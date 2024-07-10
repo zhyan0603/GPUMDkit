@@ -1,6 +1,6 @@
 # GPUMDkit
 
-**GPUMDkit** is a shell interface for the GPUMD (Graphics Processing Units Molecular Dynamics) program. It provides a set of tools to streamline the use of common scripts in GPUMD and neuroevolution potential (NEP), simplifying workflows and enhancing efficiency.
+**`GPUMDkit`** is a shell interface for the [GPUMD](https://github.com/brucefan1983/GPUMD) (*Graphics Processing Units Molecular Dynamics*) program. It provides a set of tools to streamline the use of common scripts in GPUMD and  [NEP](https://gpumd.org/potentials/nep.html#nep-formalism) (neuroevolution potential), simplifying workflows and enhancing efficiency.
 
 ## Features
 - **Simplified Script Invocation**: Easily run scripts for GPUMD and NEP.
@@ -8,12 +8,12 @@
 - **User-Friendly Interface**: Intuitive shell commands designed to enhance user experience.
 
 ## Installation
-To install GPUMDkit, follow these steps:
+To install `GPUMDkit`, follow these steps:
 
 1. Clone the repository or download the `gpumdkit.sh` file.
-2. Set the `GPUMDtools_path` environment variable to the path of your GPUMD tools, for example:
+2. Set the `GPUMDtools_path` variable in the `gpumdkit.sh` file to the path of your GPUMD tools, for example:
     ```sh
-    export GPUMDtools_path=/your_dir/GPUMD/tools
+    GPUMDtools_path=/your_dir/GPUMD/tools
     ```
 3. Add executable permissions to the `gpumdkit.sh` file:
     ```sh
@@ -21,7 +21,7 @@ To install GPUMDkit, follow these steps:
     ```
 4. Move the `gpumdkit.sh` file to a directory in your PATH, for example:
     ```sh
-    mv gpumdkit.sh /usr/local/bin/
+    mv gpumdkit.sh ~/bin/
     ```
 
 ## Usage
