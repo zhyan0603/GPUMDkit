@@ -26,5 +26,10 @@ To install `GPUMDkit`, follow these steps:
     ```
 
 ## Usage
-Refer to the [Usage Instructions](./USAGE.md) for detailed examples and command options.
+Refer to the [Usage Instructions](./Tutorials/README.md) for detailed examples and command options.
 
+
+
+---
+
+Thank you for using `GPUMDkit`! If you have any questions or need further assistance, feel free to open an issue on our GitHub repository or contact Zihan YAN (yanzihan@westlake.edu.cn).
