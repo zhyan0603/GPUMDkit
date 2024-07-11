@@ -40,6 +40,10 @@ the help information:
  GPUMDkit 0.0.0 (dev) (2024-07-11)
  Usage: GPUMDkit -[options]
  Options:
+    -plt            Plot Scripts
+                    Usage: -plt thermo/train/prediction [save]
+                      Examp: gpumdkit.sh -plt thermo save
+                      
     -outcar2exyz    Convert OUTCAR to nep-exyz file
                     Usage: -outcar2exyz dir_name
                       Examp: gpumdkit.sh -outcar2exyz .
@@ -58,12 +62,17 @@ the help information:
     -h,-help    Show this help message
 ```
 
-#### Example 2: Converting VASP OUTCARs to extxyz
+#### Example 2: Convert VASP OUTCARs to extxyz
 To convert a VASP OUTCARs to an extended XYZ format (extxyz) file, use the following command:
 ```sh
 gpumdkit.sh -outcar2exyz <dir_of_OUTCARs>
 gpumdkit.sh -outcar2exyz .
 ```
 
+#### Example 3: Plot thermo evolution
 
+To visualize `thermo` evolution from `thermo.out` :
 
+```sh
+gpumdkit.sh -plt thermo
+```

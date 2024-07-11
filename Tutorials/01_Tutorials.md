@@ -1,107 +1,142 @@
-# function1 - Sample Structures
+# Function1 - Format Conversion
 
-This tutorial will guide you through using the `sample_structures` function in `GPUMDkit`. For now, this function offers two main features:
-1. Converting VASP `OUTCAR` files to `extxyz` format.
-2. Sampling structures from an `extxyz` file using a specified method.
-
-## Introduction
-
-When you run the `sample_structures` function, you will be presented with a menu to select one of the available operations. Follow the steps below to use each feature.
+This function is used to convert various file formats. 
 
 ### Menu Options
 
 ```sh
-echo " ------------>>"
-echo " 101) Convert OUTCAR to extxyz"
-echo " 102) Sample structures from extxyz"
-echo " 000) Return to the main menu"
-echo " ------------>>"
-echo " Input the function number:"
+ ------------>>
+ 101) Convert OUTCAR to extxyz
+ 102) Convert mtp to extxyz
+ 103) Convert cp2k to extxyz
+ 104) Convert castep to extxyz
+ 000) Return to the main menu
+ ------------>>
+ Input the function number:
 ```
 
+#### Option 101: Convert OUTCAR to extxyz
 
-
-### Option 101: Convert OUTCAR to EXYZ
-
-This option allows you to convert VASP OUTCAR files to EXYZ format.
+This option allows you to convert VASP `OUTCAR` files to `extxyz` format.
 
 1. Select option `101` from the menu:
 
-   ```sh
+   ```
    101
    ```
 
 2. You will see the following prompt:
 
-   ```sh
-   echo " Input the directory containing OUTCARs"
+   ```
+    >-------------------------------------------------<
+    | This function calls the script in GPUMD's tools |
+    | Script: multipleFrames-outcars2nep-exyz.sh      |
+    | Developer: Yanzhou WANG (yanzhowang@gmail.com ) |
+    >-------------------------------------------------<
+    Input the directory containing OUTCARs
+    ------------>>
    ```
 
 3. Enter the directory containing your `OUTCAR` files:
 
-   ```sh
+   ```
    /path/to/your/outcars
    ```
 
-4. The script   `multipleFrames-outcars2nep-exyz.sh`  in GPUMD's tools will be called to perform the conversion.
+4. The script `multipleFrames-outcars2nep-exyz.sh` in GPUMD's tools will be called to perform the conversion.
 
-**Script Information:**
+#### Option 102: Convert mtp to extxyz
 
-```sh
-echo " >-------------------------------------------------<"
-echo " | This function calls the script in GPUMD's tools |"
-echo " | Script: multipleFrames-outcars2nep-exyz.sh      |"
-echo " | Developer: Yanzhou WANG (yanzhowang@gmail.com ) |"
-echo " >-------------------------------------------------<"
-```
-
-
-
-### Option 102: Sample Structures from extxyz
-
-This option allows you to sample structures from an `extxyz` file using a specified method.
+This option allows you to convert `cfg` files to `extxyz` format.
 
 1. Select option `102` from the menu:
 
-   ```sh
+   ```
    102
    ```
 
 2. You will see the following prompt:
 
-   ```sh
-   echo " Input <extxyz_file> <sampling_method> <num_samples>"
-   echo " Sampling_method: 'uniform' or 'random'"
-   echo " Examp: train.xyz uniform 50"
+   ```
+    >-------------------------------------------------<
+    | This function calls the script in GPUMD's tools |
+    | Script: mtp2xyz.py                              |
+    | Developer: Ke XU (kickhsu@gmail.com)            |
+    >-------------------------------------------------<
+    Input <filename.cfg> <Symbol1 Symbol2 Symbol3 ...>
+    Examp: train.cfg Pd Ag
+    ------------>>
    ```
 
-3. Enter the `extxyz` file name, sampling method, and number of samples:
+3. Enter the `<filename.cfg>` `<Symbol1 Symbol2 Symbol3 ...>` :
 
-   ```sh
-   train.xyz uniform 50
+   ```
+   train.cfg Pd Ag
    ```
 
-4. The script `sample_structures.py` in the `Scripts` will be called to perform the sampling.
+4. The script `mtp2xyz.py` in GPUMD's tools will be called to perform the conversion.
 
-**Script Information:**
+#### Option 103: Convert cp2k to extxyz
 
-```sh
-echo " >-------------------------------------------------<"
-echo " | This function calls the script in Scripts       |"
-echo " | Script: sample_structures.py                    |"
-echo " | Developer: Zihan YAN (yanzihan@westlake.edu.cn) |"
-echo " >-------------------------------------------------<"
-```
+This option allows you to convert cp2k's output to `extxyz` format.
 
+1. Select option `103` from the menu:
 
+   ```
+   103
+   ```
 
-### Option 000: Return to the Main Menu
+2. You will see the following prompt:
 
-If you wish to return to the main menu, select option `000`:
+   ```
+    >-------------------------------------------------<
+    | This function calls the script in GPUMD's tools |
+    | Script: cp2k2xyz.py                             |
+    | Developer: Ke XU (kickhsu@gmail.com)            |
+    >-------------------------------------------------<
+    Input <dir_cp2k>
+    Examp: ./cp2k
+    ------------>>
+   ```
 
-```sh
-000
-```
+3. Enter the `<dir_cp2k>` :
+
+   ```
+   ./cp2k
+   ```
+
+4. The script `cp2k2xyz.py` in GPUMD's tools will be called to perform the conversion.
+
+#### Option 104: Convert castep to extxyz
+
+This option allows you to convert castep's output to `extxyz` format.
+
+1. Select option `104` from the menu:
+
+   ```
+   104
+   ```
+
+2. You will see the following prompt:
+
+   ```
+    >-------------------------------------------------<
+    | This function calls the script in GPUMD's tools |
+    | Script: castep2nep-exyz.sh                      |
+    | Developer: Yanzhou WANG (yanzhowang@gmail.com ) |
+    >-------------------------------------------------<
+    Input <dir_castep>
+    Examp: ./castep
+    ------------>>
+   ```
+
+3. Enter the `<dir_castep>` :
+
+   ```
+   ./castep
+   ```
+
+4. The script `castep2nep-exyz.sh` in GPUMD's tools will be called to perform the conversion.
 
 
 

@@ -5,24 +5,26 @@ GPUMD_path=/d/Westlake/GPUMD/GPUMD
 GPUMDkit_path=/d/Westlake/GPUMD/Gpumdkit
 VERSION="0.0.0 (dev) (2024-07-11)"
 
-function sample_structures(){
+function format_conversion(){
 echo " ------------>>"
 echo " 101) Convert OUTCAR to extxyz"
-echo " 102) Sample structures from extxyz"
+echo " 102) Convert mtp to extxyz"
+echo " 103) Convert cp2k to extxyz"
+echo " 104) Convert castep to extxyz"
 echo " 000) Return to the main menu"
 echo " ------------>>"
 echo " Input the function number:"
 
-arry_input_file_choice=("000" "101" "102" ) 
-read -p " " input_file_choice
-while ! echo "${arry_input_file_choice[@]}" | grep -wq "$input_file_choice" 
+arry_num_choice=("000" "101" "102" "103" "104" ) 
+read -p " " num_choice
+while ! echo "${arry_num_choice[@]}" | grep -wq "$num_choice" 
 do
   echo " ------------>>"
   echo " Please reinput function number..."
-  read -p " " input_file_choice
+  read -p " " num_choice
 done
 
-case $input_file_choice in
+case $num_choice in
     "101")
         echo " >-------------------------------------------------<"
         echo " | This function calls the script in GPUMD's tools |"
@@ -38,6 +40,78 @@ case $input_file_choice in
         echo " Code path: ${GPUMD_path}/tools/vasp2xyz/outcar2xyz/multipleFrames-outcars2nep-exyz.sh"
         ;;
     "102")
+        echo " >-------------------------------------------------<"
+        echo " | This function calls the script in GPUMD's tools |"
+        echo " | Script: mtp2xyz.py                              |"
+        echo " | Developer: Ke XU (kickhsu@gmail.com)            |"
+        echo " >-------------------------------------------------<"
+        echo " Input <filename.cfg> <Symbol1 Symbol2 Symbol3 ...>"
+        echo " Examp: train.cfg Pd Ag"
+        echo " ------------>>"
+        read -p " " mtp_variables
+        echo " ---------------------------------------------------"
+        python ${GPUMD_path}/tools/mtp2xyz/mtp2xyz.py ${mtp_variables}
+        echo "Code path: ${GPUMD_path}/tools/mtp2xyz/mtp2xyz.py"
+        echo " ---------------------------------------------------"
+        ;;
+    "103")
+        echo " >-------------------------------------------------<"
+        echo " | This function calls the script in GPUMD's tools |"
+        echo " | Script: cp2k2xyz.py                             |"
+        echo " | Developer: Ke XU (kickhsu@gmail.com)            |"
+        echo " >-------------------------------------------------<"
+        echo " Input <dir_cp2k> "
+        echo " Examp: ./cp2k "
+        echo " ------------>>"
+        read -p " " dir_cp2k
+        echo " ---------------------------------------------------"
+        python ${GPUMD_path}/tools/cp2k2xyz/cp2k2xyz.py ${dir_cp2k}
+        echo "Code path: ${GPUMD_path}/tools/cp2k2xyz/cp2k2xyz.py"
+        echo " ---------------------------------------------------"
+        ;;
+    "104")
+        echo " >-------------------------------------------------<"
+        echo " | This function calls the script in GPUMD's tools |"
+        echo " | Script: castep2nep-exyz.sh                      |"
+        echo " | Developer: Yanzhou WANG (yanzhowang@gmail.com ) |"
+        echo " >-------------------------------------------------<"
+        echo " Input <dir_castep>"
+        echo " Examp: ./castep "
+        echo " ------------>>"
+        read -p " " dir_castep
+        echo " ---------------------------------------------------"
+        bash ${GPUMD_path}/tools/castep2exyz/castep2nep-exyz.sh ${dir_castep}
+        echo "Code path: ${GPUMD_path}/tools/castep2exyz/castep2nep-exyz.sh"
+        echo " ---------------------------------------------------"
+        ;;
+    "000")
+        menu
+        main
+        ;;
+esac
+
+
+}
+
+function sample_structures(){
+echo " ------------>>"
+echo " 201) Sample structures from extxyz"
+echo " 202) Find the outliers in training set"
+echo " 000) Return to the main menu"
+echo " ------------>>"
+echo " Input the function number:"
+
+arry_num_choice=("000" "201" "202") 
+read -p " " num_choice
+while ! echo "${arry_num_choice[@]}" | grep -wq "$num_choice" 
+do
+  echo " ------------>>"
+  echo " Please reinput function number..."
+  read -p " " num_choice
+done
+
+case $num_choice in
+    "201")
         echo " >-------------------------------------------------<"
         echo " | This function calls the script in Scripts       |"
         echo " | Script: sample_structures.py                    |"
@@ -56,6 +130,22 @@ case $input_file_choice in
         echo " Code path: ${GPUMDkit_path}/Scripts/sample_structures/sample_structures.py"
         echo " ---------------------------------------------------"
         ;;
+    "202")
+        echo " >-------------------------------------------------<"
+        echo " | This function calls the script in GPUMD's tools |"
+        echo " | Script: get_max_rmse_xyz.py                     |"
+        echo " | Developer: Ke XU (kickhsu@gmail.com)            |"
+        echo " >-------------------------------------------------<"
+        echo " Input <extxyz_file> <*_train.out> <num_outliers>"
+        echo " Examp: train.xyz energy_train.out 13 "
+        echo " ------------>>"
+        read -p " " maxrmse_choice
+        echo " ---------------------------------------------------"
+        python ${GPUMD_path}/tools/get_max_rmse_xyz/get_max_rmse_xyz.py ${maxrmse_choice}
+        echo "Code path: ${GPUMD_path}/tools/get_max_rmse_xyz/get_max_rmse_xyz.py"
+        echo " ---------------------------------------------------"
+        ;;
+
     "000")
         menu
         main
@@ -69,7 +159,7 @@ esac
 # Show the menu
 function menu(){
 echo " ------------------------- GPUMD --------------------------"
-echo "  1) Sample Structures           2) Developing ...         "
+echo "  1) Format Conversion           2) Sample Structures      "
 echo " -------------------------  NEP  --------------------------"
 echo "  3) Developing ...              4) Developing ...         "
 echo "  0) Quit!"
@@ -94,10 +184,10 @@ function main(){
             exit 0
             ;;
         "1")
-            sample_structures
+            format_conversion
             ;;
         "2")
-            echo "Developing ..."
+            sample_structures
             ;;
         "3")
             echo "Developing ..."
@@ -119,6 +209,10 @@ function help_info(){
 echo " GPUMDkit ${VERSION}"
 echo " Usage: GPUMDkit -[options]"
 echo " Options:
+    -plt            Plot Scripts
+                    Usage: -plt thermo/train/prediction [save]
+                      Examp: gpumdkit.sh -plt thermo save
+
     -outcar2exyz    Convert OUTCAR to nep-exyz file
                     Usage: -outcar2exyz dir_name
                       Examp: gpumdkit.sh -outcar2exyz .
@@ -127,11 +221,11 @@ echo " Options:
                     Usage: -castep2exyz dir_name
                       Examp: gpumdkit.sh -castep2exyz .
 
-    -cp2k2exyz    Convert cp2k output to nep-exyz file
+    -cp2k2exyz      Convert cp2k output to nep-exyz file
                     Usage: -cp2k2exyz dir_name
                       Examp: gpumdkit.sh -cp2k2exyz .
 
-    -max_rmse         get_max_rmse_xyz
+    -max_rmse       get_max_rmse_xyz
                     Usage: -getmax|-get_max_rmse_xyz train.xyz force_train.out 13
 
     -h,-help    Show this help message"
@@ -141,6 +235,32 @@ if [ ! -z "$1" ]; then
     case $1 in
         -h|-help)
             help_info
+            ;;
+
+        -plt)
+            if [ ! -z "$2" ] ; then
+                case $2 in
+                    "thermo")
+                        python ${GPUMDkit_path}/Scripts/plt_scripts/plt_nep_thermo.py $3
+                        ;;
+                    "train")
+                        python ${GPUMDkit_path}/Scripts/plt_scripts/plt_nep_train_results.py $3
+                        ;;  
+                    "prediction")
+                        python ${GPUMDkit_path}/Scripts/plt_scripts/plt_nep_prediction_results.py $3
+                        ;;              
+                    *)
+                        echo "You need to specify a valid option"
+                        echo "gpumdkit.sh -h for help information"
+                        exit 1
+                        ;;
+                esac
+            else
+                echo "Missing argument"
+                echo "Usage: -plt thermo/train/prediction (eg. gpumdkit.sh -plt thermo)"
+                echo "See the codes in plt_scripts for more details"
+                echo "Code path: ${GPUMDkit_path}/Scripts/plt_scripts"
+            fi
             ;;
 
         -out2xyz|-outcar2exyz)
