@@ -2,14 +2,76 @@
 
 # You need to set the path of GPUMDtools
 GPUMDtools_path=/d/Westlake/GPUMD/GPUMD/tools
-VERSION="0.0.0 (dev) (2024-07-10)"
+GPUMDkit_path=/d/Westlake/GPUMD/Gpumdkit
+VERSION="0.0.0 (dev) (2024-07-11)"
+
+function sample_structures(){
+echo " ------------>>"
+echo " 101) Convert OUTCAR to extxyz"
+echo " 102) Sample structures from extxyz"
+echo " 000) Return to the main menu"
+echo " ------------>>"
+echo " Input the function number:"
+
+arry_input_file_choice=("000" "101" "102" ) 
+read -p " " input_file_choice
+while ! echo "${arry_input_file_choice[@]}" | grep -wq "$input_file_choice" 
+do
+  echo " ------------>>"
+  echo " Please reinput function number..."
+  read -p " " input_file_choice
+done
+
+case $input_file_choice in
+    "101")
+        echo " >-------------------------------------------------<"
+        echo " | This function calls the script in GPUMD's tools |"
+        echo " | Script: multipleFrames-outcars2nep-exyz.sh      |"
+        echo " | Developer: Yanzhou WANG (yanzhowang@gmail.com ) |"
+        echo " >-------------------------------------------------<"
+        echo " Input the directory containing OUTCARs"
+        echo " ------------>>"
+        read -p " " dir_outcars
+        echo " >-------------------------------------------------<"
+        bash ${GPUMDtools_path}/vasp2xyz/outcar2xyz/multipleFrames-outcars2nep-exyz.sh ${dir_outcars}
+        echo " >-------------------------------------------------<"
+        echo " Code path: ${GPUMDtools_path}/vasp2xyz/outcar2xyz/multipleFrames-outcars2nep-exyz.sh"
+        ;;
+    "102")
+        echo " >-------------------------------------------------<"
+        echo " | This function calls the script in Scripts       |"
+        echo " | Script: sample_structures.py                    |"
+        echo " | Developer: Zihan YAN (yanzihan@westlake.edu.cn) |"
+        echo " >-------------------------------------------------<"
+        echo " Input <extxyz_file> <sampling_method> <num_samples>"
+        echo " Sampling_method: 'uniform' or 'random'"
+        echo " Examp: train.xyz uniform 50 "
+        echo " ------------>>"
+        read -p " " sample_choice
+        extxyz_file=$(echo ${sample_choice} | awk '{print $1}')
+        sampling_method=$(echo ${sample_choice}| awk '{print $2}')
+        num_samples=$(echo ${sample_choice}| awk '{print $3}')
+        echo " ---------------------------------------------------"
+        python ${GPUMDkit_path}/Scripts/sample_structures/sample_structures.py ${extxyz_file} ${sampling_method} ${num_samples}
+        echo " Code path: ${GPUMDkit_path}/Scripts/sample_structures/sample_structures.py"
+        echo " ---------------------------------------------------"
+        ;;
+    "000")
+        menu
+        main
+        ;;
+esac
+
+}
 
 
 #--------------------- main script ----------------------
 # Show the menu
 function menu(){
 echo " ------------------------- GPUMD --------------------------"
-echo "  1) Developing ...              2) Developing ...         "
+echo "  1) Sample Structures           2) Developing ...         "
+echo " -------------------------  NEP  --------------------------"
+echo "  3) Developing ...              4) Developing ...         "
 echo "  0) Quit!"
 }
 
@@ -17,7 +79,7 @@ echo "  0) Quit!"
 function main(){
     echo " ------------>>"
     echo ' Input the function number:'
-    array_choice=("0" "1" "2") 
+    array_choice=("0" "1" "2" "3" "4") 
     read -p " " choice
     while ! echo "${array_choice[@]}" | grep -wq "$choice" 
     do
@@ -32,12 +94,21 @@ function main(){
             exit 0
             ;;
         "1")
-            echo "Developing ..."
+            sample_structures
             ;;
         "2")
             echo "Developing ..."
             ;;
-        
+        "3")
+            echo "Developing ..."
+            ;;
+        "4")
+            echo "Developing ..."
+            ;;
+        *)
+            echo "Incorrect Options"
+            ;;
+
     esac
     echo " Thank you for using GPUMDkit. Have a great day!"
 }
