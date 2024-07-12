@@ -1,7 +1,7 @@
 #!/bin/bash
 
 function f301_scf_batch_pretreatment(){
-    
+    echo " ------------>>"
     echo " Starting SCF batch pretreatment..."
 
     # Find all .vasp and .xyz files in the current directory
@@ -12,14 +12,14 @@ function f301_scf_batch_pretreatment(){
 	# Check if there are any .vasp files
 	if [ $num_vasp_files -gt 0 ]; then
 	    # Create the struct directory and move .vasp files into it
-	    mkdir -p struct
+	    mkdir -p struct_fp
 	    rename_seq=1
 		for file in *.vasp; do
 		    new_name="POSCAR_${rename_seq}.vasp"
 		    mv "$file" "$new_name"
 		    rename_seq=$((rename_seq + 1))
 		done
-		mv POSCAR_*.vasp ./struct
+		mv POSCAR_*.vasp ./struct_fp
 	else
 	    # Check if there is exactly one XYZ file
 	    if [ $num_xyz_files -eq 1 ]; then
@@ -27,9 +27,9 @@ function f301_scf_batch_pretreatment(){
 	        echo " Converting it to POSCAR using GPUMDkit..."
 	        python ${GPUMDkit_path}/Scripts/format_conversion/exyz2pos.py *.xyz
 	        
-	        mkdir -p struct
-	        mv *.vasp ./struct
-	        num_vasp_files=$(find ./struct -maxdepth 1 -name "*.vasp" | wc -l)
+	        mkdir -p struct_fp
+	        mv *.vasp ./struct_fp
+	        num_vasp_files=$(find ./struct_fp -maxdepth 1 -name "*.vasp" | wc -l)
 	        
 	        # Perform additional operations if needed after moving .vasp files
 	    else
@@ -52,9 +52,9 @@ function f301_scf_batch_pretreatment(){
     echo " config_type=<prefix>_<ID>"
     echo " ------------>>"
     echo " Please enter the prefix of directory (e.g. FAPBI3_iter01)"
-    read prefix
+    read -p " " prefix
 
-    # Create fp directory and remind user to prepare necessary files
+    # Create fp directory
     mkdir -p fp
 
     # Create individual directories for each .vasp file and set up the links
@@ -62,8 +62,8 @@ function f301_scf_batch_pretreatment(){
         dir_name="${prefix}_${i}"
         mkdir -p ${dir_name}
         cd ${dir_name}
-        ln -sf ../struct/POSCAR_${i}.vasp ./POSCAR
-        ln -sf ../fp/{POTCAR,KPOINTS,INCAR} ./
+        ln -s ../struct_fp/POSCAR_${i}.vasp ./POSCAR
+        ln -s ../fp/{POTCAR,KPOINTS,INCAR} ./
         cd ..
     done
 
