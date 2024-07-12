@@ -14,7 +14,7 @@ This script provides a menu-driven interface to perform various tasks related to
 Input the function number:
 ```
 
-#### Option 201: Sample Structures from extxyz
+### Option 201: Sample Structures from extxyz
 
 This option allows you to sample structures from an `extxyz` file using a specified method.
 
@@ -46,7 +46,7 @@ This option allows you to sample structures from an `extxyz` file using a specif
 
 4. The script `sample_structures.py` in the `Scripts` will be called to perform the sampling.
 
-#### Option 202: Find the outliers in training set
+### Option 202: Find the outliers in training set
 
 This function calls the `get_max_rmse_xyz.py` script to find outliers in a training set.
 

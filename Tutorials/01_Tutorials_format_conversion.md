@@ -17,7 +17,7 @@ This function is used to convert various file formats.
  Input the function number:
 ```
 
-#### Option 101: Convert OUTCAR to extxyz
+### Option 101: Convert OUTCAR to extxyz
 
 This option allows you to convert VASP `OUTCAR` files to `extxyz` format.
 
@@ -47,7 +47,7 @@ This option allows you to convert VASP `OUTCAR` files to `extxyz` format.
 
 4. The script `multipleFrames-outcars2nep-exyz.sh` in GPUMD's tools will be called to perform the conversion.
 
-#### Option 102: Convert mtp to extxyz
+### Option 102: Convert mtp to extxyz
 
 This option allows you to convert `cfg` files to `extxyz` format.
 
@@ -78,7 +78,7 @@ This option allows you to convert `cfg` files to `extxyz` format.
 
 4. The script `mtp2xyz.py` in GPUMD's tools will be called to perform the conversion.
 
-#### Option 103: Convert cp2k to extxyz
+### Option 103: Convert cp2k to extxyz
 
 This option allows you to convert cp2k's output to `extxyz` format.
 
@@ -109,7 +109,7 @@ This option allows you to convert cp2k's output to `extxyz` format.
 
 4. The script `cp2k2xyz.py` in GPUMD's tools will be called to perform the conversion.
 
-#### Option 104: Convert castep to extxyz
+### Option 104: Convert castep to extxyz
 
 This option allows you to convert castep's output to `extxyz` format.
 
@@ -140,9 +140,7 @@ This option allows you to convert castep's output to `extxyz` format.
 
 4. The script `castep2nep-exyz.sh` in GPUMD's tools will be called to perform the conversion.
 
-
-
-#### Option 105: Convert extxyz to POSCAR
+### Option 105: Convert extxyz to POSCAR
 
 This option allows you to convert `extxyz` file to POSCAR.
 

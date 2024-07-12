@@ -14,7 +14,7 @@ This script provides a menu-driven interface to perform various tasks related to
 Input the function number:
 ```
 
-#### Option 301: SCF batch pretreatment
+### Option 301: SCF batch pretreatment
 
 This script automates the preprocessing of `POSCAR` or `extxyz` files for *self-consistent field* (`SCF`) calculations. The script includes the following steps:
 
@@ -71,10 +71,10 @@ The script `scf_batch_pretreatment.sh` in the `Scripts` will be called to perfor
     ```
 
     You need to prepare the `POTCAR`, `KPOINTS`, and `INCAR` files and place them in a directory named `fp`.
+    
+    
 
-
-
-#### Option 302: MD sample batch pretreatment
+### Option 302: MD sample batch pretreatment
 
 This script automates the preprocessing of `POSCAR` or `extxyz` files for MD sampling using `GPUMD`. 
 
@@ -120,7 +120,7 @@ This script automates the preprocessing of `POSCAR` or `extxyz` files for MD sam
     ATTENTION: Place run.in and nep.txt in 'md' Dir. 
     >-----------------------------------------------<
     ```
-
+    
     You need to prepare the `run.in` and`nep.txt` files and place them in a directory named `md`.
 
 
