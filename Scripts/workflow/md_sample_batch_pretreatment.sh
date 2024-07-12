@@ -23,6 +23,7 @@ function f302_md_sample_batch_pretreatment(){
 		done
 		mv POSCAR_*.vasp ./struct_md
 		mv model_*.xyz ./struct_md
+		num_xyz_files=$(find ./struct_md -maxdepth 1 -name "*.xyz" | wc -l)
 	else
 	    # Check if there is exactly one XYZ file
 	    if [ $num_xyz_files -eq 1 ]; then
