@@ -1,16 +1,19 @@
 #!/bin/bash
 
-# You need to set the path of GPUMD and GPUMDkit
-GPUMD_path=/d/Westlake/GPUMD/GPUMD
-GPUMDkit_path=/d/Westlake/GPUMD/Gpumdkit
-VERSION="0.0.0 (dev) (2024-07-11)"
+# You need to set the path of GPUMD and GPUMDkit in your ~/.bashrc, for example
+# export GPUMD_path=/d/Westlake/GPUMD/GPUMD
+# export GPUMDkit_path=/d/Westlake/GPUMD/Gpumdkit
 
-function format_conversion(){
+VERSION="0.0.0 (dev) (2024-07-12)"
+
+function f1_format_conversion(){
 echo " ------------>>"
 echo " 101) Convert OUTCAR to extxyz"
 echo " 102) Convert mtp to extxyz"
 echo " 103) Convert cp2k to extxyz"
 echo " 104) Convert castep to extxyz"
+echo " 105) Convert extxyz to POSCAR"
+echo " 106) Developing ... "
 echo " 000) Return to the main menu"
 echo " ------------>>"
 echo " Input the function number:"
@@ -84,19 +87,38 @@ case $num_choice in
         echo "Code path: ${GPUMD_path}/tools/castep2exyz/castep2nep-exyz.sh"
         echo " ---------------------------------------------------"
         ;;
+    "105")
+        echo " >-------------------------------------------------<"
+        echo " | This function calls the script in Scripts       |"
+        echo " | Script: exyz2pos.py                             |"
+        echo " | Developer: Zihan YAN (yanzihan@westlake.edu.cn) |"
+        echo " >-------------------------------------------------<"
+        echo " Input the name of extxyz"
+        echo " Examp: ./train.xyz "
+        echo " ------------>>"
+        read -p " " filename
+        echo " ---------------------------------------------------"
+        python ${GPUMDkit_path}/Scripts/format_conversion/exyz2pos.py ${filename}
+        echo "Code path: ${GPUMDkit_path}/Scripts/format_conversion/exyz2pos.py"
+        echo " ---------------------------------------------------"
+        ;; 
+    "106")
+        echo " Developing ... "
+        ;;
+       
     "000")
         menu
         main
         ;;
 esac
 
-
 }
 
-function sample_structures(){
+function f2_sample_structures(){
 echo " ------------>>"
 echo " 201) Sample structures from extxyz"
 echo " 202) Find the outliers in training set"
+echo " 202) Developing ... "
 echo " 000) Return to the main menu"
 echo " ------------>>"
 echo " Input the function number:"
@@ -145,7 +167,9 @@ case $num_choice in
         echo "Code path: ${GPUMD_path}/tools/get_max_rmse_xyz/get_max_rmse_xyz.py"
         echo " ---------------------------------------------------"
         ;;
-
+    "203")
+        echo " Developing ... "
+        ;;
     "000")
         menu
         main
@@ -154,15 +178,45 @@ esac
 
 }
 
+function f3_workflow_dev(){
+echo " ------------>>"
+echo " 301) SCF batch pretreatment"
+echo " 302) Developing ... "
+echo " 000) Return to the main menu"
+echo " ------------>>"
+echo " Input the function number:"
+
+arry_num_choice=("000" "301" "302") 
+read -p " " num_choice
+while ! echo "${arry_num_choice[@]}" | grep -wq "$num_choice" 
+do
+  echo " ------------>>"
+  echo " Please reinput function number..."
+  read -p " " num_choice
+done
+
+case $num_choice in
+    "301")
+        source ${GPUMDkit_path}/Scripts/workflow/scf_batch_pretreatment.sh
+        f301_scf_batch_pretreatment
+        ;;
+    "302")
+        echo " Developing ... "
+        ;;
+    "000")
+        menu
+        main
+        ;;
+esac
+}
 
 #--------------------- main script ----------------------
 # Show the menu
 function menu(){
-echo " ------------------------- GPUMD --------------------------"
-echo "  1) Format Conversion           2) Sample Structures      "
-echo " -------------------------  NEP  --------------------------"
-echo "  3) Developing ...              4) Developing ...         "
-echo "  0) Quit!"
+echo " ----------------------- GPUMD -----------------------"
+echo " 1) Format Conversion          2) Sample Structures   "
+echo " 3) Workflow (dev)             4) Developing ...      "
+echo " 0) Quit!"
 }
 
 # Function main
@@ -184,13 +238,13 @@ function main(){
             exit 0
             ;;
         "1")
-            format_conversion
+            f1_format_conversion
             ;;
         "2")
-            sample_structures
+            f2_sample_structures
             ;;
         "3")
-            echo "Developing ..."
+            f3_workflow_dev
             ;;
         "4")
             echo "Developing ..."
