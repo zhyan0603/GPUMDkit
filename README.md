@@ -11,15 +11,25 @@
 To install `GPUMDkit`, follow these steps:
 
 1. Clone the repository or download the `gpumdkit.sh` file.
-2. Set the `GPUMD_path` and `GPUMDkit_path` variable in the `gpumdkit.sh` file to the path of your GPUMD and GPUMDkit, for example:
-    ```sh
-    GPUMD_path=/your_dir_of_GPUMD
-    GPUMDkit_path=/your_dir_of_GPUMDkit
+
+2. Set the `GPUMD_path` and `GPUMDkit_path` variables in your `~/.bashrc` file, for example:
+    
     ```
+    vi ~/.bashrc
+    ```
+    
+    add these two variables
+    
+    ```sh
+    export GPUMD_path=/your_dir_of_GPUMD
+    export GPUMDkit_path=/your_dir_of_GPUMDkit
+    ```
+    
 3. Add executable permissions to the `gpumdkit.sh` file:
     ```sh
     chmod +x gpumdkit.sh
     ```
+    
 4. Move the `gpumdkit.sh` file to a directory in your PATH, for example:
     ```sh
     mv gpumdkit.sh ~/bin/

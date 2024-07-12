@@ -63,7 +63,7 @@ the help information:
 ```
 
 #### Example 2: Convert VASP OUTCARs to extxyz
-To convert a VASP OUTCARs to an extended XYZ format (extxyz) file, use the following command:
+To convert a `VASP` `OUTCARs` to an extended XYZ format (`extxyz`) file, use the following command:
 ```sh
 gpumdkit.sh -outcar2exyz <dir_of_OUTCARs>
 gpumdkit.sh -outcar2exyz .
@@ -76,3 +76,17 @@ To visualize `thermo` evolution from `thermo.out` :
 ```sh
 gpumdkit.sh -plt thermo
 ```
+
+
+
+## Detailed Tutorials
+
+For more detailed tutorials on specific functionalities, refer to the following documents:
+
+1. [Format Conversion](01_Tutorials_format_conversion.md): Detailed guide on `1) Format Conversion`.
+2. [Sample Structures](02_Tutorials_sample_structures.md): Detailed guide on `2) Sample Structures`.
+3. [Workflow Development](03_Tutorials_workflow_dev.md): Detailed guide on `3) Workflow (dev)`.
+
+
+
+Thank you for using `GPUMDkit`! If you have any questions or need further assistance, feel free to open an issue on our GitHub repository or contact Zihan YAN (yanzihan@westlake.edu.cn).

@@ -10,6 +10,8 @@ This function is used to convert various file formats.
  102) Convert mtp to extxyz
  103) Convert cp2k to extxyz
  104) Convert castep to extxyz
+ 105) Convert extxyz to POSCAR
+ 106) Developing ...
  000) Return to the main menu
  ------------>>
  Input the function number:
@@ -137,6 +139,39 @@ This option allows you to convert castep's output to `extxyz` format.
    ```
 
 4. The script `castep2nep-exyz.sh` in GPUMD's tools will be called to perform the conversion.
+
+
+
+#### Option 105: Convert extxyz to POSCAR
+
+This option allows you to convert `extxyz` file to POSCAR.
+
+1. Select option `105` from the menu:
+
+   ```
+   105
+   ```
+
+2. You will see the following prompt:
+
+   ```
+    >-------------------------------------------------<
+    | This function calls the script in Scripts       |
+    | Script: exyz2pos.py                             |
+    | Developer: Zihan YAN (yanzihan@westlake.edu.cn) |
+    >-------------------------------------------------<
+    Input the name of extxyz
+    Examp: ./train.xyz 
+    ------------>>
+   ```
+
+3. Enter the `<extxyz_filename>` :
+
+   ```
+   ./train.xyz
+   ```
+
+4. The script `exyz2pos.py` in Scripts will be called to perform the conversion.
 
 
 

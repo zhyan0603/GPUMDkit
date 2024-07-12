@@ -118,12 +118,12 @@ function f2_sample_structures(){
 echo " ------------>>"
 echo " 201) Sample structures from extxyz"
 echo " 202) Find the outliers in training set"
-echo " 202) Developing ... "
+echo " 203) Developing ... "
 echo " 000) Return to the main menu"
 echo " ------------>>"
 echo " Input the function number:"
 
-arry_num_choice=("000" "201" "202") 
+arry_num_choice=("000" "201" "202" "203") 
 read -p " " num_choice
 while ! echo "${arry_num_choice[@]}" | grep -wq "$num_choice" 
 do

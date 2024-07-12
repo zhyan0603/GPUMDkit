@@ -41,7 +41,7 @@ function f302_md_sample_batch_pretreatment(){
 	    fi
 	fi
 
-    echo " Found $num_xyz_files .xyz files."
+    echo " $num_xyz_files model.xyz files were generated."
 
     # Ask user for directory name prefix
     echo " >-------------------------------------------------<"

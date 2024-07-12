@@ -8,6 +8,7 @@ This script provides a menu-driven interface to perform various tasks related to
 ------------>>
 201) Sample structures from extxyz
 202) Find the outliers in training set
+203) Developing ... 
 000) Return to the main menu
 ------------>>
 Input the function number:
