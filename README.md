@@ -10,7 +10,7 @@
 ## Installation
 To install `GPUMDkit`, follow these steps:
 
-1. Clone the repository or download the `gpumdkit.sh` file.
+1. Clone the repository or download the whole project.
 
 2. Set the `GPUMD_path` and `GPUMDkit_path` variables in your `~/.bashrc` file, for example:
    
@@ -25,9 +25,15 @@ To install `GPUMDkit`, follow these steps:
     export GPUMDkit_path=/your_dir_of_GPUMDkit
     ```
     
+    add `GPUMDkit_path` to the PATH
+
+    ```sh
+    export PATH=/your_dir_of_GPUMDkit:${PATH}
+    ```
+
     then
     
-    ```
+    ```sh
     source ~/.bashrc
     ```
     
