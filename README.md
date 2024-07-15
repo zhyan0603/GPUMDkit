@@ -25,10 +25,15 @@ To install `GPUMDkit`, follow these steps:
     export GPUMDkit_path=/your_dir_of_GPUMDkit
     ```
     
-    add `GPUMDkit_path` to the PATH
+    add `GPUMDkit_path` to the `PATH`
 
     ```sh
     export PATH=/your_dir_of_GPUMDkit:${PATH}
+    ```
+
+    or move the `gpumdkit.sh` file to a directory in your `PATH`, for example:
+    ```sh
+    mv gpumdkit.sh ~/bin/
     ```
 
     then
@@ -42,10 +47,6 @@ To install `GPUMDkit`, follow these steps:
     chmod +x gpumdkit.sh
     ```
     
-4. Move the `gpumdkit.sh` file to a directory in your PATH, for example:
-    ```sh
-    mv gpumdkit.sh ~/bin/
-    ```
 
 ## Usage
 Refer to the [Usage Instructions](./Tutorials/README.md) for detailed examples and command options.
