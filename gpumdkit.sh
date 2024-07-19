@@ -4,7 +4,7 @@
 # export GPUMD_path=/d/Westlake/GPUMD/GPUMD
 # export GPUMDkit_path=/d/Westlake/GPUMD/Gpumdkit
 
-VERSION="0.0.0 (dev) (2024-07-12)"
+VERSION="0.0.0 (dev) (2024-07-19)"
 
 function f1_format_conversion(){
 echo " ------------>>"
@@ -287,6 +287,9 @@ echo " Options:
     -max_rmse       get_max_rmse_xyz
                     Usage: -getmax|-get_max_rmse_xyz train.xyz force_train.out 13
 
+    -min_dist       Get the minimum distance of any two atoms
+                    Usage: -min_dist <exyzfile>
+
     -h,-help    Show this help message"
 }
 
@@ -385,6 +388,19 @@ if [ ! -z "$1" ]; then
                 echo "Usage: -getmax|-get_max_rmse_xyz train.xyz force_train.out 13"
                 echo "See the source code of get_max_rmse_xyz.py for more details"
                 echo "Code path: ${GPUMD_path}/tools/get_max_rmse_xyz/get_max_rmse_xyz.py"
+            fi
+            ;;
+
+        -min_dist)
+            if [ ! -z "$2" ] ; then
+                echo "Calling script by Zihan YAN "
+                echo "Code path: ${GPUMDkit_path}/Scripts/sample_structures/get_min_dist.py"
+                python ${GPUMDkit_path}/Scripts/sample_structures/get_min_dist.py $2
+            else
+                echo "Missing argument"
+                echo "Usage: -min_dist <exyzfile>"
+                echo "See the source code of get_min_dist.py for more details"
+                echo "Code path: ${GPUMDkit_path}/Scripts/sample_structures/get_min_dist.py"
             fi
             ;;
 
