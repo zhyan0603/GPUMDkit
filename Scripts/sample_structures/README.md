@@ -38,3 +38,34 @@ This script calculates the minimum atomic distance within a given system. The in
 python get_min_dist.py <extxyz_file>
 ```
 
+
+
+#### perturb_structure.py
+
+---
+
+This function calls the `perturb_structure.py` script to generate the perturbed structures.
+
+`<input.vasp>`: `filename.vasp`
+
+`<pert_num>`: number of perturbed structures
+
+`<cell_pert_fraction>`: A fraction determines how much (relatively) will cell deform
+
+`<atom_pert_distance>`: A distance determines how far atoms will move (in angstrom).
+
+`<atom_pert_style>`: `<uniform>`, `<normal>`, `<const>`
+
+#### Usage
+
+```sh
+python perturb_structure.py <input.vasp> <pert_num> <cell_pert_fraction> <atom_pert_distance> <atom_pert_style>
+```
+
+#### Example
+
+```sh
+python perturb_structure.py FAPbI3.vasp 20 0.03 0.2 normal
+```
+
+This command will generate 20 perturbed structures.
