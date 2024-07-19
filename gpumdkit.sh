@@ -118,12 +118,13 @@ function f2_sample_structures(){
 echo " ------------>>"
 echo " 201) Sample structures from extxyz"
 echo " 202) Find the outliers in training set"
-echo " 203) Developing ... "
+echo " 203) Perturb structure"
+echo " 204) Developing ... "
 echo " 000) Return to the main menu"
 echo " ------------>>"
 echo " Input the function number:"
 
-arry_num_choice=("000" "201" "202" "203") 
+arry_num_choice=("000" "201" "202" "203" "204") 
 read -p " " num_choice
 while ! echo "${arry_num_choice[@]}" | grep -wq "$num_choice" 
 do
@@ -168,6 +169,22 @@ case $num_choice in
         echo " ---------------------------------------------------"
         ;;
     "203")
+        echo " >-------------------------------------------------<"
+        echo " | This function calls the script in Scripts       |"
+        echo " | Script: perturb_structure.py                    |"
+        echo " | Developer: Zihan YAN (yanzihan@westlake.edu.cn) |"
+        echo " >-------------------------------------------------<"
+        echo " Input <input.vasp> <pert_num> <cell_pert_fraction> <atom_pert_distance> <atom_pert_style>"
+        echo " The default paramters for perturb are 20 0.03 0.2 normal"
+        echo " Examp: FAPbI3.vasp 20 0.03 0.2 normal"
+        echo " ------------>>"
+        read -p " " perturb_choice
+        echo " ---------------------------------------------------"
+        python ${GPUMDkit_path}/Scripts/sample_structures/perturb_structure.py ${perturb_choice}
+        echo "Code path: ${GPUMDkit_path}/Scripts/sample_structures/perturb_structure.py"
+        echo " ---------------------------------------------------"
+        ;;
+    "204")
         echo " Developing ... "
         ;;
     "000")

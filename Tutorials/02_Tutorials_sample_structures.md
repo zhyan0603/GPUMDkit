@@ -77,11 +77,53 @@ This function calls the `get_max_rmse_xyz.py` script to find outliers in a train
 
 3. Enter the `extxyz` file name, <*_train.out>, and number of outliers:
 
-```sh
-train.xyz energy_train.out 13 
-```
+   ```sh
+   train.xyz energy_train.out 13 
+   ```
 
 4. The script `sample_structures.py` in the `Scripts` will be called to perform the sampling.
+
+### Option 203: Perturb structure
+
+This function calls the `perturb_structure.py` script to generate the perturbed structures.
+
+1. Select option `203` from the menu:
+
+   ```sh
+   203
+   ```
+
+2. You will see the following prompt:
+
+   ```sh
+   >-------------------------------------------------<
+   | This function calls the script in Scripts       |
+   | Script: perturb_structure.py                    |
+   | Developer: Zihan YAN (yanzihan@westlake.edu.cn) |
+   >-------------------------------------------------<
+   Input <input.vasp> <pert_num> <cell_pert_fraction> <atom_pert_distance> <atom_pert_style>
+   The default paramters for perturb are 20 0.03 0.2 normal
+   Examp: FAPbI3.vasp 20 0.03 0.2 normal
+   ------------>>
+   ```
+
+   `<input.vasp>`: filename.vasp
+
+   `<pert_num>`: number of perturbed structures
+
+   `<cell_pert_fraction>`: A fraction determines how much (relatively) will cell deform
+
+   `<atom_pert_distance>`: A distance determines how far atoms will move (in angstrom).
+
+   `<atom_pert_style>`: `<uniform>`, `<normal>`, `<const>`
+
+3. Enter the parameters:
+
+   ```sh
+   FAPbI3.vasp 20 0.03 0.2 normal
+   ```
+
+4. The script `perturb_structure.py` in the `Scripts` will be called to perform the perturbation.
 
 
 

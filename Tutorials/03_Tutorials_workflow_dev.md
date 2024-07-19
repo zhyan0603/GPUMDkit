@@ -33,6 +33,7 @@ This script automates the preprocessing of `POSCAR` or `extxyz` files for *self-
    
    ```bash
    301
+   ```
 
 3. You will see the following prompt: 
 
