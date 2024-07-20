@@ -14,7 +14,7 @@ function f302_md_sample_batch_pretreatment(){
 	    # Create the struct directory and move .vasp files into it
 	    mkdir -p struct_md
 	    rename_seq=1
-		for file in *.vasp; do
+		for file in $(ls -v *.vasp); do
 		    new_vasp_name="POSCAR_${rename_seq}.vasp"
 		    new_xyz_name="model_${rename_seq}.xyz"
 		    mv "$file" "$new_vasp_name"
