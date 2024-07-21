@@ -301,6 +301,10 @@ echo " Options:
                     Usage: -cp2k2exyz dir_name
                       Examp: gpumdkit.sh -cp2k2exyz .
 
+    -pos2exyz       Convert POSCAR to extxyz file
+                    Usage: -pos2exyz <POSCAR_filename> <extxyz_filename>
+                      Examp: gpumdkit.sh -pos2exyz POSCAR model.xyz                      
+
     -max_rmse       get_max_rmse_xyz
                     Usage: -getmax|-get_max_rmse_xyz train.xyz force_train.out 13
 
@@ -392,6 +396,19 @@ if [ ! -z "$1" ]; then
                 echo "  Examp: gpumdkit.sh -mtp2exyz train.cfg Pd Ag"
                 echo "See the source code of mtp2xyz.py for more details"
                 echo "Code path: ${GPUMD_path}/tools/mtp2xyz/mtp2xyz.py"
+            fi
+            ;;
+
+        -pos2exyz)
+            if [ ! -z "$2" ] && [ ! -z "$3" ] ; then
+                echo "Calling script by Zihan YAN "
+                echo "Code path: ${GPUMDkit_path}/Scripts/format_conversion/pos2exyz.py"
+                python ${GPUMDkit_path}/Scripts/format_conversion/pos2exyz.py $2 $3
+            else
+                echo "Missing argument"
+                echo "Usage: -pos2exyz POSCAR model.xyz"
+                echo "See the source code of pos2exyz.py for more details"
+                echo "Code path: ${GPUMDkit_path}/Scripts/format_conversion/pos2exyz.py"
             fi
             ;;
 
