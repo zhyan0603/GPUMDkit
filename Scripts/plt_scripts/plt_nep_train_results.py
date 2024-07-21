@@ -18,7 +18,7 @@ fig, axs = plt.subplots(2, 2, figsize=(9, 7), dpi=100)
 
 # Plotting the loss figure
 axs[0, 0].loglog(loss[:, 1:7], '-', linewidth=2)
-axs[0, 0].set_xlabel('Generation', fontsize=10)
+axs[0, 0].set_xlabel('Generation/100', fontsize=10)
 axs[0, 0].set_ylabel('Loss functions', fontsize=10)
 axs[0, 0].tick_params(axis='both', labelsize=10)
 axs[0, 0].legend(['Total', 'L1-Reg', 'L2-Reg', 'Energy-train', 'Force-train', 'Virial-train'], prop = {'size':8})
