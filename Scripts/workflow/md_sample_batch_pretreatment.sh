@@ -14,15 +14,19 @@ function f302_md_sample_batch_pretreatment(){
 	    # Create the struct directory and move .vasp files into it
 	    mkdir -p struct_md
 	    rename_seq=1
+	    total_vasp_num=$(ls -v *.vasp| wc -l)
 		for file in $(ls -v *.vasp); do
 		    new_vasp_name="POSCAR_${rename_seq}.vasp"
 		    new_xyz_name="model_${rename_seq}.xyz"
-		    mv "$file" "$new_vasp_name"
-		    python ${GPUMDkit_path}/Scripts/format_conversion/pos2exyz.py ${new_vasp_name} ${new_xyz_name}
+		    mv ${file} ./struct_md/${new_vasp_name}
+		    python ${GPUMDkit_path}/Scripts/format_conversion/pos2exyz.py ./struct_md/${new_vasp_name} ./struct_md/${new_xyz_name}
+		    progress=$((rename_seq * 100 / total_vasp_num))
+		    echo -ne " Progress: ["
+		    for ((p=0; p<progress/2; p++)); do echo -ne "#"; done
+		    for ((p=progress/2; p<50; p++)); do echo -ne "."; done
+		    echo -ne "] $progress% ($rename_seq/$total_vasp_num)\r"
 		    rename_seq=$((rename_seq + 1))
 		done
-		mv POSCAR_*.vasp ./struct_md
-		mv model_*.xyz ./struct_md
 		num_xyz_files=$(find ./struct_md -maxdepth 1 -name "*.xyz" | wc -l)
 	else
 	    # Check if there is exactly one XYZ file
@@ -68,7 +72,7 @@ function f302_md_sample_batch_pretreatment(){
     cat > presub.sh <<-EOF
 	#!/bin/bash
 
-	# You can cat it to your submit script.
+	# You can copy this to your submit script.
 
 	for dir in sample_*; do
 	    cd \$dir

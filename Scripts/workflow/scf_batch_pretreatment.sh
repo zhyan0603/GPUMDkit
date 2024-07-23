@@ -16,10 +16,9 @@ function f301_scf_batch_pretreatment(){
 	    rename_seq=1
 		for file in $(ls -v *.vasp); do
 		    new_name="POSCAR_${rename_seq}.vasp"
-		    mv "$file" "$new_name"
+		    mv "$file" ./struct_fp/"$new_name"
 		    rename_seq=$((rename_seq + 1))
 		done
-		mv POSCAR_*.vasp ./struct_fp
         num_vasp_files=$(find ./struct_fp -maxdepth 1 -name "*.vasp" | wc -l)
 	else
 	    # Check if there is exactly one XYZ file
