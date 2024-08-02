@@ -214,13 +214,14 @@ esac
 function f3_workflow_dev(){
 echo " ------------>>"
 echo " 301) SCF batch pretreatment"
-echo " 302) MD sample batch pretreatment"
-echo " 303) Developing ... "
+echo " 302) MD sample batch pretreatment (gpumd)"
+echo " 303) MD sample batch pretreatment (lmp)"
+echo " 304) Developing ... "
 echo " 000) Return to the main menu"
 echo " ------------>>"
 echo " Input the function number:"
 
-arry_num_choice=("000" "301" "302" "303") 
+arry_num_choice=("000" "301" "302" "303" "304") 
 read -p " " num_choice
 while ! echo "${arry_num_choice[@]}" | grep -wq "$num_choice" 
 do
@@ -235,12 +236,16 @@ case $num_choice in
         f301_scf_batch_pretreatment
         ;;
     "302")
-        source ${GPUMDkit_path}/Scripts/workflow/md_sample_batch_pretreatment.sh
-        f302_md_sample_batch_pretreatment
+        source ${GPUMDkit_path}/Scripts/workflow/md_sample_batch_pretreatment_gpumd.sh
+        f302_md_sample_batch_pretreatment_gpumd
         ;;
     "303")
+        source ${GPUMDkit_path}/Scripts/workflow/md_sample_batch_pretreatment_lmp.sh
+        f303_md_sample_batch_pretreatment_lmp
+        ;; 
+    "304")
         echo " Developing ... "
-        ;;        
+        ;;         
     "000")
         menu
         main
