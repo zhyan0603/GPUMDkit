@@ -4,7 +4,7 @@
 # export GPUMD_path=/d/Westlake/GPUMD/GPUMD
 # export GPUMDkit_path=/d/Westlake/GPUMD/Gpumdkit
 
-VERSION="0.0.1 (dev) (2024-07-31)"
+VERSION="0.0.1 (dev) (2024-08-02)"
 
 function f1_format_conversion(){
 echo " ------------>>"
@@ -324,7 +324,11 @@ echo " Options:
 
     -pos2exyz       Convert POSCAR to extxyz file
                     Usage: -pos2exyz <POSCAR_filename> <extxyz_filename>
-                      Examp: gpumdkit.sh -pos2exyz POSCAR model.xyz                      
+                      Examp: gpumdkit.sh -pos2exyz POSCAR model.xyz
+
+    -pos2lmp        Convert POSCAR to lammps-data file
+                    Usage: -pos2lmp <POSCAR_filename> <lammps_data_filename>
+                      Examp: gpumdkit.sh -pos2lmp POSCAR lammps.data                                            
 
     -lmp2exyz       Convert lammps-dump to extxyz file
                     Usage: -lmp2exyz <dump_file> <element1> <element2> ...
@@ -437,6 +441,19 @@ if [ ! -z "$1" ]; then
                 echo " Usage: -pos2exyz POSCAR model.xyz"
                 echo " See the source code of pos2exyz.py for more details"
                 echo " Code path: ${GPUMDkit_path}/Scripts/format_conversion/pos2exyz.py"
+            fi
+            ;;
+
+        -pos2lmp)
+            if [ ! -z "$2" ] && [ ! -z "$3" ] ; then
+                echo " Calling script by Zihan YAN "
+                echo " Code path: ${GPUMDkit_path}/Scripts/format_conversion/pos2lmp.py"
+                python ${GPUMDkit_path}/Scripts/format_conversion/pos2lmp.py $2 $3
+            else
+                echo " Missing argument"
+                echo " Usage: -pos2lmp POSCAR lammps.data"
+                echo " See the source code of pos2lmp.py for more details"
+                echo " Code path: ${GPUMDkit_path}/Scripts/format_conversion/pos2lmp.py"
             fi
             ;;
 
