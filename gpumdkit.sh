@@ -321,6 +321,10 @@ echo " Options:
                     Usage: -pos2exyz <POSCAR_filename> <extxyz_filename>
                       Examp: gpumdkit.sh -pos2exyz POSCAR model.xyz                      
 
+    -lmp2exyz       Convert lammps-dump to extxyz file
+                    Usage: -lmp2exyz <dump_file> <element1> <element2> ...
+                      Examp: gpumdkit.sh -lmp2exyz data.dump Bi O  
+
     -max_rmse       get_max_rmse_xyz
                     Usage: -getmax|-get_max_rmse_xyz train.xyz force_train.out 13
 
@@ -428,6 +432,19 @@ if [ ! -z "$1" ]; then
                 echo " Usage: -pos2exyz POSCAR model.xyz"
                 echo " See the source code of pos2exyz.py for more details"
                 echo " Code path: ${GPUMDkit_path}/Scripts/format_conversion/pos2exyz.py"
+            fi
+            ;;
+
+        -lmp2exyz|-lmpdump2exyz)
+            if [ ! -z "$2" ] && [ ! -z "$3" ] ; then
+                echo " Calling script by Zihan YAN "
+                echo " Code path: ${GPUMDkit_path}/Scripts/format_conversion/lmp2exyz.py"
+                python ${GPUMDkit_path}/Scripts/format_conversion/lmp2exyz.py $2 ${@:3}
+            else
+                echo " Missing argument"
+                echo " Usage: -lmp2exyz <dump_file> <element1> <element2> ..."
+                echo " See the source code of lmp2exyz.py for more details"
+                echo " Code path: ${GPUMDkit_path}/Scripts/format_conversion/lmp2exyz.py"
             fi
             ;;
 
