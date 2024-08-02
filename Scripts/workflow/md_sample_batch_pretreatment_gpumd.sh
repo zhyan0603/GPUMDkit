@@ -1,6 +1,6 @@
 #!/bin/bash
 
-function f302_md_sample_batch_pretreatment(){
+function f302_md_sample_batch_pretreatment_gpumd(){
     echo " ------------>>"
     echo " Starting MD sample batch pretreatment..."
 

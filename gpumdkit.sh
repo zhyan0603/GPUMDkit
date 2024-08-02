@@ -335,7 +335,7 @@ echo " Options:
                       Examp: gpumdkit.sh -lmp2exyz data.dump Bi O  
 
     -max_rmse       get_max_rmse_xyz
-                    Usage: -getmax|-get_max_rmse_xyz train.xyz force_train.out 13
+                    Usage: -max_rmse train.xyz force_train.out 13
 
     -min_dist       Get the minimum distance of any two atoms
                     Usage: -min_dist <exyzfile>
