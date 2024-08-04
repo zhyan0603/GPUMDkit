@@ -307,7 +307,7 @@ echo " GPUMDkit ${VERSION}"
 echo " Usage: GPUMDkit -[options]"
 echo " Options:
     -plt            Plot Scripts
-                    Usage: -plt thermo/train/prediction [save]
+                    Usage: -plt thermo/train/prediction/msd [save]
                       Examp: gpumdkit.sh -plt thermo save
 
     -outcar2exyz    Convert OUTCAR to nep-exyz file
@@ -367,7 +367,10 @@ if [ ! -z "$1" ]; then
                         ;;  
                     "prediction")
                         python ${GPUMDkit_path}/Scripts/plt_scripts/plt_nep_prediction_results.py $3
-                        ;;              
+                        ;;
+                    "msd")
+                        python ${GPUMDkit_path}/Scripts/plt_scripts/plt_msd.py $3
+                        ;;               
                     *)
                         echo "You need to specify a valid option"
                         echo "gpumdkit.sh -h for help information"
