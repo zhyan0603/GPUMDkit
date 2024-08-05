@@ -304,7 +304,7 @@ function main(){
 ######### Custom functional area ###############
 function help_info(){
 echo " GPUMDkit ${VERSION}"
-echo " Usage: GPUMDkit -[options]"
+echo " Usage: gpumdkit.sh -[options]"
 echo " Options:
     -plt            Plot Scripts
                     Usage: -plt thermo/train/prediction [save]
