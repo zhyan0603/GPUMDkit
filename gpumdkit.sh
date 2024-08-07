@@ -4,7 +4,7 @@
 # export GPUMD_path=/d/Westlake/GPUMD/GPUMD
 # export GPUMDkit_path=/d/Westlake/GPUMD/Gpumdkit
 
-VERSION="0.0.1 (dev) (2024-08-05)"
+VERSION="0.0.1 (dev) (2024-08-07)"
 
 function f1_format_conversion(){
 echo " ------------>>"
@@ -117,15 +117,16 @@ esac
 function f2_sample_structures(){
 echo " ------------>>"
 echo " 201) Sample structures from extxyz"
-echo " 202) Find the outliers in training set"
-echo " 203) Perturb structure"
-echo " 204) Filter structures by min dist"
-echo " 205) Developing ... "
+echo " 202) Sample structures by pynep"
+echo " 203) Find the outliers in training set"
+echo " 204) Perturb structure"
+echo " 205) Filter structures by min dist"
+echo " 206) Developing ... "
 echo " 000) Return to the main menu"
 echo " ------------>>"
 echo " Input the function number:"
 
-arry_num_choice=("000" "201" "202" "203" "204" "205") 
+arry_num_choice=("000" "201" "202" "203" "204" "205" "206") 
 read -p " " num_choice
 while ! echo "${arry_num_choice[@]}" | grep -wq "$num_choice" 
 do
@@ -156,6 +157,25 @@ case $num_choice in
         ;;
     "202")
         echo " >-------------------------------------------------<"
+        echo " | This function calls the script in Scripts       |"
+        echo " | Script: pynep_select_structs.py                 |"
+        echo " | Developer: Zihan YAN (yanzihan@westlake.edu.cn) |"
+        echo " >-------------------------------------------------<"
+        echo " Input <sample.xyz> <train.xyz> <nep_model> <min_dist>"
+        echo " Examp: dump.xyz train.xyz ./nep.txt 0.01 "
+        echo " ------------>>"
+        read -p " " sample_choice
+        sample_file=$(echo ${sample_choice} | awk '{print $1}')
+        train_file=$(echo ${sample_choice}| awk '{print $2}')
+        nep_model=$(echo ${sample_choice}| awk '{print $3}')
+        min_dist=$(echo ${sample_choice}| awk '{print $4}')
+        echo " ---------------------------------------------------"
+        python ${GPUMDkit_path}/Scripts/sample_structures/pynep_select_structs.py ${sample_file} ${train_file} ${nep_model} ${min_dist}
+        echo " Code path: ${GPUMDkit_path}/Scripts/sample_structures/pynep_select_structs.py"
+        echo " ---------------------------------------------------"
+        ;;
+    "203")
+        echo " >-------------------------------------------------<"
         echo " | This function calls the script in GPUMD's tools |"
         echo " | Script: get_max_rmse_xyz.py                     |"
         echo " | Developer: Ke XU (kickhsu@gmail.com)            |"
@@ -169,7 +189,7 @@ case $num_choice in
         echo " Code path: ${GPUMD_path}/tools/get_max_rmse_xyz/get_max_rmse_xyz.py"
         echo " ---------------------------------------------------"
         ;;
-    "203")
+    "204")
         echo " >-------------------------------------------------<"
         echo " | This function calls the script in Scripts       |"
         echo " | Script: perturb_structure.py                    |"
@@ -185,7 +205,7 @@ case $num_choice in
         echo " Code path: ${GPUMDkit_path}/Scripts/sample_structures/perturb_structure.py"
         echo " ---------------------------------------------------"
         ;;
-    "204")
+    "205")
         echo " >-------------------------------------------------<"
         echo " | This function calls the script in Scripts       |"
         echo " | Script: filter_structures_by_distance.py        |"
@@ -200,7 +220,7 @@ case $num_choice in
         echo " Code path: ${GPUMDkit_path}/Scripts/sample_structures/filter_structures_by_distance.py"
         echo " ---------------------------------------------------"
         ;;
-    "205")
+    "206")
         echo " Developing ... "
         ;;
     "000")
