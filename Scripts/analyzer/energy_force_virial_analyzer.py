@@ -6,12 +6,12 @@ import matplotlib.pyplot as plt
 def calculate_range(frames, property_name):
     values = []
     for frame in frames:
-        if property_name == "energy":
+        if property_name in ["energy", "Energy"]:
             values.append(frame.get_potential_energy())
-        elif property_name == "force":
+        elif property_name in ["force", "forces"]:
             forces = frame.get_forces()
             values.extend(np.linalg.norm(forces, axis=1))
-        elif property_name == "virial":
+        elif property_name in ["virial", "Virial"]:
             if 'virial' in frame.info:
                 virial = frame.info['virial']
                 values.append(np.linalg.norm(virial))
