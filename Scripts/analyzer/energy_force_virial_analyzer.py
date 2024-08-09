@@ -4,21 +4,29 @@ from ase.io import read
 import matplotlib.pyplot as plt
 
 def calculate_range(frames, property_name):
+    property_name = property_name.lower()
     values = []
+    
     for frame in frames:
-        if property_name in ["energy", "Energy"]:
-            values.append(frame.get_potential_energy())
+        info_lower = {k.lower(): v for k, v in frame.info.items()}
+        
+        if property_name == "energy":
+            if 'energy' in info_lower:
+                values.append(info_lower['energy'])
+            else:
+                raise ValueError("Energy information not found in frame info.")
         elif property_name in ["force", "forces"]:
             forces = frame.get_forces()
             values.extend(np.linalg.norm(forces, axis=1))
-        elif property_name in ["virial", "Virial"]:
-            if 'virial' in frame.info:
-                virial = frame.info['virial']
-                values.append(np.linalg.norm(virial))
+        elif property_name == "virial":
+            if 'virial' in info_lower:
+                virial = info_lower['virial']
+                values.extend(virial)  
             else:
-                raise ValueError("Virial information not found in frame.")
+                raise ValueError("Virial information not found in frame info.")
         else:
             raise ValueError("Invalid property. Choose from 'energy', 'force', or 'virial'.")
+    
     return np.min(values), np.max(values), values
 
 def plot_histogram(values, property_name):
