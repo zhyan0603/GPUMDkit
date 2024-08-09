@@ -4,7 +4,7 @@
 # export GPUMD_path=/d/Westlake/GPUMD/GPUMD
 # export GPUMDkit_path=/d/Westlake/GPUMD/Gpumdkit
 
-VERSION="0.0.1 (dev) (2024-08-07)"
+VERSION="0.0.1 (dev) (2024-08-09)"
 
 function f1_format_conversion(){
 echo " ------------>>"
@@ -330,6 +330,10 @@ echo " Options:
                     Usage: -plt thermo/train/prediction/msd [save]
                       Examp: gpumdkit.sh -plt thermo save
 
+    -range          Analysis exyz, print range of energy, force, virial
+                    Usage: -range  <exyzfile> <property> [hist]
+                      Examp: gpumdkit.sh -range train.xyz energy hist
+
     -outcar2exyz    Convert OUTCAR to nep-exyz file
                     Usage: -outcar2exyz dir_name
                       Examp: gpumdkit.sh -outcar2exyz .
@@ -402,6 +406,19 @@ if [ ! -z "$1" ]; then
                 echo " Usage: -plt thermo/train/prediction (eg. gpumdkit.sh -plt thermo)"
                 echo " See the codes in plt_scripts for more details"
                 echo " Code path: ${GPUMDkit_path}/Scripts/plt_scripts"
+            fi
+            ;;
+
+        -range)
+            if [ ! -z "$2" ] && [ ! -z "$3" ] ; then
+                echo " Calling script by Zihan YAN. "
+                echo " Code path: ${GPUMDkit_path}/Scripts/analyzer/energy_force_virial_analyzer.py"
+                python ${GPUMDkit_path}/Scripts/analyzer/energy_force_virial_analyzer.py $2 $3 ${@:4}
+            else
+                echo " Missing argument"
+                echo " Usage: -range <exyzfile> <property> [hist] (eg. gpumdkit.sh -range train.xyz energy hist)" 
+                echo " See the source code of energy_force_virial_analyzer.py for more details"
+                echo " Code path: Code path: ${GPUMDkit_path}/Scripts/analyzer/energy_force_virial_analyzer.py"
             fi
             ;;
 
