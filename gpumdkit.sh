@@ -368,8 +368,11 @@ echo " Options:
     -min_dist       Get the minimum distance of any two atoms
                     Usage: -min_dist <exyzfile>
 
-    -filter_xyz     Filter structures by distance
-                    Usage: -filter_xyz <exyzfile> <min dist>
+    -filter_dist    Filter structures by distance
+                    Usage: -filter_dist <exyzfile> <min_dist>
+
+    -filter_box     Filter structures by distance
+                    Usage: -filter_box <exyzfile> <lattice_limit>
 
     -h,-help    Show this help message"
 }
@@ -553,16 +556,29 @@ if [ ! -z "$1" ]; then
             fi
             ;;
 
-        -filter_xyz)
+        -filter_dist)
             if [ ! -z "$2" ] && [ ! -z "$3" ]; then
                 echo " Calling script by Zihan YAN "
                 echo " Code path: ${GPUMDkit_path}/Scripts/sample_structures/filter_structures_by_distance.py"
                 python ${GPUMDkit_path}/Scripts/sample_structures/filter_structures_by_distance.py $2 $3
             else
                 echo " Missing argument"
-                echo " Usage: -filter_xyz <exyzfile> <min dist>"
-                echo " See the source code of get_min_dist.py for more details"
+                echo " Usage: -filter_xyz <exyzfile> <min_dist>"
+                echo " See the source code of filter_structures_by_distance.py for more details"
                 echo " Code path: ${GPUMDkit_path}/Scripts/sample_structures/filter_structures_by_distance.py"
+            fi
+            ;;
+
+        -filter_box)
+            if [ ! -z "$2" ] && [ ! -z "$3" ] ; then
+                echo " Calling script by Zihan YAN "
+                echo " Code path: ${GPUMDkit_path}/Scripts/analyzer/filter_exyz_by_box.py"
+                python ${GPUMDkit_path}/Scripts/analyzer/filter_exyz_by_box.py $2 $3
+            else
+                echo " Missing argument"
+                echo " Usage: -filter_box <exyzfile> <lattice limit>"
+                echo " See the source code of filter_exyz_by_box.py for more details"
+                echo " Code path: ${GPUMDkit_path}/Scripts/analyzer/filter_exyz_by_box.py"
             fi
             ;;
 
