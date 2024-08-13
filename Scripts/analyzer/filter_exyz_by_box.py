@@ -31,7 +31,7 @@ if __name__ == "__main__":
         sys.exit(1)
 
     input_file = sys.argv[1]
-    output_file = filtered_by_box.xyz
+    output_file = "filtered_by_box.xyz"
     edge_limit = float(sys.argv[2])
 
     filter_frames(input_file, output_file, edge_limit)
