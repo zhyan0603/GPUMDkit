@@ -3,7 +3,7 @@
 function submit_gpumd_array(){
 cat > submit.slurm <<-EOF
 #!/bin/bash -l
-#SBATCH -p rt-2080ti,v100,v100-af,a40-tmp,a40-quad,a100-40g
+#SBATCH -p rt-2080ti-short,v100,v100-af,a40-tmp,a40-quad,a100-40g
 #SBATCH -q gpu-huge
 #SBATCH -N 1
 #SBATCH -J $1
@@ -19,6 +19,26 @@ cd \$SLURM_SUBMIT_DIR
 
 cd sample_\${SLURM_ARRAY_TASK_ID}
 /storage/zhuyizhouLab/yanzhihan/soft/GPUMD/GPUMD3.9.4/src/gpumd > log
+EOF
+}
+
+function submit_nep_prediction(){
+cat > submit.slurm <<-EOF
+#!/bin/bash -l
+#SBATCH -p rt-2080ti-short,v100,v100-af,a40-tmp,a40-quad,a100-40g
+#SBATCH -q gpu-huge
+#SBATCH -N 1
+#SBATCH -J prediction
+#SBATCH -o log
+#SBATCH -t 08:00:00
+#SBATCH --gres=gpu:1
+
+module purge
+module load cuda/10.2
+
+cd \$SLURM_SUBMIT_DIR
+
+/storage/zhuyizhouLab/yanzhihan/soft/GPUMD/GPUMD3.9.4/src/nep
 EOF
 }
 
