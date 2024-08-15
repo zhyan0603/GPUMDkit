@@ -122,6 +122,7 @@ mv ${work_dir}/01.select/selected.xyz .
 (echo 3; echo 301; echo "${prefix_name}") | gpumdkit.sh >> /dev/null
 cp ${work_dir}/{INCAR,POTCAR,KPOINTS} ./fp
 submit_vasp_array scf ${selected_struct_num} ${prefix_name}
+sbatch submit.slurm
 echo $(date -d "2 second" +"%Y-%m-%d %H:%M:%S") "${selected_struct_num} tasks had been submitted."
 
 # Wait for all tasks to finish
@@ -148,6 +149,7 @@ if ! grep -q "prediction" nep.in; then
 fi
 
 submit_nep_prediction
+sbatch submit.slurm
 gpumdkit.sh -plt prediction save
 echo $(date -d "2 second" +"%Y-%m-%d %H:%M:%S") "Prediction finished."
 
