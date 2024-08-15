@@ -142,16 +142,14 @@ case $num_choice in
         echo " | Script: sample_structures.py                    |"
         echo " | Developer: Zihan YAN (yanzihan@westlake.edu.cn) |"
         echo " >-------------------------------------------------<"
-        echo " Input <extxyz_file> <sampling_method> <num_samples>"
+        echo " Input <extxyz_file> <sampling_method> <num_samples> [skip_num]"
+        echo " [skip_num]: number of initial frames to skip, default value is 0"
         echo " Sampling_method: 'uniform' or 'random'"
         echo " Examp: train.xyz uniform 50 "
         echo " ------------>>"
         read -p " " sample_choice
-        extxyz_file=$(echo ${sample_choice} | awk '{print $1}')
-        sampling_method=$(echo ${sample_choice}| awk '{print $2}')
-        num_samples=$(echo ${sample_choice}| awk '{print $3}')
         echo " ---------------------------------------------------"
-        python ${GPUMDkit_path}/Scripts/sample_structures/sample_structures.py ${extxyz_file} ${sampling_method} ${num_samples}
+        python ${GPUMDkit_path}/Scripts/sample_structures/sample_structures.py ${sample_choice}
         echo " Code path: ${GPUMDkit_path}/Scripts/sample_structures/sample_structures.py"
         echo " ---------------------------------------------------"
         ;;
@@ -165,12 +163,8 @@ case $num_choice in
         echo " Examp: dump.xyz train.xyz ./nep.txt 0.01 "
         echo " ------------>>"
         read -p " " sample_choice
-        sample_file=$(echo ${sample_choice} | awk '{print $1}')
-        train_file=$(echo ${sample_choice}| awk '{print $2}')
-        nep_model=$(echo ${sample_choice}| awk '{print $3}')
-        min_dist=$(echo ${sample_choice}| awk '{print $4}')
         echo " ---------------------------------------------------"
-        python ${GPUMDkit_path}/Scripts/sample_structures/pynep_select_structs.py ${sample_file} ${train_file} ${nep_model} ${min_dist}
+        python ${GPUMDkit_path}/Scripts/sample_structures/pynep_select_structs.py ${sample_choice}
         echo " Code path: ${GPUMDkit_path}/Scripts/sample_structures/pynep_select_structs.py"
         echo " ---------------------------------------------------"
         ;;
