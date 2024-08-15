@@ -18,7 +18,7 @@ module load cuda/10.2
 cd \$SLURM_SUBMIT_DIR
 
 cd sample_\${SLURM_ARRAY_TASK_ID}
-/storage/zhuyizhouLab/yanzhihan/soft/GPUMD/GPUMD3.9.4/src/gpumd > log
+gpumd > log
 EOF
 }
 
@@ -38,7 +38,7 @@ module load cuda/10.2
 
 cd \$SLURM_SUBMIT_DIR
 
-/storage/zhuyizhouLab/yanzhihan/soft/GPUMD/GPUMD3.9.4/src/nep
+nep
 EOF
 }
 

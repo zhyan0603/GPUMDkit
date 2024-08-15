@@ -26,7 +26,7 @@ echo "********************************************"
 
 # Check if the required files exist
 
-if [ -f nep.txt ] && [ -f nep.in ] && [ -f train.xyz ] && [ -f run.in ] && [ -f INCAR ] && [ -f POTCAR ] && [ -f KPOINTS ]; then
+if [ -f nep.txt ] && [ -f nep.in ] && [ -f train.xyz ] && [ -f run.in ] && [ -f INCAR ] && [ -f POTCAR ] ; then
     if [ $(find . -maxdepth 1 -name "*.xyz" | wc -l) -eq 2 ]; then
         sample_xyz_file=$(ls *.xyz | grep -v "train.xyz")
         sample_struct_num=$(grep -c Lat ${sample_xyz_file})
