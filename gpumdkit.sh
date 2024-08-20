@@ -1,8 +1,8 @@
 #!/bin/bash
 
 # You need to set the path of GPUMD and GPUMDkit in your ~/.bashrc, for example
-# export GPUMD_path=/d/Westlake/GPUMD/GPUMD
-# export GPUMDkit_path=/d/Westlake/GPUMD/Gpumdkit
+# export GPUMD_path=/d/Westlake/GPUMD
+# export GPUMDkit_path=/d/Westlake/Gpumdkit
 
 VERSION="0.0.1 (dev) (2024-08-09)"
 
