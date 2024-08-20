@@ -7,10 +7,16 @@
 #SBATCH --ntasks-per-node=1
 cd $SLURM_SUBMIT_DIR
 
-source ${GPUMDkit_path}/Scripts/workflow/submit_template.sh
-python_pynep=/storage/zhuyizhouLab/yanzhihan/soft/conda/envs/gpumd/bin/python
+#---------------------------------  ATTENTION  -----------------------------------------#
+# 1. This is a workflow script for Neuroevolution potential (NEP).                      #
+# 2. You need to set up some varibles to run it correctly.                              #
+# 3. Please contact me if you have any questions. (E-mail: yanzihan@westlake.edu.cn)    #
+#---------------------------------------------------------------------------------------#
 
-work_dir=${PWD}
+source ${GPUMDkit_path}/Scripts/workflow/submit_template.sh  # source the submit_template.sh script
+python_pynep=/storage/zhuyizhouLab/yanzhihan/soft/conda/envs/gpumd/bin/python  # python executable for pynep
+
+work_dir=${PWD}  # work directory
 prefix_name=LiF_iter01  # prefix name for this workflow, used for the scf calculations
 min_dist=1.4    # minimum distance between two atoms
 box_limit=13    # box limit for the simulation box
@@ -39,7 +45,7 @@ if [ -f nep.txt ] && [ -f nep.in ] && [ -f train.xyz ] && [ -f run.in ] && [ -f 
     echo "All required files exist."
     echo "Starting the workflow:"
 else
-    echo "Please put nep.in nep.txt run.in INCAR POTCAR KPOINTS in the current directory."
+    echo "Please put nep.in nep.txt train.xyz run.in INCAR POTCAR [KPOINTS] and the sample_struct.xyz in the current directory."
 fi
 
 cd ${work_dir}
