@@ -386,7 +386,7 @@ if [ ! -z "$1" ]; then
                     "train")
                         python ${GPUMDkit_path}/Scripts/plt_scripts/plt_nep_train_results.py $3
                         ;;  
-                    "prediction")
+                    "prediction"| "valid"| "test")
                         python ${GPUMDkit_path}/Scripts/plt_scripts/plt_nep_prediction_results.py $3
                         ;;
                     "msd")
