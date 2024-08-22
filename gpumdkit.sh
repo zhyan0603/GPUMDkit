@@ -4,7 +4,7 @@
 # export GPUMD_path=/d/Westlake/GPUMD
 # export GPUMDkit_path=/d/Westlake/Gpumdkit
 
-VERSION="0.0.1 (dev) (2024-08-09)"
+VERSION="0.0.1 (dev) (2024-08-22)"
 
 function f1_format_conversion(){
 echo " ------------>>"
