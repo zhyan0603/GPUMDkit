@@ -163,6 +163,7 @@ gpumdkit.sh -out2xyz .
 echo "---------------------------------------"
 cd NEPdataset-multiple_frames
 mkdir prediction
+cd prediction
 ln -s ${work_dir}/common/nep.txt .
 ln -s ../NEP-dataset.xyz ./train.xyz
 cp ${work_dir}/common/nep.in .
