@@ -4,7 +4,7 @@
 # export GPUMD_path=/d/Westlake/GPUMD
 # export GPUMDkit_path=/d/Westlake/Gpumdkit
 
-VERSION="0.0.1 (dev) (2024-08-22)"
+VERSION="0.0.1 (dev) (2024-09-03)"
 
 function f1_format_conversion(){
 echo " ------------>>"
@@ -519,7 +519,7 @@ if [ ! -z "$1" ]; then
             else
                 echo " Missing argument"
                 echo " Usage: -addgroup <POSCAR> <element1> <element2> ..."
-                echo " See the source code of lmp2exyz.py for more details"
+                echo " See the source code of add_groups.py for more details"
                 echo " Code path: ${GPUMDkit_path}/Scripts/format_conversion/add_groups.py"
             fi
             ;;
@@ -573,6 +573,19 @@ if [ ! -z "$1" ]; then
                 echo " Usage: -filter_box <exyzfile> <lattice limit>"
                 echo " See the source code of filter_exyz_by_box.py for more details"
                 echo " Code path: ${GPUMDkit_path}/Scripts/analyzer/filter_exyz_by_box.py"
+            fi
+            ;;
+
+        -filter_value)
+            if [ ! -z "$2" ] && [ ! -z "$3" ] ; then
+                echo " Calling script by Zihan YAN "
+                echo " Code path: ${GPUMDkit_path}/Scripts/analyzer/filter_exyz_by_value.py"
+                python ${GPUMDkit_path}/Scripts/analyzer/filter_exyz_by_value.py $2 $3 $4
+            else
+                echo " Missing argument"
+                echo " Usage: -filter_value <exyzfile> <property> <value>"
+                echo " See the source code of filter_exyz_by_value.py for more details"
+                echo " Code path: ${GPUMDkit_path}/Scripts/analyzer/filter_exyz_by_value.py"
             fi
             ;;
 
