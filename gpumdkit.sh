@@ -4,7 +4,7 @@
 # export GPUMD_path=/d/Westlake/GPUMD
 # export GPUMDkit_path=/d/Westlake/Gpumdkit
 
-VERSION="0.0.1 (dev) (2024-09-03)"
+VERSION="0.0.1 (dev) (2024-09-11)"
 
 function f1_format_conversion(){
 echo " ------------>>"
@@ -391,7 +391,10 @@ if [ ! -z "$1" ]; then
                         ;;
                     "msd")
                         python ${GPUMDkit_path}/Scripts/plt_scripts/plt_msd.py $3
-                        ;;               
+                        ;;
+                    "vac")
+                        python ${GPUMDkit_path}/Scripts/plt_scripts/plt_vac.py $3
+                        ;;                
                     *)
                         echo "You need to specify a valid option"
                         echo "gpumdkit.sh -h for help information"
