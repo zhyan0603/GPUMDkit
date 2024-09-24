@@ -4,7 +4,7 @@
 # export GPUMD_path=/d/Westlake/GPUMD
 # export GPUMDkit_path=/d/Westlake/Gpumdkit
 
-VERSION="0.0.1 (dev) (2024-09-11)"
+VERSION="0.0.1 (dev) (2024-09-24)"
 
 function f1_format_conversion(){
 echo " ------------>>"
@@ -485,6 +485,19 @@ if [ ! -z "$1" ]; then
                 echo " Usage: -pos2exyz POSCAR model.xyz"
                 echo " See the source code of pos2exyz.py for more details"
                 echo " Code path: ${GPUMDkit_path}/Scripts/format_conversion/pos2exyz.py"
+            fi
+            ;;
+
+        -exyz2pos)
+            if [ ! -z "$2" ] ; then
+                echo " Calling script by Zihan YAN "
+                echo " Code path: ${GPUMDkit_path}/Scripts/format_conversion/exyz2pos.py"
+                python ${GPUMDkit_path}/Scripts/format_conversion/exyz2pos.py $2
+            else
+                echo " Missing argument"
+                echo " Usage: -exyz2pos model.xyz"
+                echo " See the source code of exyz2pos.py for more details"
+                echo " Code path: ${GPUMDkit_path}/Scripts/format_conversion/exyz2pos.py"
             fi
             ;;
 
