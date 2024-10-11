@@ -323,7 +323,7 @@ function help_info_table(){
     echo "| -outcar2exyz   Convert OUTCAR to extxyz       | -pos2exyz     Convert POSCAR to extxyz           |"
     echo "| -castep2exyz   Convert castep to extxyz       | -pos2lmp      Convert POSCAR to LAMMPS           |"
     echo "| -cp2k2exyz     Convert cp2k output to extxyz  | -lmp2exyz     Convert LAMMPS-dump to extxyz      |"
-    echo "| -addgroup     Add group label                | Developing...                                    |"
+    echo "| -addgroup     Add group label                 | Developing...                                    |"
     echo "+========================================= Analysis ===============================================+"
     echo "| -range         Print range of energy etc.     | -max_rmse     Get max RMSE from XYZ              |"
     echo "| -min_dist      Get min_dist between atoms     | -filter_dist  Filter struct by min_dist          |"

@@ -67,14 +67,14 @@ There are two options, <u>*interactive mode*</u> and <u>*command-line mode*</u>
 
     ```
             ____ ____  _   _ __  __ ____  _    _ _
-            / ___|  _ \| | | |  \/  |  _ \| | _(_) |_
-            | |  _| |_) | | | | |\/| | | | | |/ / | __|
-            | |_| |  __/| |_| | |  | | |_| |   <| | |_
-            \____|_|    \___/|_|  |_|____/|_|\_\_|\__|
-
-            GPUMDkit Version 0.0.1 (dev) (2024-10-11)
-            Developer: Zihan YAN (yanzihan@westlake.edu.cn)
-
+           / ___|  _ \| | | |  \/  |  _ \| | _(_) |_
+          | |  _| |_) | | | | |\/| | | | | |/ / | __|
+          | |_| |  __/| |_| | |  | | |_| |   <| | |_
+           \____|_|    \___/|_|  |_|____/|_|\_\_|\__|
+    
+          GPUMDkit Version 0.0.1 (dev) (2024-10-11)
+          Developer: Zihan YAN (yanzihan@westlake.edu.cn)
+    
     ----------------------- GPUMD -----------------------
     1) Format Conversion          2) Sample Structures
     3) Workflow (dev)             4) Developing ...
