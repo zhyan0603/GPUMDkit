@@ -4,7 +4,7 @@
 # export GPUMD_path=/d/Westlake/GPUMD
 # export GPUMDkit_path=/d/Westlake/Gpumdkit
 
-VERSION="0.0.1 (dev) (2024-09-24)"
+VERSION="0.0.1 (dev) (2024-10-11)"
 
 function f1_format_conversion(){
 echo " ------------>>"
@@ -602,6 +602,19 @@ if [ ! -z "$1" ]; then
                 echo " Usage: -filter_value <exyzfile> <property> <value>"
                 echo " See the source code of filter_exyz_by_value.py for more details"
                 echo " Code path: ${GPUMDkit_path}/Scripts/analyzer/filter_exyz_by_value.py"
+            fi
+            ;;
+
+        -get_frame)
+            if [ ! -z "$2" ] && [ ! -z "$3" ] ; then
+                echo " Calling script by Zihan YAN "
+                echo " Code path: ${GPUMDkit_path}/Scripts/format_conversion/get_frame.py"
+                python ${GPUMDkit_path}/Scripts/format_conversion/get_frame.py $2 $3
+            else
+                echo " Missing argument"
+                echo " Usage: -get_frame <exyzfile> <frame_index>"
+                echo " See the source code of get_frame.py for more details"
+                echo " Code path: ${GPUMDkit_path}/Scripts/format_conversion/get_frame.py"
             fi
             ;;
 
