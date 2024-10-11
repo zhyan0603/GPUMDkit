@@ -49,9 +49,104 @@ To install `GPUMDkit`, follow these steps:
     
 
 ## Usage
-Refer to the [Usage Instructions](./Tutorials/README.md) for detailed examples and command options.
+There are two options, <u>*interactive mode*</u> and <u>*command-line mode*</u>
+
+#### Interactive Mode
+
+---
+
+1. Open your terminal.
+
+2. Execute the `gpumdkit.sh` script:
+
+   ```
+   gpumdkit.sh
+   ```
+
+3. Follow the on-screen prompts to interactively select and run the desired script.
+
+    ```
+            ____ ____  _   _ __  __ ____  _    _ _
+            / ___|  _ \| | | |  \/  |  _ \| | _(_) |_
+            | |  _| |_) | | | | |\/| | | | | |/ / | __|
+            | |_| |  __/| |_| | |  | | |_| |   <| | |_
+            \____|_|    \___/|_|  |_|____/|_|\_\_|\__|
+
+            GPUMDkit Version 0.0.1 (dev) (2024-10-11)
+            Developer: Zihan YAN (yanzihan@westlake.edu.cn)
+
+    ----------------------- GPUMD -----------------------
+    1) Format Conversion          2) Sample Structures
+    3) Workflow (dev)             4) Developing ...
+    0) Quit!
+    ------------>>
+    Input the function number:
+    ```
 
 
+
+#### Command-Line Mode
+
+----
+
+For users familiar with the `GPUMDkit` , the command-line mode allows for faster execution by directly passing arguments to `gpumdkit.sh`. Here are some examples:
+
+##### Example 1: View help information
+
+```
+gpumdkit.sh -h
+```
+
+the help information:
+
+```
++==================================================================================================+
+|                              GPUMDkit 0.0.1 (dev) (2024-10-11) Usage                             |
+|                                                                                                  |
++======================================== Conversions =============================================+
+| -outcar2exyz   Convert OUTCAR to extxyz       | -pos2exyz     Convert POSCAR to extxyz           |
+| -castep2exyz   Convert castep to extxyz       | -pos2lmp      Convert POSCAR to LAMMPS           |
+| -cp2k2exyz     Convert cp2k output to extxyz  | -lmp2exyz     Convert LAMMPS-dump to extxyz      |
+| -addgroup     Add group label                 | Developing...                                    |
++========================================= Analysis ===============================================+
+| -range         Print range of energy etc.     | -max_rmse     Get max RMSE from XYZ              |
+| -min_dist      Get min_dist between atoms     | -filter_dist  Filter struct by min_dist          |
+| -filter_box    Filter struct by box limits    | Developing...                                    |
++=========================================    Misc  ==============+================================+
+| -plt           Plot scripts                   | -get_frame     Extract the specified frame       |
+| -h, -help      Show this help message         | Developing...                                    |
++==================================================================================================+
+| For detailed usage and examples, use: gpumdkit.sh -<option> -h                                   |
++==================================================================================================+
+```
+
+##### Example 2: Convert VASP OUTCARs to extxyz
+
+To convert a `VASP` `OUTCARs` to an extended XYZ format (`extxyz`) file, use the following command:
+
+```
+gpumdkit.sh -out2xyz <dir_of_OUTCARs>
+
+Exp: gpumdkit.sh -out2xyz .
+```
+
+##### Example 3: Plot thermo evolution
+
+To visualize `thermo` evolution from `thermo.out` :
+
+```
+gpumdkit.sh -plt thermo
+```
+
+You can also save images as PNG if your device doesn't support visualization:
+
+```
+gpumdkit.sh -plt thermo save
+```
+
+
+
+Refer to the [Usage Instructions](./Tutorials/README.md) for more detailed examples and command options.
 
 ---
 
