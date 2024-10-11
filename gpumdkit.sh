@@ -314,71 +314,37 @@ function main(){
     echo " Thank you for using GPUMDkit. Have a great day!"
 }
 
-
 ######### Custom functional area ###############
-function help_info(){
-echo " GPUMDkit ${VERSION}"
-echo " Usage: gpumdkit.sh -[options]"
-echo " Options:
-    -plt            Plot Scripts
-                    Usage: -plt thermo/train/prediction/msd [save]
-                      Examp: gpumdkit.sh -plt thermo save
-
-    -range          Analysis exyz, print range of energy, force, virial
-                    Usage: -range  <exyzfile> <property> [hist]
-                      Examp: gpumdkit.sh -range train.xyz energy hist
-
-    -outcar2exyz    Convert OUTCAR to nep-exyz file
-                    Usage: -outcar2exyz dir_name
-                      Examp: gpumdkit.sh -outcar2exyz .
-
-    -castep2exyz    Convert castep to nep-exyz file
-                    Usage: -castep2exyz dir_name
-                      Examp: gpumdkit.sh -castep2exyz .
-
-    -cp2k2exyz      Convert cp2k output to nep-exyz file
-                    Usage: -cp2k2exyz dir_name
-                      Examp: gpumdkit.sh -cp2k2exyz .
-
-    -pos2exyz       Convert POSCAR to extxyz file
-                    Usage: -pos2exyz <POSCAR_filename> <extxyz_filename>
-                      Examp: gpumdkit.sh -pos2exyz POSCAR model.xyz
-
-    -pos2lmp        Convert POSCAR to lammps-data file
-                    Usage: -pos2lmp <POSCAR_filename> <lammps_data_filename>
-                      Examp: gpumdkit.sh -pos2lmp POSCAR lammps.data                                            
-
-    -lmp2exyz       Convert lammps-dump to extxyz file
-                    Usage: -lmp2exyz <dump_file> <element1> <element2> ...
-                      Examp: gpumdkit.sh -lmp2exyz data.dump Bi O  
-
-    -addgroup       Convert POSCAR to extxyz file and add group by element type
-                    Usage: -addgroup <POSCAR> <element1> <element2> ...
-                      Examp: gpumdkit.sh -addgroup POSCAR Bi O  
-
-    -max_rmse       get_max_rmse_xyz
-                    Usage: -max_rmse train.xyz force_train.out 13
-
-    -min_dist       Get the minimum distance of any two atoms
-                    Usage: -min_dist <exyzfile>
-
-    -filter_dist    Filter structures by distance
-                    Usage: -filter_dist <exyzfile> <min_dist>
-
-    -filter_box     Filter structures by distance
-                    Usage: -filter_box <exyzfile> <lattice_limit>
-
-    -h,-help    Show this help message"
+function help_info_table(){
+    echo "+==================================================================================================+"
+    echo "|                              GPUMDkit ${VERSION} Usage                             |"
+    echo "|                                                                                                  |"
+    echo "+======================================== Conversions =============================================+"
+    echo "| -outcar2exyz   Convert OUTCAR to extxyz       | -pos2exyz     Convert POSCAR to extxyz           |"
+    echo "| -castep2exyz   Convert castep to extxyz       | -pos2lmp      Convert POSCAR to LAMMPS           |"
+    echo "| -cp2k2exyz     Convert cp2k output to extxyz  | -lmp2exyz     Convert LAMMPS-dump to extxyz      |"
+    echo "| -addgroup     Add group label                | Developing...                                    |"
+    echo "+========================================= Analysis ===============================================+"
+    echo "| -range         Print range of energy etc.     | -max_rmse     Get max RMSE from XYZ              |"
+    echo "| -min_dist      Get min_dist between atoms     | -filter_dist  Filter struct by min_dist          |"
+    echo "| -filter_box    Filter struct by box limits    | Developing...                                    |"
+    echo "+=========================================    Misc  ==============+================================+"
+    echo "| -plt           Plot scripts                   | -get_frame     Extract the specified frame       |"
+    echo "| -h, -help      Show this help message         | Developing...                                    |"
+    echo "+==================================================================================================+"
+    echo "| For detailed usage and examples, use: gpumdkit.sh -<option> -h                                   |"
+    echo "+==================================================================================================+"
 }
+
 
 if [ ! -z "$1" ]; then
     case $1 in
         -h|-help)
-            help_info
+            help_info_table
             ;;
 
         -plt)
-            if [ ! -z "$2" ] ; then
+            if [ ! -z "$2" ] && [ "$2" != "-h" ]; then
                 case $2 in
                     "thermo")
                         python ${GPUMDkit_path}/Scripts/plt_scripts/plt_nep_thermo.py $3
@@ -396,26 +362,24 @@ if [ ! -z "$1" ]; then
                         python ${GPUMDkit_path}/Scripts/plt_scripts/plt_vac.py $3
                         ;;                
                     *)
-                        echo "You need to specify a valid option"
-                        echo "gpumdkit.sh -h for help information"
+                        echo "Usage: -plt thermo/train/prediction/msd/vac [save]"
+                        echo "Examp: gpumdkit.sh -plt thermo save"
                         exit 1
                         ;;
                 esac
             else
-                echo " Missing argument"
-                echo " Usage: -plt thermo/train/prediction (eg. gpumdkit.sh -plt thermo)"
+                echo " Usage: -plt thermo/train/prediction/msd/vac [save] (eg. gpumdkit.sh -plt thermo)"
                 echo " See the codes in plt_scripts for more details"
                 echo " Code path: ${GPUMDkit_path}/Scripts/plt_scripts"
             fi
             ;;
 
         -range)
-            if [ ! -z "$2" ] && [ ! -z "$3" ] ; then
+            if [ ! -z "$2" ] && [ ! -z "$3" ] && [ "$2" != "-h" ]  ; then
                 echo " Calling script by Zihan YAN. "
                 echo " Code path: ${GPUMDkit_path}/Scripts/analyzer/energy_force_virial_analyzer.py"
                 python ${GPUMDkit_path}/Scripts/analyzer/energy_force_virial_analyzer.py $2 $3 ${@:4}
             else
-                echo " Missing argument"
                 echo " Usage: -range <exyzfile> <property> [hist] (eg. gpumdkit.sh -range train.xyz energy hist)" 
                 echo " See the source code of energy_force_virial_analyzer.py for more details"
                 echo " Code path: Code path: ${GPUMDkit_path}/Scripts/analyzer/energy_force_virial_analyzer.py"
@@ -423,12 +387,11 @@ if [ ! -z "$1" ]; then
             ;;
 
         -out2xyz|-outcar2exyz)
-            if [ ! -z "$2" ]; then
+            if [ ! -z "$2" ] && [ "$2" != "-h" ] ; then
                 echo " Calling script by Yanzhou WANG et al. "
                 echo " Code path: ${GPUMD_path}/tools/vasp2xyz/outcar2xyz/multipleFrames-outcars2nep-exyz.sh"
                 bash ${GPUMD_path}/tools/vasp2xyz/outcar2xyz/multipleFrames-outcars2nep-exyz.sh $2
             else
-                echo " Missing argument"
                 echo " Usage: -out2xyz|-outcar2exyz dir_name (eg. gpumdkit.sh -outcar2exyz .)"
                 echo " See the source code of multipleFrames-outcars2nep-exyz.sh for more details"
                 echo " Code path: ${GPUMD_path}/tools/vasp2xyz/outcar2xyz/multipleFrames-outcars2nep-exyz.sh"
@@ -436,12 +399,11 @@ if [ ! -z "$1" ]; then
             ;;
 
         -cast2xyz|-castep2exyz)
-            if [ ! -z "$2" ]; then
+            if [ ! -z "$2" ] && [ "$2" != "-h" ] ; then
                 echo " Calling script by Yanzhou WANG et al. "
                 echo " Code path: ${GPUMD_path}/tools/castep2exyz/castep2nep-exyz.sh"
                 bash ${GPUMD_path}/tools/castep2exyz/castep2nep-exyz.sh $2
             else
-                echo " Missing argument"
                 echo " Usage: -cast2xyz|-castep2exyz dir_name (eg. gpumdkit.sh -castep2exyz .)"
                 echo " See the source code of castep2nep-exyz.sh for more details"
                 echo " Code path: ${GPUMD_path}/tools/castep2exyz/castep2nep-exyz.sh"
@@ -449,12 +411,11 @@ if [ ! -z "$1" ]; then
             ;;
 
         -cp2k2xyz|-cp2k2exyz)
-            if [ ! -z "$2" ]; then
+            if [ ! -z "$2" ] && [ "$2" != "-h" ] ; then
                 echo " Calling script by Ke XU et al. "
                 echo " Code path: ${GPUMD_path}/tools/cp2k2xyz/cp2k2xyz.py"
                 python ${GPUMD_path}/tools/cp2k2xyz/cp2k2xyz.py $2
             else
-                echo " Missing argument"
                 echo " Usage: -cp2k2xyz|-cp2k2exyz dir_name (eg. gpumdkit.sh -cp2k2exyz .)"
                 echo " See the source code of cp2k2xyz.py for more details"
                 echo " Code path: ${GPUMD_path}/tools/cp2k2xyz/cp2k2xyz.py"
@@ -462,12 +423,11 @@ if [ ! -z "$1" ]; then
             ;;
 
         -mtp2xyz|-mtp2exyz)
-            if [ ! -z "$2" ]; then
+            if [ ! -z "$2" ] && [ "$2" != "-h" ] ; then
                 echo " Calling script by Ke XU et al. "
                 echo " Code path: ${GPUMD_path}/tools/mtp2xyz/mtp2xyz.py"
                 python ${GPUMD_path}/tools/mtp2xyz/mtp2xyz.py train.cfg $2 ${@:3}
             else
-                echo " Missing argument"
                 echo " Usage: -mtp2xyz|-mtp2exyz train.cfg Symbol1 Symbol2 Symbol3 ..."
                 echo "   Examp: gpumdkit.sh -mtp2exyz train.cfg Pd Ag"
                 echo " See the source code of mtp2xyz.py for more details"
@@ -476,12 +436,11 @@ if [ ! -z "$1" ]; then
             ;;
 
         -pos2exyz)
-            if [ ! -z "$2" ] && [ ! -z "$3" ] ; then
+            if [ ! -z "$2" ] && [ ! -z "$3" ] && [ "$2" != "-h" ] ; then
                 echo " Calling script by Zihan YAN "
                 echo " Code path: ${GPUMDkit_path}/Scripts/format_conversion/pos2exyz.py"
                 python ${GPUMDkit_path}/Scripts/format_conversion/pos2exyz.py $2 $3
             else
-                echo " Missing argument"
                 echo " Usage: -pos2exyz POSCAR model.xyz"
                 echo " See the source code of pos2exyz.py for more details"
                 echo " Code path: ${GPUMDkit_path}/Scripts/format_conversion/pos2exyz.py"
@@ -489,12 +448,11 @@ if [ ! -z "$1" ]; then
             ;;
 
         -exyz2pos)
-            if [ ! -z "$2" ] ; then
+            if [ ! -z "$2" ] && [ "$2" != "-h" ] ; then
                 echo " Calling script by Zihan YAN "
                 echo " Code path: ${GPUMDkit_path}/Scripts/format_conversion/exyz2pos.py"
                 python ${GPUMDkit_path}/Scripts/format_conversion/exyz2pos.py $2
             else
-                echo " Missing argument"
                 echo " Usage: -exyz2pos model.xyz"
                 echo " See the source code of exyz2pos.py for more details"
                 echo " Code path: ${GPUMDkit_path}/Scripts/format_conversion/exyz2pos.py"
@@ -502,12 +460,11 @@ if [ ! -z "$1" ]; then
             ;;
 
         -pos2lmp)
-            if [ ! -z "$2" ] && [ ! -z "$3" ] ; then
+            if [ ! -z "$2" ] && [ "$2" != "-h" ] && [ ! -z "$3" ] ; then
                 echo " Calling script by Zihan YAN "
                 echo " Code path: ${GPUMDkit_path}/Scripts/format_conversion/pos2lmp.py"
                 python ${GPUMDkit_path}/Scripts/format_conversion/pos2lmp.py $2 $3
             else
-                echo " Missing argument"
                 echo " Usage: -pos2lmp POSCAR lammps.data"
                 echo " See the source code of pos2lmp.py for more details"
                 echo " Code path: ${GPUMDkit_path}/Scripts/format_conversion/pos2lmp.py"
@@ -515,12 +472,11 @@ if [ ! -z "$1" ]; then
             ;;
 
         -lmp2exyz|-lmpdump2exyz)
-            if [ ! -z "$2" ] && [ ! -z "$3" ] ; then
+            if [ ! -z "$2" ] && [ "$2" != "-h" ] && [ ! -z "$3" ] ; then
                 echo " Calling script by Zihan YAN "
                 echo " Code path: ${GPUMDkit_path}/Scripts/format_conversion/lmp2exyz.py"
                 python ${GPUMDkit_path}/Scripts/format_conversion/lmp2exyz.py $2 ${@:3}
             else
-                echo " Missing argument"
                 echo " Usage: -lmp2exyz <dump_file> <element1> <element2> ..."
                 echo " See the source code of lmp2exyz.py for more details"
                 echo " Code path: ${GPUMDkit_path}/Scripts/format_conversion/lmp2exyz.py"
@@ -528,12 +484,11 @@ if [ ! -z "$1" ]; then
             ;;
 
         -addgroup|-addlabel)
-            if [ ! -z "$2" ] && [ ! -z "$3" ] ; then
+            if [ ! -z "$2" ] && [ "$2" != "-h" ] && [ ! -z "$3" ] ; then
                 echo " Calling script by Zihan YAN "
                 echo " Code path: ${GPUMDkit_path}/Scripts/format_conversion/add_groups.py"
                 python ${GPUMDkit_path}/Scripts/format_conversion/add_groups.py $2 ${@:3}
             else
-                echo " Missing argument"
                 echo " Usage: -addgroup <POSCAR> <element1> <element2> ..."
                 echo " See the source code of add_groups.py for more details"
                 echo " Code path: ${GPUMDkit_path}/Scripts/format_conversion/add_groups.py"
@@ -541,12 +496,11 @@ if [ ! -z "$1" ]; then
             ;;
 
         -max_rmse|-get_max_rmse_xyz)
-            if [ ! -z "$2" ] && [ ! -z "$3" ] && [ ! -z "$4" ]; then
+            if [ ! -z "$2" ] && [ "$2" != "-h" ] && [ ! -z "$3" ] && [ ! -z "$4" ]; then
                 echo " Calling script by Ke XU "
                 echo " Code path: ${GPUMD_path}/tools/get_max_rmse_xyz/get_max_rmse_xyz.py"
                 python ${GPUMD_path}/tools/get_max_rmse_xyz/get_max_rmse_xyz.py $2 $3 $4
             else
-                echo " Missing argument"
                 echo " Usage: -getmax|-get_max_rmse_xyz train.xyz force_train.out 13"
                 echo " See the source code of get_max_rmse_xyz.py for more details"
                 echo " Code path: ${GPUMD_path}/tools/get_max_rmse_xyz/get_max_rmse_xyz.py"
@@ -554,12 +508,11 @@ if [ ! -z "$1" ]; then
             ;;
 
         -min_dist)
-            if [ ! -z "$2" ] ; then
+            if [ ! -z "$2" ] && [ "$2" != "-h" ]; then
                 echo " Calling script by Zihan YAN "
                 echo " Code path: ${GPUMDkit_path}/Scripts/sample_structures/get_min_dist.py"
                 python ${GPUMDkit_path}/Scripts/sample_structures/get_min_dist.py $2
             else
-                echo " Missing argument"
                 echo " Usage: -min_dist <exyzfile>"
                 echo " See the source code of get_min_dist.py for more details"
                 echo " Code path: ${GPUMDkit_path}/Scripts/sample_structures/get_min_dist.py"
@@ -567,12 +520,11 @@ if [ ! -z "$1" ]; then
             ;;
 
         -filter_dist)
-            if [ ! -z "$2" ] && [ ! -z "$3" ]; then
+            if [ ! -z "$2" ] && [ "$2" != "-h" ] && [ ! -z "$3" ]; then
                 echo " Calling script by Zihan YAN "
                 echo " Code path: ${GPUMDkit_path}/Scripts/sample_structures/filter_structures_by_distance.py"
                 python ${GPUMDkit_path}/Scripts/sample_structures/filter_structures_by_distance.py $2 $3
             else
-                echo " Missing argument"
                 echo " Usage: -filter_xyz <exyzfile> <min_dist>"
                 echo " See the source code of filter_structures_by_distance.py for more details"
                 echo " Code path: ${GPUMDkit_path}/Scripts/sample_structures/filter_structures_by_distance.py"
@@ -580,12 +532,11 @@ if [ ! -z "$1" ]; then
             ;;
 
         -filter_box)
-            if [ ! -z "$2" ] && [ ! -z "$3" ] ; then
+            if [ ! -z "$2" ] && [ "$2" != "-h" ] && [ ! -z "$3" ] ; then
                 echo " Calling script by Zihan YAN "
                 echo " Code path: ${GPUMDkit_path}/Scripts/analyzer/filter_exyz_by_box.py"
                 python ${GPUMDkit_path}/Scripts/analyzer/filter_exyz_by_box.py $2 $3
             else
-                echo " Missing argument"
                 echo " Usage: -filter_box <exyzfile> <lattice limit>"
                 echo " See the source code of filter_exyz_by_box.py for more details"
                 echo " Code path: ${GPUMDkit_path}/Scripts/analyzer/filter_exyz_by_box.py"
@@ -593,12 +544,11 @@ if [ ! -z "$1" ]; then
             ;;
 
         -filter_value)
-            if [ ! -z "$2" ] && [ ! -z "$3" ] ; then
+            if [ ! -z "$2" ] && [ "$2" != "-h" ] && [ ! -z "$3" ] ; then
                 echo " Calling script by Zihan YAN "
                 echo " Code path: ${GPUMDkit_path}/Scripts/analyzer/filter_exyz_by_value.py"
                 python ${GPUMDkit_path}/Scripts/analyzer/filter_exyz_by_value.py $2 $3 $4
             else
-                echo " Missing argument"
                 echo " Usage: -filter_value <exyzfile> <property> <value>"
                 echo " See the source code of filter_exyz_by_value.py for more details"
                 echo " Code path: ${GPUMDkit_path}/Scripts/analyzer/filter_exyz_by_value.py"
@@ -606,12 +556,11 @@ if [ ! -z "$1" ]; then
             ;;
 
         -get_frame)
-            if [ ! -z "$2" ] && [ ! -z "$3" ] ; then
+            if [ ! -z "$2" ] && [ "$2" != "-h" ] && [ ! -z "$3" ] ; then
                 echo " Calling script by Zihan YAN "
                 echo " Code path: ${GPUMDkit_path}/Scripts/format_conversion/get_frame.py"
                 python ${GPUMDkit_path}/Scripts/format_conversion/get_frame.py $2 $3
             else
-                echo " Missing argument"
                 echo " Usage: -get_frame <exyzfile> <frame_index>"
                 echo " See the source code of get_frame.py for more details"
                 echo " Code path: ${GPUMDkit_path}/Scripts/format_conversion/get_frame.py"
@@ -620,7 +569,7 @@ if [ ! -z "$1" ]; then
 
         *)
             echo " Unknown option: $1 "
-            help_info
+            help_info_table
             exit 1
             ;;
     esac
