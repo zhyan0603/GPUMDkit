@@ -44,7 +44,7 @@ des_sample = np.array(des_sample)
 des_train = []
 for i in range(total_train):
     des_train.append(np.mean(calc.get_property('descriptor', traindata[i]), axis=0))
-    print_progress_bar(i + 1, total_train, prefix=' Processing traindata:', suffix='Complete', length=50)
+    print_progress_bar(i + 1, total_train, prefix=' Processing traindata: ', suffix='Complete', length=50)
 #des_train = np.load('des_train.npy')
 des_train = np.array(des_train)
 #np.save('des_train.npy', des_train)

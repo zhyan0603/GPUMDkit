@@ -4,7 +4,7 @@
 # export GPUMD_path=/d/Westlake/GPUMD
 # export GPUMDkit_path=/d/Westlake/Gpumdkit
 
-VERSION="0.0.1 (dev) (2024-10-11)"
+VERSION="0.0.1 (dev) (2024-10-14)"
 
 function f1_format_conversion(){
 echo " ------------>>"
@@ -323,7 +323,8 @@ function help_info_table(){
     echo "| -outcar2exyz   Convert OUTCAR to extxyz       | -pos2exyz     Convert POSCAR to extxyz           |"
     echo "| -castep2exyz   Convert castep to extxyz       | -pos2lmp      Convert POSCAR to LAMMPS           |"
     echo "| -cp2k2exyz     Convert cp2k output to extxyz  | -lmp2exyz     Convert LAMMPS-dump to extxyz      |"
-    echo "| -addgroup     Add group label                 | Developing...                                    |"
+    echo "| -addgroup      Add group label                | -addweight    Add weight to the struct in extxyz |"
+    echo "| Developing...                                 | Developing...                                    |"
     echo "+========================================= Analysis ===============================================+"
     echo "| -range         Print range of energy etc.     | -max_rmse     Get max RMSE from XYZ              |"
     echo "| -min_dist      Get min_dist between atoms     | -filter_dist  Filter struct by min_dist          |"
@@ -492,6 +493,18 @@ if [ ! -z "$1" ]; then
                 echo " Usage: -addgroup <POSCAR> <element1> <element2> ..."
                 echo " See the source code of add_groups.py for more details"
                 echo " Code path: ${GPUMDkit_path}/Scripts/format_conversion/add_groups.py"
+            fi
+            ;;
+
+        -addweight)
+            if [ ! -z "$2" ] && [ "$2" != "-h" ] && [ ! -z "$3" ] && [ ! -z "$4" ]; then
+                echo " Calling script by Zihan YAN "
+                echo " Code path: ${GPUMDkit_path}/Scripts/format_conversion/add_weight.py"
+                python ${GPUMDkit_path}/Scripts/format_conversion/add_weight.py $2 $3 $4
+            else
+                echo " Usage: -addweight <input.xyz> <output.xyz> <weight> "
+                echo " See the source code of add_groups.py for more details"
+                echo " Code path: ${GPUMDkit_path}/Scripts/format_conversion/add_weight.py"
             fi
             ;;
 
