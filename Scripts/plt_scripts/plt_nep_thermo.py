@@ -14,9 +14,23 @@ potential_energy = data[:, 2]
 pressure_x = data[:, 3]
 pressure_y = data[:, 4]
 pressure_z = data[:, 5]
-box_length_x = data[:, 9]
-box_length_y = data[:, 10]
-box_length_z = data[:, 11]
+
+num_columns = data.shape[1]
+
+if num_columns == 12:
+    box_length_x = data[:, 9]
+    box_length_y = data[:, 10]
+    box_length_z = data[:, 11]
+elif num_columns == 18:
+    ax, ay, az = data[:, 9], data[:, 10], data[:, 11]
+    bx, by, bz = data[:, 12], data[:, 13], data[:, 14]
+    cx, cy, cz = data[:, 15], data[:, 16], data[:, 17]
+    
+    box_length_x = np.sqrt(ax**2 + ay**2 + az**2)
+    box_length_y = np.sqrt(bx**2 + by**2 + bz**2)
+    box_length_z = np.sqrt(cx**2 + cy**2 + cz**2)
+else:
+    raise ValueError("Unsupported number of columns in thermo.out. Expected 12 or 18.")
 
 # subplot
 fig, axs = plt.subplots(2, 2, figsize=(11, 7.5), dpi=100)
