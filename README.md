@@ -107,7 +107,8 @@ the help information:
 | -outcar2exyz   Convert OUTCAR to extxyz       | -pos2exyz     Convert POSCAR to extxyz           |
 | -castep2exyz   Convert castep to extxyz       | -pos2lmp      Convert POSCAR to LAMMPS           |
 | -cp2k2exyz     Convert cp2k output to extxyz  | -lmp2exyz     Convert LAMMPS-dump to extxyz      |
-| -addgroup     Add group label                 | Developing...                                    |
+| -addgroup      Add group label                | -addweight    Add weight to the struct in extxyz |
+| Developing...                                 | Developing...                                    |
 +========================================= Analysis ===============================================+
 | -range         Print range of energy etc.     | -max_rmse     Get max RMSE from XYZ              |
 | -min_dist      Get min_dist between atoms     | -filter_dist  Filter struct by min_dist          |
