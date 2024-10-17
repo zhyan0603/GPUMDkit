@@ -84,13 +84,13 @@ ln -s ${work_dir}/common/{train.xyz,nep.txt} ${work_dir}/01.select
 cat sample_*/dump.xyz >> ${work_dir}/01.select/modev_sampled_structs.xyz
 
 echo $(date -d "2 second" +"%Y-%m-%d %H:%M:%S") "Analysis the min_dist in modev_sampled_structs.xyz" 
-actual_min_dist=$(python ${GPUMDkit_path}/Scripts/sample_structures/get_min_dist.py ${work_dir}/01.select/modev_sampled_structs.xyz | awk '{print $4}')
+actual_min_dist=$(python ${GPUMDkit_path}/Scripts/analyzer/get_min_dist.py ${work_dir}/01.select/modev_sampled_structs.xyz | awk '{print $4}')
 
 if [ $(awk 'BEGIN {print ('$actual_min_dist' < '$min_dist')}') -eq 1 ]; then
     echo "The actual minimum distance ($actual_min_dist) between two atoms is less than the specified value ($min_dist)."
     echo "Filtering the structs based on the min_dist you specified."
     cd ${work_dir}/01.select
-    python ${GPUMDkit_path}/Scripts/sample_structures/filter_structures_by_distance.py modev_sampled_structs.xyz ${min_dist}
+    python ${GPUMDkit_path}/Scripts/analyzer/filter_structures_by_distance.py modev_sampled_structs.xyz ${min_dist}
     echo $(date -d "2 second" +"%Y-%m-%d %H:%M:%S") "Analysis the box in modev_sampled_structs.xyz" 
     mv filtered_modev_sampled_structs.xyz modev_sampled_structs.xyz
     python ${GPUMDkit_path}/Scripts/analyzer/filter_exyz_by_box.py modev_sampled_structs.xyz ${box_limit}

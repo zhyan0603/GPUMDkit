@@ -7,8 +7,10 @@ This script provides a menu-driven interface to perform various tasks related to
 ```sh
 ------------>>
 201) Sample structures from extxyz
-202) Find the outliers in training set
-203) Developing ... 
+202) Sample structures by pynep
+203) Find the outliers in training set
+204) Perturb structure
+205) Developing ...
 000) Return to the main menu
 ------------>>
 Input the function number:
@@ -46,14 +48,53 @@ This option allows you to sample structures from an `extxyz` file using a specif
 
 4. The script `sample_structures.py` in the `Scripts` will be called to perform the sampling.
 
-### Option 202: Find the outliers in training set
+### Option 202: Sample structures by pynep
 
-This function calls the `get_max_rmse_xyz.py` script to find outliers in a training set.
+This function calls the `pynep_select_structs.py` in the `Scripts/sample_structures` to sampling the structures by `pynep`.
 
 1. Select option `202` from the menu:
 
    ```sh
    202
+   ```
+
+2. You will see the following prompt:
+
+   ```sh
+   >-------------------------------------------------<
+   | This function calls the script in Scripts       |
+   | Script: pynep_select_structs.py                 |
+   | Developer: Zihan YAN (yanzihan@westlake.edu.cn) |
+   >-------------------------------------------------<
+   Input <sample.xyz> <train.xyz> <nep_model> <min_dist>
+   Examp: dump.xyz train.xyz ./nep.txt 0.01
+   ------------>>
+   ```
+
+   `<samle.xyz>`: extxyz file
+
+   `<train.xyz>`: `train.xyz`
+
+   `<nep_model>`: `nep.txt`
+
+   `<min_dist>`: min_dist for pynep sampling
+
+3. Enter the following parameters:
+
+   ```sh
+   dump.xyz train.xyz nep.txt 0.01
+   ```
+
+
+
+### Option 203: Find the outliers in training set
+
+This function calls the `get_max_rmse_xyz.py` script to find outliers in a training set.
+
+1. Select option `203` from the menu:
+
+   ```sh
+   203
    ```
 
 2. You will see the following prompt:
@@ -83,14 +124,14 @@ This function calls the `get_max_rmse_xyz.py` script to find outliers in a train
 
 4. The script `sample_structures.py` in the `Scripts` will be called to perform the sampling.
 
-### Option 203: Perturb structure
+### Option 204: Perturb structure
 
 This function calls the `perturb_structure.py` script to generate the perturbed structures.
 
-1. Select option `203` from the menu:
+1. Select option `204` from the menu:
 
    ```sh
-   203
+   204
    ```
 
 2. You will see the following prompt:
@@ -102,8 +143,8 @@ This function calls the `perturb_structure.py` script to generate the perturbed 
    | Developer: Zihan YAN (yanzihan@westlake.edu.cn) |
    >-------------------------------------------------<
    Input <input.vasp> <pert_num> <cell_pert_fraction> <atom_pert_distance> <atom_pert_style>
-   The default paramters for perturb are 20 0.03 0.2 normal
-   Examp: FAPbI3.vasp 20 0.03 0.2 normal
+   The default paramters for perturb are 20 0.03 0.2 uniform
+   Examp: POSCAR 20 0.03 0.2 normal
    ------------>>
    ```
 
@@ -117,15 +158,17 @@ This function calls the `perturb_structure.py` script to generate the perturbed 
 
    `<atom_pert_style>`: `<uniform>`, `<normal>`, `<const>`
 
-3. Enter the parameters:
+3. Enter your parameters like:
 
    ```sh
-   FAPbI3.vasp 20 0.03 0.2 normal
+   POSCAR 20 0.03 0.2 uniform
    ```
 
 4. The script `perturb_structure.py` in the `Scripts` will be called to perform the perturbation.
 
 
+
+---
 
 Thank you for using `GPUMDkit`! If you have any questions or need further assistance, feel free to open an issue on our GitHub repository or contact Zihan YAN (yanzihan@westlake.edu.cn).
 

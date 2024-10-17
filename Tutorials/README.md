@@ -14,11 +14,33 @@ Welcome to the `GPUMDkit` tutorials! This guide will help you get started with u
 ### Getting Started
 
 1. Open your terminal.
+
 2. Execute the `gpumdkit.sh` script:
     ```sh
     ./gpumdkit.sh
     ```
+    
 3. Follow the on-screen prompts to interactively select and run the desired script.
+
+    ```
+            ____ ____  _   _ __  __ ____  _    _ _
+           / ___|  _ \| | | |  \/  |  _ \| | _(_) |_
+          | |  _| |_) | | | | |\/| | | | | |/ / | __|
+          | |_| |  __/| |_| | |  | | |_| |   <| | |_
+           \____|_|    \___/|_|  |_|____/|_|\_\_|\__|
+    
+          GPUMDkit Version 0.0.1 (dev) (2024-10-11)
+          Developer: Zihan YAN (yanzihan@westlake.edu.cn)
+    
+    ----------------------- GPUMD -----------------------
+    1) Format Conversion          2) Sample Structures
+    3) Workflow (dev)             4) Developing ...
+    0) Quit!
+    ------------>>
+    Input the function number:
+    ```
+
+    
 
 This mode is useful for new users or for tasks that require step-by-step guidance.
 
@@ -37,29 +59,25 @@ gpumdkit.sh -h
 the help information:
 
 ```
- GPUMDkit 0.0.0 (dev) (2024-07-11)
- Usage: GPUMDkit -[options]
- Options:
-    -plt            Plot Scripts
-                    Usage: -plt thermo/train/prediction [save]
-                      Examp: gpumdkit.sh -plt thermo save
-                      
-    -outcar2exyz    Convert OUTCAR to nep-exyz file
-                    Usage: -outcar2exyz dir_name
-                      Examp: gpumdkit.sh -outcar2exyz .
-
-    -castep2exyz    Convert castep to nep-exyz file
-                    Usage: -castep2exyz dir_name
-                      Examp: gpumdkit.sh -castep2exyz .
-
-    -cp2k2exyz    Convert cp2k output to nep-exyz file
-                    Usage: -cp2k2exyz dir_name
-                      Examp: gpumdkit.sh -cp2k2exyz .
-
-    -max_rmse         get_max_rmse_xyz
-                    Usage: -getmax|-get_max_rmse_xyz train.xyz force_train.out 13
-
-    -h,-help    Show this help message
++==================================================================================================+
+|                              GPUMDkit 0.0.1 (dev) (2024-10-11) Usage                             |
+|                                                                                                  |
++======================================== Conversions =============================================+
+| -outcar2exyz   Convert OUTCAR to extxyz       | -pos2exyz     Convert POSCAR to extxyz           |
+| -castep2exyz   Convert castep to extxyz       | -pos2lmp      Convert POSCAR to LAMMPS           |
+| -cp2k2exyz     Convert cp2k output to extxyz  | -lmp2exyz     Convert LAMMPS-dump to extxyz      |
+| -addgroup      Add group label                | -addweight    Add weight to the struct in extxyz |
+| Developing...                                 | Developing...                                    |
++========================================= Analysis ===============================================+
+| -range         Print range of energy etc.     | -max_rmse     Get max RMSE from XYZ              |
+| -min_dist      Get min_dist between atoms     | -filter_dist  Filter struct by min_dist          |
+| -filter_box    Filter struct by box limits    | Developing...                                    |
++=========================================    Misc  ==============+================================+
+| -plt           Plot scripts                   | -get_frame     Extract the specified frame       |
+| -h, -help      Show this help message         | Developing...                                    |
++==================================================================================================+
+| For detailed usage and examples, use: gpumdkit.sh -<option> -h                                   |
++==================================================================================================+
 ```
 
 #### Example 2: Convert VASP OUTCARs to extxyz
@@ -86,7 +104,10 @@ For more detailed tutorials on specific functionalities, refer to the following 
 1. [Format Conversion](01_Tutorials_format_conversion.md): Detailed guide on `1) Format Conversion`.
 2. [Sample Structures](02_Tutorials_sample_structures.md): Detailed guide on `2) Sample Structures`.
 3. [Workflow Development](03_Tutorials_workflow_dev.md): Detailed guide on `3) Workflow (dev)`.
+3. [Activate Learning](Tutorials_workflow_activate_learning.md): Detailed guide on `Tutorial for workflow_activate_learning_dev.sh`.
 
 
+
+---
 
 Thank you for using `GPUMDkit`! If you have any questions or need further assistance, feel free to open an issue on our GitHub repository or contact Zihan YAN (yanzihan@westlake.edu.cn).

@@ -120,8 +120,7 @@ echo " 201) Sample structures from extxyz"
 echo " 202) Sample structures by pynep"
 echo " 203) Find the outliers in training set"
 echo " 204) Perturb structure"
-echo " 205) Filter structures by min dist"
-echo " 206) Developing ... "
+echo " 205) Developing ... "
 echo " 000) Return to the main menu"
 echo " ------------>>"
 echo " Input the function number:"
@@ -200,21 +199,6 @@ case $num_choice in
         echo " ---------------------------------------------------"
         ;;
     "205")
-        echo " >-------------------------------------------------<"
-        echo " | This function calls the script in Scripts       |"
-        echo " | Script: filter_structures_by_distance.py        |"
-        echo " | Developer: Zihan YAN (yanzihan@westlake.edu.cn) |"
-        echo " >-------------------------------------------------<"
-        echo " Input <extxyz_file> <min dist>"
-        echo " Examp: dump.xyz 1.2 "
-        echo " ------------>>"
-        read -p " " filter_choice
-        echo " ---------------------------------------------------"
-        python ${GPUMDkit_path}/Scripts/sample_structures/filter_structures_by_distance.py ${filter_choice}
-        echo " Code path: ${GPUMDkit_path}/Scripts/sample_structures/filter_structures_by_distance.py"
-        echo " ---------------------------------------------------"
-        ;;
-    "206")
         echo " Developing ... "
         ;;
     "000")
@@ -523,24 +507,24 @@ if [ ! -z "$1" ]; then
         -min_dist)
             if [ ! -z "$2" ] && [ "$2" != "-h" ]; then
                 echo " Calling script by Zihan YAN "
-                echo " Code path: ${GPUMDkit_path}/Scripts/sample_structures/get_min_dist.py"
-                python ${GPUMDkit_path}/Scripts/sample_structures/get_min_dist.py $2
+                echo " Code path: ${GPUMDkit_path}/Scripts/analyzer/get_min_dist.py"
+                python ${GPUMDkit_path}/Scripts/analyzer/get_min_dist.py $2
             else
                 echo " Usage: -min_dist <exyzfile>"
                 echo " See the source code of get_min_dist.py for more details"
-                echo " Code path: ${GPUMDkit_path}/Scripts/sample_structures/get_min_dist.py"
+                echo " Code path: ${GPUMDkit_path}/Scripts/analyzer/get_min_dist.py"
             fi
             ;;
 
         -filter_dist)
             if [ ! -z "$2" ] && [ "$2" != "-h" ] && [ ! -z "$3" ]; then
                 echo " Calling script by Zihan YAN "
-                echo " Code path: ${GPUMDkit_path}/Scripts/sample_structures/filter_structures_by_distance.py"
-                python ${GPUMDkit_path}/Scripts/sample_structures/filter_structures_by_distance.py $2 $3
+                echo " Code path: ${GPUMDkit_path}/Scripts/analyzer/filter_structures_by_distance.py"
+                python ${GPUMDkit_path}/Scripts/analyzer/filter_structures_by_distance.py $2 $3
             else
                 echo " Usage: -filter_xyz <exyzfile> <min_dist>"
                 echo " See the source code of filter_structures_by_distance.py for more details"
-                echo " Code path: ${GPUMDkit_path}/Scripts/sample_structures/filter_structures_by_distance.py"
+                echo " Code path: ${GPUMDkit_path}/Scripts/analyzer/filter_structures_by_distance.py"
             fi
             ;;
 

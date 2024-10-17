@@ -173,4 +173,6 @@ This option allows you to convert `extxyz` file to POSCAR.
 
 
 
+---
+
 Thank you for using `GPUMDkit`! If you have any questions or need further assistance, feel free to open an issue on our GitHub repository or contact Zihan YAN (yanzihan@westlake.edu.cn).

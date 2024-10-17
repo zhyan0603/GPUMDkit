@@ -1,21 +1,14 @@
-# Function3 - Workflow (dev)
+#### workflow_activate_learning_dev.sh
 
-This script provides a menu-driven interface to perform various tasks related to workflow.
+---
 
-### Menu Options
+See this [Tutorial](../../Tutorials/Tutorials_workflow_activate_learning.md) for running the workflow script.
 
-```sh
------------->>
-301) SCF batch pretreatment
-302) MD sample batch pretreatment (gpumd)
-303) MD sample batch pretreatment (lmp)
-304) Developing ... 
-000) Return to the main menu
------------->>
-Input the function number:
-```
 
-### Option 301: SCF batch pretreatment
+
+#### scf_batch_pretreatment.sh
+
+---
 
 This script automates the preprocessing of `POSCAR` or `extxyz` files for *self-consistent field* (`SCF`) calculations. The script includes the following steps:
 
@@ -27,13 +20,13 @@ This script automates the preprocessing of `POSCAR` or `extxyz` files for *self-
 #### Usage
 
 1. Prepare the environment:
-   
+
    Ensure all `.vasp` files or a single `.xyz` file are in the current directory.
 
-2. Select option `301` from the menu:
-   
+2. Enter:
+
    ```bash
-   301
+   bash scf_batch_pretreatment.sh
    ```
 
 3. You will see the following prompt: 
@@ -46,7 +39,7 @@ This script automates the preprocessing of `POSCAR` or `extxyz` files for *self-
     | Script: scf_batch_pretreatment.sh               |
     | Developer: Zihan YAN (yanzihan@westlake.edu.cn) |
     >-------------------------------------------------<
-
+   
     We recommend using the prefix to locate the structure.
     The folder name will be added to the second line of XYZ.
     config_type=<prefix>_<ID>
@@ -57,10 +50,10 @@ This script automates the preprocessing of `POSCAR` or `extxyz` files for *self-
 4. Enter the `prefix` of the folder name:
 
    ```sh
-   Li7La3Zr2O12_iter01
+   FAPBI3_iter01
    ```
 
-The script `scf_batch_pretreatment.sh` in the `Scripts` will be called to perform the pretreatment.
+​		The script `scf_batch_pretreatment.sh` in the `Scripts` will be called to perform the pretreatment.
 
  5. You will see the following prompts:
 
@@ -72,11 +65,14 @@ The script `scf_batch_pretreatment.sh` in the `Scripts` will be called to perfor
      >-----------------------------------------------------<
     ```
 
-    You need to prepare the `POTCAR`, `KPOINTS`, and `INCAR` files and place them in a directory named `fp`.
-    
-    
 
-### Option 302: MD sample batch pretreatment （gpumd）
+You need to prepare the `POTCAR`, `KPOINTS`, and `INCAR` files and place them in a directory named `fp`.
+
+
+
+#### md_sample_batch_pretreatment_gpumd.sh
+
+---
 
 This script automates the preprocessing of `POSCAR` or `extxyz` files for MD sampling using `GPUMD`. 
 
@@ -91,10 +87,10 @@ This script automates the preprocessing of `POSCAR` or `extxyz` files for MD sam
 
    Ensure all `.vasp` files or a single `.xyz` file are in the current directory.
 
-2. Select option `302` from the menu:
+2. Enter:
 
    ```bash
-   302
+   bash md_sample_batch_pretreatment_gpumd.sh
    ```
 
 3. You will see the following prompt: 
@@ -114,20 +110,20 @@ This script automates the preprocessing of `POSCAR` or `extxyz` files for MD sam
 
 4. You will see the following prompts:
 
+   ````
+   ```
+   >-----------------------------------------------<
+   ATTENTION: Place run.in and nep.txt in 'md' Dir. 
+   ATTENTION: Place run.in and nep.txt in 'md' Dir. 
+   ATTENTION: Place run.in and nep.txt in 'md' Dir. 
+   >-----------------------------------------------<
+   ```
+   ````
 
-    ```
-    >-----------------------------------------------<
-    ATTENTION: Place run.in and nep.txt in 'md' Dir. 
-    ATTENTION: Place run.in and nep.txt in 'md' Dir. 
-    ATTENTION: Place run.in and nep.txt in 'md' Dir. 
-    >-----------------------------------------------<
-    ```
-    
-    You need to prepare the `run.in` and`nep.txt` files and place them in a directory named `md`.
+You need to prepare the `run.in` and`nep.txt` files and place them in a directory named `md`.
 
 
 
 ---
 
 Thank you for using `GPUMDkit`! If you have any questions or need further assistance, feel free to open an issue on our GitHub repository or contact Zihan YAN (yanzihan@westlake.edu.cn).
-
