@@ -4,7 +4,7 @@
 # export GPUMD_path=/d/Westlake/GPUMD
 # export GPUMDkit_path=/d/Westlake/Gpumdkit
 
-VERSION="0.0.1 (dev) (2024-10-14)"
+VERSION="0.0.1 (dev) (2024-10-17)"
 
 function f1_format_conversion(){
 echo " ------------>>"
@@ -190,8 +190,8 @@ case $num_choice in
         echo " | Developer: Zihan YAN (yanzihan@westlake.edu.cn) |"
         echo " >-------------------------------------------------<"
         echo " Input <input.vasp> <pert_num> <cell_pert_fraction> <atom_pert_distance> <atom_pert_style>"
-        echo " The default paramters for perturb are 20 0.03 0.2 normal"
-        echo " Examp: FAPbI3.vasp 20 0.03 0.2 normal"
+        echo " The default paramters for perturb are 20 0.03 0.2 uniform"
+        echo " Examp: POSCAR 20 0.03 0.2 uniform"
         echo " ------------>>"
         read -p " " perturb_choice
         echo " ---------------------------------------------------"
