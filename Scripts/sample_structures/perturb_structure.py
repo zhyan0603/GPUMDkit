@@ -5,7 +5,7 @@ import dpdata
 DEFAULT_PERT_NUM = 20
 DEFAULT_CELL_PERT_FRACTION = 0.03
 DEFAULT_ATOM_PERT_DISTANCE = 0.2
-DEFAULT_ATOM_PERT_STYLE = 'normal'
+DEFAULT_ATOM_PERT_STYLE = 'uniform'
 
 # Check command line arguments
 if len(sys.argv) < 2:
