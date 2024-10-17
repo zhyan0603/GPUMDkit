@@ -192,3 +192,9 @@ python get_frame.py 1000
 ```
 
 You will get the `frame_1000.xyz` file after perform the script.
+
+
+
+---
+
+Thank you for using `GPUMDkit`! If you have any questions or need further assistance, feel free to open an issue on our GitHub repository or contact Zihan YAN (yanzihan@westlake.edu.cn).

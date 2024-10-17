@@ -69,3 +69,9 @@ python perturb_structure.py FAPbI3.vasp 20 0.03 0.2 normal
 ```
 
 This command will generate 20 perturbed structures.
+
+
+
+---
+
+Thank you for using `GPUMDkit`! If you have any questions or need further assistance, feel free to open an issue on our GitHub repository or contact Zihan YAN (yanzihan@westlake.edu.cn).

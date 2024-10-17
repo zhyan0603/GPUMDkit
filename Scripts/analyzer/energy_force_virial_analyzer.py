@@ -30,11 +30,14 @@ def calculate_range(frames, property_name):
     return np.min(values), np.max(values), values
 
 def plot_histogram(values, property_name):
+    plt.figure(figsize=(6,4), dpi=100)
     plt.hist(values, bins=30, edgecolor='black')
     plt.title(f'{property_name.capitalize()} Histogram')
     plt.xlabel(f'{property_name.capitalize()}')
     plt.ylabel('Frequency')
+    plt.tight_layout()
     plt.show()
+    #plt.savefig(f'range_{property_name.capitalize()}.png')
 
 if __name__ == "__main__":
     # Check if the required arguments are provided

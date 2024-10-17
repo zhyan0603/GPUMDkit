@@ -23,3 +23,7 @@ python rdf_calculator_ovito.py dump.xyz 6 400
 This command will read the `dump.xyz` file and calculate the RDF by using the `ovito` package and output the `rdf.txt` file.
 
 
+
+---
+
+Thank you for using `GPUMDkit`! If you have any questions or need further assistance, feel free to open an issue on our GitHub repository or contact Zihan YAN (yanzihan@westlake.edu.cn).
