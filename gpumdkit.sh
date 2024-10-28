@@ -4,7 +4,7 @@
 # export GPUMD_path=/d/Westlake/GPUMD
 # export GPUMDkit_path=/d/Westlake/Gpumdkit
 
-VERSION="0.0.1 (dev) (2024-10-17)"
+VERSION="0.0.1 (dev) (2024-10-28)"
 
 function f1_format_conversion(){
 echo " ------------>>"
@@ -312,7 +312,7 @@ function help_info_table(){
     echo "+========================================= Analysis ===============================================+"
     echo "| -range         Print range of energy etc.     | -max_rmse     Get max RMSE from XYZ              |"
     echo "| -min_dist      Get min_dist between atoms     | -filter_dist  Filter struct by min_dist          |"
-    echo "| -filter_box    Filter struct by box limits    | Developing...                                    |"
+    echo "| -filter_box    Filter struct by box limits    | -filter_value Filter struct by value (efs)       |"
     echo "+=========================================    Misc  ==============+================================+"
     echo "| -plt           Plot scripts                   | -get_frame     Extract the specified frame       |"
     echo "| -h, -help      Show this help message         | Developing...                                    |"
