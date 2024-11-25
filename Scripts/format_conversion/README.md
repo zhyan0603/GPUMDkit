@@ -107,16 +107,17 @@ This script converts a `POSCAR` file to `lammps-data` format.
 #### Usage
 
 ```
-python pos2lmp.py <poscar_file> <lammps_data_file>
+python pos2lmp.py <poscar_file> <lammps_data_file> <elements_order>
 ```
 
 - `<poscar_file>`: The path to the input `POSCAR` file.
 - `<lammps_data_file>`: The desired name for the output `lammps-data` file.
+- `<elements_order>`: The desired order of elements in `lammps-data` file.
 
 #### Example
 
 ```
-python pos2lmp.py POSCAR lammps.data
+python pos2lmp.py POSCAR lammps.data Li La Zr O
 ```
 
 This command will read the `POSCAR` file and convert it to `lammps.data` in `lammps-data` format.
