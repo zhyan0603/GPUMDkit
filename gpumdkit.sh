@@ -311,8 +311,9 @@ function help_info_table(){
     echo "| Developing...                                 | Developing...                                    |"
     echo "+========================================= Analysis ===============================================+"
     echo "| -range         Print range of energy etc.     | -max_rmse     Get max RMSE from XYZ              |"
-    echo "| -min_dist      Get min_dist between atoms     | -filter_dist  Filter struct by min_dist          |"
+    echo "| -min_dist      Get min_dist between atoms     | -min_dist_pbc Get min_dist considering PBC       |"
     echo "| -filter_box    Filter struct by box limits    | -filter_value Filter struct by value (efs)       |"
+    echo "| -filter_dist  Filter struct by min_dist       | Developing...                                    |"
     echo "+=========================================    Misc  ==============+================================+"
     echo "| -plt           Plot scripts                   | -get_frame     Extract the specified frame       |"
     echo "| -h, -help      Show this help message         | Developing...                                    |"
@@ -513,6 +514,18 @@ if [ ! -z "$1" ]; then
                 echo " Usage: -min_dist <exyzfile>"
                 echo " See the source code of get_min_dist.py for more details"
                 echo " Code path: ${GPUMDkit_path}/Scripts/analyzer/get_min_dist.py"
+            fi
+            ;;
+
+        -min_dist_pbc)
+            if [ ! -z "$2" ] && [ "$2" != "-h" ]; then
+                echo " Calling script by Zihan YAN "
+                echo " Code path: ${GPUMDkit_path}/Scripts/analyzer/get_min_dist_pbc.py"
+                python ${GPUMDkit_path}/Scripts/analyzer/get_min_dist_pbc.py $2
+            else
+                echo " Usage: -min_dist_pbc <exyzfile>"
+                echo " See the source code of get_min_dist_pbc.py for more details"
+                echo " Code path: ${GPUMDkit_path}/Scripts/analyzer/get_min_dist_pbc.py"
             fi
             ;;
 
