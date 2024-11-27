@@ -63,7 +63,35 @@ python get_min_dist.py dump.xyz
 Minimum interatomic distance: 1.478098603206159 Å
 ```
 
-NOTE: This script seems to be buggy and still needs improvement.
+NOTE: This script is fast because it does not take into account periodic boundary conditions (PBC), but in some cases it can be problematic.
+
+
+
+### get_min_dist_pbc.py
+
+---
+
+This script is used to calculate the min_dist of the structures considering the PBC.
+
+#### Usage
+
+```
+python get_min_dist_pbc.py <extxyz_file>
+```
+
+#### Example
+
+```sh
+python get_min_dist_pbc.py dump.xyz
+```
+
+#### Output
+
+```
+Minimum interatomic distance: 1.478098603206159 Å
+```
+
+
 
 
 
