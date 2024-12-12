@@ -70,7 +70,7 @@ else:
     raise ValueError("Unsupported number of columns in thermo.out. Expected 12 or 18.")
 
 # Calculate averages after 50% of simulation time
-start_index = len(time) // 2
+start_index = int(len(time) * 0.5) # You can change it based on your need
 avg_temperature = np.mean(temperature[start_index:])
 avg_pressure_x = np.mean(pressure_x[start_index:])
 avg_pressure_y = np.mean(pressure_y[start_index:])
@@ -95,7 +95,11 @@ avg_volume = np.mean(volume[start_index:]) / 1000  # Convert to x10^3 Å^3
 
 # Print average values
 average_results = [
-    f"Average values after 50% simulation time:",
+    f"+------------------------------------------+",    
+    f"| Average values after 50% simulation time |",
+    f"| You can change it by the following line: |",
+    f"|    start_index = int(len(time) * 0.5)    |",    
+    f"+------------------------------------------+",
     f"Temperature: {avg_temperature:.3f} K",
     f"Pressure X: {avg_pressure_x:.3f} GPa",
     f"Pressure Y: {avg_pressure_y:.3f} GPa",
@@ -120,7 +124,7 @@ with open('./average_results.txt', 'w', encoding='utf-8') as f:
     f.write("\n".join(average_results))
 
 # Subplot
-fig, axs = plt.subplots(2, 3, figsize=(12, 6), dpi=200)
+fig, axs = plt.subplots(2, 3, figsize=(12, 6), dpi=100)
 
 # Temperature
 axs[0, 0].plot(time, temperature)
