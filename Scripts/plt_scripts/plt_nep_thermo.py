@@ -3,11 +3,6 @@ import numpy as np
 import matplotlib.pyplot as plt
 import os
 
-# Get the directory of the current script and change the working directory
-script_dir = os.path.dirname(os.path.realpath(__file__))
-os.chdir(script_dir)
-
-
 def calculate_angle(x, y):
     dot_product = np.einsum('ij,ij->i', x, y)
     norm_x = np.linalg.norm(x, axis=1)
@@ -33,7 +28,7 @@ def get_dump_interval():
                         pass
     return dump_interval
 
-data = np.loadtxt('thermo.out')
+data = np.loadtxt('./thermo.out')
 
 dump_interval = get_dump_interval()
 time = np.arange(0, len(data) * dump_interval / 1000, dump_interval / 1000)
@@ -116,28 +111,16 @@ if num_columns == 18:
         f"Angle Gamma: {avg_angle_gamma:.2f}°",
     ])
 average_results.append(f"Volume: {avg_volume:.3f} ×10^3 Å^3")
+average_results.append(f"Average lattice matrix: {avg_ax:.3f}, {avg_ay:.3f}, {avg_az:.3f}, {avg_bx:.3f}, {avg_by:.3f}, {avg_bz:.3f}, {avg_cx:.3f}, {avg_cy:.3f}, {avg_cz:.3f}")
 
 print("\n".join(average_results))
 
 # Save average values to a text file
-with open('average_results.txt', 'w', encoding='utf-8') as f:
+with open('./average_results.txt', 'w', encoding='utf-8') as f:
     f.write("\n".join(average_results))
 
-np.savetxt('equilibrium_lattice_matrix.txt', 
-           np.array([[
-               f"{aver_ax:.3f}",
-               f"{aver_ay:.3f}",
-               f"{aver_az:.3f}",
-               f"{aver_bx:.3f}",
-               f"{aver_by:.3f}",
-               f"{aver_bz:.3f}",
-               f"{aver_cx:.3f}",
-               f"{aver_cy:.3f}",
-               f"{aver_cz:.3f}"
-           ]]), fmt='%s')
-
 # Subplot
-fig, axs = plt.subplots(2, 3, figsize=(12, 6), dpi=100)
+fig, axs = plt.subplots(2, 3, figsize=(12, 6), dpi=200)
 
 # Temperature
 axs[0, 0].plot(time, temperature)
@@ -145,28 +128,28 @@ axs[0, 0].set_title('Temperature')
 axs[0, 0].set_xlabel('Time (ps)')
 axs[0, 0].set_ylabel('Temperature (K)')
 
+# Pressure
+axs[0, 1].plot(time, pressure_x, label='Px')
+axs[0, 1].plot(time, pressure_y, label='Py')
+axs[0, 1].plot(time, pressure_z, label='Pz')
+axs[0, 1].set_title('Pressure')
+axs[0, 1].set_xlabel('Time (ps)')
+axs[0, 1].set_ylabel('Pressure (GPa)')
+axs[0, 1].legend()
+
 # Potential Energy and Kinetic Energy
 color_potential = 'tab:orange'
 color_kinetic = 'tab:green'
-axs[0, 1].set_title(r'$P_E$ vs $K_E$')
-axs[0, 1].set_xlabel('Time (ps)')
-axs[0, 1].set_ylabel(r'Potential Energy ($x10^3$ eV)', color=color_potential)
-axs[0, 1].plot(time, potential_energy/1000, color=color_potential)
-axs[0, 1].tick_params(axis='y', labelcolor=color_potential)
+axs[0, 2].set_title(r'$P_E$ vs $K_E$')
+axs[0, 2].set_xlabel('Time (ps)')
+axs[0, 2].set_ylabel(r'Potential Energy ($x10^3$ eV)', color=color_potential)
+axs[0, 2].plot(time, potential_energy/1000, color=color_potential)
+axs[0, 2].tick_params(axis='y', labelcolor=color_potential)
 
-axs_kinetic = axs[0, 1].twinx()
+axs_kinetic = axs[0, 2].twinx()
 axs_kinetic.set_ylabel('Kinetic Energy (eV)', color=color_kinetic)
 axs_kinetic.plot(time, kinetic_energy, color=color_kinetic)
 axs_kinetic.tick_params(axis='y', labelcolor=color_kinetic)
-
-# Pressure
-axs[0, 2].plot(time, pressure_x, label='Px')
-axs[0, 2].plot(time, pressure_y, label='Py')
-axs[0, 2].plot(time, pressure_z, label='Pz')
-axs[0, 2].set_title('Pressure')
-axs[0, 2].set_xlabel('Time (ps)')
-axs[0, 2].set_ylabel('Pressure (GPa)')
-axs[0, 2].legend()
 
 # Lattice
 axs[1, 0].plot(time, box_length_x, label='Lx')
@@ -186,17 +169,17 @@ axs[1, 1].legend()
 
 # Angles (only for triclinic systems)
 if num_columns == 18:
-    axs[1, 2].plot(time, box_angle_alpha, label='Alpha')
-    axs[1, 2].plot(time, box_angle_beta, label='Beta')
-    axs[1, 2].plot(time, box_angle_gamma, label='Gamma')
-    axs[1, 2].set_title('Angles')
+    axs[1, 2].plot(time, box_angle_alpha, label=r'$\alpha$')
+    axs[1, 2].plot(time, box_angle_beta, label=r'$\beta$')
+    axs[1, 2].plot(time, box_angle_gamma, label=r'$\gamma$')
+    axs[1, 2].set_title('Interaxial Angles')
     axs[1, 2].set_xlabel('Time (ps)')
-    axs[1, 2].set_ylabel(r'Angles ($\degree$)')
+    axs[1, 2].set_ylabel(r'Interaxial Angles ($\degree$)')
     axs[1, 2].legend()
 
 plt.tight_layout()
 
 if len(sys.argv) > 1 and sys.argv[1] == 'save':
-    plt.savefig('thermo.png')
+    plt.savefig('./thermo.png')
 else:
     plt.show()
