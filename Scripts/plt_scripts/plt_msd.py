@@ -15,6 +15,9 @@ input_file = './msd.out'
 time, msd_x, msd_y, msd_z = read_data(input_file)
 
 # Calculate the total MSD
+#msd_total = msd_x + msd_y + msd_z
+
+# Calculate the mean MSD
 msd_mean = (msd_x + msd_y + msd_z)/3
 
 # Create a plot for the MSD data
@@ -23,6 +26,7 @@ plt.plot(time, msd_x, label='x')
 plt.plot(time, msd_y, label='y')
 plt.plot(time, msd_z, label='z')
 plt.plot(time, msd_mean, label='mean', color='C4')
+#plt.plot(time, msd_total, label='total', color='C5')
 
 # Add titles and labels
 #plt.title('MSD vs dt')
