@@ -107,7 +107,7 @@ average_results = [
     f"Lattice Length X: {avg_length_x:.3f} Å",
     f"Lattice Length Y: {avg_length_y:.3f} Å",
     f"Lattice Length Z: {avg_length_z:.3f} Å",
-    f"Volume: {avg_volume:.3f} ×10^3 Å^3",
+    f"Volume: {avg_volume*1000:.3f} Å^3",
 ]
 if num_columns == 18:
     average_results.extend([
