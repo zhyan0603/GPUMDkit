@@ -251,12 +251,56 @@ case $num_choice in
 esac
 }
 
+function f4_calculators(){
+echo " ------------>>"
+echo " 401) Ionic Conductivity"
+echo " 402) Developing ... "
+echo " 000) Return to the main menu"
+echo " ------------>>"
+echo " Input the function number:"
+
+arry_num_choice=("000" "401" "402") 
+read -p " " num_choice
+while ! echo "${arry_num_choice[@]}" | grep -wq "$num_choice" 
+do
+  echo " ------------>>"
+  echo " Please reinput function number..."
+  read -p " " num_choice
+done
+
+case $num_choice in
+    "401")
+        echo " >-------------------------------------------------<"
+        echo " | This function calls the script in calculators   |"
+        echo " | Script: calc_ion_conductivity.py                |"
+        echo " | Developer: Zihan YAN (yanzihan@westlake.edu.cn) |"
+        echo " >-------------------------------------------------<"
+        echo " Input <element> <charge> (eg. Li 1)"
+        echo " ------------>>"
+        read -p " " ion_cond_choice
+        echo " ---------------------------------------------------"
+        python ${GPUMDkit_path}/Scripts/calculators/calc_ion_conductivity.py ${ion_cond_choice}
+        echo " Code path: ${GPUMDkit_path}/Scripts/calculators/calc_ion_conductivity.py"
+        echo " ---------------------------------------------------"
+        ;;
+    "402")
+        echo " Developing ... "
+        ;;         
+    "000")
+        menu
+        main
+        ;;
+esac
+}
+
+
 #--------------------- main script ----------------------
 # Show the menu
 function menu(){
 echo " ----------------------- GPUMD -----------------------"
 echo " 1) Format Conversion          2) Sample Structures   "
-echo " 3) Workflow (dev)             4) Developing ...      "
+echo " 3) Workflow (dev)             4) Calculators         "
+echo " 5) Developing ...             6) Developing ...      "
 echo " 0) Quit!"
 }
 
@@ -264,7 +308,7 @@ echo " 0) Quit!"
 function main(){
     echo " ------------>>"
     echo ' Input the function number:'
-    array_choice=("0" "1" "2" "3" "4") 
+    array_choice=("0" "1" "2" "3" "4" "5" "6") 
     read -p " " choice
     while ! echo "${array_choice[@]}" | grep -wq "$choice" 
     do
@@ -288,6 +332,12 @@ function main(){
             f3_workflow_dev
             ;;
         "4")
+            f4_calculators
+            ;;
+        "5")
+            echo "Developing ..."
+            ;;
+        "6")
             echo "Developing ..."
             ;;
         *)
@@ -357,6 +407,34 @@ if [ ! -z "$1" ]; then
                 echo " Usage: -plt thermo/train/prediction/msd/vac [save] (eg. gpumdkit.sh -plt thermo)"
                 echo " See the codes in plt_scripts for more details"
                 echo " Code path: ${GPUMDkit_path}/Scripts/plt_scripts"
+            fi
+            ;;
+
+        -calc)
+            if [ ! -z "$2" ] && [ "$2" != "-h" ]; then
+                case $2 in
+                    ion-cond|ionic-cond|ionic-conductivity)
+                        if [ ! -z "$3" ] && [ ! -z "$4" ] ; then
+                            echo " Calling script by Zihan YAN. "
+                            echo " Code path: ${GPUMDkit_path}/Scripts/calculators/calc_ion_conductivity.py"
+                            python ${GPUMDkit_path}/Scripts/calculators/calc_ion_conductivity.py $3 $4
+                        else
+                            echo " Usage: -calc ion-cond <element> <charge>"
+                            echo " Examp: gpumdkit.sh -calc ion-cond Li 1"
+                            echo " See the codes in calculators folder for more details"
+                            echo " Code path: ${GPUMDkit_path}/Scripts/calculators/calc_ion_conductivity.py"
+                            exit 1
+                        fi
+                        ;;              
+                    *)
+                        echo " See the codes in calculators folder for more details"
+                        echo " Code path: ${GPUMDkit_path}/Scripts/calculators"
+                        exit 1
+                        ;;
+                esac
+            else
+                echo " See the codes in calculators folder for more details"
+                echo " Code path: ${GPUMDkit_path}/Scripts/calculators"
             fi
             ;;
 
