@@ -78,20 +78,20 @@ avg_pressure_z = np.mean(pressure_z[start_index:])
 avg_length_x = np.mean(box_length_x[start_index:])
 avg_length_y = np.mean(box_length_y[start_index:])
 avg_length_z = np.mean(box_length_z[start_index:])
-avg_ax = np.mean(ax[start_index:])
-avg_ay = np.mean(ay[start_index:])
-avg_az = np.mean(az[start_index:])
-avg_bx = np.mean(bx[start_index:])
-avg_by = np.mean(by[start_index:])
-avg_bz = np.mean(bz[start_index:])
-avg_cx = np.mean(cx[start_index:])
-avg_cy = np.mean(cy[start_index:])
-avg_cz = np.mean(cz[start_index:])
+avg_volume = np.mean(volume[start_index:]) / 1000  # Convert to x10^3 Å^3
 if num_columns == 18:
     avg_angle_alpha = np.mean(box_angle_alpha[start_index:])
     avg_angle_beta = np.mean(box_angle_beta[start_index:])
     avg_angle_gamma = np.mean(box_angle_gamma[start_index:])
-avg_volume = np.mean(volume[start_index:]) / 1000  # Convert to x10^3 Å^3
+    avg_ax = np.mean(ax[start_index:])
+    avg_ay = np.mean(ay[start_index:])
+    avg_az = np.mean(az[start_index:])
+    avg_bx = np.mean(bx[start_index:])
+    avg_by = np.mean(by[start_index:])
+    avg_bz = np.mean(bz[start_index:])
+    avg_cx = np.mean(cx[start_index:])
+    avg_cy = np.mean(cy[start_index:])
+    avg_cz = np.mean(cz[start_index:])
 
 # Print average values
 average_results = [
@@ -107,6 +107,7 @@ average_results = [
     f"Lattice Length X: {avg_length_x:.3f} Å",
     f"Lattice Length Y: {avg_length_y:.3f} Å",
     f"Lattice Length Z: {avg_length_z:.3f} Å",
+    f"Volume: {avg_volume:.3f} ×10^3 Å^3",
 ]
 if num_columns == 18:
     average_results.extend([
@@ -114,8 +115,7 @@ if num_columns == 18:
         f"Angle Beta: {avg_angle_beta:.2f}°",
         f"Angle Gamma: {avg_angle_gamma:.2f}°",
     ])
-average_results.append(f"Volume: {avg_volume:.3f} ×10^3 Å^3")
-average_results.append(f"Average lattice matrix: {avg_ax:.3f}, {avg_ay:.3f}, {avg_az:.3f}, {avg_bx:.3f}, {avg_by:.3f}, {avg_bz:.3f}, {avg_cx:.3f}, {avg_cy:.3f}, {avg_cz:.3f}")
+    average_results.append(f"Average lattice matrix: {avg_ax:.3f}, {avg_ay:.3f}, {avg_az:.3f}, {avg_bx:.3f}, {avg_by:.3f}, {avg_bz:.3f}, {avg_cx:.3f}, {avg_cy:.3f}, {avg_cz:.3f}")
 
 print("\n".join(average_results))
 
