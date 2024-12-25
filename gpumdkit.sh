@@ -4,7 +4,7 @@
 # export GPUMD_path=/d/Westlake/GPUMD
 # export GPUMDkit_path=/d/Westlake/Gpumdkit
 
-VERSION="0.0.1 (dev) (2024-12-16)"
+VERSION="0.0.1 (dev) (2024-12-25)"
 
 function f1_format_conversion(){
 echo " ------------>>"
@@ -391,6 +391,9 @@ if [ ! -z "$1" ]; then
                     "prediction"| "valid"| "test")
                         python ${GPUMDkit_path}/Scripts/plt_scripts/plt_nep_prediction_results.py $3
                         ;;
+                    "train_test"| "tt")
+                        python ${GPUMDkit_path}/Scripts/plt_scripts/plt_nep_train_test.py $3
+                        ;;
                     "msd")
                         python ${GPUMDkit_path}/Scripts/plt_scripts/plt_msd.py $3
                         ;;
@@ -398,13 +401,13 @@ if [ ! -z "$1" ]; then
                         python ${GPUMDkit_path}/Scripts/plt_scripts/plt_vac.py $3
                         ;;                
                     *)
-                        echo "Usage: -plt thermo/train/prediction/msd/vac [save]"
+                        echo "Usage: -plt thermo/train/prediction/train_test/msd/vac [save]"
                         echo "Examp: gpumdkit.sh -plt thermo save"
                         exit 1
                         ;;
                 esac
             else
-                echo " Usage: -plt thermo/train/prediction/msd/vac [save] (eg. gpumdkit.sh -plt thermo)"
+                echo " Usage: -plt thermo/train/prediction/train_test/msd/vac [save] (eg. gpumdkit.sh -plt thermo)"
                 echo " See the codes in plt_scripts for more details"
                 echo " Code path: ${GPUMDkit_path}/Scripts/plt_scripts"
             fi

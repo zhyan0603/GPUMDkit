@@ -45,7 +45,7 @@ energy_train_rmse = calculate_rmse(energy_train[:, 0], energy_train[:, 1]) * 100
 energy_test_rmse = calculate_rmse(energy_test[:, 0], energy_test[:, 1]) * 1000
 axs[0].text(0.3, 0.2, f'RMSE (Train): {energy_train_rmse:.2f} meV/atom', transform=axs[0].transAxes, fontsize=10, verticalalignment='center')
 axs[0].text(0.3, 0.1, f'RMSE (Test): {energy_test_rmse:.2f} meV/atom', transform=axs[0].transAxes, fontsize=10, verticalalignment='center')
-axs[0].text(-0.1, 1.03, "(a)", transform=axs[0].transAxes, fontsize=13, va='top', ha='right')
+#axs[0].text(-0.1, 1.03, "(a)", transform=axs[0].transAxes, fontsize=13, va='top', ha='right')
 
 # Force plot
 xmin_force, xmax_force = calculate_limits(force_train[:, 3:6].reshape(-1), force_test[:, 3:6].reshape(-1))
@@ -66,7 +66,7 @@ mean_force_train_rmse = np.mean(force_train_rmse) * 1000
 mean_force_test_rmse = np.mean(force_test_rmse) * 1000
 axs[1].text(0.35, 0.2, rf'RMSE (Train): {mean_force_train_rmse:.2f} meV/Å', transform=axs[1].transAxes, fontsize=10, verticalalignment='center')
 axs[1].text(0.35, 0.1, rf'RMSE (Test): {mean_force_test_rmse:.2f} meV/Å', transform=axs[1].transAxes, fontsize=10, verticalalignment='center')
-axs[1].text(-0.1, 1.03, "(b)", transform=axs[1].transAxes, fontsize=13, va='top', ha='right')
+#axs[1].text(-0.1, 1.03, "(b)", transform=axs[1].transAxes, fontsize=13, va='top', ha='right')
 
 # Stress plot
 xmin_stress, xmax_stress = calculate_limits(stress_train[:, 6:12].reshape(-1), stress_test[:, 6:12].reshape(-1))
@@ -87,7 +87,7 @@ mean_stress_train_rmse = np.mean(stress_train_rmse)
 mean_stress_test_rmse = np.mean(stress_test_rmse)
 axs[2].text(0.4, 0.2, f'RMSE (Train): {mean_stress_train_rmse:.3f} GPa', transform=axs[2].transAxes, fontsize=10, verticalalignment='center')
 axs[2].text(0.4, 0.1, f'RMSE (Test): {mean_stress_test_rmse:.3f} GPa', transform=axs[2].transAxes, fontsize=10, verticalalignment='center')
-axs[2].text(-0.1, 1.03, "(c)", transform=axs[2].transAxes, fontsize=13, va='top', ha='right')
+#axs[2].text(-0.1, 1.03, "(c)", transform=axs[2].transAxes, fontsize=13, va='top', ha='right')
 
 # Adjust layout for better spacing
 plt.tight_layout()
