@@ -4,7 +4,7 @@
 # export GPUMD_path=/d/Westlake/GPUMD
 # export GPUMDkit_path=/d/Westlake/Gpumdkit
 
-VERSION="0.0.1 (dev) (2024-12-25)"
+VERSION="0.0.1 (dev) (2025-01-26)"
 
 function f1_format_conversion(){
 echo " ------------>>"
@@ -120,7 +120,8 @@ echo " 201) Sample structures from extxyz"
 echo " 202) Sample structures by pynep"
 echo " 203) Find the outliers in training set"
 echo " 204) Perturb structure"
-echo " 205) Developing ... "
+echo " 205) Select max force deviation structs from active.xyz"
+echo " 206) Developing ... "
 echo " 000) Return to the main menu"
 echo " ------------>>"
 echo " Input the function number:"
@@ -199,6 +200,20 @@ case $num_choice in
         echo " ---------------------------------------------------"
         ;;
     "205")
+        echo " >-------------------------------------------------<"
+        echo " | This function calls the script in Scripts       |"
+        echo " | Script: select_max_modev.py                    |"
+        echo " | Developer: Zihan YAN (yanzihan@westlake.edu.cn) |"
+        echo " >-------------------------------------------------<"
+        echo " Input <structs_num> <threshold> (eg. 200 0.15)"
+        echo " ------------>>"
+        read -p " " modev_choice
+        echo " ---------------------------------------------------"
+        python ${GPUMDkit_path}/Scripts/sample_structures/select_max_modev.py ${modev_choice}
+        echo " Code path: ${GPUMDkit_path}/Scripts/sample_structures/select_max_modev.py"
+        echo " ---------------------------------------------------"
+        ;;
+    "206")
         echo " Developing ... "
         ;;
     "000")
@@ -253,13 +268,14 @@ esac
 
 function f4_calculators(){
 echo " ------------>>"
-echo " 401) Ionic Conductivity"
-echo " 402) Developing ... "
+echo " 401) Calc ionic conductivity"
+echo " 402) Calc properties by nep"
+echo " 403) Developing ... "
 echo " 000) Return to the main menu"
 echo " ------------>>"
 echo " Input the function number:"
 
-arry_num_choice=("000" "401" "402") 
+arry_num_choice=("000" "401" "402" "403") 
 read -p " " num_choice
 while ! echo "${arry_num_choice[@]}" | grep -wq "$num_choice" 
 do
@@ -284,13 +300,98 @@ case $num_choice in
         echo " ---------------------------------------------------"
         ;;
     "402")
+        echo " >-------------------------------------------------<"
+        echo " | This function calls the script in calculators   |"
+        echo " | Script: calc_properties_with_nep.py                |"
+        echo " | Developer: Zihan YAN (yanzihan@westlake.edu.cn) |"
+        echo " >-------------------------------------------------<"
+        echo " Input <input.xyz> <output.xyz> <nep_model> "
+        echo " Examp: input.xyz outpt.xyz nep.txt"
+        echo " ------------>>"
+        read -p " " input_calc_properties
+        echo " ---------------------------------------------------"
+        python ${GPUMDkit_path}/Scripts/calculators/calc_properties_with_nep.py ${input_calc_properties}
+        echo " Code path: ${GPUMDkit_path}/Scripts/calculators/calc_properties_with_nep.py"
+        echo " ---------------------------------------------------"
+        ;;
+    "403")
         echo " Developing ... "
-        ;;         
+        ;;            
     "000")
         menu
         main
         ;;
 esac
+}
+
+function clean_extra_files(){
+keep_files=("run.in" "nep.in" "model.xyz" "nep.txt" "train.xyz" "test.xyz")
+keep_patterns=("*sub*" "*.sh" "*slurm")
+all_files=$(ls)
+delete_files=()
+
+for file in $all_files; do
+    # Check if the file matches any keep_files or keep_patterns
+    keep=false
+    for keep_file in "${keep_files[@]}"; do
+        if [[ "$file" == "$keep_file" ]]; then
+            keep=true
+            break
+        fi
+    done
+    for keep_pattern in "${keep_patterns[@]}"; do
+        if [[ "$file" == $keep_pattern ]]; then
+            keep=true
+            break
+        fi
+    done
+
+    # If the file is not marked to keep, add it to delete_files
+    if [ "$keep" == false ]; then
+        delete_files+=("$file")
+    fi
+done
+
+# Display files to delete
+if [ ${#delete_files[@]} -eq 0 ]; then
+    echo "No files to delete."
+    exit 0
+else
+    echo "The following files will be deleted:"
+    for file in "${delete_files[@]}"; do
+        echo "$file"
+    done
+fi
+
+# Ask user for confirmation or additional files to keep
+echo "Do you want to delete all these files?"
+echo "(y/yes to delete all, or list extra files to keep separated by spaces):"
+read user_input
+
+# Process user input
+if [[ "$user_input" == "y" || "$user_input" == "yes" ]]; then
+    echo "Deleting the files..."
+    for file in "${delete_files[@]}"; do
+        rm -f "$file"
+    done
+    echo "Files deleted."
+else
+    # Add extra files to keep based on user input
+    extra_keep_files=($user_input)
+    for extra_file in "${extra_keep_files[@]}"; do
+        delete_files=("${delete_files[@]/$extra_file}")
+    done
+
+    # Delete remaining files
+    echo "Deleting remaining files..."
+    for file in "${delete_files[@]}"; do
+        if [ -n "$file" ]; then
+            rm -f "$file"
+        fi
+    done
+    echo "Files deleted."
+fi
+
 }
 
 
@@ -352,7 +453,7 @@ function main(){
 function help_info_table(){
     echo "+==================================================================================================+"
     echo "|                              GPUMDkit ${VERSION} Usage                             |"
-    echo "|                                                                                                  |"
+    echo "|                                                                 --- by Zihan YAN                 |"
     echo "+======================================== Conversions =============================================+"
     echo "| -outcar2exyz   Convert OUTCAR to extxyz       | -pos2exyz     Convert POSCAR to extxyz           |"
     echo "| -castep2exyz   Convert castep to extxyz       | -pos2lmp      Convert POSCAR to LAMMPS           |"
@@ -363,10 +464,11 @@ function help_info_table(){
     echo "| -range         Print range of energy etc.     | -max_rmse     Get max RMSE from XYZ              |"
     echo "| -min_dist      Get min_dist between atoms     | -min_dist_pbc Get min_dist considering PBC       |"
     echo "| -filter_box    Filter struct by box limits    | -filter_value Filter struct by value (efs)       |"
-    echo "| -filter_dist  Filter struct by min_dist       | Developing...                                    |"
+    echo "| -filter_dist   Filter struct by min_dist      | Developing...                                    |"
     echo "+=========================================    Misc  ==============+================================+"
     echo "| -plt           Plot scripts                   | -get_frame     Extract the specified frame       |"
-    echo "| -h, -help      Show this help message         | Developing...                                    |"
+    echo "| -calc          Calculators                    | -clear_xyz     Clear extra info in XYZ file      |"
+    echo "| -clean         Clear files for work_dir       | Developing...                                    |"    
     echo "+==================================================================================================+"
     echo "| For detailed usage and examples, use: gpumdkit.sh -<option> -h                                   |"
     echo "+==================================================================================================+"
@@ -378,7 +480,9 @@ if [ ! -z "$1" ]; then
         -h|-help)
             help_info_table
             ;;
-
+        -clean)
+            clean_extra_files
+            ;;
         -plt)
             if [ ! -z "$2" ] && [ "$2" != "-h" ]; then
                 case $2 in
@@ -428,7 +532,20 @@ if [ ! -z "$1" ]; then
                             echo " Code path: ${GPUMDkit_path}/Scripts/calculators/calc_ion_conductivity.py"
                             exit 1
                         fi
-                        ;;              
+                        ;;
+                    nep)
+                        if [ ! -z "$3" ] && [ ! -z "$4" ] && [ ! -z "$5" ]; then
+                            echo " Calling script by Zihan YAN. "
+                            echo " Code path: ${GPUMDkit_path}/Scripts/calculators/calc_properties_with_nep.py"
+                            python ${GPUMDkit_path}/Scripts/calculators/calc_properties_with_nep.py $3 $4 $5
+                        else
+                            echo " Usage: -calc nep <input.xyz> <output.xyz> <nep_model>"
+                            echo " Examp: gpumdkit.sh -calc nep input.xyz output.xyz nep.txt"
+                            echo " See the codes in calculators folder for more details"
+                            echo " Code path: ${GPUMDkit_path}/Scripts/calculators/calc_properties_with_nep.py"
+                            exit 1
+                        fi
+                        ;;                
                     *)
                         echo " See the codes in calculators folder for more details"
                         echo " Code path: ${GPUMDkit_path}/Scripts/calculators"
@@ -655,6 +772,17 @@ if [ ! -z "$1" ]; then
                 echo " Usage: -get_frame <exyzfile> <frame_index>"
                 echo " See the source code of get_frame.py for more details"
                 echo " Code path: ${GPUMDkit_path}/Scripts/format_conversion/get_frame.py"
+            fi
+            ;;
+        -clear_xyz|-clean_xyz)
+            if [ ! -z "$2" ] && [ "$2" != "-h" ] && [ ! -z "$3" ] ; then
+                echo " Calling script by Zihan YAN "
+                echo " Code path: ${GPUMDkit_path}/Scripts/format_conversion/clear_xyz.py"
+                python ${GPUMDkit_path}/Scripts/format_conversion/clear_xyz.py $2 $3
+            else
+                echo " Usage: -clear_xyz <input.xyz> <output.xyz>"
+                echo " See the source code of clear_xyz.py for more details"
+                echo " Code path: ${GPUMDkit_path}/Scripts/format_conversion/clear_xyz.py"
             fi
             ;;
 
