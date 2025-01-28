@@ -72,7 +72,7 @@ There are two options, <u>*interactive mode*</u> and <u>*command-line mode*</u>
           | |_| |  __/| |_| | |  | | |_| |   <| | |_
            \____|_|    \___/|_|  |_|____/|_|\_\_|\__|
     
-          GPUMDkit Version 0.0.1 (dev) (2025-01-28)
+          GPUMDkit Version 1.0.0 (dev) (2025-01-28)
           Developer: Zihan YAN (yanzihan@westlake.edu.cn)
     
     ----------------------- GPUMD -----------------------
@@ -102,7 +102,7 @@ the help information:
 
 ```
 +==================================================================================================+
-|                              GPUMDkit 0.0.1 (dev) (2025-01-28) Usage                             |
+|                              GPUMDkit 1.0.0 (dev) (2025-01-28) Usage                             |
 |                                                                 --- by Zihan YAN                 |
 +======================================== Conversions =============================================+
 | -outcar2exyz   Convert OUTCAR to extxyz       | -pos2exyz     Convert POSCAR to extxyz           |
