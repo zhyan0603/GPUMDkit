@@ -1,6 +1,6 @@
 # GPUMDkit
 
-**`GPUMDkit`** is a shell interface for the [GPUMD](https://github.com/brucefan1983/GPUMD) (*Graphics Processing Units Molecular Dynamics*) program. It provides a set of tools to streamline the use of common scripts in GPUMD and  [NEP](https://gpumd.org/potentials/nep.html#nep-formalism) (neuroevolution potential), simplifying workflows and enhancing efficiency.
+**`GPUMDkit`** is a toolkit for the [GPUMD](https://github.com/brucefan1983/GPUMD) (*Graphics Processing Units Molecular Dynamics*) program. It provides a set of tools to streamline the use of common scripts in GPUMD and  [NEP](https://gpumd.org/potentials/nep.html#nep-formalism) (neuroevolution potential), simplifying workflows and enhancing efficiency.
 
 ## Features
 - **Simplified Script Invocation**: Easily run scripts for GPUMD and NEP.
@@ -72,13 +72,14 @@ There are two options, <u>*interactive mode*</u> and <u>*command-line mode*</u>
           | |_| |  __/| |_| | |  | | |_| |   <| | |_
            \____|_|    \___/|_|  |_|____/|_|\_\_|\__|
     
-          GPUMDkit Version 0.0.1 (dev) (2024-10-11)
+          GPUMDkit Version 0.0.1 (dev) (2025-01-28)
           Developer: Zihan YAN (yanzihan@westlake.edu.cn)
     
     ----------------------- GPUMD -----------------------
     1) Format Conversion          2) Sample Structures
-    3) Workflow (dev)             4) Developing ...
-    0) Quit!
+    2) Workflow (dev)             4) Calculators         
+    3) Developing ...             6) Developing ...      
+    4) Quit!
     ------------>>
     Input the function number:
     ```
@@ -101,8 +102,8 @@ the help information:
 
 ```
 +==================================================================================================+
-|                              GPUMDkit 0.0.1 (dev) (2024-10-11) Usage                             |
-|                                                                                                  |
+|                              GPUMDkit 0.0.1 (dev) (2025-01-28) Usage                             |
+|                                                                 --- by Zihan YAN                 |
 +======================================== Conversions =============================================+
 | -outcar2exyz   Convert OUTCAR to extxyz       | -pos2exyz     Convert POSCAR to extxyz           |
 | -castep2exyz   Convert castep to extxyz       | -pos2lmp      Convert POSCAR to LAMMPS           |
@@ -111,11 +112,13 @@ the help information:
 | Developing...                                 | Developing...                                    |
 +========================================= Analysis ===============================================+
 | -range         Print range of energy etc.     | -max_rmse     Get max RMSE from XYZ              |
-| -min_dist      Get min_dist between atoms     | -filter_dist  Filter struct by min_dist          |
-| -filter_box    Filter struct by box limits    | Developing...                                    |
+| -min_dist      Get min_dist between atoms     | -min_dist_pbc Get min_dist considering PBC       |
+| -filter_box    Filter struct by box limits    | -filter_value Filter struct by value (efs)       |
+| -filter_dist   Filter struct by min_dist      | Developing...                                    |
 +=========================================    Misc  ==============+================================+
 | -plt           Plot scripts                   | -get_frame     Extract the specified frame       |
-| -h, -help      Show this help message         | Developing...                                    |
+| -calc          Calculators                    | -clear_xyz     Clear extra info in XYZ file      |
+| -clean         Clear files for work_dir       | Developing...                                    |
 +==================================================================================================+
 | For detailed usage and examples, use: gpumdkit.sh -<option> -h                                   |
 +==================================================================================================+

@@ -46,7 +46,23 @@ Ionic Conductivity:
   Sigma_total: 2.261e-02 mS/cm
 ```
 
+### calc_properties_with_nep.py
 
+---
+
+This script will calculate energies, forces, and stresses by using the `calorine` package.
+
+#### Usage
+
+```
+python calc_properties_with_nep.py <input.xyz> <output.xyz> <nep_model>
+```
+
+#### Example
+
+```sh
+python calc_properties_with_nep.py input.xyz output.xyz nep.txt
+```
 
 ### rdf_calculator_ovito.py
 
