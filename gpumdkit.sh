@@ -4,7 +4,7 @@
 # export GPUMD_path=/d/Westlake/GPUMD
 # export GPUMDkit_path=/d/Westlake/Gpumdkit
 
-VERSION="0.0.1 (dev) (2025-01-26)"
+VERSION="0.0.1 (dev) (2025-01-28)"
 
 function f1_format_conversion(){
 echo " ------------>>"
@@ -358,14 +358,16 @@ if [ ${#delete_files[@]} -eq 0 ]; then
     exit 0
 else
     echo "The following files will be deleted:"
+    echo "---------------------------------------"
     for file in "${delete_files[@]}"; do
-        echo "$file"
+        echo -n "$file "
     done
+    echo -e "\n---------------------------------------"
 fi
 
 # Ask user for confirmation or additional files to keep
 echo "Do you want to delete all these files?"
-echo "(y/yes to delete all, or list extra files to keep separated by spaces):"
+echo "y/yes to delete, n/no to cancel, or input files to keep (separated by spaces):"
 read user_input
 
 # Process user input
@@ -375,6 +377,9 @@ if [[ "$user_input" == "y" || "$user_input" == "yes" ]]; then
         rm -f "$file"
     done
     echo "Files deleted."
+elif [[ "$user_input" == "n" || "$user_input" == "no" ]]; then
+    echo "Operation canceled. No files were deleted."
+    exit 0
 else
     # Add extra files to keep based on user input
     extra_keep_files=($user_input)
@@ -383,13 +388,17 @@ else
     done
 
     # Delete remaining files
-    echo "Deleting remaining files..."
-    for file in "${delete_files[@]}"; do
-        if [ -n "$file" ]; then
-            rm -f "$file"
-        fi
-    done
-    echo "Files deleted."
+    if [ ${#delete_files[@]} -eq 0 ]; then
+        echo "No files to delete after processing extra keep files."
+    else
+        echo "Deleting remaining files..."
+        for file in "${delete_files[@]}"; do
+            if [ -n "$file" ]; then
+                rm -f "$file"
+            fi
+        done
+        echo "Files deleted."
+    fi
 fi
 
 }

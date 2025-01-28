@@ -1,8 +1,16 @@
+import sys
 import numpy as np
 from ase import Atoms
 from ase.io import read, write
 from calorine.calculators import CPUNEP
-import sys
+
+def print_progress_bar(iteration, total, prefix='', suffix='', decimals=1, length=50, fill='█'):
+    percent = ("{0:." + str(decimals) + "f}").format(100 * (iteration / float(total)))
+    filled_length = int(length * iteration // total)
+    bar = fill * filled_length + '-' * (length - filled_length)
+    print(f'\r{prefix} |{bar}| {percent}% {suffix}', end='\r')
+    if iteration == total:
+        print()
 
 # Specify input and output files
 input_file = sys.argv[1]  # Input file
@@ -15,8 +23,10 @@ structures = read(input_file, index=':')  # Read all frames
 if not isinstance(structures, list):
     structures = [structures]
 
+total_structures = len(structures)
+
 # Process each structure
-for atoms in structures:
+for i, atoms in enumerate(structures):
     # Create a new calculator instance for each atoms object
     calc = CPUNEP(sys.argv[3])
     atoms.set_calculator(calc)
@@ -32,7 +42,8 @@ for atoms in structures:
     #atoms.info['virial'] = virial.tolist()  # Convert to list for extxyz compatibility
     #atoms.info['virial'] = ' '.join(map(str, virial.tolist()))
     #atoms.stress = None
+    print_progress_bar(i + 1, total_structures, prefix=' Processing', suffix='Complete', length=50)
 
 # Write the updated structures to the output file
 write(output_file, structures)
-print(f"Results saved to {output_file}")
+print(f" Results saved to {output_file}")
