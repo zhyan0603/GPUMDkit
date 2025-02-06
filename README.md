@@ -131,7 +131,7 @@ To convert a `VASP` `OUTCARs` to an extended XYZ format (`extxyz`) file, use the
 ```
 gpumdkit.sh -out2xyz <dir_of_OUTCARs>
 
-Exp: gpumdkit.sh -out2xyz .
+Example: gpumdkit.sh -out2xyz .
 ```
 
 ##### Example 3: Plot thermo evolution
