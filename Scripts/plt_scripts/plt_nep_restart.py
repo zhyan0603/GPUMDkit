@@ -35,6 +35,6 @@ fig.subplots_adjust(top=0.918,bottom=0.142,left=0.139,right=0.975,hspace=0.0,wsp
 
 # Show the plot
 if len(sys.argv) > 1 and sys.argv[1] == 'save':
-    plt.savefig('./nep_restart.png')
+    plt.savefig('./nep_restart.png', dpi=300)
 else:
     plt.show()
