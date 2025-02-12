@@ -4,7 +4,7 @@
 # export GPUMD_path=/d/Westlake/GPUMD
 # export GPUMDkit_path=/d/Westlake/Gpumdkit
 
-VERSION="1.0.1 (dev) (2025-02-06)"
+VERSION="1.0.2 (dev) (2025-02-12)"
 
 function f1_format_conversion(){
 echo " ------------>>"
@@ -513,8 +513,11 @@ if [ ! -z "$1" ]; then
                     "vac")
                         python ${GPUMDkit_path}/Scripts/plt_scripts/plt_vac.py $3
                         ;;                
+                    "restart")
+                        python ${GPUMDkit_path}/Scripts/plt_scripts/plt_nep_restart.py $3
+                        ;;  
                     *)
-                        echo "Usage: -plt thermo/train/prediction/train_test/msd/vac [save]"
+                        echo "Usage: -plt thermo/train/prediction/train_test/msd/vac/restart [save]"
                         echo "Examp: gpumdkit.sh -plt thermo save"
                         exit 1
                         ;;
