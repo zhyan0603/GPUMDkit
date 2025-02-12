@@ -510,6 +510,12 @@ if [ ! -z "$1" ]; then
                     "msd")
                         python ${GPUMDkit_path}/Scripts/plt_scripts/plt_msd.py $3
                         ;;
+                    "sdc")
+                        python ${GPUMDkit_path}/Scripts/plt_scripts/plt_sdc.py $3
+                        ;;
+                    "rdf")
+                        python ${GPUMDkit_path}/Scripts/plt_scripts/plt_rdf.py $3 $4
+                        ;;
                     "vac")
                         python ${GPUMDkit_path}/Scripts/plt_scripts/plt_vac.py $3
                         ;;                
@@ -517,7 +523,7 @@ if [ ! -z "$1" ]; then
                         python ${GPUMDkit_path}/Scripts/plt_scripts/plt_nep_restart.py $3
                         ;;  
                     *)
-                        echo "Usage: -plt thermo/train/prediction/train_test/msd/vac/restart [save]"
+                        echo "Usage: -plt thermo/train/prediction/train_test/msd/sdc/rdf/vac/restart [save]"
                         echo "Examp: gpumdkit.sh -plt thermo save"
                         exit 1
                         ;;
