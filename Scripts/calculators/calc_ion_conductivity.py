@@ -12,7 +12,7 @@ Usage:
    will prompt for manual input of structure volume, temperature, and number of ions.
 
 Author: Zihan YAN
-Date: Dec 16, 2024
+Date: Feb 20, 2025
 """
 
 import os
@@ -42,7 +42,7 @@ def get_conversion_factor(structure_volume, species_charge, num_ions, temperatur
 
     vol = structure_volume * 1e-24  # units cm^3
     return (
-        1
+        1000
         * n
         / (vol * consts.N_A)
         * z**2
