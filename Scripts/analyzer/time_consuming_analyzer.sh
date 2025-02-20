@@ -48,11 +48,11 @@ if [ -f "neighbor.out" ]; then
     remaining_seconds=$(echo "$remaining_time" | awk '{print int($1 % 60)}')
 
     # Calculate progress as a percentage using awk
-    progress=$(echo "$current_frame $frames" | awk '{print ($1 / $2) * 100}')
+    progress=$((current_frame * 100 / frames))
+    bar_length=$((progress / 3))
+    progress_bar=$(printf "%-${bar_length}s" "#" | tr ' ' '#') 
+    progress_bar="${progress_bar}$(printf "%$((33 - bar_length))s" | tr ' ' '.')"
 
-    # Generate progress bar (50 characters wide)
-    progress_bar=$(printf "%-${progress}s" "#" | tr ' ' '#')
-    progress_bar="${progress_bar:0:40}"  # Limit to 40 characters
 
 else
     current_frame=0
@@ -64,7 +64,7 @@ else
 fi
 
 # Output the results
-echo "------------------ Time Consuming Results ------------------"
+echo "--------------- Time Consuming Results ---------------"
 echo "num of atoms: $atom_num"
 echo "atom*step/s : $atom_speed"
 echo "timesteps/s : $frame_speed"
