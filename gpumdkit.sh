@@ -492,6 +492,9 @@ if [ ! -z "$1" ]; then
         -clean)
             clean_extra_files
             ;;
+        -time)
+            bash ${GPUMDkit_path}/Scripts/analyzer/time_consuming_analyzer.sh $2
+            ;;
         -plt)
             if [ ! -z "$2" ] && [ "$2" != "-h" ]; then
                 case $2 in
