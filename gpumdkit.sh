@@ -4,7 +4,7 @@
 # export GPUMD_path=/d/Westlake/GPUMD
 # export GPUMDkit_path=/d/Westlake/Gpumdkit
 
-VERSION="1.0.3 (dev) (2025-02-20)"
+VERSION="1.0.4 (dev) (2025-02-21)"
 
 function f1_format_conversion(){
 echo " ------------>>"
@@ -494,7 +494,19 @@ if [ ! -z "$1" ]; then
             clean_extra_files
             ;;
         -time)
-            bash ${GPUMDkit_path}/Scripts/analyzer/time_consuming_analyzer.sh $2
+            case $2 in
+                gpumd)
+                    bash ${GPUMDkit_path}/Scripts/analyzer/time_consuming_gpumd.sh $3
+                    ;;
+                nep)
+                    bash ${GPUMDkit_path}/Scripts/analyzer/time_consuming_nep.sh
+                    ;;                
+                *)
+                    echo " See the codes in analyzer folder for more details"
+                    echo " Code path: ${GPUMDkit_path}/Scripts/analyzer/time_consuming_*.sh"
+                    exit 1
+                    ;;
+            esac
             ;;
         -plt)
             if [ ! -z "$2" ] && [ "$2" != "-h" ]; then
