@@ -1,3 +1,8 @@
+<div align="center">
+<img src="./Gallery/gpumdkit_logo.png" width = "25%" />
+</div>
+
+
 # GPUMDkit
 
 **`GPUMDkit`** is a toolkit for the [GPUMD](https://github.com/brucefan1983/GPUMD) (*Graphics Processing Units Molecular Dynamics*) program. It provides a set of tools to streamline the use of common scripts in GPUMD and  [NEP](https://gpumd.org/potentials/nep.html#nep-formalism) (neuroevolution potential), simplifying workflows and enhancing efficiency.
@@ -72,7 +77,7 @@ There are two options, <u>*interactive mode*</u> and <u>*command-line mode*</u>
           | |_| |  __/| |_| | |  | | |_| |   <| | |_
            \____|_|    \___/|_|  |_|____/|_|\_\_|\__|
     
-          GPUMDkit Version 1.0.0 (dev) (2025-01-28)
+          GPUMDkit Version 1.0.4 (dev) (2025-02-21)
           Developer: Zihan YAN (yanzihan@westlake.edu.cn)
     
     ----------------------- GPUMD -----------------------
@@ -102,7 +107,7 @@ the help information:
 
 ```
 +==================================================================================================+
-|                              GPUMDkit 1.0.0 (dev) (2025-01-28) Usage                             |
+|                              GPUMDkit 1.0.4 (dev) (2025-02-21) Usage                             |
 |                                                                 --- by Zihan YAN                 |
 +======================================== Conversions =============================================+
 | -outcar2exyz   Convert OUTCAR to extxyz       | -pos2exyz     Convert POSCAR to extxyz           |
@@ -118,7 +123,8 @@ the help information:
 +=========================================    Misc  ==============+================================+
 | -plt           Plot scripts                   | -get_frame     Extract the specified frame       |
 | -calc          Calculators                    | -clear_xyz     Clear extra info in XYZ file      |
-| -clean         Clear files for work_dir       | Developing...                                    |
+| -clean         Clear files for work_dir       | -time          Time consuming Analyzer           |
+| Developing...                                 | Developing...                                    |
 +==================================================================================================+
 | For detailed usage and examples, use: gpumdkit.sh -<option> -h                                   |
 +==================================================================================================+

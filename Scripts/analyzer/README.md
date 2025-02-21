@@ -17,10 +17,16 @@ An optional third argument (`hist`) can be provided to generate a histogram plot
 python script.py <filename> <property> [hist]
 ```
 
-#### Example1
+#### Example
 
 ```sh
 python energy_force_virial_analyzer.py dump.xyz force
+```
+
+#### Command-Line Mode Example
+
+```
+gpumdkit.sh -range dump.xyz force
 ```
 
 #### Output
@@ -35,7 +41,9 @@ If you add the `[hist]` option, it will calculate the range of forces and displa
 python energy_force_virial_analyzer.py dump.xyz force hist
 ```
 
-<img src="./range_force.png" style="zoom: 50%;" />
+<div align="center">
+<img src="../../Gallery/range_force.png" width = "50%" />
+</div>
 
 
 
@@ -55,6 +63,12 @@ python get_min_dist.py <extxyz_file>
 
 ```sh
 python get_min_dist.py dump.xyz
+```
+
+#### Command-Line Mode Example
+
+```
+gpumdkit.sh -min_dist dump.xyz
 ```
 
 #### Output
@@ -85,13 +99,17 @@ python get_min_dist_pbc.py <extxyz_file>
 python get_min_dist_pbc.py dump.xyz
 ```
 
+#### Command-Line Mode Example
+
+```
+gpumdkit.sh -min_dist_pbc dump.xyz
+```
+
 #### Output
 
 ```
 Minimum interatomic distance: 1.478098603206159 Å
 ```
-
-
 
 
 
@@ -113,7 +131,13 @@ python filter_exyz_by_value.py <extxyz_file> <min_dist>
 python filter_exyz_by_value.py dump.xyz 1.4
 ```
 
+#### Command-Line Mode Example
 
+```
+gpumdkit.sh -filter_value dump.xyz 1.4
+```
+
+#### 
 
 ### filter_exyz_by_box.py
 
@@ -131,6 +155,12 @@ python filter_exyz_by_box.py <extxyz_file> <min_dist>
 
 ```
 python filter_exyz_by_box.py dump.xyz 20
+```
+
+#### Command-Line Mode Example
+
+```
+gpumdkit.sh -filter_box dump.xyz 20
 ```
 
 
@@ -157,7 +187,91 @@ python filter_exyz_by_value.py <extxyz_file> <property> <threshold>
 python filter_exyz_by_value.py train.xyz force 20
 ```
 
+#### Command-Line Mode Example
+
+```
+gpumdkit.sh -filter_value train.xyz force 20
+```
+
 This command will filter out the structure in `train.xyz` with a force greater than 20 eV/angstrom.
+
+
+
+### time_consuming_gpumd.sh
+
+---
+
+This script calculates the remaining time for GPUMD.
+
+#### Usage
+
+```
+bash time_consuming_gpumd.sh <logfile>
+```
+
+- `<logfile>`: The path to your `log` file.
+
+#### Example
+
+```
+bash time_consuming_gpumd.sh log
+```
+
+#### Command-Line Mode Example
+
+```
+gpumdkit.sh -time gpumd <logfile>
+```
+
+#### Output
+
+```
+------------------ Time Consuming Results ------------------
+num of atoms: 7168
+atom*step/s : 4.85401e+06
+timesteps/s : 677.178
+total frames: 1050000
+total time  : 0h 25min 50s
+time left   : 0h 0min 0s
+Progress Bar: [########################################] 100%
+```
+
+
+
+### time_consuming_nep.sh
+
+---
+
+This script calculates the remaining time for nep.
+
+#### Usage
+
+```
+bash time_consuming_gpumd.sh
+```
+
+#### Example
+
+```
+bash time_consuming_nep.sh
+```
+
+#### Command-Line Mode Example
+
+```
+gpumdkit.sh -time nep
+```
+
+#### Output
+
+```
++-----------------+-----------+-----------------+
+|       Step      | Time Diff |    Time Left    |
++-----------------+-----------+-----------------+
+| 300             | 1 s       | 0 h 16 m 37 s   |
+| 400             | 5 s       | 1 h 23 m 0 s    |
+| 500             | 5 s       | 1 h 22 m 55 s   |
+```
 
 
 

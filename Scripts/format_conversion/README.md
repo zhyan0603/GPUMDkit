@@ -19,6 +19,12 @@ python add_groups.py <filename> <Symbols>
 python add_groups.py POSCAR Li Y Cl
 ```
 
+#### Command-Line Mode Example
+
+```
+gpumdkit.sh -addgroup POSCAR Li Y Cl
+```
+
 This command will read the `POSCAR` file and add group labels for the elements `Li`, `Y`, and `Cl`. The output will be saved to a file named `model.xyz`.
 
 
@@ -45,6 +51,12 @@ python add_weight.py <input_file> <output_file> <new_weight>
 python add_weight.py train.xyz train_weighted.xyz 5
 ```
 
+#### Command-Line Mode Example
+
+```
+gpumdkit.sh -addweight train.xyz train_weighted.xyz 5
+```
+
 This command will read the `train.xyz` file and add `Weight=5` labels for all structures. The output will be saved to a file named `train_weighted.xyz`.
 
 
@@ -67,6 +79,12 @@ python exyz2pos.py [extxyz_filename]
 
 ```sh
 python exyz2pos.py my_structures.xyz
+```
+
+#### Command-Line Mode Example
+
+```
+gpumdkit.sh -exyz2pos my_structures.xyz
 ```
 
 This command will convert all frames in `my_structures.xyz` to `POSCAR` files.
@@ -94,6 +112,12 @@ python pos2exyz.py <POSCAR_filename> <extxyz_filename>
 python pos2exyz.py POSCAR model.xyz
 ```
 
+#### Command-Line Mode Example
+
+```
+gpumdkit.sh -pos2exyz POSCAR model.xyz
+```
+
 This command will read the `POSCAR` file and convert it to `model.xyz` in `extxyz` format.
 
 
@@ -118,6 +142,12 @@ python pos2lmp.py <poscar_file> <lammps_data_file> <elements_order>
 
 ```
 python pos2lmp.py POSCAR lammps.data Li La Zr O
+```
+
+#### Command-Line Mode Example
+
+```
+gpumdkit.sh -pos2lmp POSCAR lammps.data Li La Zr O
 ```
 
 This command will read the `POSCAR` file and convert it to `lammps.data` in `lammps-data` format.
@@ -169,6 +199,12 @@ python lmp2exyz.py <dump_file> <element1> <element2> ...
 python lmp2exyz.py dump.lammps Li Y Cl
 ```
 
+#### Command-Line Mode Example
+
+```
+gpumdkit.sh -lmp2exyz dump.lammps Li Y Cl
+```
+
 
 
 ### get_frame.py
@@ -189,7 +225,13 @@ python get_frame.py <extxyz_file> <frame_index>
 #### Example
 
 ```sh
-python get_frame.py 1000
+python get_frame.py dump.xyz 1000
+```
+
+#### Command-Line Mode Example
+
+```
+gpumdkit.sh -get_frame dump.xyz 1000
 ```
 
 You will get the `frame_1000.xyz` file after perform the script.

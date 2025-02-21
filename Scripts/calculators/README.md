@@ -30,6 +30,12 @@ Enter system volume (in Å^3): 16785
 Enter number of ions: 448
 ```
 
+#### Command-Line Mode Example
+
+```
+gpumdkit.sh -calc ion-cond Li 1
+```
+
 #### Output
 
 ```
