@@ -83,8 +83,8 @@ There are two options, <u>*interactive mode*</u> and <u>*command-line mode*</u>
     ----------------------- GPUMD -----------------------
     1) Format Conversion          2) Sample Structures
     2) Workflow (dev)             4) Calculators         
-    3) Developing ...             6) Developing ...      
-    4) Quit!
+    5) Developing ...             6) Developing ...      
+    0) Quit!
     ------------>>
     Input the function number:
     ```
