@@ -10,7 +10,7 @@ if [ ! -f "$log_file" ]; then
 fi
 
 # Get the number of atoms (remove the trailing dot if any)
-atom_num=$(grep "Number of atoms" "$log_file" | awk '{print $5}' | sed 's/\.$//')
+atom_num=$(grep "Number of atoms" "$log_file" | tail -1 | awk '{print $5}' | sed 's/\.$//')
 
 # Get the step per second from the input file
 atom_speed=$(grep "step/second" "$log_file" | tail -1 | awk '{print $6}')
