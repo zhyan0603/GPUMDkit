@@ -1,7 +1,8 @@
+import os
 import sys
 import numpy as np
 import matplotlib.pyplot as plt
-import os
+from matplotlib.ticker import ScalarFormatter
 
 def calculate_angle(x, y):
     dot_product = np.einsum('ij,ij->i', x, y)
@@ -146,8 +147,10 @@ color_potential = 'tab:orange'
 color_kinetic = 'tab:green'
 axs[0, 2].set_title(r'$P_E$ vs $K_E$')
 axs[0, 2].set_xlabel('Time (ps)')
-axs[0, 2].set_ylabel(r'Potential Energy ($x10^3$ eV)', color=color_potential)
-axs[0, 2].plot(time, potential_energy/1000, color=color_potential)
+axs[0, 2].set_ylabel(r'Potential Energy (eV)', color=color_potential)
+axs[0, 2].plot(time, potential_energy, color=color_potential)
+axs[0, 2].yaxis.set_major_formatter(ScalarFormatter(useMathText=True))
+axs[0, 2].ticklabel_format(axis='y', style='sci', scilimits=(0,0))
 axs[0, 2].tick_params(axis='y', labelcolor=color_potential)
 
 axs_kinetic = axs[0, 2].twinx()
@@ -165,10 +168,12 @@ axs[1, 0].set_ylabel(r'Lattice Parameters ($\AA$)')
 axs[1, 0].legend()
 
 # Volume
-axs[1, 1].plot(time, volume / 1000, label='Volume', color='tab:purple')
+axs[1, 1].plot(time, volume, label='Volume', color='tab:purple')
+axs[1, 1].yaxis.set_major_formatter(ScalarFormatter(useMathText=True))
+axs[1, 1].ticklabel_format(axis='y', style='sci', scilimits=(0,0))
 axs[1, 1].set_title('Volume')
 axs[1, 1].set_xlabel('Time (ps)')
-axs[1, 1].set_ylabel(r'Volume ($x10^3$ $\AA^3$)')
+axs[1, 1].set_ylabel(r'Volume ($\AA^3$)')
 axs[1, 1].legend()
 
 # Angles (only for triclinic systems)
@@ -184,6 +189,6 @@ if num_columns == 18:
 plt.tight_layout()
 
 if len(sys.argv) > 1 and sys.argv[1] == 'save':
-    plt.savefig('./thermo.png')
+    plt.savefig('./thermo.png', dpi=150)
 else:
     plt.show()
