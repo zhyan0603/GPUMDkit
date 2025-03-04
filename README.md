@@ -1,6 +1,11 @@
 <div align="center">
-<img src="./Gallery/gpumdkit_logo.png" width = "25%" />
+<img src="./Gallery/gpumdkit_logo.png" width="25%" /><br>
+<a href="https://github.com/zhyan0603/GPUMDkit"><img src="https://img.shields.io/badge/version-1.0.6-brightgreen" alt="Version"></a>
+<a href="https://github.com/zhyan0603/GPUMDkit/blob/main/LICENSE"><img src="https://img.shields.io/badge/license-GPL--3.0-blue" alt="License"></a>
+<a href="https://github.com/zhyan0603/GPUMDkit/stargazers"><img src="https://img.shields.io/github/stars/zhyan0603/GPUMDkit?style=social" alt="Stars"></a>
+<img src="https://img.shields.io/github/languages/code-size/zhyan0603/GPUMDkit" alt="Code Size">
 </div>
+
 
 
 # GPUMDkit
@@ -53,7 +58,16 @@ To install `GPUMDkit`, follow these steps:
     ```
     
 
+## Update
+
+To update your local copy of `GPUMDkit`, simply run this command:
+
+```
+chmod -x gpumdkit.sh; git pull; chmod +x gpumdkit.sh
+```
+
 ## Usage
+
 There are two options, <u>*interactive mode*</u> and <u>*command-line mode*</u>
 
 #### Interactive Mode
@@ -77,7 +91,7 @@ There are two options, <u>*interactive mode*</u> and <u>*command-line mode*</u>
           | |_| |  __/| |_| | |  | | |_| |   <| | |_
            \____|_|    \___/|_|  |_|____/|_|\_\_|\__|
     
-          GPUMDkit Version 1.0.4 (dev) (2025-02-21)
+          GPUMDkit Version 1.0.6 (dev) (2025-02-26)
           Developer: Zihan YAN (yanzihan@westlake.edu.cn)
     
     ----------------------- GPUMD -----------------------
@@ -88,8 +102,6 @@ There are two options, <u>*interactive mode*</u> and <u>*command-line mode*</u>
     ------------>>
     Input the function number:
     ```
-
-
 
 #### Command-Line Mode
 
@@ -107,7 +119,7 @@ the help information:
 
 ```
 +==================================================================================================+
-|                              GPUMDkit 1.0.4 (dev) (2025-02-21) Usage                             |
+|                              GPUMDkit 1.0.6 (dev) (2025-02-26) Usage                             |
 |                                                                 --- by Zihan YAN                 |
 +======================================== Conversions =============================================+
 | -outcar2exyz   Convert OUTCAR to extxyz       | -pos2exyz     Convert POSCAR to extxyz           |
@@ -154,10 +166,18 @@ You can also save images as PNG if your device doesn't support visualization:
 gpumdkit.sh -plt thermo save
 ```
 
-
-
 Refer to the [Usage Instructions](./Tutorials/README.md) for more detailed examples and command options.
 
----
+## Join Us 
 
-Thank you for using `GPUMDkit`! If you have any questions or need further assistance, feel free to open an issue on our GitHub repository or contact Zihan YAN (yanzihan@westlake.edu.cn).
+We’d love your help to improve **GPUMDkit**! Contribute by:
+
+- Adding Python/Shell scripts via [Pull Requests](https://github.com/zhyan0603/GPUMDkit/pulls).
+- Contacting me at [yanzihan@westlake.edu.cn](mailto:yanzihan@westlake.edu.cn).
+
+Let’s build something amazing together! 🌟
+
+## Citation
+
+As of now, `GPUMDkit` is a toy model, free for anyone to use and experiment with. If you like it, please ⭐ [star us on GitHub](https://github.com/zhyan0603/GPUMDkit). Thanks for your support!
+
