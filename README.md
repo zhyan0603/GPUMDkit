@@ -1,6 +1,11 @@
 <div align="center">
-<img src="./Gallery/gpumdkit_logo.png" width = "25%" />
+<img src="./Gallery/gpumdkit_logo.png" width="25%" /><br>
+<a href="https://github.com/zhyan0603/GPUMDkit"><img src="https://img.shields.io/badge/version-1.0.6-brightgreen" alt="Version"></a>
+<a href="https://github.com/zhyan0603/GPUMDkit/blob/main/LICENSE"><img src="https://img.shields.io/badge/license-GPL--3.0-blue" alt="License"></a>
+<a href="https://github.com/zhyan0603/GPUMDkit/stargazers"><img src="https://img.shields.io/github/stars/zhyan0603/GPUMDkit?style=social" alt="Stars"></a>
+<img src="https://img.shields.io/github/languages/code-size/zhyan0603/GPUMDkit" alt="Code Size">
 </div>
+
 
 
 # GPUMDkit
@@ -163,11 +168,16 @@ gpumdkit.sh -plt thermo save
 
 Refer to the [Usage Instructions](./Tutorials/README.md) for more detailed examples and command options.
 
-## Join Us
+## Join Us 
 
-We warmly welcome contributions from the community to make `GPUMDkit` even better! Whether you’d like to add `Python` or `Shell` scripts, feel free to submit a Pull Request directly or reach out to Zihan YAN (yanzihan@westlake.edu.cn) to discuss your ideas. Let’s collaborate to enhance this project together!
+We’d love your help to improve **GPUMDkit**! Contribute by:
+
+- Adding Python/Shell scripts via [Pull Requests](https://github.com/zhyan0603/GPUMDkit/pulls).
+- Contacting me at [yanzihan@westlake.edu.cn](mailto:yanzihan@westlake.edu.cn).
+
+Let’s build something amazing together! 🌟
 
 ## Citation
 
-As of now, `GPUMDkit` is a toy model, free for anyone to use and experiment with. If you find it helpful or interesting, we’d appreciate it if you could give it a ⭐ star on `GitHub`. Thank you all for your support!
+As of now, `GPUMDkit` is a toy model, free for anyone to use and experiment with. If you like it, please ⭐ [star us on GitHub](https://github.com/zhyan0603/GPUMDkit). Thanks for your support!
 
