@@ -53,7 +53,16 @@ To install `GPUMDkit`, follow these steps:
     ```
     
 
+## Update
+
+To update your local copy of `GPUMDkit`, simply run this command:
+
+```
+chmod -x gpumdkit.sh; git pull; chmod +x gpumdkit.sh
+```
+
 ## Usage
+
 There are two options, <u>*interactive mode*</u> and <u>*command-line mode*</u>
 
 #### Interactive Mode
@@ -77,7 +86,7 @@ There are two options, <u>*interactive mode*</u> and <u>*command-line mode*</u>
           | |_| |  __/| |_| | |  | | |_| |   <| | |_
            \____|_|    \___/|_|  |_|____/|_|\_\_|\__|
     
-          GPUMDkit Version 1.0.4 (dev) (2025-02-21)
+          GPUMDkit Version 1.0.6 (dev) (2025-02-26)
           Developer: Zihan YAN (yanzihan@westlake.edu.cn)
     
     ----------------------- GPUMD -----------------------
@@ -88,8 +97,6 @@ There are two options, <u>*interactive mode*</u> and <u>*command-line mode*</u>
     ------------>>
     Input the function number:
     ```
-
-
 
 #### Command-Line Mode
 
@@ -107,7 +114,7 @@ the help information:
 
 ```
 +==================================================================================================+
-|                              GPUMDkit 1.0.4 (dev) (2025-02-21) Usage                             |
+|                              GPUMDkit 1.0.6 (dev) (2025-02-26) Usage                             |
 |                                                                 --- by Zihan YAN                 |
 +======================================== Conversions =============================================+
 | -outcar2exyz   Convert OUTCAR to extxyz       | -pos2exyz     Convert POSCAR to extxyz           |
@@ -154,10 +161,13 @@ You can also save images as PNG if your device doesn't support visualization:
 gpumdkit.sh -plt thermo save
 ```
 
-
-
 Refer to the [Usage Instructions](./Tutorials/README.md) for more detailed examples and command options.
 
----
+## Join Us
 
-Thank you for using `GPUMDkit`! If you have any questions or need further assistance, feel free to open an issue on our GitHub repository or contact Zihan YAN (yanzihan@westlake.edu.cn).
+We warmly welcome contributions from the community to make `GPUMDkit` even better! Whether you’d like to add `Python` or `Shell` scripts, feel free to submit a Pull Request directly or reach out to Zihan YAN (yanzihan@westlake.edu.cn) to discuss your ideas. Let’s collaborate to enhance this project together!
+
+## Citation
+
+As of now, `GPUMDkit` is a toy model, free for anyone to use and experiment with. If you find it helpful or interesting, we’d appreciate it if you could give it a ⭐ star on `GitHub`. Thank you all for your support!
+
