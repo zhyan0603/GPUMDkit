@@ -4,7 +4,7 @@
 # export GPUMD_path=/d/Westlake/GPUMD
 # export GPUMDkit_path=/d/Westlake/Gpumdkit
 
-VERSION="1.0.6 (dev) (2025-02-26)"
+VERSION="1.0.6 (dev) (2025-03-06)"
 
 function f1_format_conversion(){
 echo " ------------>>"
@@ -202,7 +202,7 @@ case $num_choice in
     "205")
         echo " >-------------------------------------------------<"
         echo " | This function calls the script in Scripts       |"
-        echo " | Script: select_max_modev.py                    |"
+        echo " | Script: select_max_modev.py                     |"
         echo " | Developer: Zihan YAN (yanzihan@westlake.edu.cn) |"
         echo " >-------------------------------------------------<"
         echo " Input <structs_num> <threshold> (eg. 200 0.15)"
@@ -302,7 +302,7 @@ case $num_choice in
     "402")
         echo " >-------------------------------------------------<"
         echo " | This function calls the script in calculators   |"
-        echo " | Script: calc_properties_with_nep.py                |"
+        echo " | Script: calc_properties_with_nep.py             |"
         echo " | Developer: Zihan YAN (yanzihan@westlake.edu.cn) |"
         echo " >-------------------------------------------------<"
         echo " Input <input.xyz> <output.xyz> <nep_model> "
