@@ -56,7 +56,7 @@ if __name__ == "__main__":
     min_val, max_val, values = calculate_range(frames, property_name)
     
     # Print the range
-    print(f"{property_name.capitalize()} range: {min_val} to {max_val}")
+    print(f"{property_name.capitalize()} range: {min_val:.3f} to {max_val:.3f}")
     
     # Plot histogram if requested
     if plot_hist:
