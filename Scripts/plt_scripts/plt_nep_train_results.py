@@ -3,7 +3,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 # from cycler import cycler
 
-# custom_colors = ['#8FA2CD', '#F8BC7E', '#A9CA70', '#F09BA0', '#9D9EA3', '#B7B7EB']
+# custom_colors = ['#9BBBE1', '#EAB883', '#A9CA70', '#DD7C4F', '#F09BA0', '#B58C9A']
 # plt.rcParams['axes.prop_cycle'] = cycler(color=custom_colors)
 
 # Load data
