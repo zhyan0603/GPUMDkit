@@ -16,9 +16,9 @@ symbol2 = sys.argv[2]  # Type of the second atom
 nep_path = sys.argv[3]  # Directory of the NEP potential file
 
 # Set the range and step size for distances
-start_distance = 0.6  # Starting distance in Ångström
+start_distance = 0.1  # Starting distance in Ångström
 end_distance = 6.0    # Ending distance in Ångström
-step_size = 0.05      # Step size in Ångström
+step_size = 0.01      # Step size in Ångström
 
 # Initialize arrays for results
 distances = np.arange(start_distance, end_distance + step_size, step_size)
@@ -59,7 +59,7 @@ reference_energy = energies[-1]  # Use the energy at the largest distance as ref
 energies_shifted = energies - reference_energy
 
 # Save data to file after calculations
-with open('dimer_data.txt', 'w') as f:
+with open(f'dimer_{symbol1}_{symbol2}.txt', 'w') as f:
     # Write the header
     f.write('Distance (Å)  Energy (eV)  Force (eV/Å)\n')
     

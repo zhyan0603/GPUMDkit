@@ -176,7 +176,7 @@ We’d love your help to improve **GPUMDkit**! Contribute by:
 - Adding Python/Shell scripts via [Pull Requests](https://github.com/zhyan0603/GPUMDkit/pulls).
 - Contacting me at [yanzihan@westlake.edu.cn](mailto:yanzihan@westlake.edu.cn).
 
-Let’s build something amazing together! 🌟
+Let’s build something useful together! 🌟
 
 ## Citation
 
