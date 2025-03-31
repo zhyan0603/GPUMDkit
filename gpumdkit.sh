@@ -4,7 +4,89 @@
 # export GPUMD_path=/d/Westlake/GPUMD
 # export GPUMDkit_path=/d/Westlake/Gpumdkit
 
-VERSION="1.0.6 (dev) (2025-03-17)"
+VERSION="1.1.0 (dev) (2025-03-31)"
+
+#--------------------- function 1 format conversion ----------------------
+# These functions are used to convert the format of the files
+
+function f101_out2xyz(){
+echo " >-------------------------------------------------<"
+echo " | This function calls the script in GPUMD's tools |"
+echo " | Script: multipleFrames-outcars2nep-exyz.sh      |"
+echo " | Developer: Yanzhou WANG (yanzhowang@gmail.com ) |"
+echo " >-------------------------------------------------<"
+echo " Input the directory containing OUTCARs"
+echo " ------------>>"
+read -p " " dir_outcars
+echo " >-------------------------------------------------<"
+bash ${GPUMD_path}/tools/vasp2xyz/outcar2xyz/multipleFrames-outcars2nep-exyz.sh ${dir_outcars}
+echo " >-------------------------------------------------<"
+echo " Code path: ${GPUMD_path}/tools/vasp2xyz/outcar2xyz/multipleFrames-outcars2nep-exyz.sh"
+}
+
+function f102_mtp2xyz(){
+echo " >-------------------------------------------------<"
+echo " | This function calls the script in GPUMD's tools |"
+echo " | Script: mtp2xyz.py                              |"
+echo " | Developer: Ke XU (kickhsu@gmail.com)            |"
+echo " >-------------------------------------------------<"
+echo " Input <filename.cfg> <Symbol1 Symbol2 Symbol3 ...>"
+echo " Examp: train.cfg Pd Ag"
+echo " ------------>>"
+read -p " " mtp_variables
+echo " ---------------------------------------------------"
+python ${GPUMD_path}/tools/mtp2xyz/mtp2xyz.py ${mtp_variables}
+echo " Code path: ${GPUMD_path}/tools/mtp2xyz/mtp2xyz.py"
+echo " ---------------------------------------------------"
+}
+
+f103_cp2k2xyz(){
+echo " >-------------------------------------------------<"
+echo " | This function calls the script in GPUMD's tools |"
+echo " | Script: cp2k2xyz.py                             |"
+echo " | Developer: Ke XU (kickhsu@gmail.com)            |"
+echo " >-------------------------------------------------<"
+echo " Input <dir_cp2k> "
+echo " Examp: ./cp2k "
+echo " ------------>>"
+read -p " " dir_cp2k
+echo " ---------------------------------------------------"
+python ${GPUMD_path}/tools/cp2k2xyz/cp2k2xyz.py ${dir_cp2k}
+echo " Code path: ${GPUMD_path}/tools/cp2k2xyz/cp2k2xyz.py"
+echo " ---------------------------------------------------"
+}
+
+function f104_castep2xyz(){
+echo " >-------------------------------------------------<"
+echo " | This function calls the script in GPUMD's tools |"
+echo " | Script: castep2nep-exyz.sh                      |"
+echo " | Developer: Yanzhou WANG (yanzhowang@gmail.com ) |"
+echo " >-------------------------------------------------<"
+echo " Input <dir_castep>"
+echo " Examp: ./castep "
+echo " ------------>>"
+read -p " " dir_castep
+echo " ---------------------------------------------------"
+bash ${GPUMD_path}/tools/castep2exyz/castep2nep-exyz.sh ${dir_castep}
+echo " Code path: ${GPUMD_path}/tools/castep2exyz/castep2nep-exyz.sh"
+echo " ---------------------------------------------------"
+}
+
+function f105_extxyz2poscar(){
+echo " >-------------------------------------------------<"
+echo " | This function calls the script in Scripts       |"
+echo " | Script: exyz2pos.py                             |"
+echo " | Developer: Zihan YAN (yanzihan@westlake.edu.cn) |"
+echo " >-------------------------------------------------<"
+echo " Input the name of extxyz"
+echo " Examp: ./train.xyz "
+echo " ------------>>"
+read -p " " filename
+echo " ---------------------------------------------------"
+python ${GPUMDkit_path}/Scripts/format_conversion/exyz2pos.py ${filename}
+echo " Code path: ${GPUMDkit_path}/Scripts/format_conversion/exyz2pos.py"
+echo " ---------------------------------------------------"
+}
 
 function f1_format_conversion(){
 echo " ------------>>"
@@ -29,78 +111,19 @@ done
 
 case $num_choice in
     "101")
-        echo " >-------------------------------------------------<"
-        echo " | This function calls the script in GPUMD's tools |"
-        echo " | Script: multipleFrames-outcars2nep-exyz.sh      |"
-        echo " | Developer: Yanzhou WANG (yanzhowang@gmail.com ) |"
-        echo " >-------------------------------------------------<"
-        echo " Input the directory containing OUTCARs"
-        echo " ------------>>"
-        read -p " " dir_outcars
-        echo " >-------------------------------------------------<"
-        bash ${GPUMD_path}/tools/vasp2xyz/outcar2xyz/multipleFrames-outcars2nep-exyz.sh ${dir_outcars}
-        echo " >-------------------------------------------------<"
-        echo " Code path: ${GPUMD_path}/tools/vasp2xyz/outcar2xyz/multipleFrames-outcars2nep-exyz.sh"
+        f101_out2xyz
         ;;
     "102")
-        echo " >-------------------------------------------------<"
-        echo " | This function calls the script in GPUMD's tools |"
-        echo " | Script: mtp2xyz.py                              |"
-        echo " | Developer: Ke XU (kickhsu@gmail.com)            |"
-        echo " >-------------------------------------------------<"
-        echo " Input <filename.cfg> <Symbol1 Symbol2 Symbol3 ...>"
-        echo " Examp: train.cfg Pd Ag"
-        echo " ------------>>"
-        read -p " " mtp_variables
-        echo " ---------------------------------------------------"
-        python ${GPUMD_path}/tools/mtp2xyz/mtp2xyz.py ${mtp_variables}
-        echo " Code path: ${GPUMD_path}/tools/mtp2xyz/mtp2xyz.py"
-        echo " ---------------------------------------------------"
+        f102_mtp2xyz
         ;;
     "103")
-        echo " >-------------------------------------------------<"
-        echo " | This function calls the script in GPUMD's tools |"
-        echo " | Script: cp2k2xyz.py                             |"
-        echo " | Developer: Ke XU (kickhsu@gmail.com)            |"
-        echo " >-------------------------------------------------<"
-        echo " Input <dir_cp2k> "
-        echo " Examp: ./cp2k "
-        echo " ------------>>"
-        read -p " " dir_cp2k
-        echo " ---------------------------------------------------"
-        python ${GPUMD_path}/tools/cp2k2xyz/cp2k2xyz.py ${dir_cp2k}
-        echo " Code path: ${GPUMD_path}/tools/cp2k2xyz/cp2k2xyz.py"
-        echo " ---------------------------------------------------"
+        f103_cp2k2xyz
         ;;
     "104")
-        echo " >-------------------------------------------------<"
-        echo " | This function calls the script in GPUMD's tools |"
-        echo " | Script: castep2nep-exyz.sh                      |"
-        echo " | Developer: Yanzhou WANG (yanzhowang@gmail.com ) |"
-        echo " >-------------------------------------------------<"
-        echo " Input <dir_castep>"
-        echo " Examp: ./castep "
-        echo " ------------>>"
-        read -p " " dir_castep
-        echo " ---------------------------------------------------"
-        bash ${GPUMD_path}/tools/castep2exyz/castep2nep-exyz.sh ${dir_castep}
-        echo " Code path: ${GPUMD_path}/tools/castep2exyz/castep2nep-exyz.sh"
-        echo " ---------------------------------------------------"
+        f104_castep2xyz
         ;;
     "105")
-        echo " >-------------------------------------------------<"
-        echo " | This function calls the script in Scripts       |"
-        echo " | Script: exyz2pos.py                             |"
-        echo " | Developer: Zihan YAN (yanzihan@westlake.edu.cn) |"
-        echo " >-------------------------------------------------<"
-        echo " Input the name of extxyz"
-        echo " Examp: ./train.xyz "
-        echo " ------------>>"
-        read -p " " filename
-        echo " ---------------------------------------------------"
-        python ${GPUMDkit_path}/Scripts/format_conversion/exyz2pos.py ${filename}
-        echo " Code path: ${GPUMDkit_path}/Scripts/format_conversion/exyz2pos.py"
-        echo " ---------------------------------------------------"
+        f105_extxyz2poscar
         ;; 
     "106")
         echo " Developing ... "
@@ -112,6 +135,91 @@ case $num_choice in
         ;;
 esac
 
+}
+
+#--------------------- function 2 sample structures ----------------------
+# These functions are used to sample structures
+
+function f201_sample_structures(){
+echo " >-------------------------------------------------<"
+echo " | This function calls the script in Scripts       |"
+echo " | Script: sample_structures.py                    |"
+echo " | Developer: Zihan YAN (yanzihan@westlake.edu.cn) |"
+echo " >-------------------------------------------------<"
+echo " Input <extxyz_file> <sampling_method> <num_samples> [skip_num]"
+echo " [skip_num]: number of initial frames to skip, default value is 0"
+echo " Sampling_method: 'uniform' or 'random'"
+echo " Examp: train.xyz uniform 50 "
+echo " ------------>>"
+read -p " " sample_choice
+echo " ---------------------------------------------------"
+python ${GPUMDkit_path}/Scripts/sample_structures/sample_structures.py ${sample_choice}
+echo " Code path: ${GPUMDkit_path}/Scripts/sample_structures/sample_structures.py"
+echo " ---------------------------------------------------"
+}
+
+function f202_pynep_sample_structures(){
+echo " >-------------------------------------------------<"
+echo " | This function calls the script in Scripts       |"
+echo " | Script: pynep_select_structs.py                 |"
+echo " | Developer: Zihan YAN (yanzihan@westlake.edu.cn) |"
+echo " >-------------------------------------------------<"
+echo " Input <sample.xyz> <train.xyz> <nep_model> <min_dist>"
+echo " Examp: dump.xyz train.xyz ./nep.txt 0.01 "
+echo " ------------>>"
+read -p " " sample_choice
+echo " ---------------------------------------------------"
+python ${GPUMDkit_path}/Scripts/sample_structures/pynep_select_structs.py ${sample_choice}
+echo " Code path: ${GPUMDkit_path}/Scripts/sample_structures/pynep_select_structs.py"
+echo " ---------------------------------------------------"
+}
+
+function f203_find_outliers(){
+echo " >-------------------------------------------------<"
+echo " | This function calls the script in GPUMD's tools |"
+echo " | Script: get_max_rmse_xyz.py                     |"
+echo " | Developer: Ke XU (kickhsu@gmail.com)            |"
+echo " >-------------------------------------------------<"
+echo " Input <extxyz_file> <*_train.out> <num_outliers>"
+echo " Examp: train.xyz energy_train.out 13 "
+echo " ------------>>"
+read -p " " maxrmse_choice
+echo " ---------------------------------------------------"
+python ${GPUMD_path}/tools/get_max_rmse_xyz/get_max_rmse_xyz.py ${maxrmse_choice}
+echo " Code path: ${GPUMD_path}/tools/get_max_rmse_xyz/get_max_rmse_xyz.py"
+echo " ---------------------------------------------------"
+}
+
+function f204_perturb_structure(){
+echo " >-------------------------------------------------<"
+echo " | This function calls the script in Scripts       |"
+echo " | Script: perturb_structure.py                    |"
+echo " | Developer: Zihan YAN (yanzihan@westlake.edu.cn) |"
+echo " >-------------------------------------------------<"
+echo " Input <input.vasp> <pert_num> <cell_pert_fraction> <atom_pert_distance> <atom_pert_style>"
+echo " The default paramters for perturb are 20 0.03 0.2 uniform"
+echo " Examp: POSCAR 20 0.03 0.2 uniform"
+echo " ------------>>"
+read -p " " perturb_choice
+echo " ---------------------------------------------------"
+python ${GPUMDkit_path}/Scripts/sample_structures/perturb_structure.py ${perturb_choice}
+echo " Code path: ${GPUMDkit_path}/Scripts/sample_structures/perturb_structure.py"
+echo " ---------------------------------------------------"
+}
+
+function f205_select_max_force_deviation_structs(){
+echo " >-------------------------------------------------<"
+echo " | This function calls the script in Scripts       |"
+echo " | Script: select_max_modev.py                     |"
+echo " | Developer: Zihan YAN (yanzihan@westlake.edu.cn) |"
+echo " >-------------------------------------------------<"
+echo " Input <structs_num> <threshold> (eg. 200 0.15)"
+echo " ------------>>"
+read -p " " modev_choice
+echo " ---------------------------------------------------"
+python ${GPUMDkit_path}/Scripts/sample_structures/select_max_modev.py ${modev_choice}
+echo " Code path: ${GPUMDkit_path}/Scripts/sample_structures/select_max_modev.py"
+echo " ---------------------------------------------------"
 }
 
 function f2_sample_structures(){
@@ -137,81 +245,19 @@ done
 
 case $num_choice in
     "201")
-        echo " >-------------------------------------------------<"
-        echo " | This function calls the script in Scripts       |"
-        echo " | Script: sample_structures.py                    |"
-        echo " | Developer: Zihan YAN (yanzihan@westlake.edu.cn) |"
-        echo " >-------------------------------------------------<"
-        echo " Input <extxyz_file> <sampling_method> <num_samples> [skip_num]"
-        echo " [skip_num]: number of initial frames to skip, default value is 0"
-        echo " Sampling_method: 'uniform' or 'random'"
-        echo " Examp: train.xyz uniform 50 "
-        echo " ------------>>"
-        read -p " " sample_choice
-        echo " ---------------------------------------------------"
-        python ${GPUMDkit_path}/Scripts/sample_structures/sample_structures.py ${sample_choice}
-        echo " Code path: ${GPUMDkit_path}/Scripts/sample_structures/sample_structures.py"
-        echo " ---------------------------------------------------"
+        f201_sample_structures
         ;;
     "202")
-        echo " >-------------------------------------------------<"
-        echo " | This function calls the script in Scripts       |"
-        echo " | Script: pynep_select_structs.py                 |"
-        echo " | Developer: Zihan YAN (yanzihan@westlake.edu.cn) |"
-        echo " >-------------------------------------------------<"
-        echo " Input <sample.xyz> <train.xyz> <nep_model> <min_dist>"
-        echo " Examp: dump.xyz train.xyz ./nep.txt 0.01 "
-        echo " ------------>>"
-        read -p " " sample_choice
-        echo " ---------------------------------------------------"
-        python ${GPUMDkit_path}/Scripts/sample_structures/pynep_select_structs.py ${sample_choice}
-        echo " Code path: ${GPUMDkit_path}/Scripts/sample_structures/pynep_select_structs.py"
-        echo " ---------------------------------------------------"
+        f202_pynep_sample_structures
         ;;
     "203")
-        echo " >-------------------------------------------------<"
-        echo " | This function calls the script in GPUMD's tools |"
-        echo " | Script: get_max_rmse_xyz.py                     |"
-        echo " | Developer: Ke XU (kickhsu@gmail.com)            |"
-        echo " >-------------------------------------------------<"
-        echo " Input <extxyz_file> <*_train.out> <num_outliers>"
-        echo " Examp: train.xyz energy_train.out 13 "
-        echo " ------------>>"
-        read -p " " maxrmse_choice
-        echo " ---------------------------------------------------"
-        python ${GPUMD_path}/tools/get_max_rmse_xyz/get_max_rmse_xyz.py ${maxrmse_choice}
-        echo " Code path: ${GPUMD_path}/tools/get_max_rmse_xyz/get_max_rmse_xyz.py"
-        echo " ---------------------------------------------------"
+        f203_find_outliers
         ;;
     "204")
-        echo " >-------------------------------------------------<"
-        echo " | This function calls the script in Scripts       |"
-        echo " | Script: perturb_structure.py                    |"
-        echo " | Developer: Zihan YAN (yanzihan@westlake.edu.cn) |"
-        echo " >-------------------------------------------------<"
-        echo " Input <input.vasp> <pert_num> <cell_pert_fraction> <atom_pert_distance> <atom_pert_style>"
-        echo " The default paramters for perturb are 20 0.03 0.2 uniform"
-        echo " Examp: POSCAR 20 0.03 0.2 uniform"
-        echo " ------------>>"
-        read -p " " perturb_choice
-        echo " ---------------------------------------------------"
-        python ${GPUMDkit_path}/Scripts/sample_structures/perturb_structure.py ${perturb_choice}
-        echo " Code path: ${GPUMDkit_path}/Scripts/sample_structures/perturb_structure.py"
-        echo " ---------------------------------------------------"
+        f204_perturb_structure
         ;;
     "205")
-        echo " >-------------------------------------------------<"
-        echo " | This function calls the script in Scripts       |"
-        echo " | Script: select_max_modev.py                     |"
-        echo " | Developer: Zihan YAN (yanzihan@westlake.edu.cn) |"
-        echo " >-------------------------------------------------<"
-        echo " Input <structs_num> <threshold> (eg. 200 0.15)"
-        echo " ------------>>"
-        read -p " " modev_choice
-        echo " ---------------------------------------------------"
-        python ${GPUMDkit_path}/Scripts/sample_structures/select_max_modev.py ${modev_choice}
-        echo " Code path: ${GPUMDkit_path}/Scripts/sample_structures/select_max_modev.py"
-        echo " ---------------------------------------------------"
+        f205_select_max_force_deviation_structs
         ;;
     "206")
         echo " Developing ... "
@@ -223,6 +269,11 @@ case $num_choice in
 esac
 
 }
+
+
+#--------------------- function 3 workflow ----------------------
+# These functions are used to do the workflow
+# See the source codes in Scripts/workflow for more details
 
 function f3_workflow_dev(){
 echo " ------------>>"
@@ -266,6 +317,41 @@ case $num_choice in
 esac
 }
 
+#--------------------- function 4 calculators ----------------------
+# These functions are used to do the calculators
+# See the source codes in Scripts/calculators for more details
+
+function f401_calc_ionic_conductivity(){
+echo " >-------------------------------------------------<"
+echo " | This function calls the script in calculators   |"
+echo " | Script: calc_ion_conductivity.py                |"
+echo " | Developer: Zihan YAN (yanzihan@westlake.edu.cn) |"
+echo " >-------------------------------------------------<"
+echo " Input <element> <charge> (eg. Li 1)"
+echo " ------------>>"
+read -p " " ion_cond_choice
+echo " ---------------------------------------------------"
+python ${GPUMDkit_path}/Scripts/calculators/calc_ion_conductivity.py ${ion_cond_choice}
+echo " Code path: ${GPUMDkit_path}/Scripts/calculators/calc_ion_conductivity.py"
+echo " ---------------------------------------------------"
+}
+
+function f402_calc_properties_with_nep(){
+echo " >-------------------------------------------------<"
+echo " | This function calls the script in calculators   |"
+echo " | Script: calc_properties_with_nep.py             |"
+echo " | Developer: Zihan YAN (yanzihan@westlake.edu.cn) |"
+echo " >-------------------------------------------------<"
+echo " Input <input.xyz> <output.xyz> <nep_model> "
+echo " Examp: input.xyz outpt.xyz nep.txt"
+echo " ------------>>"
+read -p " " input_calc_properties
+echo " ---------------------------------------------------"
+python ${GPUMDkit_path}/Scripts/calculators/calc_properties_with_nep.py ${input_calc_properties}
+echo " Code path: ${GPUMDkit_path}/Scripts/calculators/calc_properties_with_nep.py"
+echo " ---------------------------------------------------"
+}
+
 function f4_calculators(){
 echo " ------------>>"
 echo " 401) Calc ionic conductivity"
@@ -286,33 +372,10 @@ done
 
 case $num_choice in
     "401")
-        echo " >-------------------------------------------------<"
-        echo " | This function calls the script in calculators   |"
-        echo " | Script: calc_ion_conductivity.py                |"
-        echo " | Developer: Zihan YAN (yanzihan@westlake.edu.cn) |"
-        echo " >-------------------------------------------------<"
-        echo " Input <element> <charge> (eg. Li 1)"
-        echo " ------------>>"
-        read -p " " ion_cond_choice
-        echo " ---------------------------------------------------"
-        python ${GPUMDkit_path}/Scripts/calculators/calc_ion_conductivity.py ${ion_cond_choice}
-        echo " Code path: ${GPUMDkit_path}/Scripts/calculators/calc_ion_conductivity.py"
-        echo " ---------------------------------------------------"
+        f401_calc_ionic_conductivity
         ;;
     "402")
-        echo " >-------------------------------------------------<"
-        echo " | This function calls the script in calculators   |"
-        echo " | Script: calc_properties_with_nep.py             |"
-        echo " | Developer: Zihan YAN (yanzihan@westlake.edu.cn) |"
-        echo " >-------------------------------------------------<"
-        echo " Input <input.xyz> <output.xyz> <nep_model> "
-        echo " Examp: input.xyz outpt.xyz nep.txt"
-        echo " ------------>>"
-        read -p " " input_calc_properties
-        echo " ---------------------------------------------------"
-        python ${GPUMDkit_path}/Scripts/calculators/calc_properties_with_nep.py ${input_calc_properties}
-        echo " Code path: ${GPUMDkit_path}/Scripts/calculators/calc_properties_with_nep.py"
-        echo " ---------------------------------------------------"
+        f402_calc_properties_with_nep
         ;;
     "403")
         echo " Developing ... "
@@ -323,6 +386,10 @@ case $num_choice in
         ;;
 esac
 }
+
+#--------------------- clean extra files ----------------------
+# This function is used to clean extra files in the current directory
+# It will keep some files and delete the rest
 
 function clean_extra_files(){
 keep_files=("run.in" "nep.in" "model.xyz" "nep.txt" "train.xyz" "test.xyz")
@@ -418,7 +485,14 @@ echo " 0) Quit!"
 function main(){
     echo " ------------>>"
     echo ' Input the function number:'
-    array_choice=("0" "1" "2" "3" "4" "5" "6") 
+    array_choice=(
+        "0" "1" "101" "102" "103" "104" "105" 
+        "2" "201" "202" "203" "204" "205" 
+        "3" "301" "302" "303" 
+        "4" "401" "402" 
+        "5"
+        "6"
+    ) 
     read -p " " choice
     while ! echo "${array_choice[@]}" | grep -wq "$choice" 
     do
@@ -435,14 +509,62 @@ function main(){
         "1")
             f1_format_conversion
             ;;
+        "101")
+            f101_out2xyz
+            ;;
+        "102")
+            f102_mtp2xyz
+            ;;
+        "103")
+            f103_cp2k2xyz
+            ;;
+        "104")      
+            f104_castep2xyz
+            ;;
+        "105")  
+            f105_extxyz2poscar
+            ;;
         "2")
             f2_sample_structures
+            ;;
+        "201")
+            f201_sample_structures
+            ;; 
+        "202")  
+            f202_pynep_sample_structures
+            ;;
+        "203")
+            f203_find_outliers
+            ;;
+        "204")
+            f204_perturb_structure
+            ;;
+        "205")
+            f205_select_max_force_deviation_structs
             ;;
         "3")
             f3_workflow_dev
             ;;
+        "301")
+            source ${GPUMDkit_path}/Scripts/workflow/scf_batch_pretreatment.sh
+            f301_scf_batch_pretreatment
+            ;;
+        "302")
+            source ${GPUMDkit_path}/Scripts/workflow/md_sample_batch_pretreatment_gpumd.sh
+            f302_md_sample_batch_pretreatment_gpumd
+            ;;
+        "303")
+            source ${GPUMDkit_path}/Scripts/workflow/md_sample_batch_pretreatment_lmp.sh
+            f303_md_sample_batch_pretreatment_lmp
+            ;;
         "4")
             f4_calculators
+            ;;
+        "401")
+            f401_calc_ionic_conductivity
+            ;;
+        "402")
+            f402_calc_properties_with_nep
             ;;
         "5")
             echo "Developing ..."
@@ -458,7 +580,10 @@ function main(){
     echo " Thank you for using GPUMDkit. Have a great day!"
 }
 
-######### Custom functional area ###############
+#--------------------- help info ----------------------
+# This function is used to show the help information
+# It will show the usage of each function
+
 function help_info_table(){
     echo "+==================================================================================================+"
     echo "|                              GPUMDkit ${VERSION} Usage                             |"
@@ -483,7 +608,6 @@ function help_info_table(){
     echo "| For detailed usage and examples, use: gpumdkit.sh -<option> -h                                   |"
     echo "+==================================================================================================+"
 }
-
 
 if [ ! -z "$1" ]; then
     case $1 in
