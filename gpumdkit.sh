@@ -4,7 +4,7 @@
 # export GPUMD_path=/d/Westlake/GPUMD
 # export GPUMDkit_path=/d/Westlake/Gpumdkit
 
-VERSION="1.1.0 (dev) (2025-03-31)"
+VERSION="1.1.1 (dev) (2025-04-02)"
 
 #--------------------- function 1 format conversion ----------------------
 # These functions are used to convert the format of the files
@@ -961,14 +961,14 @@ fi
 
 ## logo
 echo -e "\
-           ____ ____  _   _ __  __ ____  _    _ _   
-          / ___|  _ \| | | |  \/  |  _ \| | _(_) |_ 
-         | |  _| |_) | | | | |\/| | | | | |/ / | __|
-         | |_| |  __/| |_| | |  | | |_| |   <| | |_ 
-          \____|_|    \___/|_|  |_|____/|_|\_\_|\__|
-                                            
-          GPUMDkit Version ${VERSION}
-        Developer: Zihan YAN (yanzihan@westlake.edu.cn)
+         ____ ____  _   _ __  __ ____  _    _ _   
+        / ___|  _ \| | | |  \/  |  _ \| | _(_) |_ 
+       | |  _| |_) | | | | |\/| | | | | |/ / | __|
+       | |_| |  __/| |_| | |  | | |_| |   <| | |_ 
+        \____|_|    \___/|_|  |_|____/|_|\_\_|\__|
+                                          
+        GPUMDkit Version ${VERSION}
+     Developer: Zihan YAN (yanzihan@westlake.edu.cn)
       "
 menu
 main

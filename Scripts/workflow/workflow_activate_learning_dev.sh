@@ -13,18 +13,21 @@ cd $SLURM_SUBMIT_DIR
 # 3. Please contact me if you have any questions. (E-mail: yanzihan@westlake.edu.cn)    #
 #---------------------------------------------------------------------------------------#
 
-source ${GPUMDkit_path}/Scripts/workflow/submit_template.sh  # source the submit_template.sh script
+# source your submit_template.sh script
+# It is recommended that you copy it to another path,
+# otherwise there will be code conflicts when use 'git pull' command to update GPUMDkit.
+source ${GPUMDkit_path}/Scripts/workflow/submit_template.sh  
 python_pynep=/storage/zhuyizhouLab/yanzhihan/soft/conda/envs/gpumd/bin/python  # python executable for pynep
 
 work_dir=${PWD}  # work directory
 prefix_name=LiF_iter01  # prefix name for this workflow, used for the scf calculations
 min_dist=1.4    # minimum distance between two atoms
 box_limit=13    # box limit for the simulation box
-max_fp_num=50  # maximum number of single point calculations
+max_fp_num=50   # maximum number of single point calculations
 sample_method=pynep  # sampling method 'uniform' 'random' 'pynep'
 pynep_sample_dist=0.01  # distance for pynep sampling
 
-#print some info
+# print some info
 echo "********************************************" 
 echo $(date -d "2 second" +"%Y-%m-%d %H:%M:%S")  
 echo "WORK_DIR =" ${work_dir} 
@@ -32,7 +35,7 @@ echo "********************************************"
 
 # Check if the required files exist
 
-if [ -f nep.txt ] && [ -f nep.in ] && [ -f train.xyz ] && [ -f run.in ] && [ -f INCAR ] && [ -f POTCAR ] ; then
+if [ -f nep.txt ] && [ -f nep.in ] && [ -f train.xyz ] && [ "$(find . -maxdepth 1 -name 'run_*.in' | wc -l)" -ge 1 ] && [ -f INCAR ] && [ -f POTCAR ] ; then
     if [ $(find . -maxdepth 1 -name "*.xyz" | wc -l) -eq 2 ]; then
         sample_xyz_file=$(ls *.xyz | grep -v "train.xyz")
         sample_struct_num=$(grep -c Lat ${sample_xyz_file})
@@ -45,24 +48,24 @@ if [ -f nep.txt ] && [ -f nep.in ] && [ -f train.xyz ] && [ -f run.in ] && [ -f 
     echo "All required files exist."
     echo "Starting the workflow:"
 else
-    echo "Please put nep.in nep.txt train.xyz run.in INCAR POTCAR [KPOINTS] and the sample_struct.xyz in the current directory."
+    echo "Please put nep.in nep.txt train.xyz run_*.in (eg. run_1.in, run_2.in, ...) INCAR POTCAR [KPOINTS] and the sample_struct.xyz in the current directory."
 fi
 
 cd ${work_dir}
-mkdir 00.modev common
-mv ${work_dir}/{nep.txt,nep.in,*.xyz,run.in,INCAR,KPOINTS,POTCAR} ./common
-cp ${work_dir}/common/$sample_xyz_file ${work_dir}/00.modev
-cd ${work_dir}/00.modev
+mkdir 00.md common
+mv ${work_dir}/{nep.txt,nep.in,*.xyz,run_*.in,INCAR,KPOINTS,POTCAR} ./common
+cp ${work_dir}/common/$sample_xyz_file ${work_dir}/00.md
+cd ${work_dir}/00.md
 (echo 3; echo 302) | gpumdkit.sh >> /dev/null
-ln -s ${work_dir}/common/{nep.txt,run.in} ${work_dir}/00.modev/md
-echo $(date -d "2 second" +"%Y-%m-%d %H:%M:%S") "Starting 00.modev step ..." 
-submit_gpumd_array modev ${sample_struct_num}
+ln -s ${work_dir}/common/{nep.txt,run_*.in} ${work_dir}/00.md/md
+echo $(date -d "2 second" +"%Y-%m-%d %H:%M:%S") "Starting 00.md step ..." 
+submit_gpumd_array md ${sample_struct_num}
 sbatch submit.slurm
 echo $(date -d "2 second" +"%Y-%m-%d %H:%M:%S") "${sample_struct_num} tasks had been submitted."
 
 # Wait for all tasks to finish
 while true; do
-    logs=$(find "${work_dir}/00.modev/" -type f -name log -path "*/sample_*/log")
+    logs=$(find "${work_dir}/00.md/" -type f -name log -path "*/sample_*/log")
     finished_tasks_md=$(grep "Finished running GPUMD." $logs | wc -l)
     error_tasks_md=$(grep "Error" $logs | wc -l)
 
@@ -77,29 +80,29 @@ while true; do
     sleep 30
 done
 
-echo $(date -d "2 second" +"%Y-%m-%d %H:%M:%S") "All modev tasks have finished. Starting analysis ..." 
+echo $(date -d "2 second" +"%Y-%m-%d %H:%M:%S") "All md tasks have finished. Starting analysis ..." 
 
 mkdir ${work_dir}/01.select
 ln -s ${work_dir}/common/{train.xyz,nep.txt} ${work_dir}/01.select
-cat sample_*/dump.xyz >> ${work_dir}/01.select/modev_sampled_structs.xyz
+cat sample_*/dump.xyz >> ${work_dir}/01.select/md_sampled_structs.xyz
 
-echo $(date -d "2 second" +"%Y-%m-%d %H:%M:%S") "Analysis the min_dist in modev_sampled_structs.xyz" 
-actual_min_dist=$(python ${GPUMDkit_path}/Scripts/analyzer/get_min_dist.py ${work_dir}/01.select/modev_sampled_structs.xyz | awk '{print $4}')
+echo $(date -d "2 second" +"%Y-%m-%d %H:%M:%S") "Analysis the min_dist in md_sampled_structs.xyz" 
+actual_min_dist=$( gpumdkit.sh -min_dist ${work_dir}/01.select/md_sampled_structs.xyz | tail -1 | awk '{print $4}')
 
 if [ $(awk 'BEGIN {print ('$actual_min_dist' < '$min_dist')}') -eq 1 ]; then
     echo "The actual minimum distance ($actual_min_dist) between two atoms is less than the specified value ($min_dist)."
     echo "Filtering the structs based on the min_dist you specified."
     cd ${work_dir}/01.select
-    python ${GPUMDkit_path}/Scripts/analyzer/filter_structures_by_distance.py modev_sampled_structs.xyz ${min_dist}
-    echo $(date -d "2 second" +"%Y-%m-%d %H:%M:%S") "Analysis the box in modev_sampled_structs.xyz" 
-    mv filtered_modev_sampled_structs.xyz modev_sampled_structs.xyz
-    python ${GPUMDkit_path}/Scripts/analyzer/filter_exyz_by_box.py modev_sampled_structs.xyz ${box_limit}
+    gpumdkit.sh -filter_dist md_sampled_structs.xyz ${min_dist}
+    echo $(date -d "2 second" +"%Y-%m-%d %H:%M:%S") "Analysis the box in md_sampled_structs.xyz" 
+    mv filtered_md_sampled_structs.xyz md_sampled_structs.xyz
+    gpumdkit.sh -filter_box md_sampled_structs.xyz ${box_limit}
     echo "The box limit is $box_limit. filtered structs are saved in filtered_by_box.xyz"
 else
     echo "The actual minimum distance ($actual_min_dist) between two atoms is greater than the specified value ($min_dist)."
-    echo $(date -d "2 second" +"%Y-%m-%d %H:%M:%S") "Analysis the box in filtered_modev_sampled_structs.xyz" 
+    echo $(date -d "2 second" +"%Y-%m-%d %H:%M:%S") "Analysis the box in md_sampled_structs.xyz" 
     cd ${work_dir}/01.select
-    python ${GPUMDkit_path}/Scripts/analyzer/filter_exyz_by_box.py modev_sampled_structs.xyz ${box_limit}
+    gpumdkit.sh -filter_box md_sampled_structs.xyz ${box_limit}
     echo "The box limit is $box_limit. filtered structs are saved in filtered_by_box.xyz"
 fi
 
