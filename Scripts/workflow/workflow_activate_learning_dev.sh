@@ -144,6 +144,9 @@ echo $(date -d "2 second" +"%Y-%m-%d %H:%M:%S") "01.select have finished. Start 
 mkdir ${work_dir}/02.scf
 cd ${work_dir}/02.scf
 mv ${work_dir}/01.select/selected.xyz .
+echo $(date -d "2 second" +"%Y-%m-%d %H:%M:%S") "Filter structs by distance considering pbc." 
+gpumdkit.sh -min_dist_pbc selected.xyz ${min_dist}
+mv filtered_selected.xyz selected.xyz
 (echo 3; echo 301; echo "${prefix_name}") | gpumdkit.sh >> /dev/null
 ln -s ${work_dir}/common/{INCAR,POTCAR,KPOINTS} ./fp
 submit_vasp_array scf ${selected_struct_num} ${prefix_name}

@@ -903,6 +903,18 @@ if [ ! -z "$1" ]; then
             fi
             ;;
 
+        -filter_dist_pbc)
+            if [ ! -z "$2" ] && [ "$2" != "-h" ] && [ ! -z "$3" ]; then
+                echo " Calling script by Zihan YAN "
+                echo " Code path: ${GPUMDkit_path}/Scripts/analyzer/filter_structures_by_distance_pbc.py"
+                python ${GPUMDkit_path}/Scripts/analyzer/filter_structures_by_distance_pbc.py $2 $3
+            else
+                echo " Usage: -filter_xyz_pbc <exyzfile> <min_dist>"
+                echo " See the source code of filter_structures_by_distance_pbc.py for more details"
+                echo " Code path: ${GPUMDkit_path}/Scripts/analyzer/filter_structures_by_distance_pbc.py"
+            fi
+            ;;
+
         -filter_box)
             if [ ! -z "$2" ] && [ "$2" != "-h" ] && [ ! -z "$3" ] ; then
                 echo " Calling script by Zihan YAN "
