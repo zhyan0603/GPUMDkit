@@ -19,4 +19,4 @@ for frame in frames:
     # Update the minimum distance
     min_distance = min(min_distance, np.min(distances))
 
-print(f'Minimum interatomic distance: {min_distance:.3f} Å')
+print(f' Minimum interatomic distance: {min_distance:.3f} Å')

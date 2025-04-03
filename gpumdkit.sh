@@ -4,6 +4,14 @@
 # export GPUMD_path=/d/Westlake/GPUMD
 # export GPUMDkit_path=/d/Westlake/Gpumdkit
 
+if [ -z "$GPUMD_path" ] || [ -z "$GPUMDkit_path" ]; then
+    echo "Error: GPUMD_path and/or GPUMDkit_path are not set."
+    echo "Please set them in your ~/.bashrc, e.g.:"
+    echo "  export GPUMD_path=/d/Westlake/GPUMD"
+    echo "  export GPUMDkit_path=/d/Westlake/Gpumdkit"
+    exit 1
+fi
+
 VERSION="1.1.1 (dev) (2025-04-02)"
 
 #--------------------- function 1 format conversion ----------------------
@@ -40,7 +48,7 @@ echo " Code path: ${GPUMD_path}/tools/mtp2xyz/mtp2xyz.py"
 echo " ---------------------------------------------------"
 }
 
-f103_cp2k2xyz(){
+function f103_cp2k2xyz(){
 echo " >-------------------------------------------------<"
 echo " | This function calls the script in GPUMD's tools |"
 echo " | Script: cp2k2xyz.py                             |"
