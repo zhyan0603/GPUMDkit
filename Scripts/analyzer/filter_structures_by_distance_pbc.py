@@ -51,9 +51,9 @@ output_file_name = 'filtered_' + file_name
 write(output_file_name, filtered_frames)
 
 # Output the filtered-out frames to a new XYZ file
-# filtered_out_file_name = 'filtered_out_' + file_name
-# if filtered_out_count > 0:  # Only write if there are filtered-out structures
-#    write(filtered_out_file_name, filtered_out_frames)
+filtered_out_file_name = 'filtered_out_' + file_name
+if filtered_out_count > 0:  # Only write if there are filtered-out structures
+   write(filtered_out_file_name, filtered_out_frames)
 
 # Print summary of filtering results
 print(f' Total structures processed: {total_frames}')

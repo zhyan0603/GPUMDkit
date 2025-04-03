@@ -26,6 +26,7 @@ frames = read(file_name, index=':')
 
 total_frames = len(frames)
 filtered_frames = []
+filtered_out_frames = []
 
 # Iterate over each frame
 for i, frame in enumerate(frames):
@@ -39,6 +40,8 @@ for i, frame in enumerate(frames):
     # Check if the minimum distance meets the threshold
     if distance_threshold is None or min_distance >= distance_threshold:
         filtered_frames.append(frame)
+    else:
+        filtered_out_frames.append(frame)
     
     # Print progress bar
     print_progress_bar(i + 1, total_frames)
@@ -50,8 +53,17 @@ filtered_out_count = total_frames - filtered_count
 output_file_name = 'filtered_' + file_name
 write(output_file_name, filtered_frames)
 
+# Output the filtered-out frames to a new XYZ file
+filtered_out_file_name = 'filtered_out_' + file_name
+if filtered_out_count > 0:  # Only write if there are filtered-out structures
+   write(filtered_out_file_name, filtered_out_frames)
+
 # Print summary of filtering results
 print(f' Total structures processed: {total_frames}')
 print(f' Structures filtered out: {filtered_out_count}')
 print(f' Structures retained: {filtered_count}')
 print(f' Filtered structures saved to {output_file_name}')
+if filtered_out_count > 0:
+    print(f' Filtered-out structures saved to: {filtered_out_file_name}')
+else:
+    print(' No structures were filtered out')
