@@ -4,7 +4,15 @@
 # export GPUMD_path=/d/Westlake/GPUMD
 # export GPUMDkit_path=/d/Westlake/Gpumdkit
 
-VERSION="1.1.0 (dev) (2025-03-31)"
+if [ -z "$GPUMD_path" ] || [ -z "$GPUMDkit_path" ]; then
+    echo "Error: GPUMD_path and/or GPUMDkit_path are not set."
+    echo "Please set them in your ~/.bashrc, e.g.:"
+    echo "  export GPUMD_path=/d/Westlake/GPUMD"
+    echo "  export GPUMDkit_path=/d/Westlake/Gpumdkit"
+    exit 1
+fi
+
+VERSION="1.2.0 (dev) (2025-04-04)"
 
 #--------------------- function 1 format conversion ----------------------
 # These functions are used to convert the format of the files
@@ -40,7 +48,7 @@ echo " Code path: ${GPUMD_path}/tools/mtp2xyz/mtp2xyz.py"
 echo " ---------------------------------------------------"
 }
 
-f103_cp2k2xyz(){
+function f103_cp2k2xyz(){
 echo " >-------------------------------------------------<"
 echo " | This function calls the script in GPUMD's tools |"
 echo " | Script: cp2k2xyz.py                             |"
@@ -903,6 +911,18 @@ if [ ! -z "$1" ]; then
             fi
             ;;
 
+        -filter_dist_pbc)
+            if [ ! -z "$2" ] && [ "$2" != "-h" ] && [ ! -z "$3" ]; then
+                echo " Calling script by Zihan YAN "
+                echo " Code path: ${GPUMDkit_path}/Scripts/analyzer/filter_structures_by_distance_pbc.py"
+                python ${GPUMDkit_path}/Scripts/analyzer/filter_structures_by_distance_pbc.py $2 $3
+            else
+                echo " Usage: -filter_xyz_pbc <exyzfile> <min_dist>"
+                echo " See the source code of filter_structures_by_distance_pbc.py for more details"
+                echo " Code path: ${GPUMDkit_path}/Scripts/analyzer/filter_structures_by_distance_pbc.py"
+            fi
+            ;;
+
         -filter_box)
             if [ ! -z "$2" ] && [ "$2" != "-h" ] && [ ! -z "$3" ] ; then
                 echo " Calling script by Zihan YAN "
@@ -961,14 +981,14 @@ fi
 
 ## logo
 echo -e "\
-           ____ ____  _   _ __  __ ____  _    _ _   
-          / ___|  _ \| | | |  \/  |  _ \| | _(_) |_ 
-         | |  _| |_) | | | | |\/| | | | | |/ / | __|
-         | |_| |  __/| |_| | |  | | |_| |   <| | |_ 
-          \____|_|    \___/|_|  |_|____/|_|\_\_|\__|
-                                            
-          GPUMDkit Version ${VERSION}
-        Developer: Zihan YAN (yanzihan@westlake.edu.cn)
+         ____ ____  _   _ __  __ ____  _    _ _   
+        / ___|  _ \| | | |  \/  |  _ \| | _(_) |_ 
+       | |  _| |_) | | | | |\/| | | | | |/ / | __|
+       | |_| |  __/| |_| | |  | | |_| |   <| | |_ 
+        \____|_|    \___/|_|  |_|____/|_|\_\_|\__|
+                                          
+        GPUMDkit Version ${VERSION}
+     Developer: Zihan YAN (yanzihan@westlake.edu.cn)
       "
 menu
 main

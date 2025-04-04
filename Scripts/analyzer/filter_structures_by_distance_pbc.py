@@ -8,7 +8,6 @@ def print_progress_bar(iteration, total, length=50):
     filled_length = int(length * iteration // total)
     bar = '█' * filled_length + '-' * (length - filled_length)
     print(f'\r Progress: |{bar}| {percent}% Complete', end='\r')
-    # Print New Line on Complete
     if iteration == total:
         print()
 
@@ -31,10 +30,8 @@ filtered_out_frames = []
 # Iterate over each frame
 for i, frame in enumerate(frames):
     # Get atomic positions
-    positions = frame.get_positions()
-    # Compute distances between all pairs of atoms
-    distances = pdist(positions)
-    # Find the minimum distance in the current frame
+    distances = frame.get_all_distances(mic=True)
+    np.fill_diagonal(distances, float('inf'))
     min_distance = np.min(distances)
     
     # Check if the minimum distance meets the threshold
@@ -42,12 +39,12 @@ for i, frame in enumerate(frames):
         filtered_frames.append(frame)
     else:
         filtered_out_frames.append(frame)
-    
+
     # Print progress bar
     print_progress_bar(i + 1, total_frames)
 
 filtered_count = len(filtered_frames)
-filtered_out_count = total_frames - filtered_count
+filtered_out_count = len(filtered_out_frames)
 
 # Output the filtered frames to a new XYZ file
 output_file_name = 'filtered_' + file_name
@@ -62,7 +59,7 @@ if filtered_out_count > 0:  # Only write if there are filtered-out structures
 print(f' Total structures processed: {total_frames}')
 print(f' Structures filtered out: {filtered_out_count}')
 print(f' Structures retained: {filtered_count}')
-print(f' Filtered structures saved to {output_file_name}')
+print(f' Filtered structures saved to: {output_file_name}')
 if filtered_out_count > 0:
     print(f' Filtered-out structures saved to: {filtered_out_file_name}')
 else:
