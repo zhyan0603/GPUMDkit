@@ -36,12 +36,7 @@ _gpumdkit_completions() {
         -range)
             COMPREPLY=($(compgen -W "energy force virial" -- "$cur"))  # Example properties, assumed supported
             ;;
-
-        # Options requiring files or directories, complete with filenames
-        -out2xyz|-outcar2exyz|-cast2xyz|-castep2exyz|-cp2k2xyz|-cp2k2exyz|-exyz2pos|-min_dist|-min_dist_pbc|-filter_dist|-filter_dist_pbc|-filter_box|-get_frame|-clear_xyz|-clean_xyz|-mtp2xyz|-mtp2exyz|-pos2exyz|-pos2lmp|-lmp2exyz|-addgroup|-addlabel|-addweight|-max_rmse|-get_max_rmse_xyz)
-            COMPREPLY=($(compgen -f -- "$cur"))  # Complete files or directories
-            ;;
-
+            
         # Secondary completion for -filter_value
         -filter_value)
             if [ "$COMP_CWORD" -eq 2 ]; then
@@ -49,6 +44,10 @@ _gpumdkit_completions() {
             else 
                 COMPREPLY=($(compgen -W "energy force virial" -- "$cur"))  # Properties
             fi
+            ;;
+        # Options requiring files or directories, complete with filenames
+        -out2xyz|-outcar2exyz|-cast2xyz|-castep2exyz|-cp2k2xyz|-cp2k2exyz|-exyz2pos|-min_dist|-min_dist_pbc|-filter_dist|-filter_dist_pbc|-filter_box|-get_frame|-clear_xyz|-clean_xyz|-mtp2xyz|-mtp2exyz|-pos2exyz|-pos2lmp|-lmp2exyz|-addgroup|-addlabel|-addweight|-max_rmse|-get_max_rmse_xyz)
+            COMPREPLY=($(compgen -f -- "$cur"))  # Complete files or directories
             ;;
 
         # Default case: complete primary options
