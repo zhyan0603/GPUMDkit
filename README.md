@@ -163,8 +163,6 @@ Refer to the [Usage Instructions](./Tutorials/README.md) for more detailed examp
 
 #### Tab Completion Support
 
----
-
 `gpumdkit.sh` provides optional Bash `Tab` completion to enhance the command-line experience. This feature allows you to auto-complete primary options (e.g., `-h`, `-plt`, `-calc`) and their secondary parameters (e.g., `thermo`, `train`) by pressing the `Tab` key.
 
 ##### Usage Examples
