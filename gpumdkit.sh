@@ -12,7 +12,7 @@ if [ -z "$GPUMD_path" ] || [ -z "$GPUMDkit_path" ]; then
     exit 1
 fi
 
-VERSION="1.2.2 (dev) (2025-04-15)"
+VERSION="1.2.3 (dev) (2025-04-18)"
 
 #--------------------- function 1 format conversion ----------------------
 # These functions are used to convert the format of the files
@@ -26,10 +26,21 @@ echo " >-------------------------------------------------<"
 echo " Input the directory containing OUTCARs"
 echo " ------------>>"
 read -p " " dir_outcars
-echo " >-------------------------------------------------<"
-bash ${GPUMD_path}/tools/vasp2xyz/outcar2xyz/multipleFrames-outcars2nep-exyz.sh ${dir_outcars}
-echo " >-------------------------------------------------<"
-echo " Code path: ${GPUMD_path}/tools/vasp2xyz/outcar2xyz/multipleFrames-outcars2nep-exyz.sh"
+echo " ---------------------------------------------------"
+script_path="${GPUMD_path}/tools/vasp2xyz/outcar2xyz/multipleFrames-outcars2nep-exyz.sh"
+alt_path="${GPUMD_path}/tools/Format_Conversion/vasp2xyz/outcar2xyz/multipleFrames-outcars2nep-exyz.sh"
+if [[ -f ${script_path} ]]; then
+    bash ${script_path} ${dir_outcars}
+    echo " Code path: ${script_path}"
+    echo " ---------------------------------------------------"
+elif [[ -f ${alt_path} ]]; then
+    bash ${alt_path} ${dir_outcars}
+    echo " Code path: ${alt_path}"
+    echo " ---------------------------------------------------"
+else
+    echo "Error: multipleFrames-outcars2nep-exyz.sh not found"
+    return 1
+fi
 }
 
 function f102_mtp2xyz(){
@@ -43,9 +54,20 @@ echo " Examp: train.cfg Pd Ag"
 echo " ------------>>"
 read -p " " mtp_variables
 echo " ---------------------------------------------------"
-python ${GPUMD_path}/tools/mtp2xyz/mtp2xyz.py ${mtp_variables}
-echo " Code path: ${GPUMD_path}/tools/mtp2xyz/mtp2xyz.py"
-echo " ---------------------------------------------------"
+script_path="${GPUMD_path}/tools/mtp2xyz/mtp2xyz.py"
+alt_path="${GPUMD_path}/tools/Format_Conversion/mtp2xyz/mtp2xyz.py"
+if [[ -f ${script_path} ]]; then
+    python ${script_path} ${mtp_variables}
+    echo " Code path: ${script_path}"
+    echo " ---------------------------------------------------"
+elif [[ -f ${alt_path} ]]; then
+    python ${alt_path} ${mtp_variables}
+    echo " Code path: ${alt_path}"
+    echo " ---------------------------------------------------"
+else
+    echo "Error: mtp2xyz.py not found"
+    return 1
+fi
 }
 
 function f103_cp2k2xyz(){
@@ -59,9 +81,20 @@ echo " Examp: ./cp2k "
 echo " ------------>>"
 read -p " " dir_cp2k
 echo " ---------------------------------------------------"
-python ${GPUMD_path}/tools/cp2k2xyz/cp2k2xyz.py ${dir_cp2k}
-echo " Code path: ${GPUMD_path}/tools/cp2k2xyz/cp2k2xyz.py"
-echo " ---------------------------------------------------"
+script_path="${GPUMD_path}/tools/cp2k2xyz/cp2k2xyz.py"
+alt_path="${GPUMD_path}/tools/Format_Conversion/cp2k2xyz/cp2k2xyz.py"
+if [[ -f ${script_path} ]]; then
+    python ${script_path} ${dir_cp2k}
+    echo " Code path: ${script_path}"
+    echo " ---------------------------------------------------"
+elif [[ -f ${alt_path} ]]; then
+    python ${alt_path} ${dir_cp2k}
+    echo " Code path: ${alt_path}"
+    echo " ---------------------------------------------------"
+else
+    echo "Error: cp2k2xyz.py not found"
+    return 1
+fi
 }
 
 function f104_castep2xyz(){
@@ -75,9 +108,20 @@ echo " Examp: ./castep "
 echo " ------------>>"
 read -p " " dir_castep
 echo " ---------------------------------------------------"
-bash ${GPUMD_path}/tools/castep2exyz/castep2nep-exyz.sh ${dir_castep}
-echo " Code path: ${GPUMD_path}/tools/castep2exyz/castep2nep-exyz.sh"
-echo " ---------------------------------------------------"
+script_path="${GPUMD_path}/tools/castep2exyz/castep2nep-exyz.sh"
+alt_path="${GPUMD_path}/tools/Format_Conversion/castep2exyz/castep2nep-exyz.sh"
+if [[ -f ${script_path} ]]; then
+    bash ${script_path} ${dir_castep}
+    echo " Code path: ${script_path}"
+    echo " ---------------------------------------------------"
+elif [[ -f ${alt_path} ]]; then
+    bash ${alt_path} ${dir_castep}
+    echo " Code path: ${alt_path}"
+    echo " ---------------------------------------------------"
+else
+    echo "Error: castep2nep-exyz.sh not found"
+    return 1
+fi
 }
 
 function f105_extxyz2poscar(){
@@ -193,9 +237,20 @@ echo " Examp: train.xyz energy_train.out 13 "
 echo " ------------>>"
 read -p " " maxrmse_choice
 echo " ---------------------------------------------------"
-python ${GPUMD_path}/tools/get_max_rmse_xyz/get_max_rmse_xyz.py ${maxrmse_choice}
-echo " Code path: ${GPUMD_path}/tools/get_max_rmse_xyz/get_max_rmse_xyz.py"
-echo " ---------------------------------------------------"
+script_path="${GPUMD_path}/tools/get_max_rmse_xyz/get_max_rmse_xyz.py"
+alt_path="${GPUMD_path}/tools/Analysis_and_Processing/get_max_rmse_xyz/get_max_rmse_xyz.py"
+if [[ -f ${script_path} ]]; then
+    python ${script_path} ${maxrmse_choice}
+    echo " Code path: ${script_path}"
+    echo " ---------------------------------------------------"
+elif [[ -f ${alt_path} ]]; then
+    python ${alt_path} ${maxrmse_choice}
+    echo " Code path: ${alt_path}"
+    echo " ---------------------------------------------------"
+else
+    echo "Error: get_max_rmse_xyz.py not found"
+    return 1
+fi
 }
 
 function f204_perturb_structure(){
@@ -745,49 +800,125 @@ if [ ! -z "$1" ]; then
         -out2xyz|-outcar2exyz)
             if [ ! -z "$2" ] && [ "$2" != "-h" ] ; then
                 echo " Calling script by Yanzhou WANG et al. "
-                echo " Code path: ${GPUMD_path}/tools/vasp2xyz/outcar2xyz/multipleFrames-outcars2nep-exyz.sh"
-                bash ${GPUMD_path}/tools/vasp2xyz/outcar2xyz/multipleFrames-outcars2nep-exyz.sh $2
+                script_path="${GPUMD_path}/tools/vasp2xyz/outcar2xyz/multipleFrames-outcars2nep-exyz.sh"
+                alt_path="${GPUMD_path}/tools/Format_Conversion/vasp2xyz/outcar2xyz/multipleFrames-outcars2nep-exyz.sh"
+                if [[ -f ${script_path} ]]; then
+                    echo " Code path: ${script_path}"
+                    bash ${script_path} $2
+                elif [[ -f ${alt_path} ]]; then
+                    echo " Code path: ${alt_path}"
+                    bash ${alt_path} $2
+                else
+                    echo "Error: multipleFrames-outcars2nep-exyz.sh not found"
+                    return 1
+                fi
             else
                 echo " Usage: -out2xyz|-outcar2exyz dir_name (eg. gpumdkit.sh -outcar2exyz .)"
                 echo " See the source code of multipleFrames-outcars2nep-exyz.sh for more details"
-                echo " Code path: ${GPUMD_path}/tools/vasp2xyz/outcar2xyz/multipleFrames-outcars2nep-exyz.sh"
+                script_path="${GPUMD_path}/tools/vasp2xyz/outcar2xyz/multipleFrames-outcars2nep-exyz.sh"
+                alt_path="${GPUMD_path}/tools/Format_Conversion/vasp2xyz/outcar2xyz/multipleFrames-outcars2nep-exyz.sh"
+                if [[ -f "${script_path}" ]]; then
+                    echo " Code path: ${script_path}"
+                elif [[ -f "${alt_path}" ]]; then
+                    echo " Code path: ${alt_path}"
+                else
+                    echo "Error: multipleFrames-outcars2nep-exyz.sh not found"
+                    return 1
+                fi
             fi
             ;;
 
         -cast2xyz|-castep2exyz)
             if [ ! -z "$2" ] && [ "$2" != "-h" ] ; then
                 echo " Calling script by Yanzhou WANG et al. "
-                echo " Code path: ${GPUMD_path}/tools/castep2exyz/castep2nep-exyz.sh"
-                bash ${GPUMD_path}/tools/castep2exyz/castep2nep-exyz.sh $2
+                script_path="${GPUMD_path}/tools/castep2exyz/castep2nep-exyz.sh"
+                alt_path="${GPUMD_path}/tools/Format_Conversion/castep2exyz/castep2nep-exyz.sh"
+                if [[ -f ${script_path} ]]; then
+                    echo " Code path: ${script_path}"
+                    bash ${script_path} $2
+                elif [[ -f ${alt_path} ]]; then
+                    echo " Code path: ${alt_path}"
+                    bash ${alt_path} $2
+                else
+                    echo "Error: castep2nep-exyz.sh not found"
+                    return 1
+                fi
             else
                 echo " Usage: -cast2xyz|-castep2exyz dir_name (eg. gpumdkit.sh -castep2exyz .)"
                 echo " See the source code of castep2nep-exyz.sh for more details"
-                echo " Code path: ${GPUMD_path}/tools/castep2exyz/castep2nep-exyz.sh"
+                script_path="${GPUMD_path}/tools/castep2exyz/castep2nep-exyz.sh"
+                alt_path="${GPUMD_path}/tools/Format_Conversion/castep2exyz/castep2nep-exyz.sh"
+                if [[ -f "${script_path}" ]]; then
+                    echo " Code path: ${script_path}"
+                elif [[ -f "${alt_path}" ]]; then
+                    echo " Code path: ${alt_path}"
+                else
+                    echo "Error: castep2nep-exyz.sh not found"
+                    return 1
+                fi
             fi
             ;;
 
         -cp2k2xyz|-cp2k2exyz)
             if [ ! -z "$2" ] && [ "$2" != "-h" ] ; then
                 echo " Calling script by Ke XU et al. "
-                echo " Code path: ${GPUMD_path}/tools/cp2k2xyz/cp2k2xyz.py"
-                python ${GPUMD_path}/tools/cp2k2xyz/cp2k2xyz.py $2
+                script_path="${GPUMD_path}/tools/cp2k2xyz/cp2k2xyz.py"
+                alt_path="${GPUMD_path}/tools/Format_Conversion/cp2k2xyz/cp2k2xyz.py"
+                if [[ -f ${script_path} ]]; then
+                    echo " Code path: ${script_path}"
+                    python ${script_path} $2
+                elif [[ -f ${alt_path} ]]; then
+                    echo " Code path: ${alt_path}"
+                    python ${alt_path} $2
+                else
+                    echo "Error: cp2k2xyz.py not found"
+                    return 1
+                fi
             else
                 echo " Usage: -cp2k2xyz|-cp2k2exyz dir_name (eg. gpumdkit.sh -cp2k2exyz .)"
                 echo " See the source code of cp2k2xyz.py for more details"
-                echo " Code path: ${GPUMD_path}/tools/cp2k2xyz/cp2k2xyz.py"
+                script_path="${GPUMD_path}/tools/cp2k2xyz/cp2k2xyz.py"
+                alt_path="${GPUMD_path}/tools/Format_Conversion/cp2k2xyz/cp2k2xyz.py"                
+                if [[ -f "${script_path}" ]]; then
+                    echo " Code path: ${script_path}"
+                elif [[ -f "${alt_path}" ]]; then
+                    echo " Code path: ${alt_path}"
+                else
+                    echo "Error: cp2k2xyz.py not found"
+                    return 1
+                fi
             fi
             ;;
 
         -mtp2xyz|-mtp2exyz)
             if [ ! -z "$2" ] && [ "$2" != "-h" ] ; then
                 echo " Calling script by Ke XU et al. "
-                echo " Code path: ${GPUMD_path}/tools/mtp2xyz/mtp2xyz.py"
-                python ${GPUMD_path}/tools/mtp2xyz/mtp2xyz.py train.cfg $2 ${@:3}
+                script_path="${GPUMD_path}/tools/mtp2xyz/mtp2xyz.py"
+                alt_path="${GPUMD_path}/tools/Format_Conversion/mtp2xyz/mtp2xyz.py"
+                if [[ -f ${script_path} ]]; then
+                    echo " Code path: ${script_path}"
+                    python ${script_path} train.cfg $2 ${@:3}
+                elif [[ -f ${alt_path} ]]; then
+                    echo " Code path: ${alt_path}"
+                    python ${alt_path} train.cfg $2 ${@:3}
+                else
+                    echo "Error: mtp2xyz.py not found"
+                    return 1
+                fi
             else
                 echo " Usage: -mtp2xyz|-mtp2exyz train.cfg Symbol1 Symbol2 Symbol3 ..."
                 echo "   Examp: gpumdkit.sh -mtp2exyz train.cfg Pd Ag"
                 echo " See the source code of mtp2xyz.py for more details"
-                echo " Code path: ${GPUMD_path}/tools/mtp2xyz/mtp2xyz.py"
+                script_path="${GPUMD_path}/tools/mtp2xyz/mtp2xyz.py"
+                alt_path="${GPUMD_path}/tools/Format_Conversion/mtp2xyz/mtp2xyz.py"
+                if [[ -f "${script_path}" ]]; then
+                    echo " Code path: ${script_path}"
+                elif [[ -f "${alt_path}" ]]; then
+                    echo " Code path: ${alt_path}"
+                else
+                    echo "Error: mtp2xyz.py not found"
+                    return 1
+                fi
             fi
             ;;
 
@@ -866,12 +997,31 @@ if [ ! -z "$1" ]; then
         -max_rmse|-get_max_rmse_xyz)
             if [ ! -z "$2" ] && [ "$2" != "-h" ] && [ ! -z "$3" ] && [ ! -z "$4" ]; then
                 echo " Calling script by Ke XU "
-                echo " Code path: ${GPUMD_path}/tools/get_max_rmse_xyz/get_max_rmse_xyz.py"
-                python ${GPUMD_path}/tools/get_max_rmse_xyz/get_max_rmse_xyz.py $2 $3 $4
+                script_path="${GPUMD_path}/tools/get_max_rmse_xyz/get_max_rmse_xyz.py"
+                alt_path="${GPUMD_path}/tools/Format_Conversion/get_max_rmse_xyz/get_max_rmse_xyz.py"
+                if [[ -f ${script_path} ]]; then
+                    echo " Code path: ${script_path}"
+                    python ${script_path} $2 $3 $4
+                elif [[ -f ${alt_path} ]]; then
+                    echo " Code path: ${alt_path}"
+                    python ${alt_path} $2 $3 $4
+                else
+                    echo "Error: get_max_rmse_xyz.py not found"
+                    return 1
+                fi                
             else
                 echo " Usage: -getmax|-get_max_rmse_xyz train.xyz force_train.out 13"
                 echo " See the source code of get_max_rmse_xyz.py for more details"
-                echo " Code path: ${GPUMD_path}/tools/get_max_rmse_xyz/get_max_rmse_xyz.py"
+                script_path="${GPUMD_path}/tools/get_max_rmse_xyz/get_max_rmse_xyz.py"
+                alt_path="${GPUMD_path}/tools/Format_Conversion/get_max_rmse_xyz/get_max_rmse_xyz.py"                
+                if [[ -f "${script_path}" ]]; then
+                    echo " Code path: ${script_path}"
+                elif [[ -f "${alt_path}" ]]; then
+                    echo " Code path: ${alt_path}"
+                else
+                    echo "Error: get_max_rmse_xyz.py not found"
+                    return 1
+                fi
             fi
             ;;
 
