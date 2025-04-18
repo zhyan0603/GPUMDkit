@@ -1,6 +1,6 @@
 <div align="center">
 <img src="./Gallery/gpumdkit_logo.png" width="25%" /><br>
-<a href="https://github.com/zhyan0603/GPUMDkit"><img src="https://img.shields.io/badge/version-1.2.0-brightgreen" alt="Version"></a>
+<a href="https://github.com/zhyan0603/GPUMDkit"><img src="https://img.shields.io/badge/version-1.2.3-brightgreen" alt="Version"></a>
 <a href="https://github.com/zhyan0603/GPUMDkit/blob/main/LICENCE"><img src="https://img.shields.io/badge/license-GPL--3.0-blue" alt="License"></a>
 <a href="https://github.com/zhyan0603/GPUMDkit/stargazers"><img src="https://img.shields.io/github/stars/zhyan0603/GPUMDkit?style=social" alt="Stars"></a>
 <img src="https://img.shields.io/github/languages/code-size/zhyan0603/GPUMDkit" alt="Code Size">
@@ -84,7 +84,7 @@ There are two options, <u>*interactive mode*</u> and <u>*command-line mode*</u>
           | |_| |  __/| |_| | |  | | |_| |   <| | |_
            \____|_|    \___/|_|  |_|____/|_|\_\_|\__|
     
-          GPUMDkit Version 1.2.0 (dev) (2025-04-04)
+          GPUMDkit Version 1.2.3 (dev) (2025-04-18)
           Developer: Zihan YAN (yanzihan@westlake.edu.cn)
     
     ----------------------- GPUMD -----------------------
