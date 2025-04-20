@@ -2,6 +2,32 @@ import sys
 import numpy as np
 from ase.io import read
 
+# The following function is a part of NepTrainKit (https://github.com/aboys-cb/NepTrainKit)
+# Thanks to Chengbing Chen for providing this function.
+def calculate_pairwise_distances(lattice_params, atom_coords, fractional=True):
+    """
+    Calculate the distances between all pairs of atoms in a crystal, considering periodic boundary conditions.
+
+    Parameters:
+    lattice_params: Lattice parameters, a 3x3 numpy array representing the lattice vectors (a, b, c).
+    atom_coords: Atomic coordinates, an Nx3 numpy array.
+    fractional: Whether the coordinates are fractional (True) or Cartesian (False).
+
+    Returns:
+    distances: An NxN numpy array containing the distances between all pairs of atoms.
+    """
+    if fractional:
+        atom_coords = np.dot(atom_coords, lattice_params)
+
+    diff = atom_coords[np.newaxis, :, :] - atom_coords[:, np.newaxis, :]
+    shifts = np.array(np.meshgrid([-1, 0, 1], [-1, 0, 1], [-1, 0, 1])).T.reshape(-1, 3)
+    lattice_shifts = np.dot(shifts, lattice_params)
+    all_diffs = diff[:, :, np.newaxis, :] + lattice_shifts[np.newaxis, np.newaxis, :, :]
+    all_distances = np.sqrt(np.sum(all_diffs ** 2, axis=-1))
+    distances = np.min(all_distances, axis=-1)
+    np.fill_diagonal(distances, 0)
+    return distances
+
 # Read the file name from command line arguments
 file_name = sys.argv[1]
 
@@ -23,8 +49,11 @@ overall_min_distance = float('inf')
 for frame in frames:
     # Get atomic positions and chemical symbols
     symbols = frame.get_chemical_symbols()
-    # Get all distances between atoms considering PBC
-    distances = frame.get_all_distances(mic=True)
+    # Get cell parameters and atomic positions
+    lattice_params = frame.get_cell()
+    atom_coords = frame.get_positions()
+    # Calculate distances using custom function
+    distances = calculate_pairwise_distances(lattice_params, atom_coords, fractional=False)
     
     # Calculate minimum distance for each atom pair type
     for i, sym1 in enumerate(unique_symbols):

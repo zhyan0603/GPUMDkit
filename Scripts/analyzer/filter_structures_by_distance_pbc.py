@@ -11,6 +11,32 @@ def print_progress_bar(iteration, total, length=50):
     if iteration == total:
         print()
 
+# The following function is a part of NepTrainKit (https://github.com/aboys-cb/NepTrainKit)
+# Thanks to Chengbing Chen for providing this function.
+def calculate_pairwise_distances(lattice_params, atom_coords, fractional=True):
+    """
+    Calculate the distances between all pairs of atoms in a crystal, considering periodic boundary conditions.
+
+    Parameters:
+    lattice_params: Lattice parameters, a 3x3 numpy array representing the lattice vectors (a, b, c).
+    atom_coords: Atomic coordinates, an Nx3 numpy array.
+    fractional: Whether the coordinates are fractional (True) or Cartesian (False).
+
+    Returns:
+    distances: An NxN numpy array containing the distances between all pairs of atoms.
+    """
+    if fractional:
+        atom_coords = np.dot(atom_coords, lattice_params)
+
+    diff = atom_coords[np.newaxis, :, :] - atom_coords[:, np.newaxis, :]
+    shifts = np.array(np.meshgrid([-1, 0, 1], [-1, 0, 1], [-1, 0, 1])).T.reshape(-1, 3)
+    lattice_shifts = np.dot(shifts, lattice_params)
+    all_diffs = diff[:, :, np.newaxis, :] + lattice_shifts[np.newaxis, np.newaxis, :, :]
+    all_distances = np.sqrt(np.sum(all_diffs ** 2, axis=-1))
+    distances = np.min(all_distances, axis=-1)
+    np.fill_diagonal(distances, 0)
+    return distances
+
 # Read the file name from command line arguments
 file_name = sys.argv[1]
 
@@ -29,8 +55,11 @@ filtered_out_frames = []
 
 # Iterate over each frame
 for i, frame in enumerate(frames):
-    # Get atomic positions
-    distances = frame.get_all_distances(mic=True)
+    # Get cell parameters and atomic positions
+    lattice_params = frame.get_cell()
+    atom_coords = frame.get_positions()
+    # Calculate distances using custom function
+    distances = calculate_pairwise_distances(lattice_params, atom_coords, fractional=False)
     np.fill_diagonal(distances, float('inf'))
     min_distance = np.min(distances)
     
@@ -53,7 +82,7 @@ write(output_file_name, filtered_frames)
 # Output the filtered-out frames to a new XYZ file
 filtered_out_file_name = 'filtered_out_' + file_name
 if filtered_out_count > 0:  # Only write if there are filtered-out structures
-   write(filtered_out_file_name, filtered_out_frames)
+    write(filtered_out_file_name, filtered_out_frames)
 
 # Print summary of filtering results
 print(f' Total structures processed: {total_frames}')

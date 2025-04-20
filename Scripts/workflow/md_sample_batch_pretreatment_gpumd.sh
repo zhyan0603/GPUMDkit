@@ -86,13 +86,13 @@ function f302_md_sample_batch_pretreatment_gpumd(){
     # Make presub.sh executable
     chmod +x presub.sh
 
-	echo ">----------------------------------------------------<"
-	echo "| ATTENTION: Place run_*.in and nep.txt in 'md' Dir. |"
-	echo ">----------------------------------------------------<"
-	echo "| You need to provide MD control parameter files in  |"
-	echo "| the format run_*.in (e.g., run_1.in, run_2.in),    |"
-	echo "| each corresponding to a sample (e.g., sample_1,    |"
-	echo "| sample_2) for molecular dynamics simulations.      |"
-	echo ">----------------------------------------------------<"
+	echo " >----------------------------------------------------<"
+	echo " | ATTENTION: Place run_*.in and nep.txt in 'md' Dir. |"
+	echo " >----------------------------------------------------<"
+	echo " | You need to provide MD control parameter files in  |"
+	echo " | the format run_*.in (e.g., run_1.in, run_2.in),    |"
+	echo " | each corresponding to a sample (e.g., sample_1,    |"
+	echo " | sample_2) for molecular dynamics simulations.      |"
+	echo " >----------------------------------------------------<"
 
 }
