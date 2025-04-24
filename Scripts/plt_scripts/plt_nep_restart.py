@@ -35,6 +35,13 @@ fig.subplots_adjust(top=0.918,bottom=0.142,left=0.139,right=0.975,hspace=0.0,wsp
 
 # Show the plot
 if len(sys.argv) > 1 and sys.argv[1] == 'save':
-    plt.savefig('./nep_restart.png', dpi=300)
+    plt.savefig('nep_restart.png', dpi=300)
 else:
-    plt.show()
+    # Check if the current backend is non-interactive
+    from matplotlib import get_backend
+    if get_backend().lower() in ['agg', 'cairo', 'pdf', 'ps', 'svg']:
+        print("Unable to display the plot due to the non-interactive backend.")
+        print("The plot has been automatically saved as 'nep_restart.png'.")
+        plt.savefig('nep_restart.png', dpi=300)
+    else:
+        plt.show()
