@@ -5,9 +5,9 @@ import matplotlib.pyplot as plt
 
 # Configuration for custom file paths and legend labels (edit as needed)
 FILE_CONFIG = [
-    # {'path': 'des_Li_1978.npy', 'label': 'Li 1978'},
-    # {'path': 'des_Li_802.npy', 'label': 'Li 802'},
-    # {'path': 'des_Li_25.npy', 'label': 'Li 25'},
+    # {'path': 'des_Li_1978.npy', 'label': r'NEP$_{std}$'},
+    # {'path': 'des_Li_802.npy', 'label': r'NEP$_{802}$'},
+    # {'path': 'des_Li_25.npy', 'label': r'NEP$_{25}$'},
 ]
 
 def load_descriptors(file_paths):
