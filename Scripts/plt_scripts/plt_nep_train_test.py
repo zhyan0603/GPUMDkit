@@ -97,4 +97,11 @@ fig.subplots_adjust(top=0.968, bottom=0.16, left=0.086, right=0.983, hspace=0.2,
 if len(sys.argv) > 1 and sys.argv[1] == 'save':
     plt.savefig('train_test.png', dpi=300)
 else:
-    plt.show()
+    # Check if the current backend is non-interactive
+    from matplotlib import get_backend
+    if get_backend().lower() in ['agg', 'cairo', 'pdf', 'ps', 'svg']:
+        print("Unable to display the plot due to the non-interactive backend.")
+        print("The plot has been automatically saved as 'train_test.png'.")
+        plt.savefig('train_test.png', dpi=300)
+    else:
+        plt.show()
