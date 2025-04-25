@@ -415,11 +415,28 @@ echo " Code path: ${GPUMDkit_path}/Scripts/calculators/calc_properties_with_nep.
 echo " ---------------------------------------------------"
 }
 
+function f403_calc_descriptors(){
+echo " >-------------------------------------------------<"
+echo " | This function calls the script in calculators   |"
+echo " | Script: calc_descriptors.py                     |"
+echo " | Developer: Zihan YAN (yanzihan@westlake.edu.cn) |"
+echo " >-------------------------------------------------<"
+echo " Input <input.xyz> <output.npy> <nep_model> <element>"
+echo " Examp: train.xyz des_Li.npy nep.txt Li"
+echo " ------------>>"
+read -p " " input_calc_descriptors
+echo " ---------------------------------------------------"
+python ${GPUMDkit_path}/Scripts/calculators/calc_descriptors.py ${input_calc_descriptors}
+echo " Code path: ${GPUMDkit_path}/Scripts/calculators/calc_descriptors.py"
+echo " ---------------------------------------------------"
+}
+
 function f4_calculators(){
 echo " ------------>>"
 echo " 401) Calc ionic conductivity"
 echo " 402) Calc properties by nep"
-echo " 403) Developing ... "
+echo " 403) Calc descriptors of specific elements"
+echo " 404) Developing ... "
 echo " 000) Return to the main menu"
 echo " ------------>>"
 echo " Input the function number:"
@@ -441,8 +458,11 @@ case $num_choice in
         f402_calc_properties_with_nep
         ;;
     "403")
+        f403_calc_descriptors
+        ;;
+    "404")
         echo " Developing ... "
-        ;;            
+        ;;             
     "000")
         menu
         main
@@ -628,6 +648,9 @@ function main(){
             ;;
         "402")
             f402_calc_properties_with_nep
+            ;;
+        "403")
+            f403_calc_descriptors
             ;;
         "5")
             echo "Developing ..."
