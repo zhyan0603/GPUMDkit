@@ -730,9 +730,12 @@ if [ ! -z "$1" ]; then
                         ;;
                     "force_errors"|"force_error"|"force")
                         python ${GPUMDkit_path}/Scripts/plt_scripts/plt_force_errors.py $3 
-                        ;;    
+                        ;;
+                    "des")
+                        python ${GPUMDkit_path}/Scripts/plt_scripts/plt_descriptors.py $3 ${@:4}
+                        ;;     
                     *)
-                        echo "Usage: -plt thermo/train/prediction/train_test/msd/sdc/rdf/vac/restart/dimer/force [save]"
+                        echo "Usage: -plt thermo/train/prediction/train_test/msd/sdc/rdf/vac/restart/dimer/force/des [save]"
                         echo "Examp: gpumdkit.sh -plt thermo save"
                         exit 1
                         ;;
