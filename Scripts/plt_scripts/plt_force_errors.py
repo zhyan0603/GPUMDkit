@@ -131,6 +131,13 @@ ax6.set_title(r'The CDF of $\delta_{\theta}$')
 plt.tight_layout(pad=1.0)
 
 if len(sys.argv) > 1 and sys.argv[1] == 'save':
-    plt.savefig('./force_errors.png', dpi=200)
+    plt.savefig('force_errors.png', dpi=300)
 else:
-    plt.show()
+    # Check if the current backend is non-interactive
+    from matplotlib import get_backend
+    if get_backend().lower() in ['agg', 'cairo', 'pdf', 'ps', 'svg']:
+        print("Unable to display the plot due to the non-interactive backend.")
+        print("The plot has been automatically saved as 'force_errors.png'.")
+        plt.savefig('force_errors.png', dpi=300)
+    else:
+        plt.show()

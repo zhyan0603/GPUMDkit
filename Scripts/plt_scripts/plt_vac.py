@@ -35,4 +35,11 @@ plt.tight_layout()
 if len(sys.argv) > 1 and sys.argv[1] == 'save':
     plt.savefig('vac.png')
 else:
-    plt.show()
+    # Check if the current backend is non-interactive
+    from matplotlib import get_backend
+    if get_backend().lower() in ['agg', 'cairo', 'pdf', 'ps', 'svg']:
+        print("Unable to display the plot due to the non-interactive backend.")
+        print("The plot has been automatically saved as 'vac.png'.")
+        plt.savefig('vac.png', dpi=300)
+    else:
+        plt.show()

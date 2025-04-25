@@ -1,9 +1,9 @@
 #!/bin/bash
 
-# Get total steps from nep.in (still needed for remaining time calculation)
+# Get total steps from nep.in
 total_steps=$(grep 'generation' "nep.in" | awk '{print $2}')
 
-# Get the last output step from loss.out (for initializing current step)
+# Get the last output step from loss.out
 current_step=$(tail -1 "loss.out" | awk '{print $1}')
 
 # Initialize variables for time and step tracking
@@ -12,13 +12,13 @@ first_step=0
 first_read=true
 
 # Print table header with borders
-echo "+-----------------+-----------+-----------------+"
-echo "|       Step      | Time Diff |    Time Left    |"
-echo "+-----------------+-----------+-----------------+"
+echo "+-----------------+-----------+-----------------+---------------------+"
+echo "|       Step      | Time Diff |    Time Left    |    Finish Time      |"
+echo "+-----------------+-----------+-----------------+---------------------+"
 
 # Read loss.out file in real-time
 tail -1f "loss.out" | while read line; do
-  # Extract the step from the current line (assuming step is the first column)
+  # Extract the step from the current line
   step=$(echo "$line" | awk '{print $1}')
 
   # Get current timestamp
@@ -55,11 +55,11 @@ tail -1f "loss.out" | while read line; do
   minutes=$(((remaining_time % 3600) / 60))
   seconds=$((remaining_time % 60))
 
-  # Prepare centered values
-  step_val="$current_step"
-  time_val="$time_diff s"
-  remain_val="$hours h $minutes m $seconds s"
+  # Calculate finish time (current time + remaining time)
+  finish_timestamp=$((timestamp + remaining_time))
+  finish_time=$(date -d "@$finish_timestamp" "+%Y-%m-%d %H:%M:%S")
 
-  # Output data in table format with centered values
-  printf "| %-15s | %-9s | %-15s |\n" "$current_step" "$time_diff s" "$hours h $minutes m $seconds s"
+  # Output data in table format
+  printf "| %-15s | %-9s | %-15s | %-19s |\n" \
+    "$current_step" "$time_diff s" "$hours h $minutes m $seconds s" "$finish_time"
 done
