@@ -12,7 +12,7 @@ if [ -z "$GPUMD_path" ] || [ -z "$GPUMDkit_path" ]; then
     exit 1
 fi
 
-VERSION="1.2.3 (dev) (2025-04-22)"
+VERSION="1.2.4 (dev) (2025-04-25)"
 
 #--------------------- function 1 format conversion ----------------------
 # These functions are used to convert the format of the files
@@ -772,7 +772,20 @@ if [ ! -z "$1" ]; then
                             echo " Code path: ${GPUMDkit_path}/Scripts/calculators/calc_properties_with_nep.py"
                             exit 1
                         fi
-                        ;;                
+                        ;;
+                    des)
+                        if [ ! -z "$3" ] && [ ! -z "$4" ] && [ ! -z "$5" ] && [ ! -z "$6" ]; then
+                            echo " Calling script by Zihan YAN. "
+                            echo " Code path: ${GPUMDkit_path}/Scripts/calculators/calc_descriptors.py"
+                            python ${GPUMDkit_path}/Scripts/calculators/calc_descriptors.py $3 $4 $5 $6
+                        else
+                            echo " Usage: -calc des <input.xyz> <output.npy> <nep_model> <element>"
+                            echo " Examp: gpumdkit.sh -calc des train.xyz des_Li.npy nep.txt Li"
+                            echo " See the codes in calculators folder for more details"
+                            echo " Code path: ${GPUMDkit_path}/Scripts/calculators/calc_descriptors.py"
+                            exit 1
+                        fi
+                        ;;                  
                     *)
                         echo " See the codes in calculators folder for more details"
                         echo " Code path: ${GPUMDkit_path}/Scripts/calculators"
