@@ -297,6 +297,28 @@
   
   
     <li class="md-nav__item">
+      <a href="plot_scripts.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Plot Scripts
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
       <a href="format_conversion.html" class="md-nav__link">
         
   
@@ -481,7 +503,7 @@
   
   
     <li class="md-nav__item">
-      <a href="workflow_activate_learning.html" class="md-nav__link">
+      <a href="workflow_active_learning.html" class="md-nav__link">
         
   
   
@@ -611,14 +633,10 @@
 </code></pre></div>
 <h3 id="option-201-sample-structures-from-extxyz">Option 201: Sample Structures from extxyz</h3>
 <p>This option allows you to sample structures from an <code>extxyz</code> file using a specified method.</p>
-<ol>
-<li>Select option <code>201</code> from the menu:</li>
-</ol>
+<p>Select option <code>201</code> from the menu:</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="m">201</span>
 </code></pre></div>
-<ol>
-<li>You will see the following prompt:</li>
-</ol>
+<p>You will see the following prompt:</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>&gt;-------------------------------------------------&lt;
 <a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="p">|</span><span class="w"> </span>This<span class="w"> </span><span class="k">function</span><span class="w"> </span>calls<span class="w"> </span>the<span class="w"> </span>script<span class="w"> </span><span class="k">in</span><span class="w"> </span>Scripts<span class="w">       </span><span class="p">|</span>
 <a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="p">|</span><span class="w"> </span>Script:<span class="w"> </span>sample_structures.py<span class="w">                    </span><span class="p">|</span>
@@ -629,24 +647,16 @@
 <a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>Examp:<span class="w"> </span>train.xyz<span class="w"> </span>uniform<span class="w"> </span><span class="m">50</span>
 <a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a>------------&gt;&gt;
 </code></pre></div>
-<ol>
-<li>Enter the <code>extxyz</code> file name, sampling method, and number of samples:</li>
-</ol>
+<p>Enter the <code>extxyz</code> file name, sampling method, and number of samples:</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>train.xyz<span class="w"> </span>uniform<span class="w"> </span><span class="m">50</span>
 </code></pre></div>
-<ol>
-<li>The script <code>sample_structures.py</code> in the <code>Scripts/sample_strcutures</code> will be called to perform the sampling.</li>
-</ol>
+<p>The script <code>sample_structures.py</code> in the <code>Scripts/sample_strcutures</code> will be called to perform the sampling.</p>
 <h3 id="option-202-sample-structures-by-pynep">Option 202: Sample structures by pynep</h3>
 <p>This function calls the <code>pynep_select_structs.py</code> in the <code>Scripts/sample_structures</code> to sampling the structures by <code>pynep</code>.</p>
-<ol>
-<li>Select option <code>202</code> from the menu:</li>
-</ol>
+<p>Select option <code>202</code> from the menu:</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="m">202</span>
 </code></pre></div>
-<ol>
-<li>You will see the following prompt:</li>
-</ol>
+<p>You will see the following prompt:</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>&gt;-------------------------------------------------&lt;
 <a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="p">|</span><span class="w"> </span>This<span class="w"> </span><span class="k">function</span><span class="w"> </span>calls<span class="w"> </span>the<span class="w"> </span>script<span class="w"> </span><span class="k">in</span><span class="w"> </span>Scripts<span class="w">       </span><span class="p">|</span>
 <a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="p">|</span><span class="w"> </span>Script:<span class="w"> </span>pynep_select_structs.py<span class="w">                 </span><span class="p">|</span>
@@ -660,21 +670,15 @@
 <p><code>&lt;train.xyz&gt;</code>: <code>train.xyz</code></p>
 <p><code>&lt;nep_model&gt;</code>: <code>nep.txt</code></p>
 <p><code>&lt;min_dist&gt;</code>: min_dist for pynep sampling</p>
-<ol>
-<li>Enter the following parameters:</li>
-</ol>
+<p>Enter the following parameters:</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>dump.xyz<span class="w"> </span>train.xyz<span class="w"> </span>nep.txt<span class="w"> </span><span class="m">0</span>.01
 </code></pre></div>
 <h3 id="option-203-find-the-outliers-in-training-set">Option 203: Find the outliers in training set</h3>
 <p>This function calls the <code>get_max_rmse_xyz.py</code> script to find outliers in a training set.</p>
-<ol>
-<li>Select option <code>203</code> from the menu:</li>
-</ol>
+<p>Select option <code>203</code> from the menu:</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="m">203</span>
 </code></pre></div>
-<ol>
-<li>You will see the following prompt:</li>
-</ol>
+<p>You will see the following prompt:</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>&gt;-------------------------------------------------&lt;
 <a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a><span class="p">|</span><span class="w"> </span>This<span class="w"> </span><span class="k">function</span><span class="w"> </span>calls<span class="w"> </span>the<span class="w"> </span>script<span class="w"> </span><span class="k">in</span><span class="w"> </span>GPUMD<span class="err">&#39;</span>s<span class="w"> </span>tools<span class="w"> </span><span class="p">|</span>
 <a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a><span class="p">|</span><span class="w"> </span>Script:<span class="w"> </span>get_max_rmse_xyz.py<span class="w">                     </span><span class="p">|</span>
@@ -687,24 +691,16 @@
 <p><code>&lt;extxyz_file&gt;</code>: extxyz file</p>
 <p><code>&lt;*_train.out&gt;</code>: <code>energy_train.out</code>/<code>force_train.out</code>/`virial_train.out``</p>
 <p><code>&lt;num_outliers&gt;</code>: number of outliers</p>
-<ol>
-<li>Enter the <code>extxyz</code> file name, &lt;*_train.out&gt;, and number of outliers:</li>
-</ol>
+<p>Enter the <code>extxyz</code> file name, &lt;*_train.out&gt;, and number of outliers:</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>train.xyz<span class="w"> </span>energy_train.out<span class="w"> </span><span class="m">13</span><span class="w"> </span>
 </code></pre></div>
-<ol>
-<li>The script <code>sample_structures.py</code> in the <code>Scripts/sample_strcutures</code> will be called to perform the sampling.</li>
-</ol>
+<p>The script <code>sample_structures.py</code> in the <code>Scripts/sample_strcutures</code> will be called to perform the sampling.</p>
 <h3 id="option-204-perturb-structure">Option 204: Perturb structure</h3>
 <p>This function calls the <code>perturb_structure.py</code> script to generate the perturbed structures.</p>
-<ol>
-<li>Select option <code>204</code> from the menu:</li>
-</ol>
+<p>Select option <code>204</code> from the menu:</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="m">204</span>
 </code></pre></div>
-<ol>
-<li>You will see the following prompt:</li>
-</ol>
+<p>You will see the following prompt:</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a>&gt;-------------------------------------------------&lt;
 <a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a><span class="p">|</span><span class="w"> </span>This<span class="w"> </span><span class="k">function</span><span class="w"> </span>calls<span class="w"> </span>the<span class="w"> </span>script<span class="w"> </span><span class="k">in</span><span class="w"> </span>Scripts<span class="w">       </span><span class="p">|</span>
 <a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a><span class="p">|</span><span class="w"> </span>Script:<span class="w"> </span>perturb_structure.py<span class="w">                    </span><span class="p">|</span>
@@ -720,24 +716,16 @@
 <p><code>&lt;cell_pert_fraction&gt;</code>: A fraction determines how much (relatively) will cell deform</p>
 <p><code>&lt;atom_pert_distance&gt;</code>: A distance determines how far atoms will move (in angstrom).</p>
 <p><code>&lt;atom_pert_style&gt;</code>: <code>&lt;uniform&gt;</code>, <code>&lt;normal&gt;</code>, <code>&lt;const&gt;</code></p>
-<ol>
-<li>Enter your parameters like:</li>
-</ol>
+<p>Enter your parameters like:</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a>POSCAR<span class="w"> </span><span class="m">20</span><span class="w"> </span><span class="m">0</span>.03<span class="w"> </span><span class="m">0</span>.2<span class="w"> </span>uniform
 </code></pre></div>
-<ol>
-<li>The script <code>perturb_structure.py</code> in the <code>Scripts/sample_strcutures</code> will be called to perform the perturbation.</li>
-</ol>
+<p>The script <code>perturb_structure.py</code> in the <code>Scripts/sample_strcutures</code> will be called to perform the perturbation.</p>
 <h3 id="option-205-select-max-force-deviation-structs-from-activexyz">Option 205: Select max force deviation structs from active.xyz</h3>
 <p>This option allows you to select max force deviation structures from <code>active.xyz</code> generated by the command <code>active</code> in gpumd.</p>
-<ol>
-<li>Select option <code>205</code> from the menu:</li>
-</ol>
+<p>Select option <code>205</code> from the menu:</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a><span class="m">205</span>
 </code></pre></div>
-<ol>
-<li>You will see the following prompt:</li>
-</ol>
+<p>You will see the following prompt:</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a>&gt;-------------------------------------------------&lt;
 <a id="__codelineno-14-2" name="__codelineno-14-2" href="#__codelineno-14-2"></a><span class="p">|</span><span class="w"> </span>This<span class="w"> </span><span class="k">function</span><span class="w"> </span>calls<span class="w"> </span>the<span class="w"> </span>script<span class="w"> </span><span class="k">in</span><span class="w"> </span>Scripts<span class="w">       </span><span class="p">|</span>
 <a id="__codelineno-14-3" name="__codelineno-14-3" href="#__codelineno-14-3"></a><span class="p">|</span><span class="w"> </span>Script:<span class="w"> </span>select_max_modev.py<span class="w">                    </span><span class="p">|</span>
@@ -746,14 +734,10 @@
 <a id="__codelineno-14-6" name="__codelineno-14-6" href="#__codelineno-14-6"></a>Input<span class="w"> </span>&lt;structs_num&gt;<span class="w"> </span>&lt;threshold&gt;<span class="w"> </span><span class="o">(</span>eg.<span class="w"> </span><span class="m">200</span><span class="w"> </span><span class="m">0</span>.15<span class="o">)</span>
 <a id="__codelineno-14-7" name="__codelineno-14-7" href="#__codelineno-14-7"></a>------------&gt;&gt;
 </code></pre></div>
-<ol>
-<li>Enter the number of structures and the <code>threshold</code> used in your <code>run.in</code>:</li>
-</ol>
+<p>Enter the number of structures and the <code>threshold</code> used in your <code>run.in</code>:</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a><span class="m">200</span><span class="w"> </span><span class="m">0</span>.15
 </code></pre></div>
-<ol>
-<li>The script <code>select_max_modev.py</code> in the <code>Scripts/sample_strcutures</code> will be called to perform the sampling.</li>
-</ol>
+<p>The script <code>select_max_modev.py</code> in the <code>Scripts/sample_strcutures</code> will be called to perform the sampling.</p>
 <hr />
 <p>Thank you for using <code>GPUMDkit</code>! If you have any questions or need further assistance, feel free to open an issue on our GitHub repository or contact Zihan YAN (yanzihan@westlake.edu.cn).</p>
 

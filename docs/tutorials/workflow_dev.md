@@ -26,55 +26,55 @@ This script automates the preprocessing of `POSCAR` or `extxyz` files for *self-
 
 #### Usage
 
-1. Prepare the environment:
-   
-   Ensure all `.vasp` files or a single `.xyz` file are in the current directory.
+Prepare the environment:
 
-2. Select option `301` from the menu:
-   
-   ```bash
-   301
-   ```
+Ensure all `.vasp` files or a single `.xyz` file are in the current directory.
 
-3. You will see the following prompt: 
+Select option `301` from the menu:
 
-   ```sh
-    Starting SCF batch pretreatment...
-    Found 8 .vasp files.
-    >-------------------------------------------------<
-    | This function calls the script in Scripts       |
-    | Script: scf_batch_pretreatment.sh               |
-    | Developer: Zihan YAN (yanzihan@westlake.edu.cn) |
-    >-------------------------------------------------<
+```bash
+301
+```
 
-    We recommend using the prefix to locate the structure.
-    The folder name will be added to the second line of XYZ.
-    config_type=<prefix>_<ID>
-    ------------>>
-    Please enter the prefix of directory (e.g. FAPBI3_iter01)
-   ```
+You will see the following prompt: 
 
-4. Enter the `prefix` of the folder name:
+```sh
+ Starting SCF batch pretreatment...
+ Found 8 .vasp files.
+ >-------------------------------------------------<
+ | This function calls the script in Scripts       |
+ | Script: scf_batch_pretreatment.sh               |
+ | Developer: Zihan YAN (yanzihan@westlake.edu.cn) |
+ >-------------------------------------------------<
 
-   ```sh
-   Li7La3Zr2O12_iter01
-   ```
+ We recommend using the prefix to locate the structure.
+ The folder name will be added to the second line of XYZ.
+ config_type=<prefix>_<ID>
+ ------------>>
+ Please enter the prefix of directory (e.g. FAPBI3_iter01)
+```
+
+Enter the `prefix` of the folder name:
+
+```sh
+Li7La3Zr2O12_iter01
+```
 
 The script `scf_batch_pretreatment.sh` in the `Scripts` will be called to perform the pretreatment.
 
- 5. You will see the following prompts:
+You will see the following prompts:
 
-    ```
-     >-----------------------------------------------------<
-     ATTENTION: Place POTCAR, KPOINTS and INCAR in 'fp' Dir.
-     ATTENTION: Place POTCAR, KPOINTS and INCAR in 'fp' Dir.
-     ATTENTION: Place POTCAR, KPOINTS and INCAR in 'fp' Dir.
-     >-----------------------------------------------------<
-    ```
+```
+ >-----------------------------------------------------<
+ ATTENTION: Place POTCAR, KPOINTS and INCAR in 'fp' Dir.
+ ATTENTION: Place POTCAR, KPOINTS and INCAR in 'fp' Dir.
+ ATTENTION: Place POTCAR, KPOINTS and INCAR in 'fp' Dir.
+ >-----------------------------------------------------<
+```
 
-    You need to prepare the `POTCAR`, `KPOINTS`, and `INCAR` files and place them in a directory named `fp`.
-    
-    
+You need to prepare the `POTCAR`, `KPOINTS`, and `INCAR` files and place them in a directory named `fp`.
+
+
 
 ### Option 302: MD sample batch pretreatment （gpumd）
 
@@ -87,43 +87,41 @@ This script automates the preprocessing of `POSCAR` or `extxyz` files for MD sam
 
 #### Usage
 
-1. Prepare the environment:
+Prepare the environment:
 
-   Ensure all `.vasp` files or a single `.xyz` file are in the current directory.
+Ensure all `.vasp` files or a single `.xyz` file are in the current directory.
 
-2. Select option `302` from the menu:
+Select option `302` from the menu:
 
-   ```bash
-   302
-   ```
+```bash
+302
+```
 
-3. You will see the following prompt: 
+You will see the following prompt: 
 
-   ```sh
-    Starting MD sample batch pretreatment...
-    No .vasp files found, but found one XYZ file.
-    Converting it to model.xyz using GPUMDkit...
-    All frames from "NEP-dataset.xyz" have been split into individual model files.
-    20 model.xyz files were generated.
-    >-------------------------------------------------<
-    | This function calls the script in Scripts       |
-    | Script: md_sample_batch_pretreatment.sh         |
-    | Developer: Zihan YAN (yanzihan@westlake.edu.cn) |
-    >-------------------------------------------------<
-   ```
+```sh
+ Starting MD sample batch pretreatment...
+ No .vasp files found, but found one XYZ file.
+ Converting it to model.xyz using GPUMDkit...
+ All frames from "NEP-dataset.xyz" have been split into individual model files.
+ 20 model.xyz files were generated.
+ >-------------------------------------------------<
+ | This function calls the script in Scripts       |
+ | Script: md_sample_batch_pretreatment.sh         |
+ | Developer: Zihan YAN (yanzihan@westlake.edu.cn) |
+ >-------------------------------------------------<
+```
 
-4. You will see the following prompts:
+You will see the following prompts:
 
 
-    ```
     >-----------------------------------------------<
     ATTENTION: Place run.in and nep.txt in 'md' Dir. 
     ATTENTION: Place run.in and nep.txt in 'md' Dir. 
     ATTENTION: Place run.in and nep.txt in 'md' Dir. 
     >-----------------------------------------------<
-    ```
-    
-    You need to prepare the `run.in` and`nep.txt` files and place them in a directory named `md`.
+
+You need to prepare the `run.in` and`nep.txt` files and place them in a directory named `md`.
 
 
 

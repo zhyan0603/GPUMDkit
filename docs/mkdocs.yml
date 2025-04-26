@@ -53,6 +53,7 @@ plugins:
 
 nav:
   - Home: README.md
+  - Plot Scripts: plot_scripts.md
   - Format Conversion: format_conversion.md
   - Sample Structures: sample_structures.md
   - Workflow (dev): workflow_dev.md
