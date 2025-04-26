@@ -819,6 +819,17 @@ section h2::after {
     border-top: 1px solid rgba(255, 255, 255, 0.1);
 }
 
+.site-stats {
+    margin-top: 0.5rem;
+    font-size: 0.9rem;
+    color: rgba(255, 255, 255, 0.7);
+    text-align: center;
+}
+
+.site-stats span {
+    margin: 0 0.5rem;
+}
+
 @media (max-width: 768px) {
     .footer-content {
         grid-template-columns: 1fr;
