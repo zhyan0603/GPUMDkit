@@ -15,7 +15,7 @@
         <link rel="canonical" href="https://zhyan0603.github.io/GPUMDkit/format_conversion.html">
       
       
-        <link rel="prev" href="index.html">
+        <link rel="prev" href="plot_scripts.html">
       
       
         <link rel="next" href="sample_structures.html">
@@ -294,6 +294,28 @@
       
   
   
+  
+  
+    <li class="md-nav__item">
+      <a href="plot_scripts.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Plot Scripts
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
     
   
   
@@ -481,7 +503,7 @@
   
   
     <li class="md-nav__item">
-      <a href="workflow_activate_learning.html" class="md-nav__link">
+      <a href="workflow_active_learning.html" class="md-nav__link">
         
   
   
@@ -611,14 +633,10 @@
 </code></pre></div>
 <h3 id="option-101-convert-outcar-to-extxyz">Option 101: Convert OUTCAR to extxyz</h3>
 <p>This option allows you to convert VASP <code>OUTCAR</code> files to <code>extxyz</code> format.</p>
-<ol>
-<li>Select option <code>101</code> from the menu:</li>
-</ol>
+<p>Select option <code>101</code> from the menu:</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>101
 </code></pre></div>
-<ol>
-<li>You will see the following prompt:</li>
-</ol>
+<p>You will see the following prompt:</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a> &gt;-------------------------------------------------&lt;
 <a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a> | This function calls the script in GPUMD&#39;s tools |
 <a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a> | Script: multipleFrames-outcars2nep-exyz.sh      |
@@ -627,24 +645,16 @@
 <a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a> Input the directory containing OUTCARs
 <a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a> ------------&gt;&gt;
 </code></pre></div>
-<ol>
-<li>Enter the directory containing your <code>OUTCAR</code> files:</li>
-</ol>
+<p>Enter the directory containing your <code>OUTCAR</code> files:</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>/path/to/your/outcars
 </code></pre></div>
-<ol>
-<li>The script <code>multipleFrames-outcars2nep-exyz.sh</code> in GPUMD's tools will be called to perform the conversion.</li>
-</ol>
+<p>The script <code>multipleFrames-outcars2nep-exyz.sh</code> in GPUMD's tools will be called to perform the conversion.</p>
 <h3 id="option-102-convert-mtp-to-extxyz">Option 102: Convert mtp to extxyz</h3>
 <p>This option allows you to convert <code>cfg</code> files to <code>extxyz</code> format.</p>
-<ol>
-<li>Select option <code>102</code> from the menu:</li>
-</ol>
+<p>Select option <code>102</code> from the menu:</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>102
 </code></pre></div>
-<ol>
-<li>You will see the following prompt:</li>
-</ol>
+<p>You will see the following prompt:</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a> &gt;-------------------------------------------------&lt;
 <a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a> | This function calls the script in GPUMD&#39;s tools |
 <a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a> | Script: mtp2xyz.py                              |
@@ -654,24 +664,16 @@
 <a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a> Examp: train.cfg Pd Ag
 <a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a> ------------&gt;&gt;
 </code></pre></div>
-<ol>
-<li>Enter the <code>&lt;filename.cfg&gt;</code> <code>&lt;Symbol1 Symbol2 Symbol3 ...&gt;</code> :</li>
-</ol>
+<p>Enter the <code>&lt;filename.cfg&gt;</code> <code>&lt;Symbol1 Symbol2 Symbol3 ...&gt;</code> :</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>train.cfg Pd Ag
 </code></pre></div>
-<ol>
-<li>The script <code>mtp2xyz.py</code> in GPUMD's tools will be called to perform the conversion.</li>
-</ol>
+<p>The script <code>mtp2xyz.py</code> in GPUMD's tools will be called to perform the conversion.</p>
 <h3 id="option-103-convert-cp2k-to-extxyz">Option 103: Convert cp2k to extxyz</h3>
 <p>This option allows you to convert cp2k's output to <code>extxyz</code> format.</p>
-<ol>
-<li>Select option <code>103</code> from the menu:</li>
-</ol>
+<p>Select option <code>103</code> from the menu:</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>103
 </code></pre></div>
-<ol>
-<li>You will see the following prompt:</li>
-</ol>
+<p>You will see the following prompt:</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a> &gt;-------------------------------------------------&lt;
 <a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a> | This function calls the script in GPUMD&#39;s tools |
 <a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a> | Script: cp2k2xyz.py                             |
@@ -681,24 +683,16 @@
 <a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a> Examp: ./cp2k
 <a id="__codelineno-8-8" name="__codelineno-8-8" href="#__codelineno-8-8"></a> ------------&gt;&gt;
 </code></pre></div>
-<ol>
-<li>Enter the <code>&lt;dir_cp2k&gt;</code> :</li>
-</ol>
+<p>Enter the <code>&lt;dir_cp2k&gt;</code> :</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>./cp2k
 </code></pre></div>
-<ol>
-<li>The script <code>cp2k2xyz.py</code> in GPUMD's tools will be called to perform the conversion.</li>
-</ol>
+<p>The script <code>cp2k2xyz.py</code> in GPUMD's tools will be called to perform the conversion.</p>
 <h3 id="option-104-convert-castep-to-extxyz">Option 104: Convert castep to extxyz</h3>
 <p>This option allows you to convert castep's output to <code>extxyz</code> format.</p>
-<ol>
-<li>Select option <code>104</code> from the menu:</li>
-</ol>
+<p>Select option <code>104</code> from the menu:</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a>104
 </code></pre></div>
-<ol>
-<li>You will see the following prompt:</li>
-</ol>
+<p>You will see the following prompt:</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a> &gt;-------------------------------------------------&lt;
 <a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a> | This function calls the script in GPUMD&#39;s tools |
 <a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a> | Script: castep2nep-exyz.sh                      |
@@ -708,24 +702,16 @@
 <a id="__codelineno-11-7" name="__codelineno-11-7" href="#__codelineno-11-7"></a> Examp: ./castep
 <a id="__codelineno-11-8" name="__codelineno-11-8" href="#__codelineno-11-8"></a> ------------&gt;&gt;
 </code></pre></div>
-<ol>
-<li>Enter the <code>&lt;dir_castep&gt;</code> :</li>
-</ol>
+<p>Enter the <code>&lt;dir_castep&gt;</code> :</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a>./castep
 </code></pre></div>
-<ol>
-<li>The script <code>castep2nep-exyz.sh</code> in GPUMD's tools will be called to perform the conversion.</li>
-</ol>
+<p>The script <code>castep2nep-exyz.sh</code> in GPUMD's tools will be called to perform the conversion.</p>
 <h3 id="option-105-convert-extxyz-to-poscar">Option 105: Convert extxyz to POSCAR</h3>
 <p>This option allows you to convert <code>extxyz</code> file to POSCAR.</p>
-<ol>
-<li>Select option <code>105</code> from the menu:</li>
-</ol>
+<p>Select option <code>105</code> from the menu:</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a>105
 </code></pre></div>
-<ol>
-<li>You will see the following prompt:</li>
-</ol>
+<p>You will see the following prompt:</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a> &gt;-------------------------------------------------&lt;
 <a id="__codelineno-14-2" name="__codelineno-14-2" href="#__codelineno-14-2"></a> | This function calls the script in Scripts       |
 <a id="__codelineno-14-3" name="__codelineno-14-3" href="#__codelineno-14-3"></a> | Script: exyz2pos.py                             |
@@ -735,14 +721,10 @@
 <a id="__codelineno-14-7" name="__codelineno-14-7" href="#__codelineno-14-7"></a> Examp: ./train.xyz 
 <a id="__codelineno-14-8" name="__codelineno-14-8" href="#__codelineno-14-8"></a> ------------&gt;&gt;
 </code></pre></div>
-<ol>
-<li>Enter the <code>&lt;extxyz_filename&gt;</code> :</li>
-</ol>
+<p>Enter the <code>&lt;extxyz_filename&gt;</code> :</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a>./train.xyz
 </code></pre></div>
-<ol>
-<li>The script <code>exyz2pos.py</code> in Scripts will be called to perform the conversion.</li>
-</ol>
+<p>The script <code>exyz2pos.py</code> in Scripts will be called to perform the conversion.</p>
 <hr />
 <p>Thank you for using <code>GPUMDkit</code>! If you have any questions or need further assistance, feel free to open an issue on our GitHub repository or contact Zihan YAN (yanzihan@westlake.edu.cn).</p>
 
