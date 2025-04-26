@@ -823,7 +823,7 @@ section h2::after {
     margin-top: 0.5rem;
     font-size: 0.9rem;
     color: rgba(255, 255, 255, 0.7);
-    text-align: center;
+    text-align: center !important;
 }
 
 .site-stats span {
