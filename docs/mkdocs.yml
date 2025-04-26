@@ -1,0 +1,78 @@
+site_name: GPUMDkit Tutorial
+site_description: A tutorial for GPUMDkit, a toolkit for GPUMD and NEP.
+site_author: Zihan YAN
+site_url: https://zhyan0603.github.io/GPUMDkit
+repo_name: zhyan0603/GPUMDkit
+repo_url: https://github.com/zhyan0603/GPUMDkit
+
+theme:
+  name: material
+  language: en  # English interface
+  palette:
+    primary: '#3498db'  # Main color
+    accent: light_blue  # Link/button color
+  font:
+    text: Roboto
+    code: JetBrains Mono
+  features:
+    - content.code.copy  # Copy button for code blocks
+    - navigation.top  # Back-to-top button
+    - search.suggest  # Search suggestions
+    - search.highlight  # Highlight search terms
+  icon:
+    admonition:
+      note: octicons/tag-16
+      abstract: octicons/checklist-16
+      info: octicons/info-16
+      tip: octicons/squirrel-16
+      success: octicons/check-16
+      question: octicons/question-16
+      warning: octicons/alert-16
+      failure: octicons/x-circle-16
+      danger: octicons/zap-16
+      bug: octicons/bug-16
+      example: octicons/beaker-16
+      quote: octicons/quote-16
+
+docs_dir: tutorials
+site_dir: tmp  # Output HTML to docs/
+use_directory_urls: false
+
+markdown_extensions:
+  - admonition
+  - pymdownx.details
+  - pymdownx.highlight:  # Code highlighting
+      anchor_linenums: true
+  - pymdownx.superfences  # Advanced code blocks
+  - tables  # Markdown tables
+  - md_in_html  # Allow HTML in Markdown
+
+plugins:
+  - search:  # Enable search
+      lang: en
+
+nav:
+  - Home: README.md
+  - Format Conversion: format_conversion.md
+  - Sample Structures: sample_structures.md
+  - Workflow (dev): workflow_dev.md
+  - Calculators: calculators.md
+  - Active Learning Workflow: workflow_active_learning.md
+
+extra:
+  social:
+    - icon: fontawesome/solid/envelope
+      link: mailto:yanzihan@westlake.edu.cn
+      name: Email
+    - icon: fontawesome/brands/github
+      link: https://github.com/zhyan0603
+      name: GitHub
+    - icon: fontawesome/solid/graduation-cap
+      link: https://scholar.google.com/citations?user=NL8zhZYAAAAJ&hl=zh-CN
+      name: Google Scholar
+    - icon: fontawesome/brands/researchgate
+      link: https://www.researchgate.net/profile/Zihan-Yan-7?ev=hdr_xprf
+      name: ResearchGate
+    - icon: fontawesome/brands/orcid
+      link: https://orcid.org/0000-0002-8911-6549
+      name: ORCID

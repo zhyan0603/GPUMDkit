@@ -23,22 +23,22 @@ Welcome to the `GPUMDkit` tutorials! This guide will help you get started with u
 3. Follow the on-screen prompts to interactively select and run the desired script.
 
     ```
-            ____ ____  _   _ __  __ ____  _    _ _
-           / ___|  _ \| | | |  \/  |  _ \| | _(_) |_
-          | |  _| |_) | | | | |\/| | | | | |/ / | __|
-          | |_| |  __/| |_| | |  | | |_| |   <| | |_
-           \____|_|    \___/|_|  |_|____/|_|\_\_|\__|
+             ____ ____  _   _ __  __ ____  _    _ _
+            / ___|  _ \| | | |  \/  |  _ \| | _(_) |_
+           | |  _| |_) | | | | |\/| | | | | |/ / | __|
+           | |_| |  __/| |_| | |  | | |_| |   <| | |_
+            \____|_|    \___/|_|  |_|____/|_|\_\_|\__|
     
-          GPUMDkit Version 0.0.1 (dev) (2025-01-28)
-          Developer: Zihan YAN (yanzihan@westlake.edu.cn)
+            GPUMDkit Version 1.2.4 (dev) (2025-04-25)
+         Developer: Zihan YAN (yanzihan@westlake.edu.cn)
     
-    ----------------------- GPUMD -----------------------
-    1) Format Conversion          2) Sample Structures
-    2) Workflow (dev)             4) Calculators         
-    3) Developing ...             6) Developing ...      
-    4) Quit!
-    ------------>>
-    Input the function number:
+     ----------------------- GPUMD -----------------------
+     1) Format Conversion          2) Sample Structures
+     3) Workflow (dev)             4) Calculators
+     5) Developing ...             6) Developing ...
+     0) Quit!
+     ------------>>
+     Input the function number:
     ```
 
     
@@ -61,7 +61,7 @@ the help information:
 
 ```
 +==================================================================================================+
-|                              GPUMDkit 1.0.0 (dev) (2025-01-28) Usage                             |
+|                              GPUMDkit 1.2.4 (dev) (2025-04-25) Usage                             |
 |                                                                 --- by Zihan YAN                 |
 +======================================== Conversions =============================================+
 | -outcar2exyz   Convert OUTCAR to extxyz       | -pos2exyz     Convert POSCAR to extxyz           |
@@ -77,7 +77,8 @@ the help information:
 +=========================================    Misc  ==============+================================+
 | -plt           Plot scripts                   | -get_frame     Extract the specified frame       |
 | -calc          Calculators                    | -clear_xyz     Clear extra info in XYZ file      |
-| -clean         Clear files for work_dir       | Developing...                                    |
+| -clean         Clear files for work_dir       | -time          Time consuming Analyzer           |
+| Developing...                                 | Developing...                                    |
 +==================================================================================================+
 | For detailed usage and examples, use: gpumdkit.sh -<option> -h                                   |
 +==================================================================================================+
@@ -104,11 +105,11 @@ gpumdkit.sh -plt thermo
 
 For more detailed tutorials on specific functionalities, refer to the following documents:
 
-1. [Format Conversion](01_Tutorials_format_conversion.md): Detailed guide on `1) Format Conversion`.
-2. [Sample Structures](02_Tutorials_sample_structures.md): Detailed guide on `2) Sample Structures`.
-3. [Workflow (dev)](03_Tutorials_workflow_dev.md): Detailed guide on `3) Workflow (dev)`.
-4. [Calculators](04_Tutorials_calculators.md): Detailed guide on `4) Calculators`.
-5. [Activate Learning](Tutorials_workflow_activate_learning.md): Detailed guide on `Tutorial for workflow_activate_learning_dev.sh`.
+1. [Format Conversion](format_conversion.md): Detailed guide on `1) Format Conversion`.
+2. [Sample Structures](sample_structures.md): Detailed guide on `2) Sample Structures`.
+3. [Workflow (dev)](workflow_dev.md): Detailed guide on `3) Workflow (dev)`.
+4. [Calculators](calculators.md): Detailed guide on `4) Calculators`.
+5. [Activate Learning](workflow_active_learning.md): Detailed guide on `workflow_activate_learning_dev.sh`.
 
 
 ---

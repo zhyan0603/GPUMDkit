@@ -1,10 +1,13 @@
 <div align="center">
-<img src="./Gallery/gpumdkit_logo.png" width="25%" /><br>
+<a href="https://zhyan0603.github.io/GPUMDkit">
+  <img src="./Gallery/gpumdkit_logo.png" width="25%" alt="GPUMDkit Logo">
+</a><br>
 <a href="https://github.com/zhyan0603/GPUMDkit"><img src="https://img.shields.io/badge/version-1.2.4-brightgreen" alt="Version"></a>
 <a href="https://github.com/zhyan0603/GPUMDkit/blob/main/LICENCE"><img src="https://img.shields.io/badge/license-GPL--3.0-blue" alt="License"></a>
 <a href="https://github.com/zhyan0603/GPUMDkit/stargazers"><img src="https://img.shields.io/github/stars/zhyan0603/GPUMDkit?style=social" alt="Stars"></a>
 <img src="https://img.shields.io/github/languages/code-size/zhyan0603/GPUMDkit" alt="Code Size">
 </div>
+
 
 
 
@@ -84,7 +87,7 @@ There are two options, <u>*interactive mode*</u> and <u>*command-line mode*</u>
           | |_| |  __/| |_| | |  | | |_| |   <| | |_
            \____|_|    \___/|_|  |_|____/|_|\_\_|\__|
     
-          GPUMDkit Version 1.2.3 (dev) (2025-04-18)
+          GPUMDkit Version 1.2.4 (dev) (2025-04-25)
           Developer: Zihan YAN (yanzihan@westlake.edu.cn)
     
     ----------------------- GPUMD -----------------------
@@ -112,7 +115,7 @@ the help information:
 
 ```
 +==================================================================================================+
-|                              GPUMDkit 1.2.0 (dev) (2025-04-04) Usage                             |
+|                              GPUMDkit 1.2.4 (dev) (2025-04-25) Usage                             |
 |                                                                 --- by Zihan YAN                 |
 +======================================== Conversions =============================================+
 | -outcar2exyz   Convert OUTCAR to extxyz       | -pos2exyz     Convert POSCAR to extxyz           |
@@ -159,7 +162,7 @@ You can also save images as PNG if your device doesn't support visualization:
 gpumdkit.sh -plt thermo save
 ```
 
-Refer to the [Usage Instructions](./Tutorials/README.md) for more detailed examples and command options.
+Refer to our [documentation](https://zhyan0603.github.io/GPUMDkit/home.html) or the [Usage Instructions](./docs/tutorials/README.md) for more detailed examples and command options.
 
 #### Tab Completion Support
 
