@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GPUMDkit - High-Performance Molecular Dynamics Simulation Toolkit</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="gallery.js" defer></script>
+</head>
+<body>
+    <header class="header">
+        <nav class="nav">
+            <div class="logo"><img src="../Gallery/gpumdkit_logo_lateral.png" alt="GPUMDkit Logo"></div>
+            <ul class="nav-links">
+                <li><a href="home.html">Documentation</a></li>
+                <li><a href="#gallery">Gallery</a></li>
+                <li><a href="#join-and-citation">Join Us</a></li>
+                <li><a href="https://github.com/zhyan0603/GPUMDkit/archive/refs/heads/main.zip">Download</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main>
+        <section class="hero">
+            <div class="decoration-1"></div>
+            <div class="decoration-2"></div>
+            <div class="decoration-3"></div>
+            <div class="decoration-4"></div>
+            <h1><span class="gpumd">GPUMD</span><span class="kit">kit</span></h1>
+            <h2>A Toolkit for GPUMD & NEP</h2>
+            <p>GPUMDkit is a toolkit for the GPUMD (Graphics Processing Units Molecular Dynamics) program. It provides a set of tools to streamline the use of common scripts in GPUMD and NEP (neuroevolution potential), simplifying workflows and enhancing efficiency.</p>
+            <a href="https://github.com/zhyan0603/GPUMDkit.git" class="cta-button">Get Started</a>
+        </section>
+
+        <section id="features" class="features">
+            <h2>Key Features</h2>
+            <div class="feature-grid">
+                <div class="feature-card">
+                    <h3>Script Invocation</h3>
+                    <p>Easily run scripts for GPUMD and NEP</p>
+                </div>
+                <div class="feature-card">
+                    <h3>Workflow Automation</h3>
+                    <p>Automate common tasks to save time and reduce manual intervention</p>
+                </div>
+                <div class="feature-card">
+                    <h3>User-Friendly Interface</h3>
+                    <p>Intuitive shell commands designed to enhance user experience</p>
+                </div>
+                <div class="feature-card">
+                    <h3>Analysis Tools</h3>
+                    <p>Comprehensive tools for analyzing simulation results</p>
+                </div>
+            </div>
+        </section>
+
+        <section id="quick-start" class="quick-start">
+            <h2>Quick Start</h2>
+            <div class="quick-start-content">
+                <div class="code-block">
+                    <pre><code>
+# Clone the repository
+git clone https://github.com/zhyan0603/GPUMDkit.git
+
+# Set environment variables
+export GPUMD_path=/your_dir_of_GPUMD
+export GPUMDkit_path=/your_dir_of_GPUMDkit
+export PATH=${GPUMDkit_path}:${PATH}
+source ${GPUMDkit_path}/Scripts/utils/completion.sh
+
+# Make script executable and run
+chmod +x gpumdkit.sh
+gpumdkit.sh</code></pre>
+                </div>
+                <div class="buttons-container">
+                    <a href="https://github.com/zhyan0603/GPUMDkit" class="github-button">
+                        <svg height="20" width="20" viewBox="0 0 16 16" fill="currentColor">
+                            <path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"></path>
+                        </svg>
+                        View on GitHub
+                    </a>
+                    <a href="https://github.com/zhyan0603/GPUMDkit/archive/refs/heads/main.zip" class="cta-button"><svg height="20" width="20" viewBox="0 0 16 16" fill="currentColor"><path d="M8 0a8 8 0 00-8 8 8 8 0 008 8 8 8 0 008-8 8 8 0 00-8-8zm3.5 11.5l-3.5 3.5-3.5-3.5h2.5v-7h2v7h2.5z"/></svg> Download</a>
+                </div>
+            </div>
+        </section>
+
+        <section id="documentation" class="documentation">
+            <h2>Documentation</h2>
+            <div class="doc-grid">
+                <div class="doc-card">
+                    <h3>Format Conversion</h3>
+                    <p>Convert between various formats</p>
+                    <a href="format_conversion.html" class="doc-link">Read More ></a>
+                </div>
+                <div class="doc-card">
+                    <h3>Sample Structures</h3>
+                    <p>Sample structures by various methods</p>
+                    <a href="sample_structures.html" class="doc-link">Read More ></a>
+                </div>
+                <div class="doc-card">
+                    <h3>Workflow</h3>
+                    <p>Workflows for active-learning iterations</p>
+                    <a href="workflow_dev.html" class="doc-link">Read More ></a>
+                </div>
+                <div class="doc-card">
+                    <h3>Calculators</h3>
+                    <p>Calculate various properties of your system</p>
+                    <a href="calculators.html" class="doc-link">Read More ></a>
+                </div>
+<!--                 <div class="doc-card">
+                    <h3>Active Learning</h3>
+                    <p>Active learning workflow</p>
+                    <a href="workflow_active_learning.html" class="doc-link">Read More ></a>
+                </div> -->
+            </div>
+            <div class="view-all-container">
+                <a href="home.html" class="view-all-button">View all Documentation</a>
+            </div>
+        </section>
+
+        <section id="gallery" class="gallery">
+            <h2>Gallery</h2>
+            <div class="gallery-grid">
+                <div class="gallery-item">
+                    <img src="../Gallery/train.png" alt="Training Process">
+                    <p>Training Process</p>
+                </div>
+                <div class="gallery-item">
+                    <img src="../Gallery/thermo.png" alt="Thermo Analysis">
+                    <p>Thermo Analysis</p>
+                </div>
+                <div class="gallery-item">
+                    <img src="../Gallery/prediction.png" alt="NEP Predictions">
+                    <p>NEP Predictions</p>
+                </div>
+                <div class="gallery-item">
+                    <img src="../Gallery/train_test.png" alt="Training and Testing">
+                    <p>Training and Testing</p>
+                </div>
+                <div class="gallery-item">
+                    <img src="../Gallery/des_umap.png" alt="Descriptors">
+                    <p>Descriptors Analysis</p>
+                </div>
+                <div class="gallery-item">
+                    <img src="../Gallery/force_errors.png" alt="force errors">
+                    <p>Force Errors</p>
+                </div>
+                <div class="gallery-item">
+                    <img src="../Gallery/msd.png" alt="Mean Square Displacement">
+                    <p>Mean Square Displacement</p>
+                </div>
+                <div class="gallery-item">
+                    <img src="../Gallery/rdf1.png" alt="RDF Analysis 1">
+                    <p>RDF Analysis 1</p>
+                </div>
+                <div class="gallery-item">
+                    <img src="../Gallery/rdf2.png" alt="RDF Analysis 2">
+                    <p>RDF Analysis 2</p>
+                </div>
+                <div class="gallery-item">
+                    <img src="../Gallery/dimer_nep.png" alt="Dimer">
+                    <p>Dimer Plot</p>
+                </div>
+                <div class="gallery-item">
+                    <img src="../Gallery/nep_restart.png" alt="Restart">
+                    <p>plot nep.restart</p>
+                </div>
+            </div>
+            <!-- <div class="view-all-container">
+                <a href="#" class="view-all-button">View all Gallery</a>
+            </div> -->
+        </section>
+
+        <section id="publications" class="publications">
+            <h2>Publications</h2>
+            <div class="publication-grid">
+                <div class="publication-card">
+                    <h3>Impact of Lithium Nonstoichiometry on Ionic Diffusion in Tetragonal Garnet-Type Li<sub>7</sub>La<sub>3</sub>Zr<sub>2</sub>O<sub>12</sub></h3>
+                    <div class="authors">Zihan Yan, Yizhou Zhu</div>
+                    <div class="journal">Chem. Mater. 2024, 36, 23, 11551–11557</div>
+                    <a href="https://doi.org/10.1021/acs.chemmater.3c03211" class="read-button" target="_blank">Read</a>
+                </div>
+
+                <div class="publication-card">
+                    <h3>Improving robustness and training efficiency of machine-learned potentials by incorporating short-range empirical potentials</h3>
+                    <div class="authors">Zihan Yan, Zheyong Fan, Yizhou Zhu</div>
+                    <div class="journal">arXiv:2504.15925</div>
+                    <a href="https://doi.org/10.48550/arXiv.2504.15925" class="read-button" target="_blank">Read</a>
+                </div>
+                
+            </div>
+            <div class="view-all-container">
+                <a href="#publications" class="view-all-button">View all Publications</a>
+            </div>
+        </section>
+
+        <section id="join-and-citation" class="join-and-citation">
+            <h2>Join Us & Citation</h2>
+            <div class="join-citation-grid">
+                <div class="join-citation-card">
+                    <h3>Contribute Code</h3>
+                    <p>Help improve GPUMDkit by contributing Python/Shell scripts through Pull Requests.</p>
+                    <a href="https://github.com/zhyan0603/GPUMDkit/pulls" class="join-us-button" target="_blank">Submit PR</a>
+                </div>
+                <div class="join-citation-card">
+                    <h3>Contact Us</h3>
+                    <p>Have questions or suggestions? Feel free to reach out to us via email.</p>
+                    <a href="mailto:yanzihan@westlake.edu.cn" class="join-us-button">Send Email</a>
+                </div>
+                <div class="join-citation-card">
+                    <h3>Citation</h3>
+                    <p>As of now, GPUMDkit is a toy model, free for anyone to use and experiment with. If you like it, please star us on GitHub.</p>
+                    <a href="https://github.com/zhyan0603/GPUMDkit" class="github-star-button" target="_blank">
+                        <svg height="20" width="20" viewBox="0 0 16 16" fill="currentColor">
+                            <path d="M8 .25a.75.75 0 01.673.418l1.882 3.815 4.21.612a.75.75 0 01.416 1.279l-3.046 2.97.719 4.192a.75.75 0 01-1.088.791L8 12.347l-3.766 1.98a.75.75 0 01-1.088-.79l.72-4.194L.818 6.374a.75.75 0 01.416-1.28l4.21-.611L7.327.668A.75.75 0 018 .25z"></path>
+                        </svg>
+                        Star on GitHub
+                    </a>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer class="footer">
+        <div class="footer-content">
+            <div class="footer-column">
+                <h4>Research Group</h4>
+                <ul>
+                    <li><a href="https://zhuyizhou.github.io/" target="_blank">Yizhou Zhu Group</a></li>
+                </ul>
+            </div>
+            <div class="footer-column">
+                <h4>GPUMD Project</h4>
+                <ul>
+                    <li><a href="https://github.com/brucefan1983/GPUMD" target="_blank">GPUMD Repository</a></li>
+                    <li><a href="https://gpumd.org/" target="_blank">GPUMD Documentation</a></li>
+                    <li><a href="https://github.com/brucefan1983/GPUMD-Tutorials" target="_blank">GPUMD-Tutorials</a></li>
+                </ul>
+            </div>
+            <div class="footer-column">
+                <h4>GPUMD ecosystem</h4>
+                <ul>
+                    <li><a href="https://gitlab.com/brucefan1983/nep-data" target="_blank">nep-data</a></li>
+                    <li><a href="https://github.com/brucefan1983/NEP_CPU" target="_blank">NEP_CPU</a></li>
+                    <li><a href="https://github.com/brucefan1983/calorine" target="_blank">calorine</a></li>
+                    <li><a href="https://github.com/initqp/gpyumd" target="_blank">gpyumd</a></li>
+                    <li><a href="https://github.com/initqp/mdapy" target="_blank">mdapy</a></li>
+                    <li><a href="https://github.com/brucefan1983/pynep" target="_blank">pynep</a></li>
+                    <li><a href="https://github.com/initqp/somd" target="_blank">somd</a></li>
+                    <li><a href="https://github.com/zhyan0403/NepTrainKit" target="_blank">NepTrainKit</a></li>
+                    <li><a href="https://github.com/zhyan0403/NEP_Active" target="_blank">NEP_Active</a></li>
+                    <li><a href="https://github.com/zhyan0403/nep_maker" target="_blank">nep_maker</a></li>
+                    <li><a href="https://github.com/brucefan1983/GPUMD-Wizard" target="_blank">GPUMD-Wizard</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2025 GPUMDkit Teams. All rights reserved.</p>
+        </div>
+    </footer>
+</body>
+</html>

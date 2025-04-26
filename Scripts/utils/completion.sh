@@ -29,7 +29,7 @@ _gpumdkit_completions() {
 
         # Secondary options for -calc
         -calc)
-            COMPREPLY=($(compgen -W "ionic-cond nep" -- "$cur"))
+            COMPREPLY=($(compgen -W "ionic-cond nep des" -- "$cur"))
             ;;
 
         # Secondary options for -range

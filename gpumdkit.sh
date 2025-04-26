@@ -12,7 +12,7 @@ if [ -z "$GPUMD_path" ] || [ -z "$GPUMDkit_path" ]; then
     exit 1
 fi
 
-VERSION="1.2.3 (dev) (2025-04-22)"
+VERSION="1.2.4 (dev) (2025-04-25)"
 
 #--------------------- function 1 format conversion ----------------------
 # These functions are used to convert the format of the files
@@ -415,11 +415,28 @@ echo " Code path: ${GPUMDkit_path}/Scripts/calculators/calc_properties_with_nep.
 echo " ---------------------------------------------------"
 }
 
+function f403_calc_descriptors(){
+echo " >-------------------------------------------------<"
+echo " | This function calls the script in calculators   |"
+echo " | Script: calc_descriptors.py                     |"
+echo " | Developer: Zihan YAN (yanzihan@westlake.edu.cn) |"
+echo " >-------------------------------------------------<"
+echo " Input <input.xyz> <output.npy> <nep_model> <element>"
+echo " Examp: train.xyz des_Li.npy nep.txt Li"
+echo " ------------>>"
+read -p " " input_calc_descriptors
+echo " ---------------------------------------------------"
+python ${GPUMDkit_path}/Scripts/calculators/calc_descriptors.py ${input_calc_descriptors}
+echo " Code path: ${GPUMDkit_path}/Scripts/calculators/calc_descriptors.py"
+echo " ---------------------------------------------------"
+}
+
 function f4_calculators(){
 echo " ------------>>"
 echo " 401) Calc ionic conductivity"
 echo " 402) Calc properties by nep"
-echo " 403) Developing ... "
+echo " 403) Calc descriptors of specific elements"
+echo " 404) Developing ... "
 echo " 000) Return to the main menu"
 echo " ------------>>"
 echo " Input the function number:"
@@ -441,8 +458,11 @@ case $num_choice in
         f402_calc_properties_with_nep
         ;;
     "403")
+        f403_calc_descriptors
+        ;;
+    "404")
         echo " Developing ... "
-        ;;            
+        ;;             
     "000")
         menu
         main
@@ -629,6 +649,9 @@ function main(){
         "402")
             f402_calc_properties_with_nep
             ;;
+        "403")
+            f403_calc_descriptors
+            ;;
         "5")
             echo "Developing ..."
             ;;
@@ -730,9 +753,12 @@ if [ ! -z "$1" ]; then
                         ;;
                     "force_errors"|"force_error"|"force")
                         python ${GPUMDkit_path}/Scripts/plt_scripts/plt_force_errors.py $3 
-                        ;;    
+                        ;;
+                    "des")
+                        python ${GPUMDkit_path}/Scripts/plt_scripts/plt_descriptors.py $3 ${@:4}
+                        ;;     
                     *)
-                        echo "Usage: -plt thermo/train/prediction/train_test/msd/sdc/rdf/vac/restart/dimer/force [save]"
+                        echo "Usage: -plt thermo/train/prediction/train_test/msd/sdc/rdf/vac/restart/dimer/force/des [save]"
                         echo "Examp: gpumdkit.sh -plt thermo save"
                         exit 1
                         ;;
@@ -772,7 +798,20 @@ if [ ! -z "$1" ]; then
                             echo " Code path: ${GPUMDkit_path}/Scripts/calculators/calc_properties_with_nep.py"
                             exit 1
                         fi
-                        ;;                
+                        ;;
+                    des)
+                        if [ ! -z "$3" ] && [ ! -z "$4" ] && [ ! -z "$5" ] && [ ! -z "$6" ]; then
+                            echo " Calling script by Zihan YAN. "
+                            echo " Code path: ${GPUMDkit_path}/Scripts/calculators/calc_descriptors.py"
+                            python ${GPUMDkit_path}/Scripts/calculators/calc_descriptors.py $3 $4 $5 $6
+                        else
+                            echo " Usage: -calc des <input.xyz> <output.npy> <nep_model> <element>"
+                            echo " Examp: gpumdkit.sh -calc des train.xyz des_Li.npy nep.txt Li"
+                            echo " See the codes in calculators folder for more details"
+                            echo " Code path: ${GPUMDkit_path}/Scripts/calculators/calc_descriptors.py"
+                            exit 1
+                        fi
+                        ;;                  
                     *)
                         echo " See the codes in calculators folder for more details"
                         echo " Code path: ${GPUMDkit_path}/Scripts/calculators"

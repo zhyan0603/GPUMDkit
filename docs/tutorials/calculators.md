@@ -86,7 +86,7 @@ This script will calculate energies, forces, and stresses by using the `calorine
    ```sh
     >-------------------------------------------------<
     | This function calls the script in calculators   |
-    | Script: calc_properties_with_nep.py                |
+    | Script: calc_properties_with_nep.py             |
     | Developer: Zihan YAN (yanzihan@westlake.edu.cn) |
     >-------------------------------------------------<
     Input <input.xyz> <output.xyz> <nep_model> 
@@ -102,3 +102,33 @@ This script will calculate energies, forces, and stresses by using the `calorine
 
 4. The script `calc_properties_with_nep.py` in the `Scripts/calculators` will be called to perform the calculations.
 
+### Option 403: Calc descriptors of specific elements
+
+This script will calculate the descriptors of specific elements by using the `calorine` package.
+
+1. Select option `403` from the menu:
+
+   ```sh
+   403
+   ```
+
+2. You will see the following prompt:
+
+   ```sh
+    >-------------------------------------------------<
+    | This function calls the script in calculators   |
+    | Script: calc_descriptors.py                     |
+    | Developer: Zihan YAN (yanzihan@westlake.edu.cn) |
+    >-------------------------------------------------<
+    Input <input.xyz> <output.npy> <nep_model> <element>
+    Examp: train.xyz des_Li.npy nep.txt Li
+    ------------>>
+   ```
+
+3. Enter the `<input.xyz>` `<output.npy>`, `<nep_model>` and `<element>`:
+
+   ```sh
+   train.xyz des_Li.npy nep.txt Li
+   ```
+
+4. The script `calc_descriptors.py` in the `Scripts/calculators` will be called to perform the calculations, and output `des_Li.npy` for the analysis.
