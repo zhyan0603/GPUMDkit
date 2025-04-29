@@ -79,7 +79,7 @@ calculate_times() {
 }
 
 # Output initial results (printed only once)
-echo "--------------- Time Consuming Results ---------------"
+echo "----------------- System Information ----------------"
 echo "num of atoms: $atom_num"
 echo "total frames: $frames"
 echo "-----------------------------------------------------"
@@ -87,13 +87,13 @@ echo "-----------------------------------------------------"
 # Print table header (centered)
 printf "%-15s %-12s %-15s %-15s %-20s\n" \
     "$(center_text "Current Frame" 15)" \
-    "$(center_text "Speed (steps/s)" 12)" \
+    "$(center_text "Speed (steps/s)" 15)" \
     "$(center_text "Total Time" 15)" \
     "$(center_text "Time Left" 15)" \
     "$(center_text "Estimated End" 20)"
 printf "%-15s %-12s %-15s %-15s %-20s\n" \
     "$(center_text "-------------" 15)" \
-    "$(center_text "------------" 12)" \
+    "$(center_text "-------------" 15)" \
     "$(center_text "-------------" 15)" \
     "$(center_text "-------------" 15)" \
     "$(center_text "-----------------" 20)"
@@ -147,7 +147,7 @@ tail -f -n 1 neighbor.out | while read -r line; do
     # Print table row (centered)
     printf "%-15s %-12s %-15s %-15s %-20s\n" \
         "$(center_text "$current_frame" 15)" \
-        "$(center_text "$speed_str" 12)" \
+        "$(center_text "$speed_str" 15)" \
         "$(center_text "$total_time" 15)" \
         "$(center_text "$remaining_time_str" 15)" \
         "$(center_text "$end_time" 20)"
