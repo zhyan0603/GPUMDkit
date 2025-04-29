@@ -79,10 +79,10 @@ calculate_times() {
 }
 
 # Output initial results (printed only once)
-echo "----------------- System Information ----------------"
-echo "num of atoms: $atom_num"
-echo "total frames: $frames"
-echo "-----------------------------------------------------"
+echo " ----------------- System Information ----------------"
+echo " num of atoms: $atom_num"
+echo " total frames: $frames"
+echo " -----------------------------------------------------"
 
 # Print table header (centered)
 printf "%-15s %-12s %-15s %-15s %-20s\n" \

@@ -1147,6 +1147,11 @@ if [ ! -z "$1" ]; then
                 echo " Code path: ${GPUMDkit_path}/Scripts/format_conversion/get_frame.py"
             fi
             ;;
+
+        -get_volume)
+            python ${GPUMDkit_path}/Scripts/analyzer/get_volume.py
+            ;;
+
         -clear_xyz|-clean_xyz)
             if [ ! -z "$2" ] && [ "$2" != "-h" ] && [ ! -z "$3" ] ; then
                 echo " Calling script by Zihan YAN "
