@@ -2,7 +2,7 @@
 <a href="https://zhyan0603.github.io/GPUMDkit">
   <img src="./docs/Gallery/gpumdkit_logo.png" width="25%" alt="GPUMDkit Logo">
 </a><br>
-<a href="https://github.com/zhyan0603/GPUMDkit"><img src="https://img.shields.io/badge/version-1.2.4-brightgreen" alt="Version"></a>
+<a href="https://github.com/zhyan0603/GPUMDkit"><img src="https://img.shields.io/badge/version-1.2.5-brightgreen" alt="Version"></a>
 <a href="https://github.com/zhyan0603/GPUMDkit/blob/main/LICENCE"><img src="https://img.shields.io/badge/license-GPL--3.0-blue" alt="License"></a>
 <a href="https://github.com/zhyan0603/GPUMDkit/stargazers"><img src="https://img.shields.io/github/stars/zhyan0603/GPUMDkit?style=social" alt="Stars"></a>
 <img src="https://img.shields.io/github/languages/code-size/zhyan0603/GPUMDkit" alt="Code Size">
@@ -10,7 +10,7 @@
 
 # GPUMDkit
 
-**`GPUMDkit`** is a toolkit for the [GPUMD](https://github.com/brucefan1983/GPUMD) (*Graphics Processing Units Molecular Dynamics*) program. It provides a set of tools to streamline the use of common scripts in GPUMD and  [NEP](https://gpumd.org/potentials/nep.html#nep-formalism) (neuroevolution potential), simplifying workflows and enhancing efficiency.
+**`GPUMDkit`** is a toolkit for the [GPUMD](https://github.com/brucefan1983/GPUMD) (*Graphics Processing Units Molecular Dynamics*) and [NEP](https://gpumd.org/potentials/nep.html#nep-formalism) (neuroevolution potential) program. It offers a user-friendly command-line interface to streamline common scripts and workflows, simplifying tasks such as script invocation, format conversion, structure sampling, NEP construction workflow, and various analysis, aiming to improve user productivity.
 
 ## Features
 - **Simplified Script Invocation**: Easily run scripts for GPUMD and NEP.
