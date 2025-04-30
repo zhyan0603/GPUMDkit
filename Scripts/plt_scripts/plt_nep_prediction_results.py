@@ -49,8 +49,8 @@ axs[1].set_xlim(xmin_force, xmax_force)
 axs[1].set_ylim(xmin_force, xmax_force)
 axs[1].plot(force_data[:, 3:6], force_data[:, 0:3], '.', markersize=10)
 axs[1].plot([xmin_force, xmax_force], [xmin_force, xmax_force], linewidth=2, color='grey', linestyle='--')
-axs[1].set_xlabel(r'DFT force (eV/$\AA$)', fontsize=11)
-axs[1].set_ylabel(r'NEP force (eV/$\AA$)', fontsize=11)
+axs[1].set_xlabel(r'DFT force (eV/$\mathrm{\AA}$)', fontsize=11)
+axs[1].set_ylabel(r'NEP force (eV/$\mathrm{\AA}$)', fontsize=11)
 axs[1].tick_params(axis='both', labelsize=11)
 axs[1].legend(['fx', 'fy', 'fz'])
 axs[1].axis('tight')
@@ -58,7 +58,7 @@ axs[1].axis('tight')
 # Calculate and display RMSE for forces
 force_rmse = [calculate_rmse(force_data[:, i], force_data[:, i + 3]) for i in range(3)]
 mean_force_rmse = np.mean(force_rmse) * 1000
-axs[1].text(0.35, 0.08, rf'RMSE: {mean_force_rmse:.2f} meV/$\AA$', transform=axs[1].transAxes, fontsize=11, verticalalignment='center')
+axs[1].text(0.35, 0.08, rf'RMSE: {mean_force_rmse:.2f} meV/$\mathrm{{\AA}}$', transform=axs[1].transAxes, fontsize=11, verticalalignment='center')
 #axs[1].text(-0.1, 1.03, "(b)", transform=axs[1].transAxes, fontsize=13, va='top', ha='right')
 
 # Plotting the stress figure
