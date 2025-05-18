@@ -115,7 +115,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#tutorial-for-workflow_activate_learning_devsh" class="md-skip">
+        <a href="#tutorial-for-workflow_active_learning_devsh" class="md-skip">
           Skip to content
         </a>
       
@@ -451,13 +451,13 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#tutorial-for-workflow_activate_learning_devsh" class="md-nav__link">
+  <a href="#tutorial-for-workflow_active_learning_devsh" class="md-nav__link">
     <span class="md-ellipsis">
-      Tutorial for workflow_activate_learning_dev.sh
+      Tutorial for workflow_active_learning_dev.sh
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="Tutorial for workflow_activate_learning_dev.sh">
+    <nav class="md-nav" aria-label="Tutorial for workflow_active_learning_dev.sh">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
@@ -606,13 +606,13 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#tutorial-for-workflow_activate_learning_devsh" class="md-nav__link">
+  <a href="#tutorial-for-workflow_active_learning_devsh" class="md-nav__link">
     <span class="md-ellipsis">
-      Tutorial for workflow_activate_learning_dev.sh
+      Tutorial for workflow_active_learning_dev.sh
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="Tutorial for workflow_activate_learning_dev.sh">
+    <nav class="md-nav" aria-label="Tutorial for workflow_active_learning_dev.sh">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
@@ -749,8 +749,8 @@
 
   <h1>Active Learning Workflow</h1>
 
-<h2 id="tutorial-for-workflow_activate_learning_devsh">Tutorial for workflow_activate_learning_dev.sh</h2>
-<p>This tutorial explains the steps and considerations involved in <code>workflow_activate_learning_dev.sh</code> script. The workflow is used to generate, select, and analyze molecular structures, followed by simulations and data collection.</p>
+<h2 id="tutorial-for-workflow_active_learning_devsh">Tutorial for workflow_active_learning_dev.sh</h2>
+<p>This tutorial explains the steps and considerations involved in <code>workflow_active_learning_dev.sh</code> script. The workflow is used to generate, select, and analyze molecular structures, followed by simulations and data collection.</p>
 <h3 id="overview">Overview</h3>
 <p>This script is designed to handle molecular dynamics simulations, sampling, and SCF (self-consistent field) calculations for NEP. Below is a step-by-step guide explaining how the script works and what each part does.</p>
 <h3 id="1-slurm-directives">1. <strong>SLURM Directives</strong></h3>
@@ -772,7 +772,7 @@
 <li><code>--ntasks-per-node=1</code> specifies that only one task should run per node.</li>
 </ul>
 <p><strong><u>NOTE:</u></strong> If your machine does not have the SLURM environment, you can also run the script directly from the command line. For example:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>nohup bash workflow_activate_learning_dev.sh &amp;&gt;workflow.log &amp;
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>nohup bash workflow_active_learning_dev.sh &amp;&gt;workflow.log &amp;
 </code></pre></div>
 <h3 id="2-basic-setup">2. <strong>Basic Setup</strong></h3>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>cd $SLURM_SUBMIT_DIR 

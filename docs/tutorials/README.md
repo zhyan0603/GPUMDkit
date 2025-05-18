@@ -109,7 +109,7 @@ For more detailed tutorials on specific functionalities, refer to the following 
 2. [Sample Structures](sample_structures.md): Detailed guide on `2) Sample Structures`.
 3. [Workflow (dev)](workflow_dev.md): Detailed guide on `3) Workflow (dev)`.
 4. [Calculators](calculators.md): Detailed guide on `4) Calculators`.
-5. [Activate Learning](workflow_active_learning.md): Detailed guide on `workflow_activate_learning_dev.sh`.
+5. [Active Learning](workflow_active_learning.md): Detailed guide on `workflow_active_learning_dev.sh`.
 
 
 ---

@@ -1,6 +1,6 @@
-## Tutorial for workflow_activate_learning_dev.sh
+## Tutorial for workflow_active_learning_dev.sh
 
-This tutorial explains the steps and considerations involved in `workflow_activate_learning_dev.sh` script. The workflow is used to generate, select, and analyze molecular structures, followed by simulations and data collection.
+This tutorial explains the steps and considerations involved in `workflow_active_learning_dev.sh` script. The workflow is used to generate, select, and analyze molecular structures, followed by simulations and data collection.
 
 ### Overview
 
