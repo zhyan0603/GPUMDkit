@@ -17,22 +17,35 @@ def calculate_volume(a, b, c):
 
 # Determine dump_interval from run.in file
 def get_dump_interval():
-    dump_interval = 10  # Default value
+    timestep = 1.0  # Default
+    dump_interval = 10  # Default 
+    
     if os.path.exists('run.in'):
         with open('run.in', 'r') as file:
             for line in file:
-                if "dump_thermo" in line:
+                # Read timestep value
+                if "time_step" in line:
                     try:
-                        dump_interval = int(line.split()[1])
+                        timestep = float(line.split()[1])  # timestep in fs
+                    except (IndexError, ValueError):
+                        pass
+                # Read dump_thermo interval
+                elif "dump_thermo" in line:
+                    try:
+                        dump_interval = int(line.split()[1])  # number of timesteps between dumps
                         break
                     except (IndexError, ValueError):
                         pass
-    return dump_interval
+    
+    # Calculate total time interval per dump in ps
+    total_interval_ps = timestep * dump_interval / 1000.0
+    
+    return total_interval_ps
 
 data = np.loadtxt('./thermo.out')
 
-dump_interval = get_dump_interval()
-time = np.arange(0, len(data) * dump_interval / 1000, dump_interval / 1000)
+dump_interval_ps = get_dump_interval()
+time = np.arange(0, len(data) * dump_interval_ps, dump_interval_ps)
 
 # read data
 temperature = data[:, 0]
@@ -143,20 +156,31 @@ axs[0, 1].set_ylabel('Pressure (GPa)')
 axs[0, 1].legend()
 
 # Potential Energy and Kinetic Energy
-color_potential = 'tab:orange'
-color_kinetic = 'tab:green'
+# Determine y-axis limits dynamically
+pe_min, pe_max = np.min(potential_energy), np.max(potential_energy)
+pe_range = pe_max - pe_min
+pe_ylim_lower = pe_min - 0.6 * pe_range  # Double the range downward
+pe_ylim_upper = pe_max + 0.05 * pe_range  # Double the range upward
 axs[0, 2].set_title(r'$P_E$ vs $K_E$')
 axs[0, 2].set_xlabel('Time (ps)')
-axs[0, 2].set_ylabel(r'Potential Energy (eV)', color=color_potential)
-axs[0, 2].plot(time, potential_energy, color=color_potential)
+axs[0, 2].set_ylabel(r'Potential Energy (eV)', color='tab:orange')
+axs[0, 2].plot(time, potential_energy, color='tab:orange')
+axs[0, 2].set_ylim(pe_ylim_lower, pe_ylim_upper)  # Set extended range for PE
 axs[0, 2].yaxis.set_major_formatter(ScalarFormatter(useMathText=True))
 axs[0, 2].ticklabel_format(axis='y', style='sci', scilimits=(0,0))
-axs[0, 2].tick_params(axis='y', labelcolor=color_potential)
+axs[0, 2].tick_params(axis='y', labelcolor='tab:orange')
 
+ke_min, ke_max = np.min(kinetic_energy), np.max(kinetic_energy)
+ke_range = ke_max - ke_min
+ke_ylim_lower = ke_min - 0.05 * ke_range  # Double the range downward
+ke_ylim_upper = ke_max + 0.6 * ke_range  # Double the range upward
 axs_kinetic = axs[0, 2].twinx()
-axs_kinetic.set_ylabel('Kinetic Energy (eV)', color=color_kinetic)
-axs_kinetic.plot(time, kinetic_energy, color=color_kinetic)
-axs_kinetic.tick_params(axis='y', labelcolor=color_kinetic)
+axs_kinetic.set_ylabel('Kinetic Energy (eV)', color='tab:green')
+axs_kinetic.plot(time, kinetic_energy, color='tab:green')
+axs_kinetic.set_ylim(ke_ylim_lower, ke_ylim_upper)  # Set extended range for KE
+axs_kinetic.tick_params(axis='y', labelcolor='tab:green')
+axs_kinetic.yaxis.set_major_formatter(ScalarFormatter(useMathText=True))
+axs_kinetic.ticklabel_format(axis='y', style='sci', scilimits=(0,0))
 
 # Lattice
 axs[1, 0].plot(time, box_length_x, label='Lx')

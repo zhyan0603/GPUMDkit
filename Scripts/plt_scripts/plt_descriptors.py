@@ -64,9 +64,9 @@ def plot_reduced_data(reduced_splits, labels, method):
     colors = ['#9BBBE1', '#EAB883', '#A9CA70', '#DD7C4F', '#F09BA0', '#B58C9A'] 
     
     for reduced, label, color in zip(reduced_splits, labels, colors):
-        plt.scatter(reduced[:, 0], reduced[:, 1], label=label, color=color, alpha=0.6, s=25)
+        plt.scatter(reduced[:, 0], reduced[:, 1], label=label, color=color, alpha=0.6, s=15)
     
-    #plt.title(f'{method.upper()} Reduction of Descriptors')
+    #plt.title(f'{method.upper()} Analysis')
     plt.xlabel(f'{method.upper()} Component 1')
     plt.ylabel(f'{method.upper()} Component 2')
     plt.legend()
