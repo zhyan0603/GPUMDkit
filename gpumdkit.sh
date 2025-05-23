@@ -1187,6 +1187,18 @@ if [ ! -z "$1" ]; then
             fi
             ;;
 
+        -filter_range)
+            if [ ! -z "$2" ] && [ "$2" != "-h" ] && [ ! -z "$3" ] ; then
+                echo " Calling script by Zihan YAN "
+                echo " Code path: ${GPUMDkit_path}/Scripts/analyzer/filter_dist_range.py"
+                python ${GPUMDkit_path}/Scripts/analyzer/filter_dist_range.py $2 $3 $4 $5 $6
+            else
+                echo " Usage: -filter_range <exyzfile> <element1> <element2> <min_dist> <max_dist>"
+                echo " See the source code of filter_dist_range.py for more details"
+                echo " Code path: ${GPUMDkit_path}/Scripts/analyzer/filter_dist_range.py"
+            fi
+            ;;
+
         -get_frame)
             if [ ! -z "$2" ] && [ "$2" != "-h" ] && [ ! -z "$3" ] ; then
                 echo " Calling script by Zihan YAN "

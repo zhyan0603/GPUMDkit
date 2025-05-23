@@ -1,3 +1,51 @@
+### analyze_composition.py
+
+---
+
+This script is used to analyze the composition of your training set.
+
+#### Usage
+
+```
+python analyze_composition.py <input.xyz>
+```
+
+#### Example
+
+```sh
+python analyze_composition.py train.xyz
+```
+
+#### Output
+
+```
+ ---------------------------------------------------
+ Index    Compositions           N atoms      Count
+ ---------------------------------------------------
+ 1        Li20Mg2Cl36Y4          62           108
+ 2        Li19Mg1Cl36Y5          61           99
+ 3        Li39Mg3Cl72Y9          123          16
+ 4        Li37Mg1Cl72Y11         121          20
+ 5        Li163Mg19Cl288Y29      499          10
+ 6        Li158Mg14Cl288Y34      494          11
+ 7        Li154Mg10Cl288Y38      490          9
+ 8        Li149Mg5Cl288Y43       485          10
+ 9        Li18Cl36Y6             60           118
+ 10       Li144Cl288Y48          480          10
+ ---------------------------------------------------
+ Enter index to export (e.g., '1,2', '2-3', 'all'), or press Enter to skip:
+```
+
+When you enter the index of compositions, it will export the corresponding structures:
+
+```sh
+Enter index to export (e.g., '1,2', '2-3', 'all'), or press Enter to skip:
+1
+Exported Li20Mg2Cl36Y4 to Li20Mg2Cl36Y4.xyz (108 structures)
+```
+
+
+
 ### energy_force_virial_analyzer.py
 
 ---
@@ -14,7 +62,7 @@ The script requires at least two arguments:
 An optional third argument (`hist`) can be provided to generate a histogram plot of the values.
 
 ```
-python script.py <filename> <property> [hist]
+python energy_force_virial_analyzer.py <filename> <property> [hist]
 ```
 
 #### Example
@@ -42,8 +90,36 @@ python energy_force_virial_analyzer.py dump.xyz force hist
 ```
 
 <div align="center">
-<img src="../../Gallery/range_force.png" width = "50%" />
+<img src="../../docs/Gallery/range_force.png" width = "50%" />
 </div>
+
+
+
+### filter_dist_range.py
+
+---
+
+This script is used to extract the structures with specified `min_dist`.
+
+#### Usage
+
+```
+python filter_dist_range.py <input.xyz> <element1> <element2> <min_dist> <max_dist>
+```
+
+#### Example
+
+```sh
+python filter_dist_range.py dump.xyz Li Li 1.8 2.0
+```
+
+#### Command-Line Mode Example
+
+```
+gpumdkit.sh -filter_range dump.xyz Li Li 1.9 2.0
+```
+
+This means you need to extract the structures with the `min_dist` of Li-Li in the range of 1.8-2.0 in `dump.xyz` file. Finally, the `filtered_Li_Li_1.8_2.0.xyz` file will be generated.
 
 
 

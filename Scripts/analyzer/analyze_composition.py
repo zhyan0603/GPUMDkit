@@ -64,18 +64,17 @@ def analyze_xyz_compositions(filename):
     unique_compositions = sorted(composition_data.keys(), key=lambda x: tuple(atomic_numbers.get(elem[0], float('inf')) for elem in re.findall(r'([A-Z][a-z]?)(\d+)', x)))
     
     # Print results with aligned columns
-    print(" Composition Analysis Results:")
-    print(f"{' Index':<8} {'Composition':<22} {'N atoms':<12} {'Count':<10}")
-    print("-" * 60)
+    print(f" {'Index':<8} {'Compositions':<22} {'N atoms':<12} {'Count':<10}")
+    print(" "+"-" * 51)
     comp_to_index = {}
     for idx, comp in enumerate(unique_compositions, 1):
         data = composition_data[comp]
         comp_to_index[comp] = idx
         print(f" {idx:<8} {comp:<22} {data['total_atoms']:<12} {len(data['structures']):<10}")
-    
+    print(" "+"-" * 51)
     # Prompt for export
-    print("\n Enter composition indices to export (e.g., '1,2', '2-3', 'all'), or press Enter to skip:")
-    user_input = input().strip()
+    print(" Enter index to export (e.g., '1,2', '2-3', 'all'), or press Enter to skip:")
+    user_input = input(" ").strip()
     if user_input:
         indices = parse_export_input(user_input, len(unique_compositions))
         if not indices:
