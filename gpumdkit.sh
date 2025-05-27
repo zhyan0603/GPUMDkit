@@ -12,7 +12,7 @@ if [ -z "$GPUMD_path" ] || [ -z "$GPUMDkit_path" ]; then
     exit 1
 fi
 
-VERSION="1.2.6 (dev) (2025-05-18)"
+VERSION="1.2.7 (dev) (2025-05-27)"
 
 #--------------------- function 1 format conversion ----------------------
 # These functions are used to convert the format of the files
@@ -470,6 +470,54 @@ case $num_choice in
 esac
 }
 
+#--------------------- function 5 analyzer ----------------------
+function f501_analyze_composition(){
+echo " >-------------------------------------------------<"
+echo " | This function calls the script in analyzer      |"
+echo " | Script: analyze_composition.py                  |"
+echo " | Developer: Zihan YAN (yanzihan@westlake.edu.cn) |"
+echo " >-------------------------------------------------<"
+echo " Input <input.xyz> you want to analyze"
+echo " Examp: train.xyz"
+echo " ------------>>"
+read -p " " input_extxyz
+echo " ---------------------------------------------------"
+python ${GPUMDkit_path}/Scripts/analyzer/analyze_composition.py ${input_extxyz}
+echo " Code path: ${GPUMDkit_path}/Scripts/analyzer/analyze_composition.py"
+echo " ---------------------------------------------------"
+}
+
+function f5_analyzer(){
+echo " ------------>>"
+echo " 501) Analyze composition of extxyz"
+echo " 502) Developing ... "
+echo " 000) Return to the main menu"
+echo " ------------>>"
+echo " Input the function number:"
+
+arry_num_choice=("000" "501" "502") 
+read -p " " num_choice
+while ! echo "${arry_num_choice[@]}" | grep -wq "$num_choice" 
+do
+  echo " ------------>>"
+  echo " Please reinput function number..."
+  read -p " " num_choice
+done
+
+case $num_choice in
+    "501")
+        f501_analyze_composition
+        ;;
+    "502")
+        echo " Developing ... "
+        ;;             
+    "000")
+        menu
+        main
+        ;;
+esac
+}
+
 #--------------------- clean extra files ----------------------
 # This function is used to clean extra files in the current directory
 # It will keep some files and delete the rest
@@ -560,7 +608,7 @@ function menu(){
 echo " ----------------------- GPUMD -----------------------"
 echo " 1) Format Conversion          2) Sample Structures   "
 echo " 3) Workflow (dev)             4) Calculators         "
-echo " 5) Developing ...             6) Developing ...      "
+echo " 5) Analyzer                   6) Developing ...      "
 echo " 0) Quit!"
 }
 
@@ -573,7 +621,7 @@ function main(){
         "2" "201" "202" "203" "204" "205" 
         "3" "301" "302" "303" 
         "4" "401" "402" 
-        "5"
+        "5" "501" "502"
         "6"
     ) 
     read -p " " choice
@@ -653,7 +701,10 @@ function main(){
             f403_calc_descriptors
             ;;
         "5")
-            echo "Developing ..."
+            f5_analyzer
+            ;;
+        "501")
+            f501_analyze_composition
             ;;
         "6")
             echo "Developing ..."
@@ -723,6 +774,9 @@ if [ ! -z "$1" ]; then
                 case $2 in
                     "thermo")
                         python ${GPUMDkit_path}/Scripts/plt_scripts/plt_nep_thermo.py $3
+                        ;;
+                    "thermo2")
+                        python ${GPUMDkit_path}/Scripts/plt_scripts/plt_nep_thermo2.py $3
                         ;;
                     "train")
                         python ${GPUMDkit_path}/Scripts/plt_scripts/plt_nep_train_results.py $3
@@ -1133,6 +1187,18 @@ if [ ! -z "$1" ]; then
                 echo " Usage: -filter_value <exyzfile> <property> <value>"
                 echo " See the source code of filter_exyz_by_value.py for more details"
                 echo " Code path: ${GPUMDkit_path}/Scripts/analyzer/filter_exyz_by_value.py"
+            fi
+            ;;
+
+        -filter_range)
+            if [ ! -z "$2" ] && [ "$2" != "-h" ] && [ ! -z "$3" ] ; then
+                echo " Calling script by Zihan YAN "
+                echo " Code path: ${GPUMDkit_path}/Scripts/analyzer/filter_dist_range.py"
+                python ${GPUMDkit_path}/Scripts/analyzer/filter_dist_range.py $2 $3 $4 $5 $6
+            else
+                echo " Usage: -filter_range <exyzfile> <element1> <element2> <min_dist> <max_dist>"
+                echo " See the source code of filter_dist_range.py for more details"
+                echo " Code path: ${GPUMDkit_path}/Scripts/analyzer/filter_dist_range.py"
             fi
             ;;
 
