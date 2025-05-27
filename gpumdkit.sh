@@ -12,7 +12,7 @@ if [ -z "$GPUMD_path" ] || [ -z "$GPUMDkit_path" ]; then
     exit 1
 fi
 
-VERSION="1.2.7 (dev) (2025-05-23)"
+VERSION="1.2.7 (dev) (2025-05-27)"
 
 #--------------------- function 1 format conversion ----------------------
 # These functions are used to convert the format of the files
@@ -774,6 +774,9 @@ if [ ! -z "$1" ]; then
                 case $2 in
                     "thermo")
                         python ${GPUMDkit_path}/Scripts/plt_scripts/plt_nep_thermo.py $3
+                        ;;
+                    "thermo2")
+                        python ${GPUMDkit_path}/Scripts/plt_scripts/plt_nep_thermo2.py $3
                         ;;
                     "train")
                         python ${GPUMDkit_path}/Scripts/plt_scripts/plt_nep_train_results.py $3
