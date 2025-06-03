@@ -620,7 +620,7 @@ if ! git rev-parse --is-inside-work-tree > /dev/null 2>&1; then
     if ! git rev-parse --is-inside-work-tree > /dev/null 2>&1; then
         echo "Error: $GPUMDkit_path is not a Git repository."
         exit 1
-    }
+    fi
 fi
 
 # Get current branch name
@@ -800,10 +800,10 @@ function help_info_table(){
     echo "| -addgroup      Add group label                | -addweight    Add weight to the struct in extxyz |"
     echo "| Developing...                                 | Developing...                                    |"
     echo "+========================================= Analysis ===============================================+"
-    echo "| -range         Print range of energy etc.     | -max_rmse     Get max RMSE from XYZ              |"
+    echo "| -range         Print range of energy etc.     | -max_rmse     Get max RMSE from extxyz           |"
     echo "| -min_dist      Get min_dist between atoms     | -min_dist_pbc Get min_dist considering PBC       |"
     echo "| -filter_box    Filter struct by box limits    | -filter_value Filter struct by value (efs)       |"
-    echo "| -filter_dist   Filter struct by min_dist      | Developing...                                    |"
+    echo "| -filter_dist   Filter struct by min_dist      | -analyze_comp Analyze composition of extxyz      |"
     echo "+=========================================    Misc  ==============+================================+"
     echo "| -plt           Plot scripts                   | -get_frame     Extract the specified frame       |"
     echo "| -calc          Calculators                    | -clear_xyz     Clear extra info in XYZ file      |"
@@ -1282,6 +1282,19 @@ if [ ! -z "$1" ]; then
                 echo " Usage: -get_frame <exyzfile> <frame_index>"
                 echo " See the source code of get_frame.py for more details"
                 echo " Code path: ${GPUMDkit_path}/Scripts/format_conversion/get_frame.py"
+            fi
+            ;;
+
+        -analyze_comp|-ac|-analyze_composition)
+            if [ ! -z "$2" ] && [ "$2" != "-h" ]; then
+                echo " Calling script by Zihan YAN "
+                echo " Code path: ${GPUMDkit_path}/Scripts/analyzer/analyze_composition.py"
+                python ${GPUMDkit_path}/Scripts/analyzer/analyze_composition.py $2
+            else
+                echo " Usage: -analyze_composition <exyzfile>"
+                echo " See the source code of analyze_composition.py for more details"
+                echo " Code path: ${GPUMDkit_path}/Scripts/analyzer/analyze_composition.py"
+                exit 1
             fi
             ;;
 
