@@ -603,8 +603,6 @@ fi
 
 # check for updates
 function update_gpumdkit(){
-#!/bin/bash
-
 # Check if in a Git repository; if not, try to switch to GPUMDkit_path
 if ! git rev-parse --is-inside-work-tree > /dev/null 2>&1; then
     if [ -z "$GPUMDkit_path" ]; then
@@ -640,7 +638,8 @@ remote_commit=$(git ls-remote https://github.com/zhyan0603/GPUMDkit.git "$curren
 
 # Check if remote commit was retrieved successfully
 if [ -z "$remote_commit" ]; then
-    echo "Error: Unable to fetch remote repository information. Check network or branch name ($current_branch)."
+    echo "Error: Unable to fetch remote repository information."
+    echo "Check network or branch name ($current_branch)."
     exit 1
 fi
 
