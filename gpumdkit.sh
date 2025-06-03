@@ -808,7 +808,7 @@ function help_info_table(){
     echo "| -plt           Plot scripts                   | -get_frame     Extract the specified frame       |"
     echo "| -calc          Calculators                    | -clear_xyz     Clear extra info in XYZ file      |"
     echo "| -clean         Clear files for work_dir       | -time          Time consuming Analyzer           |"
-    echo "| Developing...                                 | Developing...                                    |"    
+    echo "| -update        Update GPUMDkit                | Developing...                                    |"    
     echo "+==================================================================================================+"
     echo "| For detailed usage and examples, use: gpumdkit.sh -<option> -h                                   |"
     echo "+==================================================================================================+"
