@@ -12,7 +12,7 @@ if [ -z "$GPUMD_path" ] || [ -z "$GPUMDkit_path" ]; then
     exit 1
 fi
 
-VERSION="1.2.6 (dev) (2025-05-18)"
+VERSION="1.2.8 (dev) (2025-06-03)"
 
 #--------------------- function 1 format conversion ----------------------
 # These functions are used to convert the format of the files
@@ -470,6 +470,54 @@ case $num_choice in
 esac
 }
 
+#--------------------- function 5 analyzer ----------------------
+function f501_analyze_composition(){
+echo " >-------------------------------------------------<"
+echo " | This function calls the script in analyzer      |"
+echo " | Script: analyze_composition.py                  |"
+echo " | Developer: Zihan YAN (yanzihan@westlake.edu.cn) |"
+echo " >-------------------------------------------------<"
+echo " Input <input.xyz> you want to analyze"
+echo " Examp: train.xyz"
+echo " ------------>>"
+read -p " " input_extxyz
+echo " ---------------------------------------------------"
+python ${GPUMDkit_path}/Scripts/analyzer/analyze_composition.py ${input_extxyz}
+echo " Code path: ${GPUMDkit_path}/Scripts/analyzer/analyze_composition.py"
+echo " ---------------------------------------------------"
+}
+
+function f5_analyzer(){
+echo " ------------>>"
+echo " 501) Analyze composition of extxyz"
+echo " 502) Developing ... "
+echo " 000) Return to the main menu"
+echo " ------------>>"
+echo " Input the function number:"
+
+arry_num_choice=("000" "501" "502") 
+read -p " " num_choice
+while ! echo "${arry_num_choice[@]}" | grep -wq "$num_choice" 
+do
+  echo " ------------>>"
+  echo " Please reinput function number..."
+  read -p " " num_choice
+done
+
+case $num_choice in
+    "501")
+        f501_analyze_composition
+        ;;
+    "502")
+        echo " Developing ... "
+        ;;             
+    "000")
+        menu
+        main
+        ;;
+esac
+}
+
 #--------------------- clean extra files ----------------------
 # This function is used to clean extra files in the current directory
 # It will keep some files and delete the rest
@@ -553,6 +601,74 @@ fi
 
 }
 
+# check for updates
+function update_gpumdkit(){
+# Check if in a Git repository; if not, try to switch to GPUMDkit_path
+if ! git rev-parse --is-inside-work-tree > /dev/null 2>&1; then
+    if [ -z "$GPUMDkit_path" ]; then
+        echo "Error: Not in a Git repository and GPUMDkit_path environment variable is not set."
+        exit 1
+    fi
+    if [ ! -d "$GPUMDkit_path" ]; then
+        echo "Error: Directory $GPUMDkit_path does not exist."
+        exit 1
+    fi
+    cd "$GPUMDkit_path" || {
+        echo "Error: Failed to change directory to $GPUMDkit_path."
+        exit 1
+    }
+    if ! git rev-parse --is-inside-work-tree > /dev/null 2>&1; then
+        echo "Error: $GPUMDkit_path is not a Git repository."
+        exit 1
+    fi
+fi
+
+# Get current branch name
+current_branch=$(git rev-parse --abbrev-ref HEAD)
+if [ -z "$current_branch" ]; then
+    echo "Error: Unable to determine current branch."
+    exit 1
+fi
+
+# Get local commit hash for current branch
+local_commit=$(git rev-parse HEAD)
+
+# Get remote commit hash for current branch
+remote_commit=$(git ls-remote https://github.com/zhyan0603/GPUMDkit.git "$current_branch" | awk '{print $1}')
+
+# Check if remote commit was retrieved successfully
+if [ -z "$remote_commit" ]; then
+    echo "Error: Unable to fetch remote repository information."
+    echo "Check network or branch name ($current_branch)."
+    exit 1
+fi
+
+# Compare local and remote commits
+if [ "$local_commit" = "$remote_commit" ]; then
+    echo "No updates available: Local $current_branch branch is up to date."
+else
+    echo "Updates detected, pulling latest code for branch $current_branch..."
+    # Update permissions and pull code
+    if [ -f "gpumdkit.sh" ]; then
+        chmod -x gpumdkit.sh
+    else
+        echo "Warning: gpumdkit.sh not found, skipping permission change."
+    fi
+
+    # Pull latest code
+    if git pull origin "$current_branch"; then
+        echo "Code successfully updated."
+        # Restore executable permission for gpumdkit.sh
+        if [ -f "gpumdkit.sh" ]; then
+            chmod +x gpumdkit.sh
+            echo "Restored executable permission for gpumdkit.sh."
+        fi
+    else
+        echo "Error: Failed to pull code. Check Git configuration or network connection."
+        exit 1
+    fi
+fi
+}
 
 #--------------------- main script ----------------------
 # Show the menu
@@ -560,7 +676,7 @@ function menu(){
 echo " ----------------------- GPUMD -----------------------"
 echo " 1) Format Conversion          2) Sample Structures   "
 echo " 3) Workflow (dev)             4) Calculators         "
-echo " 5) Developing ...             6) Developing ...      "
+echo " 5) Analyzer                   6) Developing ...      "
 echo " 0) Quit!"
 }
 
@@ -573,7 +689,7 @@ function main(){
         "2" "201" "202" "203" "204" "205" 
         "3" "301" "302" "303" 
         "4" "401" "402" 
-        "5"
+        "5" "501" "502"
         "6"
     ) 
     read -p " " choice
@@ -653,7 +769,10 @@ function main(){
             f403_calc_descriptors
             ;;
         "5")
-            echo "Developing ..."
+            f5_analyzer
+            ;;
+        "501")
+            f501_analyze_composition
             ;;
         "6")
             echo "Developing ..."
@@ -681,10 +800,10 @@ function help_info_table(){
     echo "| -addgroup      Add group label                | -addweight    Add weight to the struct in extxyz |"
     echo "| Developing...                                 | Developing...                                    |"
     echo "+========================================= Analysis ===============================================+"
-    echo "| -range         Print range of energy etc.     | -max_rmse     Get max RMSE from XYZ              |"
+    echo "| -range         Print range of energy etc.     | -max_rmse     Get max RMSE from extxyz           |"
     echo "| -min_dist      Get min_dist between atoms     | -min_dist_pbc Get min_dist considering PBC       |"
     echo "| -filter_box    Filter struct by box limits    | -filter_value Filter struct by value (efs)       |"
-    echo "| -filter_dist   Filter struct by min_dist      | Developing...                                    |"
+    echo "| -filter_dist   Filter struct by min_dist      | -analyze_comp Analyze composition of extxyz      |"
     echo "+=========================================    Misc  ==============+================================+"
     echo "| -plt           Plot scripts                   | -get_frame     Extract the specified frame       |"
     echo "| -calc          Calculators                    | -clear_xyz     Clear extra info in XYZ file      |"
@@ -703,6 +822,9 @@ if [ ! -z "$1" ]; then
         -clean)
             clean_extra_files
             ;;
+        -update|-U)
+            update_gpumdkit
+            ;;            
         -time)
             case $2 in
                 gpumd)
@@ -723,6 +845,9 @@ if [ ! -z "$1" ]; then
                 case $2 in
                     "thermo")
                         python ${GPUMDkit_path}/Scripts/plt_scripts/plt_nep_thermo.py $3
+                        ;;
+                    "thermo2")
+                        python ${GPUMDkit_path}/Scripts/plt_scripts/plt_nep_thermo2.py $3
                         ;;
                     "train")
                         python ${GPUMDkit_path}/Scripts/plt_scripts/plt_nep_train_results.py $3
@@ -1136,6 +1261,18 @@ if [ ! -z "$1" ]; then
             fi
             ;;
 
+        -filter_range)
+            if [ ! -z "$2" ] && [ "$2" != "-h" ] && [ ! -z "$3" ] ; then
+                echo " Calling script by Zihan YAN "
+                echo " Code path: ${GPUMDkit_path}/Scripts/analyzer/filter_dist_range.py"
+                python ${GPUMDkit_path}/Scripts/analyzer/filter_dist_range.py $2 $3 $4 $5 $6
+            else
+                echo " Usage: -filter_range <exyzfile> <element1> <element2> <min_dist> <max_dist>"
+                echo " See the source code of filter_dist_range.py for more details"
+                echo " Code path: ${GPUMDkit_path}/Scripts/analyzer/filter_dist_range.py"
+            fi
+            ;;
+
         -get_frame)
             if [ ! -z "$2" ] && [ "$2" != "-h" ] && [ ! -z "$3" ] ; then
                 echo " Calling script by Zihan YAN "
@@ -1145,6 +1282,19 @@ if [ ! -z "$1" ]; then
                 echo " Usage: -get_frame <exyzfile> <frame_index>"
                 echo " See the source code of get_frame.py for more details"
                 echo " Code path: ${GPUMDkit_path}/Scripts/format_conversion/get_frame.py"
+            fi
+            ;;
+
+        -analyze_comp|-ac|-analyze_composition)
+            if [ ! -z "$2" ] && [ "$2" != "-h" ]; then
+                echo " Calling script by Zihan YAN "
+                echo " Code path: ${GPUMDkit_path}/Scripts/analyzer/analyze_composition.py"
+                python ${GPUMDkit_path}/Scripts/analyzer/analyze_composition.py $2
+            else
+                echo " Usage: -analyze_composition <exyzfile>"
+                echo " See the source code of analyze_composition.py for more details"
+                echo " Code path: ${GPUMDkit_path}/Scripts/analyzer/analyze_composition.py"
+                exit 1
             fi
             ;;
 

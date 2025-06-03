@@ -13,7 +13,7 @@ _gpumdkit_completions() {
     prev="${COMP_WORDS[COMP_CWORD-1]}" # Previous word
 
     # List of primary options (extracted from gpumdkit.sh)
-    local opts="-h -help -clean -time -plt -calc -range -out2xyz -outcar2exyz -cast2xyz -castep2exyz -cp2k2xyz -cp2k2exyz -mtp2xyz -mtp2exyz -pos2exyz -exyz2pos -pos2lmp -lmp2exyz -addgroup -addlabel -addweight -max_rmse -get_max_rmse_xyz -min_dist -min_dist_pbc -filter_dist -filter_dist_pbc -filter_box -filter_value -get_frame -clear_xyz -clean_xyz"
+    local opts="-h -update -U -help -clean -time -plt -calc -range -out2xyz -outcar2exyz -cast2xyz -castep2exyz -cp2k2xyz -cp2k2exyz -mtp2xyz -mtp2exyz -pos2exyz -exyz2pos -pos2lmp -lmp2exyz -addgroup -addlabel -addweight -max_rmse -get_max_rmse_xyz -min_dist -min_dist_pbc -filter_dist -filter_dist_pbc -filter_box -filter_value -get_frame -clear_xyz -clean_xyz -get_volume -analyze_comp"
 
     # Provide secondary completion based on the previous word
     case "$prev" in
@@ -24,7 +24,7 @@ _gpumdkit_completions() {
 
         # Secondary options for -plt
         -plt)
-            COMPREPLY=($(compgen -W "thermo train prediction valid test train_test msd sdc rdf vac restart dimer force_error" -- "$cur"))
+            COMPREPLY=($(compgen -W "thermo thermo2 train prediction valid test train_test msd sdc rdf vac restart dimer force_error des" -- "$cur"))
             ;;
 
         # Secondary options for -calc
