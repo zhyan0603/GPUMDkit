@@ -12,7 +12,7 @@ if [ -z "$GPUMD_path" ] || [ -z "$GPUMDkit_path" ]; then
     exit 1
 fi
 
-VERSION="1.2.8 (dev) (2025-06-03)"
+VERSION="1.2.8 (dev) (2025-07-04)"
 
 #--------------------- function 1 format conversion ----------------------
 # These functions are used to convert the format of the files
@@ -76,19 +76,18 @@ echo " | This function calls the script in GPUMD's tools |"
 echo " | Script: cp2k2xyz.py                             |"
 echo " | Developer: Ke XU (kickhsu@gmail.com)            |"
 echo " >-------------------------------------------------<"
-echo " Input <dir_cp2k> "
-echo " Examp: ./cp2k "
+echo " Input [pos.xyz] [frc.xyz] [cell.cell] [-shifted yes/no] "
 echo " ------------>>"
-read -p " " dir_cp2k
+read -p " " cp2k_choice
 echo " ---------------------------------------------------"
 script_path="${GPUMD_path}/tools/cp2k2xyz/cp2k2xyz.py"
 alt_path="${GPUMD_path}/tools/Format_Conversion/cp2k2xyz/cp2k2xyz.py"
 if [[ -f ${script_path} ]]; then
-    python ${script_path} ${dir_cp2k}
+    python ${script_path} ${cp2k_choice}
     echo " Code path: ${script_path}"
     echo " ---------------------------------------------------"
 elif [[ -f ${alt_path} ]]; then
-    python ${alt_path} ${dir_cp2k}
+    python ${alt_path} ${cp2k_choice}
     echo " Code path: ${alt_path}"
     echo " ---------------------------------------------------"
 else
