@@ -27,13 +27,21 @@ def calculate_limits(train_data, padding=0.08):
 # Create a subplot with 2 row and 2 columns
 fig, axs = plt.subplots(2, 2, figsize=(9, 7), dpi=100)
 
+if loss[1, 0] - loss[0, 0] == 100:
+    xlabel = 'Generation/100'
+    plot_cols = slice(1, 7)  # loss[:, 1:7]
+    legend_labels = ['Total', 'L1-Reg', 'L2-Reg', 'Energy-train', 'Force-train', 'Virial-train']
+else:
+    xlabel = 'Epoch'
+    plot_cols = slice(1, 5)  # loss[:, 1:5]
+    legend_labels = ['Total', 'Energy-train', 'Force-train', 'Virial-train']
+
 # Plotting the loss figure
-axs[0, 0].loglog(loss[:, 1:7], '-', linewidth=2)
-xlabel = 'Generation/100' if loss[1, 0] - loss[0, 0] == 100 else 'Epoch'
+axs[0, 0].loglog(loss[:, plot_cols], '-', linewidth=2)
 axs[0, 0].set_xlabel(xlabel, fontsize=10)
 axs[0, 0].set_ylabel('Loss functions', fontsize=10)
 axs[0, 0].tick_params(axis='both', labelsize=10)
-axs[0, 0].legend(['Total', 'L1-Reg', 'L2-Reg', 'Energy-train', 'Force-train', 'Virial-train'], prop = {'size':8})
+axs[0, 0].legend(legend_labels, prop={'size': 8})
 axs[0, 0].axis('tight')
 #axs[0, 0].text(-0.07, 1.03, "(a)", transform=axs[0, 0].transAxes, fontsize=12, va='top', ha='right')
 
