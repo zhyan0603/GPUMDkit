@@ -10,12 +10,21 @@ import numpy as np
 loss = np.loadtxt('loss.out')
 energy_data = np.loadtxt('energy_train.out')
 force_data = np.loadtxt('force_train.out')
-#virial_data = np.loadtxt('virial_train.out')
 stress_data = np.loadtxt('stress_train.out')
 
 # Function to calculate RMSE
 def calculate_rmse(pred, actual):
     return np.sqrt(np.mean((pred - actual) ** 2))
+
+# Function to calculate MAE
+def calculate_mae(pred, actual):
+    return np.mean(np.abs(pred - actual))
+
+# Function to calculate R²
+def calculate_r2(pred, actual):
+    ss_tot = np.sum((actual - np.mean(actual)) ** 2)
+    ss_res = np.sum((pred - actual) ** 2)
+    return 1 - ss_res / ss_tot if ss_tot != 0 else 1.0
 
 # Function to calculate dynamic axis limits
 def calculate_limits(train_data, padding=0.08):
@@ -24,7 +33,7 @@ def calculate_limits(train_data, padding=0.08):
     data_range = data_max - data_min
     return data_min - padding * data_range, data_max + padding * data_range
 
-# Create a subplot with 2 row and 2 columns
+# Create a subplot with 2 rows and 2 columns
 fig, axs = plt.subplots(2, 2, figsize=(9, 7), dpi=100)
 
 if loss[1, 0] - loss[0, 0] == 100:
@@ -57,9 +66,12 @@ axs[0, 1].tick_params(axis='both', labelsize=10)
 axs[0, 1].legend(['energy'])
 axs[0, 1].axis('tight')
 
-# Calculate and display RMSE for energy
+# Calculate and display RMSE, MAE, and R² for energy
 energy_rmse = calculate_rmse(energy_data[:, 0], energy_data[:, 1]) * 1000
-axs[0, 1].text(0.5, 0.08, f'RMSE: {energy_rmse:.2f} meV/atom', transform=axs[0, 1].transAxes, fontsize=10, verticalalignment='center')
+energy_mae = calculate_mae(energy_data[:, 0], energy_data[:, 1]) * 1000
+energy_r2 = calculate_r2(energy_data[:, 0], energy_data[:, 1])
+axs[0, 1].text(0.7, 0.12, f'R²: {energy_r2:.4f}\nMAE: {energy_mae:.2f} meV/atom\nRMSE: {energy_rmse:.2f} meV/atom', 
+               transform=axs[0, 1].transAxes, fontsize=10, verticalalignment='center', horizontalalignment='center')
 #axs[0, 1].text(-0.07, 1.03, "(b)", transform=axs[0, 1].transAxes, fontsize=12, va='top', ha='right')
 
 # Plotting the force_data figure
@@ -74,10 +86,16 @@ axs[1, 0].tick_params(axis='both', labelsize=10)
 axs[1, 0].legend(['fx', 'fy', 'fz'])
 axs[1, 0].axis('tight')
 
-# Calculate and display RMSE for forces
+# Calculate and display RMSE, MAE, and R² for forces
 force_rmse = [calculate_rmse(force_data[:, i], force_data[:, i + 3]) for i in range(3)]
+force_mae = [calculate_mae(force_data[:, i], force_data[:, i + 3]) for i in range(3)]
+force_r2 = [calculate_r2(force_data[:, i], force_data[:, i + 3]) for i in range(3)]
 mean_force_rmse = np.mean(force_rmse) * 1000
-axs[1, 0].text(0.5, 0.08, rf'RMSE: {mean_force_rmse:.2f} meV/$\mathrm{{\AA}}$', transform=axs[1, 0].transAxes, fontsize=10, verticalalignment='center')
+mean_force_mae = np.mean(force_mae) * 1000
+mean_force_r2 = np.mean(force_r2)
+axs[1, 0].text(0.7, 0.12, 
+               f'R²: {mean_force_r2:.4f}\nMAE: {mean_force_mae:.2f} meV/Å\nRMSE: {mean_force_rmse:.2f} meV/Å', 
+               transform=axs[1, 0].transAxes, fontsize=10, verticalalignment='center', horizontalalignment='center')
 #axs[1, 0].text(-0.07, 1.03, "(c)", transform=axs[1, 0].transAxes, fontsize=12, va='top', ha='right')
 
 # Plotting the stress figure
@@ -92,10 +110,15 @@ axs[1, 1].tick_params(axis='both', labelsize=10)
 axs[1, 1].legend(['xx', 'yy', 'zz', 'xy', 'yz', 'zx'])
 axs[1, 1].axis('tight')
 
-# Calculate and display RMSE for stresses
+# Calculate and display RMSE, MAE, and R² for stresses
 stress_rmse = [calculate_rmse(stress_data[:, i], stress_data[:, i + 6]) for i in range(6)]
-mean_stress_rmse = np.mean(stress_rmse) 
-axs[1, 1].text(0.5, 0.08, f'RMSE: {mean_stress_rmse:.4f} GPa', transform=axs[1, 1].transAxes, fontsize=10, verticalalignment='center')
+stress_mae = [calculate_mae(stress_data[:, i], stress_data[:, i + 6]) for i in range(6)]
+stress_r2 = [calculate_r2(stress_data[:, i], stress_data[:, i + 6]) for i in range(6)]
+mean_stress_rmse = np.mean(stress_rmse)
+mean_stress_mae = np.mean(stress_mae)
+mean_stress_r2 = np.mean(stress_r2)
+axs[1, 1].text(0.7, 0.12, f'R²: {mean_stress_r2:.4f}\nMAE: {mean_stress_mae:.4f} GPa\nRMSE: {mean_stress_rmse:.4f} GPa', 
+               transform=axs[1, 1].transAxes, fontsize=10, verticalalignment='center', horizontalalignment='center')
 #axs[1, 1].text(-0.07, 1.03, "(d)", transform=axs[1, 1].transAxes, fontsize=12, va='top', ha='right')
 
 # Adjust layout for better spacing
