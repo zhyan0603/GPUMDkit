@@ -863,6 +863,9 @@ if [ ! -z "$1" ]; then
                     "msd")
                         python ${GPUMDkit_path}/Scripts/plt_scripts/plt_msd.py $3
                         ;;
+                    "msd_all")
+                        python ${GPUMDkit_path}/Scripts/plt_scripts/plt_msd_all.py $3 ${@:4}
+                        ;;                        
                     "sdc")
                         python ${GPUMDkit_path}/Scripts/plt_scripts/plt_sdc.py $3
                         ;;
