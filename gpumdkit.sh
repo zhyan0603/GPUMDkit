@@ -829,7 +829,7 @@ if [ ! -z "$1" ]; then
                 gpumd)
                     bash ${GPUMDkit_path}/Scripts/analyzer/time_consuming_gpumd.sh $3
                     ;;
-                nep)
+                nep|gnep)
                     bash ${GPUMDkit_path}/Scripts/analyzer/time_consuming_nep.sh
                     ;;                
                 *)
@@ -865,7 +865,10 @@ if [ ! -z "$1" ]; then
                         ;;
                     "msd_all")
                         python ${GPUMDkit_path}/Scripts/plt_scripts/plt_msd_all.py $3 ${@:4}
-                        ;;                        
+                        ;;
+                    "msd_conv")
+                        python ${GPUMDkit_path}/Scripts/plt_scripts/plt_msd_convergence_check.py
+                        ;;                                                 
                     "sdc")
                         python ${GPUMDkit_path}/Scripts/plt_scripts/plt_sdc.py $3
                         ;;
