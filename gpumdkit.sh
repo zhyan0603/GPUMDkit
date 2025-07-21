@@ -12,7 +12,7 @@ if [ -z "$GPUMD_path" ] || [ -z "$GPUMDkit_path" ]; then
     exit 1
 fi
 
-VERSION="1.3.1 (dev) (2025-07-18)"
+VERSION="1.3.2 (dev) (2025-07-21)"
 
 #--------------------- function 1 format conversion ----------------------
 # These functions are used to convert the format of the files
@@ -890,8 +890,11 @@ if [ ! -z "$1" ]; then
                     "des")
                         python ${GPUMDkit_path}/Scripts/plt_scripts/plt_descriptors.py $3 ${@:4}
                         ;;     
+                    "charge")
+                        python ${GPUMDkit_path}/Scripts/plt_scripts/plt_charge.py
+                        ;; 
                     *)
-                        echo "Usage: -plt thermo/train/prediction/train_test/msd/sdc/rdf/vac/restart/dimer/force/des [save]"
+                        echo "Usage: -plt thermo/train/prediction/train_test/msd/sdc/rdf/vac/restart/dimer/force/des/charge [save]"
                         echo "Examp: gpumdkit.sh -plt thermo save"
                         exit 1
                         ;;
