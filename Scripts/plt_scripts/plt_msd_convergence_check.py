@@ -121,7 +121,7 @@ else:
     from matplotlib import get_backend
     if get_backend().lower() in ['agg', 'cairo', 'pdf', 'ps', 'svg']:
         print("Unable to display the plot due to the non-interactive backend.")
-        print("The plot has been saved as 'msd_slopes_dual_axis.png'.")
+        print("The plot has been saved as 'msd_convergence.png'.")
         plt.savefig('msd_convergence.png', dpi=300)
     else:
         plt.show()

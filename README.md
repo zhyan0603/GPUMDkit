@@ -186,5 +186,11 @@ Let’s build something useful together! 🌟
 
 ## Citation
 
-As of now, `GPUMDkit` is a toy model, free for anyone to use and experiment with. If you like it, please ⭐ [star us on GitHub](https://github.com/zhyan0603/GPUMDkit). Thanks for your support!
+As of now, `GPUMDkit` is a free, open-source tool for everyone to use. If you find it helpful, please ⭐ [star us on GitHub](https://github.com/zhyan0603/GPUMDkit). Thanks for your support! Moreover, we also recommend citing the following publications if they are relevant to your work:
+
+[1] Z. Yan and Y. Zhu, [Impact of Lithium Nonstoichiometry on Ionic Diffusion in Tetragonal Garnet-Type Li<sub>7</sub>La<sub>3</sub>Zr<sub>2</sub>O<sub>12</sub>](https://doi.org/10.1021/acs.chemmater.4c02454), Chem. Mater. 2024, 36, 23, 11551–11557.
+
+[2] Z. Yan, Z. Fan and Y. Zhu, [Improving robustness and training efficiency of machine-learned potentials by incorporating short-range empirical potentials](https://arxiv.org/abs/2504.15925), arXiv:2504.15925
+
+> **Note:** These citations are **not mandatory** and should **only** be included if they contribute to your research.
 
