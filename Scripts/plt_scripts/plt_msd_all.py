@@ -46,11 +46,14 @@ plt.ylabel(r'MSD ($\AA^2$)')
 plt.legend()
 plt.tight_layout()
 
-# Handle saving or displaying the plot
-from matplotlib import get_backend
-if get_backend().lower() in ['agg', 'cairo', 'pdf', 'ps', 'svg']:
-    print("Unable to display the plot due to the non-interactive backend.")
-    print("The plot has been automatically saved as 'msd.png'.")
-    plt.savefig('msd.png', dpi=300)
+if len(sys.argv) > 1 and sys.argv[1] == 'save':
+    plt.savefig('msd_all.png', dpi=300)
 else:
-    plt.show()
+    # Handle saving or displaying the plot
+    from matplotlib import get_backend
+    if get_backend().lower() in ['agg', 'cairo', 'pdf', 'ps', 'svg']:
+        print("Unable to display the plot due to the non-interactive backend.")
+        print("The plot has been automatically saved as 'msd_all.png'.")
+        plt.savefig('msd_all.png', dpi=300)
+    else:
+        plt.show()

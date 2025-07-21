@@ -91,7 +91,7 @@ fig, ax1 = plt.subplots(figsize=(5.5, 4), dpi=150)
 
 # Plot total MSD on the left y-axis
 ax1.plot(time_points, slopes_total, marker='o', linestyle='-', color=color_total, 
-         fillstyle='none', label='MSD Total')
+         fillstyle='none', label='Total')
 ax1.set_xlabel('Simulation Time (ns)')
 ax1.set_ylabel(r'Total Diffusion Rate ($\AA^2$/ps)', color=color_total)
 ax1.tick_params(axis='y', labelcolor=color_total)
@@ -99,11 +99,11 @@ ax1.tick_params(axis='y', labelcolor=color_total)
 # Create second y-axis for individual components
 ax2 = ax1.twinx()
 ax2.plot(time_points, slopes_x, marker='o', linestyle='-', color=color_x, 
-         fillstyle='none', label='MSD X')
+         fillstyle='none', label='x')
 ax2.plot(time_points, slopes_y, marker='o', linestyle='-', color=color_y, 
-         fillstyle='none', label='MSD Y')
-ax2.plot(time_points, slopes_z, marker='o', linestyle='-.', color=color_z, 
-         fillstyle='none', label='MSD Z')
+         fillstyle='none', label='y')
+ax2.plot(time_points, slopes_z, marker='o', linestyle='-', color=color_z, 
+         fillstyle='none', label='z')
 ax2.set_ylabel(r'Component Diffusion Rate ($\AA^2$/ps)', color='gray')
 ax2.tick_params(axis='y', labelcolor='gray')
 
