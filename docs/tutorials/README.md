@@ -29,7 +29,7 @@ Welcome to the `GPUMDkit` tutorials! This guide will help you get started with u
            | |_| |  __/| |_| | |  | | |_| |   <| | |_
             \____|_|    \___/|_|  |_|____/|_|\_\_|\__|
     
-            GPUMDkit Version 1.2.4 (dev) (2025-04-25)
+            GPUMDkit Version 1.3.2 (dev) (2025-07-21)
          Developer: Zihan YAN (yanzihan@westlake.edu.cn)
     
      ----------------------- GPUMD -----------------------
@@ -61,7 +61,7 @@ the help information:
 
 ```
 +==================================================================================================+
-|                              GPUMDkit 1.2.4 (dev) (2025-04-25) Usage                             |
+|                              GPUMDkit 1.3.0 (dev) (2025-07-11) Usage                             |
 |                                                                 --- by Zihan YAN                 |
 +======================================== Conversions =============================================+
 | -outcar2exyz   Convert OUTCAR to extxyz       | -pos2exyz     Convert POSCAR to extxyz           |

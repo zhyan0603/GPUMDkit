@@ -1,7 +1,14 @@
 #!/bin/bash
 
 # Get total steps from nep.in
-total_steps=$(grep 'generation' "nep.in" | awk '{print $2}')
+if [ -f "nep.in" ]; then
+    total_steps=$(grep 'generation' "nep.in" | awk '{print $2}')
+elif [ -f "gnep.in" ]; then
+    total_steps=$(grep 'epoch' "gnep.in" | awk '{print $2}')
+else
+    echo "Error: Neither nep.in nor gnep.in found"
+    exit 1
+fi
 
 # Get the last output step from loss.out
 current_step=$(tail -1 "loss.out" | awk '{print $1}')

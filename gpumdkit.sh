@@ -12,7 +12,7 @@ if [ -z "$GPUMD_path" ] || [ -z "$GPUMDkit_path" ]; then
     exit 1
 fi
 
-VERSION="1.3.0 (dev) (2025-07-11)"
+VERSION="1.3.2 (dev) (2025-07-21)"
 
 #--------------------- function 1 format conversion ----------------------
 # These functions are used to convert the format of the files
@@ -829,7 +829,7 @@ if [ ! -z "$1" ]; then
                 gpumd)
                     bash ${GPUMDkit_path}/Scripts/analyzer/time_consuming_gpumd.sh $3
                     ;;
-                nep)
+                nep|gnep)
                     bash ${GPUMDkit_path}/Scripts/analyzer/time_consuming_nep.sh
                     ;;                
                 *)
@@ -850,7 +850,10 @@ if [ ! -z "$1" ]; then
                         ;;
                     "train")
                         python ${GPUMDkit_path}/Scripts/plt_scripts/plt_nep_train_results.py $3
-                        ;;  
+                        ;;
+                    "loss")
+                        python ${GPUMDkit_path}/Scripts/plt_scripts/plt_train_loss.py $3
+                        ;;                       
                     "prediction"|"valid"|"test")
                         python ${GPUMDkit_path}/Scripts/plt_scripts/plt_nep_prediction_results.py $3
                         ;;
@@ -860,6 +863,12 @@ if [ ! -z "$1" ]; then
                     "msd")
                         python ${GPUMDkit_path}/Scripts/plt_scripts/plt_msd.py $3
                         ;;
+                    "msd_all")
+                        python ${GPUMDkit_path}/Scripts/plt_scripts/plt_msd_all.py $3 ${@:4}
+                        ;;
+                    "msd_conv")
+                        python ${GPUMDkit_path}/Scripts/plt_scripts/plt_msd_convergence_check.py
+                        ;;                                                 
                     "sdc")
                         python ${GPUMDkit_path}/Scripts/plt_scripts/plt_sdc.py $3
                         ;;
@@ -881,8 +890,11 @@ if [ ! -z "$1" ]; then
                     "des")
                         python ${GPUMDkit_path}/Scripts/plt_scripts/plt_descriptors.py $3 ${@:4}
                         ;;     
+                    "charge")
+                        python ${GPUMDkit_path}/Scripts/plt_scripts/plt_charge.py
+                        ;; 
                     *)
-                        echo "Usage: -plt thermo/train/prediction/train_test/msd/sdc/rdf/vac/restart/dimer/force/des [save]"
+                        echo "Usage: -plt thermo/train/prediction/train_test/msd/sdc/rdf/vac/restart/dimer/force/des/charge [save]"
                         echo "Examp: gpumdkit.sh -plt thermo save"
                         exit 1
                         ;;

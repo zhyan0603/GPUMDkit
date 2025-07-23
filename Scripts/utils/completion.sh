@@ -19,12 +19,12 @@ _gpumdkit_completions() {
     case "$prev" in
         # Secondary options for -time
         -time)
-            COMPREPLY=($(compgen -W "gpumd nep" -- "$cur"))
+            COMPREPLY=($(compgen -W "gpumd nep gnep" -- "$cur"))
             ;;
 
         # Secondary options for -plt
         -plt)
-            COMPREPLY=($(compgen -W "thermo thermo2 train prediction valid test train_test msd sdc rdf vac restart dimer force_error des" -- "$cur"))
+            COMPREPLY=($(compgen -W "thermo thermo2 train prediction valid test train_test msd msd_all msd_conv sdc rdf vac restart dimer force_error des charge" -- "$cur"))
             ;;
 
         # Secondary options for -calc
