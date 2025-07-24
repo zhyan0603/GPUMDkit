@@ -122,7 +122,9 @@ case $sample_method in
         ;;
     "pynep")
         echo $(date -d "2 second" +"%Y-%m-%d %H:%M:%S") "Performing pynep sampling..." 
-        ${python_pynep} ${GPUMDkit_path}/Scripts/sample_structures/pynep_select_structs.py filtered_by_box.xyz train.xyz nep.txt ${pynep_sample_dist}
+        # This function still needs to be improved in the future. 
+        (echo 202; echo "filtered_by_box.xyz train.xyz nep.txt"; echo 1; echo ${pynep_sample_dist}) | gpumdkit.sh >> /dev/null
+        #${python_pynep} ${GPUMDkit_path}/Scripts/sample_structures/pynep_select_structs.py filtered_by_box.xyz train.xyz nep.txt ${pynep_sample_dist}
         # Check the number of structures in selected.xyz
         selected_struct_num=$(grep -c Lat selected.xyz)
         if [ $selected_struct_num -gt $max_fp_num ]; then

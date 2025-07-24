@@ -15,10 +15,33 @@ def print_progress_bar(iteration, total, prefix='', suffix='', decimals=1, lengt
     if iteration == total: 
         print()
 
+# Calculate descriptors with progress bar
+def calculate_descriptors():
+    total_sample = len(sampledata)
+    total_train = len(traindata)
+
+    des_sample = []
+    for i in range(total_sample):
+        des_sample.append(np.mean(calc.get_property('descriptor', sampledata[i]), axis=0))
+        print_progress_bar(i + 1, total_sample, prefix=' Processing sampledata:', suffix='Complete', length=50)
+    #des_sample = np.load('des_sample.npy')
+    des_sample = np.array(des_sample)
+    #np.save('des_sample.npy', des_sample)
+
+    des_train = []
+    for i in range(total_train):
+        des_train.append(np.mean(calc.get_property('descriptor', traindata[i]), axis=0))
+        print_progress_bar(i + 1, total_train, prefix=' Processing traindata: ', suffix='Complete', length=50)
+    #des_train = np.load('des_train.npy')
+    des_train = np.array(des_train)
+    #np.save('des_train.npy', des_train)
+    
+    return des_sample, des_train
+
 # Check command line arguments
-if len(sys.argv) < 5:
-    print(" Usage: python pynep_select_structs.py <sampledata_file> <traindata_file> <nep_model_file> <min_distance>")
-    print(" Examp: python pynep_select_structs.py dump.xyz train.xyz ./nep.txt 0.01")
+if len(sys.argv) < 4:
+    print(" Usage: python pynep_select_structs.py <sampledata_file> <traindata_file> <nep_model_file>")
+    print(" Examp: python pynep_select_structs.py dump.xyz train.xyz nep.txt")
     sys.exit(1)
 
 # Load data
@@ -29,30 +52,33 @@ traindata = read(sys.argv[2], ':')
 calc = NEP(sys.argv[3])
 print(calc)
 
-# Calculate descriptors with progress bar
-total_sample = len(sampledata)
-total_train = len(traindata)
+# Interactive selection method
+print(" Choose selection method:")
+print(" 1) Select structures based on minimum distance")
+print(" 2) Select structures based on number of structures")
+choice = input(" ------------>>\n ").strip()
 
-des_sample = []
-for i in range(total_sample):
-    des_sample.append(np.mean(calc.get_property('descriptor', sampledata[i]), axis=0))
-    print_progress_bar(i + 1, total_sample, prefix=' Processing sampledata:', suffix='Complete', length=50)
-#des_sample = np.load('des_sample.npy')
-des_sample = np.array(des_sample)
-#np.save('des_sample.npy', des_sample)
+sampler = FarthestPointSample()
+if choice == '1':
+    min_dist = float(input(" Enter min_dist (e.g., 0.01): ").strip())
+    des_sample, des_train = calculate_descriptors()
+    selected = sampler.select(des_sample, des_train, min_distance=min_dist, max_select=None)
+elif choice == '2':
+    try:
+        min_max_input = input(" Enter min_select and max_select (e.g., '50 100'): ").strip()
+        min_select, max_select = map(int, min_max_input.split())
+        if min_select < 1 or max_select < min_select:
+            print(" Error: min_select must be >= 1 and max_select must be >= min_select.")
+            sys.exit(1)
+        des_sample, des_train = calculate_descriptors()
+        selected = sampler.select(des_sample, des_train, min_select=min_select, max_select=max_select)
+    except ValueError:
+        print(" Error: Please enter two integers separated by a space (e.g., '50 100').")
+        sys.exit(1)
+else:
+    print(" Invalid choice. Exiting.")
+    sys.exit(1)
 
-des_train = []
-for i in range(total_train):
-    des_train.append(np.mean(calc.get_property('descriptor', traindata[i]), axis=0))
-    print_progress_bar(i + 1, total_train, prefix=' Processing traindata: ', suffix='Complete', length=50)
-#des_train = np.load('des_train.npy')
-des_train = np.array(des_train)
-#np.save('des_train.npy', des_train)
-
-# Farthest Point Sampling
-min_dist = float(sys.argv[4])
-sampler = FarthestPointSample(min_distance=min_dist)
-selected = sampler.select(des_sample, des_train)
 write('selected.xyz', [sampledata[i] for i in selected])
 
 # Check if seaborn is installed
