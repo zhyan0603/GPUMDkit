@@ -661,7 +661,6 @@ else
         if [ -f "gpumdkit.sh" ]; then
             chmod +x gpumdkit.sh
             echo "Restored executable permission for gpumdkit.sh."
-            source $GPUMDkit_path/docs/updates.info
         fi
     else
         echo "Error: Failed to pull code. Check Git configuration or network connection."
@@ -824,6 +823,7 @@ if [ ! -z "$1" ]; then
             ;;
         -update|-U)
             update_gpumdkit
+            source $GPUMDkit_path/docs/updates.info
             ;;            
         -time)
             case $2 in
