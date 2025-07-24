@@ -12,7 +12,7 @@ if [ -z "$GPUMD_path" ] || [ -z "$GPUMDkit_path" ]; then
     exit 1
 fi
 
-VERSION="1.3.2 (dev) (2025-07-21)"
+VERSION="1.3.3 (dev) (2025-07-24)"
 
 #--------------------- function 1 format conversion ----------------------
 # These functions are used to convert the format of the files
@@ -661,6 +661,7 @@ else
         if [ -f "gpumdkit.sh" ]; then
             chmod +x gpumdkit.sh
             echo "Restored executable permission for gpumdkit.sh."
+            source $GPUMDkit_path/docs/updates.info
         fi
     else
         echo "Error: Failed to pull code. Check Git configuration or network connection."
