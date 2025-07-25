@@ -12,7 +12,7 @@ if [ -z "$GPUMD_path" ] || [ -z "$GPUMDkit_path" ]; then
     exit 1
 fi
 
-VERSION="1.3.3 (dev) (2025-07-24)"
+VERSION="1.3.4 (dev) (2025-07-25)"
 
 #--------------------- function 1 format conversion ----------------------
 # These functions are used to convert the format of the files
