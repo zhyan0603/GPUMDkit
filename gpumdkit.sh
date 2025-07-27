@@ -12,7 +12,7 @@ if [ -z "$GPUMD_path" ] || [ -z "$GPUMDkit_path" ]; then
     exit 1
 fi
 
-VERSION="1.3.2 (dev) (2025-07-21)"
+VERSION="1.3.4 (dev) (2025-07-25)"
 
 #--------------------- function 1 format conversion ----------------------
 # These functions are used to convert the format of the files
@@ -215,8 +215,8 @@ echo " | This function calls the script in Scripts       |"
 echo " | Script: pynep_select_structs.py                 |"
 echo " | Developer: Zihan YAN (yanzihan@westlake.edu.cn) |"
 echo " >-------------------------------------------------<"
-echo " Input <sample.xyz> <train.xyz> <nep_model> <min_dist>"
-echo " Examp: dump.xyz train.xyz ./nep.txt 0.01 "
+echo " Input <sample.xyz> <train.xyz> <nep_model>"
+echo " Examp: dump.xyz train.xyz nep.txt "
 echo " ------------>>"
 read -p " " sample_choice
 echo " ---------------------------------------------------"
@@ -823,6 +823,7 @@ if [ ! -z "$1" ]; then
             ;;
         -update|-U)
             update_gpumdkit
+            source $GPUMDkit_path/docs/updates.info
             ;;            
         -time)
             case $2 in
