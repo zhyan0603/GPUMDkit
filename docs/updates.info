@@ -1,6 +1,6 @@
 # === User Configuration Section: Only modify these variables ===
-VERSION="1.3.4"
-RELEASE_DATE="2025-07-25"
+VERSION="1.3.5"
+RELEASE_DATE="2025-07-28"
 HOME_PAGE="https://zhyan0603.github.io/GPUMDkit"
 CONTACT="yanzihan@westlake.edu.cn"
 
@@ -14,6 +14,7 @@ NEW_FEATURES=(
 # Bug fixes (one per line, in an array)
 BUG_FIXES=(
     "fix a bug in -pos2lmp (use ovito to convert)"
+    "improving the robustness of F401"
 )
 
 # === Formatted Output Logic ===
