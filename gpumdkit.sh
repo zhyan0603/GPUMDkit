@@ -868,7 +868,7 @@ if [ ! -z "$1" ]; then
                         python ${GPUMDkit_path}/Scripts/plt_scripts/plt_msd_all.py $3 ${@:4}
                         ;;
                     "msd_conv")
-                        python ${GPUMDkit_path}/Scripts/plt_scripts/plt_msd_convergence_check.py
+                        python ${GPUMDkit_path}/Scripts/plt_scripts/plt_msd_convergence_check.py $3
                         ;;                                                 
                     "sdc")
                         python ${GPUMDkit_path}/Scripts/plt_scripts/plt_sdc.py $3
@@ -892,16 +892,19 @@ if [ ! -z "$1" ]; then
                         python ${GPUMDkit_path}/Scripts/plt_scripts/plt_descriptors.py $3 ${@:4}
                         ;;     
                     "charge")
-                        python ${GPUMDkit_path}/Scripts/plt_scripts/plt_charge.py
-                        ;; 
+                        python ${GPUMDkit_path}/Scripts/plt_scripts/plt_charge.py $3
+                        ;;
+                    "lr"|"learning_rate")
+                        python ${GPUMDkit_path}/Scripts/plt_scripts/plt_learning_rate.py $3
+                        ;;                          
                     *)
-                        echo "Usage: -plt thermo/train/prediction/train_test/msd/sdc/rdf/vac/restart/dimer/force/des/charge [save]"
+                        echo "Usage: -plt thermo/train/prediction/train_test/msd/sdc/rdf/vac/restart/dimer/force/des/charge/lr [save]"
                         echo "Examp: gpumdkit.sh -plt thermo save"
                         exit 1
                         ;;
                 esac
             else
-                echo " Usage: -plt thermo/train/prediction/train_test/msd/vac/sdc/rdf/vac/restart/dimer/force [save] (eg. gpumdkit.sh -plt thermo)"
+                echo " Usage: -plt thermo/train/prediction/train_test/msd/vac/sdc/rdf/vac/restart/dimer/force/des/charge/lr [save] (eg. gpumdkit.sh -plt thermo)"
                 echo " See the codes in plt_scripts for more details"
                 echo " Code path: ${GPUMDkit_path}/Scripts/plt_scripts"
             fi

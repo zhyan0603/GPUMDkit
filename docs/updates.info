@@ -1,13 +1,14 @@
 # === User Configuration Section: Only modify these variables ===
 VERSION="1.3.5"
-RELEASE_DATE="2025-07-28"
+RELEASE_DATE="2025-07-29"
 HOME_PAGE="https://zhyan0603.github.io/GPUMDkit"
 CONTACT="yanzihan@westlake.edu.cn"
 
 # New features (one per line, in an array)
 NEW_FEATURES=(
     "add -plt msd_all/msd_convergence"
-    "add -plt loss"
+    "add -plt loss (with R2, MAE, and RMSE)"
+    "add -plt lr (learning rate of GNEP)"
     "support for selecting structs by dist/num in F202"
 )
 
