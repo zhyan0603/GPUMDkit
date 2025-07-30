@@ -4,13 +4,13 @@ import matplotlib.pyplot as plt
 
 data = np.loadtxt('loss.out')
 
-epochs = data[:, 0]  
-learning_rates = data[:, -2] 
+epochs = np.arange(1, len(data) + 1) 
+learning_rates = data[:, -2]  
 
 print(f"Ploting the learning rate during GNEP training process...")
 
 plt.figure(figsize=(5, 3.5))
-plt.loglog(epochs, learning_rates, c='C0', label='Learning Rate')
+plt.plot(epochs, learning_rates, c='C0', label='Learning Rate')
 plt.xlabel('Epoch')
 plt.ylabel('Learning Rate')
 plt.legend()
