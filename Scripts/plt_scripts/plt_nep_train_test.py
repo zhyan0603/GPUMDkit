@@ -1,10 +1,6 @@
 import sys
 import matplotlib.pyplot as plt
 import numpy as np
-# from cycler import cycler
-
-# custom_colors = ['#8FA2CD', '#F8BC7E', '#A9CA70', '#F09BA0', '#9D9EA3', '#B7B7EB']
-# plt.rcParams['axes.prop_cycle'] = cycler(color=custom_colors)
 
 # Load data
 energy_train = np.loadtxt('energy_train.out')
