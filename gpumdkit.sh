@@ -405,7 +405,7 @@ echo " | Script: calc_properties_with_nep.py             |"
 echo " | Developer: Zihan YAN (yanzihan@westlake.edu.cn) |"
 echo " >-------------------------------------------------<"
 echo " Input <input.xyz> <output.xyz> <nep_model> "
-echo " Examp: input.xyz outpt.xyz nep.txt"
+echo " Examp: input.xyz output.xyz nep.txt"
 echo " ------------>>"
 read -p " " input_calc_properties
 echo " ---------------------------------------------------"
