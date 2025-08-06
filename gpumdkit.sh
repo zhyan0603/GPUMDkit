@@ -12,7 +12,7 @@ if [ -z "$GPUMD_path" ] || [ -z "$GPUMDkit_path" ]; then
     exit 1
 fi
 
-VERSION="1.3.4 (dev) (2025-07-25)"
+VERSION="1.3.6 (dev) (2025-08-06)"
 
 #--------------------- function 1 format conversion ----------------------
 # These functions are used to convert the format of the files
@@ -405,7 +405,7 @@ echo " | Script: calc_properties_with_nep.py             |"
 echo " | Developer: Zihan YAN (yanzihan@westlake.edu.cn) |"
 echo " >-------------------------------------------------<"
 echo " Input <input.xyz> <output.xyz> <nep_model> "
-echo " Examp: input.xyz outpt.xyz nep.txt"
+echo " Examp: input.xyz output.xyz nep.txt"
 echo " ------------>>"
 read -p " " input_calc_properties
 echo " ---------------------------------------------------"
@@ -868,7 +868,7 @@ if [ ! -z "$1" ]; then
                         python ${GPUMDkit_path}/Scripts/plt_scripts/plt_msd_all.py $3 ${@:4}
                         ;;
                     "msd_conv")
-                        python ${GPUMDkit_path}/Scripts/plt_scripts/plt_msd_convergence_check.py
+                        python ${GPUMDkit_path}/Scripts/plt_scripts/plt_msd_convergence_check.py $3
                         ;;                                                 
                     "sdc")
                         python ${GPUMDkit_path}/Scripts/plt_scripts/plt_sdc.py $3
@@ -892,16 +892,19 @@ if [ ! -z "$1" ]; then
                         python ${GPUMDkit_path}/Scripts/plt_scripts/plt_descriptors.py $3 ${@:4}
                         ;;     
                     "charge")
-                        python ${GPUMDkit_path}/Scripts/plt_scripts/plt_charge.py
-                        ;; 
+                        python ${GPUMDkit_path}/Scripts/plt_scripts/plt_charge.py $3
+                        ;;
+                    "lr"|"learning_rate")
+                        python ${GPUMDkit_path}/Scripts/plt_scripts/plt_learning_rate.py $3
+                        ;;                          
                     *)
-                        echo "Usage: -plt thermo/train/prediction/train_test/msd/sdc/rdf/vac/restart/dimer/force/des/charge [save]"
+                        echo "Usage: -plt thermo/train/prediction/train_test/msd/sdc/rdf/vac/restart/dimer/force/des/charge/lr [save]"
                         echo "Examp: gpumdkit.sh -plt thermo save"
                         exit 1
                         ;;
                 esac
             else
-                echo " Usage: -plt thermo/train/prediction/train_test/msd/vac/sdc/rdf/vac/restart/dimer/force [save] (eg. gpumdkit.sh -plt thermo)"
+                echo " Usage: -plt thermo/train/prediction/train_test/msd/vac/sdc/rdf/vac/restart/dimer/force/des/charge/lr [save] (eg. gpumdkit.sh -plt thermo)"
                 echo " See the codes in plt_scripts for more details"
                 echo " Code path: ${GPUMDkit_path}/Scripts/plt_scripts"
             fi
@@ -1312,6 +1315,11 @@ if [ ! -z "$1" ]; then
 
         -get_volume)
             python ${GPUMDkit_path}/Scripts/analyzer/get_volume.py
+            ;;
+
+        -re_atoms)
+            echo " Calling script by Dian HUANG et al. "
+            python ${GPUMDkit_path}/Scripts/utils/renumber_atoms.py $2 $3
             ;;
 
         -clear_xyz|-clean_xyz)

@@ -1,10 +1,6 @@
 import sys
 import matplotlib.pyplot as plt
 import numpy as np
-# from cycler import cycler
-
-# custom_colors = ['#8FA2CD', '#F8BC7E', '#A9CA70', '#F09BA0', '#9D9EA3', '#B7B7EB']
-# plt.rcParams['axes.prop_cycle'] = cycler(color=custom_colors)
 
 # Load data
 energy_train = np.loadtxt('energy_train.out')
@@ -13,6 +9,9 @@ stress_train = np.loadtxt('stress_train.out')
 energy_test = np.loadtxt('energy_test.out')
 force_test = np.loadtxt('force_test.out')
 stress_test = np.loadtxt('stress_test.out')
+
+train_color = '#237B9F'
+test_color = '#EC817E' 
 
 # Function to calculate RMSE
 def calculate_rmse(pred, actual):
@@ -31,9 +30,9 @@ fig, axs = plt.subplots(1, 3, figsize=(12, 3.3), dpi=100)
 # Energy plot
 xmin_energy, xmax_energy = calculate_limits(energy_train[:, 1], energy_test[:, 1])
 axs[0].set_xlim(xmin_energy, xmax_energy)
-axs[0].set_ylim(xmin_energy, xmax_energy)
-axs[0].plot(energy_train[:, 1], energy_train[:, 0], '.', markersize=10, label='Train', color='#237B9F') #377EB9
-axs[0].plot(energy_test[:, 1], energy_test[:, 0], '.', markersize=10, label='Test', color='#EC817E')  #F48892
+axs[0].set_ylim(xmin_energy, xmax_energy)  
+axs[0].plot(energy_train[:, 1], energy_train[:, 0], '.', markersize=10, label='Train', color=train_color) 
+axs[0].plot(energy_test[:, 1], energy_test[:, 0], '.', markersize=10, label='Test', color=test_color)  
 axs[0].plot([xmin_energy, xmax_energy], [xmin_energy, xmax_energy], linewidth=1, color='red')
 axs[0].set_xlabel('DFT energy (eV/atom)', fontsize=10)
 axs[0].set_ylabel('NEP energy (eV/atom)', fontsize=10)
@@ -51,8 +50,8 @@ axs[0].text(0.3, 0.1, f'RMSE (Test): {energy_test_rmse:.2f} meV/atom', transform
 xmin_force, xmax_force = calculate_limits(force_train[:, 3:6].reshape(-1), force_test[:, 3:6].reshape(-1))
 axs[1].set_xlim(xmin_force, xmax_force)
 axs[1].set_ylim(xmin_force, xmax_force)
-axs[1].plot(force_train[:, 3:6].reshape(-1), force_train[:, 0:3].reshape(-1), '.', markersize=10, label='Train', color='#237B9F')
-axs[1].plot(force_test[:, 3:6].reshape(-1), force_test[:, 0:3].reshape(-1), '.', markersize=10, label='Test', color='#EC817E')
+axs[1].plot(force_train[:, 3:6].reshape(-1), force_train[:, 0:3].reshape(-1), '.', markersize=10, label='Train', color=train_color)
+axs[1].plot(force_test[:, 3:6].reshape(-1), force_test[:, 0:3].reshape(-1), '.', markersize=10, label='Test', color=test_color)
 axs[1].plot([xmin_force, xmax_force], [xmin_force, xmax_force], linewidth=1, color='red')
 axs[1].set_xlabel(r'DFT force (eV/Å)', fontsize=10)
 axs[1].set_ylabel(r'NEP force (eV/Å)', fontsize=10)
@@ -72,8 +71,8 @@ axs[1].text(0.35, 0.1, rf'RMSE (Test): {mean_force_test_rmse:.2f} meV/Å', trans
 xmin_stress, xmax_stress = calculate_limits(stress_train[:, 6:12].reshape(-1), stress_test[:, 6:12].reshape(-1))
 axs[2].set_xlim(xmin_stress, xmax_stress)
 axs[2].set_ylim(xmin_stress, xmax_stress)
-axs[2].plot(stress_train[:, 6:12].reshape(-1), stress_train[:, 0:6].reshape(-1), '.', markersize=10, label='Train', color='#237B9F')
-axs[2].plot(stress_test[:, 6:12].reshape(-1), stress_test[:, 0:6].reshape(-1), '.', markersize=10, label='Test', color='#EC817E')
+axs[2].plot(stress_train[:, 6:12].reshape(-1), stress_train[:, 0:6].reshape(-1), '.', markersize=10, label='Train', color=train_color)
+axs[2].plot(stress_test[:, 6:12].reshape(-1), stress_test[:, 0:6].reshape(-1), '.', markersize=10, label='Test', color=test_color)
 axs[2].plot([xmin_stress, xmax_stress], [xmin_stress, xmax_stress], linewidth=1, color='red')
 axs[2].set_xlabel('DFT stress (GPa)', fontsize=10)
 axs[2].set_ylabel('NEP stress (GPa)', fontsize=10)

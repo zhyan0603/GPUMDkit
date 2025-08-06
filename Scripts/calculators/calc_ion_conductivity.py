@@ -150,18 +150,41 @@ def extract_thermo_data():
 
 # Function to count ions from model.xyz
 def count_ions(atom_type="Li"):
+    # Check if model.xyz exists
     if not os.path.exists("model.xyz"):
-        raise FileNotFoundError(" The file 'model.xyz' does not exist.")
+        raise FileNotFoundError("The file 'model.xyz' does not exist.")
 
+    # Count ions from model.xyz
     num_ions = 0
     with open("model.xyz", 'r') as f:
         lines = f.readlines()
-        num_atoms = int(lines[0].strip())  # First line is the number of atoms
+        num_atoms = int(lines[0].strip())  # First line is number of atoms
         for line in lines[2:]:  # Skip header lines
             parts = line.split()
             if parts[0] == atom_type:
                 num_ions += 1
-    return num_ions
+
+    # Check for run.in file and replication
+    replication_factor = 1
+    try:
+        with open("run.in", 'r') as f:
+            for line in f:
+                if line.strip().startswith("replicate"):
+                    parts = line.split()
+                    if len(parts) >= 4:
+                        try:
+                            x, y, z = map(int, parts[1:4])
+                            replication_factor = x * y * z
+                            break
+                        except ValueError:
+                            print(" Warning: Invalid replicate parameters in run.in")
+    except FileNotFoundError:
+        print(" +---------------------------------------------------------+")
+        print(" | Warning: run.in file not found, assuming no replication |")
+        print(" +---------------------------------------------------------+")
+
+    # Return total ions considering replication
+    return num_ions * replication_factor
 
 # Main function to orchestrate the process
 def main():
