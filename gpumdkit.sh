@@ -12,7 +12,7 @@ if [ -z "$GPUMD_path" ] || [ -z "$GPUMDkit_path" ]; then
     exit 1
 fi
 
-VERSION="1.3.5 (dev) (2025-07-28)"
+VERSION="1.3.6 (dev) (2025-08-06)"
 
 #--------------------- function 1 format conversion ----------------------
 # These functions are used to convert the format of the files
@@ -1318,6 +1318,7 @@ if [ ! -z "$1" ]; then
             ;;
 
         -re_atoms)
+            echo " Calling script by Dian HUANG et al. "
             python ${GPUMDkit_path}/Scripts/utils/renumber_atoms.py $2 $3
             ;;
 
