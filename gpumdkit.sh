@@ -1314,6 +1314,10 @@ if [ ! -z "$1" ]; then
             python ${GPUMDkit_path}/Scripts/analyzer/get_volume.py
             ;;
 
+        -re_atoms)
+            python ${GPUMDkit_path}/Scripts/utils/renumber_atoms.py $2 $3
+            ;;
+
         -clear_xyz|-clean_xyz)
             if [ ! -z "$2" ] && [ "$2" != "-h" ] && [ ! -z "$3" ] ; then
                 echo " Calling script by Zihan YAN "
