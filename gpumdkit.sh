@@ -858,6 +858,9 @@ if [ ! -z "$1" ]; then
                     "prediction"|"valid"|"test")
                         python ${GPUMDkit_path}/Scripts/plt_scripts/plt_nep_prediction_results.py $3
                         ;;
+                    "test_density"|"parity_density")
+                        python ${GPUMDkit_path}/Scripts/plt_scripts/plt_parity_density.py $3
+                        ;;
                     "train_test"|"tt")
                         python ${GPUMDkit_path}/Scripts/plt_scripts/plt_nep_train_test.py $3
                         ;;
@@ -898,13 +901,13 @@ if [ ! -z "$1" ]; then
                         python ${GPUMDkit_path}/Scripts/plt_scripts/plt_learning_rate.py $3
                         ;;                          
                     *)
-                        echo "Usage: -plt thermo/train/prediction/train_test/msd/sdc/rdf/vac/restart/dimer/force/des/charge/lr [save]"
+                        echo "Usage: -plt thermo/train/prediction/train_test/msd/sdc/rdf/vac/restart/dimer/force/des/charge/lr/parity_density [save]"
                         echo "Examp: gpumdkit.sh -plt thermo save"
                         exit 1
                         ;;
                 esac
             else
-                echo " Usage: -plt thermo/train/prediction/train_test/msd/vac/sdc/rdf/vac/restart/dimer/force/des/charge/lr [save] (eg. gpumdkit.sh -plt thermo)"
+                echo " Usage: -plt thermo/train/prediction/train_test/msd/vac/sdc/rdf/vac/restart/dimer/force/des/charge/lr/parity_density [save] (eg. gpumdkit.sh -plt thermo)"
                 echo " See the codes in plt_scripts for more details"
                 echo " Code path: ${GPUMDkit_path}/Scripts/plt_scripts"
             fi

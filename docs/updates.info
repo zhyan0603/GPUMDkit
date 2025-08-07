@@ -11,6 +11,7 @@ NEW_FEATURES=(
     "add -plt lr (learning rate of GNEP)"
     "support for selecting structs by dist/num in F202"
     "add -re_atoms"
+    "add -plt parity_density"
 )
 
 # Bug fixes (one per line, in an array)

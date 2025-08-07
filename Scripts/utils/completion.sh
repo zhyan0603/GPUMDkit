@@ -24,7 +24,7 @@ _gpumdkit_completions() {
 
         # Secondary options for -plt
         -plt)
-            COMPREPLY=($(compgen -W "thermo thermo2 train prediction valid test train_test msd msd_all msd_conv sdc rdf vac restart dimer force_error des charge lr" -- "$cur"))
+            COMPREPLY=($(compgen -W "thermo thermo2 train prediction valid test train_test msd msd_all msd_conv sdc rdf vac restart dimer force_error des charge lr parity_density" -- "$cur"))
             ;;
 
         # Secondary options for -calc
