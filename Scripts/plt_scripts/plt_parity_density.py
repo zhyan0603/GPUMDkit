@@ -18,7 +18,7 @@ force_data = np.loadtxt('force_train.out')
 stress_data = np.loadtxt('stress_train.out')
 
 # === Layout Setup ===
-fig = plt.figure(figsize=(12, 4.2), dpi=1000)
+fig = plt.figure(figsize=(12, 4.2), dpi=100)
 gs = GridSpec(2, 3, height_ratios=[4, 0.2], hspace=0.35)
 cmap = plt.get_cmap(COLORMAP)
 
@@ -62,8 +62,8 @@ ax2.set_ylim(xmin, xmax)
 hb2 = ax2.hexbin(x_force, y_force, gridsize=BINS, cmap=cmap,
                  norm=LogNorm(), mincnt=1, linewidths=0)
 ax2.plot([xmin, xmax], [xmin, xmax], color='gray', linestyle='-', linewidth=1)
-ax2.set_xlabel("DFT force (eV/$\mathrm{\AA}$)", fontsize=FONT_SIZE)
-ax2.set_ylabel("NEP force (eV/$\mathrm{\AA}$)", fontsize=FONT_SIZE)
+ax2.set_xlabel("DFT force (eV/Å)", fontsize=FONT_SIZE)
+ax2.set_ylabel("NEP force (eV/Å)", fontsize=FONT_SIZE)
 ax2.tick_params(labelsize=FONT_SIZE)
 rmse = np.sqrt(mean_squared_error(y_force, x_force)) * 1000
 mae = mean_absolute_error(y_force, x_force) * 1000
