@@ -17,6 +17,10 @@ energy_data = np.loadtxt('energy_train.out')
 force_data = np.loadtxt('force_train.out')
 stress_data = np.loadtxt('stress_train.out')
 
+# Filter out rows with invalid stress data
+valid_rows = ~np.any(np.abs(stress_data[:, :12]) > 1e6, axis=1)
+stress_data = stress_data[valid_rows]
+
 # === Layout Setup ===
 fig = plt.figure(figsize=(12, 4.2), dpi=100)
 gs = GridSpec(2, 3, height_ratios=[4, 0.2], hspace=0.35)

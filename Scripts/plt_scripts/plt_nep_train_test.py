@@ -10,6 +10,12 @@ energy_test = np.loadtxt('energy_test.out')
 force_test = np.loadtxt('force_test.out')
 stress_test = np.loadtxt('stress_test.out')
 
+# Filter out rows with invalid stress data
+valid_rows_train = ~np.any(np.abs(stress_train[:, :12]) > 1e6, axis=1)
+stress_train = stress_train[valid_rows_train]
+valid_rows_test = ~np.any(np.abs(stress_test[:, :12]) > 1e6, axis=1)
+stress_test = stress_test[valid_rows_test]
+
 train_color = '#237B9F'
 test_color = '#EC817E' 
 
