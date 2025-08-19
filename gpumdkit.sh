@@ -430,17 +430,51 @@ echo " Code path: ${GPUMDkit_path}/Scripts/calculators/calc_descriptors.py"
 echo " ---------------------------------------------------"
 }
 
+function f404_calc_doas(){
+echo " >-------------------------------------------------<"
+echo " | This function calls the script in calculators   |"
+echo " | Script: calc_doas.py                            |"
+echo " | Developer: Zihan YAN (yanzihan@westlake.edu.cn) |"
+echo " >-------------------------------------------------<"
+echo " Input <input.xyz> <nep_model> <output_file>"
+echo " Examp: dump.xyz nep.txt doas.out"
+echo " ------------>>"
+read -p " " input_calc_doas
+echo " ---------------------------------------------------"
+python ${GPUMDkit_path}/Scripts/calculators/calc_doas.py ${input_calc_doas}
+echo " Code path: ${GPUMDkit_path}/Scripts/calculators/calc_doas.py"
+echo " ---------------------------------------------------"
+}
+
+function f405_calc_neb(){
+echo " >-------------------------------------------------<"
+echo " | This function calls the script in calculators   |"
+echo " | Script: neb_calculation.py                      |"
+echo " | Developer: Zhoulin LIU (1776627910@qq.com)      |"
+echo " >-------------------------------------------------<"
+echo " Input <initial_struct> <final_struct> <n_image> <nep_model>"
+echo " Examp: IS.xyz FS.xyz 5 nep.txt"
+echo " ------------>>"
+read -p " " input_calc_neb
+echo " ---------------------------------------------------"
+python ${GPUMDkit_path}/Scripts/calculators/neb_calculation.py ${input_calc_neb}
+echo " Code path: ${GPUMDkit_path}/Scripts/calculators/neb_calculation.py"
+echo " ---------------------------------------------------"
+}
+
 function f4_calculators(){
 echo " ------------>>"
 echo " 401) Calc ionic conductivity"
 echo " 402) Calc properties by nep"
 echo " 403) Calc descriptors of specific elements"
-echo " 404) Developing ... "
+echo " 404) Calc density of atomistic states (DOAS)"
+echo " 405) Calc nudged elastic band (NEB) by nep"
+echo " 406) Developing ... "
 echo " 000) Return to the main menu"
 echo " ------------>>"
 echo " Input the function number:"
 
-arry_num_choice=("000" "401" "402" "403") 
+arry_num_choice=("000" "401" "402" "403" "404" "405" "406") 
 read -p " " num_choice
 while ! echo "${arry_num_choice[@]}" | grep -wq "$num_choice" 
 do
@@ -460,8 +494,14 @@ case $num_choice in
         f403_calc_descriptors
         ;;
     "404")
+        f404_calc_doas
+        ;;
+    "405")
+        f405_calc_neb
+        ;; 
+    "406")
         echo " Developing ... "
-        ;;             
+        ;;                             
     "000")
         menu
         main
@@ -687,7 +727,7 @@ function main(){
         "0" "1" "101" "102" "103" "104" "105" 
         "2" "201" "202" "203" "204" "205" 
         "3" "301" "302" "303" 
-        "4" "401" "402" 
+        "4" "401" "402" "403" "404"
         "5" "501" "502"
         "6"
     ) 
@@ -767,6 +807,12 @@ function main(){
         "403")
             f403_calc_descriptors
             ;;
+        "404")
+            f404_calc_doas
+            ;;
+        "405")
+            f405_calc_neb
+            ;;            
         "5")
             f5_analyzer
             ;;
@@ -899,9 +945,12 @@ if [ ! -z "$1" ]; then
                         ;;
                     "lr"|"learning_rate")
                         python ${GPUMDkit_path}/Scripts/plt_scripts/plt_learning_rate.py $3
-                        ;;                          
+                        ;;   
+                    "doas")
+                        python ${GPUMDkit_path}/Scripts/plt_scripts/plt_doas.py $3 $4
+                        ;;                                                 
                     *)
-                        echo "Usage: -plt thermo/train/prediction/train_test/msd/sdc/rdf/vac/restart/dimer/force/des/charge/lr/parity_density [save]"
+                        echo "Usage: -plt thermo/train/prediction/train_test/msd/sdc/rdf/vac/restart/dimer/force/des/charge/lr/doas/parity_density [save]"
                         echo "Examp: gpumdkit.sh -plt thermo save"
                         exit 1
                         ;;
@@ -954,7 +1003,20 @@ if [ ! -z "$1" ]; then
                             echo " Code path: ${GPUMDkit_path}/Scripts/calculators/calc_descriptors.py"
                             exit 1
                         fi
-                        ;;                  
+                        ;; 
+                    doas)
+                        if [ ! -z "$3" ] && [ ! -z "$4" ] && [ ! -z "$5" ]; then
+                            echo " Calling script by Zihan YAN. "
+                            echo " Code path: ${GPUMDkit_path}/Scripts/calculators/calc_doas.py"
+                            python ${GPUMDkit_path}/Scripts/calculators/calc_doas.py $3 $4 $5
+                        else
+                            echo " Usage: -calc doas <input.xyz> <nep_model> <output_file>"
+                            echo " Examp: gpumdkit.sh -calc doas dump.xyz nep.txt doas.out"
+                            echo " See the codes in calculators folder for more details"
+                            echo " Code path: ${GPUMDkit_path}/Scripts/calculators/calc_doas.py"
+                            exit 1
+                        fi
+                        ;;                                          
                     *)
                         echo " See the codes in calculators folder for more details"
                         echo " Code path: ${GPUMDkit_path}/Scripts/calculators"
