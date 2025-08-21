@@ -11,7 +11,7 @@ Arguments:
     nep_model         : Path to the NEP model file (nep.txt)
 
 Author:
-    Zhoulin LIU <>
+    Zhoulin LIU <1776627910@qq.com>
 
 Modified by Zihan YAN <yanzihan@westlake.edu.cn>
 """
