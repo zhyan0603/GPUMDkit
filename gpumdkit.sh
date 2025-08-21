@@ -12,7 +12,7 @@ if [ -z "$GPUMD_path" ] || [ -z "$GPUMDkit_path" ]; then
     exit 1
 fi
 
-VERSION="1.3.7 (dev) (2025-08-15)"
+VERSION="1.3.8 (dev) (2025-08-21)"
 
 #--------------------- function 1 format conversion ----------------------
 # These functions are used to convert the format of the files
@@ -151,7 +151,7 @@ echo " 000) Return to the main menu"
 echo " ------------>>"
 echo " Input the function number:"
 
-arry_num_choice=("000" "101" "102" "103" "104" ) 
+arry_num_choice=("000" "101" "102" "103" "104" "105") 
 read -p " " num_choice
 while ! echo "${arry_num_choice[@]}" | grep -wq "$num_choice" 
 do
@@ -841,6 +841,7 @@ function help_info_table(){
     echo "+======================================== Conversions =============================================+"
     echo "| -outcar2exyz   Convert OUTCAR to extxyz       | -pos2exyz     Convert POSCAR to extxyz           |"
     echo "| -castep2exyz   Convert castep to extxyz       | -pos2lmp      Convert POSCAR to LAMMPS           |"
+    echo "| -cif2pos       Convert cif to POSCAR          | -cif2exyz     Convert cif to extxyz              |"
     echo "| -cp2k2exyz     Convert cp2k output to extxyz  | -lmp2exyz     Convert LAMMPS-dump to extxyz      |"
     echo "| -addgroup      Add group label                | -addweight    Add weight to the struct in extxyz |"
     echo "| Developing...                                 | Developing...                                    |"
@@ -1177,6 +1178,31 @@ if [ ! -z "$1" ]; then
                 echo " Code path: ${GPUMDkit_path}/Scripts/format_conversion/pos2exyz.py"
             fi
             ;;
+
+        -cif2pos)
+            if [ ! -z "$2" ] && [ ! -z "$3" ] && [ "$2" != "-h" ] ; then
+                echo " Calling script by Boyi SITU "
+                echo " Code path: ${GPUMDkit_path}/Scripts/format_conversion/cif2pos.py"
+                python ${GPUMDkit_path}/Scripts/format_conversion/cif2pos.py $2 $3
+            else
+                echo " Usage: -cif2pos input.cif POSCAR.vasp"
+                echo " See the source code of cif2pos.py for more details"
+                echo " Code path: ${GPUMDkit_path}/Scripts/format_conversion/cif2pos.py"
+            fi
+            ;;
+
+        -cif2exyz)
+            if [ ! -z "$2" ] && [ ! -z "$3" ] && [ "$2" != "-h" ] ; then
+                echo " Calling script by Boyi SITU "
+                echo " Code path: ${GPUMDkit_path}/Scripts/format_conversion/cif2exyz.py"
+                python ${GPUMDkit_path}/Scripts/format_conversion/cif2exyz.py $2 $3
+            else
+                echo " Usage: -cif2exyz input.cif model.xyz"
+                echo " See the source code of cif2exyz.py for more details"
+                echo " Code path: ${GPUMDkit_path}/Scripts/format_conversion/cif2exyz.py"
+            fi
+            ;;
+
 
         -exyz2pos)
             if [ ! -z "$2" ] && [ "$2" != "-h" ] ; then
