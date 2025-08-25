@@ -12,7 +12,7 @@ if [ -z "$GPUMD_path" ] || [ -z "$GPUMDkit_path" ]; then
     exit 1
 fi
 
-VERSION="1.3.8 (dev) (2025-08-21)"
+VERSION="1.3.8 (dev) (2025-08-25)"
 
 #--------------------- function 1 format conversion ----------------------
 # These functions are used to convert the format of the files
@@ -1039,6 +1039,19 @@ if [ ! -z "$1" ]; then
                 echo " Usage: -range <exyzfile> <property> [hist] (eg. gpumdkit.sh -range train.xyz energy hist)" 
                 echo " See the source code of energy_force_virial_analyzer.py for more details"
                 echo " Code path: Code path: ${GPUMDkit_path}/Scripts/analyzer/energy_force_virial_analyzer.py"
+            fi
+            ;;
+
+        -replicate)
+            if [ ! -z "$2" ] && [ ! -z "$3" ] ; then
+                echo " Calling script by Boyi SITU. "
+                echo " Code path: ${GPUMDkit_path}/Scripts/format_conversion/replicate.py"
+                python ${GPUMDkit_path}/Scripts/format_conversion/replicate.py $2 $3 ${@:4}
+            else
+                echo " Usage 1: -replicate <inputfile> <outputfile> a b c" 
+                echo " Usage 2: -replicate <inputfile> <outputfile> target_num"
+                echo " See the source code of replicate.py for more details"
+                echo " Code path: Code path: ${GPUMDkit_path}/Scripts/format_conversion/replicate.py"
             fi
             ;;
 
