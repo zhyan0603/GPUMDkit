@@ -1,5 +1,5 @@
 """
-Convert CIF file to VASP POSCAR format using ASE.
+Convert CIF file to VASP extxyz format using ASE.
 Usage:
     python cif2exyz.py input.cif model.xyz
     Author: Boyi Situ (situboyi@westlake.edu.cn)
