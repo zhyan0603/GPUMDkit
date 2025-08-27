@@ -205,9 +205,9 @@ if num_columns == 18:
     axs[1, 2].plot(time, box_angle_alpha, label=r'$\alpha$')
     axs[1, 2].plot(time, box_angle_beta, label=r'$\beta$')
     axs[1, 2].plot(time, box_angle_gamma, label=r'$\gamma$')
-    axs[1, 2].set_title('Interaxial Angles')
+    axs[1, 2].set_title('Lattice Angles')
     axs[1, 2].set_xlabel('Time (ps)')
-    axs[1, 2].set_ylabel(r'Interaxial Angles ($\degree$)')
+    axs[1, 2].set_ylabel(r'Lattice Angles ($\degree$)')
     axs[1, 2].legend()
 
 plt.tight_layout()
