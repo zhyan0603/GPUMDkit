@@ -1,6 +1,6 @@
 """
-This script calculates diffusivity and ionic conductivity from MSD data (msd.out) 
-obtained via GPUMD. It computes directional (x, y, z) and total diffusivities 
+This script calculates diffusivity and ionic conductivity from MSD data (msd.out)
+obtained via GPUMD. It computes directional (x, y, z) and total diffusivities
 and converts them to ionic conductivities by Nernst-Einstein equation.
 
 Usage:
@@ -8,11 +8,12 @@ Usage:
    python script.py <element> <charge>
    - <element>: Chemical species (e.g., Li).
    - <charge>: Ion charge (e.g., 1 for Li⁺).
-2. If required files (`thermo.out` and `model.xyz`) are not found, the script 
+2. If required files (`thermo.out` and `model.xyz`) are not found, the script
    will prompt for manual input of structure volume, temperature, and number of ions.
 
 Author: Zihan YAN
-Date: Feb 20, 2025
+Modified by: Shengjie Tang
+Date: Sep 1, 2025
 """
 
 import os
@@ -20,9 +21,11 @@ import sys
 import numpy as np
 import scipy.constants as consts
 
+
 # Function to calculate the volume of a triclinic box
 def calculate_volume(a, b, c):
     return np.abs(np.einsum('ij,ij->i', a, np.cross(b, c)))
+
 
 def get_conversion_factor(structure_volume, species_charge, num_ions, temperature):
     """
@@ -42,13 +45,14 @@ def get_conversion_factor(structure_volume, species_charge, num_ions, temperatur
 
     vol = structure_volume * 1e-24  # units cm^3
     return (
-        1000
-        * n
-        / (vol * consts.N_A)
-        * z**2
-        * (consts.N_A * consts.e) ** 2
-        / (consts.R * temperature)
+            1000
+            * n
+            / (vol * consts.N_A)
+            * z ** 2
+            * (consts.N_A * consts.e) ** 2
+            / (consts.R * temperature)
     )
+
 
 def read_msd_file(msd_file):
     """
@@ -68,6 +72,7 @@ def read_msd_file(msd_file):
     msd_total = msd_x + msd_y + msd_z  # Total MSD
     return dts, msd_x, msd_y, msd_z, msd_total
 
+
 def calculate_diffusivity_and_conductivity(filepath, structure_volume, species_charge, num_ions, temperature):
     """
     Calculate the diffusivity and ionic conductivity from MSD data.
@@ -86,7 +91,7 @@ def calculate_diffusivity_and_conductivity(filepath, structure_volume, species_c
 
     # Use a portion of the MSD data for fitting
     start = int(len(dts) * 0.1)  # Start at 10% of the data
-    end = int(len(dts) * 0.4)    # End at 40% of the data
+    end = int(len(dts) * 0.4)  # End at 40% of the data
 
     # Linear fit to obtain slopes for x, y, z, and total MSD
     k_x, _ = np.polyfit(dts[start:end], msd_x[start:end], 1)
@@ -95,7 +100,7 @@ def calculate_diffusivity_and_conductivity(filepath, structure_volume, species_c
     k_total, _ = np.polyfit(dts[start:end], msd_total[start:end], 1)
 
     # Compute diffusivity D (cm^2/s) for each direction and total
-    D_x = k_x * 1e-4 / 2  #maybe?
+    D_x = k_x * 1e-4 / 2  # maybe?
     D_y = k_y * 1e-4 / 2
     D_z = k_z * 1e-4 / 2
     D_total = k_total * 1e-4 / 6
@@ -111,6 +116,7 @@ def calculate_diffusivity_and_conductivity(filepath, structure_volume, species_c
 
     return (D_x, D_y, D_z, D_total), (conductivity_x, conductivity_y, conductivity_z, conductivity_total)
 
+
 # Function to extract volume and temperature from thermo.out
 def extract_thermo_data():
     if not os.path.exists('./thermo.out'):
@@ -118,7 +124,7 @@ def extract_thermo_data():
 
     data = np.loadtxt('./thermo.out')
     num_columns = data.shape[1]
-    
+
     # Extract thermodynamic quantities
     temperature = data[:, 0]
 
@@ -147,6 +153,7 @@ def extract_thermo_data():
     avg_volume = np.mean(volume[start_index:])
 
     return avg_temperature, avg_volume
+
 
 # Function to count ions from model.xyz
 def count_ions(atom_type="Li"):
@@ -185,6 +192,7 @@ def count_ions(atom_type="Li"):
 
     # Return total ions considering replication
     return num_ions * replication_factor
+
 
 # Main function to orchestrate the process
 def main():
@@ -235,6 +243,13 @@ def main():
     print(f"   Sigma_total: {conductivity_total:.3e} mS/cm")
     print(" ------------------------------")
 
+    if D_total < 1e-7:
+        print(" WARNING: ")
+        print(" The D_total is below the threshold (1e-7) cm^2/s. ")
+        print(" Please review the MSD data to confirm whether diffusion is occurring. ")
+
 # Run the main function
 if __name__ == "__main__":
     main()
+
+
