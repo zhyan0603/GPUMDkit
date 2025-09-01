@@ -12,7 +12,8 @@ Usage:
    will prompt for manual input of structure volume, temperature, and number of ions.
 
 Author: Zihan YAN
-Date: Feb 20, 2025
+Modified by: Shengjie Tang
+Date: Sep 1, 2025
 """
 
 import os
