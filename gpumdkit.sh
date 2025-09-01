@@ -12,7 +12,7 @@ if [ -z "$GPUMD_path" ] || [ -z "$GPUMDkit_path" ]; then
     exit 1
 fi
 
-VERSION="1.3.8 (dev) (2025-08-25)"
+VERSION="1.3.9 (dev) (2025-09-01)"
 
 #--------------------- function 1 format conversion ----------------------
 # These functions are used to convert the format of the files
@@ -714,7 +714,7 @@ fi
 function menu(){
 echo " ----------------------- GPUMD -----------------------"
 echo " 1) Format Conversion          2) Sample Structures   "
-echo " 3) Workflow (dev)             4) Calculators         "
+echo " 3) Workflow                   4) Calculators         "
 echo " 5) Analyzer                   6) Developing ...      "
 echo " 0) Quit!"
 }
@@ -837,7 +837,6 @@ function main(){
 function help_info_table(){
     echo "+==================================================================================================+"
     echo "|                              GPUMDkit ${VERSION} Usage                             |"
-    echo "|                                                                 --- by Zihan YAN                 |"
     echo "+======================================== Conversions =============================================+"
     echo "| -outcar2exyz   Convert OUTCAR to extxyz       | -pos2exyz     Convert POSCAR to extxyz           |"
     echo "| -castep2exyz   Convert castep to extxyz       | -pos2lmp      Convert POSCAR to LAMMPS           |"
@@ -850,7 +849,7 @@ function help_info_table(){
     echo "| -min_dist      Get min_dist between atoms     | -min_dist_pbc Get min_dist considering PBC       |"
     echo "| -filter_box    Filter struct by box limits    | -filter_value Filter struct by value (efs)       |"
     echo "| -filter_dist   Filter struct by min_dist      | -analyze_comp Analyze composition of extxyz      |"
-    echo "+=========================================    Misc  ==============+================================+"
+    echo "+====================================== Misc Utilities ============================================+"
     echo "| -plt           Plot scripts                   | -get_frame     Extract the specified frame       |"
     echo "| -calc          Calculators                    | -clear_xyz     Clear extra info in XYZ file      |"
     echo "| -clean         Clear files for work_dir       | -time          Time consuming Analyzer           |"
@@ -1461,7 +1460,8 @@ echo -e "\
         \____|_|    \___/|_|  |_|____/|_|\_\_|\__|
                                           
         GPUMDkit Version ${VERSION}
-     Developer: Zihan YAN (yanzihan@westlake.edu.cn)
+  Core Developer: Zihan YAN (yanzihan@westlake.edu.cn)
+ Main Contributors: Boyi SITU, Hao YANG & Shengjie TANG
       "
 menu
 main
