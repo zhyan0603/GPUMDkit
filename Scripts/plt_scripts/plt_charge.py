@@ -40,7 +40,7 @@ def load_xyz_and_charges(xyz_file, charge_file):
 
 # File paths
 xyz_file = "train.xyz"
-charge_file = "charge.out"
+charge_file = "charge_train.out"
 
 # Load data and plot
 charges_by_element = load_xyz_and_charges(xyz_file, charge_file)
