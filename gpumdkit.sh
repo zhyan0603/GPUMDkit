@@ -12,7 +12,7 @@ if [ -z "$GPUMD_path" ] || [ -z "$GPUMDkit_path" ]; then
     exit 1
 fi
 
-VERSION="1.3.9 (dev) (2025-09-01)"
+VERSION="1.4.0 (dev) (2025-10-13)"
 
 #--------------------- function 1 format conversion ----------------------
 # These functions are used to convert the format of the files
@@ -1428,6 +1428,12 @@ if [ ! -z "$1" ]; then
         -cbc)
             echo " Calling script by Zihan YAN "
             python ${GPUMDkit_path}/Scripts/analyzer/charge_balance_check.py $2
+            ;;
+
+        -hydrogen_bond_analysis|-hbond)
+            echo " Calling script by Zherui CHEN "
+            python ${GPUMD_path}/tools/Analysis_and_Processing/hydrogen_bond_analysis/Hydrogen-bond-analysis.py ${@:2}
+            echo " Code path: ${GPUMD_path}/tools/Analysis_and_Processing/hydrogen_bond_analysis/Hydrogen-bond-analysis.py"
             ;;
 
         -clear_xyz|-clean_xyz)
