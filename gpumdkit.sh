@@ -1050,6 +1050,7 @@ if [ ! -z "$1" ]; then
                 echo " Code path: ${GPUMDkit_path}/Scripts/format_conversion/replicate.py"
                 python ${GPUMDkit_path}/Scripts/format_conversion/replicate.py $2 $3 ${@:4}
             else
+                echo " Please give the file name suffix (e.g. input.xyz or output.vasp)"
                 echo " Usage 1: -replicate <inputfile> <outputfile> a b c" 
                 echo " Usage 2: -replicate <inputfile> <outputfile> target_num"
                 echo " See the source code of replicate.py for more details"
