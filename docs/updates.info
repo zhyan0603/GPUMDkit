@@ -6,7 +6,8 @@ CONTACT="yanzihan@westlake.edu.cn"
 
 # New features (one per line, in an array)
 NEW_FEATURES=(
-    "add -plt diffusivity"
+    "add -plt arrhenius_d/D"
+    "add -plt arrhenius_sigma/sigma"
 )
 
 # Bug fixes (one per line, in an array)

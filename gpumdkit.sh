@@ -949,9 +949,12 @@ if [ ! -z "$1" ]; then
                     "doas")
                         python ${GPUMDkit_path}/Scripts/plt_scripts/plt_doas.py $3 $4
                         ;;
-                    "diffusivity"|"D")
-                        python ${GPUMDkit_path}/Scripts/plt_scripts/plt_diffusivity.py $3
-                        ;;                                                                         
+                    "arrhenius_d"|"diffusivity"|"D")
+                        python ${GPUMDkit_path}/Scripts/plt_scripts/plt_arrhenius_d.py $3
+                        ;;
+                    "arrhenius_sigma"|"sigma")
+                        python ${GPUMDkit_path}/Scripts/plt_scripts/plt_arrhenius_sigma.py $3
+                        ;;                                                                                                 
                     *)
                         echo "Usage: -plt thermo/train/prediction/train_test/msd/sdc/rdf/vac/restart/dimer/force/des/charge/lr/doas/parity_density [save]"
                         echo "Examp: gpumdkit.sh -plt thermo save"
