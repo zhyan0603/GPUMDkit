@@ -12,7 +12,7 @@ if [ -z "$GPUMD_path" ] || [ -z "$GPUMDkit_path" ]; then
     exit 1
 fi
 
-VERSION="1.4.0 (dev) (2025-10-13)"
+VERSION="1.4.1 (dev) (2025-10-20)"
 
 #--------------------- function 1 format conversion ----------------------
 # These functions are used to convert the format of the files
@@ -948,7 +948,10 @@ if [ ! -z "$1" ]; then
                         ;;   
                     "doas")
                         python ${GPUMDkit_path}/Scripts/plt_scripts/plt_doas.py $3 $4
-                        ;;                                                 
+                        ;;
+                    "diffusivity"|"D")
+                        python ${GPUMDkit_path}/Scripts/plt_scripts/plt_diffusivity.py $3
+                        ;;                                                                         
                     *)
                         echo "Usage: -plt thermo/train/prediction/train_test/msd/sdc/rdf/vac/restart/dimer/force/des/charge/lr/doas/parity_density [save]"
                         echo "Examp: gpumdkit.sh -plt thermo save"

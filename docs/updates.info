@@ -1,13 +1,12 @@
 # === User Configuration Section: Only modify these variables ===
-VERSION="1.4.0"
-RELEASE_DATE="2025-10-13"
+VERSION="1.4.1"
+RELEASE_DATE="2025-10-20"
 HOME_PAGE="https://zhyan0603.github.io/GPUMDkit"
 CONTACT="yanzihan@westlake.edu.cn"
 
 # New features (one per line, in an array)
 NEW_FEATURES=(
-    "add -replicate"
-    "add -hydrogen_bond_analysis/-hbond"
+    "add -plt diffusivity"
 )
 
 # Bug fixes (one per line, in an array)
