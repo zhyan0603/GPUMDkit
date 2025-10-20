@@ -155,15 +155,6 @@ legend_element = Line2D([0], [0], marker='o', linestyle='-', color=color, label=
                         markersize=5, linewidth=2, alpha=0.8)
 ax1.legend(handles=[legend_element], loc='lower left', bbox_to_anchor=(0.015, 0.02), fontsize=8, frameon=True)
 
-# Add top temperature axis
-ax2 = ax1.twiny()
-x_min, x_max = ax1.get_xlim()
-xticks = np.arange(np.floor(x_min * 2) / 2, np.ceil(x_max * 2) / 2 + 0.1, 0.5)
-ax2.set_xticks(xticks)
-ax2.set_xbound(x_min, x_max)
-ax2.set_xticklabels([f"{1000/x:.0f}" for x in xticks])
-ax2.set_xlabel("T (K)", fontsize=10)
-
 # Extrapolate from lowest temperature to 300K
 specified_temperature = 300
 x_ext = 1000 / np.arange(min(group_Ts), specified_temperature - 1, -10)  # Start from lowest T to 300K
@@ -173,6 +164,18 @@ ax1.plot(x_ext, y_ext, linestyle='--', color=color, alpha=0.5)
 ln_sigmaT_300 = k * 1000 / specified_temperature + b
 sigma_300K = np.exp(ln_sigmaT_300) / specified_temperature
 print(f"at {specified_temperature}K, {cell}: Sigma = {sigma_300K:.3e} S/cm")
+
+def tick_function(X):
+    V = 1000 / X  
+    return ["%.0f" % z for z in V]
+
+# Add top temperature axis
+ax2 = ax1.twiny()
+x_min, x_max = ax1.get_xlim()
+ax2.set_xticks(ax1.get_xticks())
+ax2.set_xbound(ax1.get_xbound())
+ax2.set_xticklabels(tick_function(ax1.get_xticks()))
+ax2.set_xlabel("T (K)", fontsize=10)
 
 # Save and show plot
 fig.tight_layout()
