@@ -1,17 +1,19 @@
 # === User Configuration Section: Only modify these variables ===
-VERSION="1.3.8"
-RELEASE_DATE="2025-08-25"
+VERSION="1.4.1"
+RELEASE_DATE="2025-10-27"
 HOME_PAGE="https://zhyan0603.github.io/GPUMDkit"
 CONTACT="yanzihan@westlake.edu.cn"
 
 # New features (one per line, in an array)
 NEW_FEATURES=(
-    "add -replicate"
+    "add -plt arrhenius_d/D"
+    "add -plt arrhenius_sigma/sigma"
+    "add -pda (probability density analysis)"
 )
 
 # Bug fixes (one per line, in an array)
 BUG_FIXES=(
-    "fix a bug in -pos2lmp (use ovito to convert)"
+    "None"
 )
 
 # === Formatted Output Logic ===

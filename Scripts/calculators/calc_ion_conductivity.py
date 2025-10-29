@@ -246,7 +246,14 @@ def main():
     if D_total < 1e-7:
         print(" WARNING: ")
         print(" The D_total is below the threshold (1e-7) cm^2/s. ")
-        print(" Please review the MSD data to confirm whether diffusion is occurring. ")
+        print(" Please check the MSD and trajectory to confirm whether diffusion has occurred. ")
+        # print("+-----------------------------------------------+")
+        # print("|               GPUMDkit WARNING                |")
+        # print("|-----------------------------------------------|")
+        # print("|         D_total is below 1e-7 cm^2/s          |")
+        # print("|        Has diffusion really occurred?         |")
+        # print("| Please check MSD and trajectory to confirm it.|")
+        # print("+-----------------------------------------------+")
 
 # Run the main function
 if __name__ == "__main__":

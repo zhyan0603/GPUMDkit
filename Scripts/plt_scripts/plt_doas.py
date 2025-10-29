@@ -45,7 +45,7 @@ plt.title(f'Density of Atomistic States of {element}')
 plt.legend()
 plt.tight_layout()
 
-if len(sys.argv) > 1 and sys.argv[1] == 'save':
+if len(sys.argv) > 3 and sys.argv[3] == 'save':
     plt.savefig('doas.png', dpi=300)
 else:
     # Check if the current backend is non-interactive

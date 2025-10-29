@@ -12,7 +12,7 @@ if [ -z "$GPUMD_path" ] || [ -z "$GPUMDkit_path" ]; then
     exit 1
 fi
 
-VERSION="1.3.9 (dev) (2025-09-01)"
+VERSION="1.4.1 (dev) (2025-10-20)"
 
 #--------------------- function 1 format conversion ----------------------
 # These functions are used to convert the format of the files
@@ -948,7 +948,13 @@ if [ ! -z "$1" ]; then
                         ;;   
                     "doas")
                         python ${GPUMDkit_path}/Scripts/plt_scripts/plt_doas.py $3 $4
-                        ;;                                                 
+                        ;;
+                    "arrhenius_d"|"diffusivity"|"D")
+                        python ${GPUMDkit_path}/Scripts/plt_scripts/plt_arrhenius_d.py $3
+                        ;;
+                    "arrhenius_sigma"|"sigma")
+                        python ${GPUMDkit_path}/Scripts/plt_scripts/plt_arrhenius_sigma.py $3
+                        ;;                                                                                                 
                     *)
                         echo "Usage: -plt thermo/train/prediction/train_test/msd/sdc/rdf/vac/restart/dimer/force/des/charge/lr/doas/parity_density [save]"
                         echo "Examp: gpumdkit.sh -plt thermo save"
@@ -1047,6 +1053,7 @@ if [ ! -z "$1" ]; then
                 echo " Code path: ${GPUMDkit_path}/Scripts/format_conversion/replicate.py"
                 python ${GPUMDkit_path}/Scripts/format_conversion/replicate.py $2 $3 ${@:4}
             else
+                echo " Please give the file name suffix (e.g. input.xyz or output.vasp)"
                 echo " Usage 1: -replicate <inputfile> <outputfile> a b c" 
                 echo " Usage 2: -replicate <inputfile> <outputfile> target_num"
                 echo " See the source code of replicate.py for more details"
@@ -1428,6 +1435,25 @@ if [ ! -z "$1" ]; then
         -cbc)
             echo " Calling script by Zihan YAN "
             python ${GPUMDkit_path}/Scripts/analyzer/charge_balance_check.py $2
+            ;;
+
+        -hydrogen_bond_analysis|-hbond)
+            echo " Calling script by Zherui CHEN "
+            python ${GPUMD_path}/tools/Analysis_and_Processing/hydrogen_bond_analysis/Hydrogen-bond-analysis.py ${@:2}
+            echo " Code path: ${GPUMD_path}/tools/Analysis_and_Processing/hydrogen_bond_analysis/Hydrogen-bond-analysis.py"
+            ;;
+
+        -pda)
+            if [ ! -z "$2" ] && [ "$2" != "-h" ] && [ ! -z "$3" ] && [ ! -z "$4" ] && [ ! -z "$5" ] ; then
+                echo " Calling script by Zihan YAN "
+                echo " Code path: ${GPUMDkit_path}/Scripts/analyzer/probability_density_analysis.py"
+                python ${GPUMDkit_path}/Scripts/analyzer/probability_density_analysis.py $2 $3 $4 $5
+            else
+                echo " Usage: -pda <ref_struct> <trajectory_file> <species> <interval>"
+                echo " Examp: gpumdkit.sh -pda LLZO.vasp dump.xyz Li 0.25"
+                echo " See the source code of probability_density_analysis.py for more details"
+                echo " Code path: ${GPUMDkit_path}/Scripts/analyzer/probability_density_analysis.py"
+            fi
             ;;
 
         -clear_xyz|-clean_xyz)
