@@ -1,6 +1,6 @@
 # === User Configuration Section: Only modify these variables ===
 VERSION="1.4.1"
-RELEASE_DATE="2025-10-20"
+RELEASE_DATE="2025-10-27"
 HOME_PAGE="https://zhyan0603.github.io/GPUMDkit"
 CONTACT="yanzihan@westlake.edu.cn"
 
@@ -8,6 +8,7 @@ CONTACT="yanzihan@westlake.edu.cn"
 NEW_FEATURES=(
     "add -plt arrhenius_d/D"
     "add -plt arrhenius_sigma/sigma"
+    "add -pda (probability density analysis)"
 )
 
 # Bug fixes (one per line, in an array)

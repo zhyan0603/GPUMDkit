@@ -1443,6 +1443,19 @@ if [ ! -z "$1" ]; then
             echo " Code path: ${GPUMD_path}/tools/Analysis_and_Processing/hydrogen_bond_analysis/Hydrogen-bond-analysis.py"
             ;;
 
+        -pda)
+            if [ ! -z "$2" ] && [ "$2" != "-h" ] && [ ! -z "$3" ] && [ ! -z "$4" ] && [ ! -z "$5" ] ; then
+                echo " Calling script by Zihan YAN "
+                echo " Code path: ${GPUMDkit_path}/Scripts/analyzer/probability_density_analysis.py"
+                python ${GPUMDkit_path}/Scripts/analyzer/probability_density_analysis.py $2 $3 $4 $5
+            else
+                echo " Usage: -pda <ref_struct> <trajectory_file> <species> <interval>"
+                echo " Examp: gpumdkit.sh -pda LLZO.vasp dump.xyz Li 0.25"
+                echo " See the source code of probability_density_analysis.py for more details"
+                echo " Code path: ${GPUMDkit_path}/Scripts/analyzer/probability_density_analysis.py"
+            fi
+            ;;
+
         -clear_xyz|-clean_xyz)
             if [ ! -z "$2" ] && [ "$2" != "-h" ] && [ ! -z "$3" ] ; then
                 echo " Calling script by Zihan YAN "
