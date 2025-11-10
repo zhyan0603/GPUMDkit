@@ -12,7 +12,7 @@ if [ -z "$GPUMD_path" ] || [ -z "$GPUMDkit_path" ]; then
     exit 1
 fi
 
-VERSION="1.4.1 (dev) (2025-10-20)"
+VERSION="1.4.1 (dev) (2025-11-10)"
 
 #--------------------- function 1 format conversion ----------------------
 # These functions are used to convert the format of the files
@@ -1077,7 +1077,7 @@ if [ ! -z "$1" ]; then
                     return 1
                 fi
             else
-                echo " Usage: -out2xyz|-outcar2exyz dir_name (eg. gpumdkit.sh -outcar2exyz .)"
+                echo " Usage: -out2xyz|-outcar2exyz dir_name (eg. gpumdkit.sh -out2xyz .)"
                 echo " See the source code of multipleFrames-outcars2nep-exyz.sh for more details"
                 script_path="${GPUMD_path}/tools/vasp2xyz/outcar2xyz/multipleFrames-outcars2nep-exyz.sh"
                 alt_path="${GPUMD_path}/tools/Format_Conversion/vasp2xyz/outcar2xyz/multipleFrames-outcars2nep-exyz.sh"
@@ -1087,6 +1087,37 @@ if [ ! -z "$1" ]; then
                     echo " Code path: ${alt_path}"
                 else
                     echo "Error: multipleFrames-outcars2nep-exyz.sh not found"
+                    return 1
+                fi
+            fi
+            ;;
+
+        -xml2xyz)
+            if [ ! -z "$2" ] && [ "$2" != "-h" ] ; then
+                echo " Calling script by Zezhu Zeng et al. "
+                script_path="${GPUMD_path}/tools/vasp2xyz/vasprun.xml2xyz/vasp2xyz.py"
+                alt_path="${GPUMD_path}/tools/Format_Conversion/vasp2xyz/vasprun.xml2xyz/vasp2xyz.py"
+                if [[ -f ${script_path} ]]; then
+                    echo " Code path: ${script_path}"
+                    python ${script_path} $2
+                elif [[ -f ${alt_path} ]]; then
+                    echo " Code path: ${alt_path}"
+                    python ${alt_path} $2
+                else
+                    echo "Error: vasp2xyz.py not found"
+                    return 1
+                fi
+            else
+                echo " Usage: -xml2xyz dir_name (eg. gpumdkit.sh -xml2xyz .)"
+                echo " See the source code of vasp2xyz.py for more details"
+                script_path="${GPUMD_path}/tools/vasp2xyz/vasprun.xml2xyz/vasp2xyz.py"
+                alt_path="${GPUMD_path}/tools/Format_Conversion/vasp2xyz/vasprun.xml2xyz/vasp2xyz.py"
+                if [[ -f "${script_path}" ]]; then
+                    echo " Code path: ${script_path}"
+                elif [[ -f "${alt_path}" ]]; then
+                    echo " Code path: ${alt_path}"
+                else
+                    echo "Error: vasp2xyz.py not found"
                     return 1
                 fi
             fi
@@ -1487,7 +1518,6 @@ echo -e "\
                                           
         GPUMDkit Version ${VERSION}
   Core Developer: Zihan YAN (yanzihan@westlake.edu.cn)
- Main Contributors: Boyi SITU, Hao YANG & Shengjie TANG
       "
 menu
 main

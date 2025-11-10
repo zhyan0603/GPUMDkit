@@ -82,22 +82,22 @@ There are two options, <u>*interactive mode*</u> and <u>*command-line mode*</u>
 3. Follow the on-screen prompts to interactively select and run the desired script.
 
     ```
-            ____ ____  _   _ __  __ ____  _    _ _
-           / ___|  _ \| | | |  \/  |  _ \| | _(_) |_
-          | |  _| |_) | | | | |\/| | | | | |/ / | __|
-          | |_| |  __/| |_| | |  | | |_| |   <| | |_
-           \____|_|    \___/|_|  |_|____/|_|\_\_|\__|
+             ____ ____  _   _ __  __ ____  _    _ _   
+            / ___|  _ \| | | |  \/  |  _ \| | _(_) |_ 
+           | |  _| |_) | | | | |\/| | | | | |/ / | __|
+           | |_| |  __/| |_| | |  | | |_| |   <| | |_
+            \____|_|    \___/|_|  |_|____/|_|\_\_|\__|
     
-          GPUMDkit Version 1.3.5 (dev) (2025-07-28)
-          Developer: Zihan YAN (yanzihan@westlake.edu.cn)
+            GPUMDkit Version 1.4.1 (dev) (2025-11-10)
+      Core Developer: Zihan YAN (yanzihan@westlake.edu.cn)        
     
-    ----------------------- GPUMD -----------------------
-    1) Format Conversion          2) Sample Structures
-    2) Workflow (dev)             4) Calculators         
-    5) Analyzer                   6) Developing ...      
-    0) Quit!
-    ------------>>
-    Input the function number:
+     ----------------------- GPUMD -----------------------      
+     1) Format Conversion          2) Sample Structures
+     3) Workflow                   4) Calculators
+     5) Analyzer                   6) Developing ...
+     0) Quit!
+     ------------>>
+     Input the function number:
     ```
 
 #### Command-Line Mode
@@ -116,24 +116,24 @@ the help information:
 
 ```
 +==================================================================================================+
-|                              GPUMDkit 1.3.5 (dev) (2025-07-28) Usage                             |
-|                                                                 --- by Zihan YAN                 |
+|                              GPUMDkit 1.4.1 (dev) (2025-11-10) Usage                             |
 +======================================== Conversions =============================================+
 | -outcar2exyz   Convert OUTCAR to extxyz       | -pos2exyz     Convert POSCAR to extxyz           |
 | -castep2exyz   Convert castep to extxyz       | -pos2lmp      Convert POSCAR to LAMMPS           |
+| -cif2pos       Convert cif to POSCAR          | -cif2exyz     Convert cif to extxyz              |
 | -cp2k2exyz     Convert cp2k output to extxyz  | -lmp2exyz     Convert LAMMPS-dump to extxyz      |
 | -addgroup      Add group label                | -addweight    Add weight to the struct in extxyz |
 | Developing...                                 | Developing...                                    |
 +========================================= Analysis ===============================================+
-| -range         Print range of energy etc.     | -max_rmse     Get max RMSE from XYZ              |
+| -range         Print range of energy etc.     | -max_rmse     Get max RMSE from extxyz           |
 | -min_dist      Get min_dist between atoms     | -min_dist_pbc Get min_dist considering PBC       |
 | -filter_box    Filter struct by box limits    | -filter_value Filter struct by value (efs)       |
-| -filter_dist   Filter struct by min_dist      | Developing...                                    |
-+=========================================    Misc  ==============+================================+
+| -filter_dist   Filter struct by min_dist      | -analyze_comp Analyze composition of extxyz      |
++====================================== Misc Utilities ============================================+
 | -plt           Plot scripts                   | -get_frame     Extract the specified frame       |
 | -calc          Calculators                    | -clear_xyz     Clear extra info in XYZ file      |
 | -clean         Clear files for work_dir       | -time          Time consuming Analyzer           |
-| Developing...                                 | Developing...                                    |
+| -update        Update GPUMDkit                | Developing...                                    |
 +==================================================================================================+
 | For detailed usage and examples, use: gpumdkit.sh -<option> -h                                   |
 +==================================================================================================+
