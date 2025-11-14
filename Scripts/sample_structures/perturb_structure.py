@@ -5,11 +5,11 @@ import dpdata
 def parse_args():
     parser = argparse.ArgumentParser(
              description="Usage: python script.py <input.vasp> <pert_num> <cell_pert_fraction> <atom_pert_distance> <atom_pert_style>")
-    parser.add_argument('input_file', help='输入 VASP 文件路径')
-    parser.add_argument('pert_num', type=int, default=20, help='微扰结构数量')
-    parser.add_argument('cell_pert_fraction', type=float, default=0.03, help='晶胞微扰比例')
-    parser.add_argument('atom_pert_distance', type=float, default=0.2, help='原子微扰距离')
-    parser.add_argument('atom_pert_style', default='uniform', choices=['normal', 'uniform', 'const'], help='原子微扰样式')
+    parser.add_argument('input_file', help='The path to POSCAR/CONTCAR file')
+    parser.add_argument('pert_num', type=int, default=20, help='The perturbation number')
+    parser.add_argument('cell_pert_fraction', type=float, default=0.03, help='The fraction of cell perturbation')
+    parser.add_argument('atom_pert_distance', type=float, default=0.2, help='The distance of atom perturbation')
+    parser.add_argument('atom_pert_style', default='uniform', choices=['normal', 'uniform', 'const'], help='The style for atom perturbation')
     return parser.parse_args()
 
 def main():
