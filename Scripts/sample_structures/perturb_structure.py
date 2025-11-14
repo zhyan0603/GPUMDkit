@@ -1,50 +1,39 @@
+import argparse
 import sys
 import dpdata
 
-# Define default values for parameters
-DEFAULT_PERT_NUM = 20
-DEFAULT_CELL_PERT_FRACTION = 0.03
-DEFAULT_ATOM_PERT_DISTANCE = 0.2
-DEFAULT_ATOM_PERT_STYLE = 'uniform'
+def parse_args():
+    parser = argparse.ArgumentParser(
+             description="Usage: python script.py <input.vasp> <pert_num> <cell_pert_fraction> <atom_pert_distance> <atom_pert_style>")
+    parser.add_argument('input_file', help='输入 VASP 文件路径')
+    parser.add_argument('pert_num', type=int, default=20, help='微扰结构数量')
+    parser.add_argument('cell_pert_fraction', type=float, default=0.03, help='晶胞微扰比例')
+    parser.add_argument('atom_pert_distance', type=float, default=0.2, help='原子微扰距离')
+    parser.add_argument('atom_pert_style', default='uniform', choices=['normal', 'uniform', 'const'], help='原子微扰样式')
+    return parser.parse_args()
 
-# Check command line arguments
-if len(sys.argv) < 2:
-    print("Usage: python script.py <input.vasp> <pert_num> <cell_pert_fraction> <atom_pert_distance> <atom_pert_style>")
-    print(f"Default values: pert_num={DEFAULT_PERT_NUM}, cell_pert_fraction={DEFAULT_CELL_PERT_FRACTION}, atom_pert_distance={DEFAULT_ATOM_PERT_DISTANCE}, atom_pert_style={DEFAULT_ATOM_PERT_STYLE}")
-    print("atom_pert_style options: 'normal', 'uniform', 'const'")
-    print("dpdata documentation: https://docs.deepmodeling.com/projects/dpdata/en/master/index.html")
-    sys.exit(1)
+def main():
+    try:
+        args = parse_args()
+    except SystemExit:
+        print(f"Default values: pert_num={DEFAULT_PERT_NUM}, cell_pert_fraction={DEFAULT_CELL_PERT_FRACTION}, atom_pert_distance={DEFAULT_ATOM_PERT_DISTANCE}, atom_pert_style={DEFAULT_ATOM_PERT_STYLE}")
+        print("atom_pert_style options: 'normal', 'uniform', 'const'")
+        print("dpdata documentation: https://docs.deepmodeling.com/projects/dpdata/en/master/index.html")
+        sys.exit(1)
 
-# Read command line arguments
-input_file = sys.argv[1]
+    # Read the POSCAR file and perform perturbation
+    system = dpdata.System(input_file, fmt='vasp/poscar')
+    perturbed_systems = system.perturb(pert_num=args.pert_num,
+                                       cell_pert_fraction=args.cell_pert_fraction,
+                                       atom_pert_distance=args.atom_pert_distance,
+                                       atom_pert_style=args.atom_pert_style,)
 
-# Set default values
-pert_num = DEFAULT_PERT_NUM
-cell_pert_fraction = DEFAULT_CELL_PERT_FRACTION
-atom_pert_distance = DEFAULT_ATOM_PERT_DISTANCE
-atom_pert_style = DEFAULT_ATOM_PERT_STYLE
+    # Save the perturbed structures
+    pert_num = args.pert_num
+    width = len(str(pert_num))
+    for i in range(pert_num):
+        output_file = f"POSCAR_{str(i + 1).zfill(width)}.vasp"
+        perturbed_systems.sub_system(i).to('vasp/poscar', output_file)
 
-# Override default values with user inputs if provided
-if len(sys.argv) > 2:
-    pert_num = int(sys.argv[2])
-if len(sys.argv) > 3:
-    cell_pert_fraction = float(sys.argv[3])
-if len(sys.argv) > 4:
-    atom_pert_distance = float(sys.argv[4])
-if len(sys.argv) > 5:
-    atom_pert_style = sys.argv[5]
-
-# Read the POSCAR file and perform perturbation
-system = dpdata.System(input_file, fmt='vasp/poscar')
-perturbed_systems = system.perturb(
-    pert_num=pert_num,
-    cell_pert_fraction=cell_pert_fraction,
-    atom_pert_distance=atom_pert_distance,
-    atom_pert_style=atom_pert_style,
-)
-
-# Save the perturbed structures
-for i in range(pert_num):
-    output_file = f"POSCAR_{i + 1}.vasp"
-    perturbed_systems.sub_system(i).to('vasp/poscar', output_file)
-
+if __name__ == "__main__":
+     main()
