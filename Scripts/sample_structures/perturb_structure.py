@@ -9,16 +9,16 @@ def parse_args():
     parser.add_argument('pert_num', type=int, default=20, help='The perturbation number')
     parser.add_argument('cell_pert_fraction', type=float, default=0.03, help='The fraction of cell perturbation')
     parser.add_argument('atom_pert_distance', type=float, default=0.2, help='The distance of atom perturbation')
-    parser.add_argument('atom_pert_style', default='uniform', choices=['normal', 'uniform', 'const'], help='The style for atom perturbation')
+    parser.add_argument('atom_pert_style', type=str, default='uniform', choices=['normal', 'uniform', 'const'], help='The style for atom perturbation')
     return parser.parse_args()
 
 def main():
     try:
         args = parse_args()
     except SystemExit:
-        print(f"Default values: pert_num={DEFAULT_PERT_NUM}, cell_pert_fraction={DEFAULT_CELL_PERT_FRACTION}, atom_pert_distance={DEFAULT_ATOM_PERT_DISTANCE}, atom_pert_style={DEFAULT_ATOM_PERT_STYLE}")
+        print(f"Default values: pert_num=20, cell_pert_fraction=0.03, atom_pert_distance=0.2, atom_pert_style=uniform")
         print("atom_pert_style options: 'normal', 'uniform', 'const'")
-        print("dpdata documentation: https://docs.deepmodeling.com/projects/dpdata/en/master/index.html")
+        print("dpdata documentation: https://docs.deepmodeling.com/projects/dpdata/en/master/index.html \n")
         sys.exit(1)
 
     # Read the POSCAR file and perform perturbation
