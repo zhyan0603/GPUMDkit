@@ -3,8 +3,9 @@ import numpy as np
 from ase.io import read, write
 import matplotlib.pyplot as plt
 from sklearn.decomposition import PCA
-from pynep.calculate import NEP
-from pynep.select import FarthestPointSample
+from NepTrain.core.nep import *
+from scipy.spatial.distance import cdist
+
 
 def print_progress_bar(iteration, total, prefix='', suffix='', decimals=1, length=50, fill='█'):
     percent = ("{0:." + str(decimals) + "f}").format(100 * (iteration / float(total)))
@@ -22,7 +23,7 @@ def calculate_descriptors():
 
     des_sample = []
     for i in range(total_sample):
-        des_sample.append(np.mean(calc.get_property('descriptor', sampledata[i]), axis=0))
+        des_sample.append(calc.get_descriptors(j).mean(0) for j in sampledata[i])
         print_progress_bar(i + 1, total_sample, prefix=' Processing sampledata:', suffix='Complete', length=50)
     #des_sample = np.load('des_sample.npy')
     des_sample = np.array(des_sample)
@@ -30,13 +31,31 @@ def calculate_descriptors():
 
     des_train = []
     for i in range(total_train):
-        des_train.append(np.mean(calc.get_property('descriptor', traindata[i]), axis=0))
+        des_train.append(calc.get_descriptors(j).mean(0) for j in traindata[i])
         print_progress_bar(i + 1, total_train, prefix=' Processing traindata: ', suffix='Complete', length=50)
     #des_train = np.load('des_train.npy')
     des_train = np.array(des_train)
     #np.save('des_train.npy', des_train)
     
     return des_sample, des_train
+
+def FarthestPointSample(new_data, now_data=[], min_distance=None, min_select=1, max_select=None, metric='euclidean'):
+    max_select = max_select or len(new_data)
+    to_add = []
+    if len(new_data) == 0:
+        return to_add
+    if len(now_data) == 0:
+        to_add.append(0)
+        now_data.append(new_data[0])
+    distances = np.min(cdist(new_data, now_data, metric=metric), axis=1)
+    while np.max(distances) > min_distance or len(to_add) < min_select:
+        i = np.argmax(distances)
+        to_add.append(i)
+        if len(to_add) >= max_select:
+            break
+        distances = np.minimum(distances, cdist([new_data[i]], new_data, metric=metric)[0])
+    return to_add
+
 
 # Check command line arguments
 if len(sys.argv) < 4:
@@ -49,7 +68,7 @@ sampledata = read(sys.argv[1], ':')
 traindata = read(sys.argv[2], ':')
 
 # Initialize NEP calculator
-calc = NEP(sys.argv[3])
+calc = Nep3Calculator(nep_name)
 print(calc)
 
 # Interactive selection method
@@ -58,11 +77,10 @@ print(" 1) Select structures based on minimum distance")
 print(" 2) Select structures based on number of structures")
 choice = input(" ------------>>\n ").strip()
 
-sampler = FarthestPointSample()
 if choice == '1':
     min_dist = float(input(" Enter min_dist (e.g., 0.01): ").strip())
     des_sample, des_train = calculate_descriptors()
-    selected = sampler.select(des_sample, des_train, min_distance=min_dist, max_select=None)
+    selected = FarthestPointSample(des_sample, des_train, min_distance=min_dist, max_select=None)
 elif choice == '2':
     try:
         min_max_input = input(" Enter min_select and max_select (e.g., '50 100'): ").strip()
@@ -71,7 +89,7 @@ elif choice == '2':
             print(" Error: min_select must be >= 1 and max_select must be >= min_select.")
             sys.exit(1)
         des_sample, des_train = calculate_descriptors()
-        selected = sampler.select(des_sample, des_train, min_select=min_select, max_select=max_select)
+        selected = FarthestPointSample(des_sample, des_train, min_select=min_select, max_select=max_select)
     except ValueError:
         print(" Error: Please enter two integers separated by a space (e.g., '50 100').")
         sys.exit(1)
