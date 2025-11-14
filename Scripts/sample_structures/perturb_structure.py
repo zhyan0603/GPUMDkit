@@ -22,7 +22,7 @@ def main():
         sys.exit(1)
 
     # Read the POSCAR file and perform perturbation
-    system = dpdata.System(input_file, fmt='vasp/poscar')
+    system = dpdata.System(args.input_file, fmt='vasp/poscar')
     perturbed_systems = system.perturb(pert_num=args.pert_num,
                                        cell_pert_fraction=args.cell_pert_fraction,
                                        atom_pert_distance=args.atom_pert_distance,
