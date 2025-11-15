@@ -139,7 +139,34 @@ the help information:
 +==================================================================================================+
 ```
 
-##### Example 2: Convert VASP OUTCARs to extxyz
+##### Example 2: View help information for -plt
+
+```
+gpumdkit.sh -plt -h
+```
+
+the help information:
+
+```
++=====================================================================================================+
+|                              GPUMDkit 1.4.1 (dev) (2025-11-10) Plotting Usage                       |
++=============================================== Plot Types ==========================================+
+| thermo          Plot thermo info                   | train          Plot NEP train results          |
+| prediction      Plot NEP prediction results        | train_test     Plot NEP train and test results |
+| msd             Plot mean square displacement      | msd_conv       Plot the convergence of MSD     |
+| msd_all         Plot MSD of all species            | sdc            Plot self diffusion coefficient |
+| rdf             Plot radial distribution function  | vac            Plot velocity autocorrelation   |
+| restart         Plot parameters in nep.restart     | dimer          Plot dimer plot                 |
+| force_errors    Plot force errors                  | des            Plot descriptors                |
+| charge          Plot charge distribution           | lr             Plot learning rate              |
+| doas            Plot density of atomistic states   | arrhenius_d    Plot Arrhenius diffusivity      |
+| arrhenius_sigma Plot Arrhenius sigma               | net_force      Plot net force distribution     |
++=====================================================================================================+
+| For detailed usage and examples, use: gpumdkit.sh -plt <plot_type> -h                               |
++=====================================================================================================+
+```
+
+##### Example 3: Convert VASP OUTCARs to extxyz
 
 To convert a `VASP` `OUTCARs` to an extended XYZ format (`extxyz`) file, use the following command:
 
@@ -149,7 +176,7 @@ gpumdkit.sh -out2xyz <dir_of_OUTCARs>
 Example: gpumdkit.sh -out2xyz .
 ```
 
-##### Example 3: Plot thermo evolution
+##### Example 4: Plot thermo evolution
 
 To visualize `thermo` evolution from `thermo.out` :
 

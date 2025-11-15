@@ -12,7 +12,7 @@ if [ -z "$GPUMD_path" ] || [ -z "$GPUMDkit_path" ]; then
     exit 1
 fi
 
-VERSION="1.4.1 (dev) (2025-11-10)"
+VERSION="1.4.1 (dev) (2025-11-15)"
 
 #--------------------- function 1 format conversion ----------------------
 # These functions are used to convert the format of the files
@@ -859,6 +859,25 @@ function help_info_table(){
     echo "+==================================================================================================+"
 }
 
+function plot_info_table(){
+    echo "+=====================================================================================================+"
+    echo "|                              GPUMDkit ${VERSION} Plotting Usage                       |"
+    echo "+=============================================== Plot Types ==========================================+"
+    echo "| thermo          Plot thermo info                   | train          Plot NEP train results          |"
+    echo "| prediction      Plot NEP prediction results        | train_test     Plot NEP train and test results |"
+    echo "| msd             Plot mean square displacement      | msd_conv       Plot the convergence of MSD     |"
+    echo "| msd_all         Plot MSD of all species            | sdc            Plot self diffusion coefficient |"
+    echo "| rdf             Plot radial distribution function  | vac            Plot velocity autocorrelation   |"
+    echo "| restart         Plot parameters in nep.restart     | dimer          Plot dimer plot                 |"
+    echo "| force_errors    Plot force errors                  | des            Plot descriptors                |"
+    echo "| charge          Plot charge distribution           | lr             Plot learning rate              |"
+    echo "| doas            Plot density of atomistic states   | arrhenius_d    Plot Arrhenius diffusivity      |"
+    echo "| arrhenius_sigma Plot Arrhenius sigma               | net_force      Plot net force distribution     |"
+    echo "+=====================================================================================================+"
+    echo "| For detailed usage and examples, use: gpumdkit.sh -plt <plot_type> -h                               |"
+    echo "+=====================================================================================================+"
+}
+
 if [ ! -z "$1" ]; then
     case $1 in
         -h|-help)
@@ -954,15 +973,17 @@ if [ ! -z "$1" ]; then
                         ;;
                     "arrhenius_sigma"|"sigma")
                         python ${GPUMDkit_path}/Scripts/plt_scripts/plt_arrhenius_sigma.py $3
-                        ;;                                                                                                 
+                        ;;
+                    "net_force")
+                        python ${GPUMDkit_path}/Scripts/plt_scripts/plt_net_force.py ${@:3}
+                        ;;                                                                                                                         
                     *)
-                        echo "Usage: -plt thermo/train/prediction/train_test/msd/sdc/rdf/vac/restart/dimer/force/des/charge/lr/doas/parity_density [save]"
-                        echo "Examp: gpumdkit.sh -plt thermo save"
+                        plot_info_table
                         exit 1
                         ;;
                 esac
             else
-                echo " Usage: -plt thermo/train/prediction/train_test/msd/vac/sdc/rdf/vac/restart/dimer/force/des/charge/lr/parity_density [save] (eg. gpumdkit.sh -plt thermo)"
+                plot_info_table
                 echo " See the codes in plt_scripts for more details"
                 echo " Code path: ${GPUMDkit_path}/Scripts/plt_scripts"
             fi
