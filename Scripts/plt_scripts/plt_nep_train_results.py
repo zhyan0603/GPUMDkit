@@ -35,10 +35,12 @@ if loss[1, 0] - loss[0, 0] == 100:
     xlabel = 'Generation/100'
     plot_cols = slice(1, 7)  # loss[:, 1:7]
     legend_labels = ['Total', 'L1-Reg', 'L2-Reg', 'Energy-train', 'Force-train', 'Virial-train']
-else:
+elif loss[1, 0] - loss[0, 0] == 1:
     xlabel = 'Epoch'
     plot_cols = slice(1, 5)  # loss[:, 1:5]
     legend_labels = ['Total', 'Energy-train', 'Force-train', 'Virial-train']
+else:
+    raise ValueError("Unexpected loss data format.")
 
 # Plotting the loss figure
 axs[0, 0].loglog(loss[:, plot_cols], '-', linewidth=2)
