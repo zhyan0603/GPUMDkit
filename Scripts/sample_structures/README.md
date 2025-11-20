@@ -37,13 +37,31 @@ This script samples structures by using the farthest point sampling method imple
 #### Usage
 
 ```sh
-python pynep_select_structs.py <sampledata_file> <traindata_file> <nep_model_file> <min_distance>
+python pynep_select_structs.py <sampledata_file> <traindata_file> <nep_model_file>
 ```
 
 #### Example
 
 ```sh
-python pynep_select_structs.py dump.xyz train.xyz nep.txt 0.01
+python pynep_select_structs.py dump.xyz train.xyz nep.txt
+```
+
+### neptrain_select_structs.py
+
+---
+
+This script samples structures by using the farthest point sampling method implemented in the `neptrain` package.
+
+#### Usage
+
+```sh
+python neptrain_select_structs.py <sampledata_file> <traindata_file> <nep_model_file>
+```
+
+#### Example
+
+```sh
+python neptrain_select_structs.py dump.xyz train.xyz nep.txt
 ```
 
 ### sample_structures.py

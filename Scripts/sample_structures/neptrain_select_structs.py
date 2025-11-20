@@ -23,7 +23,9 @@ def calculate_descriptors():
 
     des_sample = []
     for i in range(total_sample):
-        des_sample.append(calc.get_descriptors(j).mean(0) for j in sampledata[i])
+        descriptors_per_atom = calc.get_descriptors(sampledata[i])    
+        mean_descriptor = descriptors_per_atom.mean(axis=0)        
+        des_sample.append(mean_descriptor)
         print_progress_bar(i + 1, total_sample, prefix=' Processing sampledata:', suffix='Complete', length=50)
     #des_sample = np.load('des_sample.npy')
     des_sample = np.array(des_sample)
@@ -31,7 +33,9 @@ def calculate_descriptors():
 
     des_train = []
     for i in range(total_train):
-        des_train.append(calc.get_descriptors(j).mean(0) for j in traindata[i])
+        descriptors_per_atom = calc.get_descriptors(traindata[i])
+        mean_descriptor = descriptors_per_atom.mean(axis=0)
+        des_train.append(mean_descriptor)
         print_progress_bar(i + 1, total_train, prefix=' Processing traindata: ', suffix='Complete', length=50)
     #des_train = np.load('des_train.npy')
     des_train = np.array(des_train)
@@ -68,7 +72,7 @@ sampledata = read(sys.argv[1], ':')
 traindata = read(sys.argv[2], ':')
 
 # Initialize NEP calculator
-calc = Nep3Calculator(nep_name)
+calc = Nep3Calculator(sys.argv[3])
 print(calc)
 
 # Interactive selection method
@@ -89,7 +93,7 @@ elif choice == '2':
             print(" Error: min_select must be >= 1 and max_select must be >= min_select.")
             sys.exit(1)
         des_sample, des_train = calculate_descriptors()
-        selected = FarthestPointSample(des_sample, des_train, min_select=min_select, max_select=max_select)
+        selected = FarthestPointSample(des_sample, des_train, min_distance=-1, min_select=min_select, max_select=max_select)
     except ValueError:
         print(" Error: Please enter two integers separated by a space (e.g., '50 100').")
         sys.exit(1)

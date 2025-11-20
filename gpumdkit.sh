@@ -225,31 +225,21 @@ echo " Code path: ${GPUMDkit_path}/Scripts/sample_structures/pynep_select_struct
 echo " ---------------------------------------------------"
 }
 
-function f203_find_outliers(){
+function f203_neptrain_sample_structures(){
 echo " >-------------------------------------------------<"
-echo " | This function calls the script in GPUMD's tools |"
-echo " | Script: get_max_rmse_xyz.py                     |"
-echo " | Developer: Ke XU (kickhsu@gmail.com)            |"
+echo " | This function calls the script in Scripts       |"
+echo " | Script: neptrain_select_structs.py              |"
+echo " | Developer: Benrui TANG (tang070205@proton.me)   |"
 echo " >-------------------------------------------------<"
-echo " Input <extxyz_file> <*_train.out> <num_outliers>"
-echo " Examp: train.xyz energy_train.out 13 "
+echo " Input <sample.xyz> <train.xyz> <nep_model>"
+echo " Examp: dump.xyz train.xyz nep.txt "
 echo " ------------>>"
-read -p " " maxrmse_choice
+read -p " " sample_choice
 echo " ---------------------------------------------------"
-script_path="${GPUMD_path}/tools/get_max_rmse_xyz/get_max_rmse_xyz.py"
-alt_path="${GPUMD_path}/tools/Analysis_and_Processing/get_max_rmse_xyz/get_max_rmse_xyz.py"
-if [[ -f ${script_path} ]]; then
-    python ${script_path} ${maxrmse_choice}
-    echo " Code path: ${script_path}"
-    echo " ---------------------------------------------------"
-elif [[ -f ${alt_path} ]]; then
-    python ${alt_path} ${maxrmse_choice}
-    echo " Code path: ${alt_path}"
-    echo " ---------------------------------------------------"
-else
-    echo "Error: get_max_rmse_xyz.py not found"
-    return 1
-fi
+python ${GPUMDkit_path}/Scripts/sample_structures/neptrain_select_structs.py ${sample_choice}
+rm dpdispatcher.log
+echo " Code path: ${GPUMDkit_path}/Scripts/sample_structures/neptrain_select_structs.py"
+echo " ---------------------------------------------------"
 }
 
 function f204_perturb_structure(){
@@ -288,7 +278,7 @@ function f2_sample_structures(){
 echo " ------------>>"
 echo " 201) Sample structures from extxyz"
 echo " 202) Sample structures by pynep"
-echo " 203) Find the outliers in training set"
+echo " 203) Sample structures by neptrain"
 echo " 204) Perturb structure"
 echo " 205) Select max force deviation structs from active.xyz"
 echo " 206) Developing ... "
@@ -313,7 +303,7 @@ case $num_choice in
         f202_pynep_sample_structures
         ;;
     "203")
-        f203_find_outliers
+        f203_neptrain_sample_structures
         ;;
     "204")
         f204_perturb_structure
@@ -772,7 +762,7 @@ function main(){
             f202_pynep_sample_structures
             ;;
         "203")
-            f203_find_outliers
+            f203_neptrain_sample_structures
             ;;
         "204")
             f204_perturb_structure
