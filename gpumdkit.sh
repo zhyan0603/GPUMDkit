@@ -12,7 +12,7 @@ if [ -z "$GPUMD_path" ] || [ -z "$GPUMDkit_path" ]; then
     exit 1
 fi
 
-VERSION="1.4.1 (dev) (2025-10-20)"
+VERSION="1.4.1 (dev) (2025-11-15)"
 
 #--------------------- function 1 format conversion ----------------------
 # These functions are used to convert the format of the files
@@ -225,31 +225,21 @@ echo " Code path: ${GPUMDkit_path}/Scripts/sample_structures/pynep_select_struct
 echo " ---------------------------------------------------"
 }
 
-function f203_find_outliers(){
+function f203_neptrain_sample_structures(){
 echo " >-------------------------------------------------<"
-echo " | This function calls the script in GPUMD's tools |"
-echo " | Script: get_max_rmse_xyz.py                     |"
-echo " | Developer: Ke XU (kickhsu@gmail.com)            |"
+echo " | This function calls the script in Scripts       |"
+echo " | Script: neptrain_select_structs.py              |"
+echo " | Developer: Benrui TANG (tang070205@proton.me)   |"
 echo " >-------------------------------------------------<"
-echo " Input <extxyz_file> <*_train.out> <num_outliers>"
-echo " Examp: train.xyz energy_train.out 13 "
+echo " Input <sample.xyz> <train.xyz> <nep_model>"
+echo " Examp: dump.xyz train.xyz nep.txt "
 echo " ------------>>"
-read -p " " maxrmse_choice
+read -p " " sample_choice
 echo " ---------------------------------------------------"
-script_path="${GPUMD_path}/tools/get_max_rmse_xyz/get_max_rmse_xyz.py"
-alt_path="${GPUMD_path}/tools/Analysis_and_Processing/get_max_rmse_xyz/get_max_rmse_xyz.py"
-if [[ -f ${script_path} ]]; then
-    python ${script_path} ${maxrmse_choice}
-    echo " Code path: ${script_path}"
-    echo " ---------------------------------------------------"
-elif [[ -f ${alt_path} ]]; then
-    python ${alt_path} ${maxrmse_choice}
-    echo " Code path: ${alt_path}"
-    echo " ---------------------------------------------------"
-else
-    echo "Error: get_max_rmse_xyz.py not found"
-    return 1
-fi
+python ${GPUMDkit_path}/Scripts/sample_structures/neptrain_select_structs.py ${sample_choice}
+rm dpdispatcher.log
+echo " Code path: ${GPUMDkit_path}/Scripts/sample_structures/neptrain_select_structs.py"
+echo " ---------------------------------------------------"
 }
 
 function f204_perturb_structure(){
@@ -288,7 +278,7 @@ function f2_sample_structures(){
 echo " ------------>>"
 echo " 201) Sample structures from extxyz"
 echo " 202) Sample structures by pynep"
-echo " 203) Find the outliers in training set"
+echo " 203) Sample structures by neptrain"
 echo " 204) Perturb structure"
 echo " 205) Select max force deviation structs from active.xyz"
 echo " 206) Developing ... "
@@ -313,7 +303,7 @@ case $num_choice in
         f202_pynep_sample_structures
         ;;
     "203")
-        f203_find_outliers
+        f203_neptrain_sample_structures
         ;;
     "204")
         f204_perturb_structure
@@ -772,7 +762,7 @@ function main(){
             f202_pynep_sample_structures
             ;;
         "203")
-            f203_find_outliers
+            f203_neptrain_sample_structures
             ;;
         "204")
             f204_perturb_structure
@@ -857,6 +847,25 @@ function help_info_table(){
     echo "+==================================================================================================+"
     echo "| For detailed usage and examples, use: gpumdkit.sh -<option> -h                                   |"
     echo "+==================================================================================================+"
+}
+
+function plot_info_table(){
+    echo "+=====================================================================================================+"
+    echo "|                              GPUMDkit ${VERSION} Plotting Usage                       |"
+    echo "+=============================================== Plot Types ==========================================+"
+    echo "| thermo          Plot thermo info                   | train          Plot NEP train results          |"
+    echo "| prediction      Plot NEP prediction results        | train_test     Plot NEP train and test results |"
+    echo "| msd             Plot mean square displacement      | msd_conv       Plot the convergence of MSD     |"
+    echo "| msd_all         Plot MSD of all species            | sdc            Plot self diffusion coefficient |"
+    echo "| rdf             Plot radial distribution function  | vac            Plot velocity autocorrelation   |"
+    echo "| restart         Plot parameters in nep.restart     | dimer          Plot dimer plot                 |"
+    echo "| force_errors    Plot force errors                  | des            Plot descriptors                |"
+    echo "| charge          Plot charge distribution           | lr             Plot learning rate              |"
+    echo "| doas            Plot density of atomistic states   | arrhenius_d    Plot Arrhenius diffusivity      |"
+    echo "| arrhenius_sigma Plot Arrhenius sigma               | net_force      Plot net force distribution     |"
+    echo "+=====================================================================================================+"
+    echo "| For detailed usage and examples, use: gpumdkit.sh -plt <plot_type> -h                               |"
+    echo "+=====================================================================================================+"
 }
 
 if [ ! -z "$1" ]; then
@@ -954,15 +963,17 @@ if [ ! -z "$1" ]; then
                         ;;
                     "arrhenius_sigma"|"sigma")
                         python ${GPUMDkit_path}/Scripts/plt_scripts/plt_arrhenius_sigma.py $3
-                        ;;                                                                                                 
+                        ;;
+                    "net_force")
+                        python ${GPUMDkit_path}/Scripts/plt_scripts/plt_net_force.py ${@:3}
+                        ;;                                                                                                                         
                     *)
-                        echo "Usage: -plt thermo/train/prediction/train_test/msd/sdc/rdf/vac/restart/dimer/force/des/charge/lr/doas/parity_density [save]"
-                        echo "Examp: gpumdkit.sh -plt thermo save"
+                        plot_info_table
                         exit 1
                         ;;
                 esac
             else
-                echo " Usage: -plt thermo/train/prediction/train_test/msd/vac/sdc/rdf/vac/restart/dimer/force/des/charge/lr/parity_density [save] (eg. gpumdkit.sh -plt thermo)"
+                plot_info_table
                 echo " See the codes in plt_scripts for more details"
                 echo " Code path: ${GPUMDkit_path}/Scripts/plt_scripts"
             fi
@@ -1077,7 +1088,7 @@ if [ ! -z "$1" ]; then
                     return 1
                 fi
             else
-                echo " Usage: -out2xyz|-outcar2exyz dir_name (eg. gpumdkit.sh -outcar2exyz .)"
+                echo " Usage: -out2xyz|-outcar2exyz dir_name (eg. gpumdkit.sh -out2xyz .)"
                 echo " See the source code of multipleFrames-outcars2nep-exyz.sh for more details"
                 script_path="${GPUMD_path}/tools/vasp2xyz/outcar2xyz/multipleFrames-outcars2nep-exyz.sh"
                 alt_path="${GPUMD_path}/tools/Format_Conversion/vasp2xyz/outcar2xyz/multipleFrames-outcars2nep-exyz.sh"
@@ -1087,6 +1098,37 @@ if [ ! -z "$1" ]; then
                     echo " Code path: ${alt_path}"
                 else
                     echo "Error: multipleFrames-outcars2nep-exyz.sh not found"
+                    return 1
+                fi
+            fi
+            ;;
+
+        -xml2xyz)
+            if [ ! -z "$2" ] && [ "$2" != "-h" ] ; then
+                echo " Calling script by Zezhu Zeng et al. "
+                script_path="${GPUMD_path}/tools/vasp2xyz/vasprun.xml2xyz/vasp2xyz.py"
+                alt_path="${GPUMD_path}/tools/Format_Conversion/vasp2xyz/vasprun.xml2xyz/vasp2xyz.py"
+                if [[ -f ${script_path} ]]; then
+                    echo " Code path: ${script_path}"
+                    python ${script_path} $2
+                elif [[ -f ${alt_path} ]]; then
+                    echo " Code path: ${alt_path}"
+                    python ${alt_path} $2
+                else
+                    echo "Error: vasp2xyz.py not found"
+                    return 1
+                fi
+            else
+                echo " Usage: -xml2xyz dir_name (eg. gpumdkit.sh -xml2xyz .)"
+                echo " See the source code of vasp2xyz.py for more details"
+                script_path="${GPUMD_path}/tools/vasp2xyz/vasprun.xml2xyz/vasp2xyz.py"
+                alt_path="${GPUMD_path}/tools/Format_Conversion/vasp2xyz/vasprun.xml2xyz/vasp2xyz.py"
+                if [[ -f "${script_path}" ]]; then
+                    echo " Code path: ${script_path}"
+                elif [[ -f "${alt_path}" ]]; then
+                    echo " Code path: ${alt_path}"
+                else
+                    echo "Error: vasp2xyz.py not found"
                     return 1
                 fi
             fi
@@ -1487,7 +1529,6 @@ echo -e "\
                                           
         GPUMDkit Version ${VERSION}
   Core Developer: Zihan YAN (yanzihan@westlake.edu.cn)
- Main Contributors: Boyi SITU, Hao YANG & Shengjie TANG
       "
 menu
 main

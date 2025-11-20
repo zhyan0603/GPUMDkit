@@ -12,6 +12,10 @@ energy_data = np.loadtxt('energy_train.out')
 force_data = np.loadtxt('force_train.out')
 stress_data = np.loadtxt('stress_train.out')
 
+# Filter out rows with invalid stress data
+valid_rows = ~np.any(np.abs(stress_data[:, :12]) > 1e6, axis=1)
+stress_data = stress_data[valid_rows]
+
 # Function to calculate RMSE
 def calculate_rmse(pred, actual):
     return np.sqrt(np.mean((pred - actual) ** 2))
@@ -40,10 +44,12 @@ if loss[1, 0] - loss[0, 0] == 100:
     xlabel = 'Generation/100'
     plot_cols = slice(1, 7)  # loss[:, 1:7]
     legend_labels = ['Total', 'L1-Reg', 'L2-Reg', 'Energy-train', 'Force-train', 'Virial-train']
-else:
+elif loss[1, 0] - loss[0, 0] == 1:
     xlabel = 'Epoch'
     plot_cols = slice(1, 5)  # loss[:, 1:5]
     legend_labels = ['Total', 'Energy-train', 'Force-train', 'Virial-train']
+else:
+    raise ValueError("Unexpected loss data format.")
 
 # Plotting the loss figure
 axs[0, 0].loglog(loss[:, plot_cols], '-', linewidth=2)
