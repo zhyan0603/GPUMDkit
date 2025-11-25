@@ -950,6 +950,12 @@ if [ ! -z "$1" ]; then
                         python ${GPUMDkit_path}/Scripts/plt_scripts/plt_descriptors.py $3 ${@:4}
                         ;;     
                     "charge")
+                        echo " +----------------------------------------------------------+"
+                        echo " | Please ensure you are using full batch training process. |"
+                        echo " | If not, run the prediction step before plotting to avoid |"
+                        echo " | inconsistencies in the atomic order between the training |"
+                        echo " | set and charge_train.out.                                |"
+                        echo " +----------------------------------------------------------+"
                         python ${GPUMDkit_path}/Scripts/plt_scripts/plt_charge.py $3
                         ;;
                     "lr"|"learning_rate")
