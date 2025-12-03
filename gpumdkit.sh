@@ -906,9 +906,6 @@ if [ ! -z "$1" ]; then
                         ;;
                     "train")
                         python ${GPUMDkit_path}/Scripts/plt_scripts/plt_nep_train_results.py $3
-                        ;;
-                    "loss")
-                        python ${GPUMDkit_path}/Scripts/plt_scripts/plt_train_loss.py $3
                         ;;                       
                     "prediction"|"valid"|"test")
                         python ${GPUMDkit_path}/Scripts/plt_scripts/plt_nep_prediction_results.py $3
