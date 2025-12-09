@@ -904,6 +904,9 @@ if [ ! -z "$1" ]; then
                     "thermo2")
                         python ${GPUMDkit_path}/Scripts/plt_scripts/plt_nep_thermo2.py $3
                         ;;
+                    "thermo3")
+                        python ${GPUMDkit_path}/Scripts/plt_scripts/plt_nep_thermo3.py $3
+                        ;;                        
                     "train")
                         python ${GPUMDkit_path}/Scripts/plt_scripts/plt_nep_train_results.py $3
                         ;;                       
