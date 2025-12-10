@@ -45,7 +45,7 @@ To install `GPUMDkit`, follow these steps:
     
 3. Add executable permissions to the `gpumdkit.sh` file:
     ```sh
-    chmod +x gpumdkit.sh
+    cd ${GPUMDkit_path}; chmod +x gpumdkit.sh
     ```
     
 
@@ -149,7 +149,7 @@ the help information:
 
 ```
 +=====================================================================================================+
-|                              GPUMDkit 1.4.1 (dev) (2025-11-10) Plotting Usage                       |
+|                              GPUMDkit 1.4.1 (dev) (2025-12-09) Plotting Usage                       |
 +=============================================== Plot Types ==========================================+
 | thermo          Plot thermo info                   | train          Plot NEP train results          |
 | prediction      Plot NEP prediction results        | train_test     Plot NEP train and test results |
@@ -161,6 +161,8 @@ the help information:
 | charge          Plot charge distribution           | lr             Plot learning rate              |
 | doas            Plot density of atomistic states   | arrhenius_d    Plot Arrhenius diffusivity      |
 | arrhenius_sigma Plot Arrhenius sigma               | net_force      Plot net force distribution     |
+| emd             Plot EMD results                   | nemd           Plot NEMD results               |
+| hnemd           Plot HNEMD results                 |                                                |
 +=====================================================================================================+
 | For detailed usage and examples, use: gpumdkit.sh -plt <plot_type> -h                               |
 +=====================================================================================================+

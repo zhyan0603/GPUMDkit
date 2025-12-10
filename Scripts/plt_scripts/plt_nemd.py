@@ -11,11 +11,11 @@ from ase.io import read
 import os
 
 # Figure Properties
-aw, fs = 2, 12
+aw, fs = 1.2, 12
 matplotlib.rc('font', size=fs)
 matplotlib.rc('axes', linewidth=aw)
 
-def set_fig_properties(ax_list, tl=8, tw=2, tlm=4):
+def set_fig_properties(ax_list, tl=4, tw=1.2, tlm=4):
     """Set figure properties for axes"""
     for ax in ax_list:
         ax.tick_params(which='both', length=tl, width=tw, direction='in', right=True, top=True)

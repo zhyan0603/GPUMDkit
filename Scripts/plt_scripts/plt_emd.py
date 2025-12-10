@@ -10,11 +10,11 @@ import numpy as np
 import os
 
 # Figure Properties
-aw, fs = 2, 12
+aw, fs = 1.2, 12
 matplotlib.rc('font', size=fs)
 matplotlib.rc('axes', linewidth=aw)
 
-def set_fig_properties(ax_list, tl=8, tw=2, tlm=4):
+def set_fig_properties(ax_list, tl=4, tw=1.2, tlm=4):
     """Set figure properties for axes"""
     for ax in ax_list:
         ax.tick_params(which='both', length=tl, width=tw, direction='in', right=True, top=True)
@@ -22,7 +22,7 @@ def set_fig_properties(ax_list, tl=8, tw=2, tlm=4):
 
 def print_usage():
     """Print usage instructions"""
-    print("Usage: gpumdkit -plt emd direction [save]")
+    print("Usage: gpumdkit.sh -plt emd direction [save]")
     print("Params:")
     print("  direction: Heat transfer direction in lowercase (x, y, or z)")
     print("  save     : Optional, save the plot as 'emd.png'")
@@ -159,7 +159,7 @@ class EMD_Processor:
             xlim([0, Time_upper])
             xlabel('Correlation Time (ns)')
             ylabel(r'$\kappa^{in}$ (W/mK)')
-            title(f"(b) $\kappa_{{in}}$ = {res[key_map['k_in'] + '_ave']:.2f} ± {res[key_map['k_in'] + '_std']:.2f} W/mK")
+            title(fr"(b) $\kappa_{{in}}$ = {res[key_map['k_in'] + '_ave']:.2f} ± {res[key_map['k_in'] + '_std']:.2f} W/mK")
 
             # (c) OUT component
             subplot(2, 2, 3)
@@ -173,7 +173,7 @@ class EMD_Processor:
             xlim([0, Time_upper])
             xlabel('Correlation Time (ns)')
             ylabel(r'$\kappa^{out}$ (W/mK)')
-            title(f"(c) $\kappa_{{out}}$ = {res[key_map['k_out'] + '_ave']:.2f} ± {res[key_map['k_out'] + '_std']:.2f} W/mK")
+            title(fr"(c) $\kappa_{{out}}$ = {res[key_map['k_out'] + '_ave']:.2f} ± {res[key_map['k_out'] + '_std']:.2f} W/mK")
 
             # (d) TOT
             subplot(2, 2, 4)
@@ -187,7 +187,7 @@ class EMD_Processor:
             xlim([0, Time_upper])
             xlabel('Correlation Time (ns)')
             ylabel(r'$\kappa^{tot}$ (W/mK)')
-            title(f"(d) $\kappa_{{tot}}$ = {res[key_map['k_tot'] + '_ave']:.2f} ± {res[key_map['k_tot'] + '_std']:.2f} W/mK")
+            title(fr"(d) $\kappa_{{tot}}$ = {res[key_map['k_tot'] + '_ave']:.2f} ± {res[key_map['k_tot'] + '_std']:.2f} W/mK")
 
         elif self.direction == "z":
             figure(figsize=(10, 4))
@@ -218,13 +218,12 @@ class EMD_Processor:
             xlim([0, Time_upper])
             xlabel('Correlation Time (ns)')
             ylabel(r'$\kappa$ (W/mK)')
-            title(f"(b) $\kappa$ = {res['kz_tot_ave']:.2f} ± {res['kz_tot_std']:.2f} W/mK")
+            title(fr"(b) $\kappa$ = {res['kz_tot_ave']:.2f} ± {res['kz_tot_std']:.2f} W/mK")
 
         tight_layout()
 
         if len(sys.argv) > 2 and sys.argv[2] == 'save':
             savefig('emd.png', dpi=300, bbox_inches='tight')
-            show()
         else:
             show()
 

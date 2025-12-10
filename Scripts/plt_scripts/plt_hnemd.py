@@ -12,11 +12,11 @@ from scipy.integrate import cumulative_trapezoid
 from ase.io import read
 
 # Figure Properties
-aw, fs = 2, 12
+aw, fs = 1.2, 12
 matplotlib.rc('font', size=fs)
 matplotlib.rc('axes', linewidth=aw)
 
-def set_fig_properties(ax_list, tl=8, tw=2, tlm=4):
+def set_fig_properties(ax_list, tl=4, tw=1.2, tlm=4):
     """Set figure properties for axes"""
     for ax in ax_list:
         ax.tick_params(which='both', length=tl, width=tw, direction='in', right=True, top=True)
@@ -132,7 +132,7 @@ class HNEMD_Processor:
         if 'Results' not in Reformed_SHC_data:
             Reformed_SHC_data['Results'] = {}
         for key, col in zip(["in", "out", "tot"], ["k_g_wi", "k_g_wo", "k_g_wt"]):
-            values = [np.trapz(Reformed_SHC_data[col][:, i], dx=Reformed_SHC_data["nu"][0, 0]) for i in range(N_repeat)]
+            values = [np.trapezoid(Reformed_SHC_data[col][:, i], dx=Reformed_SHC_data["nu"][0, 0]) for i in range(N_repeat)]
             Reformed_SHC_data['Results'][f"{key}_ave"] = np.mean(values)
             Reformed_SHC_data['Results'][f"{key}_std"] = np.std(values) / np.sqrt(N_repeat)
 
@@ -339,7 +339,7 @@ class HNEMD_Processor:
                 plot(t, Reformed_HNEMD_data["kz_tot"][:, i], color='k', alpha=0.3)
             plot(t, Reformed_HNEMD_data["kz_tot"][:, -1], color='C0', lw=5)
 
-            text(0.95, 0.9, f"$\kappa_{{tot}}$ = {res_h['kz_tot_ave']:.3f} ± {res_h['kz_tot_std']:.2f} W/mK",
+            text(0.95, 0.9, fr"$\kappa_{{tot}}$ = {res_h['kz_tot_ave']:.3f} ± {res_h['kz_tot_std']:.2f} W/mK",
                  ha='right', va='top', transform=plt.gca().transAxes)
             xlim(0, Time_upper)
             xlabel('time (ns)')
