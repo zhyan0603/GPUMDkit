@@ -9,9 +9,11 @@ def read_data(file_name):
 
 # Function to calculate the slope of the first 50% of the data
 def calculate_slope(x, y):
-    half_idx = len(x) // 2
-    x_half, y_half = x[:half_idx], y[:half_idx]
-    coeffs = np.polyfit(x_half, y_half, 1)  # Linear fit
+    len_data = len(x)
+    start_idx = int(0.1 * len_data)  # 10% of the data
+    end_idx = int(0.3 * len_data)    # 30% of the data
+    x_range, y_range = x[start_idx:end_idx], y[start_idx:end_idx]
+    coeffs = np.polyfit(x_range, y_range, 1)  # Linear fit
     return coeffs[0]  # Slope of the linear fit
 
 # Determine the input file
