@@ -12,7 +12,7 @@ if [ -z "$GPUMD_path" ] || [ -z "$GPUMDkit_path" ]; then
     exit 1
 fi
 
-VERSION="1.4.1 (dev) (2025-11-15)"
+VERSION="1.4.1 (dev) (2025-12-09)"
 
 #--------------------- function 1 format conversion ----------------------
 # These functions are used to convert the format of the files
@@ -863,6 +863,8 @@ function plot_info_table(){
     echo "| charge          Plot charge distribution           | lr             Plot learning rate              |"
     echo "| doas            Plot density of atomistic states   | arrhenius_d    Plot Arrhenius diffusivity      |"
     echo "| arrhenius_sigma Plot Arrhenius sigma               | net_force      Plot net force distribution     |"
+    echo "| emd             Plot EMD results                   | nemd           Plot NEMD results               |"
+    echo "| hnemd           Plot HNEMD results                 |                                                |"
     echo "+=====================================================================================================+"
     echo "| For detailed usage and examples, use: gpumdkit.sh -plt <plot_type> -h                               |"
     echo "+=====================================================================================================+"
@@ -904,11 +906,11 @@ if [ ! -z "$1" ]; then
                     "thermo2")
                         python ${GPUMDkit_path}/Scripts/plt_scripts/plt_nep_thermo2.py $3
                         ;;
+                    "thermo3")
+                        python ${GPUMDkit_path}/Scripts/plt_scripts/plt_nep_thermo3.py $3
+                        ;;                        
                     "train")
                         python ${GPUMDkit_path}/Scripts/plt_scripts/plt_nep_train_results.py $3
-                        ;;
-                    "loss")
-                        python ${GPUMDkit_path}/Scripts/plt_scripts/plt_train_loss.py $3
                         ;;                       
                     "prediction"|"valid"|"test")
                         python ${GPUMDkit_path}/Scripts/plt_scripts/plt_nep_prediction_results.py $3
@@ -972,7 +974,16 @@ if [ ! -z "$1" ]; then
                         ;;
                     "net_force")
                         python ${GPUMDkit_path}/Scripts/plt_scripts/plt_net_force.py ${@:3}
-                        ;;                                                                                                                         
+                        ;;
+                    "emd")
+                        python ${GPUMDkit_path}/Scripts/plt_scripts/plt_emd.py ${@:3}
+                        ;;
+                    "nemd")
+                        python ${GPUMDkit_path}/Scripts/plt_scripts/plt_nemd.py ${@:3}
+                        ;;
+                    "hnemd")
+                        python ${GPUMDkit_path}/Scripts/plt_scripts/plt_hnemd.py ${@:3}
+                        ;;                                                                                    
                     *)
                         plot_info_table
                         exit 1
