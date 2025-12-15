@@ -7,11 +7,6 @@ from ase.build import make_supercell
 from ase import Atoms
 
 def find_nearest_supercell(atoms, target):
-    """
-    Find a supercell configuration (a, b, c) based on target atom number such that:
-    - The number of atoms is as close as possible to the target
-    - For equal atom number differences, prioritize balanced lattice constants
-    """
     n_atoms = len(atoms)
     if target < n_atoms:
         print("Warning: Target atom count is less than original; returning 1x1x1 supercell.")
@@ -19,32 +14,44 @@ def find_nearest_supercell(atoms, target):
     
     cell = atoms.cell.lengths()
     ratio = (target / n_atoms) ** (1/3)
-    max_mult = max(1, int(math.ceil(ratio * 1.5)))
+    max_mult = max(1, int(math.ceil(ratio * 5)))  
     
     candidates = [(a, b, c) for a in range(1, max_mult + 1)
                   for b in range(1, max_mult + 1)
                   for c in range(1, max_mult + 1)]
-    candidates.sort(key=lambda x: abs(n_atoms * x[0] * x[1] * x[2] - target))
     
-    best = None
-    best_diff = float("inf")
-    best_spread = float("inf")
+    diff_threshold = 0.1 * target
     
+    filtered_candidates = []
     for a, b, c in candidates:
         atoms_num = n_atoms * a * b * c
         diff = abs(atoms_num - target)
-        if diff > best_diff:
-            break
-        new_lengths = (cell[0] * a, cell[1] * b, cell[2] * c)
-        spread = np.std(new_lengths)
-        if (diff < best_diff) or (diff == best_diff and spread < best_spread):
-            best_diff = diff
-            best_spread = spread
-            best = (a, b, c)
-        if diff == 0:
-            break
+        if diff <= diff_threshold:
+            new_lengths = (cell[0] * a, cell[1] * b, cell[2] * c)
+            spread = np.std(new_lengths)
+            filtered_candidates.append((a, b, c, diff, spread))
     
-    return best
+    if not filtered_candidates:
+        candidates.sort(key=lambda x: abs(n_atoms * x[0] * x[1] * x[2] - target))
+        best = None
+        best_diff = float("inf")
+        best_spread = float("inf")
+        for a, b, c in candidates:
+            atoms_num = n_atoms * a * b * c
+            diff = abs(atoms_num - target)
+            if diff > best_diff:
+                break
+            new_lengths = (cell[0] * a, cell[1] * b, cell[2] * c)
+            spread = np.std(new_lengths)
+            if (diff < best_diff) or (diff == best_diff and spread < best_spread):
+                best_diff = diff
+                best_spread = spread
+                best = (a, b, c)
+        return best
+    
+    filtered_candidates.sort(key=lambda x: x[4])  
+    best_a, best_b, best_c, _, _ = filtered_candidates[0]
+    return (best_a, best_b, best_c)
 
 def reorder_atoms_by_input_species_order(atoms, original_atoms):
     """
