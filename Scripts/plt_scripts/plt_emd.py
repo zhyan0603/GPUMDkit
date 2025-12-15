@@ -106,7 +106,7 @@ class EMD_Processor:
 
         if self.direction in ['x', 'y']:
             key_prefix = f'k{self.direction}'
-            print(f"\nDirection: {self.direction.lower()}")
+            print(f"\nDirection: {self.direction.lower()}\n")
             print(f"κ_in  = {results[key_prefix + '_in_ave']:.4f} ± {results[key_prefix + '_in_std']:.4f} W/mK")
             print(f"κ_out = {results[key_prefix + '_out_ave']:.4f} ± {results[key_prefix + '_out_std']:.4f} W/mK")
             print(f"κ_tot = {results[key_prefix + '_tot_ave']:.4f} ± {results[key_prefix + '_tot_std']:.4f} W/mK")

@@ -22,6 +22,8 @@ def set_fig_properties(ax_list, tl=4, tw=1.2, tlm=4):
         ax.tick_params(which='both', length=tl, width=tw, direction='in', right=True, top=True)
         ax.tick_params(which='minor', length=tlm)
 
+trap = np.trapezoid if hasattr(np, "trapezoid") else np.trapz
+
 def print_usage():
     """Print usage instructions"""
     print("Usage: gpumdkit -plt hnemd [scale_eff_size] [cutoff_freq] [save]")
@@ -132,7 +134,7 @@ class HNEMD_Processor:
         if 'Results' not in Reformed_SHC_data:
             Reformed_SHC_data['Results'] = {}
         for key, col in zip(["in", "out", "tot"], ["k_g_wi", "k_g_wo", "k_g_wt"]):
-            values = [np.trapezoid(Reformed_SHC_data[col][:, i], dx=Reformed_SHC_data["nu"][0, 0]) for i in range(N_repeat)]
+            values = [trap(Reformed_SHC_data[col][:, i], dx=Reformed_SHC_data["nu"][0, 0]) for i in range(N_repeat)]
             Reformed_SHC_data['Results'][f"{key}_ave"] = np.mean(values)
             Reformed_SHC_data['Results'][f"{key}_std"] = np.std(values) / np.sqrt(N_repeat)
 
@@ -246,7 +248,7 @@ class HNEMD_Processor:
         print("\n" + "=" * 70)
         print("SHC Spectral Thermal Conductivity Results")
         print("=" * 70)
-        print(f"Cutoff frequency: {self.cutoff_freq} THz\n")
+        print(f"\nCutoff frequency: {self.cutoff_freq} THz\n")
         print(f"κ_in  (integrated) = {results['in_ave']:.4f} ± {results['in_std']:.4f} W/mK")
         print(f"κ_out (integrated) = {results['out_ave']:.4f} ± {results['out_std']:.4f} W/mK")
         print(f"κ_tot (integrated) = {results['tot_ave']:.4f} ± {results['tot_std']:.4f} W/mK")
@@ -372,9 +374,11 @@ class HNEMD_Processor:
                 title('(c) Spectral thermal conductivity')
 
         tight_layout()
+
         if len(sys.argv) > 3 and sys.argv[3] == 'save':
             savefig(f'hnemd.png', dpi=300, bbox_inches='tight')
-        show()
+        else:
+            show()
 
 
 

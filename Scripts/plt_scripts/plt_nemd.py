@@ -256,7 +256,7 @@ class NEMD_Processor:
         print("\n" + "=" * 70)
         print("SHC Spectral Thermal Conductance Results")
         print("=" * 70)
-        print(f"Cutoff frequency: {self.cutoff_freq} THz\n")
+        print(f"\nCutoff frequency: {self.cutoff_freq} THz\n")
         print(f"G_in  (integrated) = {results['in_ave']:.6f} ± {results['in_std']:.6f} MW/m²K")
         print(f"G_out (integrated) = {results['out_ave']:.6f} ± {results['out_std']:.6f} MW/m²K")
         print(f"G_tot (integrated) = {results['tot_ave']:.6f} ± {results['tot_std']:.6f} MW/m²K")
@@ -370,7 +370,6 @@ class NEMD_Processor:
 
         if len(sys.argv) > 4 and sys.argv[4] == 'save':
             savefig('nemd.png', dpi=300, bbox_inches='tight')
-            show()
         else:
             show()
 
