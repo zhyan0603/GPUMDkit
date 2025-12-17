@@ -1,6 +1,6 @@
 # === User Configuration Section: Only modify these variables ===
 VERSION="1.4.2"
-RELEASE_DATE="2025-12-10"
+RELEASE_DATE="2025-12-17"
 HOME_PAGE="https://zhyan0603.github.io/GPUMDkit"
 CONTACT="yanzihan@westlake.edu.cn"
 
@@ -8,6 +8,8 @@ CONTACT="yanzihan@westlake.edu.cn"
 NEW_FEATURES=(
     "add -plt thermo3"
     "add -plt emd/nemd/hnemd"
+    "add -pynep"
+    "improve -plt train"
 )
 
 # Bug fixes (one per line, in an array)

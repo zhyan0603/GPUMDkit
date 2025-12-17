@@ -12,7 +12,7 @@ if [ -z "$GPUMD_path" ] || [ -z "$GPUMDkit_path" ]; then
     exit 1
 fi
 
-VERSION="1.4.1 (dev) (2025-12-09)"
+VERSION="1.4.2 (dev) (2025-12-17)"
 
 #--------------------- function 1 format conversion ----------------------
 # These functions are used to convert the format of the files
@@ -858,6 +858,7 @@ function help_info_table(){
     echo "| -min_dist      Get min_dist between atoms     | -min_dist_pbc Get min_dist considering PBC       |"
     echo "| -filter_box    Filter struct by box limits    | -filter_value Filter struct by value (efs)       |"
     echo "| -filter_dist   Filter struct by min_dist      | -analyze_comp Analyze composition of extxyz      |"
+    echo "| -pynep         Sample struct by pynep         | Developing...                                    |"
     echo "+====================================== Misc Utilities ============================================+"
     echo "| -plt           Plot scripts                   | -get_frame     Extract the specified frame       |"
     echo "| -calc          Calculators                    | -clear_xyz     Clear extra info in XYZ file      |"
