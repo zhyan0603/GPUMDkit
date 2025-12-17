@@ -225,6 +225,22 @@ echo " Code path: ${GPUMDkit_path}/Scripts/sample_structures/pynep_select_struct
 echo " ---------------------------------------------------"
 }
 
+function parallel_pynep_sample_structures(){
+echo " >-------------------------------------------------<"
+echo " | This function calls the script in Scripts       |"
+echo " | Script: pynep_select_structs.py                 |"
+echo " | Developer: Zihan YAN (yanzihan@westlake.edu.cn) |"
+echo " >-------------------------------------------------<"
+echo " Input <sample.xyz> <train.xyz> <nep_model>"
+echo " Examp: dump.xyz train.xyz nep.txt [threads]"
+echo " ------------>>"
+read -p " " sample_choice
+echo " ---------------------------------------------------"
+python ${GPUMDkit_path}/Scripts/sample_structures/parallel_pynep_select_structs.py ${sample_choice}
+echo " Code path: ${GPUMDkit_path}/Scripts/sample_structures/parallel_pynep_select_structs.py"
+echo " ---------------------------------------------------"
+}
+
 function f203_neptrain_sample_structures(){
 echo " >-------------------------------------------------<"
 echo " | This function calls the script in Scripts       |"
@@ -1484,6 +1500,10 @@ if [ ! -z "$1" ]; then
 
         -get_volume)
             python ${GPUMDkit_path}/Scripts/analyzer/get_volume.py
+            ;;
+
+        -pynep)
+            parallel_pynep_sample_structures
             ;;
 
         -re_atoms)
