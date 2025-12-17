@@ -103,7 +103,7 @@ parser = argparse.ArgumentParser(description='Select structures using NEP descri
 parser.add_argument('sampledata_file', type=str, help='Path to sampledata file')
 parser.add_argument('traindata_file', type=str, help='Path to traindata file')
 parser.add_argument('nep_model_file', type=str, help='Path to NEP model file')
-parser.add_argument('--threads', type=int, default=multiprocessing.cpu_count(), help='Number of threads for parallel processing')
+parser.add_argument('threads', type=int, default=multiprocessing.cpu_count(), help='Number of threads for parallel processing')
 args = parser.parse_args()
 
 # Function to load data from file

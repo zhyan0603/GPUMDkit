@@ -222,7 +222,10 @@ read -p " " sample_choice
 echo " ---------------------------------------------------"
 python ${GPUMDkit_path}/Scripts/sample_structures/pynep_select_structs.py ${sample_choice}
 echo " Code path: ${GPUMDkit_path}/Scripts/sample_structures/pynep_select_structs.py"
-echo " ---------------------------------------------------"
+echo " +---------------------------------------------------+"
+echo " |      To use parallel version, please use:         |"
+echo " |             gpumdkit.sh -pynep                    |"
+echo " +---------------------------------------------------+"
 }
 
 function parallel_pynep_sample_structures(){
