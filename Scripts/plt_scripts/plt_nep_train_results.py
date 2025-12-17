@@ -104,28 +104,30 @@ axs[1, 0].text(0.7, 0.12,
                transform=axs[1, 0].transAxes, fontsize=10, verticalalignment='center', horizontalalignment='center')
 #axs[1, 0].text(-0.07, 1.03, "(c)", transform=axs[1, 0].transAxes, fontsize=12, va='top', ha='right')
 
-# Plotting the stress figure
-xmin_stress, xmax_stress = calculate_limits(stress_data[:, 6:12].reshape(-1))
-axs[1, 1].set_xlim(xmin_stress, xmax_stress)
-axs[1, 1].set_ylim(xmin_stress, xmax_stress)
-axs[1, 1].plot(stress_data[:, 6:12], stress_data[:, 0:6], '.', markersize=10)
-axs[1, 1].plot([xmin_stress, xmax_stress], [xmin_stress, xmax_stress], linewidth=2, color='grey', linestyle='--')
-axs[1, 1].set_xlabel('DFT stress (GPa)', fontsize=10)
-axs[1, 1].set_ylabel('NEP stress (GPa)', fontsize=10)
-axs[1, 1].tick_params(axis='both', labelsize=10)
-axs[1, 1].legend(['xx', 'yy', 'zz', 'xy', 'yz', 'zx'])
-axs[1, 1].axis('tight')
+# Plotting the stress figure 
+if stress_data.shape[0] == 0:
+    axs[1, 1].axis('off')
+else:
+    xmin_stress, xmax_stress = calculate_limits(stress_data[:, 6:12].reshape(-1))
+    axs[1, 1].set_xlim(xmin_stress, xmax_stress)
+    axs[1, 1].set_ylim(xmin_stress, xmax_stress)
+    axs[1, 1].plot(stress_data[:, 6:12].reshape(-1), stress_data[:, 0:6].reshape(-1), '.', markersize=10)
+    axs[1, 1].plot([xmin_stress, xmax_stress], [xmin_stress, xmax_stress], linewidth=2, color='grey', linestyle='--')
+    axs[1, 1].set_xlabel('DFT stress (GPa)', fontsize=10)
+    axs[1, 1].set_ylabel('NEP stress (GPa)', fontsize=10)
+    axs[1, 1].tick_params(axis='both', labelsize=10)
+    axs[1, 1].legend(['xx', 'yy', 'zz', 'xy', 'yz', 'zx'])
+    axs[1, 1].axis('tight')
 
-# Calculate and display RMSE, MAE, and R² for stresses
-stress_rmse = [calculate_rmse(stress_data[:, i], stress_data[:, i + 6]) for i in range(6)]
-stress_mae = [calculate_mae(stress_data[:, i], stress_data[:, i + 6]) for i in range(6)]
-stress_r2 = [calculate_r2(stress_data[:, i], stress_data[:, i + 6]) for i in range(6)]
-mean_stress_rmse = np.mean(stress_rmse)
-mean_stress_mae = np.mean(stress_mae)
-mean_stress_r2 = np.mean(stress_r2)
-axs[1, 1].text(0.7, 0.12, f'R²: {mean_stress_r2:.4f}\nMAE: {mean_stress_mae:.4f} GPa\nRMSE: {mean_stress_rmse:.4f} GPa', 
-               transform=axs[1, 1].transAxes, fontsize=10, verticalalignment='center', horizontalalignment='center')
-#axs[1, 1].text(-0.07, 1.03, "(d)", transform=axs[1, 1].transAxes, fontsize=12, va='top', ha='right')
+    # Calculate and display RMSE, MAE, and R² for stresses
+    stress_rmse = [calculate_rmse(stress_data[:, i], stress_data[:, i + 6]) for i in range(6)]
+    stress_mae = [calculate_mae(stress_data[:, i], stress_data[:, i + 6]) for i in range(6)]
+    stress_r2 = [calculate_r2(stress_data[:, i], stress_data[:, i + 6]) for i in range(6)]
+    mean_stress_rmse = np.mean(stress_rmse)
+    mean_stress_mae = np.mean(stress_mae)
+    mean_stress_r2 = np.mean(stress_r2)
+    axs[1, 1].text(0.7, 0.12, f'R²: {mean_stress_r2:.4f}\nMAE: {mean_stress_mae:.4f} GPa\nRMSE: {mean_stress_rmse:.4f} GPa', 
+                   transform=axs[1, 1].transAxes, fontsize=10, verticalalignment='center', horizontalalignment='center')
 
 # Adjust layout for better spacing
 plt.tight_layout()
