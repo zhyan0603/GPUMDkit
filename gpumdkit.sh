@@ -12,7 +12,7 @@ if [ -z "$GPUMD_path" ] || [ -z "$GPUMDkit_path" ]; then
     exit 1
 fi
 
-VERSION="1.4.1 (dev) (2025-12-09)"
+VERSION="1.4.2 (dev) (2025-12-17)"
 
 #--------------------- function 1 format conversion ----------------------
 # These functions are used to convert the format of the files
@@ -222,6 +222,25 @@ read -p " " sample_choice
 echo " ---------------------------------------------------"
 python ${GPUMDkit_path}/Scripts/sample_structures/pynep_select_structs.py ${sample_choice}
 echo " Code path: ${GPUMDkit_path}/Scripts/sample_structures/pynep_select_structs.py"
+echo " +---------------------------------------------------+"
+echo " |      To use parallel version, please use:         |"
+echo " |             gpumdkit.sh -pynep                    |"
+echo " +---------------------------------------------------+"
+}
+
+function parallel_pynep_sample_structures(){
+echo " >-------------------------------------------------<"
+echo " | This function calls the script in Scripts       |"
+echo " | Script: pynep_select_structs.py                 |"
+echo " | Developer: Zihan YAN (yanzihan@westlake.edu.cn) |"
+echo " >-------------------------------------------------<"
+echo " Input <sample.xyz> <train.xyz> <nep_model>"
+echo " Examp: dump.xyz train.xyz nep.txt [threads]"
+echo " ------------>>"
+read -p " " sample_choice
+echo " ---------------------------------------------------"
+python ${GPUMDkit_path}/Scripts/sample_structures/parallel_pynep_select_structs.py ${sample_choice}
+echo " Code path: ${GPUMDkit_path}/Scripts/sample_structures/parallel_pynep_select_structs.py"
 echo " ---------------------------------------------------"
 }
 
@@ -839,6 +858,7 @@ function help_info_table(){
     echo "| -min_dist      Get min_dist between atoms     | -min_dist_pbc Get min_dist considering PBC       |"
     echo "| -filter_box    Filter struct by box limits    | -filter_value Filter struct by value (efs)       |"
     echo "| -filter_dist   Filter struct by min_dist      | -analyze_comp Analyze composition of extxyz      |"
+    echo "| -pynep         Sample struct by pynep         | Developing...                                    |"
     echo "+====================================== Misc Utilities ============================================+"
     echo "| -plt           Plot scripts                   | -get_frame     Extract the specified frame       |"
     echo "| -calc          Calculators                    | -clear_xyz     Clear extra info in XYZ file      |"
@@ -1484,6 +1504,10 @@ if [ ! -z "$1" ]; then
 
         -get_volume)
             python ${GPUMDkit_path}/Scripts/analyzer/get_volume.py
+            ;;
+
+        -pynep)
+            parallel_pynep_sample_structures
             ;;
 
         -re_atoms)

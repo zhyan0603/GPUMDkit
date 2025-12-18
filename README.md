@@ -2,7 +2,7 @@
 <a href="https://zhyan0603.github.io/GPUMDkit">
   <img src="./docs/Gallery/gpumdkit_logo.png" width="25%" alt="GPUMDkit Logo">
 </a><br>
-<a href="https://github.com/zhyan0603/GPUMDkit"><img src="https://img.shields.io/badge/version-1.4.1-brightgreen" alt="Version"></a>
+<a href="https://github.com/zhyan0603/GPUMDkit"><img src="https://img.shields.io/badge/version-1.4.2-brightgreen" alt="Version"></a>
 <a href="https://github.com/zhyan0603/GPUMDkit/blob/main/LICENCE"><img src="https://img.shields.io/badge/license-GPL--3.0-blue" alt="License"></a>
 <a href="https://github.com/zhyan0603/GPUMDkit/stargazers"><img src="https://img.shields.io/github/stars/zhyan0603/GPUMDkit?style=social" alt="Stars"></a>
 <img src="https://img.shields.io/github/languages/code-size/zhyan0603/GPUMDkit" alt="Code Size">
@@ -88,7 +88,7 @@ There are two options, <u>*interactive mode*</u> and <u>*command-line mode*</u>
            | |_| |  __/| |_| | |  | | |_| |   <| | |_
             \____|_|    \___/|_|  |_|____/|_|\_\_|\__|
     
-            GPUMDkit Version 1.4.1 (dev) (2025-11-10)
+            GPUMDkit Version 1.4.2 (dev) (2025-12-17)
       Core Developer: Zihan YAN (yanzihan@westlake.edu.cn)        
     
      ----------------------- GPUMD -----------------------      
@@ -129,6 +129,7 @@ the help information:
 | -min_dist      Get min_dist between atoms     | -min_dist_pbc Get min_dist considering PBC       |
 | -filter_box    Filter struct by box limits    | -filter_value Filter struct by value (efs)       |
 | -filter_dist   Filter struct by min_dist      | -analyze_comp Analyze composition of extxyz      |
+| -pynep         Sample struct by pynep         | Developing...                                    |
 +====================================== Misc Utilities ============================================+
 | -plt           Plot scripts                   | -get_frame     Extract the specified frame       |
 | -calc          Calculators                    | -clear_xyz     Clear extra info in XYZ file      |
@@ -149,7 +150,7 @@ the help information:
 
 ```
 +=====================================================================================================+
-|                              GPUMDkit 1.4.1 (dev) (2025-12-09) Plotting Usage                       |
+|                              GPUMDkit 1.4.2 (dev) (2025-12-17) Plotting Usage                       |
 +=============================================== Plot Types ==========================================+
 | thermo          Plot thermo info                   | train          Plot NEP train results          |
 | prediction      Plot NEP prediction results        | train_test     Plot NEP train and test results |
