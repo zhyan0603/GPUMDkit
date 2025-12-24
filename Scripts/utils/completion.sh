@@ -13,7 +13,7 @@ _gpumdkit_completions() {
     prev="${COMP_WORDS[COMP_CWORD-1]}" # Previous word
 
     # List of primary options (extracted from gpumdkit.sh)
-    local opts="-h -update -U -help -clean -time -plt -calc -range -out2xyz -castep2exyz -cp2k2xyz -mtp2xyz -pos2exyz -cif2pos -cif2exyz -exyz2pos -pos2lmp -lmp2exyz -addgroup -addlabel -addweight -min_dist -min_dist_pbc -filter_dist -filter_dist_pbc -filter_box -filter_value -get_frame -clear_xyz -clean_xyz -get_volume -analyze_comp -replicate -hbond -pda -pynep"
+    local opts="-h -update -U -help -clean -time -plt -calc -range -out2xyz -pos2exyz -cif2pos -cif2exyz -exyz2pos -pos2lmp -lmp2exyz -addgroup -addlabel -addweight -min_dist -min_dist_pbc -filter_dist -filter_dist_pbc -filter_box -filter_value -get_frame -clean_xyz -get_volume -analyze_comp -replicate -hbond -pda -pynep"
 
     # Provide secondary completion based on the previous word
     case "$prev" in
@@ -46,7 +46,7 @@ _gpumdkit_completions() {
             fi
             ;;
         # Options requiring files or directories, complete with filenames
-        -out2xyz|-outcar2exyz|-cast2xyz|-castep2exyz|-cp2k2xyz|-cp2k2exyz|-exyz2pos|-min_dist|-min_dist_pbc|-filter_dist|-filter_dist_pbc|-filter_box|-get_frame|-clear_xyz|-clean_xyz|-mtp2xyz|-mtp2exyz|-pos2exyz|-pos2lmp|-lmp2exyz|-addgroup|-addlabel|-addweight|-max_rmse|-get_max_rmse_xyz)
+        -out2xyz|-cp2k2xyz|-cp2k2exyz|-exyz2pos|-min_dist|-min_dist_pbc|-filter_dist|-filter_dist_pbc|-filter_box|-get_frame|-clean_xyz|-mtp2xyz|-pos2exyz|-pos2lmp|-lmp2exyz|-addgroup|-addlabel|-addweight|-max_rmse|-get_max_rmse_xyz|-analyze_comp|-replicate|-pda)
             COMPREPLY=($(compgen -f -- "$cur"))  # Complete files or directories
             ;;
 

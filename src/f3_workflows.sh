@@ -2,6 +2,47 @@
 # These functions are used to do the workflow
 # See the source codes in Scripts/workflow for more details
 
+function cp2k_batch_pretreatment(){
+echo " >-------------------------------------------------<"
+echo " | Calling the script in Scripts/workflow          |"
+echo " | Script: scf_batch_pretreatment_cp2k.py          |"
+echo " | Developer: Zihan YAN (yanzihan@westlake.edu.cn) |"
+echo " >-------------------------------------------------<"
+echo " Input <extxyz_file> <template.inp> <prefix_name>"
+echo " Examp: dump.xyz template.inp H2O"
+echo " ------------>>"
+read -p " " input_results
+echo " ---------------------------------------------------"
+python ${GPUMDkit_path}/Scripts/workflow/scf_batch_pretreatment_cp2k.py ${input_results}
+echo " Code path: ${GPUMDkit_path}/Scripts/workflow/scf_batch_pretreatment_cp2k.py"
+echo " ---------------------------------------------------"
+}
+
+function f301_scf_batch_pretreatment(){ 
+    echo " ------------>>"
+    echo " 1) VASP scf batch pretreatment"
+    echo " 2) CP2K scf batch pretreatment"
+    echo " ------------>>"
+    echo " Input the function number:"
+    arry_num_choice=("1" "2") 
+    read -p " " num_choice
+    while ! echo "${arry_num_choice[@]}" | grep -wq "$num_choice" 
+    do
+      echo " ------------>>"
+      echo " Please reinput function number..."
+      read -p " " num_choice
+    done   
+    case $num_choice in
+        "1")
+            source ${GPUMDkit_path}/Scripts/workflow/scf_batch_pretreatment_vasp.sh
+            vasp_scf_batch_pretreatment
+            ;;
+        "2")
+            cp2k_batch_pretreatment
+            ;;          
+    esac
+}
+
 function f3_workflow_dev(){
 echo " ------------>>"
 echo " 301) SCF batch pretreatment"
@@ -22,8 +63,7 @@ done
 
 case $num_choice in
     "301")
-        source ${GPUMDkit_path}/Scripts/workflow/scf_batch_pretreatment.sh
-        f301_scf_batch_pretreatment
+        scf_batch_pretreatment
         ;;
     "302")
         source ${GPUMDkit_path}/Scripts/workflow/md_sample_batch_pretreatment_gpumd.sh

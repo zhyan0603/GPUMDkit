@@ -1,6 +1,6 @@
 #!/bin/bash
 
-function f301_scf_batch_pretreatment(){
+function vasp_scf_batch_pretreatment(){
     echo " ------------>>"
     echo " Starting SCF batch pretreatment..."
 

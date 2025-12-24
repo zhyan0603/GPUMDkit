@@ -80,7 +80,6 @@ function main(){
             case $choice in
                 "3") f3_workflow_dev ;;
                 "301") 
-                    source ${workflow_path}/scf_batch_pretreatment.sh
                     f301_scf_batch_pretreatment ;;
                 "302") 
                     source ${workflow_path}/md_sample_batch_pretreatment_gpumd.sh
@@ -123,10 +122,9 @@ function help_info_table(){
     echo "+==================================================================================================+"
     echo "|                              GPUMDkit ${VERSION} Usage                             |"
     echo "+======================================== Conversions =============================================+"
-    echo "| -outcar2exyz   Convert OUTCAR to extxyz       | -pos2exyz     Convert POSCAR to extxyz           |"
-    echo "| -castep2exyz   Convert castep to extxyz       | -pos2lmp      Convert POSCAR to LAMMPS           |"
-    echo "| -cif2pos       Convert cif to POSCAR          | -cif2exyz     Convert cif to extxyz              |"
-    echo "| -cp2k2exyz     Convert cp2k output to extxyz  | -lmp2exyz     Convert LAMMPS-dump to extxyz      |"
+    echo "| -out2xyz       Convert OUTCAR to extxyz       | -pos2exyz     Convert POSCAR to extxyz           |"
+    echo "| -cif2pos       Convert cif to POSCAR          | -pos2lmp      Convert POSCAR to LAMMPS           |"
+    echo "| -cif2exyz      Convert cif to extxyz          | -lmp2exyz     Convert LAMMPS-dump to extxyz      |"
     echo "| -addgroup      Add group label                | -addweight    Add weight to the struct in extxyz |"
     echo "| Developing...                                 | Developing...                                    |"
     echo "+========================================= Analysis ===============================================+"
@@ -137,7 +135,7 @@ function help_info_table(){
     echo "| -pynep         Sample struct by pynep         | Developing...                                    |"
     echo "+====================================== Misc Utilities ============================================+"
     echo "| -plt           Plot scripts                   | -get_frame     Extract the specified frame       |"
-    echo "| -calc          Calculators                    | -clear_xyz     Clear extra info in XYZ file      |"
+    echo "| -calc          Calculators                    | -clean_xyz     Clean extra info in XYZ file      |"
     echo "| -clean         Clear files for work_dir       | -time          Time consuming Analyzer           |"
     echo "| -update        Update GPUMDkit                | Developing...                                    |"    
     echo "+==================================================================================================+"
@@ -166,6 +164,7 @@ function plot_info_table(){
     echo "+=====================================================================================================+"
 }
 
+#--------------------- command line ----------------------
 if [ ! -z "$1" ]; then
     case $1 in
         -h|-help) help_info_table ;;
