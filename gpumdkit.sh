@@ -568,7 +568,23 @@ if [ ! -z "$1" ]; then
             echo " Code path: ${GPUMD_path}/tools/Analysis_and_Processing/hydrogen_bond_analysis/Hydrogen-bond-analysis.py" ;;
 
         *)
-            echo " Unknown option: $1 "; help_info_table; exit 1 ;;
+            # echo " Unknown option: $1 "; help_info_table; exit 1 ;;
+            alias_key="${1#-}"
+            CUSTOM_CONFIG="$HOME/.gpumdkit.in"
+            if [ ! -f "$CUSTOM_CONFIG" ]; then
+                echo "Unknown: $1"
+                echo "Use -h for help, or create $CUSTOM_CONFIG to define custom commands"
+                exit 1
+            fi
+            func_name="custom_${alias_key}"
+            source "$CUSTOM_CONFIG"
+            if ! type "$func_name" >/dev/null 2>&1; then
+                echo "Unknown: $1"
+                echo "Tip: Define the function $func_name() { ... } in $CUSTOM_CONFIG to use this alias."
+                help_info_table; exit 1
+            fi
+            shift
+            "$func_name" "$@";;
     esac
     exit
 fi
