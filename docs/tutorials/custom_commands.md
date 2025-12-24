@@ -1,17 +1,17 @@
 # Custom Commands in GPUMDkit
 
-This feature allows users to extend GPUMDkit's command-line interface with **personal custom commands**. You can define shortcuts for frequently used scripts.
+This feature allows users to extend GPUMDkit's command-line interface with **personal custom commands**. You can define shortcuts for frequently used scripts in your `~/.gpumdkit.in` file.
 
 ## Detailed Examples
 
 ### Simple Greeting
 
-Write the following codes in your `~/.bashrc` 
+Write the following codes in your `~/.gpumdkit.in` 
 
 ```
 custom_hello() {
     echo "Hello, GPUMDkit user! This is a custom command."
-    echo "Current GPUMDkit path: $GPUMDkit_path"
+    echo "Current GPUMDkit path: ${GPUMDkit_path}"
 }
 ```
 
@@ -43,7 +43,7 @@ Hello, Zihan!
 
 ### Calling an External Script
 
-If you want to call an external script like gpumdkit.sh.
+If you want to call an external script like `gpumdkit.sh`.
 
 ```
 custom_nepanalyse() {
