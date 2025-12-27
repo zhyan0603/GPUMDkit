@@ -191,10 +191,10 @@ if [ ! -z "$1" ]; then
                     "thermo") python ${plt_path}/plt_nep_thermo.py $3 ;;
                     "thermo2") python ${plt_path}/plt_nep_thermo2.py $3 ;;
                     "thermo3") python ${plt_path}/plt_nep_thermo3.py $3 ;;                        
-                    "train") python ${plt_path}/plt_nep_train_results.py $3 ;;                 
-                    "prediction"|"test") python ${plt_path}/plt_nep_prediction_results.py $3 ;; 
+                    "train") python ${plt_path}/plt_train.py $3 ;;                 
+                    "prediction"|"test") python ${plt_path}/plt_prediction.py $3 ;; 
                     "parity_density") python ${plt_path}/plt_parity_density.py $3 ;;
-                    "train_test") python ${plt_path}/plt_nep_train_test.py $3 ;;
+                    "train_test") python ${plt_path}/plt_train_test.py $3 ;;
                     "msd") python ${plt_path}/plt_msd.py $3 ;;
                     "msd_all") python ${plt_path}/plt_msd_all.py $3 ${@:4} ;;
                     "msd_conv") python ${plt_path}/plt_msd_convergence_check.py $3 ;;
