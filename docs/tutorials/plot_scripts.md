@@ -1,8 +1,10 @@
 # Plot Scripts
 
-GPUMDkit provides comprehensive visualization tools for GPUMD and NEP data. All plotting scripts support both interactive display and saving to PNG files.
+GPUMDkit provides comprehensive visualization tools for GPUMD and NEP data. These plotting scripts are primarily accessed via command-line mode, though some can also be accessed through the interactive menu.
 
-## Command-Line Usage
+## Command-Line Access
+
+All plotting scripts are accessed via the `-plt` flag:
 
 ```bash
 # General syntax
@@ -11,9 +13,22 @@ gpumdkit.sh -plt <plot_type> [options]
 # View available plot types
 gpumdkit.sh -plt
 
-# Get help for specific plot type
-gpumdkit.sh -plt <type> -h
+# Examples
+gpumdkit.sh -plt thermo          # Plot thermodynamic properties
+gpumdkit.sh -plt train           # Plot NEP training progress
+gpumdkit.sh -plt msd             # Plot mean square displacement
 ```
+
+## Interactive Mode Access
+
+Some plotting functions are also available through interactive mode:
+
+```bash
+gpumdkit.sh
+# Select: 6) Plot Scripts (if available in your version)
+```
+
+---
 
 ## Available Plots
 

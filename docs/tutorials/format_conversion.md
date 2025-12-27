@@ -1,6 +1,49 @@
-# Format Conversion
+# Function 1 - Format Conversion
 
-GPUMDkit provides comprehensive tools for converting between various file formats used in computational materials science. This guide covers both interactive and command-line modes for format conversion. 
+This section covers the format conversion tools in GPUMDkit (Interactive Mode - Function 1), which provide comprehensive tools for converting between various file formats used in computational materials science.
+
+## Interactive Mode Access
+
+```bash
+gpumdkit.sh
+# Select: 1) Format Conversion
+```
+
+You'll see the following menu:
+
+```
+ ------------>>
+ 101) Convert OUTCAR to extxyz
+ 102) Convert mtp to extxyz
+ 103) Convert cp2k to extxyz
+ 104) Convert abacus to extxyz
+ 105) Convert extxyz to POSCAR
+ 106) Convert POSCAR to extxyz
+ 107) Convert CIF to extxyz
+ ...
+ 000) Return to the main menu
+ ------------>>
+```
+
+## Command-Line Usage
+
+For quick operations, you can also use command-line mode:
+
+```bash
+# Convert VASP OUTCAR to extxyz
+gpumdkit.sh -out2xyz ./path/to/outcars/
+
+# Convert POSCAR to extxyz
+gpumdkit.sh -pos2exyz POSCAR model.xyz
+
+# Convert CIF to extxyz
+gpumdkit.sh -cif2exyz structure.cif
+
+# Add group labels for NEP training
+gpumdkit.sh -addgroup POSCAR Li Y Cl
+```
+
+--- 
 
 ### Menu Options
 

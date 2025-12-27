@@ -1,14 +1,64 @@
-# Workflow Automation
+# Function 3 - Workflow Automation
 
-GPUMDkit provides workflow automation tools for batch processing of DFT calculations and MD simulations.
+This section covers the workflow automation tools in GPUMDkit (Interactive Mode - Function 3), which provide batch processing capabilities for high-throughput DFT calculations and MD simulations.
+
+## Interactive Mode Access
+
+```bash
+gpumdkit.sh
+# Select: 3) Workflow
+```
+
+You'll see the following menu:
+
+```
+ ------------>>
+ 301) SCF batch pretreatment
+ 302) MD sample batch pretreatment (gpumd)
+ 303) MD sample batch pretreatment (lmp)
+ 000) Return to the main menu
+ ------------>>
+```
+
+---
 
 ## Available Workflows
 
 ### SCF Batch Pretreatment (`scf_batch_pretreatment`)
 
+**Option 301** in interactive mode.
+
 Automates setup of VASP single-point energy calculations for multiple structures.
 
-**Interactive:** Select option `301`
+**Interactive Mode:**
+
+Select option `301` from the workflow menu:
+
+```bash
+301
+```
+
+You will see prompts like:
+
+```
+ Starting SCF batch pretreatment...
+ Found 8 .vasp files.
+ >-------------------------------------------------<
+ | This function calls the script in Scripts       |
+ | Script: scf_batch_pretreatment.sh               |
+ | Developer: Zihan YAN (yanzihan@westlake.edu.cn) |
+ >-------------------------------------------------<
+
+ We recommend using the prefix to locate the structure.
+ Please input the prefix: (e.g. LiYCl)
+ ------------>>
+```
+
+Enter your desired prefix:
+
+```bash
+iter01_training
+```
 
 **What it does:**
 1. Converts XYZ to POSCAR if needed

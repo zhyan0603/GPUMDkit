@@ -1,8 +1,30 @@
-# Calculators
+# Function 4 - Calculators
 
-GPUMDkit provides computational tools for calculating various material properties using NEP models and analyzing simulation data.
+This section covers the calculator tools in GPUMDkit (Interactive Mode - Function 4), which provide computational tools for calculating various material properties using NEP models and analyzing simulation data.
+
+## Interactive Mode Access
+
+```bash
+gpumdkit.sh
+# Select: 4) Calculators
+```
+
+You'll see the following menu:
+
+```
+ ------------>>
+ 401) Calc ionic conductivity
+ 402) Calc properties by nep
+ 403) Calc descriptors
+ 404) Calc DOAS
+ 405) Calc NEB
+ 000) Return to the main menu
+ ------------>>
+```
 
 ## Command-Line Usage
+
+For quick operations, you can also use command-line mode:
 
 ```bash
 # Ionic conductivity
@@ -18,18 +40,46 @@ gpumdkit.sh -calc des <method> <input.xyz> <output.npy> <nep.txt> <element>
 gpumdkit.sh -calc doas <input.xyz> <nep.txt> <output.txt>
 ```
 
+---
+
 ## Available Calculators
 
 ### Ionic Conductivity (`calc_ion_conductivity.py`)
 
+**Option 401** in interactive mode.
+
 Calculates ionic diffusivity and conductivity from MSD data.
+
+**Interactive Mode:**
+
+Select option `401` from the calculator menu:
+
+```bash
+401
+```
+
+You will see the following prompt:
+
+```
+ >-------------------------------------------------<
+ | This function calls the script in calculators   |
+ | Script: calc_ion_conductivity.py                |
+ | Developer: Zihan YAN (yanzihan@westlake.edu.cn) |
+ >-------------------------------------------------<
+ Input <element> <charge> (eg. Li 1)
+ ------------>>
+```
+
+Enter the element and charge:
+
+```bash
+Li 1
+```
 
 **Command-line:**
 ```bash
 gpumdkit.sh -calc ionic-cond Li 1
 ```
-
-**Interactive:** Select option `401`
 
 **Input files:**
 - `msd.out` (required)

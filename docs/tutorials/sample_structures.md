@@ -1,23 +1,75 @@
-# Sample Structures
+# Function 2 - Sample Structures
 
-GPUMDkit provides various methods for sampling and selecting structures from datasets, essential for creating diverse NEP training sets and active learning workflows.
+This section covers the structure sampling tools in GPUMDkit (Interactive Mode - Function 2), which provide various methods for sampling and selecting structures from datasets. These tools are essential for creating diverse NEP training sets and implementing active learning workflows.
+
+## Interactive Mode Access
+
+```bash
+gpumdkit.sh
+# Select: 2) Sample Structures
+```
+
+You'll see the following menu:
+
+```
+ ------------>>
+ 201) Sample structures from extxyz
+ 202) Sample structures by pynep
+ 203) Sample structures by neptrain
+ 204) Perturb structure
+ 205) Select max force deviation structs
+ 000) Return to the main menu
+ ------------>>
+```
 
 ## Command-Line Usage
+
+For PyNEP sampling (the most commonly used method):
 
 ```bash
 # PyNEP farthest point sampling
 gpumdkit.sh -pynep <candidates.xyz> <train.xyz> <nep.txt>
-
-# Other sampling methods via interactive mode only
 ```
+
+Other sampling methods are accessed via interactive mode.
+
+---
 
 ## Sampling Methods
 
 ### Uniform/Random Sampling (`sample_structures.py`)
 
+**Option 201** in interactive mode.
+
 Sample structures using statistical methods.
 
-**Interactive:** Select option `201`
+**Interactive Mode:**
+
+Select option `201` from the sample structures menu:
+
+```bash
+201
+```
+
+You will see the following prompt:
+
+```
+>-------------------------------------------------<
+| This function calls the script in Scripts       |
+| Script: sample_structures.py                    |
+| Developer: Zihan YAN (yanzihan@westlake.edu.cn) |
+>-------------------------------------------------<
+Input <extxyz_file> <sampling_method> <num_samples>
+Sampling_method: 'uniform' or 'random'
+Examp: train.xyz uniform 50
+------------>>
+```
+
+Enter the filename, method, and number of samples:
+
+```bash
+train.xyz uniform 50
+```
 
 **Direct execution:**
 ```bash
