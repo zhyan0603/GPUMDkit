@@ -1,3 +1,23 @@
+# Analyzer Scripts
+
+This directory contains analysis tools for structure files, simulation data, and dataset quality control. These scripts help validate, filter, and understand molecular dynamics data and training sets.
+
+## Overview
+
+The analyzer scripts provide functionality for:
+- Energy, force, and virial range analysis
+- Minimum distance calculations (with/without periodic boundary conditions)
+- Structure filtering by various criteria (distance, box size, property values)
+- Composition analysis of multi-component systems
+- Time estimation for GPUMD and NEP calculations
+- Dataset quality checks and outlier detection
+
+Access analyzers through `gpumdkit.sh` using various flags or run scripts directly.
+
+---
+
+## Scripts
+
 ### energy_force_virial_analyzer.py
 
 ---
@@ -307,4 +327,210 @@ gpumdkit.sh -time nep
 
 ---
 
-Thank you for using `GPUMDkit`! If you have any questions or need further assistance, feel free to open an issue on our GitHub repository or contact Zihan YAN (yanzihan@westlake.edu.cn).
+## General Usage Guidelines
+
+### Command Syntax
+
+Access analyzers through `gpumdkit.sh`:
+```bash
+gpumdkit.sh -<analyzer_flag> [arguments]
+```
+
+Or run scripts directly:
+```bash
+python <script_name>.py [arguments]
+```
+
+### Quick Reference Table
+
+| Analyzer | Command | Purpose | Example |
+|----------|---------|---------|---------|
+| Range analysis | `-range` | Get min/max of energy/force/virial | `gpumdkit.sh -range train.xyz force` |
+| Min distance | `-min_dist` | Calculate minimum atomic distance | `gpumdkit.sh -min_dist model.xyz` |
+| Min distance PBC | `-min_dist_pbc` | Min distance with PBC | `gpumdkit.sh -min_dist_pbc model.xyz` |
+| Filter by value | `-filter_value` | Filter by property threshold | `gpumdkit.sh -filter_value train.xyz force 20` |
+| Filter by box | `-filter_box` | Filter by box size | `gpumdkit.sh -filter_box train.xyz 20` |
+| Filter by distance | `-filter_dist` | Filter by min_dist | `gpumdkit.sh -filter_dist train.xyz 1.4` |
+| Composition analysis | `-analyze_comp` | Analyze composition | `gpumdkit.sh -analyze_comp train.xyz` |
+| Time GPUMD | `-time gpumd` | Estimate remaining time | `gpumdkit.sh -time gpumd` |
+| Time NEP | `-time nep` | NEP training time estimate | `gpumdkit.sh -time nep` |
+
+### Common Workflows
+
+#### Workflow 1: Dataset Quality Check
+
+```bash
+# 1. Check composition
+gpumdkit.sh -analyze_comp train.xyz
+
+# 2. Check force range
+gpumdkit.sh -range train.xyz force
+
+# 3. Check minimum distances
+gpumdkit.sh -min_dist_pbc train.xyz
+
+# 4. Filter outliers (forces > 20 eV/Å)
+gpumdkit.sh -filter_value train.xyz force 20
+```
+
+#### Workflow 2: Structure Preparation
+
+```bash
+# 1. Check structure
+gpumdkit.sh -min_dist model.xyz
+
+# 2. Check box size
+gpumdkit.sh -range model.xyz energy
+
+# 3. Verify no issues before simulation
+```
+
+#### Workflow 3: Training Set Cleaning
+
+```bash
+# 1. Analyze current dataset
+gpumdkit.sh -range train.xyz force hist
+
+# 2. Remove high-force outliers
+gpumdkit.sh -filter_value train.xyz force 30
+
+# 3. Remove structures that are too small
+gpumdkit.sh -filter_dist filtered_force.xyz 1.5
+
+# 4. Verify cleaned dataset
+gpumdkit.sh -analyze_comp filtered_dist.xyz
+```
+
+## Dependencies
+
+### Required
+- **Python 3.x**
+- **NumPy**: Numerical operations
+- **ASE**: Atomic structure handling
+
+### Optional
+- **matplotlib**: For histogram visualizations
+- **tqdm**: Progress bars for large datasets
+
+### Installation
+
+```bash
+pip install numpy ase matplotlib tqdm
+```
+
+## Best Practices
+
+1. **Always check PBC**: Use `-min_dist_pbc` for periodic systems
+2. **Visualize distributions**: Use `hist` option to see data distribution
+3. **Filter conservatively**: Start with loose thresholds, then tighten
+4. **Keep backups**: Filtering operations create new files, originals preserved
+5. **Check composition**: Verify filtering doesn't bias composition
+
+## Troubleshooting
+
+### Issue: "Minimum distance too small"
+
+**Problem**: Atoms are overlapping (< 1.0 Å typically indicates error)
+
+**Solution**:
+1. Check structure file format is correct
+2. Verify units are in Angstroms
+3. Filter out problematic structures:
+   ```bash
+   gpumdkit.sh -filter_dist train.xyz 1.4
+   ```
+
+### Issue: "Force range suspiciously large"
+
+**Problem**: Forces > 50 eV/Å may indicate problematic configurations
+
+**Solution**:
+1. Visualize distribution: `gpumdkit.sh -range train.xyz force hist`
+2. Filter outliers: `gpumdkit.sh -filter_value train.xyz force 30`
+3. Investigate removed structures manually
+
+### Issue: "Filter removes too many structures"
+
+**Problem**: Threshold too strict
+
+**Solution**:
+1. Check distribution first
+2. Adjust threshold based on histogram
+3. Use percentile-based cutoffs rather than absolute values
+
+### Issue: "Analyze composition shows imbalance"
+
+**Problem**: Some compositions over/under-represented
+
+**Solution**:
+1. Use sample_structures.py for rebalancing
+2. Generate more structures for under-represented compositions
+3. Consider using weights in NEP training
+
+## Performance Tips
+
+1. **Large files**: Use `head` or `tail` to check file format before processing entire dataset
+2. **Batch processing**: Use shell loops for multiple files
+3. **Parallel processing**: Multiple independent filter operations can run simultaneously
+4. **Memory management**: For huge datasets (>100k structures), process in chunks
+
+## File Naming Conventions
+
+Scripts automatically generate output files with descriptive names:
+
+- `filtered_<property>_<threshold>.xyz` - Filtered by property
+- `filtered_<elem1>_<elem2>_<min>_<max>.xyz` - Filtered by distance range
+- `<composition>.xyz` - Exported by composition
+
+Keep track of filtering history in a log file for reproducibility.
+
+## Integration with Other Tools
+
+### With Sample Structures
+```bash
+# 1. Filter dataset
+gpumdkit.sh -filter_value train.xyz force 30
+
+# 2. Sample from filtered set
+python sample_structures.py filtered_force.xyz uniform 1000
+```
+
+### With NEP Training
+```bash
+# 1. Clean training set
+gpumdkit.sh -filter_dist train.xyz 1.5
+gpumdkit.sh -filter_value filtered_dist.xyz force 25
+
+# 2. Analyze final set
+gpumdkit.sh -analyze_comp filtered_force.xyz
+gpumdkit.sh -range filtered_force.xyz force
+
+# 3. Use in NEP training
+# (Use filtered files as training input)
+```
+
+### With Plotting
+```bash
+# 1. Analyze with histogram
+gpumdkit.sh -range train.xyz force hist
+
+# 2. Further analysis in Python
+# (Use generated images or data)
+```
+
+## Contributing
+
+To add new analyzer scripts:
+
+1. **Follow naming**: `<descriptive_name>.py`
+2. **Handle errors**: Validate inputs gracefully
+3. **Progress indicators**: Use tqdm for long operations
+4. **Document thoroughly**: Include docstrings and usage examples
+5. **Update README**: Add to this documentation
+6. **Test comprehensively**: Try various input formats and edge cases
+
+See [CONTRIBUTING.md](../../CONTRIBUTING.md) for detailed guidelines.
+
+---
+
+Thank you for using GPUMDkit! If you have questions or need assistance with analyzer scripts, please open an issue on our [GitHub repository](https://github.com/zhyan0603/GPUMDkit/issues) or contact Zihan YAN (yanzihan@westlake.edu.cn).
