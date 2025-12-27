@@ -1,8 +1,17 @@
 # Custom Commands in GPUMDkit
 
-This feature allows users to extend GPUMDkit's command-line interface with **personal custom commands**. You can define shortcuts for frequently used scripts in your `~/.gpumdkit.in` file.
+GPUMDkit allows users to extend the command-line interface with **custom commands**. Define shortcuts for frequently used scripts in your `~/.gpumdkit.in` file.
 
-## Detailed Examples
+## Setup
+
+Create or edit `~/.gpumdkit.in`:
+```bash
+vi ~/.gpumdkit.in
+```
+
+Define custom functions with the `custom_` prefix.
+
+## Examples
 
 ### Simple Greeting
 
@@ -54,6 +63,114 @@ custom_nepanalyse() {
 and run `gpumdkit.sh -nepanalyse`
 
 
+
+## Advanced Examples
+
+### Batch Processing
+
+Process multiple files:
+```bash
+custom_batch_plot() {
+    for dir in "$@"; do
+        cd "$dir"
+        gpumdkit.sh -plt thermo save
+        gpumdkit.sh -plt msd save
+        cd ..
+    done
+}
+```
+
+Usage: `gpumdkit.sh -batch_plot dir1 dir2 dir3`
+
+### Analysis Pipeline
+
+Combine multiple operations:
+```bash
+custom_analyze_training() {
+    xyz_file=$1
+    echo "Analyzing $xyz_file..."
+    
+    gpumdkit.sh -range "$xyz_file" force
+    gpumdkit.sh -min_dist_pbc "$xyz_file"
+    gpumdkit.sh -analyze_comp "$xyz_file"
+    
+    echo "Analysis complete!"
+}
+```
+
+Usage: `gpumdkit.sh -analyze_training train.xyz`
+
+### Custom Workflow
+
+Automate common workflow:
+```bash
+custom_prep_training() {
+    echo "Preparing training data..."
+    
+    # Convert VASP outputs
+    gpumdkit.sh -out2xyz ./
+    
+    # Filter outliers
+    gpumdkit.sh -filter_value train.xyz force 30
+    
+    # Check quality
+    gpumdkit.sh -range filtered_force.xyz energy
+    
+    echo "Training data ready!"
+}
+```
+
+Usage: `gpumdkit.sh -prep_training`
+
+## Tips
+
+- **Use descriptive names**: `custom_analyze_nep_training` is clearer than `custom_ant`
+- **Add help messages**: Echo usage info when no arguments provided
+- **Error handling**: Check if required files exist before processing
+- **Forward arguments safely**: Use `"$@"` to preserve spaces and special characters
+
+## Common Use Cases
+
+### Quick Plot Generation
+
+```bash
+custom_quickplot() {
+    gpumdkit.sh -plt thermo save
+    gpumdkit.sh -plt train save
+    gpumdkit.sh -plt msd save
+    echo "Plots saved!"
+}
+```
+
+### Structure Validation
+
+```bash
+custom_validate() {
+    xyz=$1
+    echo "Validating $xyz..."
+    gpumdkit.sh -min_dist_pbc "$xyz"
+    gpumdkit.sh -range "$xyz" force
+    gpumdkit.sh -range "$xyz" energy
+}
+```
+
+### NEP Training Setup
+
+```bash
+custom_setup_nep() {
+    prefix=$1
+    echo "Setting up NEP training with prefix $prefix..."
+    
+    # Create directories
+    mkdir -p $prefix/{train,test,validation}
+    
+    # Sample data
+    python ${GPUMDkit_path}/Scripts/sample_structures/sample_structures.py \
+        train.xyz random 1000
+    
+    echo "Setup complete in $prefix/"
+}
+```
 
 ---
 

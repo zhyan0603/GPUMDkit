@@ -1,3 +1,40 @@
+# Format Conversion Scripts
+
+This directory contains utilities for converting between different atomic structure file formats commonly used in computational materials science.
+
+## Overview
+
+The format conversion scripts provide seamless interconversion between:
+- **VASP** (POSCAR, OUTCAR) ↔ extxyz
+- **CP2K** output → extxyz
+- **ABACUS** output → extxyz  
+- **LAMMPS** dump → extxyz
+- **CIF** → POSCAR/extxyz
+- Adding metadata (group labels, weights)
+- Frame extraction and manipulation
+
+All scripts can be accessed through `gpumdkit.sh` using various flags or run directly.
+
+---
+
+## Quick Command Reference
+
+| Source Format | Target Format | Command |
+|---------------|---------------|---------|
+| OUTCAR | extxyz | `gpumdkit.sh -out2xyz <dir>` |
+| POSCAR | extxyz | `gpumdkit.sh -pos2exyz <poscar> <xyz>` |
+| extxyz | POSCAR | `gpumdkit.sh -exyz2pos <xyz>` |
+| POSCAR | LAMMPS | `gpumdkit.sh -pos2lmp <poscar> <lmp> <elem...>` |
+| LAMMPS dump | extxyz | `gpumdkit.sh -lmp2exyz <dump> <elem...>` |
+| CIF | extxyz | `gpumdkit.sh -cif2exyz <cif>` |
+| CIF | POSCAR | `gpumdkit.sh -cif2pos <cif>` |
+| Add groups | - | `gpumdkit.sh -addgroup <poscar> <elem...>` |
+| Add weight | - | `gpumdkit.sh -addweight <in> <out> <weight>` |
+
+---
+
+## Scripts
+
 ### add_groups.py
 
 ---
@@ -240,4 +277,186 @@ You will get the `frame_1000.xyz` file after perform the script.
 
 ---
 
-Thank you for using `GPUMDkit`! If you have any questions or need further assistance, feel free to open an issue on our GitHub repository or contact Zihan YAN (yanzihan@westlake.edu.cn).
+## Format Specifications
+
+### extxyz Format
+
+Extended XYZ format used by GPUMD and NEP:
+
+```
+<number_of_atoms>
+Lattice="a1 a2 a3 b1 b2 b3 c1 c2 c3" Properties=species:S:1:pos:R:3:forces:R:3 energy=<total_energy> virial="v1 v2 v3 v4 v5 v6" pbc="T T T"
+<element> <x> <y> <z> <fx> <fy> <fz>
+...
+```
+
+**Key fields:**
+- `Lattice`: 3x3 lattice vectors (row-major)
+- `Properties`: Atomic properties definition
+- `energy`: Total energy (eV)
+- `virial`: Stress tensor (eV)
+- `pbc`: Periodic boundary conditions
+
+### Group Labels
+
+Groups specify atom types for NEP training:
+
+```
+<number_of_atoms>
+Lattice="..." Properties=species:S:1:pos:R:3 group=<group_string>
+Li <x> <y> <z>
+Y <x> <y> <z>
+Cl <x> <y> <z>
+```
+
+**Group string**: Space-separated integers, one per atom
+- Example: `group=0 0 0 1 1 2 2 2` (3 Li as type 0, 2 Y as type 1, 3 Cl as type 2)
+
+### Weight Labels
+
+Weights adjust structure importance in NEP training:
+
+```
+<number_of_atoms>
+Lattice="..." Properties=... Weight=<weight_value>
+```
+
+**Typical weights:**
+- `Weight=1.0` - Normal importance (default)
+- `Weight=2.0` - Double importance
+- `Weight=0.5` - Half importance
+
+## File Format Details
+
+### VASP POSCAR
+
+```
+System name
+1.0
+a1x a1y a1z
+a2x a2y a2z
+a3x a3y a3z
+Li Y Cl
+4 2 8
+Direct
+fractional_coords...
+```
+
+### VASP OUTCAR
+
+Large file with detailed calculation output. Converters extract:
+- Final or all ionic positions
+- Energies
+- Forces
+- Stress tensor
+
+### LAMMPS Dump
+
+```
+ITEM: TIMESTEP
+<step>
+ITEM: NUMBER OF ATOMS
+<N>
+ITEM: BOX BOUNDS
+<xlo> <xhi>
+<ylo> <yhi>
+<zlo> <zhi>
+ITEM: ATOMS id type x y z fx fy fz
+<atom_data>...
+```
+
+### CIF (Crystallographic Information File)
+
+Standard crystallographic format. Converters handle:
+- Symmetry operations
+- Fractional coordinates
+- Space groups
+- Unit cell parameters
+
+## Advanced Usage
+
+### Batch Conversion with Shell Loops
+
+```bash
+# Convert multiple POSCAR files
+for poscar in POSCAR_*; do
+    output="${poscar//POSCAR/model}.xyz"
+    gpumdkit.sh -pos2exyz $poscar $output
+done
+
+# Merge multiple xyz files
+cat model_*.xyz > combined.xyz
+```
+
+### Conditional Weights
+
+```python
+# Custom script for conditional weighting
+import ase.io as io
+
+atoms_list = io.read('train.xyz', ':')
+for i, atoms in enumerate(atoms_list):
+    if atoms.info.get('energy_per_atom', 0) > -5.0:
+        atoms.info['Weight'] = 2.0  # Higher weight for high-energy configs
+    else:
+        atoms.info['Weight'] = 1.0
+io.write('train_weighted.xyz', atoms_list)
+```
+
+### Element Order Consistency
+
+For NEP training, maintain consistent element ordering:
+
+```bash
+# Define element order
+ELEMENTS="Li Y Cl"
+
+# Use same order in all conversions
+gpumdkit.sh -addgroup POSCAR $ELEMENTS
+gpumdkit.sh -pos2lmp POSCAR lmp.data $ELEMENTS
+```
+
+## Integration with Other Tools
+
+### With Visualization
+
+```bash
+# Convert and visualize
+gpumdkit.sh -pos2exyz POSCAR model.xyz
+ase gui model.xyz  # Visualize with ASE
+```
+
+### With Analysis
+
+```bash
+# Convert and analyze
+gpumdkit.sh -out2xyz ./
+gpumdkit.sh -analyze_comp train.xyz
+gpumdkit.sh -range train.xyz force
+```
+
+### With Training
+
+```bash
+# Prepare training set
+gpumdkit.sh -out2xyz ./DFT_calcs/
+gpumdkit.sh -addgroup POSCAR Li Y Cl
+# Now ready for NEP training with train.xyz
+```
+
+## Contributing
+
+To add new format converters:
+
+1. **Follow naming**: `<source>2<target>.py`
+2. **Handle errors**: Validate input format before processing
+3. **Preserve metadata**: Keep all relevant information
+4. **Test thoroughly**: Verify with various structure types
+5. **Document**: Add usage to this README
+6. **Update gpumdkit.sh**: Add command-line flag if appropriate
+
+See [CONTRIBUTING.md](../../CONTRIBUTING.md) for detailed guidelines.
+
+---
+
+Thank you for using GPUMDkit! If you have questions about format conversion, please open an issue on our [GitHub repository](https://github.com/zhyan0603/GPUMDkit/issues) or contact Zihan YAN (yanzihan@westlake.edu.cn).

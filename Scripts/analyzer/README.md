@@ -1,3 +1,23 @@
+# Analyzer Scripts
+
+This directory contains analysis tools for structure files, simulation data, and dataset quality control. These scripts help validate, filter, and understand molecular dynamics data and training sets.
+
+## Overview
+
+The analyzer scripts provide functionality for:
+- Energy, force, and virial range analysis
+- Minimum distance calculations (with/without periodic boundary conditions)
+- Structure filtering by various criteria (distance, box size, property values)
+- Composition analysis of multi-component systems
+- Time estimation for GPUMD and NEP calculations
+- Dataset quality checks and outlier detection
+
+Access analyzers through `gpumdkit.sh` using various flags or run scripts directly.
+
+---
+
+## Scripts
+
 ### energy_force_virial_analyzer.py
 
 ---
@@ -307,4 +327,63 @@ gpumdkit.sh -time nep
 
 ---
 
-Thank you for using `GPUMDkit`! If you have any questions or need further assistance, feel free to open an issue on our GitHub repository or contact Zihan YAN (yanzihan@westlake.edu.cn).
+## File Naming Conventions
+
+Scripts automatically generate output files with descriptive names:
+
+- `filtered_<property>_<threshold>.xyz` - Filtered by property
+- `filtered_<elem1>_<elem2>_<min>_<max>.xyz` - Filtered by distance range
+- `<composition>.xyz` - Exported by composition
+
+Keep track of filtering history in a log file for reproducibility.
+
+## Integration with Other Tools
+
+### With Sample Structures
+```bash
+# 1. Filter dataset
+gpumdkit.sh -filter_value train.xyz force 30
+
+# 2. Sample from filtered set
+python sample_structures.py filtered_force.xyz uniform 1000
+```
+
+### With NEP Training
+```bash
+# 1. Clean training set
+gpumdkit.sh -filter_dist train.xyz 1.5
+gpumdkit.sh -filter_value filtered_dist.xyz force 25
+
+# 2. Analyze final set
+gpumdkit.sh -analyze_comp filtered_force.xyz
+gpumdkit.sh -range filtered_force.xyz force
+
+# 3. Use in NEP training
+# (Use filtered files as training input)
+```
+
+### With Plotting
+```bash
+# 1. Analyze with histogram
+gpumdkit.sh -range train.xyz force hist
+
+# 2. Further analysis in Python
+# (Use generated images or data)
+```
+
+## Contributing
+
+To add new analyzer scripts:
+
+1. **Follow naming**: `<descriptive_name>.py`
+2. **Handle errors**: Validate inputs gracefully
+3. **Progress indicators**: Use tqdm for long operations
+4. **Document thoroughly**: Include docstrings and usage examples
+5. **Update README**: Add to this documentation
+6. **Test comprehensively**: Try various input formats and edge cases
+
+See [CONTRIBUTING.md](../../CONTRIBUTING.md) for detailed guidelines.
+
+---
+
+Thank you for using GPUMDkit! If you have questions or need assistance with analyzer scripts, please open an issue on our [GitHub repository](https://github.com/zhyan0603/GPUMDkit/issues) or contact Zihan YAN (yanzihan@westlake.edu.cn).
