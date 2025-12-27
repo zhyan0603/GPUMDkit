@@ -43,8 +43,8 @@ If you haven't installed GPUMDkit yet, see the [main README](../../README.md) fo
 
 **Quick setup:**
 ```bash
-# Clone repository
-git clone https://github.com/zhyan0603/GPUMDkit.git
+# Clone repository (use --depth 1 for faster download)
+git clone --depth 1 https://github.com/zhyan0603/GPUMDkit.git
 
 # Set environment variable in ~/.bashrc
 export GPUMDkit_path=/path/to/GPUMDkit
@@ -522,6 +522,8 @@ for dir in struct_md_*/; do
 done
 ```
 
+**Note**: Extract specific frames using ASE or gpumdkit conversion tools if needed.
+
 ---
 
 ## Interactive vs Command-Line Mode
@@ -837,7 +839,7 @@ Existing tutorial files in this directory:
 
 - **GitHub Issues**: [https://github.com/zhyan0603/GPUMDkit/issues](https://github.com/zhyan0603/GPUMDkit/issues)
 - **Email**: Zihan YAN (yanzihan@westlake.edu.cn)
-- **Documentation**: [https://zhyan0603.github.io/GPUMDkit](https://zhyan0603.github.io/GPUMDkit)
+- **Project Website**: [https://github.com/zhyan0603/GPUMDkit](https://github.com/zhyan0603/GPUMDkit)
 
 ### Community
 

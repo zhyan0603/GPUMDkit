@@ -853,7 +853,7 @@ For quick reference, here's the complete command list:
 ```bash
 gpumdkit.sh -plt
 +=====================================================================================================+
-|                              GPUMDkit 1.4.2 (dev) (2025-12-17) Plotting Usage                      |
+|                              GPUMDkit Plotting Usage                                                |
 +=============================================== Plot Types ==========================================+
 | thermo          Plot thermo info                   | train          Plot NEP train results          |
 | prediction      Plot NEP prediction results        | train_test     Plot NEP train and test results |

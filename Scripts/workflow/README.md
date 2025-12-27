@@ -50,7 +50,7 @@ Implements automated active learning cycles for iterative NEP model improvement.
 
 **Status:** Development version - under active development
 
-**Documentation:** See detailed tutorial in [docs/tutorials/](../../docs/tutorials/)
+**Documentation:** For detailed information on active learning workflows, see the [Active Learning tutorial](../../docs/tutorials/workflow_active_learning.md) or the [End-to-End Workflows](#end-to-end-workflow-examples) section in the main tutorials guide.
 
 **Use Case:** Systematic NEP model development with minimal manual intervention
 
