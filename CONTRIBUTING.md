@@ -1,8 +1,6 @@
 # Contributing to GPUMDkit
 
-Thank you for your interest in contributing to **GPUMDkit**! We appreciate your time and effort in helping improve this toolkit for GPUMD and NEP. This document provides guidelines to make the contribution process smooth and effective for everyone involved.
-
-GPUMDkit is an open-source scientific software project, and we welcome contributions from the community, whether you're fixing bugs, adding new features, improving documentation, or suggesting enhancements.
+Thank you for your interest in contributing to `GPUMDkit`! We appreciate your time and effort in helping improve this toolkit. `GPUMDkit` is an open-source package, and we welcome contributions from the community, whether you're fixing bugs, adding new features, improving documentation, or suggesting enhancements.
 
 ---
 
@@ -31,7 +29,7 @@ To maintain code quality and consistency across the project, please adhere to th
 
 ### Language Requirements
 
-- **All code must be written in English**: This includes variable names, function names, comments, docstrings, commit messages, and documentation.
+- **All code should be written in English**: This includes variable names, function names, comments, docstrings, commit messages, and documentation.
 - While we understand that contributors come from diverse backgrounds, using English ensures that the codebase is accessible to the widest possible audience.
 
 ### Modularity and Reusability
@@ -99,11 +97,12 @@ We welcome feature suggestions! To propose a new feature:
 1. **Fork the repository** on GitHub by clicking the "Fork" button at the top right of the [repository page](https://github.com/zhyan0603/GPUMDkit).
 
 2. **Clone your fork** to your local machine:
+   
    ```bash
    git clone https://github.com/YOUR_USERNAME/GPUMDkit.git
    cd GPUMDkit
    ```
-
+   
 3. **Set up the upstream remote** to keep your fork in sync:
    ```bash
    git remote add upstream https://github.com/zhyan0603/GPUMDkit.git
@@ -118,11 +117,11 @@ Create a new branch for your changes:
 git checkout -b your-branch-name
 ```
 
-Name your branch as you prefer - there are no strict naming conventions.
+Name your branch as you prefer.
 
 ### Making Changes
 
-The structure of GPUMDkit consists of:
+The structure of `GPUMDkit` consists of:
 - **`gpumdkit.sh`**: Main entry point (Bash script) handling both interactive menu mode and command-line mode
 - **`Scripts/`**: Python utility scripts organized by functionality
   - `plt_scripts/`: Plotting scripts
@@ -145,11 +144,12 @@ The structure of GPUMDkit consists of:
 To add a new feature accessible through the interactive menu:
 
 1. **Create your implementation script** in the appropriate `Scripts/` subdirectory:
+   
    ```bash
    # Example: Add a new format conversion script
    touch Scripts/format_conversion/new_converter.py
    ```
-
+   
 2. **Implement your functionality** following the modularity guidelines (accept parameters, avoid hardcoding).
 
 3. **Add a wrapper function** in the corresponding `src/` file:
@@ -382,16 +382,4 @@ If you have questions about contributing or need help with your contribution:
 
 ---
 
-## Code of Conduct
-
-We are committed to providing a welcoming and inclusive environment. Please:
-
-- Be respectful and considerate
-- Welcome newcomers and help them get started
-- Give and accept constructive feedback gracefully
-- Focus on what is best for the community and the project
-- Show empathy towards other community members
-
----
-
-Thank you again for contributing to GPUMDkit! Your efforts help make this toolkit better for the entire GPUMD and NEP community. 🚀
+Thank you again for contributing to `GPUMDkit`! Your efforts help make this toolkit better for the entire GPUMD and NEP community. 🚀
