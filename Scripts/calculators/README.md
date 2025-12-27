@@ -1,18 +1,17 @@
-# Calculator Scripts
-
-This directory contains computational tools for calculating various material properties using NEP models and analyzing simulation data.
+<div align="center">
+  <h1>🧮 Calculator Scripts</h1>
+    <p style="text-align: justify;">This directory contains computational tools for calculating various material properties using NEP models and analyzing simulation data.</p>
+</div>
 
 ## Overview
 
 The calculator scripts provide functionality for:
 - Ionic conductivity and diffusivity calculations
 - Property predictions using NEP models
-- Descriptor calculations for machine learning analysis
-- Density of atomistic states (DOAS) analysis
+- Descriptor calculations for PCA or UMAP analysis
+- Density of atomistic states (DOAS)
 - Nudged elastic band (NEB) calculations
 - Radial distribution function (RDF) calculations
-
-All scripts can be accessed through `gpumdkit.sh` using the `-calc` flag or run directly.
 
 ---
 
@@ -22,17 +21,16 @@ All scripts can be accessed through `gpumdkit.sh` using the `-calc` flag or run 
 
 Calculates ionic diffusivity and conductivity from mean square displacement (MSD) data.
 
-#### Purpose
-Determines transport properties of ionic species using the Nernst-Einstein equation, connecting MSD to diffusion coefficients and ionic conductivity.
-
 #### Input Files
 - `msd.out` - MSD data from GPUMD (required)
 - `thermo.out` - Temperature data (optional, for automatic temperature detection)
 - `model.xyz` - Structure file (optional, for automatic volume/atom count detection)
+- `run.in` - MD input file (optional, for replicate detection)
 
 #### Usage
 
 **Command-line mode:**
+
 ```bash
 gpumdkit.sh -calc ionic-cond <element> <charge>
 ```
@@ -49,6 +47,7 @@ python calc_ion_conductivity.py <element> <charge>
 #### Examples
 
 **Automatic mode** (with thermo.out and model.xyz present):
+
 ```bash
 gpumdkit.sh -calc ionic-cond Li 1
 ```
@@ -81,34 +80,21 @@ Ionic Conductivity:
   Sigma_total: 2.261e-02 mS/cm
 ```
 
-#### Theory
-- **Diffusivity**: Calculated from MSD slope using Einstein relation: D = MSD/(6t)
-- **Conductivity**: Nernst-Einstein equation: σ = (n·q²·D)/(kB·T)
-  - n: number density of ions
-  - q: ion charge
-  - kB: Boltzmann constant
-  - T: temperature
-
-#### Requirements
-- `msd.out` must contain at least 4 columns: time, MSD_x, MSD_y, MSD_z
-- Sufficient sampling time for linear MSD regime
-- Proper equilibration before MSD calculation
-
 ---
 
 ### calc_properties_with_nep.py
 
-Calculates energies, forces, and stresses for structures using a NEP model.
+Calculates energies, forces, and stresses for structures using a NEP model. You can provide a clean extxyz file and use a `nep.txt` to label the reference values for energies, forces, and stresses. 
 
-#### Purpose
-Performs predictions on structure datasets using trained NEP models, useful for:
-- Generating predictions for test sets
-- Creating training data from DFT-relaxed structures
-- Validating NEP model performance
-- Large-scale property screening
+***Note that you must know what you are doing and this is not a substitute for DFT calculations.***
+
+Unless you have a well-trained NEP model and you want to use it as a DFT surrogate, you probably shouldn't use this feature. See [this article]([ https://doi.org/10.48550/arXiv.2504.15925](https://doi.org/10.48550/arXiv.2504.15925)) if you are interesting in it.
 
 #### Input Files
-- Structure file in extxyz format
+- A clean structure file in `extxyz` format with energy, force, and virial/stress. 
+
+  (use `gpumdkit.sh -clean_xyz train.xyz` to remove the original values)
+
 - NEP model file (nep.txt)
 
 #### Usage
@@ -123,65 +109,31 @@ gpumdkit.sh -calc nep <input.xyz> <output.xyz> <nep.txt>
 python calc_properties_with_nep.py <input.xyz> <output.xyz> <nep.txt>
 ```
 
-#### Parameters
-- `<input.xyz>`: Input structure file (extxyz format)
-- `<output.xyz>`: Output file with NEP predictions
-- `<nep.txt>`: NEP model file
-
 #### Example
 
 ```bash
 # Predict properties for a test set
-gpumdkit.sh -calc nep test_structures.xyz predictions.xyz nep.txt
-
-# Generate NEP properties for new structures
-python calc_properties_with_nep.py new_configs.xyz nep_results.xyz nep.txt
+gpumdkit.sh -calc nep structures.xyz predictions.xyz nep.txt
 ```
 
-#### Output Format
-Output extxyz file contains:
-- Original atomic positions
-- NEP-predicted energies (per-atom and total)
-- NEP-predicted forces (per atom)
-- NEP-predicted stresses/virials (if applicable)
-- Original lattice parameters
-
-#### Use Cases
-1. **Model validation**: Predict on test set and compare with DFT
-2. **High-throughput screening**: Calculate properties for many structures
-3. **Trajectory analysis**: Compute energies/forces for MD trajectories
-4. **Active learning**: Generate predictions for structure selection
-
 #### Requirements
-- Python package: `calorine` (NEP interface)
-- ASE (Atomic Simulation Environment)
+- Python package: `calorine` 
 
 ```bash
-pip install calorine ase
+pip install calorine
 ```
 
 ---
 
 ### calc_descriptors.py
 
-Calculates NEP descriptors for structures, which can be used for dimensionality reduction and structure analysis.
-
-#### Purpose
-Extracts high-dimensional descriptors from NEP model for:
-- Visualizing training set coverage (UMAP/t-SNE)
-- Identifying similar structures
-- Active learning structure selection
-- Analyzing descriptor space distribution
-
-#### Input Files
-- Structure file (extxyz format)
-- NEP model file (nep.txt)
+Calculates descriptors for the specific species, which can be used for dimensionality reduction and structure analysis.
 
 #### Usage
 
 **Command-line mode:**
 ```bash
-gpumdkit.sh -calc des <method> <input.xyz> <output.npy> <element>
+gpumdkit.sh -calc des <input.xyz> <output.npy> <nep.txt> <element>
 ```
 
 **Direct execution:**
@@ -190,24 +142,16 @@ python calc_descriptors.py <input.xyz> <output.npy> <nep.txt> <element>
 ```
 
 #### Parameters
-- `<method>`: Dimensionality reduction method (umap, tsne, pca)
 - `<input.xyz>`: Input structure file
-- `<output.npy>`: Output NumPy file with descriptors
+- `<output.npy>`: Output `npy` file with high-dimensional descriptors
 - `<nep.txt>`: NEP model file
-- `<element>`: Target element for descriptor extraction
+- `<element>`: Target element for descriptor calculations
 
 #### Examples
 
 ```bash
 # Calculate descriptors using UMAP
-gpumdkit.sh -calc des umap train.xyz descriptors.npy nep.txt Li
-
-# Calculate for multiple elements
-gpumdkit.sh -calc des umap train.xyz desc_li.npy nep.txt Li
-gpumdkit.sh -calc des umap train.xyz desc_o.npy nep.txt O
-
-# Visualize after calculation
-gpumdkit.sh -plt des umap descriptors.npy save
+gpumdkit.sh -calc des train.xyz descriptors.npy nep.txt Li
 ```
 
 #### Output
@@ -216,60 +160,43 @@ gpumdkit.sh -plt des umap descriptors.npy save
 
 #### Applications
 - **Training set analysis**: Check if training data covers configuration space
-- **Active learning**: Select diverse structures based on descriptor distance
 - **Model comparison**: Compare descriptor distributions across different models
-- **Outlier detection**: Identify unusual configurations
 
 #### Reference
-See [arXiv:2504.15925](https://doi.org/10.48550/arXiv.2504.15925) for methodology and applications.
-
-#### Requirements
-```bash
-pip install calorine numpy scikit-learn
-```
+See [arXiv:2504.15925](https://doi.org/10.48550/arXiv.2504.15925) if you are interesting in it.
 
 ---
 
 ### calc_doas.py
 
-Calculates the density of atomistic states (DOAS) by optimizing structures and computing per-atom energies.
-
-#### Purpose
-DOAS provides atomic-level electronic structure information, proposed by [Wang et al.](https://doi.org/10.1002/anie.202215544). Useful for:
-- Understanding local atomic environments
-- Analyzing electronic structure at atomic resolution
-- Comparing different element contributions
-- Identifying active sites in catalysts
-
-#### Input Files
-- Structure file (extxyz format)
-- NEP model file (nep.txt)
+Calculates the [density of atomistic states (DOAS)](https://doi.org/10.1002/anie.202215544) by optimizing structures and computing per-atom energies.
 
 #### Usage
 
 **Command-line mode:**
 ```bash
-gpumdkit.sh -calc doas <input.xyz> <nep.txt> <output.txt>
+gpumdkit.sh -calc doas <input.xyz> <nep.txt> <doas.out>
 ```
 
 **Direct execution:**
 ```bash
-python calc_doas.py <input.xyz> <nep.txt> <output.txt>
+python calc_doas.py <input.xyz> <nep.txt> <doas.out>
 ```
 
 #### Parameters
 - `<input.xyz>`: Input structure file
-- `<nep.txt>`: NEP model file for structure optimization and energy calculation
+- `<nep.txt>`: NEP model file for structure optimization and atomistic-energies calculation
 - `<output.txt>`: Output file with grouped atomic energies by element
 
 #### Example
 
 ```bash
 # Calculate DOAS
-gpumdkit.sh -calc doas structures.xyz nep.txt doas_results.txt
+gpumdkit.sh -calc doas structures.xyz nep.txt doas.out
 
 # Visualize results
-gpumdkit.sh -plt doas doas_results.txt save
+gpumdkit.sh -plt doas doas.txt <species>
+gpumdkit.sh -plt doas doas.txt Li
 ```
 
 #### Process
@@ -279,42 +206,13 @@ gpumdkit.sh -plt doas doas_results.txt save
 4. Groups energies by element type
 5. Outputs distribution for each element
 
-#### Output Format
-Text file with per-atom energies grouped by element:
-```
-Li: -5.23 -5.21 -5.25 ...
-Y: -8.45 -8.43 -8.47 ...
-Cl: -3.12 -3.15 -3.10 ...
-```
-
-#### Visualization
-After calculation, visualize with:
-```bash
-gpumdkit.sh -plt doas element1.txt element2.txt
-```
-
-#### Requirements
-```bash
-pip install calorine ase tqdm
-```
+You can also do the `minimize` and atomistic energy calculations in `gpumd`, which is prefered for large-scale structures.
 
 ---
 
 ### neb_calculation.py
 
 Performs nudged elastic band (NEB) calculations to find minimum energy pathways between initial and final states.
-
-#### Purpose
-NEB method identifies transition states and reaction pathways for:
-- Ion migration barriers
-- Phase transformations
-- Chemical reactions
-- Diffusion mechanisms
-
-#### Input Files
-- Initial structure (XYZ format)
-- Final structure (XYZ format)
-- NEP model file (nep.txt)
 
 #### Usage
 
@@ -326,85 +224,45 @@ python neb_calculation.py <initial.xyz> <final.xyz> <n_images> <nep.txt>
 #### Parameters
 - `<initial.xyz>`: Initial structure file
 - `<final.xyz>`: Final structure file
-- `<n_images>`: Number of intermediate images (typically 5-15)
+- `<n_images>`: Number of intermediate images
 - `<nep.txt>`: NEP model for energy/force calculations
 
 #### Example
 
 ```bash
 # Calculate Li migration pathway with 9 intermediate images
-python neb_calculation.py li_start.xyz li_end.xyz 9 nep.txt
-
-# Interactive prompts will ask about atom constraints
+python neb_calculation.py init.xyz fin.xyz 9 nep.txt
 ```
 
 #### Interactive Options
-The script will prompt for:
-1. **Constraint method**:
-   - None: All atoms free to move
-   - Index: Fix specific atom indices
-   - Element: Fix all atoms of specific element
-   - Layer: Fix bottom layer(s)
-
-2. **Constraint details** based on chosen method
-
-#### Output Files
-- `neb.traj`: ASE trajectory file with all NEB images
-- `neb_pathway.png`: Plot of energy vs reaction coordinate
-- Terminal output with barrier height
-
-#### Example Output
 ```
-Created 11 images (1 initial + 9 intermediate + 1 final)
-Select fixing method:
-1) None (all atoms free)
-2) Fix by indices
-3) Fix by element
-4) Fix bottom layer
-Choice: 4
-Bottom layer Z threshold: 5.0
-NEB optimization converged
-Forward barrier: 0.45 eV
-Reverse barrier: 0.32 eV
+ Input the function number:
+ 4
+ ------------>>
+ 401) Calc ionic conductivity
+ 402) Calc properties by nep
+ 403) Calc descriptors of specific elements
+ 404) Calc density of atomistic states (DOAS)
+ 405) Calc nudged elastic band (NEB) by nep
+ 000) Return to the main menu
+ ------------>>
+ Input the function number:
+ 405
+ >-------------------------------------------------<
+ | This function calls the script in calculators   |
+ | Script: neb_calculation.py                      |
+ | Developer: Zhoulin LIU (1776627910@qq.com)      |
+ >-------------------------------------------------<
+ Input <initial_struct> <final_struct> <n_image> <nep_model>
+ Examp: IS.xyz FS.xyz 5 nep.txt
+ ------------>>
 ```
-
-#### Visualization
-The script automatically generates:
-- Energy vs reaction coordinate plot
-- Shows initial, transition state, and final energies
-- Indicates forward and reverse barriers
-
-#### Best Practices
-1. **Initial/final alignment**: Ensure structures are well-aligned
-2. **Number of images**: 7-11 images usually sufficient for simple migrations
-3. **Constraints**: Fix bottom layers for surface processes
-4. **Convergence**: Check forces converge to <0.05 eV/Å
-5. **Validation**: Verify path makes chemical sense
-
-#### Requirements
-```bash
-pip install calorine ase matplotlib numpy
-```
-
-#### Authors
-- Zhoulin LIU (1776627910@qq.com) - Original implementation
-- Zihan YAN (yanzihan@westlake.edu.cn) - Modifications
 
 ---
 
 ### rdf_calculator_ovito.py
 
 Calculates radial distribution function (RDF) using OVITO's analysis tools.
-
-#### Purpose
-Computes pair correlation functions for analyzing:
-- Local atomic structure
-- Nearest neighbor distances
-- Coordination numbers
-- Structural ordering
-
-#### Input Files
-- Structure file (extxyz format)
 
 #### Usage
 
@@ -423,54 +281,19 @@ python rdf_calculator_ovito.py <input.xyz> <cutoff> <bins>
 ```bash
 # Calculate RDF with 6 Å cutoff and 400 bins
 python rdf_calculator_ovito.py trajectory.xyz 6.0 400
-
-# Higher resolution
-python rdf_calculator_ovito.py model.xyz 8.0 800
 ```
-
-#### Output
-- `rdf.txt`: Text file with RDF data
-  - Column 1: Distance (Å)
-  - Columns 2+: g(r) for each pair type
-
-#### Advantages over GPUMD RDF
-- **Offline analysis**: Calculate RDF from existing trajectories
-- **Flexible binning**: Choose any number of bins
-- **Post-processing**: Easy to compute RDF from saved structures
-- **Multiple frames**: Average over trajectory frames
-
-#### Use Cases
-1. **Structure validation**: Verify structure quality before simulations
-2. **Trajectory analysis**: Compute RDF from MD trajectories
-3. **Phase identification**: Compare RDF with reference patterns
-4. **Custom analysis**: Extract specific pair correlations
 
 #### Visualization
 After calculation:
 ```bash
-gpumdkit.sh -plt rdf      # If saved as rdf.out
-# Or plot manually with your preferred tool
+gpumdkit.sh -plt rdf    
 ```
 
-#### Requirements
-```bash
-pip install ovito ase
-```
-
-**Note**: OVITO package can be large (~500MB). For simple RDF, consider using GPUMD's built-in `compute_rdf` command.
+**Note**: It is recommended to use the `compute_rdf` command in `gpumd`.
 
 ---
 
 ## Contributing
-
-To add new calculator scripts:
-
-1. **Follow naming**: `calc_<descriptive_name>.py`
-2. **Add documentation**: Include docstring with usage
-3. **Handle errors**: Validate inputs and provide helpful error messages
-4. **Update README**: Add documentation to this file
-5. **Test thoroughly**: Verify with multiple systems
-6. **Consider integration**: Add command-line flag to `gpumdkit.sh` if appropriate
 
 See [CONTRIBUTING.md](../../CONTRIBUTING.md) for detailed guidelines.
 

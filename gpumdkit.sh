@@ -103,6 +103,7 @@ function main(){
             case $choice in
                 "5") f5_analyzers ;;
                 "501") f501_analyze_composition ;;
+                "502") f502_find_outliers ;;
             esac ;;  
         "6")
             echo "Developing ..." ;;

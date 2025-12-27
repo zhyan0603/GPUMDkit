@@ -1,6 +1,7 @@
-# Analyzer Scripts
-
-This directory contains analysis tools for structure files, simulation data, and dataset quality control. These scripts help validate, filter, and understand molecular dynamics data and training sets.
+<div align="center">
+  <h1>🔍 Analyzer Scripts</h1>
+    <p style="text-align: justify;">This directory contains analysis tools for structure files, simulation data, and dataset quality control. These scripts help validate, filter, and understand molecular dynamics data and training sets.</p>
+</div>
 
 ## Overview
 
@@ -17,6 +18,68 @@ Access analyzers through `gpumdkit.sh` using various flags or run scripts direct
 ---
 
 ## Scripts
+
+### analyze_composition.py
+
+---
+
+This script analyze the composition of your `extxyz` file.
+
+#### Usage
+
+```
+python analyze_composition.py <extxyz>
+```
+
+#### Command-Line Mode Example
+
+```
+gpumdkit.sh -analyze_comp train.xyz
+```
+
+#### Output
+
+```
+ Calling script by Zihan YAN
+ Code path: /d/Westlake/GPUMD/Gpumdkit/Scripts/analyzer/analyze_composition.py
+ Index    Compositions           N atoms      Count
+ ---------------------------------------------------
+ 1        Li56O96Zr16La24        192          51
+ ---------------------------------------------------
+ Enter index to export (e.g., '1,2', '2-3', 'all'), or press Enter to skip:
+```
+
+
+
+### charge_balance_check.py
+
+---
+
+This script can be used to check the charge balance status of your `extxyz` file.
+
+#### Usage
+
+```
+python charge_balance_check.py <extxyz>
+```
+
+#### Command-Line Mode Example
+
+```
+gpumdkit.sh -cbc train.xyz
+```
+
+#### Output
+
+```
+ Calling script by Zihan YAN
+Computing compositions: 100%|████████████████████████████████████████████████████████████████████| 51/51 [00:03<00:00, 13.03it/s]
+Checking oxidation states: 100%|████████████████████████████████████████████████████████████████████| 1/1 [00:03<00:00,  3.67s/it]
+```
+
+Finally, you will get a `balanced.xyz` and `indices.txt` file.
+
+
 
 ### energy_force_virial_analyzer.py
 
@@ -40,13 +103,13 @@ python energy_force_virial_analyzer.py <filename> <property> [hist]
 #### Example
 
 ```sh
-python energy_force_virial_analyzer.py dump.xyz force
+python energy_force_virial_analyzer.py train.xyz force
 ```
 
 #### Command-Line Mode Example
 
 ```
-gpumdkit.sh -range dump.xyz force
+gpumdkit.sh -range train.xyz force
 ```
 
 #### Output
@@ -58,7 +121,7 @@ Force range: 0.03210566767721861 to 9.230115912468435
 If you add the `[hist]` option, it will calculate the range of forces and display a histogram:
 
 ```sh
-python energy_force_virial_analyzer.py dump.xyz force hist
+python energy_force_virial_analyzer.py train.xyz force hist
 ```
 
 <div align="center">
@@ -122,7 +185,28 @@ gpumdkit.sh -min_dist dump.xyz
 #### Output
 
 ```
-Minimum interatomic distance: 1.478098603206159 Å
+ Calling script by Zihan YAN
+ Code path: /d/Westlake/GPUMD/Gpumdkit/Scripts/analyzer/get_min_dist.py
+ +---------------------------+
+ |   PBC ignored for speed   |
+ | use -min_dist_pbc for PBC |
+ +---------------------------+
+ Minimum interatomic distances:
+ +---------------------------+
+ | Atom Pair |  Distance (Å) |
+ +---------------------------+
+ |   Li-Li   |     1.696     |
+ |   Li-La   |     2.498     |
+ |   Li-Zr   |     2.506     |
+ |   Li-O    |     1.587     |
+ |   La-La   |     3.463     |
+ |   La-Zr   |     3.243     |
+ |   La-O    |     2.043     |
+ |   Zr-Zr   |     5.060     |
+ |   Zr-O    |     1.867     |
+ |   O-O     |     2.480     |
+ +---------------------------+
+ Overall min_distance: 1.587 Å
 ```
 
 NOTE: This script is fast because it does not take into account periodic boundary conditions (PBC), but in some cases it can be problematic.
@@ -156,8 +240,65 @@ gpumdkit.sh -min_dist_pbc dump.xyz
 #### Output
 
 ```
-Minimum interatomic distance: 1.478098603206159 Å
+ Calling script by Zihan YAN
+ Code path: /d/Westlake/GPUMD/Gpumdkit/Scripts/analyzer/get_min_dist_pbc.py
+ Minimum interatomic distances (with PBC):
+ +---------------------------+
+ | Atom Pair |  Distance (Å) |
+ +---------------------------+
+ |   Li-Li   |     1.696     |
+ |   Li-La   |     2.498     |
+ |   Li-Zr   |     2.477     |
+ |   Li-O    |     1.587     |
+ |   La-La   |     3.463     |
+ |   La-Zr   |     3.210     |
+ |   La-O    |     2.043     |
+ |   Zr-Zr   |     5.060     |
+ |   Zr-O    |     1.867     |
+ |   O-O     |     2.355     |
+ +---------------------------+
+ Overall min_distance: 1.587 Å
 ```
+
+
+
+### find_outliers.py
+
+---
+
+This script is used to find outliers in training data based on RMSE thresholds for energy, force, and stress.
+
+#### Usage
+
+```sh
+python find_outliers.py
+```
+
+#### Interactive Mode
+
+```
+ Input the function number:
+ 5
+ ------------>>
+ 501) Analyze composition of extxyz
+ 502) Find outliers of extxyz
+ 000) Return to the main menu
+ ------------>>
+ Input the function number:
+ 502
+ >-------------------------------------------------<
+ | This function calls the script in analyzer      |
+ | Script: find_outliers.py                        |
+ | Developer: Zihan YAN (yanzihan@westlake.edu.cn) |
+ >-------------------------------------------------<
+ Input the threshold of RMSE to identify outliers
+ ---------------------------------------------------
+ Enter energy RMSE threshold (meV/atom): 1
+ Enter force RMSE threshold (meV/Å): 60
+ Enter stress RMSE threshold (GPa): 0.03
+```
+
+After that, you will get `selected.xyz`, `remained.xyz`, and `slected_remained.png`
 
 
 
@@ -185,7 +326,7 @@ python filter_exyz_by_value.py dump.xyz 1.4
 gpumdkit.sh -filter_value dump.xyz 1.4
 ```
 
-#### 
+
 
 ### filter_exyz_by_box.py
 
@@ -254,34 +395,26 @@ This script calculates the remaining time for GPUMD.
 #### Usage
 
 ```
-bash time_consuming_gpumd.sh <logfile>
-```
-
-- `<logfile>`: The path to your `log` file.
-
-#### Example
-
-```
-bash time_consuming_gpumd.sh log
+bash time_consuming_gpumd.sh
 ```
 
 #### Command-Line Mode Example
 
 ```
-gpumdkit.sh -time gpumd <logfile>
+gpumdkit.sh -time gpumd
 ```
 
 #### Output
 
 ```
------------------- Time Consuming Results ------------------
-num of atoms: 7168
-atom*step/s : 4.85401e+06
-timesteps/s : 677.178
-total frames: 1050000
-total time  : 0h 25min 50s
-time left   : 0h 0min 0s
-Progress Bar: [########################################] 100%
+ ----------------- System Information ----------------
+ total frames: 1050000
+ -----------------------------------------------------
+ Current Frame  Speed (steps/s)   Total Time       Time Left       Estimated End
+ -------------   -------------   -------------   -------------   -----------------
+     13000          499.86         0h 35m 0s      0h 34m 34s    2025-12-27 18:12:04
+     14000          199.93        1h 27m 31s      1h 26m 21s    2025-12-27 19:03:56
+     15000          199.94        1h 27m 31s      1h 26m 16s    2025-12-27 19:03:56
 ```
 
 
@@ -293,12 +426,6 @@ Progress Bar: [########################################] 100%
 This script calculates the remaining time for nep.
 
 #### Usage
-
-```
-bash time_consuming_gpumd.sh
-```
-
-#### Example
 
 ```
 bash time_consuming_nep.sh
@@ -323,66 +450,9 @@ gpumdkit.sh -time nep
 | 7100            | 3 s       | 0 h 46 m 27 s   | 2025-10-23 16:05:14 |
 ```
 
-
-
----
-
-## File Naming Conventions
-
-Scripts automatically generate output files with descriptive names:
-
-- `filtered_<property>_<threshold>.xyz` - Filtered by property
-- `filtered_<elem1>_<elem2>_<min>_<max>.xyz` - Filtered by distance range
-- `<composition>.xyz` - Exported by composition
-
-Keep track of filtering history in a log file for reproducibility.
-
-## Integration with Other Tools
-
-### With Sample Structures
-```bash
-# 1. Filter dataset
-gpumdkit.sh -filter_value train.xyz force 30
-
-# 2. Sample from filtered set
-python sample_structures.py filtered_force.xyz uniform 1000
-```
-
-### With NEP Training
-```bash
-# 1. Clean training set
-gpumdkit.sh -filter_dist train.xyz 1.5
-gpumdkit.sh -filter_value filtered_dist.xyz force 25
-
-# 2. Analyze final set
-gpumdkit.sh -analyze_comp filtered_force.xyz
-gpumdkit.sh -range filtered_force.xyz force
-
-# 3. Use in NEP training
-# (Use filtered files as training input)
-```
-
-### With Plotting
-```bash
-# 1. Analyze with histogram
-gpumdkit.sh -range train.xyz force hist
-
-# 2. Further analysis in Python
-# (Use generated images or data)
-```
-
 ## Contributing
 
-To add new analyzer scripts:
-
-1. **Follow naming**: `<descriptive_name>.py`
-2. **Handle errors**: Validate inputs gracefully
-3. **Progress indicators**: Use tqdm for long operations
-4. **Document thoroughly**: Include docstrings and usage examples
-5. **Update README**: Add to this documentation
-6. **Test comprehensively**: Try various input formats and edge cases
-
-See [CONTRIBUTING.md](../../CONTRIBUTING.md) for detailed guidelines.
+To add new analyzer scripts, see [CONTRIBUTING.md](../../CONTRIBUTING.md) for detailed guidelines.
 
 ---
 

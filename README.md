@@ -2,15 +2,13 @@
 <a href="https://zhyan0603.github.io/GPUMDkit">
   <img src="./docs/Gallery/gpumdkit_logo.png" width="25%" alt="GPUMDkit Logo">
 </a><br>
-<a href="https://github.com/zhyan0603/GPUMDkit"><img src="https://img.shields.io/badge/version-1.4.2-brightgreen" alt="Version"></a>
+<a href="https://github.com/zhyan0603/GPUMDkit/releases"><img src="https://img.shields.io/github/v/tag/zhyan0603/GPUMDkit?label=version&style=flat-square&color=brightgreen" alt="Version"></a>
 <a href="https://github.com/zhyan0603/GPUMDkit/blob/main/LICENCE"><img src="https://img.shields.io/badge/license-GPL--3.0-blue" alt="License"></a>
 <a href="https://github.com/zhyan0603/GPUMDkit/stargazers"><img src="https://img.shields.io/github/stars/zhyan0603/GPUMDkit?style=social" alt="Stars"></a>
 <img src="https://img.shields.io/github/languages/code-size/zhyan0603/GPUMDkit" alt="Code Size">
+<p style="text-align: justify;"><strong>GPUMDkit</strong> is a toolkit for the GPUMD (<em>Graphics Processing Units Molecular Dynamics</em>) and NEP (<em>neuroevolution potential</em>) program. It offers a user-friendly command-line interface to streamline common scripts and workflows, simplifying tasks such as script invocation, format conversion, structure sampling, NEP construction workflow, and various analysis, aiming to improve user productivity.</p>
 </div>
 
-# GPUMDkit
-
-**`GPUMDkit`** is a toolkit for the [GPUMD](https://github.com/brucefan1983/GPUMD) (*Graphics Processing Units Molecular Dynamics*) and [NEP](https://gpumd.org/potentials/nep.html#nep-formalism) (neuroevolution potential) program. It offers a user-friendly command-line interface to streamline common scripts and workflows, simplifying tasks such as script invocation, format conversion, structure sampling, NEP construction workflow, and various analysis, aiming to improve user productivity.
 
 ## Features
 - **Simplified Script Invocation**: Easily run scripts for GPUMD and NEP.
@@ -247,4 +245,3 @@ As of now, `GPUMDkit` is a free, open-source tool for everyone to use. If you fi
 [2] Z. Yan, Z. Fan and Y. Zhu, [Improving robustness and training efficiency of machine-learned potentials by incorporating short-range empirical potentials](https://arxiv.org/abs/2504.15925), arXiv:2504.15925
 
 > **Note:** These citations are **not mandatory** and should **only** be included if they contribute to your research.
-
