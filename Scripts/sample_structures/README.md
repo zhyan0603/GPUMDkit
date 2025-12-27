@@ -1,4 +1,38 @@
-### perturb_structure.py
+# Structure Sampling Scripts
+
+This directory contains tools for sampling, selecting, and generating atomic structures for NEP training and molecular dynamics simulations.
+
+## Overview
+
+Structure sampling is crucial for creating diverse and representative training sets. These scripts provide:
+- **Uniform and random sampling**: Basic statistical sampling methods
+- **FPS (Farthest Point Sampling)**: Maximizing structural diversity using PyNEP or NEPtrain
+- **Structure perturbation**: Generating variations for training set augmentation
+- **Active learning selection**: Identifying structures with maximum force deviations
+- **Frame extraction**: Selecting specific structures from trajectories
+
+All scripts can be accessed through `gpumdkit.sh` interactive mode or run directly.
+
+---
+
+## Quick Command Reference
+
+| Task | Command/Method |
+|------|----------------|
+| Uniform sampling | `python sample_structures.py <xyz> uniform <n>` |
+| Random sampling | `python sample_structures.py <xyz> random <n>` |
+| PyNEP FPS | `gpumdkit.sh -pynep <sample> <train> <model>` |
+| NEPtrain FPS | Via interactive mode option 203 |
+| Perturb structure | Via interactive mode option 204 |
+| Max force deviation | Via interactive mode option 205 |
+
+---
+
+## Scripts
+
+### sample_structures.py
+
+Basic structure sampling using uniform or random methods.
 
 ---
 
@@ -111,6 +145,192 @@ python select_max_modev.py 100 0.15
 This command will extract top 100 max force deviation structures in `active.xyz`. `0.15` is the threshold set in the `active` command.
 
 
+
+
 ---
 
-Thank you for using `GPUMDkit`! If you have any questions or need further assistance, feel free to open an issue on our GitHub repository or contact Zihan YAN (yanzihan@westlake.edu.cn).
+## Advanced Usage
+
+### Parallel PyNEP Sampling
+
+For large datasets, use parallel version:
+
+```bash
+python parallel_pynep_select_structs.py sample.xyz train.xyz nep.txt
+```
+
+**Benefits:**
+- Faster processing of large files
+- Utilizes multiple CPU cores
+- Same results as serial version
+
+### Custom Perturbation Strategies
+
+Adjust perturbation parameters based on material:
+
+```python
+# For rigid materials (e.g., crystals):
+cell_pert_fraction = 0.02  # Small cell deformation
+atom_pert_distance = 0.1   # Small atomic displacements
+
+# For soft materials (e.g., molecular systems):
+cell_pert_fraction = 0.05  # Larger cell deformation
+atom_pert_distance = 0.3   # Larger atomic displacements
+
+# For phase transitions:
+cell_pert_fraction = 0.10  # Even larger variations
+atom_pert_distance = 0.5   # Significant movements
+```
+
+### Combining Sampling Methods
+
+```bash
+# 1. Start with random sampling (fast)
+python sample_structures.py large_set.xyz random 5000
+
+# 2. Apply FPS on subset (better diversity)
+gpumdkit.sh -pynep sampled_structures.xyz train.xyz nep.txt
+
+# 3. Result: Fast and diverse
+```
+
+## Sampling Theory
+
+### Farthest Point Sampling (FPS)
+
+FPS maximizes diversity by selecting structures maximally distant in descriptor space:
+
+1. Start with random structure
+2. Calculate distances to all other structures
+3. Select structure farthest from current set
+4. Repeat until desired number selected
+
+**Advantages:**
+- Guarantees diversity in descriptor space
+- Covers configuration space evenly
+- Reduces training set size without losing coverage
+
+**Mathematical formulation:**
+```
+For each structure i not in set S:
+  d(i) = min_{j ∈ S} distance(i, j)
+  
+Next structure = argmax_i d(i)
+```
+
+### Perturbation Theory
+
+Small perturbations explore local configuration space:
+- Cell perturbations probe strain response
+- Atomic perturbations sample phonon modes
+- Combination explores coupled effects
+
+**Perturbation magnitude should:**
+- Preserve structural topology
+- Stay within DFT convergence range
+- Not create unphysical configurations
+
+## Integration with Other Tools
+
+### With Analyzers
+
+```bash
+# 1. Sample structures
+python sample_structures.py large.xyz uniform 1000
+
+# 2. Analyze sampled set
+gpumdkit.sh -analyze_comp sampled_structures.xyz
+gpumdkit.sh -range sampled_structures.xyz force
+```
+
+### With Format Conversion
+
+```bash
+# 1. Convert from various formats
+gpumdkit.sh -out2xyz ./DFT_calcs/
+
+# 2. Sample from combined set
+python sample_structures.py train.xyz uniform 500
+```
+
+### With NEP Training
+
+```bash
+# 1. Create diverse training set
+gpumdkit.sh -pynep candidates.xyz train.xyz nep.txt
+
+# 2. Train NEP
+# (Use train.xyz)
+
+# 3. Iterate with active learning
+```
+
+## Recommended Practices for Different Scenarios
+
+### For Initial Training Set
+
+```bash
+# 1. Collect diverse structures (different compositions, temperatures)
+# 2. Random sample to manageable size (~2000)
+python sample_structures.py all_structures.xyz random 2000
+
+# 3. Apply FPS for maximum diversity (~500-1000)
+gpumdkit.sh -pynep sampled_structures.xyz train.xyz initial_nep.txt
+```
+
+### For Active Learning
+
+```bash
+# 1. Run MD with active mode in GPUMD
+# 2. Select high-uncertainty structures
+python select_max_modev.py 50 0.15
+
+# 3. Add to training set after DFT calculations
+# 4. Repeat until convergence
+```
+
+### For Data Augmentation
+
+```bash
+# 1. Have ~100 DFT-relaxed structures
+# 2. Generate perturbations
+gpumdkit.sh  # Use perturb option
+
+# 3. Run DFT on perturbed structures
+# 4. Combine with originals for training
+```
+
+## File Management
+
+Recommended organization:
+
+```
+sampling/
+├── raw_data/
+│   └── md_trajectory.xyz         # Original large dataset
+├── sampled/
+│   ├── uniform_1000.xyz          # Uniformly sampled
+│   ├── fps_500.xyz               # FPS selected
+│   └── perturbed/                # Perturbed structures
+│       ├── struct_001/
+│       └── struct_002/
+└── training/
+    ├── train.xyz                 # Final training set
+    └── test.xyz                  # Test set
+```
+
+## Contributing
+
+To add new sampling methods:
+
+1. **Follow naming**: `<method>_select_structs.py` or `sample_<method>.py`
+2. **Document algorithm**: Explain sampling strategy clearly
+3. **Add examples**: Provide usage examples
+4. **Benchmark**: Compare with existing methods
+5. **Update README**: Add to this documentation
+
+See [CONTRIBUTING.md](../../CONTRIBUTING.md) for detailed guidelines.
+
+---
+
+Thank you for using GPUMDkit! If you have questions about structure sampling, please open an issue on our [GitHub repository](https://github.com/zhyan0603/GPUMDkit/issues) or contact Zihan YAN (yanzihan@westlake.edu.cn).

@@ -1,201 +1,455 @@
-# GPUMDkit Tutorials
+# GPUMDkit User Guide
 
-Welcome to **GPUMDkit** tutorials! This guide helps you learn how to use GPUMDkit for GPUMD and NEP workflows.
+Welcome to **GPUMDkit** - your comprehensive toolkit for GPUMD (Graphics Processing Units Molecular Dynamics) and NEP (neuroevolution potential) workflows!
 
 ## What is GPUMDkit?
 
-GPUMDkit is a command-line toolkit that simplifies working with GPUMD (Graphics Processing Units Molecular Dynamics) and NEP (neuroevolution potential). It provides:
+GPUMDkit is a powerful command-line toolkit that streamlines your molecular dynamics and machine learning potential workflows. It provides:
 
-- **Easy-to-use interface**: Both interactive menu and command-line modes
-- **Format conversion tools**: Convert between VASP, LAMMPS, CP2K, and other formats
-- **Analysis tools**: Analyze structures, forces, energies, and more
-- **Visualization scripts**: Plot NEP training, MD results, and material properties
-- **Workflow automation**: Batch processing for DFT and MD calculations
+- **🎯 Two Usage Modes**: Interactive menu system OR fast command-line interface
+- **🔄 Format Conversion**: Convert between VASP, LAMMPS, CP2K, CASTEP, ABACUS, and extxyz formats
+- **📊 Visualization**: Comprehensive plotting tools for NEP training, MD simulations, and analysis
+- **🧮 Calculators**: Compute ionic conductivity, NEP predictions, descriptors, and more
+- **🔍 Analysis Tools**: Structure validation, filtering, composition analysis, and quality checks
+- **⚙️ Workflow Automation**: Batch processing for DFT calculations and MD simulations
+- **🤖 Active Learning**: Automated NEP model improvement cycles
 
-## Getting Started
+## Quick Start
 
 ### Installation
 
 ```bash
-# Clone the repository
+# 1. Clone the repository
 git clone --depth 1 https://github.com/zhyan0603/GPUMDkit.git
 
-# Add to your ~/.bashrc
+# 2. Add to your ~/.bashrc
 export GPUMDkit_path=/path/to/GPUMDkit
 export PATH=${GPUMDkit_path}:${PATH}
 source ${GPUMDkit_path}/Scripts/utils/completion.sh
 
-# Make executable
+# 3. Reload your shell
+source ~/.bashrc
+
+# 4. Make executable
 cd ${GPUMDkit_path}
 chmod +x gpumdkit.sh
 ```
 
-### Basic Usage
+### First Steps
 
-**Interactive Mode** (recommended for beginners):
 ```bash
-gpumdkit.sh
-# Follow the menu to select functions
-```
-
-**Command-Line Mode** (for quick operations):
-```bash
-# Show help
+# Check installation
 gpumdkit.sh -h
 
-# Plot thermodynamic data
+# Try interactive mode
+gpumdkit.sh
+
+# Run a quick command
 gpumdkit.sh -plt thermo
-
-# Convert VASP to extxyz
-gpumdkit.sh -out2xyz ./
-
-# Analyze composition
-gpumdkit.sh -analyze_comp train.xyz
 ```
 
-## Command-Line Reference
+## Two Ways to Use GPUMDkit
 
-### Format Conversion
+### 🖱️ Interactive Mode (Beginner-Friendly)
+
+Launch the interactive menu:
 ```bash
-gpumdkit.sh -out2xyz <dir>              # OUTCAR to extxyz
-gpumdkit.sh -pos2exyz <P> <xyz>         # POSCAR to extxyz
-gpumdkit.sh -cif2exyz <cif>             # CIF to extxyz
-gpumdkit.sh -lmp2exyz <dump> <elements> # LAMMPS to extxyz
-gpumdkit.sh -addgroup <P> <elements>    # Add group labels
-gpumdkit.sh -addweight <in> <out> <w>   # Add weights
+gpumdkit.sh
 ```
 
-### Analysis Tools
-```bash
-gpumdkit.sh -range <xyz> <property>     # Show range of property
-gpumdkit.sh -min_dist <xyz>             # Calculate min distance
-gpumdkit.sh -min_dist_pbc <xyz>         # Min distance with PBC
-gpumdkit.sh -filter_value <xyz> <p> <t> # Filter by threshold
-gpumdkit.sh -filter_dist <xyz> <dist>   # Filter by distance
-gpumdkit.sh -analyze_comp <xyz>         # Analyze composition
+You'll see:
+```
+      ____ ____  _   _ __  __ ____  _    _ _   
+     / ___|  _ \| | | |  \/  |  _ \| | _(_) |_ 
+    | |  _| |_) | | | | |\/| | | | | |/ / | __|
+    | |_| |  __/| |_| | |  | | |_| |   <| | |_
+     \____|_|    \___/|_|  |_|____/|_|\_\_|\__|
+ 
+      GPUMDkit Version 1.4.2
+  
+ ----------------------- GPUMD -----------------------      
+ 1) Format Conversion          2) Sample Structures
+ 3) Workflow                   4) Calculators
+ 5) Analyzer                   6) Plot Scripts
+ 0) Quit!
+ ------------>>
 ```
 
-### Plotting
+**Best for:**
+- Learning GPUMDkit features
+- Complex multi-step tasks
+- When you need guided prompts
+
+### ⚡ Command-Line Mode (Power Users)
+
+Direct command execution:
 ```bash
-gpumdkit.sh -plt thermo       # Plot thermodynamic properties
-gpumdkit.sh -plt train        # Plot NEP training results
-gpumdkit.sh -plt prediction   # Plot NEP predictions
-gpumdkit.sh -plt msd          # Plot mean square displacement
-gpumdkit.sh -plt rdf          # Plot radial distribution function
-gpumdkit.sh -plt sdc          # Plot self-diffusion coefficient
-gpumdkit.sh -plt charge       # Plot charge distribution
-gpumdkit.sh -plt des <method> # Plot descriptors (umap/tsne/pca)
+gpumdkit.sh -<flag> [arguments]
 ```
 
-### Calculators
-```bash
-gpumdkit.sh -calc ionic-cond <elem> <charge>          # Ionic conductivity
-gpumdkit.sh -calc nep <in> <out> <model>              # NEP predictions
-gpumdkit.sh -calc des <method> <in> <out> <model> <elem>  # Descriptors
-```
+**Best for:**
+- Quick one-off operations
+- Scripting and automation
+- Batch processing
 
-### Utilities
-```bash
-gpumdkit.sh -clean      # Clean extra files
-gpumdkit.sh -update     # Update GPUMDkit
-gpumdkit.sh -time gpumd # Estimate GPUMD time
-gpumdkit.sh -time nep   # Estimate NEP time
-```
+## Core Functionalities
 
-## Quick Examples
+### 1. Format Conversion
 
-### Example 1: Convert VASP Data to NEP Training Set
+Convert structure files between different formats:
 
 ```bash
-# 1. Convert VASP OUTCAR files to extxyz
+# VASP → extxyz
 gpumdkit.sh -out2xyz ./vasp_calculations/
+
+# POSCAR → extxyz
+gpumdkit.sh -pos2exyz POSCAR model.xyz
+
+# CIF → extxyz
+gpumdkit.sh -cif2exyz structure.cif
+
+# LAMMPS → extxyz
+gpumdkit.sh -lmp2exyz dump.lammpstrj Li Y Cl
+
+# Add group labels (required for NEP training)
+gpumdkit.sh -addgroup POSCAR Li Y Cl
+
+# Add weights to structures
+gpumdkit.sh -addweight train.xyz weighted.xyz 2.0
+```
+
+**📖 Learn more:** [Format Conversion Guide](format_conversion.md)
+
+### 2. Visualization & Plotting
+
+Visualize simulation results and training data:
+
+```bash
+# NEP Training
+gpumdkit.sh -plt train           # Training progress
+gpumdkit.sh -plt prediction      # Prediction accuracy
+gpumdkit.sh -plt force_errors    # Force error analysis
+
+# MD Simulations
+gpumdkit.sh -plt thermo          # Temperature, pressure, energy
+gpumdkit.sh -plt msd             # Mean square displacement
+gpumdkit.sh -plt rdf             # Radial distribution function
+
+# Transport Properties
+gpumdkit.sh -plt sdc             # Self-diffusion coefficient
+gpumdkit.sh -plt emd             # Thermal conductivity
+
+# Advanced Analysis
+gpumdkit.sh -plt des umap desc.npy  # Descriptor visualization
+gpumdkit.sh -plt charge          # Charge distribution
+```
+
+**📖 Learn more:** [Plot Scripts Guide](plot_scripts.md)
+
+### 3. Calculators
+
+Compute material properties:
+
+```bash
+# Ionic conductivity from MSD
+gpumdkit.sh -calc ionic-cond Li 1
+
+# NEP predictions
+gpumdkit.sh -calc nep input.xyz output.xyz nep.txt
+
+# Calculate descriptors
+gpumdkit.sh -calc des umap train.xyz desc.npy nep.txt Li
+
+# Density of atomistic states
+gpumdkit.sh -calc doas structures.xyz nep.txt output.txt
+```
+
+**📖 Learn more:** [Calculators Guide](calculators.md)
+
+### 4. Structure Analysis
+
+Validate and filter structure files:
+
+```bash
+# Check data quality
+gpumdkit.sh -range train.xyz force
+gpumdkit.sh -min_dist_pbc model.xyz
+gpumdkit.sh -analyze_comp train.xyz
+
+# Filter outliers
+gpumdkit.sh -filter_value train.xyz force 30
+gpumdkit.sh -filter_dist train.xyz 1.5
+gpumdkit.sh -filter_box train.xyz 20
+```
+
+### 5. Structure Sampling
+
+Select diverse structures for training:
+
+```bash
+# PyNEP farthest point sampling
+gpumdkit.sh -pynep candidates.xyz selected.xyz nep.txt
+
+# Generate perturbed structures
+# (via interactive mode option 204)
+```
+
+**📖 Learn more:** [Structure Sampling Guide](sample_structures.md)
+
+### 6. Workflow Automation
+
+Batch processing for high-throughput calculations:
+
+```bash
+# Interactive mode
+gpumdkit.sh
+# Select: 3) Workflow
+# - 301) SCF batch pretreatment (VASP/CP2K)
+# - 302) MD batch pretreatment (GPUMD)
+# - 303) MD batch pretreatment (LAMMPS)
+```
+
+**📖 Learn more:** [Workflow Guide](workflow_dev.md) | [Active Learning](workflow_active_learning.md)
+
+## Complete Feature Reference
+
+### Format Conversion Commands
+
+| Command | Description | Example |
+|---------|-------------|---------|
+| `-out2xyz` | OUTCAR → extxyz | `gpumdkit.sh -out2xyz ./` |
+| `-pos2exyz` | POSCAR → extxyz | `gpumdkit.sh -pos2exyz POSCAR model.xyz` |
+| `-exyz2pos` | extxyz → POSCAR | `gpumdkit.sh -exyz2pos train.xyz` |
+| `-cp2k2exyz` | CP2K → extxyz | `gpumdkit.sh -cp2k2exyz ./cp2k_out/` |
+| `-abacus2exyz` | ABACUS → extxyz | `gpumdkit.sh -abacus2exyz ./` |
+| `-cif2exyz` | CIF → extxyz | `gpumdkit.sh -cif2exyz structure.cif` |
+| `-cif2pos` | CIF → POSCAR | `gpumdkit.sh -cif2pos structure.cif` |
+| `-lmp2exyz` | LAMMPS → extxyz | `gpumdkit.sh -lmp2exyz dump.lmp Li Y` |
+| `-pos2lmp` | POSCAR → LAMMPS | `gpumdkit.sh -pos2lmp POSCAR lmp.data Li Y` |
+| `-addgroup` | Add group labels | `gpumdkit.sh -addgroup POSCAR Li Y Cl` |
+| `-addweight` | Add structure weight | `gpumdkit.sh -addweight in.xyz out.xyz 2.0` |
+| `-get_frame` | Extract frame | `gpumdkit.sh -get_frame dump.xyz 1000` |
+
+### Analysis Commands
+
+| Command | Description | Example |
+|---------|-------------|---------|
+| `-range` | Show property range | `gpumdkit.sh -range train.xyz force` |
+| `-min_dist` | Min atomic distance | `gpumdkit.sh -min_dist model.xyz` |
+| `-min_dist_pbc` | Min distance with PBC | `gpumdkit.sh -min_dist_pbc model.xyz` |
+| `-filter_value` | Filter by threshold | `gpumdkit.sh -filter_value train.xyz force 30` |
+| `-filter_dist` | Filter by distance | `gpumdkit.sh -filter_dist train.xyz 1.5` |
+| `-filter_box` | Filter by box size | `gpumdkit.sh -filter_box train.xyz 20` |
+| `-analyze_comp` | Composition analysis | `gpumdkit.sh -analyze_comp train.xyz` |
+| `-time` | Estimate runtime | `gpumdkit.sh -time gpumd` or `-time nep` |
+
+### Plotting Commands
+
+| Command | Description | Input File |
+|---------|-------------|------------|
+| `-plt thermo` | Thermodynamic properties | `thermo.out` |
+| `-plt train` | NEP training progress | `loss.out`, `*_train.out` |
+| `-plt prediction` | NEP predictions | `*_test.out` |
+| `-plt train_test` | Train & test comparison | `*_train.out`, `*_test.out` |
+| `-plt msd` | Mean square displacement | `msd.out` |
+| `-plt msd_all` | MSD per species | `msd.out` |
+| `-plt sdc` | Self-diffusion coefficient | `msd.out` |
+| `-plt rdf` | Radial distribution | `rdf.out` |
+| `-plt vac` | Velocity autocorrelation | `sdc.out` |
+| `-plt force_errors` | Force error metrics | `force_train.out` |
+| `-plt charge` | Charge distribution | `charge_train.out` |
+| `-plt lr` | Learning rate | `loss.out` |
+| `-plt restart` | Restart parameters | `nep.restart` |
+| `-plt des` | Descriptors | `descriptors.npy` |
+| `-plt dimer` | Dimer interaction | NEP model |
+| `-plt doas` | Density of states | DOAS files |
+| `-plt emd` | EMD thermal conductivity | EMD outputs |
+| `-plt nemd` | NEMD thermal transport | NEMD outputs |
+
+### Calculator Commands
+
+| Command | Description |
+|---------|-------------|
+| `-calc ionic-cond` | Ionic conductivity |
+| `-calc nep` | NEP predictions |
+| `-calc des` | Calculate descriptors |
+| `-calc doas` | Density of atomistic states |
+
+### Utility Commands
+
+| Command | Description |
+|---------|-------------|
+| `-clean` | Clean working directory |
+| `-update` | Update GPUMDkit |
+| `-h` | Show help |
+
+## Real-World Examples
+
+### Example 1: Prepare NEP Training Data from VASP
+
+```bash
+# 1. Convert VASP calculations to extxyz
+cd vasp_calculations/
+gpumdkit.sh -out2xyz ./
 
 # 2. Check data quality
 gpumdkit.sh -range train.xyz force
 gpumdkit.sh -min_dist_pbc train.xyz
 
-# 3. Filter outliers
+# 3. Filter problematic structures
 gpumdkit.sh -filter_value train.xyz force 30
 
-# 4. Add group labels (for multi-element systems)
+# 4. Add group labels for NEP
 gpumdkit.sh -addgroup POSCAR Li Y Cl
+
+# 5. Now train.xyz and model.xyz are ready for NEP!
 ```
 
-### Example 2: Analyze NEP Training
+### Example 2: Monitor and Visualize NEP Training
 
 ```bash
-# After NEP training completes:
-
-# Plot training progress
+# During training, in another terminal
 gpumdkit.sh -plt train
 
-# Plot prediction accuracy
+# After training completes
+gpumdkit.sh -plt train
 gpumdkit.sh -plt prediction
-
-# Plot force errors
 gpumdkit.sh -plt force_errors
-
-# Visualize learning rate
 gpumdkit.sh -plt lr
+
+# Check descriptor coverage
+gpumdkit.sh -calc des umap train.xyz desc.npy nep.txt Li
+gpumdkit.sh -plt des umap desc.npy
 ```
 
 ### Example 3: Analyze MD Simulation
 
 ```bash
-# After GPUMD simulation:
+# After GPUMD simulation
+cd simulation_results/
 
-# Plot thermodynamic properties
+# Thermodynamic properties
 gpumdkit.sh -plt thermo
 
-# Plot diffusion properties
+# Transport properties
 gpumdkit.sh -plt msd
-gpumdkit.sh -plt sdc
-
-# Calculate ionic conductivity
 gpumdkit.sh -calc ionic-cond Li 1
 
-# Plot structure
+# Structure
 gpumdkit.sh -plt rdf
 ```
 
-## Detailed Tutorials
+### Example 4: Active Learning Workflow
 
-For detailed tutorials on specific topics, see:
+```bash
+# Iteration 1: Initial training
+cd iteration_01/
+nep  # Train initial model
 
-- [Format Conversion](format_conversion.md) - Converting between file formats
-- [Sample Structures](sample_structures.md) - Sampling and selecting structures
-- [Calculators](calculators.md) - Using calculator tools
-- [Plot Scripts](plot_scripts.md) - Visualization and plotting
-- [Workflow Development](workflow_dev.md) - Batch processing workflows
-- [Active Learning](workflow_active_learning.md) - NEP active learning cycles
-- [Custom Commands](custom_commands.md) - Creating custom commands
+# Iteration 2: Active learning
+cd ../iteration_02/
 
-## Script Documentation
+# Run MD with active mode, then select uncertain structures
+gpumdkit.sh -pynep md_trajectory.xyz selected.xyz ../iteration_01/nep.txt
 
-For comprehensive documentation of all scripts:
+# Set up DFT calculations
+gpumdkit.sh  # Interactive mode → 3) Workflow → 301
 
-- [Scripts/plt_scripts/](../../Scripts/plt_scripts/README.md) - Plotting scripts
-- [Scripts/analyzer/](../../Scripts/analyzer/README.md) - Analysis tools
-- [Scripts/calculators/](../../Scripts/calculators/README.md) - Calculator scripts
-- [Scripts/format_conversion/](../../Scripts/format_conversion/README.md) - Format converters
-- [Scripts/sample_structures/](../../Scripts/sample_structures/README.md) - Sampling tools
-- [Scripts/workflow/](../../Scripts/workflow/README.md) - Workflow automation
-- [Scripts/utils/](../../Scripts/utils/README.md) - Utility scripts
+# After DFT, add to training set and retrain
+cat ../iteration_01/train.xyz dft_results.xyz > train.xyz
+nep  # Retrain
+```
 
-## Tips
+## Tips & Best Practices
 
-- Use **tab completion** for faster command entry
-- Add `save` at the end of plot commands to save figures (e.g., `-plt thermo save`)
-- Check help for any command: `gpumdkit.sh -<command> -h`
-- Use interactive mode when learning, command-line mode for automation
-- Keep training data organized in separate directories
+💡 **Use Tab Completion**: Bash completion makes command entry faster
+```bash
+gpumdkit.sh -plt <Tab>  # Shows available plot types
+```
+
+💡 **Save Plots**: Add `save` to any plot command to export PNG
+```bash
+gpumdkit.sh -plt thermo save
+```
+
+💡 **Check Help**: Most commands have help options
+```bash
+gpumdkit.sh -h
+gpumdkit.sh -plt -h
+gpumdkit.sh -calc -h
+```
+
+💡 **Organize Your Data**: Keep training data in well-structured directories
+```
+project/
+├── 00_raw_data/
+├── 01_converted/
+├── 02_filtered/
+├── 03_training/
+└── 04_models/
+```
+
+💡 **Quality Control**: Always validate data before training
+```bash
+gpumdkit.sh -range train.xyz force
+gpumdkit.sh -min_dist_pbc train.xyz
+gpumdkit.sh -analyze_comp train.xyz
+```
 
 ## Getting Help
 
-- **Documentation**: [https://github.com/zhyan0603/GPUMDkit](https://github.com/zhyan0603/GPUMDkit)
-- **Issues**: [GitHub Issues](https://github.com/zhyan0603/GPUMDkit/issues)
+- **Documentation**: This guide and linked tutorials
+- **Script Documentation**: See [Scripts directory README files](../../Scripts/)
+- **GitHub Issues**: [Report bugs or request features](https://github.com/zhyan0603/GPUMDkit/issues)
 - **Contact**: Zihan YAN (yanzihan@westlake.edu.cn)
+
+## Detailed Topic Guides
+
+For in-depth information on specific topics:
+
+- 📄 [Format Conversion](format_conversion.md) - Converting between file formats
+- 📊 [Plot Scripts](plot_scripts.md) - Visualization and plotting
+- 🧮 [Calculators](calculators.md) - Property calculations
+- 📦 [Structure Sampling](sample_structures.md) - Sampling methods and strategies
+- ⚙️ [Workflow Automation](workflow_dev.md) - Batch processing
+- 🤖 [Active Learning](workflow_active_learning.md) - NEP model improvement
+- 🔧 [Custom Commands](custom_commands.md) - Extending GPUMDkit
+
+## Advanced Features
+
+### Custom Commands
+
+Extend GPUMDkit with your own shortcuts by editing `~/.gpumdkit.in`:
+
+```bash
+custom_quick_analyze() {
+    gpumdkit.sh -range "$1" force
+    gpumdkit.sh -min_dist_pbc "$1"
+    gpumdkit.sh -analyze_comp "$1"
+}
+```
+
+Then use: `gpumdkit.sh -quick_analyze train.xyz`
+
+**Learn more:** [Custom Commands Guide](custom_commands.md)
+
+### Scripting with GPUMDkit
+
+GPUMDkit commands work great in shell scripts:
+
+```bash
+#!/bin/bash
+for temp in 600 900 1200; do
+    cd temp_${temp}/
+    gpumdkit.sh -plt thermo
+    gpumdkit.sh -plt msd
+    gpumdkit.sh -calc ionic-cond Li 1
+    cd ..
+done
+```
 
 ---
 
-Thank you for using GPUMDkit!
+**🎉 Ready to get started?** Try the interactive mode: `gpumdkit.sh`
+
+Thank you for using GPUMDkit! For questions or feedback, please contact Zihan YAN (yanzihan@westlake.edu.cn) or open an issue on GitHub.
