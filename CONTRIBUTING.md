@@ -37,7 +37,7 @@ To maintain code quality and consistency across the project, please adhere to th
 ### Modularity and Reusability
 
 - **Write modular and reusable code**: Functions and scripts should be designed with flexibility in mind.
-- **Prefer passing parameters over hardcoding values**: Use function arguments, command-line parameters, or configuration files instead of hardcoded values.
+- **Prefer passing parameters over hardcoding values**: Use function arguments, command-line parameters, or configuration files instead of hardcoded values. However, some filenames are required to be fixed by GPUMD and NEP programs (e.g., `train.xyz`, `thermo.out`), and these can be hardcoded as needed.
 - **Example**: 
   ```bash
   # Good: accepts parameters
@@ -47,7 +47,7 @@ To maintain code quality and consistency across the project, please adhere to th
       # processing logic
   }
   
-  # Avoid: hardcoded values
+  # Avoid: hardcoded values (unless required by GPUMD/NEP)
   function convert_file() {
       local input_file="hardcoded_input.xyz"
       # processing logic
@@ -56,15 +56,14 @@ To maintain code quality and consistency across the project, please adhere to th
 
 ### Code Style
 
-- **Shell scripts**: Follow consistent indentation (4 spaces) and use descriptive function names.
-- **Python scripts**: Follow PEP 8 style guidelines. Use meaningful variable names and add docstrings to functions and classes.
-- **Comments**: Write clear, concise comments explaining *why* something is done, not just *what* is done (the code should be self-explanatory for the "what").
+- Write code that is clear and easy for others to maintain and modify.
+- Use meaningful variable and function names.
+- Add comments where necessary to explain complex logic.
 
 ### Documentation
 
-- Update documentation when adding new features or changing existing behavior.
 - Ensure that help messages (e.g., `-h` flags) are clear and accurate.
-- If your change affects user workflows, consider updating the relevant files in the `docs/` directory.
+- Documentation files in the `docs/` directory will be updated by the maintainers, so you generally don't need to modify them.
 
 ---
 
@@ -74,16 +73,12 @@ If you encounter a bug, please help us fix it by reporting it through GitHub Iss
 
 1. **Search existing issues** to see if the bug has already been reported.
 2. **Open a new issue** if it hasn't been reported yet: [Create an Issue](https://github.com/zhyan0603/GPUMDkit/issues/new)
-3. **Provide detailed information**:
-   - **Description**: Clearly describe the bug and its impact.
-   - **Steps to reproduce**: List the exact steps to reproduce the issue.
-   - **Expected behavior**: What you expected to happen.
-   - **Actual behavior**: What actually happened.
-   - **Environment**: Your operating system, shell version, Python version, and GPUMDkit version.
-   - **Error messages**: Include any error messages or stack traces.
-   - **Screenshots**: If applicable, add screenshots to illustrate the problem.
+3. **Describe the problem in detail** and provide test files if possible.
 
-**Example Issue Title**: `Bug: -out2xyz fails with OUTCAR files containing magnetic moments`
+You can also reach out to us through:
+- **QQ Group**: 825696376
+- **Email**: yanzihan@westlake.edu.cn
+- **Script Developer**: Contact the developer listed in the script header
 
 ---
 
@@ -92,14 +87,8 @@ If you encounter a bug, please help us fix it by reporting it through GitHub Iss
 We welcome feature suggestions! To propose a new feature:
 
 1. **Search existing issues** to see if someone has already suggested it.
-2. **Open a new feature request**: [Create a Feature Request](https://github.com/zhyan0603/GPUMDkit/issues/new)
-3. **Provide detailed information**:
-   - **Description**: Clearly describe the feature and its purpose.
-   - **Use case**: Explain why this feature would be useful and how it would be used.
-   - **Proposed implementation**: If you have ideas about how to implement it, share them.
-   - **Examples**: Provide examples or mockups if applicable.
-
-**Example Feature Request Title**: `Feature: Add support for converting LAMMPS trajectory to extxyz format`
+2. **Open a new feature request**: [Create a Feature Request](https://github.com/zhyan0603/GPUMDkit/issues/new) and mention @zhyan0603
+3. **Describe what you need** clearly and explain how it would be useful.
 
 ---
 
@@ -115,30 +104,21 @@ We welcome feature suggestions! To propose a new feature:
    cd GPUMDkit
    ```
 
-3. **Checkout the `refactor` branch** (this is our main development branch):
-   ```bash
-   git checkout refactor
-   ```
-
-4. **Set up the upstream remote** to keep your fork in sync:
+3. **Set up the upstream remote** to keep your fork in sync:
    ```bash
    git remote add upstream https://github.com/zhyan0603/GPUMDkit.git
    ```
 
 ### Create a Feature Branch
 
-Always create a new branch for your changes. Branch names should be descriptive:
+Create a new branch for your changes:
 
 ```bash
-# Create and checkout a new branch from refactor
-git checkout -b feature/add-xyz-to-lammps-converter refactor
+# Create and checkout a new branch from main
+git checkout -b your-branch-name
 ```
 
-**Branch naming conventions**:
-- Feature additions: `feature/description-of-feature`
-- Bug fixes: `fix/description-of-bug`
-- Documentation: `docs/description-of-change`
-- Refactoring: `refactor/description-of-change`
+Name your branch as you prefer - there are no strict naming conventions.
 
 ### Making Changes
 
@@ -234,17 +214,19 @@ To add a new command-line flag or subcommand:
    touch Scripts/analyzer/analyze_bonds.py
    ```
 
-2. **Implement your functionality** with proper argument parsing:
+2. **Implement your functionality** with clear parameter requirements:
    ```python
    # Example: Scripts/analyzer/analyze_bonds.py
    import sys
-   import argparse
    
    def main():
-       parser = argparse.ArgumentParser(description='Analyze bond lengths in structure')
-       parser.add_argument('input_file', help='Input XYZ file')
-       parser.add_argument('--cutoff', type=float, default=3.0, help='Bond cutoff distance')
-       args = parser.parse_args()
+       if len(sys.argv) != 3:
+           print("Usage: gpumdkit.sh -analyze_bonds <input.xyz> <cutoff_distance>")
+           print("Example: gpumdkit.sh -analyze_bonds structure.xyz 3.0")
+           sys.exit(1)
+       
+       input_file = sys.argv[1]
+       cutoff = float(sys.argv[2])
        
        # Your implementation here
        
@@ -260,10 +242,11 @@ To add a new command-line flag or subcommand:
    case $1 in
        # ... existing cases ...
        -analyze_bonds)
-           if [ ! -z "$2" ]; then
-               python ${analyzer_path}/analyze_bonds.py "$2" "${@:3}"
+           if [ ! -z "$2" ] && [ ! -z "$3" ]; then
+               python ${analyzer_path}/analyze_bonds.py "$2" "$3"
            else
-               echo " Usage: gpumdkit.sh -analyze_bonds <input.xyz> [--cutoff 3.0]"
+               echo " Usage: gpumdkit.sh -analyze_bonds <input.xyz> <cutoff_distance>"
+               echo " Example: gpumdkit.sh -analyze_bonds structure.xyz 3.0"
                echo " Code path: ${analyzer_path}/analyze_bonds.py"
                exit 1
            fi ;;
@@ -311,31 +294,12 @@ esac
 ### Code Style and Best Practices
 
 - **Shell Scripts**:
-  - Use `#!/bin/bash` shebang
-  - Use 4-space indentation
-  - Quote variables: `"$variable"` not `$variable`
-  - Use `[[` instead of `[` for conditionals
-  - Add error checking: `set -e` or check return codes
+  - Use `${variable}` for variable expansion
+  - Write code that is clear and easy to maintain
 
 - **Python Scripts**:
-  - Follow PEP 8 style guide
-  - Use type hints where appropriate
-  - Add docstrings to functions and classes:
-    ```python
-    def calculate_distance(coord1, coord2):
-        """
-        Calculate Euclidean distance between two coordinates.
-        
-        Args:
-            coord1 (list): First coordinate [x, y, z]
-            coord2 (list): Second coordinate [x, y, z]
-            
-        Returns:
-            float: Distance between the two coordinates
-        """
-        # implementation
-    ```
-  - Use meaningful variable names (avoid single letters except for common iterators)
+  - Write clear, maintainable code
+  - Use meaningful variable names
 
 ### Testing Your Changes
 
@@ -368,92 +332,43 @@ Before submitting your contribution:
 
 ### Commit Messages
 
-Write clear, descriptive commit messages following conventional commit format:
-
-**Format**:
-```
-<type>(<scope>): <short summary>
-
-<detailed description (optional)>
-
-<footer (optional)>
-```
-
-**Types**:
-- `feat`: New feature
-- `fix`: Bug fix
-- `docs`: Documentation changes
-- `style`: Code style changes (formatting, no functional changes)
-- `refactor`: Code refactoring
-- `test`: Adding or updating tests
-- `chore`: Maintenance tasks
-
-**Examples**:
-```bash
-feat(format_conversion): add LAMMPS trajectory to XYZ converter
-
-Implement new converter that reads LAMMPS dump files and converts
-them to extended XYZ format. Supports custom atom types and periodic
-boundary conditions.
-
-Closes #123
-```
-
-```bash
-fix(calculators): correct ionic conductivity calculation for multi-species systems
-
-The previous implementation incorrectly averaged conductivities.
-Now properly weights by species concentration.
-```
-
-```bash
-docs(README): update installation instructions for Python dependencies
-```
-
-**Guidelines**:
-- Use present tense: "add feature" not "added feature"
-- Keep the first line under 72 characters
-- Reference related issues: `Fixes #123`, `Closes #456`, `Related to #789`
-- Write in English
-- Be descriptive but concise
+Write clear, descriptive commit messages that explain what you changed. There are no strict format requirements - just make sure your message is understandable.
 
 ### Push and Open a Pull Request
 
 1. **Commit your changes**:
    ```bash
    git add .
-   git commit -m "feat(scope): your descriptive message"
+   git commit -m "your descriptive message"
    ```
 
-2. **Keep your branch updated** with the upstream `refactor` branch:
+2. **Keep your branch updated** with the upstream `main` branch:
    ```bash
    git fetch upstream
-   git rebase upstream/refactor
+   git rebase upstream/main
    ```
 
 3. **Push your branch** to your fork:
    ```bash
-   git push origin feature/your-feature-name
+   git push origin your-branch-name
    ```
 
 4. **Open a Pull Request**:
    - Go to the [GPUMDkit repository](https://github.com/zhyan0603/GPUMDkit)
    - Click "Pull Requests" → "New Pull Request"
-   - Set the base branch to `dev` (not `refactor` directly)
+   - Set the base branch to `dev` for code review
    - Set the compare branch to your feature branch
-   - Fill in the PR template with:
-     - **Title**: Brief description of changes (following commit message format)
+   - Fill in the PR description with:
+     - **Title**: Brief description of changes
      - **Description**: Detailed explanation of what changed and why
-     - **Related Issues**: Link any related issues
      - **Testing**: Describe how you tested the changes
-     - **Checklist**: Complete the checklist items
 
 5. **Respond to review feedback**:
    - Be open to suggestions and constructive criticism
    - Make requested changes promptly
    - Push additional commits to your branch (they'll automatically appear in the PR)
 
-6. **After approval**: A maintainer will merge your PR into the `dev` branch, and it will eventually be merged into `refactor`.
+6. **After approval**: A maintainer will merge your PR.
 
 ---
 
