@@ -471,6 +471,70 @@ done
 
 ---
 
+## Tutorial Quick Reference
+
+### By User Level
+
+**Beginners - Start Here:**
+1. Read this [README](README.md) - Overview and quick start
+2. [Format Conversion](format_conversion.md) - Learn basic file conversions
+3. [Plot Scripts](plot_scripts.md) - Visualize your data
+4. [Analyzer Tools](analyzer.md) - Check data quality
+
+**Intermediate - Build Skills:**
+1. [Calculators](calculators.md) - Compute properties
+2. [Structure Sampling](sample_structures.md) - Create training sets
+3. [Workflow Automation](workflow_dev.md) - Batch processing
+4. [Custom Commands](custom_commands.md) - Extend GPUMDkit
+
+**Advanced - Master the Toolkit:**
+1. [Active Learning](workflow_active_learning.md) - Automated NEP development
+2. [Structure Sampling Advanced](sample_structures.md#advanced-techniques) - Optimization strategies
+3. [Custom Commands Advanced](custom_commands.md#advanced-examples) - Complex workflows
+
+---
+
+### By Task Type
+
+**NEP Model Development:**
+1. [Format Conversion](format_conversion.md) → Convert DFT data
+2. [Analyzer Tools](analyzer.md) → Quality control
+3. [Structure Sampling](sample_structures.md) → Create training set
+4. [Plot Scripts](plot_scripts.md) → Monitor training
+5. [Active Learning](workflow_active_learning.md) → Iterative improvement
+
+**MD Simulation Analysis:**
+1. [Plot Scripts](plot_scripts.md) → Visualize results
+2. [Calculators](calculators.md) → Compute properties
+3. [Analyzer Tools](analyzer.md) → Validate structures
+
+**High-Throughput Calculations:**
+1. [Workflow Automation](workflow_dev.md) → Batch DFT/MD setup
+2. [Custom Commands](custom_commands.md) → Automate repetitive tasks
+
+**Data Curation:**
+1. [Analyzer Tools](analyzer.md) → Filter and validate
+2. [Structure Sampling](sample_structures.md) → Reduce and diversify
+3. [Format Conversion](format_conversion.md) → Prepare formats
+
+---
+
+### All Tutorials at a Glance
+
+| Tutorial | Size | Level | Topics Covered |
+|----------|------|-------|----------------|
+| [README](README.md) | Quick Start | Beginner | Overview, installation, basic usage |
+| [Format Conversion](format_conversion.md) | Comprehensive | Beginner | VASP, LAMMPS, CP2K, CIF conversions |
+| [Plot Scripts](plot_scripts.md) | Reference | Beginner | All visualization tools |
+| [Analyzer Tools](analyzer.md) | Comprehensive | Beginner-Int | Quality control, filtering, analysis |
+| [Calculators](calculators.md) | Detailed | Intermediate | Ionic conductivity, descriptors, NEB, DOAS |
+| [Structure Sampling](sample_structures.md) | Comprehensive | Intermediate | FPS, perturbation, active selection |
+| [Workflow Automation](workflow_dev.md) | Detailed | Intermediate | Batch DFT/MD preprocessing |
+| [Active Learning](workflow_active_learning.md) | Comprehensive | Advanced | Automated NEP development cycles |
+| [Custom Commands](custom_commands.md) | Detailed | Advanced | Extending GPUMDkit functionality |
+
+---
+
 **🎉 Ready to get started?** Try the interactive mode: `gpumdkit.sh`
 
 Thank you for using GPUMDkit! For questions or feedback, please contact Zihan YAN (yanzihan@westlake.edu.cn) or open an issue on GitHub.
