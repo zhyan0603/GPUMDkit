@@ -1,3 +1,18 @@
+"""
+This script is part of GPUMDkit.
+Repository: https://github.com/zhyan0603/GPUMDkit
+
+Description:
+    Plot net force evolution
+
+Usage:
+    python plt_net_force.py [arguments]
+
+Author: Zihan YAN
+Contact: yanzihan@westlake.edu.cn
+Last Modified: 2025-12-28
+"""
+
 import numpy as np
 import matplotlib.pyplot as plt
 import os

@@ -1,3 +1,18 @@
+"""
+This script is part of GPUMDkit.
+Repository: https://github.com/zhyan0603/GPUMDkit
+
+Description:
+    Check MSD convergence
+
+Usage:
+    python plt_msd_convergence_check.py [arguments]
+
+Author: Zihan YAN
+Contact: yanzihan@westlake.edu.cn
+Last Modified: 2025-12-28
+"""
+
 import sys
 import numpy as np
 import matplotlib.pyplot as plt

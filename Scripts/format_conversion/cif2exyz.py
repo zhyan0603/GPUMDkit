@@ -1,10 +1,18 @@
 """
-Convert CIF file to VASP extxyz format using ASE.
+This script is part of GPUMDkit.
+Repository: https://github.com/zhyan0603/GPUMDkit
+
+Description:
+    Convert CIF to EXYZ format
+
 Usage:
-    python cif2exyz.py input.cif model.xyz
-    Author: Boyi Situ (situboyi@westlake.edu.cn)
-    Date: 2025-08-21
+    python cif2exyz.py [arguments]
+
+Author: Zihan YAN
+Contact: yanzihan@westlake.edu.cn
+Last Modified: 2025-12-28
 """
+
 
 import sys
 from ase.io import read, write

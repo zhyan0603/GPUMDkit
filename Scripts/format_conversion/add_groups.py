@@ -1,3 +1,18 @@
+"""
+This script is part of GPUMDkit.
+Repository: https://github.com/zhyan0603/GPUMDkit
+
+Description:
+    Add group information to structures
+
+Usage:
+    python add_groups.py [arguments]
+
+Author: Zihan YAN
+Contact: yanzihan@westlake.edu.cn
+Last Modified: 2025-12-28
+"""
+
 import sys
 from ase.io import read, write
 import numpy as np

@@ -1,3 +1,18 @@
+"""
+This script is part of GPUMDkit.
+Repository: https://github.com/zhyan0603/GPUMDkit
+
+Description:
+    Plot dimer potential curve
+
+Usage:
+    python plt_dimer.py [arguments]
+
+Author: Zihan YAN
+Contact: yanzihan@westlake.edu.cn
+Last Modified: 2025-12-28
+"""
+
 import numpy as np
 import matplotlib.pyplot as plt
 from ase import Atoms

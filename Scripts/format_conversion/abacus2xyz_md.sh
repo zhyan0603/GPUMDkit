@@ -1,12 +1,19 @@
 #!/bin/bash
-### HOW TO USE #################################################################################
-### SYNTAX: ./abacus2xyz_md.sh dire_name
-###     NOTE: 1).'dire_name' is the directory containing running_md.log and MD_dump file.
-### Email: tang070205@proton.me if any questions
-### Modified from multipleFrames-outcars2nep-exyz.sh
-### Modified by Benrui Tang
-################################################################################################
-#--- DEFAULT ASSIGNMENTS ---------------------------------------------------------------------
+#
+# This script is part of GPUMDkit.
+# Repository: https://github.com/zhyan0603/GPUMDkit
+#
+# Description:
+#     Convert ABACUS MD output to XYZ
+#
+# Usage:
+#     bash abacus2xyz_md.sh [arguments]
+#
+# Author: Zihan YAN
+# Contact: yanzihan@westlake.edu.cn
+# Last Modified: 2025-12-28
+#
+
 isol_ener=0     # Shifted energy, specify the value?
 viri_logi=1     # Logical value for virial, true=1, false=0
 #--------------------------------------------------------------------------------------------

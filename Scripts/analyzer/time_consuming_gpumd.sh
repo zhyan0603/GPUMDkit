@@ -1,6 +1,19 @@
 #!/bin/bash
+#
+# This script is part of GPUMDkit.
+# Repository: https://github.com/zhyan0603/GPUMDkit
+#
+# Description:
+#     Analyze time consumption for GPUMD
+#
+# Usage:
+#     bash time_consuming_gpumd.sh [arguments]
+#
+# Author: Zihan YAN
+# Contact: yanzihan@westlake.edu.cn
+# Last Modified: 2025-12-28
+#
 
-# Get the total number of frames from the "run" file
 frames=$(grep run run.in | awk '{sum += $2} END {print sum}')
 
 # Initialize variables

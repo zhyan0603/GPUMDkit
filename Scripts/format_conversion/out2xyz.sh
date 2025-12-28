@@ -1,13 +1,19 @@
 #!/bin/bash
-### HOW TO USE #################################################################################
-### SYNTAX: ./outcar2nep-exyz.sh dire_name
-###     NOTE: 1).'dire_name' is the directory containing OUTCARs
-### Email: yanzhowang@gmail.com if any questions
-### Modified by Yuwen Zhang
-### Modified by Shunda Chen
-### Modified by Zihan Yan
-################################################################################################
-#--- DEFAULT ASSIGNMENTS ---------------------------------------------------------------------
+#
+# This script is part of GPUMDkit.
+# Repository: https://github.com/zhyan0603/GPUMDkit
+#
+# Description:
+#     Convert output files to XYZ format
+#
+# Usage:
+#     bash out2xyz.sh [arguments]
+#
+# Author: Zihan YAN
+# Contact: yanzihan@westlake.edu.cn
+# Last Modified: 2025-12-28
+#
+
 isol_ener=0     # Shifted energy, specify the value?
 viri_logi=1     # Logical value for virial, true=1, false=0
 #--------------------------------------------------------------------------------------------

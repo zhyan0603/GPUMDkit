@@ -1,3 +1,18 @@
+"""
+This script is part of GPUMDkit.
+Repository: https://github.com/zhyan0603/GPUMDkit
+
+Description:
+    Convert POSCAR to LAMMPS data format
+
+Usage:
+    python pos2lmp.py [arguments]
+
+Author: Zihan YAN
+Contact: yanzihan@westlake.edu.cn
+Last Modified: 2025-12-28
+"""
+
 import sys
 from ovito.io import import_file, export_file
 

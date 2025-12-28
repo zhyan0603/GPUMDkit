@@ -1,3 +1,18 @@
+"""
+This script is part of GPUMDkit.
+Repository: https://github.com/zhyan0603/GPUMDkit
+
+Description:
+    Convert CP2K output to XYZ format
+
+Usage:
+    python cp2k2xyz.py [arguments]
+
+Author: Zihan YAN
+Contact: yanzihan@westlake.edu.cn
+Last Modified: 2025-12-28
+"""
+
 #python cp2k2xyz.py [pos.xyz] [frc.xyz] [cell.cell] [-shifted yes/no]
 #-shifted yes, energy shift; -shifted no, not energy shift; The default is "-shifted no".
 #If only entering "python cp2k2xyz.py", read according to the default file name; Otherwise, read according to the input file name.

@@ -1,6 +1,19 @@
 #!/bin/bash
+#
+# This script is part of GPUMDkit.
+# Repository: https://github.com/zhyan0603/GPUMDkit
+#
+# Description:
+#     Analyze time consumption for NEP training
+#
+# Usage:
+#     bash time_consuming_nep.sh [arguments]
+#
+# Author: Zihan YAN
+# Contact: yanzihan@westlake.edu.cn
+# Last Modified: 2025-12-28
+#
 
-# Get total steps from nep.in
 if [ -f "nep.in" ]; then
     total_steps=$(grep 'generation' "nep.in" | awk '{print $2}')
 elif [ -f "gnep.in" ]; then

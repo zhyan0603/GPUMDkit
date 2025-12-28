@@ -1,3 +1,18 @@
+"""
+This script is part of GPUMDkit.
+Repository: https://github.com/zhyan0603/GPUMDkit
+
+Description:
+    Perform probability density analysis on trajectories
+
+Usage:
+    python probability_density_analysis.py [arguments]
+
+Author: Zihan YAN
+Contact: yanzihan@westlake.edu.cn
+Last Modified: 2025-12-28
+"""
+
 import sys
 import numpy as np
 from pymatgen.analysis.diffusion.aimd.pathway import ProbabilityDensityAnalysis

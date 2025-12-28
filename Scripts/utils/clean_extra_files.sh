@@ -1,6 +1,17 @@
-#--------------------- clean extra files ----------------------
-# This function is used to clean extra files in the current directory
-# It will keep some files and delete the rest
+#
+# This script is part of GPUMDkit.
+# Repository: https://github.com/zhyan0603/GPUMDkit
+#
+# Description:
+#     Clean extra files generated during runs
+#
+# Usage:
+#     bash clean_extra_files.sh [arguments]
+#
+# Author: Zihan YAN
+# Contact: yanzihan@westlake.edu.cn
+# Last Modified: 2025-12-28
+#
 
 function clean_extra_files(){
 keep_files=("run.in" "nep.in" "model.xyz" "nep.txt" "train.xyz" "test.xyz")

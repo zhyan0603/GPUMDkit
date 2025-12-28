@@ -1,4 +1,18 @@
 #!bin/bash
+#
+# This script is part of GPUMDkit.
+# Repository: https://github.com/zhyan0603/GPUMDkit
+#
+# Description:
+#     Template script for job submission
+#
+# Usage:
+#     bash submit_template.sh [arguments]
+#
+# Author: Zihan YAN
+# Contact: yanzihan@westlake.edu.cn
+# Last Modified: 2025-12-28
+#
 
 function submit_gpumd_array(){
 cat > submit.slurm <<-EOF

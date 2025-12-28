@@ -1,4 +1,18 @@
 #!/bin/bash
+#
+# This script is part of GPUMDkit.
+# Repository: https://github.com/zhyan0603/GPUMDkit
+#
+# Description:
+#     Batch pretreatment for VASP SCF calculations
+#
+# Usage:
+#     bash scf_batch_pretreatment_vasp.sh [arguments]
+#
+# Author: Zihan YAN
+# Contact: yanzihan@westlake.edu.cn
+# Last Modified: 2025-12-28
+#
 
 function vasp_scf_batch_pretreatment(){
     echo " ------------>>"

@@ -1,15 +1,18 @@
 """
-This script calculates the radial distribution function (RDF) using the OVITO library.
-Usage: python rdf_calculator_ovito.py exyzfile cutoff bins
-Parameters:
-    exyzfile : The path to the input exyz file.
-    cutoff   : The cutoff distance for the coordination analysis.
-    bins     : The number of bins for the RDF histogram.
-Output:
-    The calculated RDF values are exported to a text file named "rdf.txt".
+This script is part of GPUMDkit.
+Repository: https://github.com/zhyan0603/GPUMDkit
+
+Description:
+    Calculate radial distribution function using OVITO
+
+Usage:
+    python rdf_calculator_ovito.py [arguments]
+
 Author: Zihan YAN
-Date: Aug 20, 2024
+Contact: yanzihan@westlake.edu.cn
+Last Modified: 2025-12-28
 """
+
 
 import sys
 from ovito.io import import_file, export_file

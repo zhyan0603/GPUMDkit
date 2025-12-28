@@ -1,6 +1,19 @@
 #!/usr/bin/env bash
+#
+# This script is part of GPUMDkit.
+# Repository: https://github.com/zhyan0603/GPUMDkit
+#
+# Description:
+#     Bash completion script for gpumdkit.sh
+#
+# Usage:
+#     bash completion.sh [arguments]
+#
+# Author: Zihan YAN
+# Contact: yanzihan@westlake.edu.cn
+# Last Modified: 2025-12-28
+#
 
-# Check if 'complete' and 'compgen' commands are available
 if ! command -v complete >/dev/null 2>&1 || ! command -v compgen >/dev/null 2>&1; then
     # If either command is not found, exit silently
     return 0 2>/dev/null || exit 0

@@ -1,3 +1,18 @@
+"""
+This script is part of GPUMDkit.
+Repository: https://github.com/zhyan0603/GPUMDkit
+
+Description:
+    Convert ABACUS SCF output to XYZ (Python version)
+
+Usage:
+    python abacus2xyz_scf.py [arguments]
+
+Author: Zihan YAN
+Contact: yanzihan@westlake.edu.cn
+Last Modified: 2025-12-28
+"""
+
 import os, sys, json
 import numpy as np
 from ase.io import read, write
