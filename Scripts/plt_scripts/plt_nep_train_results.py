@@ -111,7 +111,7 @@ else:
     xmin_stress, xmax_stress = calculate_limits(stress_data[:, 6:12].reshape(-1))
     axs[1, 1].set_xlim(xmin_stress, xmax_stress)
     axs[1, 1].set_ylim(xmin_stress, xmax_stress)
-    axs[1, 1].plot(stress_data[:, 6:12].reshape(-1), stress_data[:, 0:6].reshape(-1), '.', markersize=10)
+    axs[1, 1].plot(stress_data[:, 6:12], stress_data[:, 0:6], '.', markersize=10)
     axs[1, 1].plot([xmin_stress, xmax_stress], [xmin_stress, xmax_stress], linewidth=2, color='grey', linestyle='--')
     axs[1, 1].set_xlabel('DFT stress (GPa)', fontsize=10)
     axs[1, 1].set_ylabel('NEP stress (GPa)', fontsize=10)
@@ -127,7 +127,7 @@ else:
     mean_stress_mae = np.mean(stress_mae)
     mean_stress_r2 = np.mean(stress_r2)
     axs[1, 1].text(0.7, 0.12, f'R²: {mean_stress_r2:.4f}\nMAE: {mean_stress_mae:.4f} GPa\nRMSE: {mean_stress_rmse:.4f} GPa', 
-                   transform=axs[1, 1].transAxes, fontsize=10, verticalalignment='center', horizontalalignment='center')
+                transform=axs[1, 1].transAxes, fontsize=10, verticalalignment='center', horizontalalignment='center')
 
 # Adjust layout for better spacing
 plt.tight_layout()
