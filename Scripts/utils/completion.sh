@@ -13,47 +13,29 @@ _gpumdkit_completions() {
     prev="${COMP_WORDS[COMP_CWORD-1]}" # Previous word
 
     # List of primary options (extracted from gpumdkit.sh)
-    local opts="-h -update -U -help -clean -time -plt -calc -range -out2xyz -pos2exyz -cif2pos -cif2exyz -exyz2pos -pos2lmp -lmp2exyz -addgroup -addlabel -addweight -min_dist -min_dist_pbc -filter_dist -filter_dist_pbc -filter_box -filter_value -get_frame -clean_xyz -get_volume -analyze_comp -replicate -hbond -pda -pynep"
+    local opts="-h -update -help -clean -time -plt -calc -cbc -range -out2xyz -pos2exyz -cif2pos -cif2exyz -exyz2pos -pos2lmp -lmp2exyz -addgroup -addlabel -addweight -min_dist -min_dist_pbc -filter_dist -filter_dist_pbc -filter_box -filter_value -get_frame -clean_xyz -get_volume -analyze_comp -replicate -hbond -pda -pynep"
 
     # Provide secondary completion based on the previous word
     case "$prev" in
         # Secondary options for -time
         -time)
-            COMPREPLY=($(compgen -W "gpumd nep gnep" -- "$cur"))
-            ;;
+            COMPREPLY=($(compgen -W "gpumd nep gnep" -- "$cur")) ;;
 
         # Secondary options for -plt
         -plt)
-            COMPREPLY=($(compgen -W "thermo thermo2 thermo3 train prediction test train_test msd msd_all msd_conv sdc rdf vac restart dimer force_error des doas charge lr parity_density arrhenius_d arrhenius_sigma sigma D net_force emd nemd hnemd" -- "$cur"))
-            ;;
+            COMPREPLY=($(compgen -W "thermo thermo2 thermo3 train prediction test train_test msd msd_all msd_conv sdc rdf vac restart dimer force_error des doas charge lr parity_density arrhenius_d arrhenius_sigma sigma D net_force emd nemd hnemd" -- "$cur")) ;;
 
         # Secondary options for -calc
         -calc)
-            COMPREPLY=($(compgen -W "ionic-cond nep des doas neb" -- "$cur"))
-            ;;
-
-        # Secondary options for -range
-        -range)
-            COMPREPLY=($(compgen -W "energy force virial" -- "$cur"))  # Example properties, assumed supported
-            ;;
+            COMPREPLY=($(compgen -W "ionic-cond nep des doas neb" -- "$cur")) ;;
             
-        # Secondary completion for -filter_value
-        -filter_value)
-            if [ "$COMP_CWORD" -eq 2 ]; then
-                COMPREPLY=($(compgen -f -- "$cur"))  # Complete extxyz file
-            else 
-                COMPREPLY=($(compgen -W "energy force virial" -- "$cur"))  # Properties
-            fi
-            ;;
         # Options requiring files or directories, complete with filenames
-        -out2xyz|-cp2k2xyz|-cp2k2exyz|-exyz2pos|-min_dist|-min_dist_pbc|-filter_dist|-filter_dist_pbc|-filter_box|-get_frame|-clean_xyz|-mtp2xyz|-pos2exyz|-pos2lmp|-lmp2exyz|-addgroup|-addlabel|-addweight|-max_rmse|-get_max_rmse_xyz|-analyze_comp|-replicate|-pda)
-            COMPREPLY=($(compgen -f -- "$cur"))  # Complete files or directories
-            ;;
+        -out2xyz|-cp2k2xyz|-cp2k2exyz|-exyz2pos|-min_dist|-min_dist_pbc|-filter_dist|-filter_dist_pbc|-filter_box|-get_frame|-clean_xyz|-mtp2xyz|-pos2exyz|-pos2lmp|-lmp2exyz|-addgroup|-addlabel|-addweight|-max_rmse|-get_max_rmse_xyz|-analyze_comp|-replicate|-pda|-cbc|-frame_range)
+            COMPREPLY=($(compgen -f -- "$cur")) ;;
 
         # Default case: complete primary options
         *)
-            COMPREPLY=($(compgen -W "$opts" -- "$cur"))
-            ;;
+            COMPREPLY=($(compgen -W "$opts" -- "$cur")) ;;
     esac
 }
 

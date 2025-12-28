@@ -106,9 +106,9 @@ function main(){
                 "502") f502_find_outliers ;;
             esac ;;  
         "6")
-            echo "Developing ..." ;;
+            echo " Developing ..." ;;
         *)
-            echo "Incorrect Options"
+            echo " Incorrect Options"
             ;;
 
     esac
@@ -136,9 +136,9 @@ function help_info_table(){
     echo "| -pynep         Sample struct by pynep         | Developing...                                    |"
     echo "+====================================== Misc Utilities ============================================+"
     echo "| -plt           Plot scripts                   | -get_frame     Extract the specified frame       |"
-    echo "| -calc          Calculators                    | -clean_xyz     Clean extra info in XYZ file      |"
-    echo "| -clean         Clear files for work_dir       | -time          Time consuming Analyzer           |"
-    echo "| -update        Update GPUMDkit                | Developing...                                    |"    
+    echo "| -calc          Calculators                    | -frame_range   Extract frames by fraction range  |"
+    echo "| -clean         Clear files for work_dir       | -clean_xyz     Clean extra info in XYZ file      |"
+    echo "| -time          Time consuming Analyzer        | -update        Update GPUMDkit                   |"    
     echo "+==================================================================================================+"
     echo "| For detailed usage and examples, use: gpumdkit.sh -<option> -h                                   |"
     echo "+==================================================================================================+"
@@ -220,7 +220,7 @@ if [ ! -z "$1" ]; then
                         echo " | inconsistencies in the atomic order between the training |"
                         echo " | set and charge_train.out.                                |"
                         echo " +----------------------------------------------------------+"
-                        python ${plt_path}/plt_charge.py $3 ;;                                                                                    
+                        python ${plt_path}/plt_charge.py $3 ;;
                     *) plot_info_table; exit 1 ;;
                 esac
             else
@@ -298,8 +298,7 @@ if [ ! -z "$1" ]; then
                 echo " Usage: -range <exyzfile> <property> [hist] (eg. gpumdkit.sh -range train.xyz energy hist)" 
                 echo " See the source code of energy_force_virial_analyzer.py for more details"
                 echo " Code path: Code path: ${analyzer_path}/energy_force_virial_analyzer.py"
-            fi
-            ;;
+            fi ;;
 
         -replicate)
             if [ ! -z "$2" ] && [ "$2" != "-h" ] && [ ! -z "$3" ] ; then
@@ -542,14 +541,31 @@ if [ ! -z "$1" ]; then
         -pynep)
             parallel_pynep_sample_structures ;;
 
+        -frame_range)
+            if [ ! -z "$2" ] && [ "$2" != "-h" ] && [ ! -z "$3" ] && [ ! -z "$4" ] ; then
+                echo " Calling script by Zihan YAN "
+                echo " Code path: ${sample_path}/frame_range.py"
+                python ${sample_path}/frame_range.py $2 $3 $4
+            else
+                echo " Usage: -frame_range <exyzfile> <start_frac> <end_frac>"
+                echo " Examp: gpumdkit.sh -frame_range dump.xyz 0.2 0.5"
+                echo " See the source code of frame_range.py for more details"
+                echo " Code path: ${sample_path}/frame_range.py"
+            fi ;;
+
         -re_atoms)
             echo " Calling script by Dian HUANG et al. "
             python ${utils_path}/renumber_atoms.py $2 $3 ;;
 
         -cbc)
-            echo " Calling script by Zihan YAN "
-            python ${analyzer_path}/charge_balance_check.py $2
-            ;;
+            if [ ! -z "$2" ] && [ "$2" != "-h" ] ; then
+                echo " Calling script by Zihan YAN "
+                python ${analyzer_path}/charge_balance_check.py $2
+            else
+                echo " Usage: -cbc <exyzfile>"
+                echo " See the source code of charge_balance_check.py for more details"
+                echo " Code path: ${analyzer_path}/charge_balance_check.py"
+            fi ;;
 
         -pda)
             if [ ! -z "$2" ] && [ "$2" != "-h" ] && [ ! -z "$3" ] && [ ! -z "$4" ] && [ ! -z "$5" ] ; then
