@@ -1,6 +1,8 @@
 # Active Learning Workflow
 
-This tutorial explains how to use the `workflow_active_learning_dev.sh` script for automated NEP model development through active learning.
+**Script Location:** `Scripts/workflow/workflow_active_learning_dev.sh`
+
+This tutorial explains the automated active learning workflow for NEP model development.
 
 ## Overview
 
@@ -88,14 +90,7 @@ The workflow will:
 
 ### Stage 1: MD Sampling
 
-Generates candidate structures by running MD at specified temperature:
-
-```bash
-# Multiple MD runs from sampled initial structures
-for each structure in train.xyz:
-    Run GPUMD MD simulation
-    Collect trajectory
-```
+Generates candidate structures by running MD at specified temperature.
 
 ### Stage 2: Structure Filtering
 
@@ -104,46 +99,21 @@ Applies quality filters:
 - Box size within limits
 - Maximum force < threshold
 
-```bash
-gpumdkit.sh -min_dist_pbc candidates.xyz
-gpumdkit.sh -filter_box candidates.xyz $box_limit
-gpumdkit.sh -filter_value candidates.xyz force $max_force
-```
-
 ### Stage 3: Structure Selection
 
-Uses PyNEP FPS to select most diverse structures:
-
-```bash
-gpumdkit.sh -pynep filtered_candidates.xyz selected.xyz nep.txt
-```
+Uses PyNEP FPS to select most diverse structures.
 
 ### Stage 4: DFT Calculations
 
-Sets up and runs VASP calculations:
-
-```bash
-# Use SCF batch workflow
-# Submits jobs to cluster
-# Waits for completion
-```
+Sets up and runs VASP calculations.
 
 ### Stage 5: Data Collection
 
-Converts VASP results and adds to training:
-
-```bash
-gpumdkit.sh -out2xyz ./struct_fp_*/
-cat train.xyz dft_results.xyz > train_new.xyz
-```
+Converts VASP results and adds to training.
 
 ### Stage 6: NEP Retraining
 
-Retrains NEP with expanded dataset:
-
-```bash
-nep  # Using updated train.xyz
-```
+Retrains NEP with expanded dataset.
 
 ## Customization
 
@@ -180,20 +150,6 @@ max_force=50    # Allow higher forces
 min_dist=1.2    # Tighter distance threshold
 ```
 
-### Cluster Settings
-
-Adapt for your cluster:
-
-```bash
-# For different scheduler
-#PBS -N workflow
-#PBS -l nodes=1:ppn=48
-
-# For different DFT code
-module load quantum-espresso
-pw.x < input.in > output.out
-```
-
 ## Multi-Element Systems
 
 For systems with multiple species:
@@ -221,35 +177,7 @@ Example monitoring:
 grep "RMSE" */loss.out
 ```
 
-## Troubleshooting
-
-### Issue: Too few structures selected
-
-**Solution:** Relax filters
-```bash
-max_force=40    # Increase threshold
-min_dist=1.3    # Decrease threshold
-```
-
-### Issue: DFT jobs fail
-
-**Solution:** Check VASP inputs
-```bash
-# Verify POTCAR matches elements
-# Check ENCUT is sufficient
-# Ensure KPOINTS appropriate for cell size
-```
-
-### Issue: MD doesn't generate diverse structures
-
-**Solution:** Adjust MD conditions
-```bash
-md_temp=1500    # Higher temperature
-md_steps=100000 # Longer simulation
-# Or use multiple starting configurations
-```
-
-## Example Complete Workflow
+## Example Workflow
 
 ```bash
 # Iteration 1
@@ -269,22 +197,6 @@ sbatch workflow_active_learning_dev.sh
 
 # Continue until converged
 ```
-
-## Best Practices
-
-1. **Start conservative**: Use strict filters initially
-2. **Monitor carefully**: Check selected structures make sense
-3. **Track provenance**: Keep detailed logs of each iteration
-4. **Backup regularly**: Save NEP models and training data
-5. **Validate frequently**: Test on independent validation set
-6. **Document changes**: Note parameter adjustments between iterations
-
-## Performance Tips
-
-- Run multiple iterations in parallel if resources allow
-- Use faster DFT settings for exploration, accurate for final
-- Cache MD trajectories for analysis
-- Profile bottlenecks (MD vs DFT vs selection)
 
 ---
 

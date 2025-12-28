@@ -428,6 +428,7 @@ For in-depth information on specific topics:
 - 📄 [Format Conversion](format_conversion.md) - Converting between file formats
 - 📊 [Plot Scripts](plot_scripts.md) - Visualization and plotting
 - 🧮 [Calculators](calculators.md) - Property calculations
+- 🔍 [Analyzer](analyzer.md) - Data analysis and quality control
 - 📦 [Structure Sampling](sample_structures.md) - Sampling methods and strategies
 - ⚙️ [Workflow Automation](workflow_dev.md) - Batch processing
 - 🤖 [Active Learning](workflow_active_learning.md) - NEP model improvement

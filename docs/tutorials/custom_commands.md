@@ -17,7 +17,7 @@ Define custom functions with the `custom_` prefix.
 
 Write the following codes in your `~/.gpumdkit.in` 
 
-```
+```bash
 custom_hello() {
     echo "Hello, GPUMDkit user! This is a custom command."
     echo "Current GPUMDkit path: ${GPUMDkit_path}"
@@ -35,7 +35,7 @@ Current GPUMDkit path: /home/yanzihan/software/GPUMDkit
 
 For the following function:
 
-```
+```bash
 custom_greet() {
     name=$1
     echo "Hello, ${name}!"
@@ -54,15 +54,13 @@ Hello, Zihan!
 
 If you want to call an external script like `gpumdkit.sh`.
 
-```
+```bash
 custom_nepanalyse() {
     python ~/my_gpumd_tools/analyse_nep.py
 }
 ```
 
 and run `gpumdkit.sh -nepanalyse`
-
-
 
 ## Advanced Examples
 

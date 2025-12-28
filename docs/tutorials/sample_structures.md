@@ -1,6 +1,8 @@
 # Function 2 - Sample Structures
 
-This section covers the structure sampling tools in GPUMDkit (Interactive Mode - Function 2), which provide various methods for sampling and selecting structures from datasets. These tools are essential for creating diverse NEP training sets and implementing active learning workflows.
+**Script Location:** `Scripts/sample_structures/`
+
+This section covers the structure sampling tools in GPUMDkit (Interactive Mode - Function 2).
 
 ## Interactive Mode Access
 
@@ -24,152 +26,50 @@ You'll see the following menu:
 
 ## Command-Line Usage
 
-For PyNEP sampling (the most commonly used method):
-
 ```bash
-# PyNEP farthest point sampling
 gpumdkit.sh -pynep <candidates.xyz> <train.xyz> <nep.txt>
 ```
 
-Other sampling methods are accessed via interactive mode.
+---
+
+<div align="center">
+  <h1>📦 Structure Sampling Scripts</h1>
+    <p style="text-align: justify;">This directory contains tools for sampling, selecting, and generating atomic structures for NEP training and molecular dynamics simulations.</p>
+</div>
+
+## Overview
+
+Structure sampling is crucial for creating diverse configurations. These scripts provide:
+- **Uniform and random sampling**: Basic sampling methods
+- **FPS (Farthest Point Sampling)**: Maximizing structural diversity using PyNEP or NEPtrain
+- **Structure perturbation**: Generating variations for training set augmentation
+- **maximum force deviations selection**: Identifying structures with maximum force deviations
+- **Frame extraction**: Selecting specific range from trajectories
 
 ---
 
-## Sampling Methods
+## Via interactive mode
 
-### Uniform/Random Sampling (`sample_structures.py`)
-
-**Option 201** in interactive mode.
-
-Sample structures using statistical methods.
-
-**Interactive Mode:**
-
-Select option `201` from the sample structures menu:
-
-```bash
-201
-```
-
-You will see the following prompt:
+---
 
 ```
->-------------------------------------------------<
-| This function calls the script in Scripts       |
-| Script: sample_structures.py                    |
-| Developer: Zihan YAN (yanzihan@westlake.edu.cn) |
->-------------------------------------------------<
-Input <extxyz_file> <sampling_method> <num_samples>
-Sampling_method: 'uniform' or 'random'
-Examp: train.xyz uniform 50
------------->>
-```
+          ____ ____  _   _ __  __ ____  _    _ _
+        / ___|  _ \| | | |  \/  |  _ \| | _(_) |_
+       | |  _| |_) | | | | |\/| | | | | |/ / | __|
+       | |_| |  __/| |_| | |  | | |_| |   <| | |_
+        \____|_|    \___/|_|  |_|____/|_|\_\_|\__|
 
-Enter the filename, method, and number of samples:
+        GPUMDkit Version 1.4.2 (dev) (2025-12-17)
+  Core Developer: Zihan YAN (yanzihan@westlake.edu.cn)
 
-```bash
-train.xyz uniform 50
-```
-
-**Direct execution:**
-```bash
-python ${GPUMDkit_path}/Scripts/sample_structures/sample_structures.py train.xyz uniform 100
-python ${GPUMDkit_path}/Scripts/sample_structures/sample_structures.py train.xyz random 100
-```
-
-**Methods:**
-- `uniform` - Evenly spaced samples across the dataset
-- `random` - Randomly selected samples
-
-**Output:** `sampled_structures.xyz`
-
-### PyNEP Farthest Point Sampling (`pynep_select_structs.py`)
-
-Select maximally diverse structures using FPS in descriptor space.
-
-**Command-line:**
-```bash
-gpumdkit.sh -pynep candidates.xyz selected.xyz nep.txt
-```
-
-**Interactive:** Select option `202`
-
-**Direct execution:**
-```bash
-python ${GPUMDkit_path}/Scripts/sample_structures/pynep_select_structs.py candidates.xyz train.xyz nep.txt
-```
-
-**Use case:** Create diverse training set from large candidate pool
-
-**Requires:** `pynep` package installed
-
-### NEPtrain Selection (`neptrain_select_structs.py`)
-
-Alternative FPS implementation using NEPtrain.
-
-**Interactive:** Select option `203`
-
-**Direct execution:**
-```bash
-python ${GPUMDkit_path}/Scripts/sample_structures/neptrain_select_structs.py candidates.xyz train.xyz nep.txt
-```
-
-**Requires:** `neptrain` package installed
-
-### Structure Perturbation (`perturb_structure.py`)
-
-Generate perturbed variants of structures for training data augmentation.
-
-**Interactive:** Select option `204`
-
-**Direct execution:**
-```bash
-python ${GPUMDkit_path}/Scripts/sample_structures/perturb_structure.py structure.vasp 20 0.03 0.2 normal
-```
-
-**Parameters:**
-- Input structure file (VASP format)
-- Number of perturbed structures
-- Cell perturbation fraction
-- Atom perturbation distance (Angstroms)
-- Perturbation style: `uniform`, `normal`, or `const`
-
-**Output:** Multiple perturbed VASP files
-
-**Use case:** Create training data variations from equilibrium structures
-
-### Max Force Deviation Selection (`select_max_modev.py`)
-
-Select structures with highest force deviations from active learning.
-
-**Interactive:** Select option `205`
-
-**Direct execution:**
-```bash
-python ${GPUMDkit_path}/Scripts/sample_structures/select_max_modev.py 100 0.15
-```
-
-**Parameters:**
-- Number of structures to select
-- Force deviation threshold (eV/Å)
-
-**Input:** `active.xyz` from GPUMD active learning mode
-
-**Output:** Selected structures with high uncertainty
-
-## Interactive Mode
-
-Access sampling tools through the interactive menu:
-
-```bash
-gpumdkit.sh
-# Select: 2) Sample Structures
-# Choose option 201-205
-```
-
-### Menu Options
-
-```
+ ----------------------- GPUMD -----------------------
+ 1) Format Conversion          2) Sample Structures
+ 3) Workflow                   4) Calculators
+ 5) Analyzer                   6) Developing ...
+ 0) Quit!
+ ------------>>
+ Input the function number:
+ 2
  ------------>>
  201) Sample structures from extxyz
  202) Sample structures by pynep
@@ -178,88 +78,13 @@ gpumdkit.sh
  205) Select max force deviation structs
  000) Return to the main menu
  ------------>>
+ Input the function number:
 ```
 
-## Common Workflows
+## Contributing
 
-### Create Initial Training Set
-
-```bash
-# 1. Start with large dataset
-# 2. Random sample to manageable size
-python ${GPUMDkit_path}/Scripts/sample_structures/sample_structures.py large_dataset.xyz random 2000
-
-# 3. Apply FPS for diversity
-gpumdkit.sh -pynep sampled_structures.xyz train.xyz initial_nep.txt
-```
-
-### Active Learning Cycle
-
-```bash
-# 1. Run GPUMD with active learning mode
-#    Add to run.in: active 100 0.15
-
-# 2. After simulation, select uncertain structures
-python ${GPUMDkit_path}/Scripts/sample_structures/select_max_modev.py 50 0.15
-
-# 3. Run DFT on selected structures
-
-# 4. Add to training set and retrain NEP
-```
-
-### Data Augmentation
-
-```bash
-# 1. Have equilibrium structures
-# 2. Generate perturbed variants
-python ${GPUMDkit_path}/Scripts/sample_structures/perturb_structure.py POSCAR 20 0.03 0.2 normal
-
-# 3. Run DFT on perturbed structures
-# 4. Add to training set
-```
-
-## Sampling Strategy Guide
-
-| Method | When to Use | Pros | Cons |
-|--------|-------------|------|------|
-| **Uniform** | Initial exploration | Simple, evenly spaced | May miss important regions |
-| **Random** | Quick reduction | Unbiased | May cluster |
-| **PyNEP FPS** | Training set creation | Maximizes diversity | Requires NEP model |
-| **NEPtrain FPS** | Alternative FPS | Also maximizes diversity | Different implementation |
-| **Perturbation** | Data augmentation | Creates variations | Needs good initial |
-| **Max force dev** | Active learning | Targets uncertainty | Requires active mode |
-
-## Tips
-
-- **Start diverse**: Begin with varied initial structures
-- **Iterative refinement**: Use active learning for continuous improvement
-- **Validate samples**: Check that sampled structures make sense
-- **Track provenance**: Keep records of sampling parameters
-- **Balance composition**: Ensure all compositions represented
-
-## Perturbation Guidelines
-
-For different materials:
-
-**Rigid crystals:**
-- Cell perturbation: 0.01-0.02
-- Atom perturbation: 0.1-0.2 Å
-
-**Soft materials:**
-- Cell perturbation: 0.03-0.05
-- Atom perturbation: 0.2-0.3 Å
-
-**Phase transitions:**
-- Cell perturbation: 0.05-0.10
-- Atom perturbation: 0.3-0.5 Å
-
-## Dependencies
-
-- **PyNEP**: For PyNEP sampling (`pip install pynep`)
-- **NEPtrain**: For NEPtrain sampling
-- **ASE**: For structure manipulation
-- **NumPy**: For numerical operations
+See [CONTRIBUTING.md](../../CONTRIBUTING.md) for detailed guidelines.
 
 ---
 
-For more details, see [Scripts/sample_structures/README.md](../../Scripts/sample_structures/README.md)
+Thank you for using GPUMDkit! If you have questions about structure sampling, please open an issue on our [GitHub repository](https://github.com/zhyan0603/GPUMDkit/issues) or contact Zihan YAN (yanzihan@westlake.edu.cn).
