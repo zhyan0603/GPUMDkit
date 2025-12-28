@@ -2,15 +2,12 @@
 This script is part of GPUMDkit.
 Repository: https://github.com/zhyan0603/GPUMDkit
 
-Description:
-    Convert MTP format to XYZ
-
-Usage:
-    python mtp2xyz.py [arguments]
-
-Author: Zihan YAN
-Contact: yanzihan@westlake.edu.cn
-Last Modified: 2025-12-28
+Purpose:
+        Convert mtp input file format to xyz.
+    Ref:
+        dpdata: https://github.com/deepmodeling/dpdata
+    Run:
+        python mtp2xyz.py train.cfg Symbol1 Symbol2 Symbol3 ...
 """
 
 

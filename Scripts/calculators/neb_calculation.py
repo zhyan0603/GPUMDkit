@@ -2,15 +2,21 @@
 This script is part of GPUMDkit.
 Repository: https://github.com/zhyan0603/GPUMDkit
 
-Description:
-    Perform NEB calculations
+Performing NEB calculations with NEP model.
 
 Usage:
-    python neb_calculation.py [arguments]
+    python neb_calculation.py <initial_structure> <final_structure> <n_image> <nep_model>
 
-Author: Zihan YAN
-Contact: yanzihan@westlake.edu.cn
-Last Modified: 2025-12-28
+Arguments:
+    initial_structure : Path to the initial structure XYZ file
+    final_structure   : Path to the final structure XYZ file
+    n_image           : Number of intermediate images
+    nep_model         : Path to the NEP model file (nep.txt)
+
+Author:
+    Zhoulin LIU <1776627910@qq.com>
+
+Modified by Zihan YAN <yanzihan@westlake.edu.cn>
 """
 
 import os

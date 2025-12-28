@@ -1,18 +1,6 @@
-"""
-This script is part of GPUMDkit.
-Repository: https://github.com/zhyan0603/GPUMDkit
-
-Description:
-    Find outlier structures in dataset
-
-Usage:
-    python find_outliers.py [arguments]
-
-Author: Zihan YAN
-Contact: yanzihan@westlake.edu.cn
-Last Modified: 2025-12-28
-"""
-
+# This script is part of GPUMDkit.
+# Repository: https://github.com/zhyan0603/GPUMDkit
+#
 # Script to find outliers in training data based on RMSE thresholds for energy, force, and stress.
 # It is still during development and may not handle all cases perfectly.
 # Author: Zihan YAN (yanzihan@westlake.edu.cn)

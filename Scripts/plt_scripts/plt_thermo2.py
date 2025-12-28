@@ -3,14 +3,7 @@ This script is part of GPUMDkit.
 Repository: https://github.com/zhyan0603/GPUMDkit
 
 Description:
-    Plot thermodynamic properties (version 2)
-
-Usage:
-    python plt_thermo2.py [arguments]
-
-Author: Zihan YAN
-Contact: yanzihan@westlake.edu.cn
-Last Modified: 2025-12-28
+    plt_thermo2.py
 """
 
 import os

@@ -3,14 +3,7 @@ This script is part of GPUMDkit.
 Repository: https://github.com/zhyan0603/GPUMDkit
 
 Description:
-    Plot NEP restart information
-
-Usage:
-    python plt_nep_restart.py [arguments]
-
-Author: Zihan YAN
-Contact: yanzihan@westlake.edu.cn
-Last Modified: 2025-12-28
+    plt_nep_restart.py
 """
 
 import os

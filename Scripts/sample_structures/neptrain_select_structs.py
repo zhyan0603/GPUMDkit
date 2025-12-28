@@ -3,14 +3,7 @@ This script is part of GPUMDkit.
 Repository: https://github.com/zhyan0603/GPUMDkit
 
 Description:
-    Select structures for NEP training
-
-Usage:
-    python neptrain_select_structs.py [arguments]
-
-Author: Zihan YAN
-Contact: yanzihan@westlake.edu.cn
-Last Modified: 2025-12-28
+    neptrain_select_structs.py
 """
 
 import sys

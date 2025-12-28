@@ -3,14 +3,7 @@ This script is part of GPUMDkit.
 Repository: https://github.com/zhyan0603/GPUMDkit
 
 Description:
-    Filter structures by distance range
-
-Usage:
-    python filter_dist_range.py [arguments]
-
-Author: Zihan YAN
-Contact: yanzihan@westlake.edu.cn
-Last Modified: 2025-12-28
+    filter_dist_range.py
 """
 
 import sys

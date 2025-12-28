@@ -2,15 +2,11 @@
 This script is part of GPUMDkit.
 Repository: https://github.com/zhyan0603/GPUMDkit
 
-Description:
-    Convert CIF to POSCAR format
-
+Convert CIF file to VASP POSCAR format using ASE.
 Usage:
-    python cif2pos.py [arguments]
-
-Author: Zihan YAN
-Contact: yanzihan@westlake.edu.cn
-Last Modified: 2025-12-28
+    python cif2pos.py input.cif output.vasp
+    Author: Boyi Situ (situboyi@westlake.edu.cn)
+    Date: 2025-08-21
 """
 
 

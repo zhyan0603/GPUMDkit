@@ -3,14 +3,7 @@ This script is part of GPUMDkit.
 Repository: https://github.com/zhyan0603/GPUMDkit
 
 Description:
-    Convert CP2K output to XYZ format
-
-Usage:
-    python cp2k2xyz.py [arguments]
-
-Author: Zihan YAN
-Contact: yanzihan@westlake.edu.cn
-Last Modified: 2025-12-28
+    cp2k2xyz.py
 """
 
 #python cp2k2xyz.py [pos.xyz] [frc.xyz] [cell.cell] [-shifted yes/no]

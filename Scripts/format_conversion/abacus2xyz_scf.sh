@@ -3,17 +3,13 @@
 # This script is part of GPUMDkit.
 # Repository: https://github.com/zhyan0603/GPUMDkit
 #
-# Description:
-#     Convert ABACUS SCF output to XYZ
-#
-# Usage:
-#     bash abacus2xyz_scf.sh [arguments]
-#
-# Author: Zihan YAN
-# Contact: yanzihan@westlake.edu.cn
-# Last Modified: 2025-12-28
-#
-
+### HOW TO USE #################################################################################
+### SYNTAX: ./abacus2xyz_scf.sh dire_name   
+###     NOTE: 1).'dire_name' is the directory containing running_scf.logs
+### Email: tang070205@proton.me if have questions
+### Modified by Benrui Tang
+################################################################################################
+#--- DEFAULT ASSIGNMENTSts ---------------------------------------------------------------------
 isol_ener=0     # Shifted energy, specify the value?
 #--------------------------------------------------------------------------------------------
 read_dire=$1

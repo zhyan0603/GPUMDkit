@@ -3,14 +3,7 @@ This script is part of GPUMDkit.
 Repository: https://github.com/zhyan0603/GPUMDkit
 
 Description:
-    Filter structures by minimum distance
-
-Usage:
-    python filter_structures_by_distance.py [arguments]
-
-Author: Zihan YAN
-Contact: yanzihan@westlake.edu.cn
-Last Modified: 2025-12-28
+    filter_structures_by_distance.py
 """
 
 import sys

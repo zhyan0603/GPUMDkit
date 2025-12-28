@@ -3,14 +3,7 @@ This script is part of GPUMDkit.
 Repository: https://github.com/zhyan0603/GPUMDkit
 
 Description:
-    Parallel structure selection using PyNEP
-
-Usage:
-    python parallel_pynep_select_structs.py [arguments]
-
-Author: Zihan YAN
-Contact: yanzihan@westlake.edu.cn
-Last Modified: 2025-12-28
+    parallel_pynep_select_structs.py
 """
 
 import sys

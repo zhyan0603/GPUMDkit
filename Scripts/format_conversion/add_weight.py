@@ -2,15 +2,13 @@
 This script is part of GPUMDkit.
 Repository: https://github.com/zhyan0603/GPUMDkit
 
-Description:
-    Add weight information to structures
+This script is used to add a weight value to the 'Weight' attribute of each structure in an input file and save the modified structures to an output file.
 
 Usage:
-    python add_weight.py [arguments]
+    python add_weight.py <input_file> <output_file> <new_weight>
 
-Author: Zihan YAN
-Contact: yanzihan@westlake.edu.cn
-Last Modified: 2025-12-28
+Example:
+    python add_weight.py input.xyz output.xyz 5
 """
 
 

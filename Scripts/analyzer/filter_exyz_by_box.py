@@ -3,14 +3,7 @@ This script is part of GPUMDkit.
 Repository: https://github.com/zhyan0603/GPUMDkit
 
 Description:
-    Filter EXYZ structures by box size
-
-Usage:
-    python filter_exyz_by_box.py [arguments]
-
-Author: Zihan YAN
-Contact: yanzihan@westlake.edu.cn
-Last Modified: 2025-12-28
+    filter_exyz_by_box.py
 """
 
 import sys

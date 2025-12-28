@@ -3,14 +3,7 @@ This script is part of GPUMDkit.
 Repository: https://github.com/zhyan0603/GPUMDkit
 
 Description:
-    Batch pretreatment for CP2K SCF calculations
-
-Usage:
-    python scf_batch_pretreatment_cp2k.py [arguments]
-
-Author: Zihan YAN
-Contact: yanzihan@westlake.edu.cn
-Last Modified: 2025-12-28
+    scf_batch_pretreatment_cp2k.py
 """
 
 import os

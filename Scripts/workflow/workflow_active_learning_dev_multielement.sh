@@ -3,17 +3,6 @@
 # This script is part of GPUMDkit.
 # Repository: https://github.com/zhyan0603/GPUMDkit
 #
-# Description:
-#     Active learning workflow for multi-element systems
-#
-# Usage:
-#     bash workflow_active_learning_dev_multielement.sh [arguments]
-#
-# Author: Zihan YAN
-# Contact: yanzihan@westlake.edu.cn
-# Last Modified: 2025-12-28
-#
-
 #SBATCH -p intel-sc3,intel-sc3-32c
 #SBATCH -q huge
 #SBATCH -N 1

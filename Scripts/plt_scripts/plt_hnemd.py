@@ -2,15 +2,9 @@
 This script is part of GPUMDkit.
 Repository: https://github.com/zhyan0603/GPUMDkit
 
-Description:
-    Plot homogeneous NEMD results
-
-Usage:
-    python plt_hnemd.py [arguments]
-
-Author: Zihan YAN
-Contact: yanzihan@westlake.edu.cn
-Last Modified: 2025-12-28
+@Author   : Xin Wu
+@Contact  : xinwuchn97@gmial.com
+@Remark   : Post-processing script for HNEMD (Homogenous Non-Equilibrium Molecular Dynamics) thermal conductivity calculations
 """
 
 

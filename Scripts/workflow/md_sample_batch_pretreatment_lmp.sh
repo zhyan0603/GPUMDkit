@@ -3,17 +3,6 @@
 # This script is part of GPUMDkit.
 # Repository: https://github.com/zhyan0603/GPUMDkit
 #
-# Description:
-#     Batch pretreatment for LAMMPS MD samples
-#
-# Usage:
-#     bash md_sample_batch_pretreatment_lmp.sh [arguments]
-#
-# Author: Zihan YAN
-# Contact: yanzihan@westlake.edu.cn
-# Last Modified: 2025-12-28
-#
-
 function f303_md_sample_batch_pretreatment_lmp(){
     echo " ------------>>"
     echo " Starting MD sample batch pretreatment..."

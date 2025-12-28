@@ -3,14 +3,7 @@ This script is part of GPUMDkit.
 Repository: https://github.com/zhyan0603/GPUMDkit
 
 Description:
-    Convert LAMMPS dump to EXYZ format
-
-Usage:
-    python lmp2exyz.py [arguments]
-
-Author: Zihan YAN
-Contact: yanzihan@westlake.edu.cn
-Last Modified: 2025-12-28
+    lmp2exyz.py
 """
 
 import sys

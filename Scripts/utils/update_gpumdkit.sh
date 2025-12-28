@@ -1,18 +1,4 @@
-#
-# This script is part of GPUMDkit.
-# Repository: https://github.com/zhyan0603/GPUMDkit
-#
-# Description:
-#     Update GPUMDkit to latest version
-#
-# Usage:
-#     bash update_gpumdkit.sh [arguments]
-#
-# Author: Zihan YAN
-# Contact: yanzihan@westlake.edu.cn
-# Last Modified: 2025-12-28
-#
-
+# check for updates
 function update_gpumdkit(){
 # Check if in a Git repository; if not, try to switch to GPUMDkit_path
 if ! git rev-parse --is-inside-work-tree > /dev/null 2>&1; then

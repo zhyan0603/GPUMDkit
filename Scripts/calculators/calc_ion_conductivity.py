@@ -2,15 +2,21 @@
 This script is part of GPUMDkit.
 Repository: https://github.com/zhyan0603/GPUMDkit
 
-Description:
-    Calculate ionic conductivity
+This script calculates diffusivity and ionic conductivity from MSD data (msd.out)
+obtained via GPUMD. It computes directional (x, y, z) and total diffusivities
+and converts them to ionic conductivities by Nernst-Einstein equation.
 
 Usage:
-    python calc_ion_conductivity.py [arguments]
+1. Run the script with:
+   python script.py <element> <charge>
+   - <element>: Chemical species (e.g., Li).
+   - <charge>: Ion charge (e.g., 1 for Li⁺).
+2. If required files (`thermo.out` and `model.xyz`) are not found, the script
+   will prompt for manual input of structure volume, temperature, and number of ions.
 
 Author: Zihan YAN
-Contact: yanzihan@westlake.edu.cn
-Last Modified: 2025-12-28
+Modified by: Shengjie Tang
+Date: Sep 1, 2025
 """
 
 
