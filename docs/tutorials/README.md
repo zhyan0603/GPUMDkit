@@ -1,18 +1,18 @@
-# GPUMDkit User Guide
+# GPUMDkit Tutorials
 
-Welcome to **GPUMDkit** - your comprehensive toolkit for GPUMD (Graphics Processing Units Molecular Dynamics) and NEP (neuroevolution potential) workflows!
+Welcome to **GPUMDkit**!
 
 ## What is GPUMDkit?
 
-GPUMDkit is a powerful command-line toolkit that streamlines your molecular dynamics and machine learning potential workflows. It provides:
+GPUMDkit is a powerful command-line toolkit that streamlines your tasks for GPUMD and NEP. It provides:
 
-- **🎯 Two Usage Modes**: Interactive menu system OR fast command-line interface
-- **🔄 Format Conversion**: Convert between VASP, LAMMPS, CP2K, CASTEP, ABACUS, and extxyz formats
-- **📊 Visualization**: Comprehensive plotting tools for NEP training, MD simulations, and analysis
-- **🧮 Calculators**: Compute ionic conductivity, NEP predictions, descriptors, and more
-- **🔍 Analysis Tools**: Structure validation, filtering, composition analysis, and quality checks
-- **⚙️ Workflow Automation**: Batch processing for DFT calculations and MD simulations
-- **🤖 Active Learning**: Automated NEP model improvement cycles
+- **🎯 Two Usage Modes**: Interactive mode and command-line mode
+- **🔄 Format Conversion**: Convert between VASP, LAMMPS, CP2K, CASTEP, ABACUS, and extxyz formats.
+- **📊 Visualization**: Comprehensive plotting tools for NEP training, MD simulations, and analysis.
+- **🧮 Calculators**: Compute ionic conductivity, descriptors, etc.
+- **🔍 Analysis Tools**: Structure validation, filtering, composition analysis, and quality checks, etc.
+- **⚙️ Workflow Automation**: Batch processing for DFT calculations and MD simulations.
+- **🤖 Active Learning**: Semi-Automated NEP model training workflow.
 
 ## Quick Start
 
@@ -20,7 +20,7 @@ GPUMDkit is a powerful command-line toolkit that streamlines your molecular dyna
 
 ```bash
 # 1. Clone the repository
-git clone --depth 1 https://github.com/zhyan0603/GPUMDkit.git
+git clone https://github.com/zhyan0603/GPUMDkit.git
 
 # 2. Add to your ~/.bashrc
 export GPUMDkit_path=/path/to/GPUMDkit
@@ -35,19 +35,6 @@ cd ${GPUMDkit_path}
 chmod +x gpumdkit.sh
 ```
 
-### First Steps
-
-```bash
-# Check installation
-gpumdkit.sh -h
-
-# Try interactive mode
-gpumdkit.sh
-
-# Run a quick command
-gpumdkit.sh -plt thermo
-```
-
 ## Two Ways to Use GPUMDkit
 
 ### 🖱️ Interactive Mode (Beginner-Friendly)
@@ -59,35 +46,66 @@ gpumdkit.sh
 
 You'll see:
 ```
-      ____ ____  _   _ __  __ ____  _    _ _   
-     / ___|  _ \| | | |  \/  |  _ \| | _(_) |_ 
-    | |  _| |_) | | | | |\/| | | | | |/ / | __|
-    | |_| |  __/| |_| | |  | | |_| |   <| | |_
-     \____|_|    \___/|_|  |_|____/|_|\_\_|\__|
- 
-      GPUMDkit Version 1.4.2
-  
- ----------------------- GPUMD -----------------------      
+         ____ ____  _   _ __  __ ____  _    _ _
+        / ___|  _ \| | | |  \/  |  _ \| | _(_) |_
+       | |  _| |_) | | | | |\/| | | | | |/ / | __|
+       | |_| |  __/| |_| | |  | | |_| |   <| | |_
+        \____|_|    \___/|_|  |_|____/|_|\_\_|\__|
+
+        GPUMDkit Version 1.4.2 (dev) (2025-12-17)
+  Core Developer: Zihan YAN (yanzihan@westlake.edu.cn)
+
+ ----------------------- GPUMD -----------------------
  1) Format Conversion          2) Sample Structures
  3) Workflow                   4) Calculators
- 5) Analyzer                   6) Plot Scripts
+ 5) Analyzer                   6) Developing ...
  0) Quit!
  ------------>>
+ Input the function number:
 ```
 
 **Best for:**
+
 - Learning GPUMDkit features
 - Complex multi-step tasks
 - When you need guided prompts
 
-### ⚡ Command-Line Mode (Power Users)
+### ⚡ Command-Line Mode
 
 Direct command execution:
 ```bash
-gpumdkit.sh -<flag> [arguments]
+gpumdkit.sh -h
+```
+
+You will see:
+
+```
++==================================================================================================+
+|                              GPUMDkit 1.4.2 (dev) (2025-12-17) Usage                             |
++======================================== Conversions =============================================+
+| -out2xyz       Convert OUTCAR to extxyz       | -pos2exyz     Convert POSCAR to extxyz           |
+| -cif2pos       Convert cif to POSCAR          | -pos2lmp      Convert POSCAR to LAMMPS           |
+| -cif2exyz      Convert cif to extxyz          | -lmp2exyz     Convert LAMMPS-dump to extxyz      |
+| -addgroup      Add group label                | -addweight    Add weight to the struct in extxyz |
+| Developing...                                 | Developing...                                    |
++========================================= Analysis ===============================================+
+| -range         Print range of energy etc.     | -max_rmse     Get max RMSE from extxyz           |
+| -min_dist      Get min_dist between atoms     | -min_dist_pbc Get min_dist considering PBC       |
+| -filter_box    Filter struct by box limits    | -filter_value Filter struct by value (efs)       |
+| -filter_dist   Filter struct by min_dist      | -analyze_comp Analyze composition of extxyz      |
+| -pynep         Sample struct by pynep         | Developing...                                    |
++====================================== Misc Utilities ============================================+
+| -plt           Plot scripts                   | -get_frame     Extract the specified frame       |
+| -calc          Calculators                    | -clean_xyz     Clean extra info in XYZ file      |
+| -clean         Clear files for work_dir       | -time          Time consuming Analyzer           |
+| -update        Update GPUMDkit                | Developing...                                    |
++==================================================================================================+
+| For detailed usage and examples, use: gpumdkit.sh -<option> -h                                   |
++==================================================================================================+
 ```
 
 **Best for:**
+
 - Quick one-off operations
 - Scripting and automation
 - Batch processing
