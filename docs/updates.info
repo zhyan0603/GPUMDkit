@@ -1,15 +1,14 @@
 # === User Configuration Section: Only modify these variables ===
-VERSION="1.4.2"
-RELEASE_DATE="2025-12-17"
+VERSION="1.4.3"
+RELEASE_DATE="2025-12-28"
 HOME_PAGE="https://zhyan0603.github.io/GPUMDkit"
 CONTACT="yanzihan@westlake.edu.cn"
 
 # New features (one per line, in an array)
 NEW_FEATURES=(
-    "add -plt thermo3"
-    "add -plt emd/nemd/hnemd"
-    "add -pynep"
-    "improve -plt train"
+    "We have refactored GPUMDkit."
+    "See our repository for more infomation."
+    "You can custom your own scripts in ~/.gpumdkit.in."
 )
 
 # Bug fixes (one per line, in an array)
@@ -29,11 +28,11 @@ if [ -t 1 ] && [ "$(tput colors 2>/dev/null || echo 0)" -ge 8 ]; then
     printf "\033[1;34m----------------------------------------------\033[0m\n"
     printf "\n\033[1;33m🚀 What's New:\033[0m\n"
     for feature in "${NEW_FEATURES[@]}"; do
-        printf "  ✅ %s\n" "$feature"
+        printf "  - %s\n" "$feature"
     done
     printf "\n\033[1;33m🔧 Bug Fixes:\033[0m\n"
     for fix in "${BUG_FIXES[@]}"; do
-        printf "  ✅ %s\n" "$fix"
+        printf "  - %s\n" "$fix"
     done
     printf "\n\033[1;34m----------------------------------------------\033[0m\n"
     printf "\033[1;35m🏠 HomePage:\033[0m %s\n" "$HOME_PAGE"

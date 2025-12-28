@@ -1,10 +1,22 @@
-# Function 4 - Calculators
+<div align="center">
+  <h1>🧮 Calculators</h1>
+    <p style="text-align: justify;">This directory (Scripts/calculators/) contains computational tools for calculating various material properties using NEP models and analyzing simulation data.</p>
+</div>
 
 **Script Location:** `Scripts/calculators/`
 
-This section covers the calculator tools in GPUMDkit (Interactive Mode - Function 4).
+This section covers the calculator tools in GPUMDkit (Interactive Mode - Option 4).
 
-## Interactive Mode Access
+The calculator scripts provide functionality for:
+
+- Ionic conductivity and diffusivity calculations
+- Property predictions using NEP models
+- Descriptor calculations for PCA or UMAP analysis
+- Density of atomistic states (DOAS)
+- Nudged elastic band (NEB) calculations
+- Radial distribution function (RDF) calculations
+
+## Interactive Mode
 
 ```bash
 gpumdkit.sh
@@ -17,38 +29,88 @@ You'll see the following menu:
  ------------>>
  401) Calc ionic conductivity
  402) Calc properties by nep
- 403) Calc descriptors
- 404) Calc DOAS
- 405) Calc NEB
+ 403) Calc descriptors of specific elements
+ 404) Calc density of atomistic states (DOAS)
+ 405) Calc nudged elastic band (NEB) by nep
  000) Return to the main menu
+ ------------>>
+ Input the function number:
+```
+
+for `401`:
+
+```
+ >-------------------------------------------------<
+ | This function calls the script in calculators   |
+ | Script: calc_ion_conductivity.py                |
+ | Developer: Zihan YAN (yanzihan@westlake.edu.cn) |
+ >-------------------------------------------------<
+ Input <element> <charge> (eg. Li 1)
  ------------>>
 ```
 
-## Command-Line Usage
+for `402`:
+
+```
+ >-------------------------------------------------<
+ | This function calls the script in calculators   |
+ | Script: calc_properties_with_nep.py             |
+ | Developer: Zihan YAN (yanzihan@westlake.edu.cn) |
+ >-------------------------------------------------<
+ Input <input.xyz> <output.xyz> <nep_model>
+ Examp: input.xyz output.xyz nep.txt
+ ------------>>
+```
+
+for `403`:
+
+```
+ >-------------------------------------------------<
+ | This function calls the script in calculators   |
+ | Script: calc_descriptors.py                     |
+ | Developer: Zihan YAN (yanzihan@westlake.edu.cn) |
+ >-------------------------------------------------<
+ Input <input.xyz> <output.npy> <nep_model> <element>
+ Examp: train.xyz des_Li.npy nep.txt Li
+ ------------>>
+```
+
+for `404`:
+
+```
+ >-------------------------------------------------<
+ | This function calls the script in calculators   |
+ | Script: calc_doas.py                            |
+ | Developer: Zihan YAN (yanzihan@westlake.edu.cn) |
+ >-------------------------------------------------<
+ Input <input.xyz> <nep_model> <output_file>
+ Examp: dump.xyz nep.txt doas.out
+ ------------>>
+```
+
+for `405`:
+
+```
+ >-------------------------------------------------<
+ | This function calls the script in calculators   |
+ | Script: neb_calculation.py                      |
+ | Developer: Zhoulin LIU (1776627910@qq.com)      |
+ >-------------------------------------------------<
+ Input <initial_struct> <final_struct> <n_image> <nep_model>
+ Examp: IS.xyz FS.xyz 5 nep.txt
+ ------------>>
+```
+
+Follow the prompts to complete the function.
+
+## Command-Line Mode
 
 ```bash
 gpumdkit.sh -calc ionic-cond <element> <charge>
 gpumdkit.sh -calc nep <input.xyz> <output.xyz> <nep.txt>
-gpumdkit.sh -calc des <method> <input.xyz> <output.npy> <nep.txt> <element>
+gpumdkit.sh -calc des <input.xyz> <output.npy> <nep.txt> <element>
 gpumdkit.sh -calc doas <input.xyz> <nep.txt> <output.txt>
 ```
-
----
-
-<div align="center">
-  <h1>🧮 Calculator Scripts</h1>
-    <p style="text-align: justify;">This directory contains computational tools for calculating various material properties using NEP models and analyzing simulation data.</p>
-</div>
-
-## Overview
-
-The calculator scripts provide functionality for:
-- Ionic conductivity and diffusivity calculations
-- Property predictions using NEP models
-- Descriptor calculations for PCA or UMAP analysis
-- Density of atomistic states (DOAS)
-- Nudged elastic band (NEB) calculations
-- Radial distribution function (RDF) calculations
 
 ---
 
@@ -332,7 +394,7 @@ gpumdkit.sh -plt rdf
 
 ## Contributing
 
-See [CONTRIBUTING.md](../../CONTRIBUTING.md) for detailed guidelines.
+See [CONTRIBUTING.md](Contributing.md) for detailed guidelines.
 
 ---
 

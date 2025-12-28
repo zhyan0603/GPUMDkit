@@ -63,7 +63,7 @@ done
 
 case $num_choice in
     "301")
-        scf_batch_pretreatment
+        f301_scf_batch_pretreatment
         ;;
     "302")
         source ${GPUMDkit_path}/Scripts/workflow/md_sample_batch_pretreatment_gpumd.sh

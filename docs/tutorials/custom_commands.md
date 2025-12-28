@@ -1,6 +1,7 @@
-# Custom Commands in GPUMDkit
-
-GPUMDkit allows users to extend the command-line interface with **custom commands**. Define shortcuts for frequently used scripts in your `~/.gpumdkit.in` file.
+<div align="center">
+  <h1>🔧 Custom Commands</h1>
+    <p style="text-align: justify;">GPUMDkit allows users to extend the command-line interface with <strong>custom commands</strong>. Define shortcuts for frequently used scripts in your <strong>~/.gpumdkit.in</strong> file.</p>
+</div>
 
 ## Setup
 
@@ -126,49 +127,6 @@ Usage: `gpumdkit.sh -prep_training`
 - **Add help messages**: Echo usage info when no arguments provided
 - **Error handling**: Check if required files exist before processing
 - **Forward arguments safely**: Use `"$@"` to preserve spaces and special characters
-
-## Common Use Cases
-
-### Quick Plot Generation
-
-```bash
-custom_quickplot() {
-    gpumdkit.sh -plt thermo save
-    gpumdkit.sh -plt train save
-    gpumdkit.sh -plt msd save
-    echo "Plots saved!"
-}
-```
-
-### Structure Validation
-
-```bash
-custom_validate() {
-    xyz=$1
-    echo "Validating $xyz..."
-    gpumdkit.sh -min_dist_pbc "$xyz"
-    gpumdkit.sh -range "$xyz" force
-    gpumdkit.sh -range "$xyz" energy
-}
-```
-
-### NEP Training Setup
-
-```bash
-custom_setup_nep() {
-    prefix=$1
-    echo "Setting up NEP training with prefix $prefix..."
-    
-    # Create directories
-    mkdir -p $prefix/{train,test,validation}
-    
-    # Sample data
-    python ${GPUMDkit_path}/Scripts/sample_structures/sample_structures.py \
-        train.xyz random 1000
-    
-    echo "Setup complete in $prefix/"
-}
-```
 
 ---
 

@@ -10,7 +10,7 @@ if [ -z "$GPUMDkit_path" ]; then
     exit 1
 fi
 
-VERSION="1.4.2 (dev) (2025-12-17)"
+VERSION="1.4.3 (dev) (2025-12-28)"
 
 plt_path="${GPUMDkit_path}/Scripts/plt_scripts"
 analyzer_path="${GPUMDkit_path}/Scripts/analyzer"
@@ -38,7 +38,7 @@ function main(){
         "0" "1" "101" "102" "103" "104" "105" 
         "2" "201" "202" "203" "204" "205" 
         "3" "301" "302" "303" 
-        "4" "401" "402" "403" "404"
+        "4" "401" "402" "403" "404" "405"
         "5" "501" "502"
         "6"
     ) 
@@ -188,9 +188,9 @@ if [ ! -z "$1" ]; then
         -plt)
             if [ ! -z "$2" ] && [ "$2" != "-h" ]; then
                 case $2 in
-                    "thermo") python ${plt_path}/plt_nep_thermo.py $3 ;;
-                    "thermo2") python ${plt_path}/plt_nep_thermo2.py $3 ;;
-                    "thermo3") python ${plt_path}/plt_nep_thermo3.py $3 ;;                        
+                    "thermo") python ${plt_path}/plt_thermo.py $3 ;;
+                    "thermo2") python ${plt_path}/plt_thermo2.py $3 ;;
+                    "thermo3") python ${plt_path}/plt_thermo3.py $3 ;;                        
                     "train") python ${plt_path}/plt_train.py $3 ;;                 
                     "prediction"|"test") python ${plt_path}/plt_prediction.py $3 ;; 
                     "parity_density") python ${plt_path}/plt_parity_density.py $3 ;;

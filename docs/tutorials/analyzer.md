@@ -1,10 +1,22 @@
-# Function 5 - Analyzer
+<div align="center">
+  <h1>🔍 Analyzer Scripts</h1>
+    <p style="text-align: justify;">This directory (Scripts/analyzer/) contains analysis tools for structure files, simulation data, and dataset quality control. These scripts help validate, filter, and understand molecular dynamics data and training sets.</p>
+</div>
 
 **Script Location:** `Scripts/analyzer/`
 
-This section covers the analyzer tools in GPUMDkit (Interactive Mode - Function 5).
+This section covers the analyzer tools in GPUMDkit (Interactive Mode - Option 5).
 
-## Interactive Mode Access
+The analyzer scripts provide functionality for:
+
+- Energy, force, and virial range analysis
+- Minimum distance calculations (with/without periodic boundary conditions)
+- Structure filtering by various criteria (distance, box size, property values)
+- Composition analysis of multi-component systems
+- Time estimation for GPUMD and NEP calculations
+- Dataset quality checks and outlier detection
+
+## Interactive Mode
 
 ```bash
 gpumdkit.sh
@@ -21,7 +33,37 @@ You'll see the following menu:
  ------------>>
 ```
 
-## Command-Line Usage
+for `501`:
+
+```
+ >-------------------------------------------------<
+ | This function calls the script in analyzer      |
+ | Script: analyze_composition.py                  |
+ | Developer: Zihan YAN (yanzihan@westlake.edu.cn) |
+ >-------------------------------------------------<
+ Input <input.xyz> you want to analyze
+ Examp: train.xyz
+ ------------>>
+```
+
+for `502`:
+
+```
+ >-------------------------------------------------<
+ | This function calls the script in analyzer      |
+ | Script: find_outliers.py                        |
+ | Developer: Zihan YAN (yanzihan@westlake.edu.cn) |
+ >-------------------------------------------------<
+ Input the threshold of RMSE to identify outliers
+ ---------------------------------------------------
+ Enter energy RMSE threshold (meV/atom): 1
+ Enter force RMSE threshold (meV/Å): 60
+ Enter stress RMSE threshold (GPa): 0.03
+```
+
+Follow the prompts to complete the function.
+
+## Command-Line Mode
 
 ```bash
 gpumdkit.sh -range <file.xyz> <property>
@@ -34,25 +76,6 @@ gpumdkit.sh -analyze_comp <file.xyz>
 gpumdkit.sh -time gpumd
 gpumdkit.sh -time nep
 ```
-
----
-
-<div align="center">
-  <h1>🔍 Analyzer Scripts</h1>
-    <p style="text-align: justify;">This directory contains analysis tools for structure files, simulation data, and dataset quality control. These scripts help validate, filter, and understand molecular dynamics data and training sets.</p>
-</div>
-
-## Overview
-
-The analyzer scripts provide functionality for:
-- Energy, force, and virial range analysis
-- Minimum distance calculations (with/without periodic boundary conditions)
-- Structure filtering by various criteria (distance, box size, property values)
-- Composition analysis of multi-component systems
-- Time estimation for GPUMD and NEP calculations
-- Dataset quality checks and outlier detection
-
-Access analyzers through `gpumdkit.sh` using various flags or run scripts directly.
 
 ---
 
@@ -164,8 +187,9 @@ python energy_force_virial_analyzer.py train.xyz force hist
 ```
 
 <div align="center">
-<img src="../../docs/Gallery/range_force.png" width = "50%" />
+<img src="../Gallery/range_force.png" width = "50%" />
 </div>
+
 
 
 
@@ -491,7 +515,7 @@ gpumdkit.sh -time nep
 
 ## Contributing
 
-To add new analyzer scripts, see [CONTRIBUTING.md](../../CONTRIBUTING.md) for detailed guidelines.
+To add new analyzer scripts, see [CONTRIBUTING.md](Contributing.md) for detailed guidelines.
 
 ---
 

@@ -1,5 +1,5 @@
 site_name: GPUMDkit Tutorial
-site_description: A tutorial for GPUMDkit, a toolkit for GPUMD and NEP.
+site_description: Tutorials for GPUMDkit.
 site_author: Zihan YAN
 site_url: https://zhyan0603.github.io/GPUMDkit
 repo_name: zhyan0603/GPUMDkit
@@ -35,7 +35,7 @@ theme:
       quote: octicons/quote-16
 
 docs_dir: tutorials
-site_dir: tmp  # Output HTML to docs/
+site_dir: htmls  # Output HTML to docs/
 use_directory_urls: false
 
 markdown_extensions:
@@ -52,13 +52,16 @@ plugins:
       lang: en
 
 nav:
-  - Home: README.md
+  - Home: tutorials.md
   - Plot Scripts: plot_scripts.md
   - Format Conversion: format_conversion.md
   - Sample Structures: sample_structures.md
-  - Workflow (dev): workflow_dev.md
+  - Workflow: workflow.md
   - Calculators: calculators.md
+  - Analyzers: analyzer.md
+  - Custom Commands: custom_commands.md
   - Active Learning Workflow: workflow_active_learning.md
+  - Contributing: contributing.md
 
 extra:
   social:

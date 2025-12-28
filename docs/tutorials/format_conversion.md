@@ -1,10 +1,13 @@
-# Function 1 - Format Conversion
+<div align="center">
+  <h1>🔄 Format Conversion</h1>
+    <p style="text-align: justify;">This directory (Scripts/format_conversion/) contains utilities for converting between different file formats commonly used in computational materials science.</p>
+</div>
 
 **Script Location:** `Scripts/format_conversion/`
 
-This section covers the format conversion tools in GPUMDkit (Interactive Mode - Function 1).
+This section covers the format conversion tools in GPUMDkit (Interactive Mode - Option 1).
 
-## Interactive Mode Access
+## Interactive Mode
 
 ```bash
 gpumdkit.sh
@@ -15,54 +18,87 @@ You'll see the following menu:
 
 ```
  ------------>>
- 101) Convert OUTCAR to extxyz
+ 101) Convert VASP to extxyz
  102) Convert mtp to extxyz
- 103) Convert cp2k to extxyz
- 104) Convert abacus to extxyz
+ 103) Convert CP2K to extxyz
+ 104) Convert ABACUS to extxyz
  105) Convert extxyz to POSCAR
- 106) Convert POSCAR to extxyz
- 107) Convert CIF to extxyz
- ...
  000) Return to the main menu
+ ------------>>
+ Input the function number:
+```
+
+for `101`:
+
+```
+ >-------------------------------------------------<
+ | Calling the script in Scripts/format_conversion |
+ | Script: out2xyz.sh                              |
+ | Developer: Yanzhou WANG (yanzhowang@gmail.com)  |
+ >-------------------------------------------------<
+ Choose the type of conversion:
+ 1) OUTCAR to extxyz
+ 2) vasprun.xml to extxyz
  ------------>>
 ```
 
-## Command-Line Usage
+for `102`:
 
-```bash
-gpumdkit.sh -out2xyz <directory>
-gpumdkit.sh -pos2exyz <POSCAR> <output.xyz>
-gpumdkit.sh -exyz2pos <input.xyz>
-gpumdkit.sh -cif2exyz <structure.cif>
-gpumdkit.sh -cif2pos <structure.cif>
-gpumdkit.sh -lmp2exyz <dump.lmp> <element1> <element2> ...
-gpumdkit.sh -pos2lmp <POSCAR> <lammps.data> <element1> <element2> ...
-gpumdkit.sh -addgroup <POSCAR> <element1> <element2> ...
-gpumdkit.sh -addweight <input.xyz> <output.xyz> <weight>
-gpumdkit.sh -get_frame <dump.xyz> <frame_index>
+```
+ >-------------------------------------------------<
+ | Calling the script in Scripts/format_conversion |
+ | Script: mtp2xyz.py                              |
+ | Developer: Ke XU (kickhsu@gmail.com)            |
+ >-------------------------------------------------<
+ Input <filename.cfg> <Symbol1 Symbol2 Symbol3 ...>
+ Examp: train.cfg Pd Ag
+ ------------>>
 ```
 
+for `103`:
+
+```
+ >-------------------------------------------------<
+ | Calling the script in Scripts/format_conversion |
+ | Script: cp2k2xyz.py                             |
+ | Developer: Ke XU (kickhsu@gmail.com)            |
+ >-------------------------------------------------<
+ Input [pos.xyz] [frc.xyz] [cell.cell] [-shifted yes/no]
+ ------------>>
+```
+
+for `104`:
+
+```
+ >-------------------------------------------------<
+ | Calling the script in Scripts/format_conversion |
+ | Script: abacus2xyz-scf.sh/abacus2xyz-md.sh      |
+ | Developer: Benrui TANG (tang070205@proton.me)   |
+ >-------------------------------------------------<
+ Choose the type of ABACUS calculation:
+ 1) SCF calculation
+ 2) MD calculation
+ ------------>>
+```
+
+for `105`:
+
+```
+ >-------------------------------------------------<
+ | Calling the script in Scripts/format_conversion |
+ | Script: exyz2pos.py                             |
+ | Developer: Zihan YAN (yanzihan@westlake.edu.cn) |
+ >-------------------------------------------------<
+ Input the name of extxyz
+ Examp: ./train.xyz
+ ------------>>
+```
+
+Follow the prompts to complete the function.
+
 ---
 
-<div align="center">
-  <h1>🔄 Format Conversion Scripts</h1>
-    <p style="text-align: justify;">This directory contains utilities for converting between different file formats commonly used in computational materials science.</p>
-</div>
-
-## Overview
-
-The format conversion scripts provide seamless interconversion between:
-- **VASP** (POSCAR, OUTCAR) ↔ extxyz
-- **CP2K** output → extxyz
-- **ABACUS** output → extxyz  
-- **LAMMPS** dump → extxyz
-- **CIF** → POSCAR/extxyz
-- Adding metadata (group labels, weights)
-- Frame extraction and manipulation
-
----
-
-## Quick Command Reference
+## Command-line Mode
 
 | Source Format | Target Format | Command |
 |---------------|---------------|---------|
@@ -324,7 +360,7 @@ To add new format converters:
 3. **Document**: Add usage to this README
 6. **Update gpumdkit.sh**: Add command-line flag if appropriate
 
-See [CONTRIBUTING.md](../../CONTRIBUTING.md) for detailed guidelines.
+See [CONTRIBUTING.md](Contributing.md) for detailed guidelines.
 
 ---
 

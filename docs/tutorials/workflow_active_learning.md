@@ -1,203 +1,186 @@
-# Active Learning Workflow
+## Tutorial for workflow_active_learning_dev.sh
 
-**Script Location:** `Scripts/workflow/workflow_active_learning_dev.sh`
+This tutorial explains the steps and considerations involved in `workflow_active_learning_dev.sh` script. The workflow is used to generate, select, and analyze molecular structures, followed by simulations and data collection.
 
-This tutorial explains the automated active learning workflow for NEP model development.
+### Overview
 
-## Overview
+This script is designed to handle molecular dynamics simulations, sampling, and SCF (self-consistent field) calculations for NEP. Below is a step-by-step guide explaining how the script works and what each part does.
 
-Active learning iteratively improves NEP models by:
-1. Generating candidate structures via MD
-2. Identifying uncertain configurations
-3. Running DFT on selected structures
-4. Adding to training set and retraining
+### 1. **SLURM Directives**
 
-This workflow automates the entire cycle.
-
-## Prerequisites
-
-- **GPUMD** installed and accessible
-- **VASP** (or other DFT code) set up
-- **GPUMDkit** installed
-- **PyNEP** installed (for structure selection)
-- Initial NEP model trained
-
-## Workflow Steps
-
-### 1. Preparation
-
-Create a working directory with:
-- `nep.txt` - Current NEP model
-- `train.xyz` - Current training data
-- `run.in` - GPUMD configuration
-- VASP inputs (`POTCAR`, `INCAR`, `KPOINTS` in `fp/` directory)
-
-### 2. Configuration
-
-Edit `workflow_active_learning_dev.sh` to set:
-
-```bash
-# Basic settings
-prefix_name=LiF_iter01        # Iteration identifier
-min_dist=1.4                  # Minimum atomic distance filter
-box_limit=13                  # Box size filter
-max_force=30                  # Maximum force filter (eV/Å)
-
-# Sampling
-sample_number=100             # Structures to sample from MD
-select_number=50              # Structures to select for DFT
-
-# MD settings
-md_steps=50000                # MD steps per structure
-md_temp=1200                  # Temperature (K)
-
-# DFT settings
-dft_partition=intel-sc3       # Cluster partition
-dft_queue=huge                # Queue name
-dft_nodes=1                   # Nodes per calculation
+```
+#!/bin/bash -l
+#SBATCH -p intel-sc3,intel-sc3-32c
+#SBATCH -q huge
+#SBATCH -N 1
+#SBATCH -J workflow
+#SBATCH -o workflow.log
+#SBATCH --ntasks-per-node=1
 ```
 
-### 3. Run the Workflow
+The SLURM directives are used to define how the job will be submitted to the cluster:
 
-**On SLURM cluster:**
-```bash
-sbatch workflow_active_learning_dev.sh
+- `#SBATCH -p` defines the partition, in this case, it's `intel-sc3` and `intel-sc3-32c`.
+- `#SBATCH -q` specifies the queue, in this case, `huge`.
+- `#SBATCH -N` allocates 1 node for the job.
+- `#SBATCH -J` names the job `workflow`.
+- `#SBATCH -o` defines the output log file as `workflow.log`.
+- `--ntasks-per-node=1` specifies that only one task should run per node.
+
+**<u>NOTE:</u>** If your machine does not have the SLURM environment, you can also run the script directly from the command line. For example:
+
+```
+nohup bash workflow_activate_learning_dev.sh &>workflow.log &
 ```
 
-**Without SLURM:**
-```bash
-nohup bash workflow_active_learning_dev.sh &>workflow.log &
+### 2. **Basic Setup**
+
+```
+cd $SLURM_SUBMIT_DIR 
 ```
 
-### 4. Monitor Progress
+Ensure the working directory is correct, and that all necessary files are present for the job.
 
-Check log file:
-```bash
-tail -f workflow.log
+```
+source ${GPUMDkit_path}/Scripts/workflow/submit_template.sh  # Load the submit template
+python_pynep=/storage/zhuyizhouLab/yanzhihan/soft/conda/envs/gpumd/bin/python  # Python executable
 ```
 
-The workflow will:
-1. Run MD sampling with current NEP
-2. Filter structures by distance and force
-3. Select diverse structures using PyNEP FPS
-4. Set up DFT calculations
-5. Submit DFT jobs
-6. Collect results after DFT completes
-7. Add to training set
-8. Retrain NEP model
+- `GPUMDkit_path` is the environment variable that stores the path for the `GPUMDkit` .
+- `python_pynep` points to the Python environment needed for `pynep`-related scripts.
 
-## Workflow Stages
+------
 
-### Stage 1: MD Sampling
+### 3. **Variable Definitions**
 
-Generates candidate structures by running MD at specified temperature.
-
-### Stage 2: Structure Filtering
-
-Applies quality filters:
-- Minimum atomic distance > threshold
-- Box size within limits
-- Maximum force < threshold
-
-### Stage 3: Structure Selection
-
-Uses PyNEP FPS to select most diverse structures.
-
-### Stage 4: DFT Calculations
-
-Sets up and runs VASP calculations.
-
-### Stage 5: Data Collection
-
-Converts VASP results and adds to training.
-
-### Stage 6: NEP Retraining
-
-Retrains NEP with expanded dataset.
-
-## Customization
-
-### Adjust MD Parameters
-
-For different exploration strategies:
-
-**High temperature exploration:**
-```bash
-md_temp=1500    # More aggressive sampling
-md_steps=100000 # Longer trajectories
+```
+work_dir=${PWD}  # Set the working directory
+prefix_name=LiF_iter01  # Prefix for calculations
+min_dist=1.4  # Minimum atom distance
+box_limit=13  # Simulation box limit
+max_fp_num=50  # Maximum number of single point calculations
+sample_method=pynep  # Sampling method (options: uniform, random, pynep)
+pynep_sample_dist=0.01  # Sampling distance for pynep
 ```
 
-**Multiple temperatures:**
-```bash
-# Run at several temperatures
-for temp in 600 900 1200 1500; do
-    # Modify run.in for each temperature
-    # Run MD
+You can customize:
+
+- `prefix_name` to reflect the name of your current work.
+- `min_dist`, `box_limit`, and `max_fp_num` based on your own system.
+- `sample_method` (choose between `uniform`, `random`, or `pynep`).
+- `pynep_sample_dist` is the sampling distance for `pynep`.
+
+------
+
+### 4. **Check Required Files**
+
+```
+if [ -f nep.txt ] && [ -f nep.in ] && [ -f train.xyz ] && [ -f run.in ] && [ -f INCAR ] && [ -f POTCAR ] ; then
+    # Check for the required files before proceeding.
+else
+    echo "Please put nep.in nep.txt train.xyz run.in INCAR POTCAR [KPOINTS] and the sample_struct.xyz in the current directory."
+    exit 1
+fi
+```
+
+Make sure the necessary files (`nep.txt`, `nep.in`, `train.xyz`, `run.in`, `INCAR`, `POTCAR`, `KPOINTS`) are available in the working directory. If any of these are missing, the script will terminate. `train.xyz` and `nep.txt` are used for `pynep` sampling, and `run.in` is the simulation parameters of MD in the current iteration.
+
+------
+
+### 5. **File Organization**
+
+```
+mkdir 00.modev common
+mv ${work_dir}/{nep.txt,nep.in,*.xyz,run.in,INCAR,KPOINTS,POTCAR} ./common
+cp ${work_dir}/common/$sample_xyz_file ${work_dir}/00.modev
+```
+
+The script organizes the working files into two folders:
+
+- `00.modev`: For molecular dynamics simulation.
+- `common`: For shared resources such as `nep.txt`, `run.in`, and the structure files, etc.
+
+------
+
+### 6. **Molecular Dynamics Simulation Submission**
+
+```
+submit_gpumd_array modev ${sample_struct_num}
+sbatch submit.slurm
+```
+
+After preparing the input files, the script submits an array of molecular dynamics (MD) tasks using `submit_gpumd_array`.
+
+------
+
+### 7. **Monitoring Task Completion**
+
+```
+while true; do
+    logs=$(find "${work_dir}/00.modev/" -type f -name log -path "*/sample_*/log")
+    finished_tasks_md=$(grep "Finished running GPUMD." $logs | wc -l)
+    error_tasks_md=$(grep "Error" $logs | wc -l)
+
+    if [ "$error_tasks_md" -ne 0 ]; then
+        echo "Error: MD simulation encountered an error."
+        exit 1
+    fi
+    if [ $finished_tasks_md -eq $sample_struct_num ]; then
+        break
+    fi
+    sleep 30
 done
 ```
 
-### Adjust Selection Strategy
+The script continuously checks whether all MD tasks have finished by searching for a `Finished running GPUMD.` message in the logs. If an error is encountered, the script terminates.
 
-**More structures per iteration:**
-```bash
-sample_number=200
-select_number=100
+------
+
+### 8. **Analysis and Filtering**
+
+```
+mkdir ${work_dir}/01.select
+...
 ```
 
-**Aggressive exploration:**
-```bash
-max_force=50    # Allow higher forces
-min_dist=1.2    # Tighter distance threshold
+In the `01.select` folder, all structures in the trajectory file `dump.xyz` during the MD process will be analyzed and filtered to avoid the generation of non-physical structures as much as possible. Specifically, the `get_min_dist.py`, `filter_structures_by_distance.py` and `filter_exyz_by_box.py` scripts will be employed to check whether there are situations where the distance between atoms is too close or the simulated box exceeds the limit value, and such structures will be filtered out.
+
+------
+
+### 9. **Sampling Methods**
+
+```
+case $sample_method in
+    "uniform")
+    "random")
+    "pynep")
 ```
 
-## Multi-Element Systems
+The script supports three sampling methods: `uniform`, `random`, and `pynep`. It selects structures according to the chosen method and checks if the number exceeds `max_fp_num`, ensuring the final structure count is within limits.
 
-For systems with multiple species:
+------
 
-```bash
-# Ensure proper group labels
-gpumdkit.sh -addgroup POSCAR Li Y Cl
+### 10. **SCF Calculations**
 
-# Filter may need adjustment
-min_dist=1.3    # Smaller for Li
-box_limit=15    # Larger for multi-component
+```
+submit_vasp_array scf ${selected_struct_num} ${prefix_name}
 ```
 
-## Convergence Criteria
+After sampling, SCF calculations are submitted using `submit_vasp_array`. The process is similar to the MD submission, but for SCF calculations.
 
-Stop active learning when:
+------
 
-1. **RMSE plateaus**: No significant improvement
-2. **Few uncertain structures**: Most pass uncertainty threshold
-3. **Validation metrics stable**: Test set performance stops improving
+### 11. **Prediction Step**
 
-Example monitoring:
-```bash
-# Track RMSE over iterations
-grep "RMSE" */loss.out
+```
+submit_nep_prediction
 ```
 
-## Example Workflow
+The final step involves submitting the NEP prediction task to check  the accuracy of the NEP model. 
 
-```bash
-# Iteration 1
-cd iteration_01
-cp ../iter00/nep.txt ./
-cp ../iter00/train.xyz ./
-sbatch workflow_active_learning_dev.sh
 
-# Monitor and wait for completion
-
-# Iteration 2
-cd ../iteration_02
-cp ../iter01/nep.txt ./
-cp ../iter01/train.xyz ./
-# Adjust parameters if needed
-sbatch workflow_active_learning_dev.sh
-
-# Continue until converged
-```
 
 ---
 
-For script details, see `Scripts/workflow/workflow_active_learning_dev.sh`
+Thank you for using `GPUMDkit`! If you have any questions or need further assistance, feel free to open an issue on our GitHub repository or contact Zihan YAN (yanzihan@westlake.edu.cn).
+
