@@ -8,8 +8,6 @@
 <img src="https://img.shields.io/github/languages/code-size/zhyan0603/GPUMDkit" alt="Code Size">
 <p style="text-align: justify;"><strong>GPUMDkit</strong> is a toolkit for the GPUMD (<em>Graphics Processing Units Molecular Dynamics</em>) and NEP (<em>neuroevolution potential</em>) program. It offers a user-friendly command-line interface to streamline common scripts and workflows, simplifying tasks such as script invocation, format conversion, structure sampling, NEP construction workflow, and various analysis, aiming to improve user productivity.</p>
 </div>
-
-
 ## Features
 - **Simplified Script Invocation**: Easily run scripts for GPUMD and NEP.
 - **Workflow Automation**: Automate common tasks to save time and reduce manual intervention.
@@ -208,13 +206,13 @@ You can also save images as PNG if your device doesn't support visualization:
 gpumdkit.sh -plt thermo save
 ```
 
-Refer to our [documentation](https://zhyan0603.github.io/GPUMDkit/home.html) or the [Usage Instructions](./docs/tutorials/README.md) for more detailed examples and command options.
+Refer to our [documentation](https://zhyan0603.github.io/GPUMDkit/htmls/tutorials.html) for more detailed examples and command options.
 
 #### Custom Commands
 
 `GPUMDkit` now supports custom commands via `~/.gpumdkit.in`.
 
-You can add your own shortcuts (e.g., `gpumdkit.sh -yourcommand`) by defining some functions in this file. This allows you to extend `GPUMDkit` with personal scripts. See [here](./docs/tutorials/custom_commands.md) for the detail usage.
+You can add your own shortcuts (e.g., `gpumdkit.sh -yourcommand`) by defining some functions in this file. This allows you to extend `GPUMDkit` with personal scripts. See [here](https://zhyan0603.github.io/GPUMDkit/htmls/custom_commands.html) for the detail usage.
 
 #### Tab Completion Support
 
@@ -234,7 +232,7 @@ We’d love your help to improve **GPUMDkit**! Contribute by:
 - Report issues or suggest features via [issues](https://github.com/zhyan0603/GPUMDkit/issues).
 - Contacting me at [yanzihan@westlake.edu.cn](mailto:yanzihan@westlake.edu.cn).
 
-Let’s build something useful together! 🌟
+Also, welcome to join our QQ group ([825696376](https://qun.qq.com/universal-share/share?ac=1&authKey=buBNi1ADDzIFF2oZ1yA5FywG3LA9EL9yKZmb%2BN2MMz7nNuuxTas54wH7BgPEqP0s&busi_data=eyJncm91cENvZGUiOiI4MjU2OTYzNzYiLCJ0b2tlbiI6IlRxL1RLTDlOK3U2ekRSUXJ1TkNTUWd3ODNVV3BrdG9HN2lWWmJKMHAraGlDNzBZWFFyRUY2dUlSaW8rbUd4MisiLCJ1aW4iOiIxNDg5NjQ3MTc5In0%3D&data=fa4zSsT_IdI4ftCT_wwpytYHf--TaTB35lH0Jac5JHVpYoyXw3_3bZ1l1NZejsOZnGJku5u3BCbf5_bgrCkhZg&svctype=4&tempid=h5_group_info)). Let’s build something useful together! 🌟
 
 ## Citation
 
