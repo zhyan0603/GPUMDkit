@@ -1,6 +1,8 @@
 # Function 1 - Format Conversion
 
-This section covers the format conversion tools in GPUMDkit (Interactive Mode - Function 1), which provide comprehensive tools for converting between various file formats used in computational materials science.
+**Script Location:** `Scripts/format_conversion/`
+
+This section covers the format conversion tools in GPUMDkit (Interactive Mode - Function 1).
 
 ## Interactive Mode Access
 
@@ -27,330 +29,303 @@ You'll see the following menu:
 
 ## Command-Line Usage
 
-For quick operations, you can also use command-line mode:
-
 ```bash
-# Convert VASP OUTCAR to extxyz
-gpumdkit.sh -out2xyz ./path/to/outcars/
-
-# Convert POSCAR to extxyz
-gpumdkit.sh -pos2exyz POSCAR model.xyz
-
-# Convert CIF to extxyz
-gpumdkit.sh -cif2exyz structure.cif
-
-# Add group labels for NEP training
-gpumdkit.sh -addgroup POSCAR Li Y Cl
+gpumdkit.sh -out2xyz <directory>
+gpumdkit.sh -pos2exyz <POSCAR> <output.xyz>
+gpumdkit.sh -exyz2pos <input.xyz>
+gpumdkit.sh -cif2exyz <structure.cif>
+gpumdkit.sh -cif2pos <structure.cif>
+gpumdkit.sh -lmp2exyz <dump.lmp> <element1> <element2> ...
+gpumdkit.sh -pos2lmp <POSCAR> <lammps.data> <element1> <element2> ...
+gpumdkit.sh -addgroup <POSCAR> <element1> <element2> ...
+gpumdkit.sh -addweight <input.xyz> <output.xyz> <weight>
+gpumdkit.sh -get_frame <dump.xyz> <frame_index>
 ```
 
---- 
+---
 
-### Menu Options
+<div align="center">
+  <h1>🔄 Format Conversion Scripts</h1>
+    <p style="text-align: justify;">This directory contains utilities for converting between different file formats commonly used in computational materials science.</p>
+</div>
+
+## Overview
+
+The format conversion scripts provide seamless interconversion between:
+- **VASP** (POSCAR, OUTCAR) ↔ extxyz
+- **CP2K** output → extxyz
+- **ABACUS** output → extxyz  
+- **LAMMPS** dump → extxyz
+- **CIF** → POSCAR/extxyz
+- Adding metadata (group labels, weights)
+- Frame extraction and manipulation
+
+---
+
+## Quick Command Reference
+
+| Source Format | Target Format | Command |
+|---------------|---------------|---------|
+| OUTCAR | extxyz | `gpumdkit.sh -out2xyz <dir>` |
+| vasprun.xml | extxyz | `gpumdkit.sh -xml2xyz <dir>` |
+| POSCAR | extxyz | `gpumdkit.sh -pos2exyz <poscar> <xyz>` |
+| extxyz | POSCAR | `gpumdkit.sh -exyz2pos <xyz>` |
+| POSCAR | LAMMPS | `gpumdkit.sh -pos2lmp <poscar> <lmp> <elem...>` |
+| LAMMPS dump | extxyz | `gpumdkit.sh -lmp2exyz <dump> <elem...>` |
+| CIF | extxyz | `gpumdkit.sh -cif2exyz <cif>` |
+| CIF | POSCAR | `gpumdkit.sh -cif2pos <cif>` |
+| Add groups | - | `gpumdkit.sh -addgroup <poscar> <elem...>` |
+| Add weight | - | `gpumdkit.sh -addweight <in> <out> <weight>` |
+| Replicate1 | - | `gpumdkit.sh -replicate input.vasp output.vasp 2 2 2` |
+| Replicate2 | - | `gpumdkit.sh -replicate input.vasp output.vasp <target_num>` |
+| Get frame | - | `gpumdkit.sh -ge_frame <extxyz> <index>` |
+
+---
+
+## Scripts
+
+### add_groups.py
+
+---
+
+This script adds group labels to structures based on specified elements.
+
+#### Usage
+
+```
+python add_groups.py <filename> <Symbols1> <Symbols2> ...
+```
+
+- `<filename>`: The path to the input file (e.g., POSCAR).
+- `<Symbols>`: Space-separated list of element symbols to group (e.g., Li Y Cl).
+
+#### Example
 
 ```sh
- ------------>>
- 101) Convert OUTCAR to extxyz
- 102) Convert mtp to extxyz
- 103) Convert cp2k to extxyz
- 104) Convert castep to extxyz
- 105) Convert extxyz to POSCAR
- 106) Developing ...
- 000) Return to the main menu
- ------------>>
- Input the function number:
+python add_groups.py POSCAR Li Y Cl
 ```
 
-### Option 101: Convert OUTCAR to extxyz
-
-This option allows you to convert VASP `OUTCAR` files to `extxyz` format.
-
-Select option `101` from the menu:
+#### Command-Line Mode Example
 
 ```
-101
+gpumdkit.sh -addgroup POSCAR Li Y Cl
 ```
 
-You will see the following prompt:
-
-```
- >-------------------------------------------------<
- | This function calls the script in GPUMD's tools |
- | Script: multipleFrames-outcars2nep-exyz.sh      |
- | Developer: Yanzhou WANG (yanzhowang@gmail.com ) |
- >-------------------------------------------------<
- Input the directory containing OUTCARs
- ------------>>
-```
-
-Enter the directory containing your `OUTCAR` files:
-
-```
-/path/to/your/outcars
-```
-
-The script `multipleFrames-outcars2nep-exyz.sh` in GPUMD's tools will be called to perform the conversion.
-
-### Option 102: Convert mtp to extxyz
-
-This option allows you to convert `cfg` files to `extxyz` format.
-
-Select option `102` from the menu:
-
-```
-102
-```
-
-You will see the following prompt:
-
-```
- >-------------------------------------------------<
- | This function calls the script in GPUMD's tools |
- | Script: mtp2xyz.py                              |
- | Developer: Ke XU (kickhsu@gmail.com)            |
- >-------------------------------------------------<
- Input <filename.cfg> <Symbol1 Symbol2 Symbol3 ...>
- Examp: train.cfg Pd Ag
- ------------>>
-```
-
-Enter the `<filename.cfg>` `<Symbol1 Symbol2 Symbol3 ...>` :
-
-```
-train.cfg Pd Ag
-```
-
-The script `mtp2xyz.py` in GPUMD's tools will be called to perform the conversion.
-
-### Option 103: Convert cp2k to extxyz
-
-This option allows you to convert cp2k's output to `extxyz` format.
-
-Select option `103` from the menu:
-
-```
-103
-```
-
-You will see the following prompt:
-
-```
- >-------------------------------------------------<
- | This function calls the script in GPUMD's tools |
- | Script: cp2k2xyz.py                             |
- | Developer: Ke XU (kickhsu@gmail.com)            |
- >-------------------------------------------------<
- Input <dir_cp2k>
- Examp: ./cp2k
- ------------>>
-```
-
-Enter the `<dir_cp2k>` :
-
-```
-./cp2k
-```
-
-The script `cp2k2xyz.py` in GPUMD's tools will be called to perform the conversion.
-
-### Option 104: Convert castep to extxyz
-
-This option allows you to convert castep's output to `extxyz` format.
-
-Select option `104` from the menu:
-
-```
-104
-```
-
-You will see the following prompt:
-
-```
- >-------------------------------------------------<
- | This function calls the script in GPUMD's tools |
- | Script: castep2nep-exyz.sh                      |
- | Developer: Yanzhou WANG (yanzhowang@gmail.com ) |
- >-------------------------------------------------<
- Input <dir_castep>
- Examp: ./castep
- ------------>>
-```
-
-Enter the `<dir_castep>` :
-
-```
-./castep
-```
-
-The script `castep2nep-exyz.sh` in GPUMD's tools will be called to perform the conversion.
-
-### Option 105: Convert extxyz to POSCAR
-
-This option allows you to convert `extxyz` file to POSCAR.
-
-Select option `105` from the menu:
-
-```
-105
-```
-
-You will see the following prompt:
-
-```
- >-------------------------------------------------<
- | This function calls the script in Scripts       |
- | Script: exyz2pos.py                             |
- | Developer: Zihan YAN (yanzihan@westlake.edu.cn) |
- >-------------------------------------------------<
- Input the name of extxyz
- Examp: ./train.xyz 
- ------------>>
-```
-
-Enter the `<extxyz_filename>` :
-
-```
-./train.xyz
-```
-
-The script `exyz2pos.py` in Scripts will be called to perform the conversion.
+This command will read the `POSCAR` file and add group labels for the elements `Li`, `Y`, and `Cl`. The output will be saved to a file named `model.xyz`.
 
 
+
+### add_weight.py
 
 ---
 
-## Command-Line Usage
+This script adds weight labels to structures.
 
-For quick operations, use command-line mode:
+#### Usage
 
-```bash
-# Convert VASP OUTCAR to extxyz
-gpumdkit.sh -out2xyz ./path/to/outcars/
+```
+python add_weight.py <input_file> <output_file> <new_weight>
+```
 
-# Convert POSCAR to extxyz
+- `<inputfile>`: The path to the input file (e.g., train.xyz).
+- `<outputfile>`: The path to the input file (e.g., train_weighted.xyz).
+- `<new_weight>`: The `weight` you need to change.
+
+#### Example
+
+```sh
+python add_weight.py train.xyz train_weighted.xyz 5
+```
+
+#### Command-Line Mode Example
+
+```
+gpumdkit.sh -addweight train.xyz train_weighted.xyz 5
+```
+
+This command will read the `train.xyz` file and add `Weight=5` labels for all structures. The output will be saved to a file named `train_weighted.xyz`.
+
+
+
+### exyz2pos.py
+
+---
+
+This script converts all frames in an `extxyz` file to `POSCAR` format.
+
+#### Usage
+
+```sh
+python exyz2pos.py <extxyz_file>
+```
+
+#### Example
+
+```sh
+python exyz2pos.py structs.xyz
+```
+
+#### Command-Line Mode Example
+
+```
+gpumdkit.sh -exyz2pos structs.xyz
+```
+
+This command will convert all frames in `structs.xyz` to `POSCAR_*.vasp` files.
+
+
+
+### pos2exyz.py
+
+---
+
+This script converts a `POSCAR` file to `extxyz` format.
+
+#### Usage
+
+```
+python pos2exyz.py <POSCAR_file> <extxyz_file>
+```
+
+- `<POSCAR_file>`: The path to the input `POSCAR` file.
+- `<extxyz_file>`: The desired name for the output `extxyz` file.
+
+#### Example
+
+```
+python pos2exyz.py POSCAR model.xyz
+```
+
+#### Command-Line Mode Example
+
+```
 gpumdkit.sh -pos2exyz POSCAR model.xyz
-
-# Convert CIF to extxyz
-gpumdkit.sh -cif2exyz structure.cif
-
-# Convert CIF to POSCAR
-gpumdkit.sh -cif2pos structure.cif
-
-# Convert POSCAR to LAMMPS data
-gpumdkit.sh -pos2lmp POSCAR lammps.data Li Y Cl
-
-# Convert LAMMPS dump to extxyz
-gpumdkit.sh -lmp2exyz dump.lammpstrj Li Y Cl
-
-# Add group labels for NEP training
-gpumdkit.sh -addgroup POSCAR Li Y Cl
-
-# Add weight to structures
-gpumdkit.sh -addweight train.xyz train_weighted.xyz 2.0
-
-# Extract specific frame
-gpumdkit.sh -get_frame dump.xyz 100
 ```
 
-## Supported Formats
+This command will read the `POSCAR` file and convert it to `model.xyz` in `extxyz` format.
 
-| Source Format | Target Format | Interactive | Command-Line | Script |
-|--------------|---------------|-------------|--------------|---------|
-| VASP OUTCAR | extxyz | 101 | `-out2xyz` | `out2xyz.sh` |
-| VASP vasprun.xml | extxyz | 101 | `-out2xyz` | `xml2xyz.py` |
-| MTP .cfg | extxyz | 102 | - | `mtp2xyz.py` |
-| CP2K output | extxyz | 103 | `-cp2k2exyz` | `cp2k2xyz.py` |
-| ABACUS output | extxyz | 104 | `-abacus2xyz` | `abacus2xyz_*.sh` |
-| extxyz | POSCAR | 105 | `-exyz2pos` | `exyz2pos.py` |
-| POSCAR | extxyz | - | `-pos2exyz` | `pos2exyz.py` |
-| POSCAR | LAMMPS | - | `-pos2lmp` | `pos2lmp.py` |
-| LAMMPS dump | extxyz | - | `-lmp2exyz` | - |
-| CIF | extxyz | - | `-cif2exyz` | `cif2exyz.py` |
-| CIF | POSCAR | - | `-cif2pos` | - |
 
-## Common Workflows
 
-### Prepare NEP Training Data from VASP
-
-```bash
-# 1. Convert all OUTCAR files in subdirectories
-gpumdkit.sh -out2xyz ./dft_calculations/
-
-# 2. Output: train.xyz with all structures combined
-
-# 3. Add group labels (for multi-element systems)
-gpumdkit.sh -addgroup POSCAR Li Y Cl
-# Output: model.xyz with group information
-
-# 4. (Optional) Add weights to specific structures
-gpumdkit.sh -addweight train.xyz train_weighted.xyz 2.0
-```
-
-### Convert CIF Database to GPUMD Format
-
-```bash
-# Convert multiple CIF files
-for cif in *.cif; do
-    gpumdkit.sh -cif2exyz "$cif"
-done
-
-# Combine into single file if needed
-cat *.xyz > combined_structures.xyz
-```
-
-### Prepare LAMMPS Simulation from VASP
-
-```bash
-# 1. Convert POSCAR to LAMMPS data file
-gpumdkit.sh -pos2lmp POSCAR lammps.data Li La Zr O
-
-# 2. Use in LAMMPS simulation
-# Note: Specify element order matching your LAMMPS potential
-```
-
-## File Format Details
-
-### Extended XYZ (extxyz)
-
-The extended XYZ format used by GPUMD includes:
-
-```
-<number_of_atoms>
-Lattice="a1 a2 a3 b1 b2 b3 c1 c2 c3" Properties=species:S:1:pos:R:3:forces:R:3 energy=<value> virial="v1 v2 ... v6"
-<element> <x> <y> <z> <fx> <fy> <fz>
-...
-```
-
-**Key fields:**
-- `Lattice`: 3x3 lattice vectors (row-major, in Angstroms)
-- `energy`: Total energy (eV)
-- `forces`: Forces on atoms (eV/Angstrom)
-- `virial`: Stress tensor components (eV)
-
-### Group Labels
-
-For NEP training with multiple species, add group labels:
-
-```
-<number_of_atoms>
-Lattice="..." Properties=species:S:1:pos:R:3 group=<group_string>
-Li <x> <y> <z>
-Y <x> <y> <z>
-Cl <x> <y> <z>
-```
-
-The `group` string assigns atom types, e.g., `group=0 0 0 1 1 2 2 2` means:
-- First 3 atoms (Li) are type 0
-- Next 2 atoms (Y) are type 1  
-- Last 3 atoms (Cl) are type 2
-
-## Tips
-
-- **Batch conversion**: Use shell loops for multiple files
-- **Check results**: Always verify a few structures after conversion
-- **Element order**: Keep consistent element ordering across conversions
-- **Group labels**: Required for NEP training with multiple species
-- **Weights**: Use to emphasize important structures in training
+### pos2lmp.py
 
 ---
 
-Thank you for using `GPUMDkit`! If you have any questions or need further assistance, feel free to open an issue on our GitHub repository or contact Zihan YAN (yanzihan@westlake.edu.cn).
+This script converts a `POSCAR` file to `lammps-data` format.
+
+#### Usage
+
+```
+python pos2lmp.py <poscar_file> <lammps_data_file>
+```
+
+- `<poscar_file>`: The path to the input `POSCAR` file.
+- `<lammps_data_file>`: The desired name for the output `lammps-data` file.
+
+#### Example
+
+```
+python pos2lmp.py POSCAR lammps.data
+```
+
+#### Command-Line Mode Example
+
+```
+gpumdkit.sh -pos2lmp POSCAR lammps.data
+```
+
+This command will read the `POSCAR` file and convert it to `lammps.data` in `lammps-data` format.
+
+
+
+### split_single_xyz.py
+
+---
+
+This script splits an `extxyz` file into individual frames, each written to a separate file.
+
+#### Usage
+
+```
+python split_single_xyz.py <extxyz_file>
+```
+
+This command will split all frames in `extxyz_file` into separate files named `model_*.xyz`.
+
+
+
+### lmp2exyz.py
+
+---
+
+This script will convert the `lammps-dump` to `extxyz` format.
+
+#### Usage
+
+```
+python lmp2exyz.py <dump_file> <element1> <element2> ...
+```
+
+- `<dump_file>`: The path to the input `lammps-dump` file.
+- `<element>`: The order of the specified elements.
+
+#### Example
+
+```sh
+python lmp2exyz.py dump.data Li Y Cl
+```
+
+#### Command-Line Mode Example
+
+```
+gpumdkit.sh -lmp2exyz dump.data Li Y Cl
+```
+
+It will convert the `dump.data` to `dump.xyz` file
+
+
+
+### get_frame.py
+
+---
+
+This script will read the `extxyz` file and return the specified frame by index..
+
+#### Usage
+
+```
+python get_frame.py <extxyz_file> <frame_index>
+```
+
+- `<extxyz_file>`: The path to the input `extxyz` file.
+- `<frame_index>`: The index of the specified frame.
+
+#### Example
+
+```sh
+python get_frame.py dump.xyz 1000
+```
+
+#### Command-Line Mode Example
+
+```
+gpumdkit.sh -get_frame dump.xyz 1000
+```
+
+You will get the `frame_1000.xyz` file after perform the script.
+
+
+
+## Contributing
+
+To add new format converters:
+
+1. **Follow naming**: `<source>2<target>.py`
+2. **Handle errors**: Validate input format before processing
+3. **Document**: Add usage to this README
+6. **Update gpumdkit.sh**: Add command-line flag if appropriate
+
+See [CONTRIBUTING.md](../../CONTRIBUTING.md) for detailed guidelines.
+
+---
+
+Thank you for using GPUMDkit! If you have questions about format conversion, please open an issue on our [GitHub repository](https://github.com/zhyan0603/GPUMDkit/issues) or contact Zihan YAN (yanzihan@westlake.edu.cn).
