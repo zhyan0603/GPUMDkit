@@ -20,7 +20,7 @@ To install `GPUMDkit`, follow these steps:
 1. Clone the repository or download the whole project.
 
     ```
-    git clone git@github.com:zhyan0603/GPUMDkit.git
+    git clone https://github.com/zhyan0603/GPUMDkit.git
     ```
 
 2. Set some variable in your `~/.bashrc` file, for example:
