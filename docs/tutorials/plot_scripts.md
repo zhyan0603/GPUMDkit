@@ -629,7 +629,7 @@ To add new plotting scripts:
 2. **Add documentation** to this README
 5. **Update gpumdkit.sh** to integrate new plot type
 
-See [CONTRIBUTING.md](Contributing.md) for detailed guidelines.
+See [CONTRIBUTING.md](contributing.md) for detailed guidelines.
 
 ---
 

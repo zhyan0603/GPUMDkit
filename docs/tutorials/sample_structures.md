@@ -217,7 +217,7 @@ The script `select_max_modev.py` in the `Scripts/sample_strcutures` will be call
 
 ## Contributing
 
-See [CONTRIBUTING.md](Contributing.md) for detailed guidelines.
+See [CONTRIBUTING.md](contributing.md) for detailed guidelines.
 
 ---
 

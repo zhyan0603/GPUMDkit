@@ -171,13 +171,13 @@ Implements automated active learning cycles for iterative NEP model improvement.
 
 **Status:** Development version - **under active development**
 
-**Documentation:** See detailed tutorial in [docs/tutorials/](../../docs/tutorials/)
+**Documentation:** See detailed tutorial in [docs/tutorials/](tutorials.md)
 
 ---
 
 ## Contributing
 
-To add new workflow capabilities, see [CONTRIBUTING.md](Contributing.md) for detailed guidelines.
+To add new workflow capabilities, see [CONTRIBUTING.md](contributing.md) for detailed guidelines.
 
 ---
 

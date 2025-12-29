@@ -394,7 +394,7 @@ gpumdkit.sh -plt rdf
 
 ## Contributing
 
-See [CONTRIBUTING.md](Contributing.md) for detailed guidelines.
+See [CONTRIBUTING.md](contributing.md) for detailed guidelines.
 
 ---
 

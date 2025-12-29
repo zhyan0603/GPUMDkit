@@ -515,7 +515,7 @@ gpumdkit.sh -time nep
 
 ## Contributing
 
-To add new analyzer scripts, see [CONTRIBUTING.md](Contributing.md) for detailed guidelines.
+To add new analyzer scripts, see [CONTRIBUTING.md](contributing.md) for detailed guidelines.
 
 ---
 

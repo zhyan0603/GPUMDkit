@@ -360,7 +360,7 @@ To add new format converters:
 3. **Document**: Add usage to this README
 6. **Update gpumdkit.sh**: Add command-line flag if appropriate
 
-See [CONTRIBUTING.md](Contributing.md) for detailed guidelines.
+See [CONTRIBUTING.md](contributing.md) for detailed guidelines.
 
 ---
 
