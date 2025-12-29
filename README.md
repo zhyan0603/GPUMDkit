@@ -8,6 +8,7 @@
 <img src="https://img.shields.io/github/languages/code-size/zhyan0603/GPUMDkit" alt="Code Size">
 <p style="text-align: justify;"><strong>GPUMDkit</strong> is a toolkit for the GPUMD (<em>Graphics Processing Units Molecular Dynamics</em>) and NEP (<em>neuroevolution potential</em>) program. It offers a user-friendly command-line interface to streamline common scripts and workflows, simplifying tasks such as script invocation, format conversion, structure sampling, NEP construction workflow, and various analysis, aiming to improve user productivity.</p>
 </div>
+
 ## Features
 - **Simplified Script Invocation**: Easily run scripts for GPUMD and NEP.
 - **Workflow Automation**: Automate common tasks to save time and reduce manual intervention.
