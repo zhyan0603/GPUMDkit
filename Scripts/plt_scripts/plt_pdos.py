@@ -1,5 +1,6 @@
 """
-@Author   : Ziyang Wang (m15566605404@163.com)
+@Author   : Ziyang Wang
+@Email    : m15566605404@163.com
 @Remark   : Post-processing script for VAC (Velocity Autocorrelation) and PDOS (Phonon Density of States)
             Calculates normalized VAC, PDOS, and Heat Capacity (Cv) from GPUMD outputs.
 """
