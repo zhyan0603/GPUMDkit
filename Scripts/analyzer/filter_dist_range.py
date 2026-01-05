@@ -1,6 +1,6 @@
+import sys
 import numpy as np
 from ase.io import read, write
-import sys
 
 def get_min_distance(atoms, symbol1, symbol2):
     """Calculate the minimum distance between atoms of symbol1 and symbol2."""

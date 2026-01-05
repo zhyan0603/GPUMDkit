@@ -6,17 +6,19 @@
       <meta charset="utf-8">
       <meta name="viewport" content="width=device-width,initial-scale=1">
       
-        <meta name="description" content="A tutorial for GPUMDkit, a toolkit for GPUMD and NEP.">
+        <meta name="description" content="Tutorials for GPUMDkit.">
       
       
         <meta name="author" content="Zihan YAN">
       
       
-        <link rel="canonical" href="https://zhyan0603.github.io/GPUMDkit/index.html">
+        <link rel="canonical" href="https://zhyan0603.github.io/GPUMDkit/custom_commands.html">
       
       
+        <link rel="prev" href="analyzer.html">
       
-        <link rel="next" href="plot_scripts.html">
+      
+        <link rel="next" href="workflow_active_learning.html">
       
       
       <link rel="icon" href="assets/images/favicon.png">
@@ -24,7 +26,7 @@
     
     
       
-        <title>GPUMDkit Tutorial</title>
+        <title>Custom Commands - GPUMDkit Tutorial</title>
       
     
     
@@ -115,7 +117,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#gpumdkit-tutorials" class="md-skip">
+        <a href="#setup" class="md-skip">
           Skip to content
         </a>
       
@@ -131,7 +133,7 @@
 
 <header class="md-header md-header--shadow" data-md-component="header">
   <nav class="md-header__inner md-grid" aria-label="Header">
-    <a href="index.html" title="GPUMDkit Tutorial" class="md-header__button md-logo" aria-label="GPUMDkit Tutorial" data-md-component="logo">
+    <a href="." title="GPUMDkit Tutorial" class="md-header__button md-logo" aria-label="GPUMDkit Tutorial" data-md-component="logo">
       
   
   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
@@ -151,7 +153,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Home
+              Custom Commands
             
           </span>
         </div>
@@ -243,7 +245,7 @@
 
 <nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
   <label class="md-nav__title" for="__drawer">
-    <a href="index.html" title="GPUMDkit Tutorial" class="md-nav__button md-logo" aria-label="GPUMDkit Tutorial" data-md-component="logo">
+    <a href="." title="GPUMDkit Tutorial" class="md-nav__button md-logo" aria-label="GPUMDkit Tutorial" data-md-component="logo">
       
   
   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
@@ -270,32 +272,10 @@
       
   
   
-    
   
   
-  
-    <li class="md-nav__item md-nav__item--active">
-      
-      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
-      
-      
-        
-      
-      
-        <label class="md-nav__link md-nav__link--active" for="__toc">
-          
-  
-  
-  <span class="md-ellipsis">
-    Home
-    
-  </span>
-  
-
-          <span class="md-nav__icon md-icon"></span>
-        </label>
-      
-      <a href="index.html" class="md-nav__link md-nav__link--active">
+    <li class="md-nav__item">
+      <a href="tutorials.html" class="md-nav__link">
         
   
   
@@ -306,125 +286,6 @@
   
 
       </a>
-      
-        
-
-<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
-  
-  
-  
-    
-  
-  
-    <label class="md-nav__title" for="__toc">
-      <span class="md-nav__icon md-icon"></span>
-      Table of contents
-    </label>
-    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
-      
-        <li class="md-nav__item">
-  <a href="#introduction" class="md-nav__link">
-    <span class="md-ellipsis">
-      Introduction
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#interactive-mode" class="md-nav__link">
-    <span class="md-ellipsis">
-      Interactive Mode
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Interactive Mode">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#getting-started" class="md-nav__link">
-    <span class="md-ellipsis">
-      Getting Started
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#command-line-mode" class="md-nav__link">
-    <span class="md-ellipsis">
-      Command-Line Mode
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Command-Line Mode">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#quick-commands" class="md-nav__link">
-    <span class="md-ellipsis">
-      Quick Commands
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Quick Commands">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#example-1-view-help-information" class="md-nav__link">
-    <span class="md-ellipsis">
-      Example 1: View help information
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#example-2-convert-vasp-outcars-to-extxyz" class="md-nav__link">
-    <span class="md-ellipsis">
-      Example 2: Convert VASP OUTCARs to extxyz
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#example-3-plot-thermo-evolution" class="md-nav__link">
-    <span class="md-ellipsis">
-      Example 3: Plot thermo evolution
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#detailed-tutorials" class="md-nav__link">
-    <span class="md-ellipsis">
-      Detailed Tutorials
-    </span>
-  </a>
-  
-</li>
-      
-    </ul>
-  
-</nav>
-      
     </li>
   
 
@@ -502,12 +363,12 @@
   
   
     <li class="md-nav__item">
-      <a href="workflow_dev.html" class="md-nav__link">
+      <a href="workflow.html" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
-    Workflow (dev)
+    Workflow
     
   </span>
   
@@ -546,12 +407,218 @@
   
   
     <li class="md-nav__item">
+      <a href="analyzer.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Analyzers
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    Custom Commands
+    
+  </span>
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="custom_commands.html" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    Custom Commands
+    
+  </span>
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#setup" class="md-nav__link">
+    <span class="md-ellipsis">
+      Setup
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#examples" class="md-nav__link">
+    <span class="md-ellipsis">
+      Examples
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Examples">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#simple-greeting" class="md-nav__link">
+    <span class="md-ellipsis">
+      Simple Greeting
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#command-with-required-arguments" class="md-nav__link">
+    <span class="md-ellipsis">
+      Command with Required Arguments
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#calling-an-external-script" class="md-nav__link">
+    <span class="md-ellipsis">
+      Calling an External Script
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#advanced-examples" class="md-nav__link">
+    <span class="md-ellipsis">
+      Advanced Examples
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Advanced Examples">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#batch-processing" class="md-nav__link">
+    <span class="md-ellipsis">
+      Batch Processing
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#analysis-pipeline" class="md-nav__link">
+    <span class="md-ellipsis">
+      Analysis Pipeline
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#custom-workflow" class="md-nav__link">
+    <span class="md-ellipsis">
+      Custom Workflow
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#tips" class="md-nav__link">
+    <span class="md-ellipsis">
+      Tips
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
       <a href="workflow_active_learning.html" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     Active Learning Workflow
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="contributing.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Contributing
     
   </span>
   
@@ -578,8 +645,6 @@
   
   
   
-    
-  
   
     <label class="md-nav__title" for="__toc">
       <span class="md-nav__icon md-icon"></span>
@@ -588,28 +653,46 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#introduction" class="md-nav__link">
+  <a href="#setup" class="md-nav__link">
     <span class="md-ellipsis">
-      Introduction
+      Setup
     </span>
   </a>
   
 </li>
       
         <li class="md-nav__item">
-  <a href="#interactive-mode" class="md-nav__link">
+  <a href="#examples" class="md-nav__link">
     <span class="md-ellipsis">
-      Interactive Mode
+      Examples
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="Interactive Mode">
+    <nav class="md-nav" aria-label="Examples">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#getting-started" class="md-nav__link">
+  <a href="#simple-greeting" class="md-nav__link">
     <span class="md-ellipsis">
-      Getting Started
+      Simple Greeting
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#command-with-required-arguments" class="md-nav__link">
+    <span class="md-ellipsis">
+      Command with Required Arguments
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#calling-an-external-script" class="md-nav__link">
+    <span class="md-ellipsis">
+      Calling an External Script
     </span>
   </a>
   
@@ -621,54 +704,39 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#command-line-mode" class="md-nav__link">
+  <a href="#advanced-examples" class="md-nav__link">
     <span class="md-ellipsis">
-      Command-Line Mode
+      Advanced Examples
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="Command-Line Mode">
+    <nav class="md-nav" aria-label="Advanced Examples">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#quick-commands" class="md-nav__link">
+  <a href="#batch-processing" class="md-nav__link">
     <span class="md-ellipsis">
-      Quick Commands
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Quick Commands">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#example-1-view-help-information" class="md-nav__link">
-    <span class="md-ellipsis">
-      Example 1: View help information
+      Batch Processing
     </span>
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#example-2-convert-vasp-outcars-to-extxyz" class="md-nav__link">
+  <a href="#analysis-pipeline" class="md-nav__link">
     <span class="md-ellipsis">
-      Example 2: Convert VASP OUTCARs to extxyz
+      Analysis Pipeline
     </span>
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#example-3-plot-thermo-evolution" class="md-nav__link">
+  <a href="#custom-workflow" class="md-nav__link">
     <span class="md-ellipsis">
-      Example 3: Plot thermo evolution
+      Custom Workflow
     </span>
   </a>
-  
-</li>
-        
-      </ul>
-    </nav>
   
 </li>
         
@@ -678,9 +746,9 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#detailed-tutorials" class="md-nav__link">
+  <a href="#tips" class="md-nav__link">
     <span class="md-ellipsis">
-      Detailed Tutorials
+      Tips
     </span>
   </a>
   
@@ -705,95 +773,98 @@
   
 
 
-<h1 id="gpumdkit-tutorials">GPUMDkit Tutorials</h1>
-<p>Welcome to the <code>GPUMDkit</code> tutorials! This guide will help you get started with using <code>GPUMDkit</code>, a shell interface designed to streamline your <code>GPUMD</code> workflows.</p>
-<h2 id="introduction">Introduction</h2>
-<p><code>GPUMDkit</code> offers two main modes of operation:</p>
-<ol>
-<li><strong>Interactive Mode</strong>: Run <code>gpumdkit.sh</code> and follow the menu prompts for a guided experience.</li>
-<li><strong>Command-Line Mode</strong>: Directly pass arguments to <code>gpumdkit.sh</code> for quick and streamlined command execution.</li>
-</ol>
-<h2 id="interactive-mode">Interactive Mode</h2>
-<h3 id="getting-started">Getting Started</h3>
-<ol>
-<li>
-<p>Open your terminal.</p>
-</li>
-<li>
-<p>Execute the <code>gpumdkit.sh</code> script:
-    <div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>./gpumdkit.sh
+<div align="center">
+  <h1>🔧 Custom Commands</h1>
+    <p style="text-align: justify;">GPUMDkit allows users to extend the command-line interface with <strong>custom commands</strong>. Define shortcuts for frequently used scripts in your <strong>~/.gpumdkit.in</strong> file.</p>
+</div>
+
+<h2 id="setup">Setup</h2>
+<p>Create or edit <code>~/.gpumdkit.in</code>:
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>vi<span class="w"> </span>~/.gpumdkit.in
 </code></pre></div></p>
-</li>
-<li>
-<p>Follow the on-screen prompts to interactively select and run the desired script.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>         ____ ____  _   _ __  __ ____  _    _ _
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>        / ___|  _ \| | | |  \/  |  _ \| | _(_) |_
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>       | |  _| |_) | | | | |\/| | | | | |/ / | __|
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>       | |_| |  __/| |_| | |  | | |_| |   &lt;| | |_
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>        \____|_|    \___/|_|  |_|____/|_|\_\_|\__|
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>        GPUMDkit Version 1.2.4 (dev) (2025-04-25)
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>     Developer: Zihan YAN (yanzihan@westlake.edu.cn)
-<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>
-<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a> ----------------------- GPUMD -----------------------
-<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a> 1) Format Conversion          2) Sample Structures
-<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a> 3) Workflow (dev)             4) Calculators
-<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a> 5) Developing ...             6) Developing ...
-<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a> 0) Quit!
-<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a> ------------&gt;&gt;
-<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a> Input the function number:
+<p>Define custom functions with the <code>custom_</code> prefix.</p>
+<h2 id="examples">Examples</h2>
+<h3 id="simple-greeting">Simple Greeting</h3>
+<p>Write the following codes in your <code>~/.gpumdkit.in</code> </p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>custom_hello<span class="o">()</span><span class="w"> </span><span class="o">{</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="w">    </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;Hello, GPUMDkit user! This is a custom command.&quot;</span>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="w">    </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;Current GPUMDkit path: </span><span class="si">${</span><span class="nv">GPUMDkit_path</span><span class="si">}</span><span class="s2">&quot;</span>
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="o">}</span>
 </code></pre></div>
-</li>
-</ol>
-<p>This mode is useful for new users or for tasks that require step-by-step guidance.</p>
-<h2 id="command-line-mode">Command-Line Mode</h2>
-<h3 id="quick-commands">Quick Commands</h3>
-<p>For users familiar with the <code>GPUMDkit</code> , the command-line mode allows for faster execution by directly passing arguments to <code>gpumdkit.sh</code>. Here are some examples:</p>
-<h4 id="example-1-view-help-information">Example 1: View help information</h4>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>gpumdkit.sh -h
+<p>and run <code>gpumdkit.sh -hello</code>, you will see:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>Hello, GPUMDkit user! This is a custom command.
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>Current GPUMDkit path: /home/yanzihan/software/GPUMDkit
 </code></pre></div>
-<p>the help information:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>+==================================================================================================+
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>|                              GPUMDkit 1.2.4 (dev) (2025-04-25) Usage                             |
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>|                                                                 --- by Zihan YAN                 |
-<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>+======================================== Conversions =============================================+
-<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>| -outcar2exyz   Convert OUTCAR to extxyz       | -pos2exyz     Convert POSCAR to extxyz           |
-<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>| -castep2exyz   Convert castep to extxyz       | -pos2lmp      Convert POSCAR to LAMMPS           |
-<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>| -cp2k2exyz     Convert cp2k output to extxyz  | -lmp2exyz     Convert LAMMPS-dump to extxyz      |
-<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>| -addgroup      Add group label                | -addweight    Add weight to the struct in extxyz |
-<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>| Developing...                                 | Developing...                                    |
-<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a>+========================================= Analysis ===============================================+
-<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a>| -range         Print range of energy etc.     | -max_rmse     Get max RMSE from XYZ              |
-<a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a>| -min_dist      Get min_dist between atoms     | -min_dist_pbc Get min_dist considering PBC       |
-<a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a>| -filter_box    Filter struct by box limits    | -filter_value Filter struct by value (efs)       |
-<a id="__codelineno-3-14" name="__codelineno-3-14" href="#__codelineno-3-14"></a>| -filter_dist   Filter struct by min_dist      | Developing...                                    |
-<a id="__codelineno-3-15" name="__codelineno-3-15" href="#__codelineno-3-15"></a>+=========================================    Misc  ==============+================================+
-<a id="__codelineno-3-16" name="__codelineno-3-16" href="#__codelineno-3-16"></a>| -plt           Plot scripts                   | -get_frame     Extract the specified frame       |
-<a id="__codelineno-3-17" name="__codelineno-3-17" href="#__codelineno-3-17"></a>| -calc          Calculators                    | -clear_xyz     Clear extra info in XYZ file      |
-<a id="__codelineno-3-18" name="__codelineno-3-18" href="#__codelineno-3-18"></a>| -clean         Clear files for work_dir       | -time          Time consuming Analyzer           |
-<a id="__codelineno-3-19" name="__codelineno-3-19" href="#__codelineno-3-19"></a>| Developing...                                 | Developing...                                    |
-<a id="__codelineno-3-20" name="__codelineno-3-20" href="#__codelineno-3-20"></a>+==================================================================================================+
-<a id="__codelineno-3-21" name="__codelineno-3-21" href="#__codelineno-3-21"></a>| For detailed usage and examples, use: gpumdkit.sh -&lt;option&gt; -h                                   |
-<a id="__codelineno-3-22" name="__codelineno-3-22" href="#__codelineno-3-22"></a>+==================================================================================================+
+<h3 id="command-with-required-arguments">Command with Required Arguments</h3>
+<p>For the following function:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>custom_greet<span class="o">()</span><span class="w"> </span><span class="o">{</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="w">    </span><span class="nv">name</span><span class="o">=</span><span class="nv">$1</span>
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="w">    </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;Hello, </span><span class="si">${</span><span class="nv">name</span><span class="si">}</span><span class="s2">!&quot;</span>
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="o">}</span>
 </code></pre></div>
-<h4 id="example-2-convert-vasp-outcars-to-extxyz">Example 2: Convert VASP OUTCARs to extxyz</h4>
-<p>To convert a <code>VASP</code> <code>OUTCARs</code> to an extended XYZ format (<code>extxyz</code>) file, use the following command:
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>gpumdkit.sh<span class="w"> </span>-outcar2exyz<span class="w"> </span>&lt;dir_of_OUTCARs&gt;
-<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>gpumdkit.sh<span class="w"> </span>-outcar2exyz<span class="w"> </span>.
+<p>and you can add a argument, for example: <code>gpumdkit.sh -greet Zihan</code>, then you will see:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>Hello, Zihan!
+</code></pre></div>
+<p><strong>Passing arguments</strong>: Use <code>"$@"</code> to forward all arguments safely. Use <code>${@:1}</code> when you need to refer to arguments starting from the first one. </p>
+<h3 id="calling-an-external-script">Calling an External Script</h3>
+<p>If you want to call an external script like <code>gpumdkit.sh</code>.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>custom_nepanalyse<span class="o">()</span><span class="w"> </span><span class="o">{</span>
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="w">    </span>python<span class="w"> </span>~/my_gpumd_tools/analyse_nep.py
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="o">}</span>
+</code></pre></div>
+<p>and run <code>gpumdkit.sh -nepanalyse</code></p>
+<h2 id="advanced-examples">Advanced Examples</h2>
+<h3 id="batch-processing">Batch Processing</h3>
+<p>Process multiple files:
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>custom_batch_plot<span class="o">()</span><span class="w"> </span><span class="o">{</span>
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a><span class="w">    </span><span class="k">for</span><span class="w"> </span>dir<span class="w"> </span><span class="k">in</span><span class="w"> </span><span class="s2">&quot;</span><span class="nv">$@</span><span class="s2">&quot;</span><span class="p">;</span><span class="w"> </span><span class="k">do</span>
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a><span class="w">        </span><span class="nb">cd</span><span class="w"> </span><span class="s2">&quot;</span><span class="nv">$dir</span><span class="s2">&quot;</span>
+<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="w">        </span>gpumdkit.sh<span class="w"> </span>-plt<span class="w"> </span>thermo<span class="w"> </span>save
+<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a><span class="w">        </span>gpumdkit.sh<span class="w"> </span>-plt<span class="w"> </span>msd<span class="w"> </span>save
+<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a><span class="w">        </span><span class="nb">cd</span><span class="w"> </span>..
+<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a><span class="w">    </span><span class="k">done</span>
+<a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a><span class="o">}</span>
 </code></pre></div></p>
-<h4 id="example-3-plot-thermo-evolution">Example 3: Plot thermo evolution</h4>
-<p>To visualize <code>thermo</code> evolution from <code>thermo.out</code> :</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>gpumdkit.sh<span class="w"> </span>-plt<span class="w"> </span>thermo
-</code></pre></div>
-<h2 id="detailed-tutorials">Detailed Tutorials</h2>
-<p>For more detailed tutorials on specific functionalities, refer to the following documents:</p>
-<ol>
-<li><a href="format_conversion.html">Format Conversion</a>: Detailed guide on <code>1) Format Conversion</code>.</li>
-<li><a href="sample_structures.html">Sample Structures</a>: Detailed guide on <code>2) Sample Structures</code>.</li>
-<li><a href="workflow_dev.html">Workflow (dev)</a>: Detailed guide on <code>3) Workflow (dev)</code>.</li>
-<li><a href="calculators.html">Calculators</a>: Detailed guide on <code>4) Calculators</code>.</li>
-<li><a href="workflow_active_learning.html">Active Learning</a>: Detailed guide on <code>workflow_active_learning_dev.sh</code>.</li>
-</ol>
+<p>Usage: <code>gpumdkit.sh -batch_plot dir1 dir2 dir3</code></p>
+<h3 id="analysis-pipeline">Analysis Pipeline</h3>
+<p>Combine multiple operations:
+<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>custom_analyze_training<span class="o">()</span><span class="w"> </span><span class="o">{</span>
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a><span class="w">    </span><span class="nv">xyz_file</span><span class="o">=</span><span class="nv">$1</span>
+<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a><span class="w">    </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;Analyzing </span><span class="nv">$xyz_file</span><span class="s2">...&quot;</span>
+<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a>
+<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a><span class="w">    </span>gpumdkit.sh<span class="w"> </span>-range<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$xyz_file</span><span class="s2">&quot;</span><span class="w"> </span>force
+<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a><span class="w">    </span>gpumdkit.sh<span class="w"> </span>-min_dist_pbc<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$xyz_file</span><span class="s2">&quot;</span>
+<a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a><span class="w">    </span>gpumdkit.sh<span class="w"> </span>-analyze_comp<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$xyz_file</span><span class="s2">&quot;</span>
+<a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a>
+<a id="__codelineno-7-9" name="__codelineno-7-9" href="#__codelineno-7-9"></a><span class="w">    </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;Analysis complete!&quot;</span>
+<a id="__codelineno-7-10" name="__codelineno-7-10" href="#__codelineno-7-10"></a><span class="o">}</span>
+</code></pre></div></p>
+<p>Usage: <code>gpumdkit.sh -analyze_training train.xyz</code></p>
+<h3 id="custom-workflow">Custom Workflow</h3>
+<p>Automate common workflow:
+<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>custom_prep_training<span class="o">()</span><span class="w"> </span><span class="o">{</span>
+<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a><span class="w">    </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;Preparing training data...&quot;</span>
+<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a>
+<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a><span class="w">    </span><span class="c1"># Convert VASP outputs</span>
+<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a><span class="w">    </span>gpumdkit.sh<span class="w"> </span>-out2xyz<span class="w"> </span>./
+<a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a>
+<a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a><span class="w">    </span><span class="c1"># Filter outliers</span>
+<a id="__codelineno-8-8" name="__codelineno-8-8" href="#__codelineno-8-8"></a><span class="w">    </span>gpumdkit.sh<span class="w"> </span>-filter_value<span class="w"> </span>train.xyz<span class="w"> </span>force<span class="w"> </span><span class="m">30</span>
+<a id="__codelineno-8-9" name="__codelineno-8-9" href="#__codelineno-8-9"></a>
+<a id="__codelineno-8-10" name="__codelineno-8-10" href="#__codelineno-8-10"></a><span class="w">    </span><span class="c1"># Check quality</span>
+<a id="__codelineno-8-11" name="__codelineno-8-11" href="#__codelineno-8-11"></a><span class="w">    </span>gpumdkit.sh<span class="w"> </span>-range<span class="w"> </span>filtered_force.xyz<span class="w"> </span>energy
+<a id="__codelineno-8-12" name="__codelineno-8-12" href="#__codelineno-8-12"></a>
+<a id="__codelineno-8-13" name="__codelineno-8-13" href="#__codelineno-8-13"></a><span class="w">    </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;Training data ready!&quot;</span>
+<a id="__codelineno-8-14" name="__codelineno-8-14" href="#__codelineno-8-14"></a><span class="o">}</span>
+</code></pre></div></p>
+<p>Usage: <code>gpumdkit.sh -prep_training</code></p>
+<h2 id="tips">Tips</h2>
+<ul>
+<li><strong>Use descriptive names</strong>: <code>custom_analyze_nep_training</code> is clearer than <code>custom_ant</code></li>
+<li><strong>Add help messages</strong>: Echo usage info when no arguments provided</li>
+<li><strong>Error handling</strong>: Check if required files exist before processing</li>
+<li><strong>Forward arguments safely</strong>: Use <code>"$@"</code> to preserve spaces and special characters</li>
+</ul>
 <hr />
 <p>Thank you for using <code>GPUMDkit</code>! If you have any questions or need further assistance, feel free to open an issue on our GitHub repository or contact Zihan YAN (yanzihan@westlake.edu.cn).</p>
 

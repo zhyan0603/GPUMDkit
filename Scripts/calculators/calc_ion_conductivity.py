@@ -100,7 +100,7 @@ def calculate_diffusivity_and_conductivity(filepath, structure_volume, species_c
     k_total, _ = np.polyfit(dts[start:end], msd_total[start:end], 1)
 
     # Compute diffusivity D (cm^2/s) for each direction and total
-    D_x = k_x * 1e-4 / 2  # maybe?
+    D_x = k_x * 1e-4 / 2  # Convert from Å^2/ps to cm^2/s
     D_y = k_y * 1e-4 / 2
     D_z = k_z * 1e-4 / 2
     D_total = k_total * 1e-4 / 6

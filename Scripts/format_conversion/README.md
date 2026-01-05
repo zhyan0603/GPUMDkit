@@ -1,3 +1,43 @@
+<div align="center">
+  <h1>🔄 Format Conversion Scripts</h1>
+    <p style="text-align: justify;">This directory contains utilities for converting between different file formats commonly used in computational materials science.</p>
+</div>
+
+## Overview
+
+The format conversion scripts provide seamless interconversion between:
+- **VASP** (POSCAR, OUTCAR) ↔ extxyz
+- **CP2K** output → extxyz
+- **ABACUS** output → extxyz  
+- **LAMMPS** dump → extxyz
+- **CIF** → POSCAR/extxyz
+- Adding metadata (group labels, weights)
+- Frame extraction and manipulation
+
+---
+
+## Quick Command Reference
+
+| Source Format | Target Format | Command |
+|---------------|---------------|---------|
+| OUTCAR | extxyz | `gpumdkit.sh -out2xyz <dir>` |
+| vasprun.xml | extxyz | `gpumdkit.sh -xml2xyz <dir>` |
+| POSCAR | extxyz | `gpumdkit.sh -pos2exyz <poscar> <xyz>` |
+| extxyz | POSCAR | `gpumdkit.sh -exyz2pos <xyz>` |
+| POSCAR | LAMMPS | `gpumdkit.sh -pos2lmp <poscar> <lmp> <elem...>` |
+| LAMMPS dump | extxyz | `gpumdkit.sh -lmp2exyz <dump> <elem...>` |
+| CIF | extxyz | `gpumdkit.sh -cif2exyz <cif>` |
+| CIF | POSCAR | `gpumdkit.sh -cif2pos <cif>` |
+| Add groups | - | `gpumdkit.sh -addgroup <poscar> <elem...>` |
+| Add weight | - | `gpumdkit.sh -addweight <in> <out> <weight>` |
+| Replicate1 | - | `gpumdkit.sh -replicate input.vasp output.vasp 2 2 2` |
+| Replicate2 | - | `gpumdkit.sh -replicate input.vasp output.vasp <target_num>` |
+| Get frame | - | `gpumdkit.sh -ge_frame <extxyz> <index>` |
+
+---
+
+## Scripts
+
 ### add_groups.py
 
 ---
@@ -7,7 +47,7 @@ This script adds group labels to structures based on specified elements.
 #### Usage
 
 ```
-python add_groups.py <filename> <Symbols>
+python add_groups.py <filename> <Symbols1> <Symbols2> ...
 ```
 
 - `<filename>`: The path to the input file (e.g., POSCAR).
@@ -70,24 +110,22 @@ This script converts all frames in an `extxyz` file to `POSCAR` format.
 #### Usage
 
 ```sh
-python exyz2pos.py [extxyz_filename]
+python exyz2pos.py <extxyz_file>
 ```
-
-- `[extxyz_filename]`: (Optional) The path to the input `extxyz` file. If not specified, the default is `train.xyz`.
 
 #### Example
 
 ```sh
-python exyz2pos.py my_structures.xyz
+python exyz2pos.py structs.xyz
 ```
 
 #### Command-Line Mode Example
 
 ```
-gpumdkit.sh -exyz2pos my_structures.xyz
+gpumdkit.sh -exyz2pos structs.xyz
 ```
 
-This command will convert all frames in `my_structures.xyz` to `POSCAR` files.
+This command will convert all frames in `structs.xyz` to `POSCAR_*.vasp` files.
 
 
 
@@ -100,11 +138,11 @@ This script converts a `POSCAR` file to `extxyz` format.
 #### Usage
 
 ```
-python pos2exyz.py <POSCAR_filename> <extxyz_filename>
+python pos2exyz.py <POSCAR_file> <extxyz_file>
 ```
 
-- `<POSCAR_filename>`: The path to the input `POSCAR` file.
-- `<extxyz_filename>`: The desired name for the output `extxyz` file.
+- `<POSCAR_file>`: The path to the input `POSCAR` file.
+- `<extxyz_file>`: The desired name for the output `extxyz` file.
 
 #### Example
 
@@ -131,23 +169,22 @@ This script converts a `POSCAR` file to `lammps-data` format.
 #### Usage
 
 ```
-python pos2lmp.py <poscar_file> <lammps_data_file> <elements_order>
+python pos2lmp.py <poscar_file> <lammps_data_file>
 ```
 
 - `<poscar_file>`: The path to the input `POSCAR` file.
 - `<lammps_data_file>`: The desired name for the output `lammps-data` file.
-- `<elements_order>`: The desired order of elements in `lammps-data` file.
 
 #### Example
 
 ```
-python pos2lmp.py POSCAR lammps.data Li La Zr O
+python pos2lmp.py POSCAR lammps.data
 ```
 
 #### Command-Line Mode Example
 
 ```
-gpumdkit.sh -pos2lmp POSCAR lammps.data Li La Zr O
+gpumdkit.sh -pos2lmp POSCAR lammps.data
 ```
 
 This command will read the `POSCAR` file and convert it to `lammps.data` in `lammps-data` format.
@@ -163,18 +200,10 @@ This script splits an `extxyz` file into individual frames, each written to a se
 #### Usage
 
 ```
-python split_single_xyz.py <extxyz_filename>
+python split_single_xyz.py <extxyz_file>
 ```
 
-- `<extxyz_filename>`: The path to the input `extxyz` file.
-
-#### Example
-
-```sh
-python split_single_xyz.py train.extxyz
-```
-
-This command will split all frames in `train.extxyz` into separate files named `model_${i}.xyz`, where `${i}` is the frame index.
+This command will split all frames in `extxyz_file` into separate files named `model_*.xyz`.
 
 
 
@@ -196,14 +225,16 @@ python lmp2exyz.py <dump_file> <element1> <element2> ...
 #### Example
 
 ```sh
-python lmp2exyz.py dump.lammps Li Y Cl
+python lmp2exyz.py dump.data Li Y Cl
 ```
 
 #### Command-Line Mode Example
 
 ```
-gpumdkit.sh -lmp2exyz dump.lammps Li Y Cl
+gpumdkit.sh -lmp2exyz dump.data Li Y Cl
 ```
+
+It will convert the `dump.data` to `dump.xyz` file
 
 
 
@@ -238,6 +269,17 @@ You will get the `frame_1000.xyz` file after perform the script.
 
 
 
+## Contributing
+
+To add new format converters:
+
+1. **Follow naming**: `<source>2<target>.py`
+2. **Handle errors**: Validate input format before processing
+3. **Document**: Add usage to this README
+6. **Update gpumdkit.sh**: Add command-line flag if appropriate
+
+See [CONTRIBUTING.md](../../CONTRIBUTING.md) for detailed guidelines.
+
 ---
 
-Thank you for using `GPUMDkit`! If you have any questions or need further assistance, feel free to open an issue on our GitHub repository or contact Zihan YAN (yanzihan@westlake.edu.cn).
+Thank you for using GPUMDkit! If you have questions about format conversion, please open an issue on our [GitHub repository](https://github.com/zhyan0603/GPUMDkit/issues) or contact Zihan YAN (yanzihan@westlake.edu.cn).

@@ -72,13 +72,13 @@ ax2.set_xlabel("T (K)", fontsize=11)
 
 plt.tight_layout()
 if len(sys.argv) > 1 and sys.argv[1] == 'save':
-    plt.savefig('Arrhenius_plot.png', dpi=300)
+    plt.savefig('Arrhenius_D.png', dpi=300)
 else:
     # Check if the current backend is non-interactive
     from matplotlib import get_backend
     if get_backend().lower() in ['agg', 'cairo', 'pdf', 'ps', 'svg']:
         print("Unable to display the plot due to the non-interactive backend.")
-        print("The plot has been automatically saved as 'Arrhenius_plot.png'.")
-        plt.savefig('Arrhenius_plot.png', dpi=300)
+        print("The plot has been automatically saved as 'Arrhenius_D.png'.")
+        plt.savefig('Arrhenius_D.png', dpi=300)
     else:
         plt.show()

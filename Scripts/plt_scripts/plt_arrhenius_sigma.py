@@ -64,7 +64,7 @@ else:
 group_Ts = []
 group_sigmaTs = []
 group_sigmas = []
-fig, ax1 = plt.subplots(figsize=(6, 3.5), dpi=150)
+fig, ax1 = plt.subplots(figsize=(5, 3.4), dpi=150)
 
 # Print header for conductivity data
 print("\nConductivity Data:")
@@ -180,11 +180,11 @@ ax2.set_xlabel("T (K)", fontsize=10)
 # Save and show plot
 fig.tight_layout()
 if len(sys.argv) > 1 and sys.argv[1] == 'save':
-    fig.savefig('Arrhenius.png', dpi=300)
+    fig.savefig('Arrhenius_sigma.png', dpi=300)
 else:
     if get_backend().lower() in ['agg', 'cairo', 'pdf', 'ps', 'svg']:
         print("Unable to display the plot due to the non-interactive backend.")
-        print("The plot has been automatically saved as 'Arrhenius.png'.")
-        fig.savefig('Arrhenius.png', dpi=300)
+        print("The plot has been automatically saved as 'Arrhenius_sigma.png'.")
+        fig.savefig('Arrhenius_sigma.png', dpi=300)
     else:
         plt.show()

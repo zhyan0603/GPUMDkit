@@ -1,7 +1,7 @@
-import matplotlib.pyplot as plt
-import numpy as np
 import sys
 import math
+import numpy as np
+import matplotlib.pyplot as plt
 
 # Function to plot RDF data
 def plot_rdf(file_path, column_index=None, save=False):

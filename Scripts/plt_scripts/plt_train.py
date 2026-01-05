@@ -40,11 +40,11 @@ def calculate_limits(train_data, padding=0.08):
 # Create a subplot with 2 rows and 2 columns
 fig, axs = plt.subplots(2, 2, figsize=(9, 7), dpi=100)
 
-if loss[1, 0] - loss[0, 0] == 100:
+if loss[0, 0] == 100:
     xlabel = 'Generation/100'
     plot_cols = slice(1, 7)  # loss[:, 1:7]
     legend_labels = ['Total', 'L1-Reg', 'L2-Reg', 'Energy-train', 'Force-train', 'Virial-train']
-elif loss[1, 0] - loss[0, 0] == 1:
+elif loss[0, 0] == 1:
     xlabel = 'Epoch'
     plot_cols = slice(1, 5)  # loss[:, 1:5]
     legend_labels = ['Total', 'Energy-train', 'Force-train', 'Virial-train']
