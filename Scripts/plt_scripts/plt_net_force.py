@@ -120,7 +120,7 @@ def plot_net_force_distribution(net_forces, output_base, save_flag):
     
     # Set axes
     ax.set_xscale('log')
-    ax.set_xlabel(r'Net Force (eV/$\AA$)')
+    ax.set_xlabel(r'Net Force (eV/$\mathrm{{\AA}}$)')
     ax.set_ylabel('Density')
     
     # Add grid for better readability

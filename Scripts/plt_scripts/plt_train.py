@@ -100,8 +100,8 @@ mean_force_rmse = np.mean(force_rmse) * 1000
 mean_force_mae = np.mean(force_mae) * 1000
 mean_force_r2 = np.mean(force_r2)
 axs[1, 0].text(0.7, 0.12, 
-               r'R$^2$'+f': {mean_force_r2:.4f}\nMAE: {mean_force_mae:.2f} meV/'+r'$\AA$'
-               +f'\nRMSE: {mean_force_rmse:.2f} meV/'+r'$\AA$', 
+               r'R$^2$'+f': {mean_force_r2:.4f}\nMAE: {mean_force_mae:.2f} meV/'+r'$\mathrm{{\AA}}$'
+               +f'\nRMSE: {mean_force_rmse:.2f} meV/'+r'$\mathrm{{\AA}}$', 
                transform=axs[1, 0].transAxes, fontsize=10, verticalalignment='center', horizontalalignment='center')
 #axs[1, 0].text(-0.07, 1.03, "(c)", transform=axs[1, 0].transAxes, fontsize=12, va='top', ha='right')
 

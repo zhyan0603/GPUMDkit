@@ -16,9 +16,9 @@ symbol2 = sys.argv[2]  # Type of the second atom
 nep_path = sys.argv[3]  # Directory of the NEP potential file
 
 # Set the range and step size for distances
-start_distance = 0.1  # Starting distance in Angström
-end_distance = 6.0    # Ending distance in Angström
-step_size = 0.01      # Step size in Angström
+start_distance = 0.1  # Starting distance in Angstrom
+end_distance = 6.0    # Ending distance in Angstrom
+step_size = 0.01      # Step size in Angstrom
 
 # Initialize arrays for results
 distances = np.arange(start_distance, end_distance + step_size, step_size)
@@ -72,15 +72,15 @@ fig, axs = plt.subplots(2, 1, figsize=(6, 6), dpi=150)
 
 # Plot energy difference vs. distance
 axs[0].plot(distances, energies_shifted, marker='o')
-axs[0].set_xlabel(r'Dimer Distance ($\AA$)')
+axs[0].set_xlabel(r'Dimer Distance ($\mathrm{{\AA}}$)')
 axs[0].set_ylabel(r'$\Delta$E (eV)')
 title = f"{symbol1}-{symbol2} Dimer Interaction"
 axs[0].set_title(title)
 
 # Plot force vs. distance
 axs[1].plot(distances, forces, marker='o', color='C1')
-axs[1].set_xlabel(r'Dimer Distance ($\AA$)')
-axs[1].set_ylabel(r'Fx (eV/$\AA$)')
+axs[1].set_xlabel(r'Dimer Distance ($\mathrm{{\AA}}$)')
+axs[1].set_ylabel(r'Fx (eV/$\mathrm{{\AA}}$)')
 
 # Adjust layout and display the plot
 plt.tight_layout()

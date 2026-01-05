@@ -59,8 +59,8 @@ axs[1].set_ylim(xmin_force, xmax_force)
 axs[1].plot(force_train[:, 3:6].reshape(-1), force_train[:, 0:3].reshape(-1), '.', markersize=10, label='Train', color=train_color)
 axs[1].plot(force_test[:, 3:6].reshape(-1), force_test[:, 0:3].reshape(-1), '.', markersize=10, label='Test', color=test_color)
 axs[1].plot([xmin_force, xmax_force], [xmin_force, xmax_force], linewidth=1, color='red')
-axs[1].set_xlabel(r'DFT force (eV/$\AA$)', fontsize=10)
-axs[1].set_ylabel(r'NEP force (eV/$\AA$)', fontsize=10)
+axs[1].set_xlabel(r'DFT force (eV/$\mathrm{{\AA}}$)', fontsize=10)
+axs[1].set_ylabel(r'NEP force (eV/$\mathrm{{\AA}}$)', fontsize=10)
 axs[1].tick_params(axis='both', labelsize=10)
 axs[1].legend(frameon=False)
 
@@ -69,8 +69,8 @@ force_train_rmse = [calculate_rmse(force_train[:, i], force_train[:, i + 3]) for
 force_test_rmse = [calculate_rmse(force_test[:, i], force_test[:, i + 3]) for i in range(3)]
 mean_force_train_rmse = np.mean(force_train_rmse) * 1000
 mean_force_test_rmse = np.mean(force_test_rmse) * 1000
-axs[1].text(0.35, 0.2, f'RMSE (Train): {mean_force_train_rmse:.2f} meV/'+r'$\AA$', transform=axs[1].transAxes, fontsize=10, verticalalignment='center')
-axs[1].text(0.35, 0.1, f'RMSE (Test): {mean_force_test_rmse:.2f} meV/'+r'$\AA$', transform=axs[1].transAxes, fontsize=10, verticalalignment='center')
+axs[1].text(0.35, 0.2, f'RMSE (Train): {mean_force_train_rmse:.2f} meV/'+r'$\mathrm{{\AA}}$', transform=axs[1].transAxes, fontsize=10, verticalalignment='center')
+axs[1].text(0.35, 0.1, f'RMSE (Test): {mean_force_test_rmse:.2f} meV/'+r'$\mathrm{{\AA}}$', transform=axs[1].transAxes, fontsize=10, verticalalignment='center')
 #axs[1].text(-0.1, 1.03, "(b)", transform=axs[1].transAxes, fontsize=13, va='top', ha='right')
 
 # Stress plot

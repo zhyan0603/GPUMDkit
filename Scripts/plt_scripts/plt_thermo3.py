@@ -219,7 +219,7 @@ for i, l in enumerate(l_data):
     axs[1, 0].plot(l_time, l_avg, color=['C0', 'C1', 'C2'][i], linewidth=AVG_LW)
 axs[1, 0].set_title('Lattice Parameters')
 axs[1, 0].set_xlabel('Time (ps)')
-axs[1, 0].set_ylabel(r'Lattice Parameters ($\AA$)')
+axs[1, 0].set_ylabel(r'Lattice Parameters ($\mathrm{{\AA}}$)')
 axs[1, 0].legend()
 
 # Volume

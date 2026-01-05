@@ -188,7 +188,7 @@ axs[1, 0].plot(time, box_length_y, label='Ly')
 axs[1, 0].plot(time, box_length_z, label='Lz')
 axs[1, 0].set_title('Lattice Parameters')
 axs[1, 0].set_xlabel('Time (ps)')
-axs[1, 0].set_ylabel(r'Lattice Parameters ($\AA$)')
+axs[1, 0].set_ylabel(r'Lattice Parameters ($\mathrm{{\AA}}$)')
 axs[1, 0].legend()
 
 # Volume
