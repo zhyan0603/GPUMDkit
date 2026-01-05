@@ -1,17 +1,5 @@
 #!/bin/bash
 
-# Check if the first argument ($1) exists and is not empty
-log_file="${1:-log}"  # If $1 is not provided, default to "log"
-
-# Check if the log file exists
-if [ ! -f "$log_file" ]; then
-    echo "Error: $log_file does not exist. Please provide a valid log file path."
-    exit 1
-fi
-
-# Get the number of atoms (remove the trailing dot if any)
-atom_num=$(grep "Number of atoms" "$log_file" | tail -1 | awk '{print $5}' | sed 's/\.$//')
-
 # Get the total number of frames from the "run" file
 frames=$(grep run run.in | awk '{sum += $2} END {print sum}')
 
@@ -80,7 +68,6 @@ calculate_times() {
 
 # Output initial results (printed only once)
 echo " ----------------- System Information ----------------"
-echo " num of atoms: $atom_num"
 echo " total frames: $frames"
 echo " -----------------------------------------------------"
 

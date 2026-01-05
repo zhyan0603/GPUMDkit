@@ -2,15 +2,12 @@
 <a href="https://zhyan0603.github.io/GPUMDkit">
   <img src="./docs/Gallery/gpumdkit_logo.png" width="25%" alt="GPUMDkit Logo">
 </a><br>
-<a href="https://github.com/zhyan0603/GPUMDkit"><img src="https://img.shields.io/badge/version-1.4.2-brightgreen" alt="Version"></a>
+<a href="https://github.com/zhyan0603/GPUMDkit/releases"><img src="https://img.shields.io/github/v/tag/zhyan0603/GPUMDkit?label=version&style=flat-square&color=brightgreen" alt="Version"></a>
 <a href="https://github.com/zhyan0603/GPUMDkit/blob/main/LICENCE"><img src="https://img.shields.io/badge/license-GPL--3.0-blue" alt="License"></a>
 <a href="https://github.com/zhyan0603/GPUMDkit/stargazers"><img src="https://img.shields.io/github/stars/zhyan0603/GPUMDkit?style=social" alt="Stars"></a>
 <img src="https://img.shields.io/github/languages/code-size/zhyan0603/GPUMDkit" alt="Code Size">
+<p style="text-align: justify;"><strong>GPUMDkit</strong> is a toolkit for the GPUMD (<em>Graphics Processing Units Molecular Dynamics</em>) and NEP (<em>neuroevolution potential</em>) program. It offers a user-friendly command-line interface to streamline common scripts and workflows, simplifying tasks such as script invocation, format conversion, structure sampling, NEP construction workflow, and various analysis, aiming to improve user productivity.</p>
 </div>
-
-# GPUMDkit
-
-**`GPUMDkit`** is a toolkit for the [GPUMD](https://github.com/brucefan1983/GPUMD) (*Graphics Processing Units Molecular Dynamics*) and [NEP](https://gpumd.org/potentials/nep.html#nep-formalism) (neuroevolution potential) program. It offers a user-friendly command-line interface to streamline common scripts and workflows, simplifying tasks such as script invocation, format conversion, structure sampling, NEP construction workflow, and various analysis, aiming to improve user productivity.
 
 ## Features
 - **Simplified Script Invocation**: Easily run scripts for GPUMD and NEP.
@@ -22,21 +19,24 @@ To install `GPUMDkit`, follow these steps:
 
 1. Clone the repository or download the whole project.
 
-2. Set the `GPUMD_path` and `GPUMDkit_path` variables in your `~/.bashrc` file, for example:
+    ```
+    git clone https://github.com/zhyan0603/GPUMDkit.git
+    ```
+
+2. Set some variable in your `~/.bashrc` file, for example:
    
     ```
     vi ~/.bashrc
     ```
     
-    add these four lines
+    add these three lines
     
     ```sh
-    export GPUMD_path=/your_dir_of_GPUMD
-    export GPUMDkit_path=/your_dir_of_GPUMDkit
+    export GPUMDkit_path=/your_dir_of_GPUMDkit  # change this
     export PATH=${GPUMDkit_path}:${PATH}
     source ${GPUMDkit_path}/Scripts/utils/completion.sh
     ```
-
+    
     then
     
     ```sh
@@ -51,16 +51,16 @@ To install `GPUMDkit`, follow these steps:
 
 ## Update
 
-To update your local copy of `GPUMDkit`, simply run this command:
-
-```
-chmod -x gpumdkit.sh; git pull; chmod +x gpumdkit.sh
-```
-
-or
+If your device has access to `github`, simply run this command:
 
 ```
 gpumdkit.sh -update
+```
+
+Otherwise you will need to download the new package manually.
+
+```
+wget https://github.com/zhyan0603/GPUMDkit/archive/refs/heads/main.zip
 ```
 
 ## Usage
@@ -79,7 +79,7 @@ There are two options, <u>*interactive mode*</u> and <u>*command-line mode*</u>
    gpumdkit.sh
    ```
 
-3. Follow the on-screen prompts to interactively select and run the desired script.
+3. Follow the on-screen prompts to interactively select and run the desired function.
 
     ```
              ____ ____  _   _ __  __ ____  _    _ _   
@@ -179,7 +179,19 @@ gpumdkit.sh -out2xyz <dir_of_OUTCARs>
 Example: gpumdkit.sh -out2xyz .
 ```
 
-##### Example 4: Plot thermo evolution
+##### Example 4: Plot loss and parity plots
+
+To visualize the evolution of various terms and parity plots:
+
+```
+gpumdkit.sh -plt train
+```
+
+<div align="center">
+    <img src="./docs/Gallery/train.png" alt="msd" width="75%" />
+</div>
+
+##### Example 5: Plot thermo evolution
 
 To visualize `thermo` evolution from `thermo.out` :
 
@@ -187,13 +199,21 @@ To visualize `thermo` evolution from `thermo.out` :
 gpumdkit.sh -plt thermo
 ```
 
+![](./docs/Gallery/thermo.png)
+
 You can also save images as PNG if your device doesn't support visualization:
 
 ```
 gpumdkit.sh -plt thermo save
 ```
 
-Refer to our [documentation](https://zhyan0603.github.io/GPUMDkit/home.html) or the [Usage Instructions](./docs/tutorials/README.md) for more detailed examples and command options.
+Refer to our [documentation](https://zhyan0603.github.io/GPUMDkit/htmls/tutorials.html) for more detailed examples and command options.
+
+#### Custom Commands
+
+`GPUMDkit` now supports custom commands via `~/.gpumdkit.in`.
+
+You can add your own shortcuts (e.g., `gpumdkit.sh -yourcommand`) by defining some functions in this file. This allows you to extend `GPUMDkit` with personal scripts. See [here](https://zhyan0603.github.io/GPUMDkit/htmls/custom_commands.html) for the detail usage.
 
 #### Tab Completion Support
 
@@ -210,9 +230,10 @@ Refer to our [documentation](https://zhyan0603.github.io/GPUMDkit/home.html) or 
 We’d love your help to improve **GPUMDkit**! Contribute by:
 
 - Adding Python/Shell scripts via [Pull Requests](https://github.com/zhyan0603/GPUMDkit/pulls).
+- Report issues or suggest features via [issues](https://github.com/zhyan0603/GPUMDkit/issues).
 - Contacting me at [yanzihan@westlake.edu.cn](mailto:yanzihan@westlake.edu.cn).
 
-Let’s build something useful together! 🌟
+Also, welcome to join our QQ group ([825696376](https://qun.qq.com/universal-share/share?ac=1&authKey=buBNi1ADDzIFF2oZ1yA5FywG3LA9EL9yKZmb%2BN2MMz7nNuuxTas54wH7BgPEqP0s&busi_data=eyJncm91cENvZGUiOiI4MjU2OTYzNzYiLCJ0b2tlbiI6IlRxL1RLTDlOK3U2ekRSUXJ1TkNTUWd3ODNVV3BrdG9HN2lWWmJKMHAraGlDNzBZWFFyRUY2dUlSaW8rbUd4MisiLCJ1aW4iOiIxNDg5NjQ3MTc5In0%3D&data=fa4zSsT_IdI4ftCT_wwpytYHf--TaTB35lH0Jac5JHVpYoyXw3_3bZ1l1NZejsOZnGJku5u3BCbf5_bgrCkhZg&svctype=4&tempid=h5_group_info)). Let’s build something useful together! 🌟
 
 ## Citation
 
@@ -223,4 +244,3 @@ As of now, `GPUMDkit` is a free, open-source tool for everyone to use. If you fi
 [2] Z. Yan, Z. Fan and Y. Zhu, [Improving robustness and training efficiency of machine-learned potentials by incorporating short-range empirical potentials](https://arxiv.org/abs/2504.15925), arXiv:2504.15925
 
 > **Note:** These citations are **not mandatory** and should **only** be included if they contribute to your research.
-

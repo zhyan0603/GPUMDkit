@@ -16,7 +16,7 @@
         <nav class="nav">
             <div class="logo"><img src="./Gallery/gpumdkit_logo_lateral.png" alt="GPUMDkit Logo"></div>
             <ul class="nav-links">
-                <li><a href="home.html">Documentation</a></li>
+                <li><a href="./htmls/tutorials.html">Documentation</a></li>
                 <li><a href="#gallery">Gallery</a></li>
                 <li><a href="#join-and-citation">Join Us</a></li>
                 <li><a href="https://github.com/zhyan0603/GPUMDkit/archive/refs/heads/main.zip">Download</a></li>
@@ -67,12 +67,12 @@
 git clone https://github.com/zhyan0603/GPUMDkit.git
 
 # Set environment variables
-export GPUMD_path=/your_dir_of_GPUMD
 export GPUMDkit_path=/your_dir_of_GPUMDkit
 export PATH=${GPUMDkit_path}:${PATH}
 source ${GPUMDkit_path}/Scripts/utils/completion.sh
 
 # Make script executable and run
+cd $GPUMDkit_path
 chmod +x gpumdkit.sh
 gpumdkit.sh</code></pre>
                 </div>
@@ -94,22 +94,22 @@ gpumdkit.sh</code></pre>
                 <div class="doc-card">
                     <h3>Format Conversion</h3>
                     <p>Convert between various formats</p>
-                    <a href="format_conversion.html" class="doc-link">Read More ></a>
+                    <a href="./htmls/format_conversion.html" class="doc-link">Read More ></a>
                 </div>
                 <div class="doc-card">
                     <h3>Sample Structures</h3>
                     <p>Sample structures by various methods</p>
-                    <a href="sample_structures.html" class="doc-link">Read More ></a>
+                    <a href="./htmls/sample_structures.html" class="doc-link">Read More ></a>
                 </div>
                 <div class="doc-card">
                     <h3>Workflow</h3>
                     <p>Workflows for active-learning iterations</p>
-                    <a href="workflow_dev.html" class="doc-link">Read More ></a>
+                    <a href="./htmls/workflow.html" class="doc-link">Read More ></a>
                 </div>
                 <div class="doc-card">
                     <h3>Calculators</h3>
                     <p>Calculate various properties of your system</p>
-                    <a href="calculators.html" class="doc-link">Read More ></a>
+                    <a href="./htmls/calculators.html" class="doc-link">Read More ></a>
                 </div>
 <!--                 <div class="doc-card">
                     <h3>Active Learning</h3>
@@ -118,7 +118,7 @@ gpumdkit.sh</code></pre>
                 </div> -->
             </div>
             <div class="view-all-container">
-                <a href="home.html" class="view-all-button">View all Documentation</a>
+                <a href="./htmls/tutorials.html" class="view-all-button">View all Documentation</a>
             </div>
         </section>
 
@@ -138,13 +138,37 @@ gpumdkit.sh</code></pre>
                     <p>NEP Predictions</p>
                 </div>
                 <div class="gallery-item">
+                    <img src="./Gallery/parity_plot_density.png" alt="Density Parity Plot">
+                    <p>Density Parity Plot</p>
+                </div>                
+                <div class="gallery-item">
                     <img src="./Gallery/train_test.png" alt="Training and Testing">
                     <p>Training and Testing</p>
+                </div>
+                <div class="gallery-item">
+                    <img src="./Gallery/Arrhenius_D.png" alt="Arrhenius Plot">
+                    <p>Arrhenius Plot</p>
+                </div>
+                <div class="gallery-item">
+                    <img src="./Gallery/emd.png" alt="EMD Analysis">
+                    <p>EMD Analysis</p>
+                </div>
+                <div class="gallery-item">
+                    <img src="./Gallery/nemd.png" alt="NEMD Analysis">
+                    <p>NEMD Analysis</p>
+                </div>
+                <div class="gallery-item">
+                    <img src="./Gallery/hnemd.png" alt="HNEMD Analysis">
+                    <p>HNEMD Analysis</p>
                 </div>
                 <div class="gallery-item">
                     <img src="./Gallery/des_umap.png" alt="Descriptors">
                     <p>Descriptors Analysis</p>
                 </div>
+                <div class="gallery-item">
+                    <img src="./Gallery/charge.png" alt="Charge analysis">
+                    <p>Charge Analysis</p>
+                </div>                
                 <div class="gallery-item">
                     <img src="./Gallery/force_errors.png" alt="force errors">
                     <p>Force Errors</p>
@@ -174,9 +198,9 @@ gpumdkit.sh</code></pre>
                     <p>plot nep.restart</p>
                 </div>
             </div>
-            <!-- <div class="view-all-container">
-                <a href="#" class="view-all-button">View all Gallery</a>
-            </div> -->
+            <div class="view-all-container">
+                <a href="./htmls/plot_scripts.html" class="view-all-button">View all Plots</a>
+            </div>
         </section>
 
         <section id="publications" class="publications">
@@ -217,7 +241,7 @@ gpumdkit.sh</code></pre>
                 </div>
                 <div class="join-citation-card">
                     <h3>Citation</h3>
-                    <p>As of now, GPUMDkit is a toy model, free for anyone to use and experiment with. If you like it, please star us on GitHub.</p>
+                    <p>As of now, our article is still in preparation. If you like it, please star us on GitHub.</p>
                     <a href="https://github.com/zhyan0603/GPUMDkit" class="github-star-button" target="_blank">
                         <svg height="20" width="20" viewBox="0 0 16 16" fill="currentColor">
                             <path d="M8 .25a.75.75 0 01.673.418l1.882 3.815 4.21.612a.75.75 0 01.416 1.279l-3.046 2.97.719 4.192a.75.75 0 01-1.088.791L8 12.347l-3.766 1.98a.75.75 0 01-1.088-.79l.72-4.194L.818 6.374a.75.75 0 01.416-1.28l4.21-.611L7.327.668A.75.75 0 018 .25z"></path>

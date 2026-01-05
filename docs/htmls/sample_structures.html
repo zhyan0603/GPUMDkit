@@ -6,17 +6,19 @@
       <meta charset="utf-8">
       <meta name="viewport" content="width=device-width,initial-scale=1">
       
-        <meta name="description" content="A tutorial for GPUMDkit, a toolkit for GPUMD and NEP.">
+        <meta name="description" content="Tutorials for GPUMDkit.">
       
       
         <meta name="author" content="Zihan YAN">
       
       
-        <link rel="canonical" href="https://zhyan0603.github.io/GPUMDkit/workflow_active_learning.html">
+        <link rel="canonical" href="https://zhyan0603.github.io/GPUMDkit/sample_structures.html">
       
       
-        <link rel="prev" href="calculators.html">
+        <link rel="prev" href="format_conversion.html">
       
+      
+        <link rel="next" href="workflow.html">
       
       
       <link rel="icon" href="assets/images/favicon.png">
@@ -24,7 +26,7 @@
     
     
       
-        <title>Active Learning Workflow - GPUMDkit Tutorial</title>
+        <title>Sample Structures - GPUMDkit Tutorial</title>
       
     
     
@@ -115,7 +117,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#tutorial-for-workflow_active_learning_devsh" class="md-skip">
+        <a href="#interactive-mode" class="md-skip">
           Skip to content
         </a>
       
@@ -131,7 +133,7 @@
 
 <header class="md-header md-header--shadow" data-md-component="header">
   <nav class="md-header__inner md-grid" aria-label="Header">
-    <a href="index.html" title="GPUMDkit Tutorial" class="md-header__button md-logo" aria-label="GPUMDkit Tutorial" data-md-component="logo">
+    <a href="." title="GPUMDkit Tutorial" class="md-header__button md-logo" aria-label="GPUMDkit Tutorial" data-md-component="logo">
       
   
   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
@@ -151,7 +153,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Active Learning Workflow
+              Sample Structures
             
           </span>
         </div>
@@ -243,7 +245,7 @@
 
 <nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
   <label class="md-nav__title" for="__drawer">
-    <a href="index.html" title="GPUMDkit Tutorial" class="md-nav__button md-logo" aria-label="GPUMDkit Tutorial" data-md-component="logo">
+    <a href="." title="GPUMDkit Tutorial" class="md-nav__button md-logo" aria-label="GPUMDkit Tutorial" data-md-component="logo">
       
   
   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
@@ -273,7 +275,7 @@
   
   
     <li class="md-nav__item">
-      <a href="index.html" class="md-nav__link">
+      <a href="tutorials.html" class="md-nav__link">
         
   
   
@@ -336,10 +338,30 @@
       
   
   
+    
   
   
-    <li class="md-nav__item">
-      <a href="sample_structures.html" class="md-nav__link">
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    Sample Structures
+    
+  </span>
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="sample_structures.html" class="md-nav__link md-nav__link--active">
         
   
   
@@ -350,6 +372,93 @@
   
 
       </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#interactive-mode" class="md-nav__link">
+    <span class="md-ellipsis">
+      Interactive Mode
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Interactive Mode">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#option-201-sample-structures-from-extxyz" class="md-nav__link">
+    <span class="md-ellipsis">
+      Option 201: Sample Structures from extxyz
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#option-202-sample-structures-by-pynep" class="md-nav__link">
+    <span class="md-ellipsis">
+      Option 202: Sample structures by pynep
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#option-203-sample-structures-by-neptrain" class="md-nav__link">
+    <span class="md-ellipsis">
+      Option 203: Sample structures by neptrain
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#option-204-perturb-structure" class="md-nav__link">
+    <span class="md-ellipsis">
+      Option 204: Perturb structure
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#option-205-select-max-force-deviation-structs-from-activexyz" class="md-nav__link">
+    <span class="md-ellipsis">
+      Option 205: Select max force deviation structs from active.xyz
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#contributing" class="md-nav__link">
+    <span class="md-ellipsis">
+      Contributing
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
     </li>
   
 
@@ -361,12 +470,12 @@
   
   
     <li class="md-nav__item">
-      <a href="workflow_dev.html" class="md-nav__link">
+      <a href="workflow.html" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
-    Workflow (dev)
+    Workflow
     
   </span>
   
@@ -402,30 +511,54 @@
       
   
   
-    
   
   
-  
-    <li class="md-nav__item md-nav__item--active">
-      
-      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
-      
-      
-      
-        <label class="md-nav__link md-nav__link--active" for="__toc">
-          
+    <li class="md-nav__item">
+      <a href="analyzer.html" class="md-nav__link">
+        
   
   
   <span class="md-ellipsis">
-    Active Learning Workflow
+    Analyzers
     
   </span>
   
 
-          <span class="md-nav__icon md-icon"></span>
-        </label>
+      </a>
+    </li>
+  
+
+    
       
-      <a href="workflow_active_learning.html" class="md-nav__link md-nav__link--active">
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="custom_commands.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Custom Commands
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="workflow_active_learning.html" class="md-nav__link">
         
   
   
@@ -436,147 +569,28 @@
   
 
       </a>
-      
-        
+    </li>
+  
 
-<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
-  
-  
-  
-  
-    <label class="md-nav__title" for="__toc">
-      <span class="md-nav__icon md-icon"></span>
-      Table of contents
-    </label>
-    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+    
       
-        <li class="md-nav__item">
-  <a href="#tutorial-for-workflow_active_learning_devsh" class="md-nav__link">
-    <span class="md-ellipsis">
-      Tutorial for workflow_active_learning_dev.sh
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Tutorial for workflow_active_learning_dev.sh">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#overview" class="md-nav__link">
-    <span class="md-ellipsis">
-      Overview
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#1-slurm-directives" class="md-nav__link">
-    <span class="md-ellipsis">
-      1. SLURM Directives
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#2-basic-setup" class="md-nav__link">
-    <span class="md-ellipsis">
-      2. Basic Setup
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#3-variable-definitions" class="md-nav__link">
-    <span class="md-ellipsis">
-      3. Variable Definitions
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#4-check-required-files" class="md-nav__link">
-    <span class="md-ellipsis">
-      4. Check Required Files
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#5-file-organization" class="md-nav__link">
-    <span class="md-ellipsis">
-      5. File Organization
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#6-molecular-dynamics-simulation-submission" class="md-nav__link">
-    <span class="md-ellipsis">
-      6. Molecular Dynamics Simulation Submission
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#7-monitoring-task-completion" class="md-nav__link">
-    <span class="md-ellipsis">
-      7. Monitoring Task Completion
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#8-analysis-and-filtering" class="md-nav__link">
-    <span class="md-ellipsis">
-      8. Analysis and Filtering
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#9-sampling-methods" class="md-nav__link">
-    <span class="md-ellipsis">
-      9. Sampling Methods
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#10-scf-calculations" class="md-nav__link">
-    <span class="md-ellipsis">
-      10. SCF Calculations
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#11-prediction-step" class="md-nav__link">
-    <span class="md-ellipsis">
-      11. Prediction Step
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
       
-    </ul>
   
-</nav>
-      
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="contributing.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Contributing
+    
+  </span>
+  
+
+      </a>
     </li>
   
 
@@ -606,118 +620,55 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#tutorial-for-workflow_active_learning_devsh" class="md-nav__link">
+  <a href="#interactive-mode" class="md-nav__link">
     <span class="md-ellipsis">
-      Tutorial for workflow_active_learning_dev.sh
+      Interactive Mode
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="Tutorial for workflow_active_learning_dev.sh">
+    <nav class="md-nav" aria-label="Interactive Mode">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#overview" class="md-nav__link">
+  <a href="#option-201-sample-structures-from-extxyz" class="md-nav__link">
     <span class="md-ellipsis">
-      Overview
+      Option 201: Sample Structures from extxyz
     </span>
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#1-slurm-directives" class="md-nav__link">
+  <a href="#option-202-sample-structures-by-pynep" class="md-nav__link">
     <span class="md-ellipsis">
-      1. SLURM Directives
+      Option 202: Sample structures by pynep
     </span>
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#2-basic-setup" class="md-nav__link">
+  <a href="#option-203-sample-structures-by-neptrain" class="md-nav__link">
     <span class="md-ellipsis">
-      2. Basic Setup
+      Option 203: Sample structures by neptrain
     </span>
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#3-variable-definitions" class="md-nav__link">
+  <a href="#option-204-perturb-structure" class="md-nav__link">
     <span class="md-ellipsis">
-      3. Variable Definitions
+      Option 204: Perturb structure
     </span>
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#4-check-required-files" class="md-nav__link">
+  <a href="#option-205-select-max-force-deviation-structs-from-activexyz" class="md-nav__link">
     <span class="md-ellipsis">
-      4. Check Required Files
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#5-file-organization" class="md-nav__link">
-    <span class="md-ellipsis">
-      5. File Organization
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#6-molecular-dynamics-simulation-submission" class="md-nav__link">
-    <span class="md-ellipsis">
-      6. Molecular Dynamics Simulation Submission
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#7-monitoring-task-completion" class="md-nav__link">
-    <span class="md-ellipsis">
-      7. Monitoring Task Completion
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#8-analysis-and-filtering" class="md-nav__link">
-    <span class="md-ellipsis">
-      8. Analysis and Filtering
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#9-sampling-methods" class="md-nav__link">
-    <span class="md-ellipsis">
-      9. Sampling Methods
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#10-scf-calculations" class="md-nav__link">
-    <span class="md-ellipsis">
-      10. SCF Calculations
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#11-prediction-step" class="md-nav__link">
-    <span class="md-ellipsis">
-      11. Prediction Step
+      Option 205: Select max force deviation structs from active.xyz
     </span>
   </a>
   
@@ -725,6 +676,15 @@
         
       </ul>
     </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#contributing" class="md-nav__link">
+    <span class="md-ellipsis">
+      Contributing
+    </span>
+  </a>
   
 </li>
       
@@ -747,132 +707,154 @@
   
 
 
-  <h1>Active Learning Workflow</h1>
+<div align="center">
+  <h1>📦 Structure Sampling</h1>
+    <p style="text-align: justify;">This directory (Scripts/sample_structures/) contains tools for sampling, selecting, and generating atomic structures for NEP training and molecular dynamics simulations.</p>
+</div>
 
-<h2 id="tutorial-for-workflow_active_learning_devsh">Tutorial for workflow_active_learning_dev.sh</h2>
-<p>This tutorial explains the steps and considerations involved in <code>workflow_active_learning_dev.sh</code> script. The workflow is used to generate, select, and analyze molecular structures, followed by simulations and data collection.</p>
-<h3 id="overview">Overview</h3>
-<p>This script is designed to handle molecular dynamics simulations, sampling, and SCF (self-consistent field) calculations for NEP. Below is a step-by-step guide explaining how the script works and what each part does.</p>
-<h3 id="1-slurm-directives">1. <strong>SLURM Directives</strong></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>#!/bin/bash -l
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>#SBATCH -p intel-sc3,intel-sc3-32c
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>#SBATCH -q huge
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>#SBATCH -N 1
-<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>#SBATCH -J workflow
-<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>#SBATCH -o workflow.log
-<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>#SBATCH --ntasks-per-node=1
-</code></pre></div>
-<p>The SLURM directives are used to define how the job will be submitted to the cluster:</p>
+<p><strong>Script Location:</strong> <code>Scripts/sample_structures/</code></p>
+<p>This section covers the structure sampling tools in GPUMDkit (Interactive Mode - Option 2).</p>
+<p>Structure sampling is crucial for creating diverse configurations. These scripts provide:</p>
 <ul>
-<li><code>#SBATCH -p</code> defines the partition, in this case, it's <code>intel-sc3</code> and <code>intel-sc3-32c</code>.</li>
-<li><code>#SBATCH -q</code> specifies the queue, in this case, <code>huge</code>.</li>
-<li><code>#SBATCH -N</code> allocates 1 node for the job.</li>
-<li><code>#SBATCH -J</code> names the job <code>workflow</code>.</li>
-<li><code>#SBATCH -o</code> defines the output log file as <code>workflow.log</code>.</li>
-<li><code>--ntasks-per-node=1</code> specifies that only one task should run per node.</li>
+<li><strong>Uniform and random sampling</strong>: Basic sampling methods</li>
+<li><strong>FPS (Farthest Point Sampling)</strong>: Maximizing structural diversity using PyNEP or NEPtrain</li>
+<li><strong>Structure perturbation</strong>: Generating variations for training set augmentation</li>
+<li><strong>maximum force deviations selection</strong>: Identifying structures with maximum force deviations</li>
+<li><strong>Frame extraction</strong>: Selecting specific range from trajectories</li>
 </ul>
-<p><strong><u>NOTE:</u></strong> If your machine does not have the SLURM environment, you can also run the script directly from the command line. For example:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>nohup bash workflow_active_learning_dev.sh &amp;&gt;workflow.log &amp;
+<h2 id="interactive-mode">Interactive Mode</h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>gpumdkit.sh
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="c1"># Select: 2) Sample Structures</span>
 </code></pre></div>
-<h3 id="2-basic-setup">2. <strong>Basic Setup</strong></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>cd $SLURM_SUBMIT_DIR 
+<p>You'll see the following menu:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a> ------------&gt;&gt;
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a> 201) Sample structures from extxyz
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a> 202) Sample structures by pynep
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a> 203) Sample structures by neptrain
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a> 204) Perturb structure
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a> 205) Select max force deviation structs
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a> 000) Return to the main menu
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a> ------------&gt;&gt;
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a> Input the function number:
 </code></pre></div>
-<p>Ensure the working directory is correct, and that all necessary files are present for the job.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>source ${GPUMDkit_path}/Scripts/workflow/submit_template.sh  # Load the submit template
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>python_pynep=/storage/zhuyizhouLab/yanzhihan/soft/conda/envs/gpumd/bin/python  # Python executable
+<h3 id="option-201-sample-structures-from-extxyz">Option 201: Sample Structures from extxyz</h3>
+<p>This option allows you to sample structures from an <code>extxyz</code> file using a specified method.</p>
+<p>Select option <code>201</code> from the menu:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>201
 </code></pre></div>
-<ul>
-<li><code>GPUMDkit_path</code> is the environment variable that stores the path for the <code>GPUMDkit</code> .</li>
-<li><code>python_pynep</code> points to the Python environment needed for <code>pynep</code>-related scripts.</li>
-</ul>
+<p>You will see the following prompt:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a> &gt;-------------------------------------------------&lt;
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a> | Calling the script in Scripts/sample_structures |
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a> | Script: sample_structures.py                    |
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a> | Developer: Zihan YAN (yanzihan@westlake.edu.cn) |
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a> &gt;-------------------------------------------------&lt;
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a> Input &lt;extxyz_file&gt; &lt;sampling_method&gt; &lt;num_samples&gt; [skip_num]
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a> [skip_num]: number of initial frames to skip, default value is 0
+<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a> Sampling_method: &#39;uniform&#39; or &#39;random&#39;
+<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a> Examp: train.xyz uniform 50
+<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a> ------------&gt;&gt;
+</code></pre></div>
+<p>Enter the <code>extxyz</code> file name, sampling method, and number of samples:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>train.xyz uniform 50
+</code></pre></div>
+<p>The script <code>sample_structures.py</code> in the <code>Scripts/sample_strcutures</code> will be called to perform the sampling.</p>
+<h3 id="option-202-sample-structures-by-pynep">Option 202: Sample structures by pynep</h3>
+<p>This function calls the <code>pynep_select_structs.py</code> in the <code>Scripts/sample_structures</code> to sampling the structures by <code>pynep</code>.</p>
+<p>Select option <code>202</code> from the menu:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>202
+</code></pre></div>
+<p>You will see the following prompt:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a> +-------------------------------------------------+
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a> | PyNEP package is no longer actively maintained  |
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a> |       Recommend using function 203 instead      |
+<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a> +-------------------------------------------------+
+<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a> +-------------------------------------------------+
+<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a> |     To use parallel version, please use:        |
+<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a> |            gpumdkit.sh -pynep                   |
+<a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a> +-------------------------------------------------+
+<a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a> &gt;-------------------------------------------------&lt;
+<a id="__codelineno-6-10" name="__codelineno-6-10" href="#__codelineno-6-10"></a> | Calling the script in Scripts/sample_structures |
+<a id="__codelineno-6-11" name="__codelineno-6-11" href="#__codelineno-6-11"></a> | Script: pynep_select_structs.py                 |
+<a id="__codelineno-6-12" name="__codelineno-6-12" href="#__codelineno-6-12"></a> | Developer: Zihan YAN (yanzihan@westlake.edu.cn) |
+<a id="__codelineno-6-13" name="__codelineno-6-13" href="#__codelineno-6-13"></a> &gt;-------------------------------------------------&lt;
+<a id="__codelineno-6-14" name="__codelineno-6-14" href="#__codelineno-6-14"></a> Input &lt;sample.xyz&gt; &lt;train.xyz&gt; &lt;nep_model&gt;
+<a id="__codelineno-6-15" name="__codelineno-6-15" href="#__codelineno-6-15"></a> Examp: dump.xyz train.xyz nep.txt
+<a id="__codelineno-6-16" name="__codelineno-6-16" href="#__codelineno-6-16"></a> ------------&gt;&gt;
+</code></pre></div>
+<p><code>&lt;samle.xyz&gt;</code>: extxyz file</p>
+<p><code>&lt;train.xyz&gt;</code>: train.xyz</p>
+<p><code>&lt;nep_model&gt;</code>: nep.txt</p>
+<p>Enter the following parameters:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>dump.xyz train.xyz nep.txt
+</code></pre></div>
+<p><strong>Note:</strong> pynep package is no longer actively maintained, this function will be removed soon.</p>
+<h3 id="option-203-sample-structures-by-neptrain">Option 203: Sample structures by neptrain</h3>
+<p>This function calls the <code>neptrain_select_structs.py</code> script in the <code>Scripts/sample_structures</code> to sampling the structures by <code>neptrain</code></p>
+<p>Select option <code>203</code> from the menu:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>203
+</code></pre></div>
+<p>You will see the following prompt:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a> &gt;-------------------------------------------------&lt;
+<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a> | Calling the script in Scripts/sample_structures |
+<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a> | Script: neptrain_select_structs.py              |
+<a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a> | Developer: Benrui TANG (tang070205@proton.me)   |
+<a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a> &gt;-------------------------------------------------&lt;
+<a id="__codelineno-9-6" name="__codelineno-9-6" href="#__codelineno-9-6"></a> Input &lt;sample.xyz&gt; &lt;train.xyz&gt; &lt;nep_model&gt;
+<a id="__codelineno-9-7" name="__codelineno-9-7" href="#__codelineno-9-7"></a> Examp: dump.xyz train.xyz nep.txt
+<a id="__codelineno-9-8" name="__codelineno-9-8" href="#__codelineno-9-8"></a> ------------&gt;&gt;
+</code></pre></div>
+<p>It is the same with option <code>202</code>.</p>
+<h3 id="option-204-perturb-structure">Option 204: Perturb structure</h3>
+<p>This function calls the <code>perturb_structure.py</code> script  in the <code>Scripts/sample_structures</code>  to generate the perturbed structures.</p>
+<p>Select option <code>204</code> from the menu:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a>204
+</code></pre></div>
+<p>You will see the following prompt:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a>&gt;-------------------------------------------------&lt;
+<a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a>| This function calls the script in Scripts       |
+<a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a>| Script: perturb_structure.py                    |
+<a id="__codelineno-11-4" name="__codelineno-11-4" href="#__codelineno-11-4"></a>| Developer: Zihan YAN (yanzihan@westlake.edu.cn) |
+<a id="__codelineno-11-5" name="__codelineno-11-5" href="#__codelineno-11-5"></a>&gt;-------------------------------------------------&lt;
+<a id="__codelineno-11-6" name="__codelineno-11-6" href="#__codelineno-11-6"></a>Input &lt;input.vasp&gt; &lt;pert_num&gt; &lt;cell_pert_fraction&gt; &lt;atom_pert_distance&gt; &lt;atom_pert_style&gt;
+<a id="__codelineno-11-7" name="__codelineno-11-7" href="#__codelineno-11-7"></a>The default paramters for perturb are 20 0.03 0.2 uniform
+<a id="__codelineno-11-8" name="__codelineno-11-8" href="#__codelineno-11-8"></a>Examp: POSCAR 20 0.03 0.2 normal
+<a id="__codelineno-11-9" name="__codelineno-11-9" href="#__codelineno-11-9"></a>------------&gt;&gt;
+</code></pre></div>
+<p><code>&lt;input.vasp&gt;</code>: filename.vasp</p>
+<p><code>&lt;pert_num&gt;</code>: number of perturbed structures</p>
+<p><code>&lt;cell_pert_fraction&gt;</code>: A fraction determines how much (relatively) will cell deform</p>
+<p><code>&lt;atom_pert_distance&gt;</code>: A distance determines how far atoms will move (in angstrom).</p>
+<p><code>&lt;atom_pert_style&gt;</code>: <code>&lt;uniform&gt;</code>, <code>&lt;normal&gt;</code>, <code>&lt;const&gt;</code></p>
+<p>Enter your parameters like:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a>POSCAR 20 0.03 0.2 uniform
+</code></pre></div>
+<p>The script <code>perturb_structure.py</code> in the <code>Scripts/sample_strcutures</code> will be called to perform the perturbation.</p>
+<h3 id="option-205-select-max-force-deviation-structs-from-activexyz">Option 205: Select max force deviation structs from active.xyz</h3>
+<p>This option allows you to select max force deviation structures from <code>active.xyz</code> generated by the command <code>active</code> in <code>gpumd</code>.</p>
+<p>Select option <code>205</code> from the menu:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a>205
+</code></pre></div>
+<p>You will see the following prompt:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a> &gt;-------------------------------------------------&lt;
+<a id="__codelineno-14-2" name="__codelineno-14-2" href="#__codelineno-14-2"></a> | Calling the script in Scripts/sample_structures |
+<a id="__codelineno-14-3" name="__codelineno-14-3" href="#__codelineno-14-3"></a> | Script: select_max_modev.py                     |
+<a id="__codelineno-14-4" name="__codelineno-14-4" href="#__codelineno-14-4"></a> | Developer: Zihan YAN (yanzihan@westlake.edu.cn) |
+<a id="__codelineno-14-5" name="__codelineno-14-5" href="#__codelineno-14-5"></a> &gt;-------------------------------------------------&lt;
+<a id="__codelineno-14-6" name="__codelineno-14-6" href="#__codelineno-14-6"></a> +----------------------------------------------------+
+<a id="__codelineno-14-7" name="__codelineno-14-7" href="#__codelineno-14-7"></a> | Select max force deviation structs from active.xyz |
+<a id="__codelineno-14-8" name="__codelineno-14-8" href="#__codelineno-14-8"></a> |     generated by the active command in gpumd.      |
+<a id="__codelineno-14-9" name="__codelineno-14-9" href="#__codelineno-14-9"></a> +----------------------------------------------------+
+<a id="__codelineno-14-10" name="__codelineno-14-10" href="#__codelineno-14-10"></a> Input &lt;structs_num&gt; &lt;threshold&gt; (eg. 200 0.15)
+<a id="__codelineno-14-11" name="__codelineno-14-11" href="#__codelineno-14-11"></a> ------------&gt;&gt;
+</code></pre></div>
+<p>Enter the number of structures and the <code>threshold</code> used in your <code>run.in</code>:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a>200 0.15
+</code></pre></div>
+<p>The script <code>select_max_modev.py</code> in the <code>Scripts/sample_strcutures</code> will be called to perform the sampling.</p>
+<h2 id="contributing">Contributing</h2>
+<p>See <a href="contributing.html">CONTRIBUTING.md</a> for detailed guidelines.</p>
 <hr />
-<h3 id="3-variable-definitions">3. <strong>Variable Definitions</strong></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>work_dir=${PWD}  # Set the working directory
-<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>prefix_name=LiF_iter01  # Prefix for calculations
-<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>min_dist=1.4  # Minimum atom distance
-<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>box_limit=13  # Simulation box limit
-<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>max_fp_num=50  # Maximum number of single point calculations
-<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>sample_method=pynep  # Sampling method (options: uniform, random, pynep)
-<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a>pynep_sample_dist=0.01  # Sampling distance for pynep
-</code></pre></div>
-<p>You can customize:</p>
-<ul>
-<li><code>prefix_name</code> to reflect the name of your current work.</li>
-<li><code>min_dist</code>, <code>box_limit</code>, and <code>max_fp_num</code> based on your own system.</li>
-<li><code>sample_method</code> (choose between <code>uniform</code>, <code>random</code>, or <code>pynep</code>).</li>
-<li><code>pynep_sample_dist</code> is the sampling distance for <code>pynep</code>.</li>
-</ul>
-<hr />
-<h3 id="4-check-required-files">4. <strong>Check Required Files</strong></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>if [ -f nep.txt ] &amp;&amp; [ -f nep.in ] &amp;&amp; [ -f train.xyz ] &amp;&amp; [ -f run.in ] &amp;&amp; [ -f INCAR ] &amp;&amp; [ -f POTCAR ] ; then
-<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>    # Check for the required files before proceeding.
-<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>else
-<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>    echo &quot;Please put nep.in nep.txt train.xyz run.in INCAR POTCAR [KPOINTS] and the sample_struct.xyz in the current directory.&quot;
-<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>    exit 1
-<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>fi
-</code></pre></div>
-<p>Make sure the necessary files (<code>nep.txt</code>, <code>nep.in</code>, <code>train.xyz</code>, <code>run.in</code>, <code>INCAR</code>, <code>POTCAR</code>, <code>KPOINTS</code>) are available in the working directory. If any of these are missing, the script will terminate. <code>train.xyz</code> and <code>nep.txt</code> are used for <code>pynep</code> sampling, and <code>run.in</code> is the simulation parameters of MD in the current iteration.</p>
-<hr />
-<h3 id="5-file-organization">5. <strong>File Organization</strong></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>mkdir 00.modev common
-<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>mv ${work_dir}/{nep.txt,nep.in,*.xyz,run.in,INCAR,KPOINTS,POTCAR} ./common
-<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>cp ${work_dir}/common/$sample_xyz_file ${work_dir}/00.modev
-</code></pre></div>
-<p>The script organizes the working files into two folders:</p>
-<ul>
-<li><code>00.modev</code>: For molecular dynamics simulation.</li>
-<li><code>common</code>: For shared resources such as <code>nep.txt</code>, <code>run.in</code>, and the structure files, etc.</li>
-</ul>
-<hr />
-<h3 id="6-molecular-dynamics-simulation-submission">6. <strong>Molecular Dynamics Simulation Submission</strong></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>submit_gpumd_array modev ${sample_struct_num}
-<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>sbatch submit.slurm
-</code></pre></div>
-<p>After preparing the input files, the script submits an array of molecular dynamics (MD) tasks using <code>submit_gpumd_array</code>.</p>
-<hr />
-<h3 id="7-monitoring-task-completion">7. <strong>Monitoring Task Completion</strong></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>while true; do
-<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>    logs=$(find &quot;${work_dir}/00.modev/&quot; -type f -name log -path &quot;*/sample_*/log&quot;)
-<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a>    finished_tasks_md=$(grep &quot;Finished running GPUMD.&quot; $logs | wc -l)
-<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a>    error_tasks_md=$(grep &quot;Error&quot; $logs | wc -l)
-<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a>
-<a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a>    if [ &quot;$error_tasks_md&quot; -ne 0 ]; then
-<a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a>        echo &quot;Error: MD simulation encountered an error.&quot;
-<a id="__codelineno-8-8" name="__codelineno-8-8" href="#__codelineno-8-8"></a>        exit 1
-<a id="__codelineno-8-9" name="__codelineno-8-9" href="#__codelineno-8-9"></a>    fi
-<a id="__codelineno-8-10" name="__codelineno-8-10" href="#__codelineno-8-10"></a>    if [ $finished_tasks_md -eq $sample_struct_num ]; then
-<a id="__codelineno-8-11" name="__codelineno-8-11" href="#__codelineno-8-11"></a>        break
-<a id="__codelineno-8-12" name="__codelineno-8-12" href="#__codelineno-8-12"></a>    fi
-<a id="__codelineno-8-13" name="__codelineno-8-13" href="#__codelineno-8-13"></a>    sleep 30
-<a id="__codelineno-8-14" name="__codelineno-8-14" href="#__codelineno-8-14"></a>done
-</code></pre></div>
-<p>The script continuously checks whether all MD tasks have finished by searching for a <code>Finished running GPUMD.</code> message in the logs. If an error is encountered, the script terminates.</p>
-<hr />
-<h3 id="8-analysis-and-filtering">8. <strong>Analysis and Filtering</strong></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>mkdir ${work_dir}/01.select
-<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>...
-</code></pre></div>
-<p>In the <code>01.select</code> folder, all structures in the trajectory file <code>dump.xyz</code> during the MD process will be analyzed and filtered to avoid the generation of non-physical structures as much as possible. Specifically, the <code>get_min_dist.py</code>, <code>filter_structures_by_distance.py</code> and <code>filter_exyz_by_box.py</code> scripts will be employed to check whether there are situations where the distance between atoms is too close or the simulated box exceeds the limit value, and such structures will be filtered out.</p>
-<hr />
-<h3 id="9-sampling-methods">9. <strong>Sampling Methods</strong></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a>case $sample_method in
-<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a>    &quot;uniform&quot;)
-<a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a>    &quot;random&quot;)
-<a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a>    &quot;pynep&quot;)
-</code></pre></div>
-<p>The script supports three sampling methods: <code>uniform</code>, <code>random</code>, and <code>pynep</code>. It selects structures according to the chosen method and checks if the number exceeds <code>max_fp_num</code>, ensuring the final structure count is within limits.</p>
-<hr />
-<h3 id="10-scf-calculations">10. <strong>SCF Calculations</strong></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a>submit_vasp_array scf ${selected_struct_num} ${prefix_name}
-</code></pre></div>
-<p>After sampling, SCF calculations are submitted using <code>submit_vasp_array</code>. The process is similar to the MD submission, but for SCF calculations.</p>
-<hr />
-<h3 id="11-prediction-step">11. <strong>Prediction Step</strong></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a>submit_nep_prediction
-</code></pre></div>
-<p>The final step involves submitting the NEP prediction task to check  the accuracy of the NEP model. </p>
-<hr />
-<p>Thank you for using <code>GPUMDkit</code>! If you have any questions or need further assistance, feel free to open an issue on our GitHub repository or contact Zihan YAN (yanzihan@westlake.edu.cn).</p>
+<p>Thank you for using GPUMDkit! If you have questions about structure sampling, please open an issue on our <a href="https://github.com/zhyan0603/GPUMDkit/issues">GitHub repository</a> or contact Zihan YAN (yanzihan@westlake.edu.cn).</p>
 
 
 
