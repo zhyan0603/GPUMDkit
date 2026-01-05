@@ -10,7 +10,7 @@ if [ -z "$GPUMDkit_path" ]; then
     exit 1
 fi
 
-VERSION="1.4.3 (dev) (2025-12-28)"
+VERSION="1.5.0 (dev) (2025-01-05)"
 
 plt_path="${GPUMDkit_path}/Scripts/plt_scripts"
 analyzer_path="${GPUMDkit_path}/Scripts/analyzer"
@@ -159,7 +159,7 @@ function plot_info_table(){
     echo "| doas            Plot density of atomistic states   | arrhenius_d    Plot Arrhenius diffusivity      |"
     echo "| arrhenius_sigma Plot Arrhenius sigma               | net_force      Plot net force distribution     |"
     echo "| emd             Plot EMD results                   | nemd           Plot NEMD results               |"
-    echo "| hnemd           Plot HNEMD results                 |                                                |"
+    echo "| hnemd           Plot HNEMD results                 | pdos           Plot VAC and PDOS               |"
     echo "+=====================================================================================================+"
     echo "| For detailed usage and examples, use: gpumdkit.sh -plt <plot_type> -h                               |"
     echo "+=====================================================================================================+"
@@ -213,6 +213,7 @@ if [ ! -z "$1" ]; then
                     "emd") python ${plt_path}/plt_emd.py ${@:3} ;;
                     "nemd") python ${plt_path}/plt_nemd.py ${@:3} ;;
                     "hnemd") python ${plt_path}/plt_hnemd.py ${@:3} ;;
+                    "pdos") python ${plt_path}/plt_pdos.py $3 ;;
                     "charge")
                         echo " +----------------------------------------------------------+"
                         echo " | Please ensure you are using full batch training process. |"

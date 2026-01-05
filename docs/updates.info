@@ -1,6 +1,6 @@
 # === User Configuration Section: Only modify these variables ===
-VERSION="1.4.3"
-RELEASE_DATE="2025-12-28"
+VERSION="1.5.0"
+RELEASE_DATE="2026-01-05"
 HOME_PAGE="https://zhyan0603.github.io/GPUMDkit"
 CONTACT="yanzihan@westlake.edu.cn"
 

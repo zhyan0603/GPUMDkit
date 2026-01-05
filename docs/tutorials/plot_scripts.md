@@ -372,8 +372,9 @@ gpumdkit.sh -plt emd x # for x direction
 ```
 
 <div align="center">
-    <img src="../Gallery/emd.png" alt="EMD thermal conductivity" width="60%" />
+    <img src="../Gallery/emd.png" alt="EMD thermal conductivity" width="70%" />
 </div>
+
 
 
 ---
@@ -403,8 +404,9 @@ save          : Optional, save the plot as 'nemd.png'
 ```
 
 <div align="center">
-    <img src="../Gallery/nemd.png" alt="NEMD results" width="60%" />
+    <img src="../Gallery/nemd.png" alt="NEMD results" width="70%" />
 </div>
+
 
 
 ---
@@ -435,8 +437,38 @@ save          : Optional, save the plot as 'hnemd.png'
 
 
 <div align="center">
-    <img src="../Gallery/hnemd.png" alt="HNEMD results" width="60%" />
+    <img src="../Gallery/hnemd.png" alt="HNEMD results" width="70%" />
 </div>
+
+
+
+---
+
+#### plt_pdos.py
+
+Calculates and Plots normalized VAC, PDOS, and Heat Capacity (Cv).
+
+**Usage:**
+
+```bash
+gpumdkit.sh -plt pdos [save]
+```
+
+**Input Files:** `model.xyz, run.in, dos.out, mvac.out`
+
+<div align="center">
+    <img src="../Gallery/vac_pdos.png" alt="VAS PDOS" width="70%" />
+</div>
+
+
+
+and heat capacity:
+
+<div align="center">
+    <img src="../Gallery/heat_capacity.png" alt="Heat Capacity" width="50%" />
+</div>
+
+
 
 
 ---
