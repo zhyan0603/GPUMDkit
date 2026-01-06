@@ -1,0 +1,1856 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="Tutorials for GPUMDkit.">
+      
+      
+        <meta name="author" content="Zihan YAN">
+      
+      
+        <link rel="canonical" href="https://zhyan0603.github.io/GPUMDkit/plot_scripts.html">
+      
+      
+        <link rel="prev" href="tutorials.html">
+      
+      
+        <link rel="next" href="format_conversion.html">
+      
+      
+      <link rel="icon" href="assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.6.12">
+    
+    
+      
+        <title>Plot Scripts - GPUMDkit Tutorial</title>
+      
+    
+    
+      <link rel="stylesheet" href="assets/stylesheets/main.2afb09e1.min.css">
+      
+        
+        <link rel="stylesheet" href="assets/stylesheets/palette.06af60db.min.css">
+      
+      
+  
+  
+    
+    
+  
+    
+    
+  
+    
+    
+  
+    
+    
+  
+    
+    
+  
+    
+    
+  
+    
+    
+  
+    
+    
+  
+    
+    
+  
+    
+    
+  
+    
+    
+  
+    
+    
+  
+  
+  <style>:root{--md-admonition-icon--note:url('data:image/svg+xml;charset=utf-8,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20viewBox%3D%220%200%2016%2016%22%3E%3Cpath%20d%3D%22M1%207.775V2.75C1%201.784%201.784%201%202.75%201h5.025c.464%200%20.91.184%201.238.513l6.25%206.25a1.75%201.75%200%200%201%200%202.474l-5.026%205.026a1.75%201.75%200%200%201-2.474%200l-6.25-6.25A1.75%201.75%200%200%201%201%207.775m1.5%200c0%20.066.026.13.073.177l6.25%206.25a.25.25%200%200%200%20.354%200l5.025-5.025a.25.25%200%200%200%200-.354l-6.25-6.25a.25.25%200%200%200-.177-.073H2.75a.25.25%200%200%200-.25.25ZM6%205a1%201%200%201%201%200%202%201%201%200%200%201%200-2%22/%3E%3C/svg%3E');--md-admonition-icon--abstract:url('data:image/svg+xml;charset=utf-8,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20viewBox%3D%220%200%2016%2016%22%3E%3Cpath%20d%3D%22M2.5%201.75v11.5c0%20.138.112.25.25.25h3.17a.75.75%200%200%201%200%201.5H2.75A1.75%201.75%200%200%201%201%2013.25V1.75C1%20.784%201.784%200%202.75%200h8.5C12.216%200%2013%20.784%2013%201.75v7.736a.75.75%200%200%201-1.5%200V1.75a.25.25%200%200%200-.25-.25h-8.5a.25.25%200%200%200-.25.25m13.274%209.537zl-4.557%204.45a.75.75%200%200%201-1.055-.008l-1.943-1.95a.75.75%200%200%201%201.062-1.058l1.419%201.425%204.026-3.932a.75.75%200%201%201%201.048%201.074M4.75%204h4.5a.75.75%200%200%201%200%201.5h-4.5a.75.75%200%200%201%200-1.5M4%207.75A.75.75%200%200%201%204.75%207h2a.75.75%200%200%201%200%201.5h-2A.75.75%200%200%201%204%207.75%22/%3E%3C/svg%3E');--md-admonition-icon--info:url('data:image/svg+xml;charset=utf-8,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20viewBox%3D%220%200%2016%2016%22%3E%3Cpath%20d%3D%22M0%208a8%208%200%201%201%2016%200A8%208%200%200%201%200%208m8-6.5a6.5%206.5%200%201%200%200%2013%206.5%206.5%200%200%200%200-13M6.5%207.75A.75.75%200%200%201%207.25%207h1a.75.75%200%200%201%20.75.75v2.75h.25a.75.75%200%200%201%200%201.5h-2a.75.75%200%200%201%200-1.5h.25v-2h-.25a.75.75%200%200%201-.75-.75M8%206a1%201%200%201%201%200-2%201%201%200%200%201%200%202%22/%3E%3C/svg%3E');--md-admonition-icon--tip:url('data:image/svg+xml;charset=utf-8,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20viewBox%3D%220%200%2016%2016%22%3E%3Cpath%20d%3D%22M3.499.75a.75.75%200%200%201%201.5%200v.996C5.9%202.903%206.793%203.65%207.662%204.376l.24.202c-.036-.694.055-1.422.426-2.163C9.1.873%2010.794-.045%2012.622.26%2014.408.558%2016%201.94%2016%204.25c0%201.278-.954%202.575-2.44%202.734l.146.508.065.22c.203.701.412%201.455.476%202.226.142%201.707-.4%203.03-1.487%203.898C11.714%2014.671%2010.27%2015%208.75%2015h-6a.75.75%200%200%201%200-1.5h1.376a4.5%204.5%200%200%201-.563-1.191%203.84%203.84%200%200%201-.05-2.063%204.65%204.65%200%200%201-2.025-.293.75.75%200%200%201%20.525-1.406c1.357.507%202.376-.006%202.698-.318l.009-.01a.747.747%200%200%201%201.06%200%20.75.75%200%200%201-.012%201.074c-.912.92-.992%201.835-.768%202.586.221.74.745%201.337%201.196%201.621H8.75c1.343%200%202.398-.296%203.074-.836.635-.507%201.036-1.31.928-2.602-.05-.603-.216-1.224-.422-1.93l-.064-.221c-.12-.407-.246-.84-.353-1.29a2.4%202.4%200%200%201-.507-.441%203.1%203.1%200%200%201-.633-1.248.75.75%200%200%201%201.455-.364c.046.185.144.436.31.627.146.168.353.305.712.305.738%200%201.25-.615%201.25-1.25%200-1.47-.95-2.315-2.123-2.51-1.172-.196-2.227.387-2.706%201.345-.46.92-.27%201.774.019%203.062l.042.19.01.05c.348.443.666.949.94%201.553a.75.75%200%201%201-1.365.62c-.553-1.217-1.32-1.94-2.3-2.768L6.7%205.527c-.814-.68-1.75-1.462-2.692-2.619a3.7%203.7%200%200%200-1.023.88c-.406.495-.663%201.036-.722%201.508.116.122.306.21.591.239.388.038.797-.06%201.032-.19a.75.75%200%200%201%20.728%201.31c-.515.287-1.23.439-1.906.373-.682-.067-1.473-.38-1.879-1.193L.75%205.677V5.5c0-.984.48-1.94%201.077-2.664.46-.559%201.05-1.055%201.673-1.353z%22/%3E%3C/svg%3E');--md-admonition-icon--success:url('data:image/svg+xml;charset=utf-8,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20viewBox%3D%220%200%2016%2016%22%3E%3Cpath%20d%3D%22M13.78%204.22a.75.75%200%200%201%200%201.06l-7.25%207.25a.75.75%200%200%201-1.06%200L2.22%209.28a.75.75%200%200%201%20.018-1.042.75.75%200%200%201%201.042-.018L6%2010.94l6.72-6.72a.75.75%200%200%201%201.06%200%22/%3E%3C/svg%3E');--md-admonition-icon--question:url('data:image/svg+xml;charset=utf-8,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20viewBox%3D%220%200%2016%2016%22%3E%3Cpath%20d%3D%22M0%208a8%208%200%201%201%2016%200A8%208%200%200%201%200%208m8-6.5a6.5%206.5%200%201%200%200%2013%206.5%206.5%200%200%200%200-13M6.92%206.085h.001a.749.749%200%201%201-1.342-.67c.169-.339.436-.701.849-.977C6.845%204.16%207.369%204%208%204a2.76%202.76%200%200%201%201.637.525c.503.377.863.965.863%201.725%200%20.448-.115.83-.329%201.15-.205.307-.47.513-.692.662-.109.072-.22.138-.313.195l-.006.004a6%206%200%200%200-.26.16%201%201%200%200%200-.276.245.75.75%200%200%201-1.248-.832c.184-.264.42-.489.692-.661q.154-.1.313-.195l.007-.004c.1-.061.182-.11.258-.161a1%201%200%200%200%20.277-.245C8.96%206.514%209%206.427%209%206.25a.61.61%200%200%200-.262-.525A1.27%201.27%200%200%200%208%205.5c-.369%200-.595.09-.74.187a1%201%200%200%200-.34.398M9%2011a1%201%200%201%201-2%200%201%201%200%200%201%202%200%22/%3E%3C/svg%3E');--md-admonition-icon--warning:url('data:image/svg+xml;charset=utf-8,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20viewBox%3D%220%200%2016%2016%22%3E%3Cpath%20d%3D%22M6.457%201.047c.659-1.234%202.427-1.234%203.086%200l6.082%2011.378A1.75%201.75%200%200%201%2014.082%2015H1.918a1.75%201.75%200%200%201-1.543-2.575Zm1.763.707a.25.25%200%200%200-.44%200L1.698%2013.132a.25.25%200%200%200%20.22.368h12.164a.25.25%200%200%200%20.22-.368Zm.53%203.996v2.5a.75.75%200%200%201-1.5%200v-2.5a.75.75%200%200%201%201.5%200M9%2011a1%201%200%201%201-2%200%201%201%200%200%201%202%200%22/%3E%3C/svg%3E');--md-admonition-icon--failure:url('data:image/svg+xml;charset=utf-8,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20viewBox%3D%220%200%2016%2016%22%3E%3Cpath%20d%3D%22M2.344%202.343za8%208%200%200%201%2011.314%2011.314A8.002%208.002%200%200%201%20.234%2010.089a8%208%200%200%201%202.11-7.746m1.06%2010.253a6.5%206.5%200%201%200%209.108-9.275%206.5%206.5%200%200%200-9.108%209.275M6.03%204.97%208%206.94l1.97-1.97a.749.749%200%200%201%201.275.326.75.75%200%200%201-.215.734L9.06%208l1.97%201.97a.749.749%200%200%201-.326%201.275.75.75%200%200%201-.734-.215L8%209.06l-1.97%201.97a.749.749%200%200%201-1.275-.326.75.75%200%200%201%20.215-.734L6.94%208%204.97%206.03a.75.75%200%200%201%20.018-1.042.75.75%200%200%201%201.042-.018%22/%3E%3C/svg%3E');--md-admonition-icon--danger:url('data:image/svg+xml;charset=utf-8,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20viewBox%3D%220%200%2016%2016%22%3E%3Cpath%20d%3D%22M9.504.43a1.516%201.516%200%200%201%202.437%201.713L10.415%205.5h2.123c1.57%200%202.346%201.909%201.22%203.004l-7.34%207.142a1.25%201.25%200%200%201-.871.354h-.302a1.25%201.25%200%200%201-1.157-1.723L5.633%2010.5H3.462c-1.57%200-2.346-1.909-1.22-3.004zm1.047%201.074L3.286%208.571A.25.25%200%200%200%203.462%209H6.75a.75.75%200%200%201%20.694%201.034l-1.713%204.188%206.982-6.793A.25.25%200%200%200%2012.538%207H9.25a.75.75%200%200%201-.683-1.06l2.008-4.418.003-.006-.004-.009-.006-.006-.008-.001q-.005%200-.009.004%22/%3E%3C/svg%3E');--md-admonition-icon--bug:url('data:image/svg+xml;charset=utf-8,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20viewBox%3D%220%200%2016%2016%22%3E%3Cpath%20d%3D%22M4.72.22a.75.75%200%200%201%201.06%200l1%20.999a3.5%203.5%200%200%201%202.441%200l.999-1a.748.748%200%200%201%201.265.332.75.75%200%200%201-.205.729l-.775.776c.616.63.995%201.493.995%202.444v.327q0%20.15-.025.292c.408.14.764.392%201.029.722l1.968-.787a.75.75%200%200%201%20.556%201.392L13%207.258V9h2.25a.75.75%200%200%201%200%201.5H13v.5q-.002.615-.141%201.186l2.17.868a.75.75%200%200%201-.557%201.392l-2.184-.873A5%205%200%200%201%208%2016a5%205%200%200%201-4.288-2.427l-2.183.873a.75.75%200%200%201-.558-1.392l2.17-.868A5%205%200%200%201%203%2011v-.5H.75a.75.75%200%200%201%200-1.5H3V7.258L.971%206.446a.75.75%200%200%201%20.558-1.392l1.967.787c.265-.33.62-.583%201.03-.722a1.7%201.7%200%200%201-.026-.292V4.5c0-.951.38-1.814.995-2.444L4.72%201.28a.75.75%200%200%201%200-1.06m.53%206.28a.75.75%200%200%200-.75.75V11a3.5%203.5%200%201%200%207%200V7.25a.75.75%200%200%200-.75-.75ZM6.173%205h3.654A.17.17%200%200%200%2010%204.827V4.5a2%202%200%201%200-4%200v.327c0%20.096.077.173.173.173%22/%3E%3C/svg%3E');--md-admonition-icon--example:url('data:image/svg+xml;charset=utf-8,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20viewBox%3D%220%200%2016%2016%22%3E%3Cpath%20d%3D%22M5%205.782V2.5h-.25a.75.75%200%200%201%200-1.5h6.5a.75.75%200%200%201%200%201.5H11v3.282l3.666%205.76C15.619%2013.04%2014.543%2015%2012.767%2015H3.233c-1.776%200-2.852-1.96-1.899-3.458Zm-2.4%206.565a.75.75%200%200%200%20.633%201.153h9.534a.75.75%200%200%200%20.633-1.153L12.225%2010.5h-8.45ZM9.5%202.5h-3V6c0%20.143-.04.283-.117.403L4.73%209h6.54L9.617%206.403A.75.75%200%200%201%209.5%206Z%22/%3E%3C/svg%3E');--md-admonition-icon--quote:url('data:image/svg+xml;charset=utf-8,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20viewBox%3D%220%200%2016%2016%22%3E%3Cpath%20d%3D%22M1.75%202.5h10.5a.75.75%200%200%201%200%201.5H1.75a.75.75%200%200%201%200-1.5m4%205h8.5a.75.75%200%200%201%200%201.5h-8.5a.75.75%200%200%201%200-1.5m0%205h8.5a.75.75%200%200%201%200%201.5h-8.5a.75.75%200%200%201%200-1.5M2.5%207.75v6a.75.75%200%200%201-1.5%200v-6a.75.75%200%200%201%201.5%200%22/%3E%3C/svg%3E');}</style>
+
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CJetBrains+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"JetBrains Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL(".",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+    
+  </head>
+  
+  
+    
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="#3498db" data-md-color-accent="light_blue">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#command-line-mode" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="." title="GPUMDkit Tutorial" class="md-header__button md-logo" aria-label="GPUMDkit Tutorial" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            GPUMDkit Tutorial
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Plot Scripts
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+    
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/zhyan0603/GPUMDkit" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 6.7.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2024 Fonticons, Inc.--><path d="M439.55 236.05 244 40.45a28.87 28.87 0 0 0-40.81 0l-40.66 40.63 51.52 51.52c27.06-9.14 52.68 16.77 43.39 43.68l49.66 49.66c34.23-11.8 61.18 31 35.47 56.69-26.49 26.49-70.21-2.87-56-37.34L240.22 199v121.85c25.3 12.54 22.26 41.85 9.08 55a34.34 34.34 0 0 1-48.55 0c-17.57-17.6-11.07-46.91 11.25-56v-123c-20.8-8.51-24.6-30.74-18.64-45L142.57 101 8.45 235.14a28.86 28.86 0 0 0 0 40.81l195.61 195.6a28.86 28.86 0 0 0 40.8 0l194.69-194.69a28.86 28.86 0 0 0 0-40.81"/></svg>
+  </div>
+  <div class="md-source__repository">
+    zhyan0603/GPUMDkit
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="." title="GPUMDkit Tutorial" class="md-nav__button md-logo" aria-label="GPUMDkit Tutorial" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    GPUMDkit Tutorial
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/zhyan0603/GPUMDkit" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 6.7.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2024 Fonticons, Inc.--><path d="M439.55 236.05 244 40.45a28.87 28.87 0 0 0-40.81 0l-40.66 40.63 51.52 51.52c27.06-9.14 52.68 16.77 43.39 43.68l49.66 49.66c34.23-11.8 61.18 31 35.47 56.69-26.49 26.49-70.21-2.87-56-37.34L240.22 199v121.85c25.3 12.54 22.26 41.85 9.08 55a34.34 34.34 0 0 1-48.55 0c-17.57-17.6-11.07-46.91 11.25-56v-123c-20.8-8.51-24.6-30.74-18.64-45L142.57 101 8.45 235.14a28.86 28.86 0 0 0 0 40.81l195.61 195.6a28.86 28.86 0 0 0 40.8 0l194.69-194.69a28.86 28.86 0 0 0 0-40.81"/></svg>
+  </div>
+  <div class="md-source__repository">
+    zhyan0603/GPUMDkit
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="tutorials.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Home
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    Plot Scripts
+    
+  </span>
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="plot_scripts.html" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    Plot Scripts
+    
+  </span>
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#command-line-mode" class="md-nav__link">
+    <span class="md-ellipsis">
+      Command-Line Mode
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#script-categories" class="md-nav__link">
+    <span class="md-ellipsis">
+      Script Categories
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Script Categories">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#nep-training-prediction" class="md-nav__link">
+    <span class="md-ellipsis">
+      🔬 NEP Training &amp; Prediction
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="🔬 NEP Training &amp; Prediction">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#plt_trainpy" class="md-nav__link">
+    <span class="md-ellipsis">
+      plt_train.py
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#plt_predictionpy" class="md-nav__link">
+    <span class="md-ellipsis">
+      plt_prediction.py
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#plt_train_testpy" class="md-nav__link">
+    <span class="md-ellipsis">
+      plt_train_test.py
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#plt_parity_densitypy" class="md-nav__link">
+    <span class="md-ellipsis">
+      plt_parity_density.py
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#plt_force_errorspy" class="md-nav__link">
+    <span class="md-ellipsis">
+      plt_force_errors.py
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#plt_learning_ratepy" class="md-nav__link">
+    <span class="md-ellipsis">
+      plt_learning_rate.py
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#plt_nep_restartpy" class="md-nav__link">
+    <span class="md-ellipsis">
+      plt_nep_restart.py
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#thermodynamic-properties" class="md-nav__link">
+    <span class="md-ellipsis">
+      🌡️ Thermodynamic Properties
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="🌡️ Thermodynamic Properties">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#plt_thermopy" class="md-nav__link">
+    <span class="md-ellipsis">
+      plt_thermo.py
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#plt_thermo2py-plt_thermo3py" class="md-nav__link">
+    <span class="md-ellipsis">
+      plt_thermo2.py &amp; plt_thermo3.py
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#transport-properties" class="md-nav__link">
+    <span class="md-ellipsis">
+      🔄 Transport Properties
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="🔄 Transport Properties">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#plt_msdpy" class="md-nav__link">
+    <span class="md-ellipsis">
+      plt_msd.py
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#plt_msd_allpy" class="md-nav__link">
+    <span class="md-ellipsis">
+      plt_msd_all.py
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#plt_msd_convergence_checkpy" class="md-nav__link">
+    <span class="md-ellipsis">
+      plt_msd_convergence_check.py
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#plt_sdcpy" class="md-nav__link">
+    <span class="md-ellipsis">
+      plt_sdc.py
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#plt_arrhenius_dpy" class="md-nav__link">
+    <span class="md-ellipsis">
+      plt_arrhenius_d.py
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#plt_arrhenius_sigmapy" class="md-nav__link">
+    <span class="md-ellipsis">
+      plt_arrhenius_sigma.py
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#plt_emdpy" class="md-nav__link">
+    <span class="md-ellipsis">
+      plt_emd.py
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#plt_nemdpy" class="md-nav__link">
+    <span class="md-ellipsis">
+      plt_nemd.py
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#plt_hnemdpy" class="md-nav__link">
+    <span class="md-ellipsis">
+      plt_hnemd.py
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#structural-analysis" class="md-nav__link">
+    <span class="md-ellipsis">
+      📐 Structural Analysis
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="📐 Structural Analysis">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#plt_rdfpy" class="md-nav__link">
+    <span class="md-ellipsis">
+      plt_rdf.py
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#plt_chargepy" class="md-nav__link">
+    <span class="md-ellipsis">
+      plt_charge.py
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#extra-analysis" class="md-nav__link">
+    <span class="md-ellipsis">
+      🧬 Extra Analysis
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="🧬 Extra Analysis">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#plt_descriptorspy" class="md-nav__link">
+    <span class="md-ellipsis">
+      plt_descriptors.py
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#plt_descriptors_comparepy" class="md-nav__link">
+    <span class="md-ellipsis">
+      plt_descriptors_compare.py
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#plt_dimerpy" class="md-nav__link">
+    <span class="md-ellipsis">
+      plt_dimer.py
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#plt_doaspy" class="md-nav__link">
+    <span class="md-ellipsis">
+      plt_doas.py
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#plt_net_forcepy" class="md-nav__link">
+    <span class="md-ellipsis">
+      plt_net_force.py
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#quick-reference-table" class="md-nav__link">
+    <span class="md-ellipsis">
+      Quick Reference Table
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#contributing" class="md-nav__link">
+    <span class="md-ellipsis">
+      Contributing
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="format_conversion.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Format Conversion
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="sample_structures.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Sample Structures
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="workflow.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Workflow
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="calculators.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Calculators
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="analyzer.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Analyzers
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="custom_commands.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Custom Commands
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="workflow_active_learning.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Active Learning Workflow
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="contributing.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Contributing
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#command-line-mode" class="md-nav__link">
+    <span class="md-ellipsis">
+      Command-Line Mode
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#script-categories" class="md-nav__link">
+    <span class="md-ellipsis">
+      Script Categories
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Script Categories">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#nep-training-prediction" class="md-nav__link">
+    <span class="md-ellipsis">
+      🔬 NEP Training &amp; Prediction
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="🔬 NEP Training &amp; Prediction">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#plt_trainpy" class="md-nav__link">
+    <span class="md-ellipsis">
+      plt_train.py
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#plt_predictionpy" class="md-nav__link">
+    <span class="md-ellipsis">
+      plt_prediction.py
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#plt_train_testpy" class="md-nav__link">
+    <span class="md-ellipsis">
+      plt_train_test.py
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#plt_parity_densitypy" class="md-nav__link">
+    <span class="md-ellipsis">
+      plt_parity_density.py
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#plt_force_errorspy" class="md-nav__link">
+    <span class="md-ellipsis">
+      plt_force_errors.py
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#plt_learning_ratepy" class="md-nav__link">
+    <span class="md-ellipsis">
+      plt_learning_rate.py
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#plt_nep_restartpy" class="md-nav__link">
+    <span class="md-ellipsis">
+      plt_nep_restart.py
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#thermodynamic-properties" class="md-nav__link">
+    <span class="md-ellipsis">
+      🌡️ Thermodynamic Properties
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="🌡️ Thermodynamic Properties">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#plt_thermopy" class="md-nav__link">
+    <span class="md-ellipsis">
+      plt_thermo.py
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#plt_thermo2py-plt_thermo3py" class="md-nav__link">
+    <span class="md-ellipsis">
+      plt_thermo2.py &amp; plt_thermo3.py
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#transport-properties" class="md-nav__link">
+    <span class="md-ellipsis">
+      🔄 Transport Properties
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="🔄 Transport Properties">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#plt_msdpy" class="md-nav__link">
+    <span class="md-ellipsis">
+      plt_msd.py
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#plt_msd_allpy" class="md-nav__link">
+    <span class="md-ellipsis">
+      plt_msd_all.py
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#plt_msd_convergence_checkpy" class="md-nav__link">
+    <span class="md-ellipsis">
+      plt_msd_convergence_check.py
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#plt_sdcpy" class="md-nav__link">
+    <span class="md-ellipsis">
+      plt_sdc.py
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#plt_arrhenius_dpy" class="md-nav__link">
+    <span class="md-ellipsis">
+      plt_arrhenius_d.py
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#plt_arrhenius_sigmapy" class="md-nav__link">
+    <span class="md-ellipsis">
+      plt_arrhenius_sigma.py
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#plt_emdpy" class="md-nav__link">
+    <span class="md-ellipsis">
+      plt_emd.py
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#plt_nemdpy" class="md-nav__link">
+    <span class="md-ellipsis">
+      plt_nemd.py
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#plt_hnemdpy" class="md-nav__link">
+    <span class="md-ellipsis">
+      plt_hnemd.py
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#structural-analysis" class="md-nav__link">
+    <span class="md-ellipsis">
+      📐 Structural Analysis
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="📐 Structural Analysis">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#plt_rdfpy" class="md-nav__link">
+    <span class="md-ellipsis">
+      plt_rdf.py
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#plt_chargepy" class="md-nav__link">
+    <span class="md-ellipsis">
+      plt_charge.py
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#extra-analysis" class="md-nav__link">
+    <span class="md-ellipsis">
+      🧬 Extra Analysis
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="🧬 Extra Analysis">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#plt_descriptorspy" class="md-nav__link">
+    <span class="md-ellipsis">
+      plt_descriptors.py
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#plt_descriptors_comparepy" class="md-nav__link">
+    <span class="md-ellipsis">
+      plt_descriptors_compare.py
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#plt_dimerpy" class="md-nav__link">
+    <span class="md-ellipsis">
+      plt_dimer.py
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#plt_doaspy" class="md-nav__link">
+    <span class="md-ellipsis">
+      plt_doas.py
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#plt_net_forcepy" class="md-nav__link">
+    <span class="md-ellipsis">
+      plt_net_force.py
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#quick-reference-table" class="md-nav__link">
+    <span class="md-ellipsis">
+      Quick Reference Table
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#contributing" class="md-nav__link">
+    <span class="md-ellipsis">
+      Contributing
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+  
+  
+
+
+<div align="center">
+  <h1>📊 Plot Scripts</h1>
+    <p style="text-align: justify;">This directory (Scripts/plt_scripts/) contains Python scripts for comprehensive visualization of data generated by <strong>GPUMD</strong> and <strong>NEP</strong>. These plotting tools help analyze molecular dynamics simulations, NEP training results, and various material properties.</p>
+</div>
+
+<p><strong>Script Location:</strong> <code>Scripts/plt_scripts/</code></p>
+<p>GPUMDkit provides comprehensive visualization tools for GPUMD and NEP data.</p>
+<h2 id="command-line-mode">Command-Line Mode</h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>gpumdkit.sh<span class="w"> </span>-plt<span class="w"> </span>&lt;plot_type&gt;<span class="w"> </span><span class="o">[</span>options<span class="o">]</span>
+</code></pre></div>
+<p>For a complete list:
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>gpumdkit.sh<span class="w"> </span>-plt<span class="w"> </span>-h
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>+<span class="o">=====================================================================================================</span>+
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="p">|</span><span class="w">                              </span>GPUMDkit<span class="w"> </span><span class="m">1</span>.4.2<span class="w"> </span><span class="o">(</span>dev<span class="o">)</span><span class="w"> </span><span class="o">(</span><span class="m">2025</span>-12-17<span class="o">)</span><span class="w"> </span>Plotting<span class="w"> </span>Usage<span class="w">                       </span><span class="p">|</span>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>+<span class="o">===============================================</span><span class="w"> </span>Plot<span class="w"> </span><span class="nv">Types</span><span class="w"> </span><span class="o">==========================================</span>+
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a><span class="p">|</span><span class="w"> </span>thermo<span class="w">          </span>Plot<span class="w"> </span>thermo<span class="w"> </span>info<span class="w">                   </span><span class="p">|</span><span class="w"> </span>train<span class="w">          </span>Plot<span class="w"> </span>NEP<span class="w"> </span>train<span class="w"> </span>results<span class="w">          </span><span class="p">|</span>
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="p">|</span><span class="w"> </span>prediction<span class="w">      </span>Plot<span class="w"> </span>NEP<span class="w"> </span>prediction<span class="w"> </span>results<span class="w">        </span><span class="p">|</span><span class="w"> </span>train_test<span class="w">     </span>Plot<span class="w"> </span>NEP<span class="w"> </span>train<span class="w"> </span>and<span class="w"> </span><span class="nb">test</span><span class="w"> </span>results<span class="w"> </span><span class="p">|</span>
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a><span class="p">|</span><span class="w"> </span>msd<span class="w">             </span>Plot<span class="w"> </span>mean<span class="w"> </span>square<span class="w"> </span>displacement<span class="w">      </span><span class="p">|</span><span class="w"> </span>msd_conv<span class="w">       </span>Plot<span class="w"> </span>the<span class="w"> </span>convergence<span class="w"> </span>of<span class="w"> </span>MSD<span class="w">     </span><span class="p">|</span>
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a><span class="p">|</span><span class="w"> </span>msd_all<span class="w">         </span>Plot<span class="w"> </span>MSD<span class="w"> </span>of<span class="w"> </span>all<span class="w"> </span>species<span class="w">            </span><span class="p">|</span><span class="w"> </span>sdc<span class="w">            </span>Plot<span class="w"> </span>self<span class="w"> </span>diffusion<span class="w"> </span>coefficient<span class="w"> </span><span class="p">|</span>
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a><span class="p">|</span><span class="w"> </span>rdf<span class="w">             </span>Plot<span class="w"> </span>radial<span class="w"> </span>distribution<span class="w"> </span><span class="k">function</span><span class="w">  </span><span class="p">|</span><span class="w"> </span>vac<span class="w">            </span>Plot<span class="w"> </span>velocity<span class="w"> </span>autocorrelation<span class="w">   </span><span class="p">|</span>
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a><span class="p">|</span><span class="w"> </span>restart<span class="w">         </span>Plot<span class="w"> </span>parameters<span class="w"> </span><span class="k">in</span><span class="w"> </span>nep.restart<span class="w">     </span><span class="p">|</span><span class="w"> </span>dimer<span class="w">          </span>Plot<span class="w"> </span>dimer<span class="w"> </span>plot<span class="w">                 </span><span class="p">|</span>
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a><span class="p">|</span><span class="w"> </span>force_errors<span class="w">    </span>Plot<span class="w"> </span>force<span class="w"> </span>errors<span class="w">                  </span><span class="p">|</span><span class="w"> </span>des<span class="w">            </span>Plot<span class="w"> </span>descriptors<span class="w">                </span><span class="p">|</span>
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a><span class="p">|</span><span class="w"> </span>charge<span class="w">          </span>Plot<span class="w"> </span>charge<span class="w"> </span>distribution<span class="w">           </span><span class="p">|</span><span class="w"> </span>lr<span class="w">             </span>Plot<span class="w"> </span>learning<span class="w"> </span>rate<span class="w">              </span><span class="p">|</span>
+<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a><span class="p">|</span><span class="w"> </span>doas<span class="w">            </span>Plot<span class="w"> </span>density<span class="w"> </span>of<span class="w"> </span>atomistic<span class="w"> </span>states<span class="w">   </span><span class="p">|</span><span class="w"> </span>arrhenius_d<span class="w">    </span>Plot<span class="w"> </span>Arrhenius<span class="w"> </span>diffusivity<span class="w">      </span><span class="p">|</span>
+<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a><span class="p">|</span><span class="w"> </span>arrhenius_sigma<span class="w"> </span>Plot<span class="w"> </span>Arrhenius<span class="w"> </span>sigma<span class="w">               </span><span class="p">|</span><span class="w"> </span>net_force<span class="w">      </span>Plot<span class="w"> </span>net<span class="w"> </span>force<span class="w"> </span>distribution<span class="w">     </span><span class="p">|</span>
+<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a><span class="p">|</span><span class="w"> </span>emd<span class="w">             </span>Plot<span class="w"> </span>EMD<span class="w"> </span>results<span class="w">                   </span><span class="p">|</span><span class="w"> </span>nemd<span class="w">           </span>Plot<span class="w"> </span>NEMD<span class="w"> </span>results<span class="w">               </span><span class="p">|</span>
+<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a><span class="p">|</span><span class="w"> </span>hnemd<span class="w">           </span>Plot<span class="w"> </span>HNEMD<span class="w"> </span>results<span class="w">                 </span><span class="p">|</span><span class="w">                                                </span><span class="p">|</span>
+<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a>+<span class="o">=====================================================================================================</span>+
+<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a><span class="p">|</span><span class="w"> </span>For<span class="w"> </span>detailed<span class="w"> </span>usage<span class="w"> </span>and<span class="w"> </span>examples,<span class="w"> </span>use:<span class="w"> </span>gpumdkit.sh<span class="w"> </span>-plt<span class="w"> </span>&lt;plot_type&gt;<span class="w"> </span>-h<span class="w">                               </span><span class="p">|</span>
+<a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a>+<span class="o">=====================================================================================================</span>+
+<a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a><span class="w"> </span>See<span class="w"> </span>the<span class="w"> </span>codes<span class="w"> </span><span class="k">in</span><span class="w"> </span>plt_scripts<span class="w"> </span><span class="k">for</span><span class="w"> </span>more<span class="w"> </span>details
+<a id="__codelineno-1-22" name="__codelineno-1-22" href="#__codelineno-1-22"></a><span class="w"> </span>Code<span class="w"> </span>path:<span class="w"> </span>/d/Westlake/GPUMD/Gpumdkit/Scripts/plt_scripts
+</code></pre></div></p>
+<hr />
+<h2 id="script-categories">Script Categories</h2>
+<h3 id="nep-training-prediction">🔬 NEP Training &amp; Prediction</h3>
+<p>Scripts for monitoring and analyzing NEP model training and predictions.</p>
+<h4 id="plt_trainpy">plt_train.py</h4>
+<p>Visualizes NEP training progress including loss curves, RMSE evolution, and parity plots comparing DFT vs NEP predictions for energy, forces, and stresses.</p>
+<p><strong>Input File:</strong> <code>loss.out</code>, <code>energy_train.out</code>, <code>force_train.out</code>, <code>virial_train.out</code></p>
+<p><strong>Usage:</strong>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>gpumdkit.sh<span class="w"> </span>-plt<span class="w"> </span>train
+</code></pre></div></p>
+<div align="center">
+    <img src="../Gallery/train.png" alt="NEP training results" width="75%" />
+</div>
+
+<hr />
+<h4 id="plt_predictionpy">plt_prediction.py</h4>
+<p>Visualizes NEP prediction results.</p>
+<p><strong>Input Files:</strong> <code>energy_test.out</code>, <code>force_test.out</code>, <code>virial_test.out</code></p>
+<p><strong>Usage:</strong></p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>gpumdkit.sh<span class="w"> </span>-plt<span class="w"> </span>prediction
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>gpumdkit.sh<span class="w"> </span>-plt<span class="w"> </span><span class="nb">test</span><span class="w">             </span><span class="c1"># Alternative command</span>
+</code></pre></div>
+<p><img alt="" src="../Gallery/prediction.png" /></p>
+<hr />
+<h4 id="plt_train_testpy">plt_train_test.py</h4>
+<p>Creates combined parity plots for both training and testing datasets.</p>
+<p><strong>Input Files:</strong> <code>*_train.out</code>, <code>*_test.out</code></p>
+<p><strong>Usage:</strong></p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>gpumdkit.sh<span class="w"> </span>-plt<span class="w"> </span>train_test<span class="w">  </span>
+</code></pre></div>
+<p><img alt="" src="../Gallery/train_test.png" /></p>
+<hr />
+<h4 id="plt_parity_densitypy">plt_parity_density.py</h4>
+<p>Generates density-based parity plots for energies, forces, and stresses, useful for large datasets.</p>
+<p><strong>Input Files:</strong> <code>energy_train.out</code>, <code>force_train.out</code>, <code>virial_train.out</code></p>
+<p><strong>Usage:</strong></p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>gpumdkit.sh<span class="w"> </span>-plt<span class="w"> </span>parity_density
+</code></pre></div>
+<p><img alt="" src="../../docs/Gallery/parity_plot_density.png" /></p>
+<hr />
+<h4 id="plt_force_errorspy">plt_force_errors.py</h4>
+<p>Plots force error evaluation metrics as proposed in <a href="https://doi.org/10.1038/s41524-023-01123-3">Liu et al.</a>.</p>
+<p><strong>Input File:</strong> <code>force_train.out</code></p>
+<p><strong>Usage:</strong>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>gpumdkit.sh<span class="w"> </span>-plt<span class="w"> </span>force_errors
+</code></pre></div></p>
+<p><strong>Metrics Displayed:</strong>
+- Force magnitude errors (delta_F)
+- Force angle errors  (delta_theta)
+- Distribution of errors</p>
+<p><img alt="" src="../Gallery/force_errors.png" /></p>
+<hr />
+<h4 id="plt_learning_ratepy">plt_learning_rate.py</h4>
+<p>Visualizes learning rate during <code>gnep</code> training.</p>
+<p><strong>Input File:</strong> <code>loss.out</code> </p>
+<p><strong>Usage:</strong></p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>gpumdkit.sh<span class="w"> </span>-plt<span class="w"> </span>lr<span class="w"> </span>
+</code></pre></div>
+<p><strong>Use Case:</strong> Monitor learning rate decay. </p>
+<p><strong>Note:</strong> this is only for the <code>gnep</code> training process.</p>
+<hr />
+<h4 id="plt_nep_restartpy">plt_nep_restart.py</h4>
+<p>Visualizes parameters stored in <code>nep.restart</code> file.</p>
+<p><strong>Input File:</strong> <code>nep.restart</code></p>
+<p><strong>Usage:</strong></p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>gpumdkit.sh<span class="w"> </span>-plt<span class="w"> </span>restart<span class="w">    </span>
+</code></pre></div>
+<div align="center">
+    <img src="../Gallery/nep_restart.png" alt="NEP restart parameters" width="60%" />
+</div>
+
+<hr />
+<h3 id="thermodynamic-properties">🌡️ Thermodynamic Properties</h3>
+<p>Scripts for visualizing thermo info from GPUMD simulations.</p>
+<h4 id="plt_thermopy">plt_thermo.py</h4>
+<p>Primary script for comprehensive thermodynamic property visualization.</p>
+<p><strong>Input File:</strong> <code>thermo.out</code></p>
+<p><strong>Usage:</strong></p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>gpumdkit.sh<span class="w"> </span>-plt<span class="w"> </span>thermo<span class="w">  </span>
+</code></pre></div>
+<p><img alt="" src="../Gallery/thermo.png" /></p>
+<hr />
+<h4 id="plt_thermo2py-plt_thermo3py">plt_thermo2.py &amp; plt_thermo3.py</h4>
+<p>Alternative thermodynamic visualization (different styles).</p>
+<p><strong>Usage:</strong></p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a>gpumdkit.sh<span class="w"> </span>-plt<span class="w"> </span>thermo2<span class="w"> </span>
+<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a>gpumdkit.sh<span class="w"> </span>-plt<span class="w"> </span>thermo3
+</code></pre></div>
+<hr />
+<h3 id="transport-properties">🔄 Transport Properties</h3>
+<p>Scripts for analyzing diffusion, ionic conductivity, and thermal transport, etc.</p>
+<h4 id="plt_msdpy">plt_msd.py</h4>
+<p>Plots mean square displacement (MSD) for all directions.</p>
+<p><strong>Input File:</strong> <code>msd.out</code></p>
+<p><strong>Usage:</strong></p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a>gpumdkit.sh<span class="w"> </span>-plt<span class="w"> </span>msd
+</code></pre></div>
+<div align="center">
+    <img src="../Gallery/msd.png" alt="Mean square displacement" width="45%" />
+</div>
+
+<hr />
+<h4 id="plt_msd_allpy">plt_msd_all.py</h4>
+<p>Plots MSD for all atomic species separately when using <code>all_groups</code> in GPUMD.</p>
+<p><strong>Input File:</strong> <code>msd.out</code> (computed with <code>all_groups</code> option)</p>
+<p><strong>Usage:</strong>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a>gpumdkit.sh<span class="w"> </span>-plt<span class="w"> </span>msd_all<span class="w"> </span>&lt;species1&gt;<span class="w"> </span>&lt;species2&gt;<span class="w"> </span>...
+<a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a>gpumdkit.sh<span class="w"> </span>-plt<span class="w"> </span>msd_all<span class="w"> </span>Li<span class="w"> </span>P<span class="w"> </span>S
+</code></pre></div></p>
+<p><strong>Requirements:</strong> Must use <code>all_groups</code> in the <code>compute_msd</code> command in <code>run.in</code>.</p>
+<div align="center">
+    <img src="../Gallery/msd_all.png" alt="MSD for all species" width="45%" />
+</div>
+
+<hr />
+<h4 id="plt_msd_convergence_checkpy">plt_msd_convergence_check.py</h4>
+<p>Checks convergence of MSD calculations across different time windows.</p>
+<p><strong>Input File:</strong> <code>msd.out</code> (computed with <code>save_every</code> option)</p>
+<p><strong>Usage:</strong></p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a>gpumdkit.sh<span class="w"> </span>-plt<span class="w"> </span>msd_conv
+</code></pre></div>
+<p><strong>Requirements:</strong> Use <code>save_every</code> in the <code>compute_msd</code> command.</p>
+<p><strong>Purpose:</strong> Verify MSD has converged sufficiently for accurate diffusion coefficient calculation.</p>
+<div align="center">
+    <img src="../Gallery/msd_convergence.png" alt="MSD convergence" width="45%" />
+</div>
+
+<hr />
+<h4 id="plt_sdcpy">plt_sdc.py</h4>
+<p>Plots self-diffusion coefficient (SDC) vs time.</p>
+<p><strong>Input File:</strong> <code>msd.out</code></p>
+<p><strong>Usage:</strong></p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a>gpumdkit.sh<span class="w"> </span>-plt<span class="w"> </span>sdc
+</code></pre></div>
+<div align="center">
+    <img src="../Gallery/sdc.png" alt="Self-diffusion coefficient" width="45%" />
+</div>
+
+<hr />
+<h4 id="plt_arrhenius_dpy">plt_arrhenius_d.py</h4>
+<p>Creates Arrhenius plot for diffusivity (log10 D vs 1000/T).</p>
+<p><strong>Input Files:</strong> <code>*K/msd.out</code> files</p>
+<p><strong>Usage:</strong></p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a>gpumdkit.sh<span class="w"> </span>-plt<span class="w"> </span>arrhenius_d
+<a id="__codelineno-15-2" name="__codelineno-15-2" href="#__codelineno-15-2"></a>gpumdkit.sh<span class="w"> </span>-plt<span class="w"> </span>D<span class="w">  </span><span class="c1"># Alternative command</span>
+</code></pre></div>
+<div align="center">
+    <img src="../Gallery/Arrhenius_D.png" alt="Arrhenius D" width="55%" />
+</div>
+
+<p><strong>Output:</strong></p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a>T: 300K, D_total: 1.001e-07 cm2/s
+<a id="__codelineno-16-2" name="__codelineno-16-2" href="#__codelineno-16-2"></a>T: 350K, D_total: 4.184e-07 cm2/s
+<a id="__codelineno-16-3" name="__codelineno-16-3" href="#__codelineno-16-3"></a>T: 400K, D_total: 1.027e-06 cm2/s
+<a id="__codelineno-16-4" name="__codelineno-16-4" href="#__codelineno-16-4"></a>T: 450K, D_total: 2.069e-06 cm2/s
+<a id="__codelineno-16-5" name="__codelineno-16-5" href="#__codelineno-16-5"></a>T: 500K, D_total: 3.563e-06 cm2/s
+<a id="__codelineno-16-6" name="__codelineno-16-6" href="#__codelineno-16-6"></a>Ea: 0.230 eV
+</code></pre></div>
+<hr />
+<h4 id="plt_arrhenius_sigmapy">plt_arrhenius_sigma.py</h4>
+<p>Creates Arrhenius plot for ionic conductivity (ln(σ·T) vs 1000/T).</p>
+<p><strong>Input Files:</strong> <code>*K/{model.xyz, run.in, thermo.out, msd.out}</code></p>
+<p><strong>Usage:</strong></p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-17-1" name="__codelineno-17-1" href="#__codelineno-17-1"></a>gpumdkit.sh<span class="w"> </span>-plt<span class="w"> </span>arrhenius_sigma
+<a id="__codelineno-17-2" name="__codelineno-17-2" href="#__codelineno-17-2"></a>gpumdkit.sh<span class="w"> </span>-plt<span class="w"> </span>sigma<span class="w">         </span><span class="c1"># Alternative command</span>
+</code></pre></div>
+<div align="center">
+    <img src="../Gallery/Arrhenius_sigma.png" alt="Arrhenius sigma" width="55%" />
+</div>
+
+<p><strong>Output:</strong></p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-18-1" name="__codelineno-18-1" href="#__codelineno-18-1"></a>[Note] No run.in file found, assuming no replication
+<a id="__codelineno-18-2" name="__codelineno-18-2" href="#__codelineno-18-2"></a>
+<a id="__codelineno-18-3" name="__codelineno-18-3" href="#__codelineno-18-3"></a>Conductivity Data:
+<a id="__codelineno-18-4" name="__codelineno-18-4" href="#__codelineno-18-4"></a>T (K)  Sigma (S/cm)    Sigma·T (K·S/cm)
+<a id="__codelineno-18-5" name="__codelineno-18-5" href="#__codelineno-18-5"></a>------------------------------------
+<a id="__codelineno-18-6" name="__codelineno-18-6" href="#__codelineno-18-6"></a>300    1.141e-02       3.422e+00
+<a id="__codelineno-18-7" name="__codelineno-18-7" href="#__codelineno-18-7"></a>350    4.377e-02       1.532e+01
+<a id="__codelineno-18-8" name="__codelineno-18-8" href="#__codelineno-18-8"></a>400    9.470e-02       3.788e+01
+<a id="__codelineno-18-9" name="__codelineno-18-9" href="#__codelineno-18-9"></a>450    1.688e-01       7.595e+01
+<a id="__codelineno-18-10" name="__codelineno-18-10" href="#__codelineno-18-10"></a>500    2.625e-01       1.312e+02
+<a id="__codelineno-18-11" name="__codelineno-18-11" href="#__codelineno-18-11"></a>------------------------------------
+<a id="__codelineno-18-12" name="__codelineno-18-12" href="#__codelineno-18-12"></a>
+<a id="__codelineno-18-13" name="__codelineno-18-13" href="#__codelineno-18-13"></a>msd, Ea: 0.234 eV
+<a id="__codelineno-18-14" name="__codelineno-18-14" href="#__codelineno-18-14"></a>at 300K, LGPS: Sigma = 1.250e-02 S/cm
+</code></pre></div>
+<hr />
+<h4 id="plt_emdpy">plt_emd.py</h4>
+<p>Analyzes and plots thermal conductivity from equilibrium molecular dynamics (EMD).</p>
+<p><strong>Usage:</strong></p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-19-1" name="__codelineno-19-1" href="#__codelineno-19-1"></a>gpumdkit.sh<span class="w"> </span>-plt<span class="w"> </span>emd<span class="w"> </span>&lt;direction&gt;
+<a id="__codelineno-19-2" name="__codelineno-19-2" href="#__codelineno-19-2"></a>gpumdkit.sh<span class="w"> </span>-plt<span class="w"> </span>emd<span class="w"> </span>x<span class="w"> </span><span class="c1"># for x direction</span>
+</code></pre></div>
+<div align="center">
+    <img src="../Gallery/emd.png" alt="EMD thermal conductivity" width="60%" />
+</div>
+
+<hr />
+<h4 id="plt_nemdpy">plt_nemd.py</h4>
+<p>Visualizes non-equilibrium molecular dynamics (NEMD) thermal transport properties.</p>
+<p><strong>Usage:</strong></p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-20-1" name="__codelineno-20-1" href="#__codelineno-20-1"></a>gpumdkit.sh<span class="w"> </span>-plt<span class="w"> </span>nemd<span class="w"> </span><span class="o">[</span>real_length<span class="o">]</span><span class="w"> </span><span class="o">[</span>scale_eff_size<span class="o">]</span><span class="w"> </span><span class="o">[</span>cutoff_freq<span class="o">]</span><span class="w"> </span><span class="o">[</span>save<span class="o">]</span>
+</code></pre></div>
+<p><strong>Params:</strong></p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-21-1" name="__codelineno-21-1" href="#__codelineno-21-1"></a>real_length   : Real length of heat tranfer zone in nm (set to &#39;Auto&#39;, with auto-calculation)
+<a id="__codelineno-21-2" name="__codelineno-21-2" href="#__codelineno-21-2"></a>scale_eff_size: Optional, Scale factor for effective cross-sectional area (default: 1)
+<a id="__codelineno-21-3" name="__codelineno-21-3" href="#__codelineno-21-3"></a>               • For 3D bulk systems: use 1
+<a id="__codelineno-21-4" name="__codelineno-21-4" href="#__codelineno-21-4"></a>               • For low-dimensional systems with vacuum layer: S_box / S_eff
+<a id="__codelineno-21-5" name="__codelineno-21-5" href="#__codelineno-21-5"></a>                 - S_box: box area perpendicular to heat transfer direction
+<a id="__codelineno-21-6" name="__codelineno-21-6" href="#__codelineno-21-6"></a>                 - S_eff: real or effective area of the system
+<a id="__codelineno-21-7" name="__codelineno-21-7" href="#__codelineno-21-7"></a>cutoff_freq   : Optional, Cutoff frequency for SHC calculation in THz (default: 60)
+<a id="__codelineno-21-8" name="__codelineno-21-8" href="#__codelineno-21-8"></a>save          : Optional, save the plot as &#39;nemd.png&#39;
+<a id="__codelineno-21-9" name="__codelineno-21-9" href="#__codelineno-21-9"></a>!!! Note !!!  : If no SHC data, set [scale_eff_size] and [cutoff_freq] to any number as placeholders when using &#39;save&#39;.
+</code></pre></div>
+<div align="center">
+    <img src="../Gallery/nemd.png" alt="NEMD results" width="60%" />
+</div>
+
+<hr />
+<h4 id="plt_hnemdpy">plt_hnemd.py</h4>
+<p>Plots homogeneous non-equilibrium molecular dynamics (HNEMD) results.</p>
+<p><strong>Usage:</strong></p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-22-1" name="__codelineno-22-1" href="#__codelineno-22-1"></a>gpumdkit.sh<span class="w"> </span>-plt<span class="w"> </span>hnemd<span class="w"> </span><span class="o">[</span>scale_eff_size<span class="o">]</span><span class="w"> </span><span class="o">[</span>cutoff_freq<span class="o">]</span><span class="w"> </span><span class="o">[</span>save<span class="o">]</span>
+</code></pre></div>
+<p><strong>Params:</strong></p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-23-1" name="__codelineno-23-1" href="#__codelineno-23-1"></a>scale_eff_size: Optional, Scale factor for effective cross-sectional area (default: 1)
+<a id="__codelineno-23-2" name="__codelineno-23-2" href="#__codelineno-23-2"></a>               • For 3D bulk systems: use 1
+<a id="__codelineno-23-3" name="__codelineno-23-3" href="#__codelineno-23-3"></a>               • For low-dimensional systems with vacuum layer: S_box / S_eff
+<a id="__codelineno-23-4" name="__codelineno-23-4" href="#__codelineno-23-4"></a>                 - S_box: box area perpendicular to heat transfer direction
+<a id="__codelineno-23-5" name="__codelineno-23-5" href="#__codelineno-23-5"></a>                 - S_eff: real or effective area of the system
+<a id="__codelineno-23-6" name="__codelineno-23-6" href="#__codelineno-23-6"></a>cutoff_freq   : Optional, Cutoff frequency for SHC calculation in THz (default: 60)
+<a id="__codelineno-23-7" name="__codelineno-23-7" href="#__codelineno-23-7"></a>save          : Optional, save the plot as &#39;hnemd.png&#39;
+<a id="__codelineno-23-8" name="__codelineno-23-8" href="#__codelineno-23-8"></a>!!! Note !!!  : If no SHC data, set [scale_eff_size] and [cutoff_freq] to any number as placeholders when using &#39;save&#39;.
+</code></pre></div>
+<div align="center">
+    <img src="../Gallery/hnemd.png" alt="HNEMD results" width="60%" />
+</div>
+
+<hr />
+<h3 id="structural-analysis">📐 Structural Analysis</h3>
+<p>Scripts for analyzing atomic structure and distributions.</p>
+<h4 id="plt_rdfpy">plt_rdf.py</h4>
+<p>Plots radial distribution function (RDF) showing pair correlations.</p>
+<p><strong>Input File:</strong> <code>rdf.out</code></p>
+<p><strong>Usage:</strong></p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-24-1" name="__codelineno-24-1" href="#__codelineno-24-1"></a><span class="c1"># Plot all RDF pairs</span>
+<a id="__codelineno-24-2" name="__codelineno-24-2" href="#__codelineno-24-2"></a>gpumdkit.sh<span class="w"> </span>-plt<span class="w"> </span>rdf<span class="w">               </span><span class="c1"># Display all</span>
+<a id="__codelineno-24-3" name="__codelineno-24-3" href="#__codelineno-24-3"></a>
+<a id="__codelineno-24-4" name="__codelineno-24-4" href="#__codelineno-24-4"></a><span class="c1"># Plot specific column</span>
+<a id="__codelineno-24-5" name="__codelineno-24-5" href="#__codelineno-24-5"></a>gpumdkit.sh<span class="w"> </span>-plt<span class="w"> </span>rdf<span class="w"> </span>&lt;column&gt;<span class="w">      </span><span class="c1"># Display specific pair</span>
+</code></pre></div>
+<p><strong>Full RDF output:</strong>
+<img src="../Gallery/rdf1.png" alt="Complete RDF" width="100%" /></p>
+<p><strong>Single pair RDF:</strong></p>
+<div align="center">
+    <img src="../Gallery/rdf2.png" alt="Single RDF" width="50%" />
+</div>
+
+<hr />
+<h4 id="plt_chargepy">plt_charge.py</h4>
+<p>Plots charge distribution in <code>charge_train.out</code> from <code>qNEP</code> model.</p>
+<p><strong>Input File:</strong> <code>charge_train.out</code></p>
+<p><strong>Usage:</strong></p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-25-1" name="__codelineno-25-1" href="#__codelineno-25-1"></a>gpumdkit.sh<span class="w"> </span>-plt<span class="w"> </span>charge
+</code></pre></div>
+<p><strong>Important:</strong> Ensure consistency between training set and charge output atom ordering. Use full batch training or run prediction step first.</p>
+<div align="center">
+    <img src="../Gallery/charge.png" alt="Charge distribution" width="45%" />
+</div>
+
+<hr />
+<h3 id="extra-analysis">🧬 Extra Analysis</h3>
+<p>Specialized scripts for some analysis.</p>
+<h4 id="plt_descriptorspy">plt_descriptors.py</h4>
+<p>Visualizes high-dimensional descriptors using dimensionality reduction (PCA/UMAP).</p>
+<p><strong>Input Files:</strong> <code>descriptors.npy</code> (generated by <code>calc_descriptors.py</code>)</p>
+<p><strong>Usage:</strong></p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-26-1" name="__codelineno-26-1" href="#__codelineno-26-1"></a><span class="c1"># First generate descriptors</span>
+<a id="__codelineno-26-2" name="__codelineno-26-2" href="#__codelineno-26-2"></a>gpumdkit.sh<span class="w"> </span>-calc<span class="w"> </span>des<span class="w"> </span>train.xyz<span class="w"> </span>descriptors.npy<span class="w"> </span>nep.txt<span class="w"> </span>Li
+<a id="__codelineno-26-3" name="__codelineno-26-3" href="#__codelineno-26-3"></a>
+<a id="__codelineno-26-4" name="__codelineno-26-4" href="#__codelineno-26-4"></a><span class="c1"># Then plot</span>
+<a id="__codelineno-26-5" name="__codelineno-26-5" href="#__codelineno-26-5"></a>gpumdkit.sh<span class="w"> </span>-plt<span class="w"> </span>des<span class="w"> </span>&lt;method&gt;
+</code></pre></div>
+<p><strong>Methods:</strong>
+- <code>pca</code> - Principal Component Analysis
+- <code>umap</code> - Uniform Manifold Approximation and Projection</p>
+<p>You need some additional modifications to get the following plot, see the <a href="[SourceFiles/NEP-ZBL/PCA_UMAP at main · zhyan0603/SourceFiles](https://github.com/zhyan0603/SourceFiles/tree/main/NEP-ZBL/PCA_UMAP)">code</a> here.</p>
+<div align="center">
+    <img src="../Gallery/des_umap.png" alt="UMAP descriptor visualization" width="50%" />
+</div>
+
+<hr />
+<h4 id="plt_descriptors_comparepy">plt_descriptors_compare.py</h4>
+<p>Compares descriptors from multiple training sets or models.</p>
+<hr />
+<h4 id="plt_dimerpy">plt_dimer.py</h4>
+<p>Plots dimer interaction curves. Two atoms are placed in a cubic box with the length of 30 angstrom. And then, the potential energy and the force will be calculated as a function of dimer distance.</p>
+<p><strong>Usage:</strong>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-27-1" name="__codelineno-27-1" href="#__codelineno-27-1"></a>gpumdkit.sh<span class="w"> </span>-plt<span class="w"> </span>dimer<span class="w"> </span>&lt;element1&gt;<span class="w"> </span>&lt;element2&gt;<span class="w"> </span>&lt;nepmodel&gt;
+</code></pre></div></p>
+<p><strong>Example:</strong>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-28-1" name="__codelineno-28-1" href="#__codelineno-28-1"></a>gpumdkit.sh<span class="w"> </span>-plt<span class="w"> </span>dimer<span class="w"> </span>Li<span class="w"> </span>Li<span class="w"> </span>nep.txt
+</code></pre></div></p>
+<div align="center">
+    <img src="../Gallery/dimer_nep.png" alt="Dimer NEP" width="45%" />
+    <img src="../Gallery/dimer.png" alt="Dimer comparison" width="45%" />
+</div>
+
+<p><strong>Reference:</strong> <a href="https://doi.org/10.48550/arXiv.2504.15925">arXiv:2504.15925</a></p>
+<hr />
+<h4 id="plt_doaspy">plt_doas.py</h4>
+<p>Plots density of atomistic states (DOAS) proposed by <a href="https://doi.org/10.1002/anie.202215544">Wang et al.</a>.</p>
+<p><strong>Input Files:</strong> <code>doas.out</code> file calculated by <code>gpumdkit.sh -calc doas</code></p>
+<p><strong>Usage:</strong></p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-29-1" name="__codelineno-29-1" href="#__codelineno-29-1"></a>gpumdkit.sh<span class="w"> </span>-plt<span class="w"> </span>doas<span class="w"> </span>&lt;doas.out&gt;<span class="w"> </span>&lt;species&gt;
+<a id="__codelineno-29-2" name="__codelineno-29-2" href="#__codelineno-29-2"></a>gpumdkit.sh<span class="w"> </span>-plt<span class="w"> </span>doas<span class="w"> </span>doas.out<span class="w"> </span>Li
+</code></pre></div>
+<div align="center">
+    <img src="../Gallery/doas.png" alt="Density of atomistic states" width="50%" />
+</div>
+
+<hr />
+<h4 id="plt_net_forcepy">plt_net_force.py</h4>
+<p>Plots distribution of net forces on structures, useful for identifying problematic configurations.</p>
+<p><strong>Usage:</strong>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-30-1" name="__codelineno-30-1" href="#__codelineno-30-1"></a>gpumdkit.sh<span class="w"> </span>-plt<span class="w"> </span>net_force<span class="w"> </span>&lt;extxyzfile&gt;
+<a id="__codelineno-30-2" name="__codelineno-30-2" href="#__codelineno-30-2"></a>gpumdkit.sh<span class="w"> </span>-plt<span class="w"> </span>net_force<span class="w"> </span>train.xyz
+</code></pre></div></p>
+<p><strong>Reference:</strong> <a href="https://arxiv.org/abs/2510.19774">arXiv:2510.19774</a></p>
+<div align="center">
+    <img src="../Gallery/net_force_distribution.png" alt="Net force distribution" width="55%" />
+</div>
+
+<hr />
+<h3 id="quick-reference-table">Quick Reference Table</h3>
+<table>
+<thead>
+<tr>
+<th>Command</th>
+<th>Input File(s)</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>thermo</code></td>
+<td><code>thermo.out</code></td>
+<td>Thermodynamic properties evolution</td>
+</tr>
+<tr>
+<td><code>train</code></td>
+<td><code>loss.out</code>, <code>*_train.out</code></td>
+<td>NEP training plot</td>
+</tr>
+<tr>
+<td><code>prediction</code></td>
+<td><code>*_test.out</code></td>
+<td>NEP prediction plot</td>
+</tr>
+<tr>
+<td><code>train_test</code></td>
+<td><code>*_train.out</code>, <code>*_test.out</code></td>
+<td>parity plots of train&amp;test</td>
+</tr>
+<tr>
+<td><code>msd</code></td>
+<td><code>msd.out</code></td>
+<td>Mean square displacement</td>
+</tr>
+<tr>
+<td><code>sdc</code></td>
+<td><code>msd.out</code></td>
+<td>Self-diffusion coefficient</td>
+</tr>
+<tr>
+<td><code>rdf</code></td>
+<td><code>rdf.out</code></td>
+<td>Radial distribution function</td>
+</tr>
+<tr>
+<td><code>vac</code></td>
+<td><code>vac.out</code></td>
+<td>Velocity autocorrelation</td>
+</tr>
+<tr>
+<td><code>charge</code></td>
+<td><code>charge_train.out</code></td>
+<td>Charge distribution</td>
+</tr>
+<tr>
+<td><code>doas</code></td>
+<td>DOAS files</td>
+<td>Density of atomistic states</td>
+</tr>
+<tr>
+<td><code>des</code></td>
+<td><code>descriptors.npy</code></td>
+<td>Descriptor visualization</td>
+</tr>
+<tr>
+<td><code>dimer</code></td>
+<td>Needs nep model</td>
+<td>Dimer interaction curve</td>
+</tr>
+<tr>
+<td><code>force_errors</code></td>
+<td><code>force_train.out</code></td>
+<td>Force error metrics</td>
+</tr>
+<tr>
+<td><code>lr</code></td>
+<td><code>loss.out</code> from <code>gnep</code></td>
+<td>Learning rate</td>
+</tr>
+<tr>
+<td><code>restart</code></td>
+<td><code>nep.restart</code> from <code>nep</code></td>
+<td>Restart file parameters</td>
+</tr>
+<tr>
+<td><code>net_force</code></td>
+<td>train.xyz</td>
+<td>Net force distribution</td>
+</tr>
+<tr>
+<td><code>emd</code></td>
+<td>EMD outputs</td>
+<td>EMD thermal conductivity</td>
+</tr>
+<tr>
+<td><code>nemd</code></td>
+<td>NEMD outputs</td>
+<td>NEMD thermal transport</td>
+</tr>
+<tr>
+<td><code>hnemd</code></td>
+<td>HNEMD outputs</td>
+<td>HNEMD thermal transport</td>
+</tr>
+<tr>
+<td><code>arrhenius_d</code></td>
+<td>Multiple MSD</td>
+<td>Arrhenius diffusivity</td>
+</tr>
+<tr>
+<td><code>arrhenius_sigma</code></td>
+<td>Conductivity data</td>
+<td>Arrhenius conductivity</td>
+</tr>
+</tbody>
+</table>
+<h2 id="contributing">Contributing</h2>
+<p>To add new plotting scripts:</p>
+<ol>
+<li><strong>Create script</strong> following naming conventions</li>
+<li><strong>Add documentation</strong> to this README</li>
+<li><strong>Update gpumdkit.sh</strong> to integrate new plot type</li>
+</ol>
+<p>See <a href="contributing.html">CONTRIBUTING.md</a> for detailed guidelines.</p>
+<hr />
+<p>Thank you for using GPUMDkit! If you have any questions, need further assistance, or want to contribute new plotting scripts, feel free to open an issue on our <a href="https://github.com/zhyan0603/GPUMDkit/issues">GitHub repository</a> or contact Zihan YAN (yanzihan@westlake.edu.cn).</p>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  Back to top
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+        <div class="md-social">
+  
+    
+    
+    
+    
+    <a href="mailto:yanzihan@westlake.edu.cn" target="_blank" rel="noopener" title="Email" class="md-social__link">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.7.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2024 Fonticons, Inc.--><path d="M48 64C21.5 64 0 85.5 0 112c0 15.1 7.1 29.3 19.2 38.4l217.6 163.2c11.4 8.5 27 8.5 38.4 0l217.6-163.2c12.1-9.1 19.2-23.3 19.2-38.4 0-26.5-21.5-48-48-48zM0 176v208c0 35.3 28.7 64 64 64h384c35.3 0 64-28.7 64-64V176L294.4 339.2a63.9 63.9 0 0 1-76.8 0z"/></svg>
+    </a>
+  
+    
+    
+    
+    
+    <a href="https://github.com/zhyan0603" target="_blank" rel="noopener" title="GitHub" class="md-social__link">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 496 512"><!--! Font Awesome Free 6.7.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2024 Fonticons, Inc.--><path d="M165.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M244.8 8C106.1 8 0 113.3 0 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C428.2 457.8 496 362.9 496 252 496 113.3 383.5 8 244.8 8M97.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"/></svg>
+    </a>
+  
+    
+    
+    
+    
+    <a href="https://scholar.google.com/citations?user=NL8zhZYAAAAJ&hl=zh-CN" target="_blank" rel="noopener" title="Google Scholar" class="md-social__link">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 512"><!--! Font Awesome Free 6.7.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2024 Fonticons, Inc.--><path d="M320 32c-8.1 0-16.1 1.4-23.7 4.1L15.8 137.4C6.3 140.9 0 149.9 0 160s6.3 19.1 15.8 22.6l57.9 20.9C57.3 229.3 48 259.8 48 291.9V320c0 28.4-10.8 57.7-22.3 80.8-6.5 13-13.9 25.8-22.5 37.6-3.2 4.3-4.1 9.9-2.3 15s6 8.9 11.2 10.2l64 16c4.2 1.1 8.7.3 12.4-2s6.3-6.1 7.1-10.4c8.6-42.8 4.3-81.2-2.1-108.7-3.2-14.2-7.5-28.7-13.5-42v-24.6c0-30.2 10.2-58.7 27.9-81.5 12.9-15.5 29.6-28 49.2-35.7l157-61.7c8.2-3.2 17.5.8 20.7 9s-.8 17.5-9 20.7l-157 61.7c-12.4 4.9-23.3 12.4-32.2 21.6l159.6 57.6c7.6 2.7 15.6 4.1 23.7 4.1s16.1-1.4 23.7-4.1l280.6-101c9.5-3.4 15.8-12.5 15.8-22.6s-6.3-19.1-15.8-22.6L343.7 36.1c-7.6-2.7-15.6-4.1-23.7-4.1M128 408c0 35.3 86 72 192 72s192-36.7 192-72l-15.3-145.4L354.5 314c-11.1 4-22.8 6-34.5 6s-23.5-2-34.5-6l-142.2-51.4z"/></svg>
+    </a>
+  
+    
+    
+    
+    
+    <a href="https://www.researchgate.net/profile/Zihan-Yan-7?ev=hdr_xprf" target="_blank" rel="noopener" title="ResearchGate" class="md-social__link">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 6.7.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2024 Fonticons, Inc.--><path d="M0 32v448h448V32zm262.2 334.4c-6.6 3-33.2 6-50-14.2-9.2-10.6-25.3-33.3-42.2-63.6-8.9 0-14.7 0-21.4-.6v46.4c0 23.5 6 21.2 25.8 23.9v8.1c-6.9-.3-23.1-.8-35.6-.8-13.1 0-26.1.6-33.6.8v-8.1c15.5-2.9 22-1.3 22-23.9V225c0-22.6-6.4-21-22-23.9V193c25.8 1 53.1-.6 70.9-.6 31.7 0 55.9 14.4 55.9 45.6 0 21.1-16.7 42.2-39.2 47.5 13.6 24.2 30 45.6 42.2 58.9 7.2 7.8 17.2 14.7 27.2 14.7zm22.9-135c-23.3 0-32.2-15.7-32.2-32.2V167c0-12.2 8.8-30.4 34-30.4s30.4 17.9 30.4 17.9l-10.7 7.2s-5.5-12.5-19.7-12.5c-7.9 0-19.7 7.3-19.7 19.7v26.8c0 13.4 6.6 23.3 17.9 23.3 14.1 0 21.5-10.9 21.5-26.8h-17.9v-10.7h30.4c0 20.5 4.7 49.9-34 49.9m-116.5 44.7c-9.4 0-13.6-.3-20-.8v-69.7c6.4-.6 15-.6 22.5-.6 23.3 0 37.2 12.2 37.2 34.5 0 21.9-15 36.6-39.7 36.6"/></svg>
+    </a>
+  
+    
+    
+    
+    
+    <a href="https://orcid.org/0000-0002-8911-6549" target="_blank" rel="noopener" title="ORCID" class="md-social__link">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.7.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2024 Fonticons, Inc.--><path d="M294.75 188.19h-45.92V342h47.47c67.62 0 83.12-51.34 83.12-76.91 0-41.64-26.54-76.9-84.67-76.9M256 8C119 8 8 119 8 256s111 248 248 248 248-111 248-248S393 8 256 8m-80.79 360.76h-29.84v-207.5h29.84zm-14.92-231.14a19.57 19.57 0 1 1 19.57-19.57 19.64 19.64 0 0 1-19.57 19.57M300 369h-81V161.26h80.6c76.73 0 110.44 54.83 110.44 103.85C410 318.39 368.38 369 300 369"/></svg>
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      <script id="__config" type="application/json">{"base": ".", "features": ["content.code.copy", "navigation.top", "search.suggest", "search.highlight"], "search": "assets/javascripts/workers/search.f8cc74c7.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="assets/javascripts/bundle.c8b220af.min.js"></script>
+      
+    
+  </body>
+</html>
