@@ -30,7 +30,7 @@ _gpumdkit_completions() {
             COMPREPLY=($(compgen -W "ionic-cond nep des doas neb" -- "$cur")) ;;
             
         # Options requiring files or directories, complete with filenames
-        -out2xyz|-cp2k2xyz|-cp2k2exyz|-exyz2pos|-min_dist|-min_dist_pbc|-filter_dist|-filter_dist_pbc|-filter_box|-get_frame|-clean_xyz|-mtp2xyz|-pos2exyz|-pos2lmp|-lmp2exyz|-addgroup|-addlabel|-addweight|-max_rmse|-get_max_rmse_xyz|-analyze_comp|-replicate|-pda|-cbc|-frame_range|-xml2xyz)
+        -out2xyz|-cp2k2xyz|-cp2k2exyz|-exyz2pos|-min_dist|-min_dist_pbc|-filter_dist|-filter_dist_pbc|-filter_box|-get_frame|-clean_xyz|-mtp2xyz|-pos2exyz|-cif2exyz|-cif2pos|-pos2lmp|-lmp2exyz|-addgroup|-addlabel|-addweight|-max_rmse|-get_max_rmse_xyz|-analyze_comp|-replicate|-pda|-cbc|-frame_range|-xml2xyz)
             COMPREPLY=($(compgen -f -- "$cur")) ;;
 
         # Default case: complete primary options
