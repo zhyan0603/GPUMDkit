@@ -127,7 +127,7 @@ function help_info_table(){
     echo "| -cif2pos       Convert cif to POSCAR          | -pos2lmp      Convert POSCAR to LAMMPS           |"
     echo "| -cif2exyz      Convert cif to extxyz          | -lmp2exyz     Convert LAMMPS-dump to extxyz      |"
     echo "| -addgroup      Add group label                | -addweight    Add weight to the struct in extxyz |"
-    echo "| -cp2k2xyz      Convert CP2K log/inp to extxyz | Developing...                                    |"
+    echo "| -cp2k2xyz      Convert CP2K file to extxyz    | Developing...                                    |"
     echo "+========================================= Analysis ===============================================+"
     echo "| -range         Print range of energy etc.     | -max_rmse     Get max RMSE from extxyz           |"
     echo "| -min_dist      Get min_dist between atoms     | -min_dist_pbc Get min_dist considering PBC       |"
