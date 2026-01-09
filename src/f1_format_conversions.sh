@@ -117,6 +117,23 @@ echo " Code path: ${GPUMDkit_path}/Scripts/format_conversion/exyz2pos.py"
 echo " ---------------------------------------------------"
 }
 
+function f106_cp2k_log2xyz(){
+echo " >-------------------------------------------------<"
+echo " | Calling the script in Scripts/format_conversion |"
+echo " | Script: cp2k_log2xyz.py                         |"
+echo " | Developer: Chen Hua (huachen23@mails.ucas.ac.cn)|"
+echo " >-------------------------------------------------<"
+echo " This script converts CP2K calculations to extxyz"
+echo " Two modes available:"
+echo "  1. Manual selection of files"
+echo "  2. Auto batch processing (recommended)"
+echo " ------------>>"
+echo " ---------------------------------------------------"
+python ${GPUMDkit_path}/Scripts/format_conversion/cp2k_log2xyz.py
+echo " Code path: ${GPUMDkit_path}/Scripts/format_conversion/cp2k_log2xyz.py"
+echo " ---------------------------------------------------"
+}
+
 function f1_format_conversion(){
 echo " ------------>>"
 echo " 101) Convert VASP to extxyz"
@@ -124,11 +141,12 @@ echo " 102) Convert mtp to extxyz"
 echo " 103) Convert CP2K to extxyz"
 echo " 104) Convert ABACUS to extxyz"
 echo " 105) Convert extxyz to POSCAR"
+echo " 106) Convert CP2K log/inp to extxyz"
 echo " 000) Return to the main menu"
 echo " ------------>>"
 echo " Input the function number:"
 
-arry_num_choice=("000" "101" "102" "103" "104" "105") 
+arry_num_choice=("000" "101" "102" "103" "104" "105" "106") 
 read -p " " num_choice
 while ! echo "${arry_num_choice[@]}" | grep -wq "$num_choice" 
 do
@@ -142,7 +160,8 @@ case $num_choice in
     "102") f102_mtp2xyz ;;
     "103") f103_cp2k2xyz ;;
     "104") f104_abacus2xyz ;;
-    "105") f105_extxyz2poscar ;;       
+    "105") f105_extxyz2poscar ;;
+    "106") f106_cp2k_log2xyz ;;
     "000") menu; main ;;
 esac
 }
