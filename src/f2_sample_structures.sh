@@ -1,6 +1,7 @@
 #--------------------- function 2 sample structures ----------------------
 # These functions are used to sample structures
 
+# Sample structures from extxyz (uniform or random)
 function f201_sample_structures(){
 echo " >-------------------------------------------------<"
 echo " | Calling the script in Scripts/sample_structures |"
@@ -19,6 +20,7 @@ echo " Code path: ${GPUMDkit_path}/Scripts/sample_structures/sample_structures.p
 echo " ---------------------------------------------------"
 }
 
+# Sample structures by pynep
 function f202_pynep_sample_structures(){
 # YELLOW="\033[1;33m"; RESET="\033[0m"
 # echo -en "${YELLOW}"
@@ -46,6 +48,7 @@ python ${GPUMDkit_path}/Scripts/sample_structures/pynep_select_structs.py ${samp
 echo " Code path: ${GPUMDkit_path}/Scripts/sample_structures/pynep_select_structs.py"
 }
 
+# Parallel sample structures by pynep
 function parallel_pynep_sample_structures(){
 # YELLOW="\033[1;33m"; RESET="\033[0m"
 # echo -e "${YELLOW}"
@@ -71,6 +74,7 @@ echo " Code path: ${GPUMDkit_path}/Scripts/sample_structures/parallel_pynep_sele
 echo " ---------------------------------------------------"
 }
 
+# Sample structures by neptrain
 function f203_neptrain_sample_structures(){
 echo " >-------------------------------------------------<"
 echo " | Calling the script in Scripts/sample_structures |"
@@ -88,6 +92,7 @@ echo " Code path: ${GPUMDkit_path}/Scripts/sample_structures/neptrain_select_str
 echo " ---------------------------------------------------"
 }
 
+# Perturb structure
 function f204_perturb_structure(){
 echo " >-------------------------------------------------<"
 echo " | Calling the script in Scripts/sample_structures |"
@@ -105,6 +110,7 @@ echo " Code path: ${GPUMDkit_path}/Scripts/sample_structures/perturb_structure.p
 echo " ---------------------------------------------------"
 }
 
+# Select max force deviation structs
 function f205_select_max_force_deviation_structs(){
 echo " >-------------------------------------------------<"
 echo " | Calling the script in Scripts/sample_structures |"
@@ -124,6 +130,7 @@ echo " Code path: ${GPUMDkit_path}/Scripts/sample_structures/select_max_modev.py
 echo " ---------------------------------------------------"
 }
 
+#--------------------- function 2 ----------------------
 function f2_sample_structures(){
 echo " ------------>>"
 echo " 201) Sample structures from extxyz"

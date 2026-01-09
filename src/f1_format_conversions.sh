@@ -1,6 +1,7 @@
 #--------------------- function 1 format conversion ----------------------
 # These functions are used to convert the format of the files
 
+# Convert VASP to extxyz
 function f101_out2xyz(){
 echo " >-------------------------------------------------<"
 echo " | Calling the script in Scripts/format_conversion |"
@@ -36,6 +37,7 @@ else
 fi
 }
 
+# Convert mtp to extxyz
 function f102_mtp2xyz(){
 echo " >-------------------------------------------------<"
 echo " | Calling the script in Scripts/format_conversion |"
@@ -52,6 +54,7 @@ echo " Code path: ${GPUMDkit_path}/Scripts/format_conversion/mtp2xyz.py"
 echo " ---------------------------------------------------"
 }
 
+# Convert CP2K to extxyz - method by Chen HUA
 function cp2k2xyz_chenhua(){
 echo " >-------------------------------------------------<"
 echo " | Calling the script in Scripts/format_conversion |"
@@ -66,6 +69,7 @@ echo " Code path: ${GPUMDkit_path}/Scripts/format_conversion/cp2k_log2xyz.py"
 echo " ---------------------------------------------------"
 }
 
+# Convert CP2K to extxyz - method by Ke XU
 function cp2k2xyz_kexu(){
 echo " >-------------------------------------------------<"
 echo " | Calling the script in Scripts/format_conversion |"
@@ -81,6 +85,7 @@ echo " Code path: ${GPUMDkit_path}/Scripts/format_conversion/cp2k2xyz.py"
 echo " ---------------------------------------------------"
 }
 
+#Convert CP2K to extxyz (main function)
 function f103_cp2k2xyz(){
 echo " >-------------------------------------------------<"
 echo " | There are two scripts for CP2K to extxyz:       |"
@@ -103,6 +108,7 @@ else
 fi
 }
 
+# Convert ABACUS to extxyz
 function f104_abacus2xyz(){ 
 echo " >-------------------------------------------------<"
 echo " | Calling the script in Scripts/format_conversion |"
@@ -137,6 +143,7 @@ else
 fi
 }
 
+# Convert extxyz to POSCAR
 function f105_extxyz2poscar(){
 echo " >-------------------------------------------------<"
 echo " | Calling the script in Scripts/format_conversion |"
@@ -153,6 +160,7 @@ echo " Code path: ${GPUMDkit_path}/Scripts/format_conversion/exyz2pos.py"
 echo " ---------------------------------------------------"
 }
 
+#--------------------- function 1 ----------------------
 function f1_format_conversion(){
 echo " ------------>>"
 echo " 101) Convert VASP to extxyz"
@@ -160,7 +168,6 @@ echo " 102) Convert mtp to extxyz"
 echo " 103) Convert CP2K to extxyz"
 echo " 104) Convert ABACUS to extxyz"
 echo " 105) Convert extxyz to POSCAR"
-echo " 106) Convert CP2K log/inp to extxyz"
 echo " 000) Return to the main menu"
 echo " ------------>>"
 echo " Input the function number:"
@@ -180,7 +187,6 @@ case $num_choice in
     "103") f103_cp2k2xyz ;;
     "104") f104_abacus2xyz ;;
     "105") f105_extxyz2poscar ;;
-    "106") f106_cp2k_log2xyz ;;
     "000") menu; main ;;
 esac
 }
