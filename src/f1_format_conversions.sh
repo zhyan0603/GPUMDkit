@@ -52,7 +52,23 @@ echo " Code path: ${GPUMDkit_path}/Scripts/format_conversion/mtp2xyz.py"
 echo " ---------------------------------------------------"
 }
 
-function f103_cp2k2xyz(){
+function cp2k2xyz_chenhua(){
+echo " >-------------------------------------------------<"
+echo " | Calling the script in Scripts/format_conversion |"
+echo " | Script: cp2k_log2xyz.py                         |"
+echo " | Developer: Chen HUA (huachen23@mails.ucas.ac.cn)|"
+echo " >-------------------------------------------------<"
+echo " This script converts CP2K calculations to extxyz"
+echo " Two modes available:"
+echo "  1. Manual selection of files"
+echo "  2. Auto batch processing (recommended)"
+echo " ---------------------------------------------------"
+python ${GPUMDkit_path}/Scripts/format_conversion/cp2k_log2xyz.py
+echo " Code path: ${GPUMDkit_path}/Scripts/format_conversion/cp2k_log2xyz.py"
+echo " ---------------------------------------------------"
+}
+
+function cp2k2xyz_kexu(){
 echo " >-------------------------------------------------<"
 echo " | Calling the script in Scripts/format_conversion |"
 echo " | Script: cp2k2xyz.py                             |"
@@ -65,6 +81,28 @@ echo " ---------------------------------------------------"
 python ${GPUMDkit_path}/Scripts/format_conversion/cp2k2xyz.py ${cp2k_choice}
 echo " Code path: ${GPUMDkit_path}/Scripts/format_conversion/cp2k2xyz.py"
 echo " ---------------------------------------------------"
+}
+
+function f103_cp2k2xyz(){
+echo " >-------------------------------------------------<"
+echo " | There are two scripts for CP2K to extxyz:       |"
+echo " | 1) cp2k_log2xyz.py by Chen HUA                  |"
+echo " | 2) cp2k2xyz.py by Ke XU                         |"
+echo " | You can choose either one to use.               |"
+echo " >-------------------------------------------------<"
+echo " Choose the script to use:"
+echo " 1) cp2k_log2xyz.py (from log and inp files)"
+echo " 2) cp2k2xyz.py (from pos.xyz, frc.xyz, cell.cell files)"
+echo " ------------>>"
+read -p " " cp2k_script_choice
+if [ "$cp2k_script_choice" == "1" ]; then
+    cp2k2xyz_chenhua
+elif [ "$cp2k_script_choice" == "2" ]; then
+    cp2k2xyz_kexu
+else
+    echo " Your input is illegal, please try again"
+    return
+fi
 }
 
 function f104_abacus2xyz(){ 
@@ -114,23 +152,6 @@ read -p " " filename
 echo " ---------------------------------------------------"
 python ${GPUMDkit_path}/Scripts/format_conversion/exyz2pos.py ${filename}
 echo " Code path: ${GPUMDkit_path}/Scripts/format_conversion/exyz2pos.py"
-echo " ---------------------------------------------------"
-}
-
-function f106_cp2k_log2xyz(){
-echo " >-------------------------------------------------<"
-echo " | Calling the script in Scripts/format_conversion |"
-echo " | Script: cp2k_log2xyz.py                         |"
-echo " | Developer: Chen Hua (huachen23@mails.ucas.ac.cn)|"
-echo " >-------------------------------------------------<"
-echo " This script converts CP2K calculations to extxyz"
-echo " Two modes available:"
-echo "  1. Manual selection of files"
-echo "  2. Auto batch processing (recommended)"
-echo " ------------>>"
-echo " ---------------------------------------------------"
-python ${GPUMDkit_path}/Scripts/format_conversion/cp2k_log2xyz.py
-echo " Code path: ${GPUMDkit_path}/Scripts/format_conversion/cp2k_log2xyz.py"
 echo " ---------------------------------------------------"
 }
 

@@ -35,7 +35,7 @@ function main(){
     echo " ------------>>"
     echo ' Input the function number:'
     array_choice=(
-        "0" "1" "101" "102" "103" "104" "105" "106"
+        "0" "1" "101" "102" "103" "104" "105"
         "2" "201" "202" "203" "204" "205" 
         "3" "301" "302" "303" 
         "4" "401" "402" "403" "404" "405"
@@ -64,7 +64,6 @@ function main(){
                 "103") f103_cp2k2xyz ;;
                 "104") f104_abacus2xyz ;;
                 "105") f105_extxyz2poscar ;;
-                "106") f106_cp2k_log2xyz ;;
             esac ;;
         "2")
             source ${GPUMDkit_path}/src/f2_sample_structures.sh
@@ -128,7 +127,7 @@ function help_info_table(){
     echo "| -cif2pos       Convert cif to POSCAR          | -pos2lmp      Convert POSCAR to LAMMPS           |"
     echo "| -cif2exyz      Convert cif to extxyz          | -lmp2exyz     Convert LAMMPS-dump to extxyz      |"
     echo "| -addgroup      Add group label                | -addweight    Add weight to the struct in extxyz |"
-    echo "| -cp2k_log2xyz  Convert CP2K log/inp to extxyz | Developing...                                    |"
+    echo "| -cp2k2xyz      Convert CP2K log/inp to extxyz | Developing...                                    |"
     echo "+========================================= Analysis ===============================================+"
     echo "| -range         Print range of energy etc.     | -max_rmse     Get max RMSE from extxyz           |"
     echo "| -min_dist      Get min_dist between atoms     | -min_dist_pbc Get min_dist considering PBC       |"
@@ -337,10 +336,10 @@ if [ ! -z "$1" ]; then
                 echo " Code path: ${format_conv_path}/xml2xyz.py"               
             fi ;;
 
-        -cp2k_log2xyz)
-            echo " Calling script for CP2K log/inp to extxyz conversion "
-            echo " Code path: ${format_conv_path}/cp2k_log2xyz.py"
-            python ${format_conv_path}/cp2k_log2xyz.py ${@:2} ;;
+        -cp2k2xyz)
+            echo " Calling script by Chen HUA "
+            python ${format_conv_path}/cp2k_log2xyz.py
+            echo " Code path: ${format_conv_path}/cp2k_log2xyz.py" ;;
 
         -pos2exyz)
             if [ ! -z "$2" ] && [ "$2" != "-h" ] && [ ! -z "$3" ] ; then
