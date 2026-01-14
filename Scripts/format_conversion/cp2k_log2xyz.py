@@ -45,27 +45,117 @@ def extract_atoms_lattice_inp(text):
         lat = [float(x) for g in m.groups() for x in g.split()]
     return atoms, lat
 
-def extract_energy(log): 
-    if m := re.search(r'ENERGY\| Total FORCE_EVAL.*?:\s+([-\d\.E\+]+)', log): 
+def extract_mixed_atoms_lattice(folder):
+    """Try to get atoms from .xyz and lattice from .inp; fall back to single-file mode."""
+    xyzs = sorted(folder.glob("*.xyz"), key=natural_sort_key)
+    inps = sorted(folder.glob("*.inp"), key=natural_sort_key)
+
+    if xyzs and inps:
+        try:
+            atoms, _ = extract_atoms_lattice_xyz(read_lines(xyzs[0]))
+            _, lat = extract_atoms_lattice_inp(inps[0].read_text(encoding='utf-8', errors='ignore'))
+            if atoms and len(lat) == 9:
+                return atoms, lat, f"{xyzs[0].name} (atoms) + {inps[0].name} (lattice)", "mixed"
+        except Exception:
+            pass
+
+    if xyzs:
+        try:
+            atoms, lat = extract_atoms_lattice_xyz(read_lines(xyzs[0]))
+            if atoms:
+                return atoms, lat, xyzs[0].name, "xyz"
+        except Exception:
+            pass
+
+    if inps:
+        try:
+            text = inps[0].read_text(encoding='utf-8', errors='ignore')
+            atoms, lat = extract_atoms_lattice_inp(text)
+            if atoms:
+                return atoms, lat, inps[0].name, "inp"
+        except Exception:
+            pass
+
+    return None, None, None, None
+
+def extract_energy(log):
+    """
+    Extract total energy from CP2K log.
+    Supports:
+      - Old format: "ENERGY| Total FORCE_EVAL ... : <value>"
+      - New format: "ENERGY| Total FORCE_EVAL (...) energy [hartree] <value>"
+    Returns energy in eV.
+    """
+    # Try NEW format first (no colon, value after [hartree])
+    if m := re.search(r'ENERGY\| Total FORCE_EVAL \(.*?\) energy \[hartree\]\s+([-\d\.E+\-]+)', log):
         return float(m.group(1)) * HARTREE_TO_EV
+
+    # Try OLD format (with colon)
+    if m := re.search(r'ENERGY\| Total FORCE_EVAL.*?:\s+([-\d\.E+\-]+)', log):
+        return float(m.group(1)) * HARTREE_TO_EV
+
     return float('nan')
 
 def extract_forces(log):
+    """
+    Extract atomic forces from CP2K log.
+    Supports:
+      - New format: "FORCES| Atomic forces [hartree/bohr]" (CP2K 2025+)
+      - Old format: "ATOMIC FORCES in [a.u.]" with element table
+    Returns forces in eV/angstrom as list of [fx, fy, fz].
+    """
+    forces = []
+
+    # --- Try NEW format (CP2K 2025+) ---
+    if 'FORCES| Atomic forces [hartree/bohr]' in log:
+        lines = log.splitlines()
+        in_block = False
+        for line in lines:
+            if line.strip().startswith('FORCES| Atomic forces [hartree/bohr]'):
+                in_block = True
+                continue
+            if in_block:
+                if not line.strip().startswith('FORCES|'):
+                    break
+                parts = line.split()
+                if len(parts) >= 5 and parts[1].isdigit():
+                    try:
+                        fx = float(parts[2]) * FORCE_AU_TO_EV_ANG
+                        fy = float(parts[3]) * FORCE_AU_TO_EV_ANG
+                        fz = float(parts[4]) * FORCE_AU_TO_EV_ANG
+                        forces.append([fx, fy, fz])
+                    except (ValueError, IndexError):
+                        continue
+        if forces:
+            return forces
+
+    # --- Try OLD format ---
     if m := re.search(r'ATOMIC FORCES in \[a\.u\.\]\n\n # Atom\s+Kind\s+Element\s+X\s+Y\s+Z\n(.*?)(?=\n SUM OF ATOMIC FORCES)', log, re.DOTALL):
-        forces = []
         for line in m.group(1).strip().splitlines():
             p = line.split()
             if len(p) >= 6:
                 fx, fy, fz = [float(p[i]) * FORCE_AU_TO_EV_ANG for i in range(3,6)]
                 forces.append([fx, fy, fz])
-        return forces
+        if forces:
+            return forces
+
     return []
 
 def extract_stress_gpa(log):
-    if not re.search(r'STRESS\|\s+Analytical stress tensor\s+\[GPa\]', log): return None
-    matches = re.findall(r'STRESS\|\s+[xyz]\s+([-\d\.E+\-]+)\s+([-\d\.E+\-]+)\s+([-\d\.E+\-]+)', log, re.IGNORECASE)
-    if len(matches) >= 3:
-        return [float(v) for row in matches[:3] for v in row]
+    # Try GPa first
+    if re.search(r'STRESS\|\s+Analytical stress tensor\s+\[GPa\]', log):
+        matches = re.findall(r'STRESS\|\s+[xyz]\s+([-\d\.E+\-]+)\s+([-\d\.E+\-]+)\s+([-\d\.E+\-]+)', log, re.IGNORECASE)
+        if len(matches) >= 3:
+            return [float(v) for row in matches[:3] for v in row]
+    
+    # Try bar (CP2K 2025+)
+    if re.search(r'STRESS\|\s+Analytical stress tensor\s+\[bar\]', log):
+        matches = re.findall(r'STRESS\|\s+[xyz]\s+([-\d\.E+\-]+)\s+([-\d\.E+\-]+)\s+([-\d\.E+\-]+)', log, re.IGNORECASE)
+        if len(matches) >= 3:
+            stress_bar = [float(v) for row in matches[:3] for v in row]
+            # Convert bar to GPa: 1 bar = 0.1 GPa
+            return [s * 0.1 for s in stress_bar]
+    
     return None
 
 def compute_volume(lat):
@@ -111,37 +201,26 @@ def main():
 
     for folder in folders:
         rel = str(folder.relative_to(cwd))
+
+        atoms, lat, source_desc, mode = extract_mixed_atoms_lattice(folder)
+
+        if atoms is None:
+            failed.append(f"{rel} -> No valid structure files")
+            continue
+
         xyzs = sorted(folder.glob("*.xyz"), key=natural_sort_key)
         inps = sorted(folder.glob("*.inp"), key=natural_sort_key)
-
-        coord_file, source = None, None
-        if xyzs:
-            coord_file, source = xyzs[0], 'xyz'
-            if len(xyzs) > 1:
-                warnings.append(f"{rel} -> Multiple .xyz files; using {xyzs[0].name}")
-        elif inps:
-            coord_file, source = inps[0], 'inp'
-            if len(inps) > 1:
-                warnings.append(f"{rel} -> Multiple .inp files; using {inps[0].name}")
-        else:
-            failed.append(f"{rel} -> No .xyz or .inp file")
-            continue
+        if len(xyzs) > 1:
+            warnings.append(f"{rel} -> Multiple .xyz files; used one for atoms")
+        if len(inps) > 1:
+            warnings.append(f"{rel} -> Multiple .inp files; used one for lattice")
 
         # Choose log: prefer cp2k.log, else first .log
         logs = sorted(folder.glob("*.log"), key=natural_sort_key)
         log_file = folder / "cp2k.log" if (folder / "cp2k.log") in logs else logs[0]
 
         try:
-            if source == 'xyz':
-                atoms, lat = extract_atoms_lattice_xyz(read_lines(coord_file))
-            else:
-                text = coord_file.read_text(encoding='utf-8', errors='ignore')
-                atoms, lat = extract_atoms_lattice_inp(text)
-
-            if not atoms:
-                failed.append(f"{rel} -> Failed to parse atoms from {coord_file.name}")
-                continue
-
+            # Note: atoms and lat are already extracted above — no need to re-parse coord_file
             log_text = log_file.read_text(encoding='utf-8', errors='ignore')
             energy = extract_energy(log_text)
             forces = extract_forces(log_text)
@@ -161,7 +240,7 @@ def main():
             virial = stress_to_virial(stress, vol)
             frame = format_frame(lat, atoms, energy, virial, forces, folder.name)
             all_frames.append(frame)
-            success.append(f"{rel} -> Used {coord_file.name} + {log_file.name}")
+            success.append(f"{rel} -> Used {source_desc} + {log_file.name}")
 
         except Exception as e:
             failed.append(f"{rel} -> Exception: {e}")
@@ -169,12 +248,6 @@ def main():
     # --- Write Logfile.txt ---
     with open(cwd / "Logfile.txt", "w") as f:
         w = lambda s="": f.write(s + "\n")
-        w("-" * 60)
-        w("DISCLAIMER")
-        w("-" * 60)
-        w("This tool ONLY supports CP2K output with stress in [GPa].")
-        w("CP2K 2025+ uses [bar] by default — NOT SUPPORTED.")
-        w("")
         w("-" * 60)
         w("UNIT CONVERSION CONSTANTS")
         w("-" * 60)
