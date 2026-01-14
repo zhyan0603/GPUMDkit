@@ -78,27 +78,84 @@ def extract_mixed_atoms_lattice(folder):
 
     return None, None, None, None
 
-def extract_energy(log): 
-    if m := re.search(r'ENERGY\| Total FORCE_EVAL.*?:\s+([-\d\.E\+]+)', log): 
+def extract_energy(log):
+    """
+    Extract total energy from CP2K log.
+    Supports:
+      - Old format: "ENERGY| Total FORCE_EVAL ... : <value>"
+      - New format: "ENERGY| Total FORCE_EVAL (...) energy [hartree] <value>"
+    Returns energy in eV.
+    """
+    # Try NEW format first (no colon, value after [hartree])
+    if m := re.search(r'ENERGY\| Total FORCE_EVAL \(.*?\) energy \[hartree\]\s+([-\d\.E+\-]+)', log):
         return float(m.group(1)) * HARTREE_TO_EV
+
+    # Try OLD format (with colon)
+    if m := re.search(r'ENERGY\| Total FORCE_EVAL.*?:\s+([-\d\.E+\-]+)', log):
+        return float(m.group(1)) * HARTREE_TO_EV
+
     return float('nan')
 
 def extract_forces(log):
+    """
+    Extract atomic forces from CP2K log.
+    Supports:
+      - New format: "FORCES| Atomic forces [hartree/bohr]" (CP2K 2025+)
+      - Old format: "ATOMIC FORCES in [a.u.]" with element table
+    Returns forces in eV/angstrom as list of [fx, fy, fz].
+    """
+    forces = []
+
+    # --- Try NEW format (CP2K 2025+) ---
+    if 'FORCES| Atomic forces [hartree/bohr]' in log:
+        lines = log.splitlines()
+        in_block = False
+        for line in lines:
+            if line.strip().startswith('FORCES| Atomic forces [hartree/bohr]'):
+                in_block = True
+                continue
+            if in_block:
+                if not line.strip().startswith('FORCES|'):
+                    break
+                parts = line.split()
+                if len(parts) >= 5 and parts[1].isdigit():
+                    try:
+                        fx = float(parts[2]) * FORCE_AU_TO_EV_ANG
+                        fy = float(parts[3]) * FORCE_AU_TO_EV_ANG
+                        fz = float(parts[4]) * FORCE_AU_TO_EV_ANG
+                        forces.append([fx, fy, fz])
+                    except (ValueError, IndexError):
+                        continue
+        if forces:
+            return forces
+
+    # --- Try OLD format ---
     if m := re.search(r'ATOMIC FORCES in \[a\.u\.\]\n\n # Atom\s+Kind\s+Element\s+X\s+Y\s+Z\n(.*?)(?=\n SUM OF ATOMIC FORCES)', log, re.DOTALL):
-        forces = []
         for line in m.group(1).strip().splitlines():
             p = line.split()
             if len(p) >= 6:
                 fx, fy, fz = [float(p[i]) * FORCE_AU_TO_EV_ANG for i in range(3,6)]
                 forces.append([fx, fy, fz])
-        return forces
+        if forces:
+            return forces
+
     return []
 
 def extract_stress_gpa(log):
-    if not re.search(r'STRESS\|\s+Analytical stress tensor\s+\[GPa\]', log): return None
-    matches = re.findall(r'STRESS\|\s+[xyz]\s+([-\d\.E+\-]+)\s+([-\d\.E+\-]+)\s+([-\d\.E+\-]+)', log, re.IGNORECASE)
-    if len(matches) >= 3:
-        return [float(v) for row in matches[:3] for v in row]
+    # Try GPa first
+    if re.search(r'STRESS\|\s+Analytical stress tensor\s+\[GPa\]', log):
+        matches = re.findall(r'STRESS\|\s+[xyz]\s+([-\d\.E+\-]+)\s+([-\d\.E+\-]+)\s+([-\d\.E+\-]+)', log, re.IGNORECASE)
+        if len(matches) >= 3:
+            return [float(v) for row in matches[:3] for v in row]
+    
+    # Try bar (CP2K 2025+)
+    if re.search(r'STRESS\|\s+Analytical stress tensor\s+\[bar\]', log):
+        matches = re.findall(r'STRESS\|\s+[xyz]\s+([-\d\.E+\-]+)\s+([-\d\.E+\-]+)\s+([-\d\.E+\-]+)', log, re.IGNORECASE)
+        if len(matches) >= 3:
+            stress_bar = [float(v) for row in matches[:3] for v in row]
+            # Convert bar to GPa: 1 bar = 0.1 GPa
+            return [s * 0.1 for s in stress_bar]
+    
     return None
 
 def compute_volume(lat):
@@ -164,7 +221,6 @@ def main():
 
         try:
             # Note: atoms and lat are already extracted above — no need to re-parse coord_file
-
             log_text = log_file.read_text(encoding='utf-8', errors='ignore')
             energy = extract_energy(log_text)
             forces = extract_forces(log_text)
@@ -192,12 +248,6 @@ def main():
     # --- Write Logfile.txt ---
     with open(cwd / "Logfile.txt", "w") as f:
         w = lambda s="": f.write(s + "\n")
-        w("-" * 60)
-        w("DISCLAIMER")
-        w("-" * 60)
-        w("This tool ONLY supports CP2K output with stress in [GPa].")
-        w("CP2K 2025+ uses [bar] by default — NOT SUPPORTED.")
-        w("")
         w("-" * 60)
         w("UNIT CONVERSION CONSTANTS")
         w("-" * 60)
