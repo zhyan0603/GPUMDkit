@@ -92,7 +92,7 @@ avg_pressure_z = np.mean(pressure_z[start_index:])
 avg_length_x = np.mean(box_length_x[start_index:])
 avg_length_y = np.mean(box_length_y[start_index:])
 avg_length_z = np.mean(box_length_z[start_index:])
-avg_volume = np.mean(volume[start_index:]) / 1000  # Convert to x10^3 Å^3
+avg_volume = np.mean(volume[start_index:]) / 1000  # Convert to x10^3 Angstrom^3
 if num_columns == 18:
     avg_angle_alpha = np.mean(box_angle_alpha[start_index:])
     avg_angle_beta = np.mean(box_angle_beta[start_index:])
@@ -118,10 +118,10 @@ average_results = [
     f"Pressure X: {avg_pressure_x:.3f} GPa",
     f"Pressure Y: {avg_pressure_y:.3f} GPa",
     f"Pressure Z: {avg_pressure_z:.3f} GPa",
-    f"Lattice Length X: {avg_length_x:.3f} Å",
-    f"Lattice Length Y: {avg_length_y:.3f} Å",
-    f"Lattice Length Z: {avg_length_z:.3f} Å",
-    f"Volume: {avg_volume*1000:.3f} Å^3",
+    f"Lattice Length X: {avg_length_x:.3f} Angstrom",
+    f"Lattice Length Y: {avg_length_y:.3f} Angstrom",
+    f"Lattice Length Z: {avg_length_z:.3f} Angstrom",
+    f"Volume: {avg_volume*1000:.3f} Angstrom^3",
 ]
 if num_columns == 18:
     average_results.extend([
@@ -188,7 +188,7 @@ axs[1, 0].plot(time, box_length_y, label='Ly')
 axs[1, 0].plot(time, box_length_z, label='Lz')
 axs[1, 0].set_title('Lattice Parameters')
 axs[1, 0].set_xlabel('Time (ps)')
-axs[1, 0].set_ylabel(r'Lattice Parameters ($\AA$)')
+axs[1, 0].set_ylabel(r'Lattice Parameters ($\mathrm{{\AA}}$)')
 axs[1, 0].legend()
 
 # Volume

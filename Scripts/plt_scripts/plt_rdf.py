@@ -25,7 +25,7 @@ def plot_rdf(file_path, column_index=None, save=False):
         plt.figure(figsize=(6, 3.5))
         # Plot the selected column
         plt.plot(distances, rdf_values[:, column_index], label=column_names[column_index + 1])
-        plt.xlabel(r'Distance ($\AA$)')
+        plt.xlabel(r'Distance ($\mathrm{{\AA}}$)')
         plt.ylabel('g(r)')
         plt.tight_layout()
         plt.legend()
@@ -52,7 +52,7 @@ def plot_rdf(file_path, column_index=None, save=False):
         for i, ax in enumerate(axes):
             if i < num_plots:  # Only plot for the available number of columns
                 ax.plot(distances, rdf_values[:, i], label=column_names[i + 1])
-                ax.set_xlabel(r'Distance ($\AA$)')
+                ax.set_xlabel(r'Distance ($\mathrm{{\AA}}$)')
                 ax.set_ylabel('g(r)')
                 ax.legend()
             else:

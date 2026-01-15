@@ -1,8 +1,8 @@
 """
-@Author   : Ziyang Wang
-@Email    : m15566605404@163.com
+@Author   : Ziyang Wang (m15566605404@163.com)
 @Remark   : Post-processing script for VAC (Velocity Autocorrelation) and PDOS (Phonon Density of States)
             Calculates normalized VAC, PDOS, and Heat Capacity (Cv) from GPUMD outputs.
+@Modified : Added logic to parse 'group' keyword in compute_dos to determine num_atoms correctly.
 """
 
 import pandas as pd
@@ -46,42 +46,102 @@ class VAC_DOS_Processor:
             sys.exit(1)
 
     def get_simulation_params(self):
-        """Parse N (correlation steps) from run.in and num_atoms from model.xyz"""
+        """Parse N (correlation steps) from run.in and num_atoms based on grouping"""
         N = None
         num_atoms = None
+        group_info = None # (method_index, group_id)
 
-        # 1. Get N from run.in
+        # 1. Parse run.in for N and group info
         if os.path.exists(self.files['run']):
             with open(self.files['run'], 'r') as f:
                 for line in f:
-                    # Look for 'compute_dos' or 'compute_vac'
-                    # Format: compute_dos interval N sample_interval ...
+                    # Look for 'compute_dos'
                     if 'compute_dos' in line and not line.strip().startswith('#'):
                         parts = line.split()
+                        # Parse N (3rd argument, index 2)
                         try:
                             N = int(parts[2])
                         except IndexError:
                             pass
-        
+                        
+                        # Check for 'group' keyword logic
+                        if 'group' in parts:
+                            try:
+                                group_idx = parts.index('group')
+                                # Read the two numbers following 'group'
+                                method_index = int(parts[group_idx + 1])
+                                group_id = int(parts[group_idx + 2])
+                                group_info = (method_index, group_id)
+                                print(f"[Info] Grouping detected in run.in: method {method_index}, group_id {group_id}")
+                            except (ValueError, IndexError):
+                                print("[Warning] 'group' keyword found but failed to parse indices.")
+
         if N is None:
-            print("[Warning] Could not parse N from run.in. Using default N=500 (from original script).")
+            print("[Warning] Could not parse N from run.in. Using default N=500.")
             N = 500
 
-        # 2. Get num_atoms from model.xyz
+        # 2. Determine num_atoms from model.xyz
         if os.path.exists(self.files['model']):
             try:
                 atoms = read(self.files['model'])
-                num_atoms = len(atoms)
-                print(f"[Info] Auto-detected num_atoms = {num_atoms} from model.xyz")
+                
+                if group_info:
+                    method_index, target_group_id = group_info
+                    available_keys = list(atoms.arrays.keys())
+                    num_atoms = self._count_atoms_by_raw_parsing(self.files['model'], method_index, target_group_id)
+                    print(f"[Info] Calculated num_atoms = {num_atoms} for group {target_group_id} (method {method_index})")
+                    
+                else:
+                    # Logic 1: No grouping, count all atoms
+                    num_atoms = len(atoms)
+                    print(f"[Info] No grouping. Total num_atoms = {num_atoms}")
+
             except Exception as e:
                 print(f"[Warning] Failed to read model.xyz: {e}")
-        
-        if num_atoms is None:
-            # Fallback to the value in your original script if file missing
-            print("[Warning] model.xyz not found. Using default num_atoms = 1152.")
-            num_atoms = 1152
+                print("Using fallback num_atoms = 1152")
+                num_atoms = 1152
+        else:
+             print("[Warning] model.xyz not found. Using default num_atoms = 1152.")
+             num_atoms = 1152
 
         return N, num_atoms
+
+    def _count_atoms_by_raw_parsing(self, filepath, method_idx, target_id):
+        """
+        Manually parse model.xyz to count atoms in a specific group.
+        Assumes GPUMD format: 
+        Line 1: N_atoms
+        Line 2: Box / Comment
+        Line 3+: type x y z mass group0 group1 ...
+        
+        User logic: method_idx 0 -> 6th column (0-based index 5? or 1-based 6?)
+        User said: "if 0 ... corresponds to the 6th group of numbers"
+        Usually GPUMD model.xyz cols: [type, x, y, z, mass, group0, group1...]
+        Indices: 0, 1, 2, 3, 4, 5, 6...
+        So method_idx 0 maps to Column 5 (6th column).
+        Target Column Index = 5 + method_idx
+        """
+        count = 0
+        target_col_idx = 5 + method_idx 
+        
+        with open(filepath, 'r') as f:
+            # Skip header
+            try:
+                next(f) # N_atoms
+                next(f) # Comment
+            except StopIteration:
+                return 0
+            
+            for line in f:
+                parts = line.split()
+                if len(parts) > target_col_idx:
+                    try:
+                        val = int(parts[target_col_idx])
+                        if val == target_id:
+                            count += 1
+                    except ValueError:
+                        pass
+        return count
 
     def process(self, save_mode=False):
         # 1. Initialization
@@ -101,7 +161,6 @@ class VAC_DOS_Processor:
 
         # 2. Reshape and Average (Ensemble Average)
         # Reshape to (N, M) then mean over axis 1 (columns)
-        # Note: GPUMD outputs are typically just concatenated.
         
         # Extract Time and Frequency (Assume same for all runs, take first N)
         t = raw_mvac[:N, 0]             # Correlation time (ps)
@@ -152,8 +211,6 @@ class VAC_DOS_Processor:
         x = (h * nu_grid) / (k_B * T_grid)
         
         # Modal Heat Capacity (Einstein term), in units of k_B
-        # Formula: x^2 * exp(x) / (exp(x) - 1)^2
-        # Handle x close to 0 to avoid singularity (though nu=0 usually dos=0)
         with np.errstate(divide='ignore', invalid='ignore'):
             modal_cv = (x**2 * np.exp(x)) / ((np.exp(x) - 1)**2)
         modal_cv[np.isnan(modal_cv)] = 1.0 # Limit x->0 is 1 (classical limit)

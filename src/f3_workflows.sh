@@ -2,6 +2,7 @@
 # These functions are used to do the workflow
 # See the source codes in Scripts/workflow for more details
 
+# CP2K scf batch pretreatment
 function cp2k_batch_pretreatment(){
 echo " >-------------------------------------------------<"
 echo " | Calling the script in Scripts/workflow          |"
@@ -18,6 +19,7 @@ echo " Code path: ${GPUMDkit_path}/Scripts/workflow/scf_batch_pretreatment_cp2k.
 echo " ---------------------------------------------------"
 }
 
+# SCF batch pretreatment (main function)
 function f301_scf_batch_pretreatment(){ 
     echo " ------------>>"
     echo " 1) VASP scf batch pretreatment"
@@ -43,6 +45,7 @@ function f301_scf_batch_pretreatment(){
     esac
 }
 
+# main function of workflow
 function f3_workflow_dev(){
 echo " ------------>>"
 echo " 301) SCF batch pretreatment"

@@ -84,9 +84,13 @@ class HNEMD_Processor:
                     Max_cor_step = int(line.split()[2])
                     N_omega = int(line.split()[4])
                     direction = int(line.split()[3])
-                    grouping_th = int(line.split()[7])
-                    group_shc_th = int(line.split()[8])
-                if 'nvt_nhc' in line:
+                    if 'group' in line:
+                        grouping_th = int(line.split()[7])
+                        group_shc_th = int(line.split()[8])
+                        part_ratio = -1
+                    else:
+                        part_ratio = 1
+                if 'nvt_' in line:
                     Temp = int(line.split()[2])
 
         N_shc_data = 2 * Max_cor_step - 1 + N_omega
@@ -107,12 +111,13 @@ class HNEMD_Processor:
 
         # Calculate k(omega) from jw
         model = read(self.path['model'])
-        if grouping_th == 0:
-            group_index = 'group'
-        elif grouping_th == 1:
-            raise ValueError("Please check your grouping for SHC method, it seems not the Default setting !!!")
-        group = model.get_array(group_index)
-        part_ratio = np.sum(group == group_shc_th) / group.size
+        if part_ratio == -1:
+            group_arr = model.get_array('group')
+            if group_arr.ndim == 1:
+                group = group_arr
+            else:
+                group = group_arr[:, grouping_th]
+            part_ratio = np.sum(group == group_shc_th) / group.size
 
         vol = model.get_volume() * part_ratio / self.scale_eff_size
         convert = 1.602176634e3  # ev*A/ps/THz * 1/A^3 *1/K * A ==> W/m/K/THz
@@ -155,7 +160,7 @@ class HNEMD_Processor:
             found_hnemd = False
             for line in file:
                 if 'time_step' in line:
-                    time_step = int(line.split()[1])
+                    time_step = float(line.split()[1])
                 if 'compute_hnemd' in line:
                     output_interval = int(line.split()[1])
                     parts = line.strip().split()

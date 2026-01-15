@@ -36,14 +36,14 @@ gs = GridSpec(2, 3)
 # Subplot 1: Scatter plot of delta_f vs dft_f
 ax1 = plt.subplot(gs[0, 0])
 ax1.scatter(dft_f, delta_f, s=10, c='g', marker='o')
-ax1.set_xlabel('|$F_{DFT}$| (eV/Å)')
-ax1.set_ylabel('$\delta_F$ (eV/Å)')
+ax1.set_xlabel(r'|$F_{DFT}$| (eV/$\mathrm{{\AA}}$)')
+ax1.set_ylabel(r'$\delta_F$ (eV/$\mathrm{{\AA}}$)')
 ax1.set_title('The errors of $\delta_F$')
 
 # Subplot 2: Scatter plot of delta_angle vs dft_f
 ax2 = plt.subplot(gs[1, 0])
 ax2.scatter(dft_f, delta_angle, s=10, c='orange', marker='s')
-ax2.set_xlabel('|$F_{DFT}$| (eV/Å)')
+ax2.set_xlabel(r'|$F_{DFT}$| (eV/$\mathrm{{\AA}}$)')
 ax2.set_ylabel(r'$\delta_{\theta}$ ($\degree$)')
 ax2.set_title(r'The errors of $\delta_{\theta}$')
 
@@ -68,7 +68,7 @@ for interval, count in sorted(interval_counts.items()):
 ax3.plot(delta_f_vals, counts_f, marker='o', linestyle='-', c='g')
 ax3.yaxis.set_major_formatter(ScalarFormatter(useMathText=True))
 ax3.ticklabel_format(axis='y', style='sci', scilimits=(0,0))
-ax3.set_xlabel('$\delta_F$ (eV/Å)')
+ax3.set_xlabel(r'$\delta_F$ (eV/$\mathrm{{\AA}}$)')
 ax3.set_ylabel('Counts')
 ax3.set_title('The distribution of $\delta_F$')
 ax3.grid(False)
@@ -109,7 +109,7 @@ cdf = np.arange(len(sorted_df)) / float(len(sorted_df))
 interp = interpolate.interp1d(sorted_df, cdf)
 ys = interp(xs) * 100
 ax5.plot(xs, ys, marker='o', linestyle='-', c='g')
-ax5.set_xlabel('|$\delta_F$| (eV/Å)')
+ax5.set_xlabel(r'|$\delta_F$| (eV/$\mathrm{{\AA}}$)')
 ax5.set_ylabel('Probability (%)')
 ax5.set_title(r'The CDF of $\delta_F$')
 

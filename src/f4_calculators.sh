@@ -2,6 +2,7 @@
 # These functions are used to do the calculators
 # See the source codes in Scripts/calculators for more details
 
+# Calculate ionic conductivity
 function f401_calc_ionic_conductivity(){
 echo " >-------------------------------------------------<"
 echo " | This function calls the script in calculators   |"
@@ -17,6 +18,7 @@ echo " Code path: ${GPUMDkit_path}/Scripts/calculators/calc_ion_conductivity.py"
 echo " ---------------------------------------------------"
 }
 
+# Calculate properties with NEP
 function f402_calc_properties_with_nep(){
 echo " >-------------------------------------------------<"
 echo " | This function calls the script in calculators   |"
@@ -33,6 +35,7 @@ echo " Code path: ${GPUMDkit_path}/Scripts/calculators/calc_properties_with_nep.
 echo " ---------------------------------------------------"
 }
 
+# Calculate descriptors
 function f403_calc_descriptors(){
 echo " >-------------------------------------------------<"
 echo " | This function calls the script in calculators   |"
@@ -49,6 +52,7 @@ echo " Code path: ${GPUMDkit_path}/Scripts/calculators/calc_descriptors.py"
 echo " ---------------------------------------------------"
 }
 
+# Calculate density of atomistic states (DOAS)
 function f404_calc_doas(){
 echo " >-------------------------------------------------<"
 echo " | This function calls the script in calculators   |"
@@ -65,6 +69,7 @@ echo " Code path: ${GPUMDkit_path}/Scripts/calculators/calc_doas.py"
 echo " ---------------------------------------------------"
 }
 
+# Calculate nudged elastic band (NEB) by nep
 function f405_calc_neb(){
 echo " >-------------------------------------------------<"
 echo " | This function calls the script in calculators   |"
@@ -81,6 +86,7 @@ echo " Code path: ${GPUMDkit_path}/Scripts/calculators/neb_calculation.py"
 echo " ---------------------------------------------------"
 }
 
+# main function of calculators
 function f4_calculators(){
 echo " ------------>>"
 echo " 401) Calc ionic conductivity"

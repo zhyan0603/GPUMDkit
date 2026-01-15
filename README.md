@@ -82,16 +82,16 @@ There are two options, <u>*interactive mode*</u> and <u>*command-line mode*</u>
 3. Follow the on-screen prompts to interactively select and run the desired function.
 
     ```
-             ____ ____  _   _ __  __ ____  _    _ _   
-            / ___|  _ \| | | |  \/  |  _ \| | _(_) |_ 
+             ____ ____  _   _ __  __ ____  _    _ _
+            / ___|  _ \| | | |  \/  |  _ \| | _(_) |_
            | |  _| |_) | | | | |\/| | | | | |/ / | __|
            | |_| |  __/| |_| | |  | | |_| |   <| | |_
             \____|_|    \___/|_|  |_|____/|_|\_\_|\__|
     
-            GPUMDkit Version 1.4.2 (dev) (2025-12-17)
-      Core Developer: Zihan YAN (yanzihan@westlake.edu.cn)        
+            GPUMDkit Version 1.5.0 (dev) (2025-01-05)
+      Core Developer: Zihan YAN (yanzihan@westlake.edu.cn)
     
-     ----------------------- GPUMD -----------------------      
+     ----------------------- GPUMD -----------------------
      1) Format Conversion          2) Sample Structures
      3) Workflow                   4) Calculators
      5) Analyzer                   6) Developing ...
@@ -116,12 +116,11 @@ the help information:
 
 ```
 +==================================================================================================+
-|                              GPUMDkit 1.4.1 (dev) (2025-11-10) Usage                             |
+|                              GPUMDkit 1.5.0 (dev) (2025-01-05) Usage                             |
 +======================================== Conversions =============================================+
-| -outcar2exyz   Convert OUTCAR to extxyz       | -pos2exyz     Convert POSCAR to extxyz           |
-| -castep2exyz   Convert castep to extxyz       | -pos2lmp      Convert POSCAR to LAMMPS           |
-| -cif2pos       Convert cif to POSCAR          | -cif2exyz     Convert cif to extxyz              |
-| -cp2k2exyz     Convert cp2k output to extxyz  | -lmp2exyz     Convert LAMMPS-dump to extxyz      |
+| -out2xyz       Convert OUTCAR to extxyz       | -pos2exyz     Convert POSCAR to extxyz           |
+| -cif2pos       Convert cif to POSCAR          | -pos2lmp      Convert POSCAR to LAMMPS           |
+| -cif2exyz      Convert cif to extxyz          | -lmp2exyz     Convert LAMMPS-dump to extxyz      |
 | -addgroup      Add group label                | -addweight    Add weight to the struct in extxyz |
 | Developing...                                 | Developing...                                    |
 +========================================= Analysis ===============================================+
@@ -132,9 +131,9 @@ the help information:
 | -pynep         Sample struct by pynep         | Developing...                                    |
 +====================================== Misc Utilities ============================================+
 | -plt           Plot scripts                   | -get_frame     Extract the specified frame       |
-| -calc          Calculators                    | -clear_xyz     Clear extra info in XYZ file      |
-| -clean         Clear files for work_dir       | -time          Time consuming Analyzer           |
-| -update        Update GPUMDkit                | Developing...                                    |
+| -calc          Calculators                    | -frame_range   Extract frames by fraction range  |
+| -clean         Clear files for work_dir       | -clean_xyz     Clean extra info in XYZ file      |
+| -time          Time consuming Analyzer        | -update        Update GPUMDkit                   |
 +==================================================================================================+
 | For detailed usage and examples, use: gpumdkit.sh -<option> -h                                   |
 +==================================================================================================+
@@ -150,7 +149,7 @@ the help information:
 
 ```
 +=====================================================================================================+
-|                              GPUMDkit 1.4.2 (dev) (2025-12-17) Plotting Usage                       |
+|                              GPUMDkit 1.5.0 (dev) (2025-01-05) Plotting Usage                       |
 +=============================================== Plot Types ==========================================+
 | thermo          Plot thermo info                   | train          Plot NEP train results          |
 | prediction      Plot NEP prediction results        | train_test     Plot NEP train and test results |
@@ -163,7 +162,7 @@ the help information:
 | doas            Plot density of atomistic states   | arrhenius_d    Plot Arrhenius diffusivity      |
 | arrhenius_sigma Plot Arrhenius sigma               | net_force      Plot net force distribution     |
 | emd             Plot EMD results                   | nemd           Plot NEMD results               |
-| hnemd           Plot HNEMD results                 |                                                |
+| hnemd           Plot HNEMD results                 | pdos           Plot VAC and PDOS               |
 +=====================================================================================================+
 | For detailed usage and examples, use: gpumdkit.sh -plt <plot_type> -h                               |
 +=====================================================================================================+

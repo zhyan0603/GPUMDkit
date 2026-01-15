@@ -1,4 +1,8 @@
 #--------------------- function 5 analyzer ----------------------
+# These functions are used to do the analyzers
+# See the source codes in Scripts/analyzer for more details
+
+# Analyze composition of extxyz
 function f501_analyze_composition(){
 echo " >-------------------------------------------------<"
 echo " | This function calls the script in analyzer      |"
@@ -15,6 +19,7 @@ echo " Code path: ${GPUMDkit_path}/Scripts/analyzer/analyze_composition.py"
 echo " ---------------------------------------------------"
 }
 
+# Find outliers of extxyz
 function f502_find_outliers(){
 echo " >-------------------------------------------------<"
 echo " | This function calls the script in analyzer      |"
@@ -28,6 +33,7 @@ echo " Code path: ${GPUMDkit_path}/Scripts/analyzer/find_outliers.py"
 echo " ---------------------------------------------------"
 }
 
+# main function of analyzers
 function f5_analyzers(){
 echo " ------------>>"
 echo " 501) Analyze composition of extxyz"

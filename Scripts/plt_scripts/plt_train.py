@@ -72,11 +72,11 @@ axs[0, 1].tick_params(axis='both', labelsize=10)
 axs[0, 1].legend(['energy'])
 axs[0, 1].axis('tight')
 
-# Calculate and display RMSE, MAE, and R² for energy
+# Calculate and display RMSE, MAE, and R2 for energy
 energy_rmse = calculate_rmse(energy_data[:, 0], energy_data[:, 1]) * 1000
 energy_mae = calculate_mae(energy_data[:, 0], energy_data[:, 1]) * 1000
 energy_r2 = calculate_r2(energy_data[:, 0], energy_data[:, 1])
-axs[0, 1].text(0.7, 0.12, f'R²: {energy_r2:.4f}\nMAE: {energy_mae:.2f} meV/atom\nRMSE: {energy_rmse:.2f} meV/atom', 
+axs[0, 1].text(0.7, 0.12, r'R$^2$'+f': {energy_r2:.4f}\nMAE: {energy_mae:.2f} meV/atom\nRMSE: {energy_rmse:.2f} meV/atom', 
                transform=axs[0, 1].transAxes, fontsize=10, verticalalignment='center', horizontalalignment='center')
 #axs[0, 1].text(-0.07, 1.03, "(b)", transform=axs[0, 1].transAxes, fontsize=12, va='top', ha='right')
 
@@ -100,7 +100,8 @@ mean_force_rmse = np.mean(force_rmse) * 1000
 mean_force_mae = np.mean(force_mae) * 1000
 mean_force_r2 = np.mean(force_r2)
 axs[1, 0].text(0.7, 0.12, 
-               f'R²: {mean_force_r2:.4f}\nMAE: {mean_force_mae:.2f} meV/Å\nRMSE: {mean_force_rmse:.2f} meV/Å', 
+               r'R$^2$'+f': {mean_force_r2:.4f}\nMAE: {mean_force_mae:.2f} meV/'+r'$\mathrm{{\AA}}$'
+               +f'\nRMSE: {mean_force_rmse:.2f} meV/'+r'$\mathrm{{\AA}}$', 
                transform=axs[1, 0].transAxes, fontsize=10, verticalalignment='center', horizontalalignment='center')
 #axs[1, 0].text(-0.07, 1.03, "(c)", transform=axs[1, 0].transAxes, fontsize=12, va='top', ha='right')
 
@@ -126,7 +127,7 @@ else:
     mean_stress_rmse = np.mean(stress_rmse)
     mean_stress_mae = np.mean(stress_mae)
     mean_stress_r2 = np.mean(stress_r2)
-    axs[1, 1].text(0.7, 0.12, f'R²: {mean_stress_r2:.4f}\nMAE: {mean_stress_mae:.4f} GPa\nRMSE: {mean_stress_rmse:.4f} GPa', 
+    axs[1, 1].text(0.7, 0.12, r'R$^2$'+f': {mean_stress_r2:.4f}\nMAE: {mean_stress_mae:.4f} GPa\nRMSE: {mean_stress_rmse:.4f} GPa', 
                 transform=axs[1, 1].transAxes, fontsize=10, verticalalignment='center', horizontalalignment='center')
 
 # Adjust layout for better spacing

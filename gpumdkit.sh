@@ -35,7 +35,7 @@ function main(){
     echo " ------------>>"
     echo ' Input the function number:'
     array_choice=(
-        "0" "1" "101" "102" "103" "104" "105" 
+        "0" "1" "101" "102" "103" "104" "105"
         "2" "201" "202" "203" "204" "205" 
         "3" "301" "302" "303" 
         "4" "401" "402" "403" "404" "405"
@@ -127,7 +127,7 @@ function help_info_table(){
     echo "| -cif2pos       Convert cif to POSCAR          | -pos2lmp      Convert POSCAR to LAMMPS           |"
     echo "| -cif2exyz      Convert cif to extxyz          | -lmp2exyz     Convert LAMMPS-dump to extxyz      |"
     echo "| -addgroup      Add group label                | -addweight    Add weight to the struct in extxyz |"
-    echo "| Developing...                                 | Developing...                                    |"
+    echo "| -cp2k2xyz      Convert CP2K file to extxyz    | Developing...                                    |"
     echo "+========================================= Analysis ===============================================+"
     echo "| -range         Print range of energy etc.     | -max_rmse     Get max RMSE from extxyz           |"
     echo "| -min_dist      Get min_dist between atoms     | -min_dist_pbc Get min_dist considering PBC       |"
@@ -138,7 +138,7 @@ function help_info_table(){
     echo "| -plt           Plot scripts                   | -get_frame     Extract the specified frame       |"
     echo "| -calc          Calculators                    | -frame_range   Extract frames by fraction range  |"
     echo "| -clean         Clear files for work_dir       | -clean_xyz     Clean extra info in XYZ file      |"
-    echo "| -time          Time consuming Analyzer        | -update        Update GPUMDkit                   |"    
+    echo "| -time          Time consuming Analyzer        | -update        Update GPUMDkit                   |"
     echo "+==================================================================================================+"
     echo "| For detailed usage and examples, use: gpumdkit.sh -<option> -h                                   |"
     echo "+==================================================================================================+"
@@ -335,6 +335,11 @@ if [ ! -z "$1" ]; then
                 echo " See the source code of xml2xyz.py for more details"
                 echo " Code path: ${format_conv_path}/xml2xyz.py"               
             fi ;;
+
+        -cp2k2xyz)
+            echo " Calling script by Chen HUA "
+            python ${format_conv_path}/cp2k_log2xyz.py
+            echo " Code path: ${format_conv_path}/cp2k_log2xyz.py" ;;
 
         -pos2exyz)
             if [ ! -z "$2" ] && [ "$2" != "-h" ] && [ ! -z "$3" ] ; then

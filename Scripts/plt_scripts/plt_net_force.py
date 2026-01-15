@@ -120,7 +120,7 @@ def plot_net_force_distribution(net_forces, output_base, save_flag):
     
     # Set axes
     ax.set_xscale('log')
-    ax.set_xlabel('Net Force (eV/Å)')
+    ax.set_xlabel(r'Net Force (eV/$\mathrm{{\AA}}$)')
     ax.set_ylabel('Density')
     
     # Add grid for better readability
@@ -177,14 +177,14 @@ def check_convergence(xyz_file, threshold=0.001, save_flag=False):
             f.write(f"Net force statistics - {xyz_file}\n")
             f.write("="*50 + "\n")
             f.write(f"Total frames: {total_frames}\n")
-            f.write(f"Suspicious frames (>{threshold} eV/Å): {unconverged}\n")
+            f.write(f"Suspicious frames (>{threshold} eV/Angstrom): {unconverged}\n")
             f.write(f"Suspicious ratio: {unconverged_ratio:.2f}%\n")
-            f.write(f"Median net force: {median_force:.6f} eV/Å\n")
-            f.write(f"Max net force: {np.max(net_forces):.6f} eV/Å\n")
-            f.write(f"Min net force: {np.min(net_forces):.6f} eV/Å\n")
+            f.write(f"Median net force: {median_force:.6f} eV/Angstrom\n")
+            f.write(f"Max net force: {np.max(net_forces):.6f} eV/Angstrom\n")
+            f.write(f"Min net force: {np.min(net_forces):.6f} eV/Angstrom\n")
         
         print(f" Suspicious ratio: {unconverged_ratio:.2f}%")
-        print(f" Median net force: {median_force:.6f} eV/Å")
+        print(f" Median net force: {median_force:.6f} eV/Angstrom")
         print(f" Results saved to: {stats_file}")
         print(" "+"-"*40)
     else:
@@ -199,7 +199,7 @@ def main():
     xyz_file = sys.argv[1]
     save_flag = len(sys.argv) > 2 and sys.argv[2].lower() == 'save'
     
-    # Check convergence with threshold 0.001 eV/Å
+    # Check convergence with threshold 0.001 eV/Angstrom
     check_convergence(xyz_file, threshold=0.001, save_flag=save_flag)
 
 if __name__ == "__main__":

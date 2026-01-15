@@ -1,6 +1,7 @@
 #--------------------- function 1 format conversion ----------------------
 # These functions are used to convert the format of the files
 
+# Convert VASP to extxyz
 function f101_out2xyz(){
 echo " >-------------------------------------------------<"
 echo " | Calling the script in Scripts/format_conversion |"
@@ -36,6 +37,7 @@ else
 fi
 }
 
+# Convert mtp to extxyz
 function f102_mtp2xyz(){
 echo " >-------------------------------------------------<"
 echo " | Calling the script in Scripts/format_conversion |"
@@ -52,7 +54,23 @@ echo " Code path: ${GPUMDkit_path}/Scripts/format_conversion/mtp2xyz.py"
 echo " ---------------------------------------------------"
 }
 
-function f103_cp2k2xyz(){
+# Convert CP2K to extxyz - method by Chen HUA
+function cp2k2xyz_chenhua(){
+echo " >-------------------------------------------------<"
+echo " | Calling the script in Scripts/format_conversion |"
+echo " | Script: cp2k_log2xyz.py                         |"
+echo " | Developer: Chen HUA (huachen23@mails.ucas.ac.cn)|"
+echo " >-------------------------------------------------<"
+echo " This script converts CP2K calculations to extxyz"
+echo " Need file: .log for properties and .xyz/.inp for structure"
+echo " ---------------------------------------------------"
+python ${GPUMDkit_path}/Scripts/format_conversion/cp2k_log2xyz.py
+echo " Code path: ${GPUMDkit_path}/Scripts/format_conversion/cp2k_log2xyz.py"
+echo " ---------------------------------------------------"
+}
+
+# Convert CP2K to extxyz - method by Ke XU
+function cp2k2xyz_kexu(){
 echo " >-------------------------------------------------<"
 echo " | Calling the script in Scripts/format_conversion |"
 echo " | Script: cp2k2xyz.py                             |"
@@ -67,6 +85,30 @@ echo " Code path: ${GPUMDkit_path}/Scripts/format_conversion/cp2k2xyz.py"
 echo " ---------------------------------------------------"
 }
 
+#Convert CP2K to extxyz (main function)
+function f103_cp2k2xyz(){
+echo " >-------------------------------------------------<"
+echo " | There are two scripts for CP2K to extxyz:       |"
+echo " | 1) cp2k_log2xyz.py by Chen HUA                  |"
+echo " | 2) cp2k2xyz.py by Ke XU                         |"
+echo " | You can choose either one to use.               |"
+echo " >-------------------------------------------------<"
+echo " Choose the script to use:"
+echo " 1) cp2k_log2xyz.py (from log and inp/xyz files)"
+echo " 2) cp2k2xyz.py (from pos.xyz, frc.xyz, cell.cell files)"
+echo " ------------>>"
+read -p " " cp2k_script_choice
+if [ "$cp2k_script_choice" == "1" ]; then
+    cp2k2xyz_chenhua
+elif [ "$cp2k_script_choice" == "2" ]; then
+    cp2k2xyz_kexu
+else
+    echo " Your input is illegal, please try again"
+    return
+fi
+}
+
+# Convert ABACUS to extxyz
 function f104_abacus2xyz(){ 
 echo " >-------------------------------------------------<"
 echo " | Calling the script in Scripts/format_conversion |"
@@ -101,6 +143,7 @@ else
 fi
 }
 
+# Convert extxyz to POSCAR
 function f105_extxyz2poscar(){
 echo " >-------------------------------------------------<"
 echo " | Calling the script in Scripts/format_conversion |"
@@ -117,6 +160,7 @@ echo " Code path: ${GPUMDkit_path}/Scripts/format_conversion/exyz2pos.py"
 echo " ---------------------------------------------------"
 }
 
+#--------------------- function 1 ----------------------
 function f1_format_conversion(){
 echo " ------------>>"
 echo " 101) Convert VASP to extxyz"
@@ -128,7 +172,7 @@ echo " 000) Return to the main menu"
 echo " ------------>>"
 echo " Input the function number:"
 
-arry_num_choice=("000" "101" "102" "103" "104" "105") 
+arry_num_choice=("000" "101" "102" "103" "104" "105" "106") 
 read -p " " num_choice
 while ! echo "${arry_num_choice[@]}" | grep -wq "$num_choice" 
 do
@@ -142,7 +186,7 @@ case $num_choice in
     "102") f102_mtp2xyz ;;
     "103") f103_cp2k2xyz ;;
     "104") f104_abacus2xyz ;;
-    "105") f105_extxyz2poscar ;;       
+    "105") f105_extxyz2poscar ;;
     "000") menu; main ;;
 esac
 }

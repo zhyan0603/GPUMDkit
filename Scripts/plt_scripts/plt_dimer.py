@@ -16,9 +16,9 @@ symbol2 = sys.argv[2]  # Type of the second atom
 nep_path = sys.argv[3]  # Directory of the NEP potential file
 
 # Set the range and step size for distances
-start_distance = 0.1  # Starting distance in Ångström
-end_distance = 6.0    # Ending distance in Ångström
-step_size = 0.01      # Step size in Ångström
+start_distance = 0.1  # Starting distance in Angstrom
+end_distance = 6.0    # Ending distance in Angstrom
+step_size = 0.01      # Step size in Angstrom
 
 # Initialize arrays for results
 distances = np.arange(start_distance, end_distance + step_size, step_size)
@@ -61,7 +61,7 @@ energies_shifted = energies - reference_energy
 # Save data to file after calculations
 with open(f'dimer_{symbol1}_{symbol2}.txt', 'w') as f:
     # Write the header
-    f.write('Distance (Å)  Energy (eV)  Force (eV/Å)\n')
+    f.write('Distance (Angstrom)  Energy (eV)  Force (eV/Angstrom)\n')
     
     # Write shifted energy and force data
     for i, distance in enumerate(distances):
@@ -72,27 +72,27 @@ fig, axs = plt.subplots(2, 1, figsize=(6, 6), dpi=150)
 
 # Plot energy difference vs. distance
 axs[0].plot(distances, energies_shifted, marker='o')
-axs[0].set_xlabel('Dimer Distance (Å)')
+axs[0].set_xlabel(r'Dimer Distance ($\mathrm{{\AA}}$)')
 axs[0].set_ylabel(r'$\Delta$E (eV)')
 title = f"{symbol1}-{symbol2} Dimer Interaction"
 axs[0].set_title(title)
 
 # Plot force vs. distance
 axs[1].plot(distances, forces, marker='o', color='C1')
-axs[1].set_xlabel('Dimer Distance (Å)')
-axs[1].set_ylabel('Fx (eV/Å)')
+axs[1].set_xlabel(r'Dimer Distance ($\mathrm{{\AA}}$)')
+axs[1].set_ylabel(r'Fx (eV/$\mathrm{{\AA}}$)')
 
 # Adjust layout and display the plot
 plt.tight_layout()
 
 if len(sys.argv) > 4 and sys.argv[4] == 'save':
-    plt.savefig('dimer.png', dpi=300)
+    plt.savefig(f'dimer-{symbol1}-{symbol2}.png', dpi=300)
 else:
     # Check if the current backend is non-interactive
     from matplotlib import get_backend
     if get_backend().lower() in ['agg', 'cairo', 'pdf', 'ps', 'svg']:
         print("Unable to display the plot due to the non-interactive backend.")
-        print("The plot has been automatically saved as 'dimer.png'.")
+        print(f"The plot has been automatically saved as 'dimer-{symbol1}-{symbol2}.png'.")
         plt.savefig(f'dimer-{symbol1}-{symbol2}.png', dpi=300)
     else:
         plt.show()

@@ -94,10 +94,14 @@ class NEMD_Processor:
                     Max_cor_step = int(line.split()[2])
                     N_omega = int(line.split()[4])
                     direction = int(line.split()[3])
-                    grouping_th = int(line.split()[7])
-                    group_shc_th = int(line.split()[8])
-                if 'nvt_nhc' in line:
-                    Temp = int(line.split()[2])
+                    if 'group' in line:
+                        grouping_th = int(line.split()[7])
+                        group_shc_th = int(line.split()[8])
+                        part_ratio = -1
+                    else:
+                        part_ratio = 1
+                # if 'nvt_' in line:
+                #     Temp = int(line.split()[2])
 
         N_shc_data = 2 * Max_cor_step - 1 + N_omega
         N_repeat = len(raw_shc_data) // N_shc_data
@@ -117,12 +121,13 @@ class NEMD_Processor:
 
         # Calculate g(omega) from jw for NEMD
         model = read(self.path['model'])
-        if grouping_th == 0:
-            group_index = 'group'
-        elif grouping_th == 1:
-            raise ValueError("Please check your grouping for SHC method, it seems not the Default setting !!!")
-        group = model.get_array(group_index)
-        part_ratio = np.sum(group == group_shc_th) / group.size
+        if part_ratio == -1:
+            group_arr = model.get_array('group')
+            if group_arr.ndim == 1:
+                group = group_arr
+            else:
+                group = group_arr[:, grouping_th]
+            part_ratio = np.sum(group == group_shc_th) / group.size
 
         vol = model.get_volume() * part_ratio / self.scale_vacuum
         convert = 1.602176634e7  # ev*A/ps/THz * 1/A^3 *1/K * A ==> MW/m/K/THz
