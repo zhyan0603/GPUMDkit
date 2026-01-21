@@ -10,7 +10,7 @@ if [ -z "$GPUMDkit_path" ]; then
     exit 1
 fi
 
-VERSION="1.5.0 (dev) (2025-01-05)"
+VERSION="1.5.0 (dev) (2025-01-21)"
 
 plt_path="${GPUMDkit_path}/Scripts/plt_scripts"
 analyzer_path="${GPUMDkit_path}/Scripts/analyzer"
@@ -541,8 +541,10 @@ if [ ! -z "$1" ]; then
             fi ;;
 
         -get_volume)
-            python ${analyzer_path}/get_volume.py
-            ;;
+            python ${analyzer_path}/get_volume.py ;;
+
+        -chem_species)
+            python ${analyzer_path}/analyze_chem_species.py $2 ;;
 
         -pynep)
             parallel_pynep_sample_structures ;;
