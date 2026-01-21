@@ -76,7 +76,7 @@ for file in "${converged_files[@]}"; do
     start_lines=($(sed -n '/aborting loop because EDIFF is reached/=' "$file"))
     end_lines=($(sed -n '/[^ML] energy  without entropy/=' "$file"))
     ion_numb_arra=($(grep "ions per type" "$file" | tail -n 1 | awk -F"=" '{print $2}'))
-    ion_symb_arra=($(grep "POTCAR:" "$file" | awk '{print $3}' | awk -F"_" '{print $1}' | awk '!seen[$0]++'))
+    ion_symb_arra=($(grep "TITEL" "$file" | awk '{print $4}' | awk -F"_" '{print $1}' ))
     syst_numb_atom=$(grep "number of ions" "$file" | awk '{print $12}')
 
     k=0
