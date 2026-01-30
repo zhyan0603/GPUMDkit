@@ -1,13 +1,13 @@
 import argparse
-import sys
 import numpy as np
+import textwrap
 from ase.io import read, write
 from pathlib import Path
 
 
 def parse_args():
-    parser = argparse.ArgumentParser(description='Sample structures from an extxyz file.' \
-    """
+    parser = argparse.ArgumentParser(formatter_class=argparse.RawDescriptionHelpFormatter,
+                                     description=textwrap.dedent("""
     Purpose:
         This script samples structures from an extxyz file using either 'uniform' or 'random' sampling methods. 
         The sampled structures are then written to the 'sampled_structures.xyz' file.
@@ -15,18 +15,20 @@ def parse_args():
     Author:
         Zihan YAN <yanzihan@westlake.edu.cn>
     Modified by:
-        Dr. Huan Wang<NAME> <huan.wang@whut.edu.cn>
+        Dr. Huan Wang <huan.wang@whut.edu.cn>
     Usage:
-        python sample_structures.py <extxyz_file> <sampling_method> <num_samples> [skip_initial]
-    """)
+        python sample_structures.py <extxyz_file> <sampling_method> <num_samples> [skip_initial])
+    """))
     parser.add_argument('extxyz_file', type=Path, 
                         help='Path to the extxyz file to sample from.')
     parser.add_argument('sampling_method', type=str, 
-                        choices=['uniform', 'random'], help='Sampling method to use. Use "uniform" or "random".')
+                        choices=['uniform', 'random'], 
+                        help='Sampling method to use. Please choose either "uniform" or "random".')
     parser.add_argument('num_samples', type=int, 
                         help='Number of frames to sample.')
     parser.add_argument('--skip_initial', type=int, 
-                        default=0, help='Number of initial frames to skip.')
+                        default=0, 
+                        help='Number of initial frames to skip.')
     return parser.parse_args() 
 
 def main():
@@ -47,11 +49,11 @@ def main():
         frames = frames[skip_initial:]
         num_frames = len(frames)  # Update the number of frames after skipping
 
+    # Generate evenly spaced indices
     if sampling_method == 'uniform':
-        # Generate evenly spaced indices
         sampled_indices = np.linspace(0, num_frames-1, num_samples, dtype=int)
+    # Generate random indices
     else:
-        # Generate random indices
         sampled_indices = np.random.choice(num_frames, num_samples, replace=False)
 
     # Initialize an empty list to store the sampled frames
