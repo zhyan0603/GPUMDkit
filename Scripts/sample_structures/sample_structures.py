@@ -1,22 +1,43 @@
+import argparse
 import sys
 import numpy as np
 from ase.io import read, write
+from pathlib import Path
 
-"""
+
+def parse_args():
+    parser = argparse.ArgumentParser(description='Sample structures from an extxyz file.' \
+    """
     Purpose:
         This script samples structures from an extxyz file using either 'uniform' or 'random' sampling methods. 
         The sampled structures are then written to the 'sampled_structures.xyz' file.
 
     Author:
         Zihan YAN <yanzihan@westlake.edu.cn>
+    Modified by:
+        Dr. Huan Wang<NAME> <huan.wang@whut.edu.cn>
+    Usage:
+        python sample_structures.py <extxyz_file> <sampling_method> <num_samples> [skip_initial]
+    """)
+    parser.add_argument('extxyz_file', type=Path, 
+                        help='Path to the extxyz file to sample from.')
+    parser.add_argument('sampling_method', type=str, 
+                        choices=['uniform', 'random'], help='Sampling method to use. Use "uniform" or "random".')
+    parser.add_argument('num_samples', type=int, 
+                        help='Number of frames to sample.')
+    parser.add_argument('--skip_initial', type=int, 
+                        default=0, help='Number of initial frames to skip.')
+    return parser.parse_args() 
 
-    Run:
-    python sample_structures.py <extxyz_file> <sampling_method> <num_samples> [skip_initial]
-"""
+def main():
+    args = parse_args()
+    file_path = args.extxyz_file
+    sampling_method = args.sampling_method
+    num_samples = args.num_samples
+    skip_initial = args.skip_initial
 
-def main(sampling_method, num_samples, skip_initial):
     # Read all frames
-    frames = read(f'./{sys.argv[1]}', index=':')
+    frames = read(file_path, index=':')
 
     # Total number of frames
     num_frames = len(frames)
@@ -29,19 +50,15 @@ def main(sampling_method, num_samples, skip_initial):
     if sampling_method == 'uniform':
         # Generate evenly spaced indices
         sampled_indices = np.linspace(0, num_frames-1, num_samples, dtype=int)
-    elif sampling_method == 'random':
+    else:
         # Generate random indices
         sampled_indices = np.random.choice(num_frames, num_samples, replace=False)
-    else:
-        raise ValueError("Invalid sampling method. Use 'uniform' or 'random'.")
 
     # Initialize an empty list to store the sampled frames
     sampled_frames = []
 
-    # Collect the sampled frames
+    # Collect the frame for the sample.xyz file
     for i, idx in enumerate(sampled_indices):
-
-        # Collect the frame for the sample.xyz file
         sampled_frames.append(frames[idx])
 
     # Write the sampled frames to sample.xyz
@@ -49,21 +66,6 @@ def main(sampling_method, num_samples, skip_initial):
 
     print('All sampled frames written to sampled_structures.xyz')
 
+
 if __name__ == "__main__":
-    # Ensure the correct number of arguments are provided
-    if len(sys.argv) < 4 or len(sys.argv) > 5:
-        print("Usage: python sample_structures.py <extxyz_file> <sampling_method> <num_samples> [skip_initial]")
-        print("sampling_method: 'uniform' or 'random'")
-        print("num_samples: number of frames to sample")
-        print("[skip_initial]: optional, number of initial frames to skip")
-        sys.exit(1)
-
-    # Parse the command line arguments
-    sampling_method = sys.argv[2]
-    num_samples = int(sys.argv[3])
-
-    # Parse the skip_initial argument if provided, otherwise default to 0
-    skip_initial = int(sys.argv[4]) if len(sys.argv) == 5 else 0
-
-    # Run the main function
-    main(sampling_method, num_samples, skip_initial)
+    main()
