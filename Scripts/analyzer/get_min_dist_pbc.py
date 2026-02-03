@@ -86,7 +86,13 @@ print(" +---------------------------+")
 for i, sym1 in enumerate(unique_symbols):
     for sym2 in unique_symbols[i:]:
         pair = f"{sym1}-{sym2}"
-        distance = min_distances[pair]
-        print(f" |   {pair:<6}  |     {distance:>5.3f}     |")
+        if pair in min_distances:
+            distance = min_distances[pair]
+            print(f" |   {pair:<6}  |     {distance:>5.3f}     |")
+        else:
+            print(f" |   {pair:<6}  |       N/A     |")
 print(" +---------------------------+")
-print(f" Overall min_distance: {overall_min_distance:.3f} Å")
+if overall_min_distance < float('inf'):
+    print(f" Overall min_distance: {overall_min_distance:.3f} Å")
+else:
+    print(" Overall min_distance: N/A")
