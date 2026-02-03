@@ -23,18 +23,16 @@ To install `GPUMDkit`, follow these steps:
     git clone https://github.com/zhyan0603/GPUMDkit.git
     ```
 
-2. Set some variable in your `~/.bashrc` file, for example:
+    use `-b` options if you want to download the specified branch, for example:
+
+    ```
+    git clone -b dev https://github.com/zhyan0603/GPUMDkit.git
+    ```
+
+2. Run the following command:
    
     ```
-    vi ~/.bashrc
-    ```
-    
-    add these three lines
-    
-    ```sh
-    export GPUMDkit_path=/your_dir_of_GPUMDkit  # change this
-    export PATH=${GPUMDkit_path}:${PATH}
-    source ${GPUMDkit_path}/Scripts/utils/completion.sh
+    source ./install.sh
     ```
     
     then
@@ -42,12 +40,6 @@ To install `GPUMDkit`, follow these steps:
     ```sh
     source ~/.bashrc
     ```
-    
-3. Add executable permissions to the `gpumdkit.sh` file:
-    ```sh
-    cd ${GPUMDkit_path}; chmod +x gpumdkit.sh
-    ```
-    
 
 ## Update
 

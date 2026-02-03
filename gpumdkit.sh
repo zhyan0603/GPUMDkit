@@ -10,7 +10,7 @@ if [ -z "$GPUMDkit_path" ]; then
     exit 1
 fi
 
-VERSION="1.5.0 (dev) (2025-01-05)"
+VERSION="1.5.1 (dev) (2025-02-03)"
 
 plt_path="${GPUMDkit_path}/Scripts/plt_scripts"
 analyzer_path="${GPUMDkit_path}/Scripts/analyzer"
@@ -156,8 +156,9 @@ function plot_info_table(){
     echo "| restart         Plot parameters in nep.restart     | dimer          Plot dimer plot                 |"
     echo "| force_errors    Plot force errors                  | des            Plot descriptors                |"
     echo "| charge          Plot charge distribution           | lr             Plot learning rate              |"
-    echo "| doas            Plot density of atomistic states   | arrhenius_d    Plot Arrhenius diffusivity      |"
-    echo "| arrhenius_sigma Plot Arrhenius sigma               | net_force      Plot net force distribution     |"
+    echo "| doas            Plot density of atomistic states   | net_force      Plot net force distribution     |"
+    echo "| sigma           Plot Arrhenius sigma               | D              Plot Arrhenius diffusivity      |"
+    echo "| sigma_xyz       Plot directional Arrhenius sigma   | D_xyz          Plot directional Arrhenius D    |"
     echo "| emd             Plot EMD results                   | nemd           Plot NEMD results               |"
     echo "| hnemd           Plot HNEMD results                 | pdos           Plot VAC and PDOS               |"
     echo "+=====================================================================================================+"
@@ -208,7 +209,9 @@ if [ ! -z "$1" ]; then
                     "lr") python ${plt_path}/plt_learning_rate.py $3 ;;
                     "doas") python ${plt_path}/plt_doas.py $3 $4 ;;
                     "arrhenius_d"|"D") python ${plt_path}/plt_arrhenius_d.py $3 ;;
+                    "D_xyz") python ${plt_path}/plt_arrhenius_d_xyz.py $3 ;;
                     "arrhenius_sigma"|"sigma") python ${plt_path}/plt_arrhenius_sigma.py $3 ;;
+                    "sigma_xyz") python ${plt_path}/plt_arrhenius_sigma_xyz.py $3 ;;
                     "net_force") python ${plt_path}/plt_net_force.py ${@:3} ;;
                     "emd") python ${plt_path}/plt_emd.py ${@:3} ;;
                     "nemd") python ${plt_path}/plt_nemd.py ${@:3} ;;
@@ -541,8 +544,10 @@ if [ ! -z "$1" ]; then
             fi ;;
 
         -get_volume)
-            python ${analyzer_path}/get_volume.py
-            ;;
+            python ${analyzer_path}/get_volume.py ;;
+
+        -chem_species)
+            python ${analyzer_path}/analyze_chem_species.py $2 ;;
 
         -pynep)
             parallel_pynep_sample_structures ;;

@@ -1,19 +1,17 @@
 # === User Configuration Section: Only modify these variables ===
-VERSION="1.5.0"
-RELEASE_DATE="2026-01-05"
+VERSION="1.5.1"
+RELEASE_DATE="2026-02-03"
 HOME_PAGE="https://zhyan0603.github.io/GPUMDkit"
 CONTACT="yanzihan@westlake.edu.cn"
 
 # New features (one per line, in an array)
 NEW_FEATURES=(
-    "We have refactored GPUMDkit."
-    "See our repository for more infomation."
-    "You can custom your own scripts in ~/.gpumdkit.in."
+    "add -plt sigma_xyz/D_xyz"
 )
 
 # Bug fixes (one per line, in an array)
 BUG_FIXES=(
-    "None"
+    "fix -min_dist"
 )
 
 # === Formatted Output Logic ===
