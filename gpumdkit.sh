@@ -10,7 +10,7 @@ if [ -z "$GPUMDkit_path" ]; then
     exit 1
 fi
 
-VERSION="1.5.1 (dev) (2025-02-03)"
+VERSION="1.5.1 (dev) (2025-03-02)"
 
 plt_path="${GPUMDkit_path}/Scripts/plt_scripts"
 analyzer_path="${GPUMDkit_path}/Scripts/analyzer"
@@ -127,7 +127,7 @@ function help_info_table(){
     echo "| -cif2pos       Convert cif to POSCAR          | -pos2lmp      Convert POSCAR to LAMMPS           |"
     echo "| -cif2exyz      Convert cif to extxyz          | -lmp2exyz     Convert LAMMPS-dump to extxyz      |"
     echo "| -addgroup      Add group label                | -addweight    Add weight to the struct in extxyz |"
-    echo "| -cp2k2xyz      Convert CP2K file to extxyz    | Developing...                                    |"
+    echo "| -cp2k2xyz      Convert CP2K file to extxyz    | -traj2exyz    Convert ASE traj to extxyz         |"
     echo "+========================================= Analysis ===============================================+"
     echo "| -range         Print range of energy etc.     | -max_rmse     Get max RMSE from extxyz           |"
     echo "| -min_dist      Get min_dist between atoms     | -min_dist_pbc Get min_dist considering PBC       |"
@@ -408,6 +408,17 @@ if [ ! -z "$1" ]; then
                 echo " Usage: -lmp2exyz <dump_file> <element1> <element2> ..."
                 echo " See the source code of lmp2exyz.py for more details"
                 echo " Code path: ${format_conv_path}/lmp2exyz.py"
+            fi ;;
+
+        -traj2exyz)
+            if [ ! -z "$2" ] && [ "$2" != "-h" ] && [ ! -z "$3" ] ; then
+                echo " Calling script by Zihan YAN "
+                echo " Code path: ${format_conv_path}/traj2exyz.py"
+                python ${format_conv_path}/traj2exyz.py $2 $3
+            else
+                echo " Usage: -traj2exyz <input.traj> <output.xyz>"
+                echo " See the source code of traj2exyz.py for more details"
+                echo " Code path: ${format_conv_path}/traj2exyz.py"
             fi ;;
 
         -addgroup|-addlabel)
