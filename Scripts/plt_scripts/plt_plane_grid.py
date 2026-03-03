@@ -41,7 +41,6 @@ def parse_args():
         "--target-size",
         nargs=3,
         type=int,
-        default=[10, 10, 10],
         help="Grid size as nx ny nz.",
     )
     parser.add_argument("-o", "--save-dir", default="plot", help="Directory to save figures.")
@@ -135,12 +134,17 @@ def main():
         raise ValueError(f"No atoms found for elements: {args.elements}")
 
     disp_frame = load_disp_frame(args.disp, n_ele, args.frame)
+    grid_kwargs = {
+        "tol": args.tol,
+    }
+    if args.target_size is not None:
+        grid_kwargs["target_size"] = tuple(args.target_size)
+
     disp_grid = grid_data(
         atoms,
         disp_frame,
         args.elements,
-        tol=args.tol,
-        target_size=tuple(args.target_size),
+        **grid_kwargs,
     )
     plane_profile(
         data=disp_grid,
