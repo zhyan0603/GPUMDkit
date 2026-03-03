@@ -23,11 +23,11 @@ _gpumdkit_completions() {
 
         # Secondary options for -plt
         -plt)
-            COMPREPLY=($(compgen -W "thermo thermo2 thermo3 train prediction test train_test msd msd_all msd_conv sdc rdf vac restart dimer force_error des doas charge lr parity_density arrhenius_d arrhenius_sigma sigma D sigma_xyz D_xyz net_force emd nemd hnemd pdos" -- "$cur")) ;;
+            COMPREPLY=($(compgen -W "thermo thermo2 thermo3 train prediction test train_test msd msd_all msd_conv sdc rdf vac restart dimer force_error des doas charge lr parity_density arrhenius_d arrhenius_sigma sigma D sigma_xyz D_xyz net_force emd nemd hnemd pdos plane-grid" -- "$cur")) ;;
 
         # Secondary options for -calc
         -calc)
-            COMPREPLY=($(compgen -W "ionic-cond nep des doas neb" -- "$cur")) ;;
+            COMPREPLY=($(compgen -W "ionic-cond nep des doas neb nlist disp avg-struct" -- "$cur")) ;;
             
         # Options requiring files or directories, complete with filenames
         -out2xyz|-cp2k2xyz|-exyz2pos|-min_dist|-min_dist_pbc|-filter_dist|-filter_dist_pbc|-filter_box|-get_frame|-clean_xyz|-mtp2xyz|-pos2exyz|-cif2exyz|-cif2pos|-pos2lmp|-lmp2exyz|-traj2exyz|-addgroup|-addlabel|-addweight|-analyze_comp|-replicate|-pda|-cbc|-frame_range|-xml2xyz|-chem_species)

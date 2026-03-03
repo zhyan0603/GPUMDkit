@@ -11,6 +11,9 @@ The calculator scripts provide functionality for:
 - Descriptor calculations for PCA or UMAP analysis
 - Density of atomistic states (DOAS)
 - Nudged elastic band (NEB) calculations
+- Neighbor list construction for targeted center/neighbor elements
+- Displacement calculation from trajectory + neighbor list
+- Averaged structure generation from trajectory slices
 - Radial distribution function (RDF) calculations
 
 ---
@@ -210,6 +213,60 @@ You can also do the `minimize` and atomistic energy calculations in `gpumd`, whi
 
 ---
 
+### calc_neighbor_list.py
+
+Builds neighbor lists for selected center and neighbor elements.
+
+#### Usage
+
+**Command-line mode:**
+```bash
+gpumdkit.sh -calc nlist -i model.xyz -c 4 -n 12 -C Pb Sr -E O
+```
+
+**Direct execution:**
+```bash
+python calc_neighbor_list.py -i model.xyz -c 4 -n 12 -C Pb Sr -E O
+```
+
+---
+
+### calc_displacement.py
+
+Calculates displacements from a trajectory and a neighbor list file.
+
+#### Usage
+
+**Command-line mode:**
+```bash
+gpumdkit.sh -calc disp -i movie.xyz -n nl-Pb-O.dat -o displacements.dat
+```
+
+**Direct execution:**
+```bash
+python calc_displacement.py -i movie.xyz -n nl-Pb-O.dat -o displacements.dat
+```
+
+---
+
+### calc_averaged_structure.py
+
+Generates an averaged structure from selected trajectory frames.
+
+#### Usage
+
+**Command-line mode:**
+```bash
+gpumdkit.sh -calc avg-struct -i movie.xyz -l 0.2 -o averaged_structure.xyz
+```
+
+**Direct execution:**
+```bash
+python calc_averaged_structure.py -i movie.xyz -l 0.2 -o averaged_structure.xyz
+```
+
+---
+
 ### neb_calculation.py
 
 Performs nudged elastic band (NEB) calculations to find minimum energy pathways between initial and final states.
@@ -256,6 +313,16 @@ python neb_calculation.py init.xyz fin.xyz 9 nep.txt
  Input <initial_struct> <final_struct> <n_image> <nep_model>
  Examp: IS.xyz FS.xyz 5 nep.txt
  ------------>>
+```
+
+---
+
+### Additional Requirement For Neighbor/Displacement/Plane Workflow
+
+The scripts `calc_neighbor_list.py`, `calc_displacement.py`, `calc_averaged_structure.py`, and `plt_plane_grid.py` require:
+
+```bash
+pip3 install git+https://github.com/MoseyQAQ/ferrodispcalc.git
 ```
 
 ---

@@ -16,6 +16,32 @@ gpumdkit.sh -plt <type> save  # Save plot as PNG
 
 ---
 
+## New Plane-Grid Plot Workflow
+
+### plt_plane_grid.py
+
+Maps displacement data onto a 3D grid and plots selected XY/XZ/YZ plane profiles.
+
+**Usage:**
+```bash
+gpumdkit.sh -plt plane-grid -i model.xyz -d displacements.dat -e Pb Sr
+gpumdkit.sh -plt plane-grid -i model.xyz -d displacements.dat -e Pb Sr --select-xy 0 1
+```
+
+**Typical upstream steps:**
+```bash
+gpumdkit.sh -calc nlist -i model.xyz -c 4 -n 12 -C Pb Sr -E O
+gpumdkit.sh -calc disp -i movie.xyz -n nl-Pb_Sr-O.dat -o displacements.dat
+gpumdkit.sh -calc avg-struct -i movie.xyz -l 0.2 -o averaged_structure.xyz
+```
+
+**Dependency:**
+```bash
+pip3 install git+https://github.com/MoseyQAQ/ferrodispcalc.git
+```
+
+---
+
 ## Script Categories
 
 ### 🔬 NEP Training & Prediction

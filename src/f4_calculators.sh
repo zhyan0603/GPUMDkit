@@ -86,6 +86,54 @@ echo " Code path: ${GPUMDkit_path}/Scripts/calculators/neb_calculation.py"
 echo " ---------------------------------------------------"
 }
 
+# Build neighbor list for displacement analysis
+function f406_calc_neighbor_list(){
+echo " >-------------------------------------------------<"
+echo " | This function calls the script in calculators   |"
+echo " | Script: calc_neighbor_list.py                   |"
+echo " | Developer: Mosey QAQ                            |"
+echo " >-------------------------------------------------<"
+echo " Input script arguments (eg. -c 4 -n 12 -C Pb Sr -E O)"
+echo " ------------>>"
+read -p " " input_calc_neighbor_list
+echo " ---------------------------------------------------"
+python ${GPUMDkit_path}/Scripts/calculators/calc_neighbor_list.py ${input_calc_neighbor_list}
+echo " Code path: ${GPUMDkit_path}/Scripts/calculators/calc_neighbor_list.py"
+echo " ---------------------------------------------------"
+}
+
+# Calculate displacement from trajectory and neighbor list
+function f407_calc_displacement(){
+echo " >-------------------------------------------------<"
+echo " | This function calls the script in calculators   |"
+echo " | Script: calc_displacement.py                    |"
+echo " | Developer: Mosey QAQ                            |"
+echo " >-------------------------------------------------<"
+echo " Input script arguments (eg. -i movie.xyz -n nl-Pb-O.dat -o displacements.dat)"
+echo " ------------>>"
+read -p " " input_calc_displacement
+echo " ---------------------------------------------------"
+python ${GPUMDkit_path}/Scripts/calculators/calc_displacement.py ${input_calc_displacement}
+echo " Code path: ${GPUMDkit_path}/Scripts/calculators/calc_displacement.py"
+echo " ---------------------------------------------------"
+}
+
+# Calculate averaged structure from trajectory
+function f408_calc_averaged_structure(){
+echo " >-------------------------------------------------<"
+echo " | This function calls the script in calculators   |"
+echo " | Script: calc_averaged_structure.py              |"
+echo " | Developer: Mosey QAQ                            |"
+echo " >-------------------------------------------------<"
+echo " Input script arguments (eg. -i movie.xyz -l 0.2 -o averaged_structure.xyz)"
+echo " ------------>>"
+read -p " " input_calc_averaged_structure
+echo " ---------------------------------------------------"
+python ${GPUMDkit_path}/Scripts/calculators/calc_averaged_structure.py ${input_calc_averaged_structure}
+echo " Code path: ${GPUMDkit_path}/Scripts/calculators/calc_averaged_structure.py"
+echo " ---------------------------------------------------"
+}
+
 # main function of calculators
 function f4_calculators(){
 echo " ------------>>"
@@ -94,11 +142,14 @@ echo " 402) Calc properties by nep"
 echo " 403) Calc descriptors of specific elements"
 echo " 404) Calc density of atomistic states (DOAS)"
 echo " 405) Calc nudged elastic band (NEB) by nep"
+echo " 406) Build neighbor list"
+echo " 407) Calc displacement from trajectory"
+echo " 408) Calc averaged structure"
 echo " 000) Return to the main menu"
 echo " ------------>>"
 echo " Input the function number:"
 
-arry_num_choice=("000" "401" "402" "403" "404" "405") 
+arry_num_choice=("000" "401" "402" "403" "404" "405" "406" "407" "408")
 read -p " " num_choice
 while ! echo "${arry_num_choice[@]}" | grep -wq "$num_choice" 
 do
@@ -112,7 +163,10 @@ case $num_choice in
     "402") f402_calc_properties_with_nep ;;
     "403") f403_calc_descriptors ;;
     "404") f404_calc_doas ;;
-    "405") f405_calc_neb ;;                             
+    "405") f405_calc_neb ;;
+    "406") f406_calc_neighbor_list ;;
+    "407") f407_calc_displacement ;;
+    "408") f408_calc_averaged_structure ;;
     "000") menu; main ;;
 esac
 }
