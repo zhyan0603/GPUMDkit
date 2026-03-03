@@ -38,7 +38,7 @@ function main(){
         "0" "1" "101" "102" "103" "104" "105"
         "2" "201" "202" "203" "204" "205" 
         "3" "301" "302" "303" 
-        "4" "401" "402" "403" "404" "405" "406" "407" "408"
+        "4" "401" "402" "403" "404" "405" "406" "407" "408" "409" "410"
         "5" "501" "502"
         "6"
     ) 
@@ -100,6 +100,8 @@ function main(){
                 "406") f406_calc_neighbor_list ;;
                 "407") f407_calc_displacement ;;
                 "408") f408_calc_averaged_structure ;;
+                "409") f409_calc_oct_tilt ;;
+                "410") f410_calc_polarization_abo3 ;;
             esac ;;           
         "5")
             source ${GPUMDkit_path}/src/f5_analyzers.sh
@@ -138,6 +140,7 @@ function help_info_table(){
     echo "| -filter_dist   Filter struct by min_dist      | -analyze_comp Analyze composition of extxyz      |"
     echo "| -calc nlist    Build neighbor list            | -calc disp    Calculate displacement             |"
     echo "| -calc avg-struct Average structure from traj  | -plt plane-grid Plot displacement plane grid    |"
+    echo "| -calc oct-tilt Calc octahedral tilt           | -calc pol-abo3 Calc polarization for ABO3       |"
     echo "| -pynep         Sample struct by pynep         | Developing...                                    |"
     echo "+====================================== Misc Utilities ============================================+"
     echo "| -plt           Plot scripts                   | -get_frame     Extract the specified frame       |"
@@ -303,6 +306,14 @@ if [ ! -z "$1" ]; then
                         echo " Calling script by Mosey QAQ. "
                         echo " Code path: ${calc_path}/calc_averaged_structure.py"
                         python ${calc_path}/calc_averaged_structure.py ${@:3} ;;
+                    oct-tilt)
+                        echo " Calling script by Mosey QAQ. "
+                        echo " Code path: ${calc_path}/calc_oct_tilt.py"
+                        python ${calc_path}/calc_oct_tilt.py ${@:3} ;;
+                    pol-abo3)
+                        echo " Calling script by Mosey QAQ. "
+                        echo " Code path: ${calc_path}/calc_polarization_abo3.py"
+                        python ${calc_path}/calc_polarization_abo3.py ${@:3} ;;
                     *)
                         echo " See the codes in calculators folder for more details"
                         echo " Code path: ${calc_path}"; exit 1 ;;

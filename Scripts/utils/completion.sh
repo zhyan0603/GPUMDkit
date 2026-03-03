@@ -27,7 +27,7 @@ _gpumdkit_completions() {
 
         # Secondary options for -calc
         -calc)
-            COMPREPLY=($(compgen -W "ionic-cond nep des doas neb nlist disp avg-struct" -- "$cur")) ;;
+            COMPREPLY=($(compgen -W "ionic-cond nep des doas neb nlist disp avg-struct oct-tilt pol-abo3" -- "$cur")) ;;
             
         # Options requiring files or directories, complete with filenames
         -out2xyz|-cp2k2xyz|-exyz2pos|-min_dist|-min_dist_pbc|-filter_dist|-filter_dist_pbc|-filter_box|-get_frame|-clean_xyz|-mtp2xyz|-pos2exyz|-cif2exyz|-cif2pos|-pos2lmp|-lmp2exyz|-traj2exyz|-addgroup|-addlabel|-addweight|-analyze_comp|-replicate|-pda|-cbc|-frame_range|-xml2xyz|-chem_species)

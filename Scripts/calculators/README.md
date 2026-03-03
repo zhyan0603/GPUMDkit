@@ -14,6 +14,8 @@ The calculator scripts provide functionality for:
 - Neighbor list construction for targeted center/neighbor elements
 - Displacement calculation from trajectory + neighbor list
 - Averaged structure generation from trajectory slices
+- Octahedral tilt calculation from B-O neighbor lists
+- Local polarization calculation for ABO3 systems
 - Radial distribution function (RDF) calculations
 
 ---
@@ -267,6 +269,42 @@ python calc_averaged_structure.py -i movie.xyz -l 0.2 -o averaged_structure.xyz
 
 ---
 
+### calc_oct_tilt.py
+
+Calculates octahedral tilt angles from trajectory/model and a B-O neighbor list.
+
+#### Usage
+
+**Command-line mode:**
+```bash
+gpumdkit.sh -calc oct-tilt -i model.xyz -n nl-Ti-O.dat -o octahedral_tilt.dat
+```
+
+**Direct execution:**
+```bash
+python calc_oct_tilt.py -i model.xyz -n nl-Ti-O.dat -o octahedral_tilt.dat
+```
+
+---
+
+### calc_polarization_abo3.py
+
+Calculates local polarization for ABO3 systems using B-A and B-O neighbor lists.
+
+#### Usage
+
+**Command-line mode:**
+```bash
+gpumdkit.sh -calc pol-abo3 -i model.xyz --nl-ba nl-Ti-A.dat --nl-bo nl-Ti-O.dat --bec Pb=2.5 Sr=2.0 Ti=4.0 O=-2.0
+```
+
+**Direct execution:**
+```bash
+python calc_polarization_abo3.py -i model.xyz --nl-ba nl-Ti-A.dat --nl-bo nl-Ti-O.dat --bec Pb=2.5 Sr=2.0 Ti=4.0 O=-2.0
+```
+
+---
+
 ### neb_calculation.py
 
 Performs nudged elastic band (NEB) calculations to find minimum energy pathways between initial and final states.
@@ -301,6 +339,11 @@ python neb_calculation.py init.xyz fin.xyz 9 nep.txt
  403) Calc descriptors of specific elements
  404) Calc density of atomistic states (DOAS)
  405) Calc nudged elastic band (NEB) by nep
+ 406) Build neighbor list
+ 407) Calc displacement from trajectory
+ 408) Calc averaged structure
+ 409) Calc octahedral tilt
+ 410) Calc polarization for ABO3
  000) Return to the main menu
  ------------>>
  Input the function number:
@@ -317,9 +360,9 @@ python neb_calculation.py init.xyz fin.xyz 9 nep.txt
 
 ---
 
-### Additional Requirement For Neighbor/Displacement/Plane Workflow
+### Additional Requirement For Neighbor/Displacement/Polarization/Tilt/Plane Workflow
 
-The scripts `calc_neighbor_list.py`, `calc_displacement.py`, `calc_averaged_structure.py`, and `plt_plane_grid.py` require:
+The scripts `calc_neighbor_list.py`, `calc_displacement.py`, `calc_averaged_structure.py`, `calc_oct_tilt.py`, `calc_polarization_abo3.py`, and `plt_plane_grid.py` require:
 
 ```bash
 pip3 install git+https://github.com/MoseyQAQ/ferrodispcalc.git

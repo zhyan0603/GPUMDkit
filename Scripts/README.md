@@ -30,6 +30,8 @@ Computational tools for property calculations:
 - Neighbor list construction (`-calc nlist`)
 - Displacement calculation (`-calc disp`)
 - Averaged structure generation (`-calc avg-struct`)
+- Octahedral tilt calculation (`-calc oct-tilt`)
+- ABO3 polarization calculation (`-calc pol-abo3`)
 
 **Quick Start:**
 ```bash
@@ -37,6 +39,8 @@ gpumdkit.sh -calc ionic-cond Li 1              # Calculate ionic conductivity
 gpumdkit.sh -calc nep input.xyz output.xyz nep.txt  # Calculate with NEP
 gpumdkit.sh -calc nlist -i model.xyz -c 4 -n 12 -C Pb Sr -E O
 gpumdkit.sh -calc disp -i movie.xyz -n nl-Pb_Sr-O.dat -o displacements.dat
+gpumdkit.sh -calc oct-tilt -i model.xyz -n nl-Ti-O.dat -o octahedral_tilt.dat
+gpumdkit.sh -calc pol-abo3 -i model.xyz --nl-ba nl-Ti-A.dat --nl-bo nl-Ti-O.dat --bec Pb=2.5 Sr=2.0 Ti=4.0 O=-2.0
 ```
 
 ### 🔄 [format_conversion/](format_conversion/README.md)
