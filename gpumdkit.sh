@@ -166,7 +166,7 @@ function plot_info_table(){
     echo "| sigma_xyz       Plot directional Arrhenius sigma   | D_xyz          Plot directional Arrhenius D    |"
     echo "| emd             Plot EMD results                   | nemd           Plot NEMD results               |"
     echo "| hnemd           Plot HNEMD results                 | pdos           Plot VAC and PDOS               |"
-    echo "| plane-grid      Plot displacement plane grid       | parity_density Plot parity plot density         |"
+    echo "| plane-grid      Plot displacement plane grid       | parity_density Plot parity plot density        |"
     echo "+=====================================================================================================+"
     echo "| For detailed usage and examples, use: gpumdkit.sh -plt <plot_type> -h                               |"
     echo "+=====================================================================================================+"
