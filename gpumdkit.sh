@@ -591,6 +591,7 @@ if [ ! -z "$1" ]; then
             python ${analyzer_path}/analyze_chem_species.py $2 ;;
 
         -pynep)
+            source ${GPUMDkit_path}/src/f2_sample_structures.sh
             parallel_pynep_sample_structures ;;
 
         -frame_range)
