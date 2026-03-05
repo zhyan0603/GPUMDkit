@@ -13,7 +13,7 @@ force_data = np.loadtxt('force_train.out')
 stress_data = np.loadtxt('stress_train.out')
 
 # Filter out rows with invalid stress data
-valid_rows = ~np.any(np.abs(stress_data[:, :12]) > 1e6, axis=1)
+valid_rows = ~np.any(np.abs(stress_data[:, :12]) >= 1e6, axis=1)
 stress_data = stress_data[valid_rows]
 
 # Function to calculate RMSE

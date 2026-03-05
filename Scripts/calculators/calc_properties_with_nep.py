@@ -25,12 +25,10 @@ if not isinstance(structures, list):
 
 total_structures = len(structures)
 
+calc = CPUNEP(sys.argv[3])
 # Process each structure
 for i, atoms in enumerate(structures):
-    # Create a new calculator instance for each atoms object
-    calc = CPUNEP(sys.argv[3])
     atoms.set_calculator(calc)
-    
     # Calculate properties
     energy = atoms.get_potential_energy()
     forces = atoms.get_forces()

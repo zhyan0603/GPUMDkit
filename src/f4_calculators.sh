@@ -86,6 +86,86 @@ echo " Code path: ${GPUMDkit_path}/Scripts/calculators/neb_calculation.py"
 echo " ---------------------------------------------------"
 }
 
+# Build neighbor list for displacement analysis
+function f406_calc_neighbor_list(){
+echo " >-------------------------------------------------<"
+echo " | This function calls the script in calculators   |"
+echo " | Script: calc_neighbor_list.py                   |"
+echo " | Developer: Mosey QAQ                            |"
+echo " >-------------------------------------------------<"
+echo " Input script arguments (eg. -c 4 -n 12 -C Pb Sr -E O)"
+echo " ------------>>"
+read -p " " input_calc_neighbor_list
+echo " ---------------------------------------------------"
+python ${GPUMDkit_path}/Scripts/calculators/calc_neighbor_list.py ${input_calc_neighbor_list}
+echo " Code path: ${GPUMDkit_path}/Scripts/calculators/calc_neighbor_list.py"
+echo " ---------------------------------------------------"
+}
+
+# Calculate displacement from trajectory and neighbor list
+function f407_calc_displacement(){
+echo " >-------------------------------------------------<"
+echo " | This function calls the script in calculators   |"
+echo " | Script: calc_displacement.py                    |"
+echo " | Developer: Mosey QAQ                            |"
+echo " >-------------------------------------------------<"
+echo " Input script arguments (eg. -i movie.xyz -n nl-Pb-O.dat -o displacements.dat)"
+echo " ------------>>"
+read -p " " input_calc_displacement
+echo " ---------------------------------------------------"
+python ${GPUMDkit_path}/Scripts/calculators/calc_displacement.py ${input_calc_displacement}
+echo " Code path: ${GPUMDkit_path}/Scripts/calculators/calc_displacement.py"
+echo " ---------------------------------------------------"
+}
+
+# Calculate averaged structure from trajectory
+function f408_calc_averaged_structure(){
+echo " >-------------------------------------------------<"
+echo " | This function calls the script in calculators   |"
+echo " | Script: calc_averaged_structure.py              |"
+echo " | Developer: Mosey QAQ                            |"
+echo " >-------------------------------------------------<"
+echo " Input script arguments (eg. -i movie.xyz -l 0.2 -o averaged_structure.xyz)"
+echo " ------------>>"
+read -p " " input_calc_averaged_structure
+echo " ---------------------------------------------------"
+python ${GPUMDkit_path}/Scripts/calculators/calc_averaged_structure.py ${input_calc_averaged_structure}
+echo " Code path: ${GPUMDkit_path}/Scripts/calculators/calc_averaged_structure.py"
+echo " ---------------------------------------------------"
+}
+
+# Calculate octahedral tilt from trajectory and B-O neighbor list
+function f409_calc_oct_tilt(){
+echo " >-------------------------------------------------<"
+echo " | This function calls the script in calculators   |"
+echo " | Script: calc_oct_tilt.py                        |"
+echo " | Developer: Mosey QAQ                            |"
+echo " >-------------------------------------------------<"
+echo " Input script arguments (eg. -i model.xyz -n nl-Ti-O.dat -o octahedral_tilt.dat)"
+echo " ------------>>"
+read -p " " input_calc_oct_tilt
+echo " ---------------------------------------------------"
+python ${GPUMDkit_path}/Scripts/calculators/calc_oct_tilt.py ${input_calc_oct_tilt}
+echo " Code path: ${GPUMDkit_path}/Scripts/calculators/calc_oct_tilt.py"
+echo " ---------------------------------------------------"
+}
+
+# Calculate local polarization for ABO3 from neighbor lists
+function f410_calc_polarization_abo3(){
+echo " >-------------------------------------------------<"
+echo " | This function calls the script in calculators   |"
+echo " | Script: calc_polarization_abo3.py               |"
+echo " | Developer: Mosey QAQ                            |"
+echo " >-------------------------------------------------<"
+echo " Input script arguments (eg. --nl-ba nl-Ti-A.dat --nl-bo nl-Ti-O.dat --bec Pb=2.5 Sr=2.0 Ti=4.0 O=-2.0)"
+echo " ------------>>"
+read -p " " input_calc_polarization_abo3
+echo " ---------------------------------------------------"
+python ${GPUMDkit_path}/Scripts/calculators/calc_polarization_abo3.py ${input_calc_polarization_abo3}
+echo " Code path: ${GPUMDkit_path}/Scripts/calculators/calc_polarization_abo3.py"
+echo " ---------------------------------------------------"
+}
+
 # main function of calculators
 function f4_calculators(){
 echo " ------------>>"
@@ -94,11 +174,16 @@ echo " 402) Calc properties by nep"
 echo " 403) Calc descriptors of specific elements"
 echo " 404) Calc density of atomistic states (DOAS)"
 echo " 405) Calc nudged elastic band (NEB) by nep"
+echo " 406) Build neighbor list"
+echo " 407) Calc displacement from trajectory"
+echo " 408) Calc averaged structure"
+echo " 409) Calc octahedral tilt"
+echo " 410) Calc polarization for ABO3"
 echo " 000) Return to the main menu"
 echo " ------------>>"
 echo " Input the function number:"
 
-arry_num_choice=("000" "401" "402" "403" "404" "405") 
+arry_num_choice=("000" "401" "402" "403" "404" "405" "406" "407" "408" "409" "410")
 read -p " " num_choice
 while ! echo "${arry_num_choice[@]}" | grep -wq "$num_choice" 
 do
@@ -112,7 +197,12 @@ case $num_choice in
     "402") f402_calc_properties_with_nep ;;
     "403") f403_calc_descriptors ;;
     "404") f404_calc_doas ;;
-    "405") f405_calc_neb ;;                             
+    "405") f405_calc_neb ;;
+    "406") f406_calc_neighbor_list ;;
+    "407") f407_calc_displacement ;;
+    "408") f408_calc_averaged_structure ;;
+    "409") f409_calc_oct_tilt ;;
+    "410") f410_calc_polarization_abo3 ;;
     "000") menu; main ;;
 esac
 }

@@ -67,9 +67,13 @@ group_sigmas = []
 fig, ax1 = plt.subplots(figsize=(5, 3.4), dpi=150)
 
 # Print header for conductivity data
-print("\nConductivity Data:")
-print(f"{'T (K)':<6} {'Sigma (S/cm)':<15} {'Sigma·T (K·S/cm)':<15}")
-print("-" * 36)
+w_t, w_sigma, w_sigmaT = 10, 16, 18
+line = f"+{'-'*(w_t+2)}-{'-'*(w_sigma+2)}-{'-'*(w_sigmaT+2)}+"
+print(line)
+print(f"| {'Conductivity (unit: S/cm, Sigma*T: K S/cm)':^{len(line)-4}} |")
+print(line)
+print(f"| {'T (K)':^{w_t}} | {'Sigma':^{w_sigma}} | {'Sigma*T':^{w_sigmaT}} |")
+print(line)
 
 # Process each temperature folder
 for temp_folder in temp_folders:
@@ -106,11 +110,11 @@ for temp_folder in temp_folders:
 
         # Calculate diffusivity
         k, _ = np.polyfit(dts[start:end], msds[start:end], 1)
-        D = k * 1e-4 / 6  # Convert A²/ps to cm²/s
+        D = k * 1e-4 / 6  # Convert A/ps to cm/s
 
         # Calculate conductivity
         z = 1  # Species charge
-        vol_cm3 = volume * 1e-24  # Convert volume to cm³
+        vol_cm3 = volume * 1e-24  # Convert volume to cm^3
         conversion_factor = (num_ions / (vol_cm3 * consts.N_A) * z**2 * (consts.N_A * consts.e)**2 / (consts.R * temp))
         conductivity = conversion_factor * D
         sigma_T = conductivity * temp
@@ -123,14 +127,14 @@ for temp_folder in temp_folders:
         group_Ts.append(temp)
         group_sigmaTs.append(sigma_T)
         group_sigmas.append(conductivity)
-        print(f"{temp:<6} {conductivity:<15.3e} {sigma_T:<15.3e}")
+        print(f"| {temp:^{w_t}d} | {conductivity:^{w_sigma}.3e} | {sigma_T:^{w_sigmaT}.3e} |")
 
         ax1.scatter(1000 / temp, np.log(sigma_T), color=color, s=20, alpha=0.8)
 
     except Exception as e:
         print(f"[Error] Processing {temp_folder}: {e}")
         continue
-print("-" * 36)
+print(line)
 
 
 if len(group_Ts) < 2:
