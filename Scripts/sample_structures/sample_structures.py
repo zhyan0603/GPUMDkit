@@ -5,8 +5,12 @@ from ase.io import read, write
 from pathlib import Path
 
 
+class MyFormatter(argparse.RawDescriptionHelpFormatter,
+                  argparse.ArgumentDefaultsHelpFormatter):
+    pass
+
 def parse_args():
-    parser = argparse.ArgumentParser(formatter_class=argparse.RawDescriptionHelpFormatter,
+    parser = argparse.ArgumentParser(formatter_class=MyFormatter,
                                      description=textwrap.dedent("""
     Purpose:
         This script samples structures from an extxyz file using either 'uniform' or 'random' sampling methods. 
@@ -19,16 +23,29 @@ def parse_args():
     Usage:
         python sample_structures.py <extxyz_file> <sampling_method> <num_samples> [skip_initial])
     """))
-    parser.add_argument('extxyz_file', type=Path, 
-                        help='Path to the extxyz file to sample from.')
-    parser.add_argument('sampling_method', type=str, 
+    parser.add_argument('extxyz_file', 
+                        type=Path, 
+                        metavar='extXYZ_File',
+                        help='Path to the extxyz file for sampling.'
+                        )
+    parser.add_argument('sampling_method', 
+                        type=str, 
+                        metavar='Method',
                         choices=['uniform', 'random'], 
-                        help='Sampling method to use. Please choose either "uniform" or "random".')
-    parser.add_argument('num_samples', type=int, 
-                        help='Number of frames to sample.')
-    parser.add_argument('--skip_initial', type=int, 
-                        default=0, 
-                        help='Number of initial frames to skip.')
+                        help='Sampling method to use. Please choose either "uniform" or "random".'
+                        )
+    parser.add_argument('num_samples', 
+                        type=int, 
+                        metavar='Num_Samples',
+                        help='Number of frames to sample.'
+                        )
+    parser.add_argument('skip_initial', 
+                        type=int, 
+                        metavar='NUM',
+                        nargs='?',
+                        default=0,
+                        help='Number of initial frames to skip.'
+                        )
     return parser.parse_args() 
 
 def main():
