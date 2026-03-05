@@ -41,6 +41,21 @@ To install `GPUMDkit`, follow these steps:
     source ~/.bashrc
     ```
 
+## Dependencies
+
+Some advanced features of `GPUMDkit` require some Python packages:
+
+```bash
+# Create a clean conda environment
+conda create -n gpumdkit python=3.12
+conda activate gpumdkit
+
+# Install the required packages
+pip install neptrain ase pymatgen dpdata
+```
+
+Tip: Make sure the `gpumdkit` environment is activated before using `GPUMDkit` features.
+
 ## Update
 
 If your device has access to `github`, simply run this command:
