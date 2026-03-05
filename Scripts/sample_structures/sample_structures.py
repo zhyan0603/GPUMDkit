@@ -83,7 +83,7 @@ def main():
     # Write the sampled frames to sample.xyz
     write('sampled_structures.xyz', sampled_frames)
 
-    print('All sampled frames written to sampled_structures.xyz')
+    print(' All sampled frames written to sampled_structures.xyz')
 
 
 if __name__ == "__main__":
