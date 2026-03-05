@@ -584,7 +584,7 @@ gpumdkit.sh -plt dimer Li Li nep.txt
 </div>
 
 
-**Reference:** [arXiv:2504.15925](https://doi.org/10.48550/arXiv.2504.15925)
+**Reference:** [*J. Chem. Inf. Model.* 2026, 66, 3, 1406–1413](https://doi.org/10.1021/acs.jcim.5c02335)
 
 ---
 
