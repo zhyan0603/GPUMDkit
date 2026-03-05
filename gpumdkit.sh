@@ -133,6 +133,7 @@ function help_info_table(){
     echo "| -cif2exyz      Convert cif to extxyz          | -lmp2exyz     Convert LAMMPS-dump to extxyz      |"
     echo "| -addgroup      Add group label                | -addweight    Add weight to the struct in extxyz |"
     echo "| -cp2k2xyz      Convert CP2K file to extxyz    | -traj2exyz    Convert ASE traj to extxyz         |"
+    echo "| -xdat2exyz     Convert XDATCAR to extxyz      | Developing...                                    |"
     echo "+========================================= Analysis ===============================================+"
     echo "| -range         Print range of energy etc.     | -max_rmse     Get max RMSE from extxyz           |"
     echo "| -min_dist      Get min_dist between atoms     | -min_dist_pbc Get min_dist considering PBC       |"
@@ -413,6 +414,17 @@ if [ ! -z "$1" ]; then
                 echo " Usage: -exyz2pos model.xyz"
                 echo " See the source code of exyz2pos.py for more details"
                 echo " Code path: ${format_conv_path}/exyz2pos.py"
+            fi ;;
+
+        -xdat2exyz)
+            if [ ! -z "$2" ] && [ "$2" != "-h" ] ; then
+                echo " Calling script by Zihan YAN "
+                echo " Code path: ${format_conv_path}/xdatcar2exyz.py"
+                python ${format_conv_path}/xdatcar2exyz.py $2 $3
+            else
+                echo " Usage: -xdat2exyz XDATCAR model.xyz"
+                echo " See the source code of xdatcar2exyz.py for more details"
+                echo " Code path: ${format_conv_path}/xdatcar2exyz.py"
             fi ;;
 
         -pos2lmp)
