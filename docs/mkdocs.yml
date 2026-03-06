@@ -61,6 +61,7 @@ nav:
   - Analyzers: analyzer.md
   - Custom Commands: custom_commands.md
   - Active Learning Workflow: workflow_active_learning.md
+  - Polar Material Analysis: polar_material_analysis.md
   - Contributing: contributing.md
 
 extra:

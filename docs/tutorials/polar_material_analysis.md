@@ -277,7 +277,9 @@ Output:
 - Creates output directory if needed.
 - Saves figures as `XY_*.png`, `XZ_*.png`, `YZ_*.png`.
 
-![plane-grid example](../Gallery/PTO_STO_superlattice.png)
+<div align="center">
+    <img src="../Gallery/PTO_STO_superlattice.png" alt="PTO_STO" width="65%" />
+</div>
 
 ## Output files at a glance
 
@@ -369,7 +371,9 @@ done
 
 By analyzing the lattice of each temperature-averaged structure together with its polarization (`XX-pol.dat`), we can obtain the following figure:
 
-![PTO phase transition](../Gallery/PTO-temp.png)
+<div align="center">
+    <img src="../Gallery/PTO-temp.png" alt="PTO-temp" width="65%" />
+</div>
 
 The trend shows a clear phase transition around `600 K`, where the polarization vanishes.
 
@@ -396,7 +400,9 @@ gpumdkit.sh -calc disp -i movie.xyz -n nl-Ti-O.dat -l 0.25 -o disp-last25.dat
 gpumdkit.sh -plt plane-grid -i model-avg.xyz -d disp-last25.dat -e Ti --select-xy 0 -o plot-topology
 ```
 
-![PTO-STO](../Gallery/PTO-STO.png)
+<div align="center">
+    <img src="../Gallery/PTO-STO.png" alt="PTO_STO" width="65%" />
+</div>
 
 This gives a map similar to the one shown earlier. In the PTO region, a vortex-like polarization pattern is visible, while polarization in the STO region is close to zero. By analyzing how polarization varies around the vortex core, you can estimate the local dielectric response, but that is beyond the scope of this tutorial.
 
