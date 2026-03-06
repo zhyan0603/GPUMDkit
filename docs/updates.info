@@ -1,12 +1,14 @@
 # === User Configuration Section: Only modify these variables ===
 VERSION="1.5.1"
-RELEASE_DATE="2026-02-03"
+RELEASE_DATE="2026-03-05"
 HOME_PAGE="https://zhyan0603.github.io/GPUMDkit"
 CONTACT="yanzihan@westlake.edu.cn"
 
 # New features (one per line, in an array)
 NEW_FEATURES=(
     "add -plt sigma_xyz/D_xyz"
+    "add -traj2exyz"
+    "add -xdat2exyz"
 )
 
 # Bug fixes (one per line, in an array)

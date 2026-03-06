@@ -32,7 +32,7 @@ To install `GPUMDkit`, follow these steps:
 2. Run the following command:
    
     ```
-    source ./install.sh
+    cd GPUMDkit; source ./install.sh
     ```
     
     then
@@ -40,6 +40,21 @@ To install `GPUMDkit`, follow these steps:
     ```sh
     source ~/.bashrc
     ```
+
+## Dependencies
+
+Some advanced features of `GPUMDkit` require some Python packages:
+
+```bash
+# Create a clean conda environment
+conda create -n gpumdkit python=3.12
+conda activate gpumdkit
+
+# Install the required packages
+pip install neptrain ase pymatgen dpdata
+```
+
+Tip: Make sure the `gpumdkit` environment is activated before using `GPUMDkit` features.
 
 ## Update
 
@@ -228,10 +243,10 @@ Also, welcome to join our QQ group ([825696376](https://qun.qq.com/universal-sha
 
 ## Citation
 
-As of now, `GPUMDkit` is a free, open-source tool for everyone to use. If you find it helpful, please ⭐ [star us on GitHub](https://github.com/zhyan0603/GPUMDkit). Thanks for your support! Moreover, we also recommend citing the following publications if they are relevant to your work:
+As of now, `GPUMDkit` is a open-source tool for everyone to use. If you find it helpful, please ⭐ [star us on GitHub](https://github.com/zhyan0603/GPUMDkit). Thanks for your support! Moreover, we also recommend citing the following publications if they are relevant to your work:
 
 [1] Z. Yan and Y. Zhu, [Impact of Lithium Nonstoichiometry on Ionic Diffusion in Tetragonal Garnet-Type Li<sub>7</sub>La<sub>3</sub>Zr<sub>2</sub>O<sub>12</sub>](https://doi.org/10.1021/acs.chemmater.4c02454), Chem. Mater. 2024, 36, 23, 11551–11557.
 
-[2] Z. Yan, Z. Fan and Y. Zhu, [Improving robustness and training efficiency of machine-learned potentials by incorporating short-range empirical potentials](https://arxiv.org/abs/2504.15925), arXiv:2504.15925
+[2] Z. Yan, Z. Fan and Y. Zhu, [Improving robustness and training efficiency of machine-learned potentials by incorporating short-range empirical potentials](https://doi.org/10.1021/acs.jcim.5c02335), J. Chem. Inf. Model. 2026, 66, 3, 1406–1413.
 
 > **Note:** These citations are **not mandatory** and should **only** be included if they contribute to your research.

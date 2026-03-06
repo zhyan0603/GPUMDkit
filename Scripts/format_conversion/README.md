@@ -25,6 +25,7 @@ The format conversion scripts provide seamless interconversion between:
 | POSCAR | extxyz | `gpumdkit.sh -pos2exyz <poscar> <xyz>` |
 | extxyz | POSCAR | `gpumdkit.sh -exyz2pos <xyz>` |
 | POSCAR | LAMMPS | `gpumdkit.sh -pos2lmp <poscar> <lmp> <elem...>` |
+| XDATCAR | extxyz | `gpumdkit.sh -xdat2exyz XDATCAR dump.xyz` |
 | LAMMPS dump | extxyz | `gpumdkit.sh -lmp2exyz <dump> <elem...>` |
 | CIF | extxyz | `gpumdkit.sh -cif2exyz <cif>` |
 | CIF | POSCAR | `gpumdkit.sh -cif2pos <cif>` |

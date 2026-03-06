@@ -10,7 +10,7 @@ if [ -z "$GPUMDkit_path" ]; then
     exit 1
 fi
 
-VERSION="1.5.1 (dev) (2025-02-03)"
+VERSION="1.5.1 (dev) (2025-03-02)"
 
 plt_path="${GPUMDkit_path}/Scripts/plt_scripts"
 analyzer_path="${GPUMDkit_path}/Scripts/analyzer"
@@ -38,7 +38,7 @@ function main(){
         "0" "1" "101" "102" "103" "104" "105"
         "2" "201" "202" "203" "204" "205" 
         "3" "301" "302" "303" 
-        "4" "401" "402" "403" "404" "405"
+        "4" "401" "402" "403" "404" "405" "406" "407" "408" "409" "410"
         "5" "501" "502"
         "6"
     ) 
@@ -96,7 +96,12 @@ function main(){
                 "402") f402_calc_properties_with_nep ;;
                 "403") f403_calc_descriptors ;;
                 "404") f404_calc_doas ;;
-                "405") f405_calc_neb ;;                
+                "405") f405_calc_neb ;;
+                "406") f406_calc_neighbor_list ;;
+                "407") f407_calc_displacement ;;
+                "408") f408_calc_averaged_structure ;;
+                "409") f409_calc_oct_tilt ;;
+                "410") f410_calc_polarization_abo3 ;;
             esac ;;           
         "5")
             source ${GPUMDkit_path}/src/f5_analyzers.sh
@@ -127,7 +132,8 @@ function help_info_table(){
     echo "| -cif2pos       Convert cif to POSCAR          | -pos2lmp      Convert POSCAR to LAMMPS           |"
     echo "| -cif2exyz      Convert cif to extxyz          | -lmp2exyz     Convert LAMMPS-dump to extxyz      |"
     echo "| -addgroup      Add group label                | -addweight    Add weight to the struct in extxyz |"
-    echo "| -cp2k2xyz      Convert CP2K file to extxyz    | Developing...                                    |"
+    echo "| -cp2k2xyz      Convert CP2K file to extxyz    | -traj2exyz    Convert ASE traj to extxyz         |"
+    echo "| -xdat2exyz     Convert XDATCAR to extxyz      | Developing...                                    |"
     echo "+========================================= Analysis ===============================================+"
     echo "| -range         Print range of energy etc.     | -max_rmse     Get max RMSE from extxyz           |"
     echo "| -min_dist      Get min_dist between atoms     | -min_dist_pbc Get min_dist considering PBC       |"
@@ -161,6 +167,7 @@ function plot_info_table(){
     echo "| sigma_xyz       Plot directional Arrhenius sigma   | D_xyz          Plot directional Arrhenius D    |"
     echo "| emd             Plot EMD results                   | nemd           Plot NEMD results               |"
     echo "| hnemd           Plot HNEMD results                 | pdos           Plot VAC and PDOS               |"
+    echo "| plane-grid      Plot displacement plane grid       | parity_density Plot parity plot density        |"
     echo "+=====================================================================================================+"
     echo "| For detailed usage and examples, use: gpumdkit.sh -plt <plot_type> -h                               |"
     echo "+=====================================================================================================+"
@@ -217,6 +224,7 @@ if [ ! -z "$1" ]; then
                     "nemd") python ${plt_path}/plt_nemd.py ${@:3} ;;
                     "hnemd") python ${plt_path}/plt_hnemd.py ${@:3} ;;
                     "pdos") python ${plt_path}/plt_pdos.py $3 ;;
+                    "plane-grid") python ${plt_path}/plt_plane_grid.py ${@:3} ;;
                     "charge")
                         echo " +----------------------------------------------------------+"
                         echo " | Please ensure you are using full batch training process. |"
@@ -283,7 +291,27 @@ if [ ! -z "$1" ]; then
                             echo " See the codes in calculators folder for more details"
                             echo " Code path: ${calc_path}/calc_doas.py"
                             exit 1
-                        fi ;;                                          
+                        fi ;;
+                    nlist)
+                        echo " Calling script by Mosey QAQ. "
+                        echo " Code path: ${calc_path}/calc_neighbor_list.py"
+                        python ${calc_path}/calc_neighbor_list.py ${@:3} ;;
+                    disp)
+                        echo " Calling script by Mosey QAQ. "
+                        echo " Code path: ${calc_path}/calc_displacement.py"
+                        python ${calc_path}/calc_displacement.py ${@:3} ;;
+                    avg-struct)
+                        echo " Calling script by Mosey QAQ. "
+                        echo " Code path: ${calc_path}/calc_averaged_structure.py"
+                        python ${calc_path}/calc_averaged_structure.py ${@:3} ;;
+                    oct-tilt)
+                        echo " Calling script by Mosey QAQ. "
+                        echo " Code path: ${calc_path}/calc_oct_tilt.py"
+                        python ${calc_path}/calc_oct_tilt.py ${@:3} ;;
+                    pol-abo3)
+                        echo " Calling script by Mosey QAQ. "
+                        echo " Code path: ${calc_path}/calc_polarization_abo3.py"
+                        python ${calc_path}/calc_polarization_abo3.py ${@:3} ;;
                     *)
                         echo " See the codes in calculators folder for more details"
                         echo " Code path: ${calc_path}"; exit 1 ;;
@@ -388,6 +416,17 @@ if [ ! -z "$1" ]; then
                 echo " Code path: ${format_conv_path}/exyz2pos.py"
             fi ;;
 
+        -xdat2exyz)
+            if [ ! -z "$2" ] && [ "$2" != "-h" ] ; then
+                echo " Calling script by Zihan YAN "
+                echo " Code path: ${format_conv_path}/xdatcar2exyz.py"
+                python ${format_conv_path}/xdatcar2exyz.py $2 $3
+            else
+                echo " Usage: -xdat2exyz XDATCAR model.xyz"
+                echo " See the source code of xdatcar2exyz.py for more details"
+                echo " Code path: ${format_conv_path}/xdatcar2exyz.py"
+            fi ;;
+
         -pos2lmp)
             if [ ! -z "$2" ] && [ "$2" != "-h" ] && [ ! -z "$3" ] ; then
                 echo " Calling script by Zihan YAN "
@@ -408,6 +447,17 @@ if [ ! -z "$1" ]; then
                 echo " Usage: -lmp2exyz <dump_file> <element1> <element2> ..."
                 echo " See the source code of lmp2exyz.py for more details"
                 echo " Code path: ${format_conv_path}/lmp2exyz.py"
+            fi ;;
+
+        -traj2exyz)
+            if [ ! -z "$2" ] && [ "$2" != "-h" ] && [ ! -z "$3" ] ; then
+                echo " Calling script by Zihan YAN "
+                echo " Code path: ${format_conv_path}/traj2exyz.py"
+                python ${format_conv_path}/traj2exyz.py $2 $3
+            else
+                echo " Usage: -traj2exyz <input.traj> <output.xyz>"
+                echo " See the source code of traj2exyz.py for more details"
+                echo " Code path: ${format_conv_path}/traj2exyz.py"
             fi ;;
 
         -addgroup|-addlabel)
@@ -550,6 +600,7 @@ if [ ! -z "$1" ]; then
             python ${analyzer_path}/analyze_chem_species.py $2 ;;
 
         -pynep)
+            source ${GPUMDkit_path}/src/f2_sample_structures.sh
             parallel_pynep_sample_structures ;;
 
         -frame_range)

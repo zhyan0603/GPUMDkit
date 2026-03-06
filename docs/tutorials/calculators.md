@@ -187,7 +187,7 @@ Calculates energies, forces, and stresses for structures using a NEP model. You 
 
 ***Note that you must know what you are doing and this is not a substitute for DFT calculations.***
 
-Unless you have a well-trained NEP model and you want to use it as a DFT surrogate, you probably shouldn't use this feature. See [this article]([ https://doi.org/10.48550/arXiv.2504.15925](https://doi.org/10.48550/arXiv.2504.15925)) if you are interesting in it.
+Unless you have a well-trained NEP model and you want to use it as a DFT surrogate, you probably shouldn't use this feature. See [this article](https://doi.org/10.1021/acs.jcim.5c02335) if you are interesting in it.
 
 #### Input Files
 - A clean structure file in `extxyz` format with energy, force, and virial/stress. 
