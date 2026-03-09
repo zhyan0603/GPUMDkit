@@ -293,23 +293,23 @@ if [ ! -z "$1" ]; then
                             exit 1
                         fi ;;
                     nlist)
-                        echo " Calling script by Mosey QAQ. "
+                        echo " Calling script by Denan LI. "
                         echo " Code path: ${calc_path}/calc_neighbor_list.py"
                         python ${calc_path}/calc_neighbor_list.py ${@:3} ;;
                     disp)
-                        echo " Calling script by Mosey QAQ. "
+                        echo " Calling script by Denan LI. "
                         echo " Code path: ${calc_path}/calc_displacement.py"
                         python ${calc_path}/calc_displacement.py ${@:3} ;;
                     avg-struct)
-                        echo " Calling script by Mosey QAQ. "
+                        echo " Calling script by Denan LI. "
                         echo " Code path: ${calc_path}/calc_averaged_structure.py"
                         python ${calc_path}/calc_averaged_structure.py ${@:3} ;;
                     oct-tilt)
-                        echo " Calling script by Mosey QAQ. "
+                        echo " Calling script by Denan LI. "
                         echo " Code path: ${calc_path}/calc_oct_tilt.py"
                         python ${calc_path}/calc_oct_tilt.py ${@:3} ;;
                     pol-abo3)
-                        echo " Calling script by Mosey QAQ. "
+                        echo " Calling script by Denan LI. "
                         echo " Code path: ${calc_path}/calc_polarization_abo3.py"
                         python ${calc_path}/calc_polarization_abo3.py ${@:3} ;;
                     *)
