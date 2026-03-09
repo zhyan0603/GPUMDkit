@@ -207,7 +207,7 @@ if [ ! -z "$1" ]; then
                     "msd_all") python ${plt_path}/plt_msd_all.py $3 ${@:4} ;;
                     "msd_conv") python ${plt_path}/plt_msd_convergence_check.py $3 ;;
                     "sdc") python ${plt_path}/plt_sdc.py $3 ;;
-                    "rdf") python ${plt_path}/plt_rdf.py $3 $4 ;;
+                    "rdf") python ${plt_path}/plt_rdf.py ${@:3} ;;
                     "vac") python ${plt_path}/plt_vac.py $3 ;;
                     "restart") python ${plt_path}/plt_nep_restart.py $3 ;;
                     "dimer") python ${plt_path}/plt_dimer.py $3 $4 $5 $6 ;;

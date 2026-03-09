@@ -1,87 +1,68 @@
-import sys
-import math
-import numpy as np
+import pandas as pd
 import matplotlib.pyplot as plt
+import argparse
+import math
 
-# Function to plot RDF data
-def plot_rdf(file_path, column_index=None, save=False):
-    # Load data from the file
-    data = np.loadtxt(file_path)
-    
-    # Extract distances and RDF values
-    distances = data[:, 0]
-    rdf_values = data[:, 1:]
+# Parse command-line arguments
+parser = argparse.ArgumentParser(description='Plot RDF data from rdf.out file.')
+parser.add_argument('action', nargs='?', default=None, help='If "save", save the plot as PNG; otherwise, show the plot.')
+args = parser.parse_args()
 
-    # Generate column names (assumes columns after the first one are types)
-    column_names = ['distance'] + [f'column{int(i)}' for i in range(1, rdf_values.shape[1] + 1)]
-    
-    # If a column index is provided, plot only that column
-    if column_index is not None:
-        column_index -= 1  # Adjust to zero-indexing
-        if column_index < 0 or column_index >= len(column_names) - 1:
-            print(f"Invalid column index. Please choose a value between 1 and {len(column_names) - 1}")
-            return
-        
-        plt.figure(figsize=(6, 3.5))
-        # Plot the selected column
-        plt.plot(distances, rdf_values[:, column_index], label=column_names[column_index + 1])
-        plt.xlabel(r'Distance ($\mathrm{{\AA}}$)')
-        plt.ylabel('g(r)')
-        plt.tight_layout()
-        plt.legend()
-        
-        if save:
-            plt.savefig(f'rdf.png', dpi=300)  # Save the plot as PNG
-        else:
-            plt.show()
-    else:
-        # If no column index is provided, plot all columns
-        num_plots = len(column_names) - 1  # Exclude 'total'
-        
-        # Calculate optimal grid size (rows, columns)
-        ncols = int(math.ceil(math.sqrt(num_plots)))  # Determine number of columns
-        nrows = int(math.ceil(num_plots / ncols))     # Determine number of rows
-        
-        # Create subplots with optimal grid layout
-        fig, axes = plt.subplots(nrows=nrows, ncols=ncols, figsize=(ncols * 3.5, nrows * 2.3))
-        
-        # Flatten axes if there's more than 1 row/column
-        axes = axes.flatten() if nrows > 1 else axes
-        
-        # Plot each column in a subplot
-        for i, ax in enumerate(axes):
-            if i < num_plots:  # Only plot for the available number of columns
-                ax.plot(distances, rdf_values[:, i], label=column_names[i + 1])
-                ax.set_xlabel(r'Distance ($\mathrm{{\AA}}$)')
-                ax.set_ylabel('g(r)')
-                ax.legend()
-            else:
-                ax.axis('off')  # Turn off unused axes if the grid is larger than the number of columns
+# Read the rdf.out file
+with open('rdf.out', 'r') as f:
+    lines = f.readlines()
 
-        # Adjust layout
-        plt.tight_layout()
-        
-        if save:
-            plt.savefig(f'rdf.png', dpi=300)  # Save the plot as PNG
-        else:
-            plt.show()
+# Extract header from the first line (strip # and split)
+header = lines[0].strip().lstrip('#').split()
 
-# Check if a column index is provided via command line arguments
-if len(sys.argv) > 1:
-    # Check if the first argument is 'save'
-    if sys.argv[1] == 'save':
-        column_index = None  # If 'save', we want to plot all columns
-        save = True
-    else:
-        # Otherwise, assume the first argument is the column index
-        column_index = int(sys.argv[1])
+# Read data lines, skipping empty or comment lines
+data_lines = [line.split() for line in lines[1:] if line.strip() and not line.startswith('#')]
+
+# Create DataFrame
+df = pd.DataFrame(data_lines, columns=header).astype(float)
+
+# Extract radius (first column)
+radius = df[header[0]]
+
+# RDF columns are from the second column onward
+rdf_columns = header[1:]
+
+# Number of subplots equals number of RDF columns
+num_subplots = len(rdf_columns)
+
+# Calculate nrows and ncols: max 3 columns
+ncols = min(3, num_subplots)
+nrows = math.ceil(num_subplots / ncols)
+
+# Create subplots
+fig, axs = plt.subplots(nrows, ncols, figsize=(3.3 * ncols, 2.3 * nrows)) 
+
+# Flatten axs for easy iteration
+axs = axs.flat if num_subplots > 1 else [axs]
+
+# Plot each RDF in its own subplot
+for i, col in enumerate(rdf_columns):
+    axs[i].plot(radius, df[col], label=col)
+    axs[i].legend(loc='upper left')
+    axs[i].set_xlabel('Radius')
+    axs[i].set_ylabel('g(r)')
+
+# Hide unused subplots if any
+for i in range(num_subplots, nrows * ncols):
+    axs[i].axis('off')
+
+# Adjust layout
+plt.tight_layout()
+
+# Save or show based on argument
+if args.action == 'save':
+    plt.savefig('rdf.png', dpi=300)
 else:
-    column_index = None
-
-# Check if 'save' is in sys.argv, this handles the case where 'save' could be in any position
-save = 'save' in sys.argv
-
-file_path = 'rdf.out'
-
-# Call the plot function
-plot_rdf(file_path, column_index, save)
+    # Check if the current backend is non-interactive
+    from matplotlib import get_backend
+    if get_backend().lower() in ['agg', 'cairo', 'pdf', 'ps', 'svg']:
+        print("Unable to display the plot due to the non-interactive backend.")
+        print("The plot has been automatically saved as 'rdf.png'.")
+        plt.savefig('rdf.png', dpi=300)
+    else:
+        plt.show()
