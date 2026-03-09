@@ -356,15 +356,15 @@ if [ ! -z "$1" ]; then
                 echo " Code path: ${format_conv_path}/out2xyz.sh"
             fi ;;
 
-        -xml2xyz)
+        -out2exyz)
             if [ ! -z "$2" ] && [ "$2" != "-h" ]; then
-                echo " Calling script by Zezhu Zeng et al. "
-                python ${format_conv_path}/xml2xyz.py $2
-                echo " Code path: ${format_conv_path}/xml2xyz.py"
+                echo " Calling script by Zihan YAN et al. "
+                python ${format_conv_path}/out2exyz.py $2
+                echo " Code path: ${format_conv_path}/out2exyz.py"
             else
-                echo " Usage: -xml2xyz dir_name (eg. gpumdkit.sh -xml2xyz .)"
-                echo " See the source code of xml2xyz.py for more details"
-                echo " Code path: ${format_conv_path}/xml2xyz.py"               
+                echo " Usage: -out2exyz dir_name (eg. gpumdkit.sh -out2exyz .)"
+                echo " See the source code of out2exyz.py for more details"
+                echo " Code path: ${format_conv_path}/out2exyz.py"               
             fi ;;
 
         -cp2k2xyz)
