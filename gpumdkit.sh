@@ -10,7 +10,7 @@ if [ -z "$GPUMDkit_path" ]; then
     exit 1
 fi
 
-VERSION="1.5.1 (dev) (2025-03-02)"
+VERSION="1.5.2 (dev) (2025-03-10)"
 
 plt_path="${GPUMDkit_path}/Scripts/plt_scripts"
 analyzer_path="${GPUMDkit_path}/Scripts/analyzer"
@@ -53,6 +53,7 @@ function main(){
     case "${choice:0:1}" in
         "0")
             echo " Thank you for using GPUMDkit. Have a great day!"
+            echo " Welcome to join our QQ group (825696376)."
             exit 0
             ;;
         "1")
@@ -118,6 +119,7 @@ function main(){
 
     esac
     echo " Thank you for using GPUMDkit. Have a great day!"
+    echo " Welcome to join our QQ group (825696376)."
 }
 
 #--------------------- help info ----------------------
