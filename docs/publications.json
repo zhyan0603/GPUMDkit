@@ -1,0 +1,30 @@
+[
+    {
+        "title": "A Perspective on Training Machine Learning Force Fields for Solid-State Electrolyte Materials",
+        "authors": "Zihan Yan, Shengjie Tang, Yizhou Zhu",
+        "journal": "arXiv:2603.07425",
+        "year": "2026",
+        "link": "https://doi.org/10.48550/arXiv.2603.07425"
+    },
+    {
+        "title": "Improving robustness and training efficiency of machine-learned potentials by incorporating short-range empirical potential",
+        "authors": "Zihan Yan, Zheyong Fan, Yizhou Zhu",
+        "journal": "J. Chem. Inf. Model. 2026, 66, 1406",
+        "year": "2026",
+        "link": "https://doi.org/10.1021/acs.jcim.5c02335"
+    },
+    {
+        "title": "GPUMD 4.0: A high-performance molecular dynamics package for versatile materials simulations with machine-learned potentials",
+        "authors": "Ke Xu, Hekai Bu, Shuning Pan, Eric Lindgren, Yongchao Wu, Yong Wang, Jiahui Liu, Keke Song, Bin Xu, Yifan Li, Tobias Hainer, Lucas Svensson, Julia Wiktor, Rui Zhao, Hongfu Huang, Cheng Qian, Shuo Zhang, Zezhu Zeng, Bohan Zhang, Benrui Tang, Yang Xiao, Zihan Yan, Jiuyang Shi, Zhixin Liang, Junjie Wang, Ting Liang, Shuo Cao, Yanzhou Wang, Penghua Ying, Nan Xu, Chengbing Chen, Yuwen Zhang, Zherui Chen, Xin Wu, Wenwu Jiang, Esme Berger, Yanlong Li, Shunda Chen, Alexander J. Gabourie, Haikuan Dong, Shiyun Xiong, Ning Wei, Yue Chen, Jianbin Xu, Feng Ding, Zhimei Sun, Tapio Ala-Nissila, Ari Harju, Jincheng Zheng, Pengfei Guan, Paul Erhart, Jian Sun, Wengen Ouyang, Yanjing Su, Zheyong Fan",
+        "journal": "MEG Adv. 2025, 3, e70028",
+        "year": "2025",
+        "link": "https://doi.org/10.1002/mgea.70028"
+    },
+    {
+        "title": "Impact of Lithium Nonstoichiometry on Ionic Diffusion in Tetragonal Garnet-Type Li<sub>7</sub>La<sub>3</sub>Zr<sub>2</sub>O<sub>12</sub>",
+        "authors": "Zihan Yan, Yizhou Zhu",
+        "journal": "Chem. Mater. 2024, 36, 23, 11551–11557",
+        "year": "2024",
+        "link": "https://doi.org/10.1021/acs.chemmater.4c02454"
+    }
+]
