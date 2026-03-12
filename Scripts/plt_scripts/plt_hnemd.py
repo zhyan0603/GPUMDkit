@@ -321,12 +321,12 @@ class HNEMD_Processor:
                              Reformed_SHC_data['k_g_wt'][:, -2] - Reformed_SHC_data['k_g_wt'][:, -1],
                              Reformed_SHC_data['k_g_wt'][:, -2] + Reformed_SHC_data['k_g_wt'][:, -1],
                              facecolor='C0', alpha=0.3)
-                text(0.6, 0.9, f"$\\kappa_{{in}}$ = {res_s['in_ave']:.2f} ± {res_s['in_std']:.2f} W/mK",
-                     ha='left', va='top', transform=gca().transAxes, color='C1')
-                text(0.6, 0.8, f"$\\kappa_{{out}}$ = {res_s['out_ave']:.2f} ± {res_s['out_std']:.2f} W/mK",
-                     ha='left', va='top', transform=gca().transAxes, color='C2')
-                text(0.6, 0.7, f"$\\kappa_{{tot}}$ = {res_s['tot_ave']:.2f} ± {res_s['tot_std']:.2f} W/mK",
-                     ha='left', va='top', transform=gca().transAxes, color='C0')
+                # text(0.6, 0.9, f"$\\kappa_{{in}}$ = {res_s['in_ave']:.2f} ± {res_s['in_std']:.2f} W/mK",
+                #      ha='left', va='top', transform=gca().transAxes, color='C1')
+                # text(0.6, 0.8, f"$\\kappa_{{out}}$ = {res_s['out_ave']:.2f} ± {res_s['out_std']:.2f} W/mK",
+                #      ha='left', va='top', transform=gca().transAxes, color='C2')
+                # text(0.6, 0.7, f"$\\kappa_{{tot}}$ = {res_s['tot_ave']:.2f} ± {res_s['tot_std']:.2f} W/mK",
+                #      ha='left', va='top', transform=gca().transAxes, color='C0')
                 xlim(0, self.cutoff_freq)
                 axhline(y=0, color='k', linestyle='--')
                 ylabel(r'$\kappa$($\omega$) (W/m/K/THz)')
@@ -370,8 +370,8 @@ class HNEMD_Processor:
                              Reformed_SHC_data['k_g_wt'][:, -2] - Reformed_SHC_data['k_g_wt'][:, -1],
                              Reformed_SHC_data['k_g_wt'][:, -2] + Reformed_SHC_data['k_g_wt'][:, -1],
                              facecolor='C0', alpha=0.3)
-                text(0.6, 0.7, f"$\\kappa_{{tot}}$ = {res_s['tot_ave']:.2f} ± {res_s['tot_std']:.2f} W/mK",
-                     ha='left', va='top', transform=gca().transAxes)
+                # text(0.6, 0.7, f"$\\kappa_{{tot}}$ = {res_s['tot_ave']:.2f} ± {res_s['tot_std']:.2f} W/mK",
+                #      ha='left', va='top', transform=gca().transAxes)
                 xlim(0, self.cutoff_freq)
                 axhline(y=0, color='k', linestyle='--')
                 ylabel(r'$\kappa$($\omega$) (W/m/K/THz)')

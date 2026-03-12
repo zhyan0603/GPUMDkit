@@ -38,7 +38,7 @@ axs[0].plot(energy_data[:, 1], energy_data[:, 0], '.', markersize=10)
 axs[0].plot([xmin_energy, xmax_energy], [xmin_energy, xmax_energy], linewidth=2, color='grey', linestyle='--')
 axs[0].set_xlabel('DFT energy (eV/atom)', fontsize=11)
 axs[0].set_ylabel('NEP energy (eV/atom)', fontsize=11)
-axs[0].legend(['energy'])
+axs[0].legend(['energy'], loc='upper left')
 axs[0].axis('tight')
 axs[0].tick_params(axis='both', labelsize=11)
 
@@ -56,7 +56,7 @@ axs[1].plot([xmin_force, xmax_force], [xmin_force, xmax_force], linewidth=2, col
 axs[1].set_xlabel(r'DFT force (eV/$\mathrm{\AA}$)', fontsize=11)
 axs[1].set_ylabel(r'NEP force (eV/$\mathrm{\AA}$)', fontsize=11)
 axs[1].tick_params(axis='both', labelsize=11)
-axs[1].legend(['fx', 'fy', 'fz'])
+axs[1].legend(['fx', 'fy', 'fz'], loc='upper left')
 axs[1].axis('tight')
 
 # Calculate and display RMSE for forces
@@ -74,7 +74,7 @@ axs[2].plot([xmin_stress, xmax_stress], [xmin_stress, xmax_stress], linewidth=2,
 axs[2].set_xlabel('DFT stress (GPa)', fontsize=11)
 axs[2].set_ylabel('NEP stress (GPa)', fontsize=11)
 axs[2].tick_params(axis='both', labelsize=11)
-axs[2].legend(['xx', 'yy', 'zz', 'xy', 'yz', 'zx'])
+axs[2].legend(['xx', 'yy', 'zz', 'xy', 'yz', 'zx'], loc='upper left')
 axs[2].axis('tight')
 
 # Calculate and display RMSE for stresses

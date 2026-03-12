@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GPUMDkit - A User-friendly Toolkit for GPUMD and NEP</title>
+    <link rel="stylesheet" href="css/home.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+</head>
+<body>
+
+    <div class="background-decorations">
+        <div class="blob blob-1"></div>
+        <div class="blob blob-2"></div>
+        <div class="blob blob-3"></div>
+    </div>
+
+    <!-- Main Header -->
+    <header class="main-header animate-on-scroll">
+        <div class="logo-container">
+            <img src="Gallery/gpumdkit_logo_lateral.png" alt="GPUMDkit Logo" class="logo">
+        </div>
+        <nav class="nav-links">
+            <a href="home.html" class="nav-item">Home</a>
+            <a href="htmls/tutorials.html" class="nav-item">Documentation</a>
+            <a href="gallery.html" class="nav-item">Gallery</a>
+            <a href="publications.html" class="nav-item">Publications</a>            
+            <!-- <a href="https://github.com/zhyan0603/GPUMDkit" class="nav-item">Join Us</a> -->
+            <a href="https://github.com/zhyan0603/GPUMDkit/archive/refs/heads/main.zip" class="nav-item">Download</a>
+        </nav>
+    </header>
+
+    <div class="home-container">
+        <!-- Hero Section -->
+        <section class="hero-section animate-on-scroll">
+            <h1 class="hero-title"><span class="gpumd">GPUMD</span><span class="kit">kit</span></h1>
+            <h2 class="hero-subtitle">A Toolkit for GPUMD and NEP</h2>
+            <p class="hero-desc">
+                GPUMDkit is a user-friendly toolkit for the GPUMD (Graphics Processing Units Molecular Dynamics) and NEP (Neuroevolution Potential) program. It provides a set of tools to streamline the use of common scripts in GPUMD and NEP, simplifying workflows and enhancing efficiency.
+            </p>
+            <div class="cta-group">
+                <a href="#quick-start" class="cta-btn cta-primary">Get Started</a>
+            </div>
+        </section>
+
+
+
+        <!-- Features Section -->
+        <section id="features" class="animate-on-scroll">
+            <h2 class="section-header">Key Features</h2>
+            <div class="features-grid">
+                <div class="feature-item">
+                    <div class="feature-icon">🔄</div>
+                    <div class="feature-title">Format Conversion</div>
+                    <p class="feature-desc">Seamlessly convert between POSCAR, XYZ, CIF, and other atomic structure formats.</p>
+                </div>
+                <div class="feature-item">
+                    <div class="feature-icon">📦</div>
+                    <div class="feature-title">Sample Structures</div>
+                    <p class="feature-desc">Generate and sample structures for NEP training.</p>
+                </div>
+                <div class="feature-item">
+                    <div class="feature-icon">📊</div>
+                    <div class="feature-title">Data Analysis</div>
+                    <p class="feature-desc">Built-in tools for analyzing trajectories, calculating properties, and visualizing simulation outcomes.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Quick Start Section -->
+        <section id="quick-start" class="animate-on-scroll">
+            <h2 class="section-header">Quick Start</h2>
+            <div class="quick-start-container">
+                <div class="qs-header">
+                    <div class="qs-title">Installation</div>
+                    <div class="qs-actions">
+                        <a href="https://github.com/zhyan0603/GPUMDkit" target="_blank">View on GitHub &rarr;</a>
+                    </div>
+                </div>
+                <div class="qs-body">
+                    <div class="code-block">
+                        <span class="code-line"><span class="comment"># 1. Clone the repository</span></span>
+                        <span class="code-line"><span class="cmd">git clone</span> <span class="arg">https://github.com/zhyan0603/GPUMDkit.git</span></span>
+                        <br>
+                        <span class="code-line"><span class="comment"># 2. Enter directory and run installer</span></span>
+                        <span class="code-line"><span class="cmd">cd</span> <span class="arg">GPUMDkit</span></span>
+                        <span class="code-line"><span class="cmd">bash</span> <span class="arg">source ./install.sh</span></span>
+                        <br>
+                        <span class="code-line"><span class="comment"># 3. Reload shell configuration</span></span>
+                        <span class="code-line"><span class="cmd">source</span> <span class="path">~/.bashrc</span></span>
+                        <br>
+                        <span class="code-line"><span class="comment"># 4. Ready to go!</span></span>
+                        <span class="code-line"><span class="cmd">gpumdkit.sh</span></span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Terminal Showcase Section -->
+        <section id="terminal-showcase" class="animate-on-scroll">
+            <h2 class="section-header">Preview</h2>
+            <div class="showcase-container">
+                <div class="showcase-tabs">
+                    <div class="showcase-tab active" data-target="panel-main">Main Menu</div>
+                    <div class="showcase-tab" data-target="panel-logs">CLI Demo</div>
+                    <div class="showcase-tab" data-target="panel-plot">Plots</div>
+                    <div class="showcase-tab" data-target="panel-help">Help</div>
+                </div>
+                <div class="showcase-window">
+                    <div class="showcase-header">
+                        <div class="showcase-buttons">
+                            <span class="btn btn-close"></span>
+                            <span class="btn btn-minimize"></span>
+                            <span class="btn btn-maximize"></span>
+                        </div>
+                        <div class="showcase-title">Terminal</div>
+                    </div>
+                    <div class="showcase-body">
+                        <div class="showcase-panel active" id="panel-main">
+                            <div class="terminal-content" id="showcase-content-main"></div>
+                        </div>
+                        <div class="showcase-panel" id="panel-logs">
+                            <div class="terminal-content" id="showcase-content-logs"></div>
+                        </div>
+                        <div class="showcase-panel" id="panel-plot">
+                            <div class="terminal-content" id="showcase-content-plot"></div>
+                        </div>
+                        <div class="showcase-panel" id="panel-help">
+                            <div class="terminal-content" id="showcase-content-help"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Documentation Section -->
+        <section id="documentation" class="animate-on-scroll">
+            <h2 class="section-header">Documentation</h2>
+            <div class="doc-grid">
+                <a href="htmls/format_conversion.html" class="doc-card">
+                    <div class="doc-icon">🔄</div>
+                    <h3>Format Conversion</h3>
+                    <p>Convert seamlessly between POSCAR, XYZ, CIF, and other formats.</p>
+                    <div class="doc-arrow">Read more</div>
+                </a>
+                <a href="htmls/sample_structures.html" class="doc-card">
+                    <div class="doc-icon">🧪</div>
+                    <h3>Sample Structures</h3>
+                    <p>Generate and sample structures for NEP training.</p>
+                    <div class="doc-arrow">Read more</div>
+                </a>
+                <a href="htmls/workflow.html" class="doc-card">
+                    <div class="doc-icon">🚀</div>
+                    <h3>Workflow</h3>
+                    <p>Guides on setting up efficient active learning loops.</p>
+                    <div class="doc-arrow">Read more</div>
+                </a>
+                <a href="htmls/calculators.html" class="doc-card">
+                    <div class="doc-icon">🧮</div>
+                    <h3>Calculators</h3>
+                    <p>Compute various properties and metrics directly.</p>
+                    <div class="doc-arrow">Read more</div>
+                </a>
+                <a href="htmls/analyzer.html" class="doc-card">
+                    <div class="doc-icon">📊</div>
+                    <h3>Analyzer</h3>
+                    <p>Trajectory analysis and property extraction.</p>
+                    <div class="doc-arrow">Read more</div>
+                </a>
+                <a href="htmls/plot_scripts.html" class="doc-card">
+                    <div class="doc-icon">📈</div>
+                    <h3>Visualization</h3>
+                    <p>Plotting tools for MSD, RDF, PDOS, and other data.</p>
+                    <div class="doc-arrow">Read more</div>
+                </a>
+            </div>
+        </section>
+
+        <!-- Gallery Section -->
+        <section id="gallery" class="animate-on-scroll">
+            <h2 class="section-header">Gallery</h2>
+            <div class="gallery-grid">
+                <div class="gallery-card">
+                    <img src="Gallery/train.png" alt="Training Plot" class="gallery-img">
+                    <div class="gallery-caption">Training Plot</div>
+                </div>
+                <div class="gallery-card">
+                    <img src="Gallery/thermo.png" alt="Thermo Analysis" class="gallery-img">
+                    <div class="gallery-caption">Thermo Analysis</div>
+                </div>
+                <div class="gallery-card">
+                    <img src="Gallery/prediction.png" alt="Parity Plot" class="gallery-img">
+                    <div class="gallery-caption">Parity Plot</div>
+                </div>
+                <div class="gallery-card">
+                    <img src="Gallery/emd.png" alt="EMD" class="gallery-img">
+                    <div class="gallery-caption">EMD</div>
+                </div>
+                <div class="gallery-card">
+                    <img src="Gallery/nemd.png" alt="NEMD" class="gallery-img">
+                    <div class="gallery-caption">NEMD</div>
+                </div>
+                <div class="gallery-card">
+                    <img src="Gallery/hnemd.png" alt="HNEMD" class="gallery-img">
+                    <div class="gallery-caption">HNEMD</div>
+                </div>
+            </div>
+            <div class="view-all-container">
+                <a href="gallery.html" class="view-all-btn">View All Gallery</a>
+            </div>
+        </section>
+
+        <!-- Publications Section -->
+        <section id="publications" class="animate-on-scroll">
+            <h2 class="section-header">Publications using GPUMDkit</h2>
+            <div id="pub-count-container" style="text-align: center; margin-bottom: 30px; font-weight: 500; color: var(--text-secondary);">
+                Total Publications: <span id="pub-count">...</span>
+            </div>
+            <div class="pub-list" id="recent-publications">
+                <!-- Dynamic Content -->
+            </div>
+            <div class="view-all-container">
+                <a href="publications.html" class="view-all-btn">View All Publications</a>
+            </div>
+        </section>
+
+        <!-- Community & Citation Section -->
+        <section id="community" class="animate-on-scroll">
+            <h2 class="section-header">Community & Citation</h2>
+            <div class="community-grid">
+                <!-- Card: QQ Group -->
+                <div class="comm-card qq-card">
+                    <div class="comm-icon">💬</div>
+                    <h3>Join Discussion</h3>
+                    <div class="qq-content">
+                        <img src="Gallery/gpumdkit_qqgroup.jpg" alt="QQ Group QR Code" class="qq-qr">
+                        <p>Scan to join our QQ Group for more discussions and support.</p>
+                    </div>
+                </div>
+
+                <!-- Card: Citation -->
+                <div class="comm-card citation-card-new">
+                    <div class="citation-content">
+                        <h3>Cite GPUMDkit</h3>
+                        <div class="citation-ref-card">
+                            <div class="watermark-icon">📝</div>
+                            <div class="cite-ref-title">GPUMDkit: A User-Friendly Toolkit for GPUMD and NEP</div>
+                            <div class="cite-ref-authors">
+                                <span class="cite-label">Authors:</span> Zihan Yan, Denan Li, Xin Wu, Zhoulin Liu, Chen Hua, Boyi Situ, Hao Yang, Shengjie Tang, Benrui Tang, Ziyang Wang, Shangzhao Yi, Huan Wang, Dian Huang, Zherui Chen, Ke Xu, Yanzhou Wang, Gang Tang, Shi Liu, Zheyong Fan, Yizhou Zhu
+                            </div>
+                            <div class="cite-ref-meta">
+                                <span class="meta-item"><strong>Journal:</strong> arXiv</span>
+                                <span class="meta-item"><strong>Year:</strong> 2025</span>
+                            </div>
+                            <div class="cite-ref-actions">
+                                <a href="https://github.com/zhyan0603/GPUMDkit" class="cite-doi-link">DOI: xx</a>
+                                <a href="https://github.com/zhyan0603/GPUMDkit" target="_blank" class="cite-full-text-btn">View Article</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+    </div>
+    <footer class="footer">
+            <div class="footer-content">
+                <div class="footer-column">
+                    <h4>Research Group</h4>
+                    <ul>
+                        <li><a href="https://zhuyizhou.github.io/" target="_blank">Yizhou Zhu Group</a></li>
+                    </ul>
+                </div>
+                <div class="footer-column">
+                    <h4>GPUMD Project</h4>
+                    <ul>
+                        <li><a href="https://github.com/brucefan1983/GPUMD" target="_blank">GPUMD Repository</a></li>
+                        <li><a href="https://gpumd.org/" target="_blank">GPUMD Documentation</a></li>
+                        <li><a href="https://github.com/brucefan1983/GPUMD-Tutorials" target="_blank">GPUMD-Tutorials</a></li>
+                        <li><a href="https://github.com/brucefan1983/GPUMD/tree/master/tools" target="_blank">GPUMD-Tools</a></li>
+                    </ul>
+                </div>
+                <div class="footer-column">
+                    <h4>GPUMD ecosystem</h4>
+                    <ul class="ecosystem-list">
+                        <li><a href="https://gitlab.com/brucefan1983/nep-data" target="_blank">nep-data</a></li>
+                        <li><a href="https://gitlab.com/materials-modeling/calorine" target="_blank">calorine</a></li>
+                        <li><a href="https://github.com/aboys-cb/NepTrainKit" target="_blank">NepTrainKit</a></li>
+                        <li><a href="https://github.com/Jonsnow-willow/GPUMD-Wizard" target="_blank">GPUMD-Wizard</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2026 GPUMDkit Teams. All rights reserved.</p>
+            </div>
+            <div class="site-stats">
+                <span id="busuanzi_container_site_pv" style="display: inline;"> Views: <span id="busuanzi_value_site_pv"></span></span>
+                <span id="busuanzi_container_site_uv" style="display: inline;"> Visitors: <span id="busuanzi_value_site_uv"></span></span>
+            </div>
+        </footer>
+    <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    <script src="js/home-terminal.js"></script>
+    <script src="js/publications.js"></script>
+    <script src="js/ui-interactions.js"></script>
+</body>
+</html>

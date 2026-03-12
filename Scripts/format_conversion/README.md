@@ -21,7 +21,7 @@ The format conversion scripts provide seamless interconversion between:
 | Source Format | Target Format | Command |
 |---------------|---------------|---------|
 | OUTCAR | extxyz | `gpumdkit.sh -out2xyz <dir>` |
-| vasprun.xml | extxyz | `gpumdkit.sh -xml2xyz <dir>` |
+| OUTCAR | extxyz | `gpumdkit.sh -out2exyz <dir>` |
 | POSCAR | extxyz | `gpumdkit.sh -pos2exyz <poscar> <xyz>` |
 | extxyz | POSCAR | `gpumdkit.sh -exyz2pos <xyz>` |
 | POSCAR | LAMMPS | `gpumdkit.sh -pos2lmp <poscar> <lmp> <elem...>` |
