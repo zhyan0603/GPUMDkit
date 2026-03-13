@@ -23,7 +23,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     card.innerHTML = `
                         <div class="pub-title">${pub.title}</div>
                         <div class="pub-authors">${pub.authors}</div>
-                        <div class="pub-journal">${pub.journal} (${pub.year})</div>
+                        <div class="pub-journal">${pub.journal}</div>
                     `;
                     
                     // Make whole card clickable if link exists
