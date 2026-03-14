@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Publications - GPUMDkit</title>
+    <link rel="stylesheet" href="css/home.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        /* Specific styles for publications page */
+        .pub-page-container {
+            width: 75%;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 140px 0 80px;
+            min-height: 80vh;
+        }
+
+        .year-section {
+            margin-bottom: 60px;
+            animation: fadeIn 0.6s ease-out;
+        }
+
+        .year-header {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--text-color);
+            margin-bottom: 30px;
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .year-header::after {
+            content: '';
+            flex-grow: 1;
+            height: 1px;
+            background: linear-gradient(90deg, rgba(0,0,0,0.1), transparent);
+        }
+
+        .year-count-badge {
+            background: rgba(24, 103, 174, 0.1);
+            color: var(--text-gpumd);
+            font-size: 1rem;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-weight: 600;
+        }
+
+        .pub-list-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            gap: 24px;
+        }
+
+        /* Reusing .pub-item style from home.css but ensuring grid layout */
+        .pub-page-item {
+            background: white;
+            padding: 24px;
+            border-radius: 12px;
+            border: 1px solid var(--border-color);
+            box-shadow: var(--shadow-soft);
+            transition: transform 0.2s ease;
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+        }
+
+        .pub-page-item:hover {
+            transform: translateY(-8px);
+            border-color: var(--text-gpumd);
+            box-shadow: var(--shadow-hover);
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="background-decorations">
+        <div class="blob blob-1"></div>
+        <div class="blob blob-2"></div>
+        <div class="blob blob-3"></div>
+    </div>
+
+    <!-- Main Header -->
+    <header class="main-header animate-on-scroll">
+        <div class="logo-container">
+            <a href="index.html" style="height: 100%; display: block;">
+                <img src="Gallery/gpumdkit_logo_lateral.png" alt="GPUMDkit Logo" class="logo">
+            </a>
+        </div>
+        <nav class="nav-links">
+            <a href="index.html" class="nav-item">Home</a>            
+            <a href="htmls/tutorials.html" class="nav-item">Documentation</a>
+            <a href="gallery.html" class="nav-item">Gallery</a>
+            <a href="publications.html" class="nav-item" style="color: var(--text-gpumd);">Publications</a>
+            <!-- <a href="https://github.com/zhyan0603/GPUMDkit" class="nav-item">Join Us</a> -->
+            <a href="https://github.com/zhyan0603/GPUMDkit/archive/refs/heads/main.zip" class="nav-item">Download</a>
+        </nav>
+    </header>
+
+    <div class="pub-page-container">
+        <div class="section-header">Publications</div>
+        
+        <div id="publications-list">
+            <!-- Dynamic Content -->
+        </div>
+    </div>
+
+    <footer class="footer">
+        <div class="footer-content">
+            <div class="footer-column">
+                <h4>Research Group</h4>
+                <ul>
+                    <li><a href="https://zhuyizhou.github.io/" target="_blank">Yizhou Zhu Group</a></li>
+                </ul>
+            </div>
+            <div class="footer-column">
+                <h4>GPUMD Project</h4>
+                <ul>
+                    <li><a href="https://github.com/brucefan1983/GPUMD" target="_blank">GPUMD Repository</a></li>
+                    <li><a href="https://gpumd.org/" target="_blank">GPUMD Documentation</a></li>
+                    <li><a href="https://github.com/brucefan1983/GPUMD-Tutorials" target="_blank">GPUMD-Tutorials</a></li>
+                    <li><a href="https://github.com/brucefan1983/GPUMD/tree/master/tools" target="_blank">GPUMD-Tools</a></li>
+                </ul>
+            </div>
+            <div class="footer-column">
+                <h4>GPUMD ecosystem</h4>
+                <ul class="ecosystem-list">
+                    <li><a href="https://gitlab.com/brucefan1983/nep-data" target="_blank">nep-data</a></li>
+                    <li><a href="https://gitlab.com/materials-modeling/calorine" target="_blank">calorine</a></li>
+                    <li><a href="https://github.com/aboys-cb/NepTrainKit" target="_blank">NepTrainKit</a></li>
+                    <li><a href="https://github.com/Jonsnow-willow/GPUMD-Wizard" target="_blank">GPUMD-Wizard</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2026 GPUMDkit Teams. All rights reserved.</p>
+        </div>
+        <div class="site-stats">
+            <span id="busuanzi_container_site_pv" style="display: inline;"> Views: <span id="busuanzi_value_site_pv"></span></span>
+            <span id="busuanzi_container_site_uv" style="display: inline;"> Visitors: <span id="busuanzi_value_site_uv"></span></span>
+        </div>
+    </footer>
+    <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    <script src="js/publications-page.js"></script>
+    <script src="js/ui-interactions.js"></script>
+</body>
+</html>

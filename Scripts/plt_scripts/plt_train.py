@@ -56,7 +56,7 @@ axs[0, 0].loglog(loss[:, plot_cols], '-', linewidth=2)
 axs[0, 0].set_xlabel(xlabel, fontsize=10)
 axs[0, 0].set_ylabel('Loss functions', fontsize=10)
 axs[0, 0].tick_params(axis='both', labelsize=10)
-axs[0, 0].legend(legend_labels, prop={'size': 8})
+axs[0, 0].legend(legend_labels, prop={'size': 8}, loc='lower left')
 axs[0, 0].axis('tight')
 #axs[0, 0].text(-0.07, 1.03, "(a)", transform=axs[0, 0].transAxes, fontsize=12, va='top', ha='right')
 
@@ -69,7 +69,7 @@ axs[0, 1].plot([xmin_energy, xmax_energy], [xmin_energy, xmax_energy], linewidth
 axs[0, 1].set_xlabel('DFT energy (eV/atom)', fontsize=10)
 axs[0, 1].set_ylabel('NEP energy (eV/atom)', fontsize=10)
 axs[0, 1].tick_params(axis='both', labelsize=10)
-axs[0, 1].legend(['energy'])
+axs[0, 1].legend(['energy'], loc='upper left')
 axs[0, 1].axis('tight')
 
 # Calculate and display RMSE, MAE, and R2 for energy
@@ -117,7 +117,7 @@ else:
     axs[1, 1].set_xlabel('DFT stress (GPa)', fontsize=10)
     axs[1, 1].set_ylabel('NEP stress (GPa)', fontsize=10)
     axs[1, 1].tick_params(axis='both', labelsize=10)
-    axs[1, 1].legend(['xx', 'yy', 'zz', 'xy', 'yz', 'zx'])
+    axs[1, 1].legend(['xx', 'yy', 'zz', 'xy', 'yz', 'zx'], loc='upper left')
     axs[1, 1].axis('tight')
 
     # Calculate and display RMSE, MAE, and R² for stresses

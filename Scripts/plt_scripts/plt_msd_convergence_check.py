@@ -9,14 +9,24 @@ def read_data(file_name):
     data = np.loadtxt(file_name)
     return data[:, 0], data[:, 1], data[:, 2], data[:, 3]
 
-# Function to calculate the slope of the 40% to 80% portion of the data
-def calculate_slope(x, y):
+# Function to calculate diffusion coefficient from the 40% to 80% portion of the data
+def calculate_diffusion_coefficient(x, y, dimension='total'):
     len_data = len(x)
-    start_idx = int(0.4 * len_data)  # 40% of the data
-    end_idx = int(0.8 * len_data)    # 80% of the data
-    x_range, y_range = x[start_idx:end_idx], y[start_idx:end_idx]
-    coeffs = np.polyfit(x_range, y_range, 1)  # Linear fit
-    return coeffs[0]  # Slope of the linear fit
+    start_idx = int(0.4 * len_data)
+    end_idx = int(0.8 * len_data)
+    x_range = x[start_idx:end_idx]
+    y_range = y[start_idx:end_idx]
+    
+    if len(x_range) < 2:
+        return np.nan
+    
+    coeffs = np.polyfit(x_range, y_range, 1)
+    slope = coeffs[0]
+    
+    if dimension in ['x', 'y', 'z']:
+        return slope / 2.0
+    else:  # total
+        return slope / 6.0
 
 # Function to read time_step from run.in file
 def get_time_step():
@@ -25,7 +35,6 @@ def get_time_step():
         with open('run.in', 'r') as file:
             for line in file:
                 if 'time_step' in line.lower():
-                    # Extract the number after 'time_step'
                     parts = line.split()
                     for part in parts:
                         try:
@@ -41,76 +50,71 @@ file_pattern = './msd_step*.out'
 files = glob.glob(file_pattern)
 steps = []
 for file in files:
-    # Extract step number from filename (between 'msd_step' and '.out')
     step_str = os.path.basename(file).replace('msd_step', '').replace('.out', '')
     try:
         steps.append(int(step_str))
     except ValueError:
         continue
-steps = np.sort(steps)  # Sort steps in ascending order
+steps = np.sort(steps)
 
 # Convert steps to ns using time_step (1 step = time_step fs)
-time_step = get_time_step()  # Get time_step in fs
-time_points = steps * time_step / 1e6  # Convert steps to ns (1 fs = 1e-6 ns)
+time_step = get_time_step()
+time_points = steps * time_step / 1e6  # steps → ns
 
-# Initialize lists to store slopes for each direction and total
-slopes_x = []
-slopes_y = []
-slopes_z = []
-slopes_total = []
+# Lists to store diffusion coefficients
+D_x_list = []
+D_y_list = []
+D_z_list = []
+D_total_list = []
 
 # Process each file
 for step in steps:
     input_file = f'./msd_step{step}.out'
     try:
-        # Read the data from the file
         time, msd_x, msd_y, msd_z = read_data(input_file)
-        msd_total = msd_x + msd_y + msd_z  # Calculate total MSD
+        msd_total = msd_x + msd_y + msd_z
         
-        # Calculate slopes for each direction and total
-        slopes_x.append(calculate_slope(time, msd_x))
-        slopes_y.append(calculate_slope(time, msd_y))
-        slopes_z.append(calculate_slope(time, msd_z))
-        slopes_total.append(calculate_slope(time, msd_total))
+        D_x = calculate_diffusion_coefficient(time, msd_x, 'x')
+        D_y = calculate_diffusion_coefficient(time, msd_y, 'y')
+        D_z = calculate_diffusion_coefficient(time, msd_z, 'z')
+        D_total = calculate_diffusion_coefficient(time, msd_total, 'total')
         
-    except FileNotFoundError:
-        print(f"File {input_file} not found, skipping.")
-        slopes_x.append(np.nan)
-        slopes_y.append(np.nan)
-        slopes_z.append(np.nan)
-        slopes_total.append(np.nan)
+        D_x_list.append(D_x)
+        D_y_list.append(D_y)
+        D_z_list.append(D_z)
+        D_total_list.append(D_total)
+        
+    except Exception:
+        print(f" File {input_file} not found or invalid, skipping.")
+        D_x_list.append(np.nan)
+        D_y_list.append(np.nan)
+        D_z_list.append(np.nan)
+        D_total_list.append(np.nan)
 
 # Define custom colors
-color_total = '#1f77b4'  # Blue for total MSD
-color_x = '#ff7f0e'      # Orange for MSD X
-color_y = '#2ca02c'      # Green for MSD Y
-color_z = '#d62728'      # Red for MSD Z
+color_total = '#1f77b4'  # Blue for total
+color_x     = '#ff7f0e'  # Orange for x
+color_y     = '#2ca02c'  # Green for y
+color_z     = '#d62728'  # Red for z
 
-# Create the plot with two y-axes
-fig, ax1 = plt.subplots(figsize=(5.5, 4), dpi=150)
+# Create the plot (single y-axis recommended)
+fig, ax = plt.subplots(figsize=(4.5, 3.6), dpi=150)
 
-# Plot total MSD on the left y-axis
-ax1.plot(time_points, slopes_total, marker='o', linestyle='-', color=color_total, 
-         fillstyle='none', label='Total')
-ax1.set_xlabel('Simulation Time (ns)')
-ax1.set_ylabel(r'Total Diffusion Rate ($\AA^2$/ps)', color=color_total)
-ax1.tick_params(axis='y', labelcolor=color_total)
+ax.plot(time_points, D_total_list, marker='o', linestyle='-', linewidth=2.0,
+        color=color_total, label='Total', zorder=10)
 
-# Create second y-axis for individual components
-ax2 = ax1.twinx()
-ax2.plot(time_points, slopes_x, marker='o', linestyle='-', color=color_x, 
-         fillstyle='none', label='x')
-ax2.plot(time_points, slopes_y, marker='o', linestyle='-', color=color_y, 
-         fillstyle='none', label='y')
-ax2.plot(time_points, slopes_z, marker='o', linestyle='-', color=color_z, 
-         fillstyle='none', label='z')
-ax2.set_ylabel(r'Component Diffusion Rate ($\AA^2$/ps)', color='gray')
-ax2.tick_params(axis='y', labelcolor='gray')
+ax.plot(time_points, D_x_list, marker='s', linestyle='-', linewidth=1.4,
+        color=color_x, label='x', alpha=0.9)
+ax.plot(time_points, D_y_list, marker='^', linestyle='-', linewidth=1.4,
+        color=color_y, label='y', alpha=0.9)
+ax.plot(time_points, D_z_list, marker='D', linestyle='-', linewidth=1.4,
+        color=color_z, label='z', alpha=0.9)
 
-# Combine legends from both axes
-lines1, labels1 = ax1.get_legend_handles_labels()
-lines2, labels2 = ax2.get_legend_handles_labels()
-ax1.legend(lines1 + lines2, labels1 + labels2, loc='best')
+ax.set_xlabel('Simulation Time (ns)')
+ax.set_ylabel(r'Diffusion Coefficient ($\AA^2$/ps)')
+
+ax.grid(True, alpha=0.25, linestyle='--')
+ax.legend(loc='best', frameon=True)
 
 plt.tight_layout()
 

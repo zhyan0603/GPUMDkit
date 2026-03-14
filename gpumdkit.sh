@@ -10,7 +10,7 @@ if [ -z "$GPUMDkit_path" ]; then
     exit 1
 fi
 
-VERSION="1.5.1 (dev) (2025-03-02)"
+VERSION="1.5.2 (dev) (2026-03-14)"
 
 plt_path="${GPUMDkit_path}/Scripts/plt_scripts"
 analyzer_path="${GPUMDkit_path}/Scripts/analyzer"
@@ -53,6 +53,7 @@ function main(){
     case "${choice:0:1}" in
         "0")
             echo " Thank you for using GPUMDkit. Have a great day!"
+            echo " Welcome to join our QQ group (825696376)."
             exit 0
             ;;
         "1")
@@ -118,6 +119,7 @@ function main(){
 
     esac
     echo " Thank you for using GPUMDkit. Have a great day!"
+    echo " Welcome to join our QQ group (825696376)."
 }
 
 #--------------------- help info ----------------------
@@ -207,7 +209,7 @@ if [ ! -z "$1" ]; then
                     "msd_all") python ${plt_path}/plt_msd_all.py $3 ${@:4} ;;
                     "msd_conv") python ${plt_path}/plt_msd_convergence_check.py $3 ;;
                     "sdc") python ${plt_path}/plt_sdc.py $3 ;;
-                    "rdf") python ${plt_path}/plt_rdf.py $3 $4 ;;
+                    "rdf") python ${plt_path}/plt_rdf.py ${@:3} ;;
                     "vac") python ${plt_path}/plt_vac.py $3 ;;
                     "restart") python ${plt_path}/plt_nep_restart.py $3 ;;
                     "dimer") python ${plt_path}/plt_dimer.py $3 $4 $5 $6 ;;
@@ -293,23 +295,23 @@ if [ ! -z "$1" ]; then
                             exit 1
                         fi ;;
                     nlist)
-                        echo " Calling script by Mosey QAQ. "
+                        echo " Calling script by Denan LI. "
                         echo " Code path: ${calc_path}/calc_neighbor_list.py"
                         python ${calc_path}/calc_neighbor_list.py ${@:3} ;;
                     disp)
-                        echo " Calling script by Mosey QAQ. "
+                        echo " Calling script by Denan LI. "
                         echo " Code path: ${calc_path}/calc_displacement.py"
                         python ${calc_path}/calc_displacement.py ${@:3} ;;
                     avg-struct)
-                        echo " Calling script by Mosey QAQ. "
+                        echo " Calling script by Denan LI. "
                         echo " Code path: ${calc_path}/calc_averaged_structure.py"
                         python ${calc_path}/calc_averaged_structure.py ${@:3} ;;
                     oct-tilt)
-                        echo " Calling script by Mosey QAQ. "
+                        echo " Calling script by Denan LI. "
                         echo " Code path: ${calc_path}/calc_oct_tilt.py"
                         python ${calc_path}/calc_oct_tilt.py ${@:3} ;;
                     pol-abo3)
-                        echo " Calling script by Mosey QAQ. "
+                        echo " Calling script by Denan LI. "
                         echo " Code path: ${calc_path}/calc_polarization_abo3.py"
                         python ${calc_path}/calc_polarization_abo3.py ${@:3} ;;
                     *)
@@ -356,15 +358,15 @@ if [ ! -z "$1" ]; then
                 echo " Code path: ${format_conv_path}/out2xyz.sh"
             fi ;;
 
-        -xml2xyz)
+        -out2exyz)
             if [ ! -z "$2" ] && [ "$2" != "-h" ]; then
-                echo " Calling script by Zezhu Zeng et al. "
-                python ${format_conv_path}/xml2xyz.py $2
-                echo " Code path: ${format_conv_path}/xml2xyz.py"
+                echo " Calling script by Zihan YAN et al. "
+                python ${format_conv_path}/out2exyz.py $2
+                echo " Code path: ${format_conv_path}/out2exyz.py"
             else
-                echo " Usage: -xml2xyz dir_name (eg. gpumdkit.sh -xml2xyz .)"
-                echo " See the source code of xml2xyz.py for more details"
-                echo " Code path: ${format_conv_path}/xml2xyz.py"               
+                echo " Usage: -out2exyz dir_name (eg. gpumdkit.sh -out2exyz .)"
+                echo " See the source code of out2exyz.py for more details"
+                echo " Code path: ${format_conv_path}/out2exyz.py"               
             fi ;;
 
         -cp2k2xyz)
