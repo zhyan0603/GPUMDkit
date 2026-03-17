@@ -8,9 +8,8 @@ File format:
 
 Usage:
   conda activate pymatgen_env
-  python plot_cohesive.py                # uses ./cohesive.out -> cohesive.png
-  python plot_cohesive.py path/to/cohesive.out
-  python plot_cohesive.py in.out out.png
+  python plot_cohesive.py                # uses ./cohesive.out -> ./cohesive.png (cwd)
+  python plot_cohesive.py path/to/cohesive.out   # output saved alongside input
 """
 
 import os
@@ -51,18 +50,16 @@ def load_cohesive(path: Path) -> tuple[np.ndarray, np.ndarray]:
 
 
 def main() -> None:
-    script_dir = Path(__file__).resolve().parent
     args = sys.argv[1:]
 
-    if len(args) == 0:
-        in_path = script_dir / "cohesive.out"
-        out_path = script_dir / "cohesive.png"
-    elif len(args) == 1:
-        in_path = Path(args[0])
-        out_path = in_path.with_suffix(".png")
+    # Input: default to cohesive.out in current working directory.
+    if len(args) < 1:
+        in_path = Path.cwd() / "cohesive.out"
     else:
         in_path = Path(args[0])
-        out_path = Path(args[1])
+
+    # Output: always save alongside the input file (same path).
+    out_path = in_path.with_suffix(".png")
 
     if not in_path.exists():
         print(f"Missing input file: {in_path}", file=sys.stderr)

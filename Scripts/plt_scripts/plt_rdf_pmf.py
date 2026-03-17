@@ -23,10 +23,10 @@ Output:
 
 from __future__ import annotations
 
-import argparse
 import json
 import math
 import os
+import sys
 from pathlib import Path
 
 import matplotlib
@@ -349,38 +349,57 @@ def rdf_pmf_analysis(
         json.dump(rdf_pmf_data_dict, f, indent=4)
 
 
-def parse_arguments() -> argparse.Namespace:
-    parser = argparse.ArgumentParser(
-        description="RDF + PMF analysis for GPUMD rdf.out (total RDF only)."
-    )
-    parser.add_argument(
-        "input",
-        type=str,
-        help="Input RDF data file (e.g. rdf.out)",
-    )
-    parser.add_argument(
-        "-T",
-        "--temperature",
-        type=float,
-        required=True,
-        help="Temperature in Kelvin (e.g. 2000)",
-    )
-    parser.add_argument(
-        "-c",
-        "--column",
-        type=int,
-        default=2,
-        help=(
-            "RDF column index to analyze (1=radius, 2=total, 3+=pair RDF). "
-            "Default: 2 (total RDF)."
-        ),
-    )
-    return parser.parse_args()
-
-
 def main() -> None:
-    args = parse_arguments()
-    rdf_pmf_analysis(Path(args.input), temperature_kelvin=args.temperature, column_index=args.column)
+    """
+    Usage:
+      python plot_rdf_pmf.py 2000            # uses col=2, ./rdf.out
+      python plot_rdf_pmf.py 2000 3          # uses col=3, ./rdf.out
+      python plot_rdf_pmf.py 2000 3 rdf.out  # uses col=3, explicit file
+
+    Positional arguments:
+      1) temperature in Kelvin (float, required)
+      2) RDF column index (optional, default: 2 = total RDF)
+      3) input RDF file path (optional, default: ./rdf.out)
+    """
+    args = sys.argv[1:]
+    if not args:
+        print(
+            "Usage: python plot_rdf_pmf.py <temperature_K> [rdf_column_index] [rdf.out]",
+            file=sys.stderr,
+        )
+        sys.exit(1)
+
+    try:
+        temperature = float(args[0])
+    except ValueError:
+        print(f"Could not parse temperature from '{args[0]}'", file=sys.stderr)
+        sys.exit(1)
+
+    # RDF column index: second argument (optional), default 2 (total)
+    if len(args) >= 2:
+        try:
+            column_index = int(args[1])
+        except ValueError:
+            print(
+                f"Could not parse RDF column index from '{args[1]}', "
+                "defaulting to 2 (total RDF).",
+                file=sys.stderr,
+            )
+            column_index = 2
+    else:
+        column_index = 2
+
+    # Input data file: last positional (optional), default ./rdf.out
+    if len(args) >= 3:
+        input_path = Path(args[2])
+    else:
+        input_path = Path.cwd() / "rdf.out"
+
+    rdf_pmf_analysis(
+        input_data_file=input_path,
+        temperature_kelvin=temperature,
+        column_index=column_index,
+    )
 
 
 if __name__ == "__main__":
