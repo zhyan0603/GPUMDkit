@@ -182,8 +182,8 @@ def main() -> None:
     plt.close()
     print(f"Saved {output_path}")
 
-if __name__ == "__main__":
-    main()
+# if __name__ == "__main__":
+#     main()
 
 if len(sys.argv) > 1 and sys.argv[1] == 'save':
     plt.savefig('viscosity.png', dpi=300)
