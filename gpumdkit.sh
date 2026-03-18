@@ -170,6 +170,8 @@ function plot_info_table(){
     echo "| emd             Plot EMD results                   | nemd           Plot NEMD results               |"
     echo "| hnemd           Plot HNEMD results                 | pdos           Plot VAC and PDOS               |"
     echo "| plane-grid      Plot displacement plane grid       | parity_density Plot parity plot density        |"
+    echo "| cohesive        Plot cohsive energy                | viscosity      Plot visconsity                 |"
+    echo "| rdf_pmf         Plot potential of mean force (PMF) |                                                |"
     echo "+=====================================================================================================+"
     echo "| For detailed usage and examples, use: gpumdkit.sh -plt <plot_type> -h                               |"
     echo "+=====================================================================================================+"
@@ -227,6 +229,9 @@ if [ ! -z "$1" ]; then
                     "hnemd") python ${plt_path}/plt_hnemd.py ${@:3} ;;
                     "pdos") python ${plt_path}/plt_pdos.py $3 ;;
                     "plane-grid") python ${plt_path}/plt_plane_grid.py ${@:3} ;;
+                    "cohesive") python ${plt_path}/plt_cohesive.py ${@:3} ;;
+                    "viscosity") python ${plt_path}/plt_viscosity.py ${@:3} ;;
+                    "rdf_pmf") python ${plt_path}/plt_rdf_pmf.py ${@:3} ;;
                     "charge")
                         echo " +----------------------------------------------------------+"
                         echo " | Please ensure you are using full batch training process. |"
