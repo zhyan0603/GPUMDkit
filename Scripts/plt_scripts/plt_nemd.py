@@ -358,12 +358,12 @@ class NEMD_Processor:
                              Reformed_SHC_data['k_g_wt'][:, -2] - Reformed_SHC_data['k_g_wt'][:, -1],
                              Reformed_SHC_data['k_g_wt'][:, -2] + Reformed_SHC_data['k_g_wt'][:, -1],
                              facecolor='C0', alpha=0.3)
-            text(0.45, 0.9, f"$G_{{in}}$ = {res_s['in_ave']:.3f} ± {res_s['in_std']:.2f} MW/m$^2$K",
-                 ha='left', va='top', transform=plt.gca().transAxes, color="C1")
-            text(0.45, 0.8, f"$G_{{out}}$ = {res_s['out_ave']:.3f} ± {res_s['out_std']:.2f} MW/m$^2$K",
-                 ha='left', va='top', transform=plt.gca().transAxes, color="C2")
-            text(0.45, 0.7, f"$G_{{tot}}$ = {res_s['tot_ave']:.3f} ± {res_s['tot_std']:.2f} MW/m$^2$K",
-                 ha='left', va='top', transform=plt.gca().transAxes, color="C0")
+            # text(0.45, 0.9, f"$G_{{in}}$ = {res_s['in_ave']:.3f} ± {res_s['in_std']:.2f} MW/m$^2$K",
+            #      ha='left', va='top', transform=plt.gca().transAxes, color="C1")
+            # text(0.45, 0.8, f"$G_{{out}}$ = {res_s['out_ave']:.3f} ± {res_s['out_std']:.2f} MW/m$^2$K",
+            #      ha='left', va='top', transform=plt.gca().transAxes, color="C2")
+            # text(0.45, 0.7, f"$G_{{tot}}$ = {res_s['tot_ave']:.3f} ± {res_s['tot_std']:.2f} MW/m$^2$K",
+            #      ha='left', va='top', transform=plt.gca().transAxes, color="C0")
             xlim(0, self.cutoff_freq)
             ylabel(r'$g$($\omega$) (MW/m$^2$/K/THz)')
             xlabel(r'$\nu$ (THz)')

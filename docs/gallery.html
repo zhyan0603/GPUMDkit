@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gallery - GPUMDkit</title>
+    <link rel="stylesheet" href="css/home.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        .gallery-page-container {
+            width: 75%;
+            max-width: 1600px;
+            margin: 0 auto;
+            padding: 140px 0 80px;
+            min-height: 80vh;
+        }
+
+        .gallery-page-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 30px;
+        }
+
+        .gallery-item {
+            background: white;
+            border-radius: 16px;
+            overflow: hidden;
+            border: 1px solid var(--border-color);
+            box-shadow: var(--shadow-soft);
+            transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+            cursor: pointer;
+            position: relative;
+        }
+
+        .gallery-item:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+            border-color: var(--text-gpumd);
+        }
+
+        .gallery-item-img-container {
+            width: 100%;
+            height: 240px;
+            overflow: hidden;
+            background: #ffffff; /* Pure white background */
+            border-bottom: 1px solid var(--border-color);
+            position: relative;
+        }
+
+        .gallery-item-img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            padding: 16px;
+            transition: transform 0.5s ease;
+        }
+
+        .gallery-item:hover .gallery-item-img {
+            transform: scale(1.05);
+        }
+
+        .gallery-item-content {
+            padding: 16px 24px;
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .gallery-item-title {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: var(--text-color);
+            margin: 0;
+            order: 1; /* Title first */
+        }
+
+        /* Modal Styles */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.7); /* Slightly darker for better contrast */
+            /* backdrop-filter: blur(5px); Removed for performance */
+            z-index: 2000;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.2s ease;
+        }
+
+        .modal-overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .modal-content {
+            width: 900px; /* Fixed width */
+            height: 600px; /* Fixed height */
+            max-width: 90vw;
+            max-height: 90vh;
+            background: #ffffff;
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+            position: relative;
+            
+            /* Optimized Animation */
+            transform: scale(0.95);
+            opacity: 0;
+            transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.2s ease;
+            will-change: transform, opacity;
+            
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal-overlay.active .modal-content {
+            transform: scale(1);
+            opacity: 1;
+        }
+
+        .modal-img {
+            max-width: 100%;
+            max-height: calc(100% - 80px); /* Adjust space for caption */
+            border-radius: 4px;
+            object-fit: contain;
+            display: block;
+        }
+
+        .modal-caption {
+            margin-top: 15px;
+            text-align: center;
+            color: var(--text-color);
+            width: 100%;
+            padding-bottom: 5px;
+        }
+
+        .modal-title {
+            font-size: 1.2rem;
+            font-weight: 600;
+            margin-bottom: 10px;
+        }
+
+        /* Improved Command Style */
+        .modal-command, .card-command {
+            font-family: 'Fira Code', monospace;
+            font-size: 0.85rem;
+            color: #64748b; /* Slate 500 */
+            padding: 4px 0;
+            display: inline-block;
+            user-select: all; /* Make it easy to copy */
+            background: transparent;
+            border: none;
+            box-shadow: none;
+        }
+        
+        .gallery-item-command {
+            font-family: 'Fira Code', monospace;
+            font-size: 0.8rem;
+            color: #64748b;
+            order: 2;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            width: 100%;
+            background: transparent;
+            border: none;
+            padding: 4px 0;
+        }
+
+        .modal-close {
+            position: absolute;
+            top: -40px;
+            right: -40px;
+            color: white;
+            font-size: 2rem;
+            cursor: pointer;
+            background: none;
+            border: none;
+            transition: transform 0.2s ease;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0.8;
+        }
+
+        .modal-close:hover {
+            transform: scale(1.1);
+            opacity: 1;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="background-decorations">
+        <div class="blob blob-1"></div>
+        <div class="blob blob-2"></div>
+        <div class="blob blob-3"></div>
+    </div>
+
+    <!-- Main Header -->
+    <header class="main-header animate-on-scroll">
+        <div class="logo-container">
+            <a href="index.html" style="height: 100%; display: block;">
+                <img src="Gallery/gpumdkit_logo_lateral.png" alt="GPUMDkit Logo" class="logo">
+            </a>
+        </div>
+        <nav class="nav-links">
+            <a href="index.html" class="nav-item">Home</a>            
+            <a href="htmls/tutorials.html" class="nav-item">Documentation</a>
+            <a href="gallery.html" class="nav-item" style="color: var(--text-gpumd);">Gallery</a>
+            <a href="publications.html" class="nav-item">Publications</a>            
+            <!-- <a href="https://github.com/zhyan0603/GPUMDkit" class="nav-item">Join Us</a> -->
+            <a href="https://github.com/zhyan0603/GPUMDkit/archive/refs/heads/main.zip" class="nav-item">Download</a>
+        </nav>
+    </header>
+
+    <div class="gallery-page-container">
+        <div class="section-header">Gallery</div>
+        
+        <div id="gallery-grid" class="gallery-page-grid">
+            <!-- Dynamic Content -->
+        </div>
+    </div>
+
+    <!-- Modal -->
+    <div class="modal-overlay" id="image-modal">
+        <div class="modal-content">
+            <button class="modal-close">&times;</button>
+            <img src="" alt="" class="modal-img" id="modal-image">
+            <div class="modal-caption" id="modal-caption"></div>
+        </div>
+    </div>
+
+    <footer class="footer">
+        <div class="footer-content">
+            <div class="footer-column">
+                <h4>Research Group</h4>
+                <ul>
+                    <li><a href="https://zhuyizhou.github.io/" target="_blank">Yizhou Zhu Group</a></li>
+                </ul>
+            </div>
+            <div class="footer-column">
+                <h4>GPUMD Project</h4>
+                <ul>
+                    <li><a href="https://github.com/brucefan1983/GPUMD" target="_blank">GPUMD Repository</a></li>
+                    <li><a href="https://gpumd.org/" target="_blank">GPUMD Documentation</a></li>
+                    <li><a href="https://github.com/brucefan1983/GPUMD-Tutorials" target="_blank">GPUMD-Tutorials</a></li>
+                    <li><a href="https://github.com/brucefan1983/GPUMD/tree/master/tools" target="_blank">GPUMD-Tools</a></li>
+                </ul>
+            </div>
+            <div class="footer-column">
+                <h4>GPUMD ecosystem</h4>
+                <ul class="ecosystem-list">
+                    <li><a href="https://gitlab.com/brucefan1983/nep-data" target="_blank">nep-data</a></li>
+                    <li><a href="https://gitlab.com/materials-modeling/calorine" target="_blank">calorine</a></li>
+                    <li><a href="https://github.com/aboys-cb/NepTrainKit" target="_blank">NepTrainKit</a></li>
+                    <li><a href="https://github.com/Jonsnow-willow/GPUMD-Wizard" target="_blank">GPUMD-Wizard</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2026 GPUMDkit Teams. All rights reserved.</p>
+        </div>
+        <div class="site-stats">
+            <span id="busuanzi_container_site_pv" style="display: inline;"> Views: <span id="busuanzi_value_site_pv"></span></span>
+            <span id="busuanzi_container_site_uv" style="display: inline;"> Visitors: <span id="busuanzi_value_site_uv"></span></span>
+        </div>
+    </footer>
+    <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    <script src="js/gallery-page.js"></script>
+    <script src="js/ui-interactions.js"></script>
+</body>
+</html>
