@@ -52,8 +52,7 @@ function main(){
 
     case "${choice:0:1}" in
         "0")
-            echo " Thank you for using GPUMDkit. Have a great day!"
-            echo " Welcome to join our QQ group (825696376)."
+            citation
             exit 0
             ;;
         "1")
@@ -118,8 +117,7 @@ function main(){
             ;;
 
     esac
-    echo " Thank you for using GPUMDkit. Have a great day!"
-    echo " Welcome to join our QQ group (825696376)."
+    citation
 }
 
 #--------------------- help info ----------------------
@@ -175,6 +173,21 @@ function plot_info_table(){
     echo "+=====================================================================================================+"
     echo "| For detailed usage and examples, use: gpumdkit.sh -plt <plot_type> -h                               |"
     echo "+=====================================================================================================+"
+}
+
+function citation(){
+echo "+-----------------------------------------------------------------------+"
+echo "|                     THANK YOU FOR USING GPUMDKIT                      |"
+echo "+-----------------------------------------------------------------------+"
+echo "│ If you find it useful, please star us on GitHub and cite our paper:   │"
+echo "│                                                                       │"
+echo "│ Z. Yan, D. Li, X. Wu, Z. Liu, C. Hua, B. Situ, H. Yang, S. Tang,      │"
+echo "│ B. Tang, Z. Wang, S. Yi, H. Wang, D. Huang, K. Li, Q. Guo, Z. Chen,   │"
+echo "│ K. Xu, Y. Wang, Z. Wang, G. Tang, S. Liu, Z. Fan, Y. Zhu.             │"
+echo "│ GPUMDkit: A User-Friendly Toolkit for GPUMD and NEP. arXiv:2603.17367 │"
+echo "│                                                                       │"
+echo "| Welcome to join our QQ group (825696376) for support and discussions! │"
+echo "+-----------------------------------------------------------------------+"
 }
 
 #--------------------- command line ----------------------
