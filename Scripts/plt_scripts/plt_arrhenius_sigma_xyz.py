@@ -1,3 +1,18 @@
+"""
+This script processes MSD and thermo data from multiple temperature folders (e.g., 400K, 500K) 
+to calculate ionic conductivity and its temperature dependence. 
+It extracts volume from thermo.out, calculates diffusivity from msd.out, 
+computes conductivity using the Nernst-Einstein relation, 
+and plots ln(sigma*T) vs 1000/T to determine activation energy. 
+The script also extrapolates conductivity to 300K based on the fitted Arrhenius behavior.
+
+Author: Zihan YAN (yanzihan@westlake.edu.cn)
+Last modified: 2026-03-19
+
+Usage:
+    python plt_arrhenius_sigma_xyz.py [save]
+"""
+
 import re
 import os
 import sys

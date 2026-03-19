@@ -175,19 +175,32 @@ function plot_info_table(){
     echo "+=====================================================================================================+"
 }
 
+# function citation(){
+# echo "+-----------------------------------------------------------------------+"
+# echo "|                     THANK YOU FOR USING GPUMDKIT                      |"
+# echo "+-----------------------------------------------------------------------+"
+# echo "│ If you find it useful, please star us on GitHub and cite our paper:   │"
+# echo "│                                                                       │"
+# echo "│ Z. Yan, D. Li, X. Wu, Z. Liu, C. Hua, B. Situ, H. Yang, S. Tang,      │"
+# echo "│ B. Tang, Z. Wang, S. Yi, H. Wang, D. Huang, K. Li, Q. Guo, Z. Chen,   │"
+# echo "│ K. Xu, Y. Wang, Z. Wang, G. Tang, S. Liu, Z. Fan, Y. Zhu.             │"
+# echo "│ GPUMDkit: A User-Friendly Toolkit for GPUMD and NEP. arXiv:2603.17367 │"
+# echo "│                                                                       │"
+# echo "| Welcome to join our QQ group (825696376) for support and discussions! │"
+# echo "+-----------------------------------------------------------------------+"
+# }
+
 function citation(){
-echo "+-----------------------------------------------------------------------+"
-echo "|                     THANK YOU FOR USING GPUMDKIT                      |"
-echo "+-----------------------------------------------------------------------+"
-echo "│ If you find it useful, please star us on GitHub and cite our paper:   │"
-echo "│                                                                       │"
-echo "│ Z. Yan, D. Li, X. Wu, Z. Liu, C. Hua, B. Situ, H. Yang, S. Tang,      │"
-echo "│ B. Tang, Z. Wang, S. Yi, H. Wang, D. Huang, K. Li, Q. Guo, Z. Chen,   │"
-echo "│ K. Xu, Y. Wang, Z. Wang, G. Tang, S. Liu, Z. Fan, Y. Zhu.             │"
-echo "│ GPUMDkit: A User-Friendly Toolkit for GPUMD and NEP. arXiv:2603.17367 │"
-echo "│                                                                       │"
-echo "| Welcome to join our QQ group (825696376) for support and discussions! │"
-echo "+-----------------------------------------------------------------------+"
+echo " +------------------------------------------------------+"
+echo " |           THANK YOU FOR USING GPUMDKIT               |"
+echo " +------------------------------------------------------+"
+echo " │ If you find it useful, please cite our paper:        │"
+echo " │                                                      │"
+echo " │ GPUMDkit: A User-Friendly Toolkit for GPUMD and NEP  │"
+echo " |       (https://arxiv.org/abs/2603.17367)             │"
+echo " │                                                      │"
+echo " |     Welcome to join our QQ group (825696376) !       │"
+echo " +------------------------------------------------------+"
 }
 
 #--------------------- command line ----------------------
@@ -690,14 +703,15 @@ fi
 
 ## logo
 echo -e "\
-         ____ ____  _   _ __  __ ____  _    _ _   
-        / ___|  _ \| | | |  \/  |  _ \| | _(_) |_ 
-       | |  _| |_) | | | | |\/| | | | | |/ / | __|
-       | |_| |  __/| |_| | |  | | |_| |   <| | |_ 
-        \____|_|    \___/|_|  |_|____/|_|\_\_|\__|
-                                          
-        GPUMDkit Version ${VERSION}
-  Core Developer: Zihan YAN (yanzihan@westlake.edu.cn)
+           ____ ____  _   _ __  __ ____  _    _ _   
+          / ___|  _ \| | | |  \/  |  _ \| | _(_) |_ 
+         | |  _| |_) | | | | |\/| | | | | |/ / | __|
+         | |_| |  __/| |_| | |  | | |_| |   <| | |_ 
+          \____|_|    \___/|_|  |_|____/|_|\_\_|\__|
+                                           
+          GPUMDkit Version ${VERSION}
+    Core Developer: Zihan YAN (yanzihan@westlake.edu.cn)
+ Main Contributors: Denan LI, Xin WU, Zhoulin LIU & Chen HUA
       "
 menu
 main
