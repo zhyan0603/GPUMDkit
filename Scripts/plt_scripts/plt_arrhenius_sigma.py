@@ -1,3 +1,13 @@
+"""
+This script processes GPUMD outputs to plot the Arrhenius relationship for conductivity (sigma) as a function of temperature. It reads MSD and thermo data from specified temperature folders, calculates diffusivity and conductivity, and fits the data to extract activation energy. The plot includes both the data points and the fitted line, with an extrapolation to 300K.
+
+Author: Zihan YAN (yanzihan@westlake.edu.cn)
+Last modified: 2026-03-19
+
+Usage:
+    python plt_arrhenius_sigma.py [save]
+"""
+
 import re
 import os
 import sys

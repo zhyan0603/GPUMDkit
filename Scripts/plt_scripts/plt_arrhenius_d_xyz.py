@@ -1,3 +1,16 @@
+"""
+This script reads MSD data from multiple temperature folders (e.g., 600K, 700K, etc.), 
+calculates diffusion coefficients (D) for all directions and individual x, y, z components, 
+and plots the Arrhenius relationship (log10(D) vs. 1000/T). 
+It also fits the data to extract activation energies (Ea) for each component. 
+
+Author: Zihan YAN (yanzihan@westlake.edu.cn)
+Last modified: 2026-03-19
+
+Usage:
+    python plt_arrhenius_d_xyz.py [save]
+"""
+
 import os
 import sys
 import numpy as np
