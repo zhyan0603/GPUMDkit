@@ -1,0 +1,220 @@
+/* Mobile Optimization Styles (max-width: 768px) */
+@media (max-width: 768px) {
+    /* 1. Hide Preview Section */
+    #terminal-showcase {
+        display: none !important;
+    }
+
+    /* 2. Global Font Size Reduction (15-25%) */
+    html {
+        font-size: 80% !important; /* Base 16px -> ~12.8px (20% reduction) */
+    }
+
+    body {
+        font-size: 14px !important;
+    }
+
+    /* Hero Section */
+    .hero-title {
+        font-size: 2.5rem !important;
+    }
+    
+    .hero-subtitle {
+        font-size: 1.1rem !important;
+    }
+    
+    .hero-desc {
+        font-size: 0.95rem !important;
+    }
+
+    /* Section Headers */
+    .section-header {
+        font-size: 1.7rem !important;
+        margin-bottom: 30px !important;
+    }
+
+    /* Buttons */
+    .cta-btn, .view-all-btn, .modern-btn {
+        font-size: 0.85rem !important;
+        padding: 10px 20px !important;
+    }
+
+    /* Cards Content */
+    .feature-title, .doc-card h3, .card-header h3, .card-header-center h3, .pub-title, .qs-title {
+        font-size: 1.05rem !important;
+    }
+
+    .feature-desc, .doc-card p, .card-desc, .pub-authors, .pub-journal, .qs-actions a {
+        font-size: 0.85rem !important;
+    }
+
+    .doc-arrow {
+        font-size: 0.8rem !important;
+        padding: 5px 12px !important;
+    }
+
+    .paper-title-modern {
+        font-size: 1rem !important;
+    }
+
+    .paper-authors-modern {
+        font-size: 0.85rem !important;
+    }
+
+    .meta-pill, .meta-text {
+        font-size: 0.75rem !important;
+    }
+
+    /* 3. Layout Fixes for Mobile (prevent overflow) */
+    .features-grid, .doc-grid, .gallery-grid, .pub-list {
+        grid-template-columns: 1fr !important;
+        gap: 20px !important;
+    }
+
+    .community-citation-wrapper {
+        grid-template-columns: 1fr !important;
+        gap: 20px !important;
+        display: flex !important;
+        flex-direction: column !important;
+    }
+
+    /* Ensure columns take full width */
+    .col-actions, .col-qq, .col-citation {
+        width: 100% !important;
+    }
+
+    /* Adjust Action Stack for mobile */
+    .action-stack {
+        gap: 15px !important;
+    }
+
+    .home-container {
+        width: 92% !important;
+        padding-top: 80px !important;
+    }
+
+    .feature-item, .doc-card, .pub-item, .gallery-card, .cc-card {
+        padding: 20px !important;
+        width: 100% !important; /* Ensure cards don't overflow */
+        box-sizing: border-box !important;
+    }
+
+    /* Publications specific */
+    .pub-page-container {
+        width: 92% !important;
+        padding-top: 80px !important;
+    }
+
+    /* Gallery specific */
+    .gallery-page-container {
+        width: 92% !important;
+        padding-top: 80px !important;
+    }
+
+    .modal-content {
+        width: 95% !important;
+        height: auto !important;
+        max-height: 80vh !important;
+        margin: auto !important;
+    }
+
+    .close-modal {
+        top: -40px !important;
+        right: 0 !important;
+        color: white !important;
+        font-size: 32px !important;
+    }
+
+    .gallery-img {
+        height: auto !important;
+        max-height: 200px !important;
+    }
+
+    /* Code Block Fixes */
+    .code-block {
+        font-size: 12px !important;
+        padding: 16px !important;
+        overflow-x: auto !important;
+    }
+    
+    .qs-header {
+        flex-direction: column !important;
+        align-items: flex-start !important;
+        gap: 10px !important;
+    }
+
+    /* Footer Fixes */
+    .footer {
+        padding: 40px 0 20px !important;
+    }
+
+    .footer-content {
+        display: none !important; /* Hide complex footer content on mobile */
+    }
+    
+    .footer-bottom {
+        padding-top: 0 !important;
+        border-top: none !important;
+    }
+
+    .footer-bottom p {
+        font-size: 0.75rem !important; /* Smaller text for ICP to prevent wrapping */
+        line-height: 1.4 !important;
+        padding: 0 10px !important;
+    }
+
+    .site-stats {
+        flex-direction: column !important;
+        gap: 5px !important;
+        font-size: 0.75rem !important;
+        margin-top: 10px !important;
+    }
+
+    /* Header and Navigation */
+    .main-header {
+        padding: 0 15px !important;
+        justify-content: space-between !important;
+    }
+    
+    .logo {
+        height: 24px !important;
+    }
+
+    /* Mobile Hamburger Menu */
+    .mobile-menu-btn {
+        display: block !important;
+        background: none;
+        border: none;
+        font-size: 24px;
+        color: var(--text-color);
+        cursor: pointer;
+        z-index: 1001;
+    }
+
+    .nav-links {
+        display: none !important; /* Hidden by default on mobile */
+        position: fixed;
+        top: 60px; /* Below header */
+        left: 0;
+        width: 100%;
+        background: rgba(255, 255, 255, 0.95);
+        backdrop-filter: blur(20px);
+        flex-direction: column;
+        align-items: center;
+        padding: 20px 0;
+        box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+        gap: 20px !important;
+        border-bottom: 1px solid rgba(0,0,0,0.05);
+    }
+
+    .nav-links.active {
+        display: flex !important;
+    }
+
+    .nav-item {
+        font-size: 1.1rem !important;
+        width: 100%;
+        text-align: center;
+        padding: 10px 0;
+    }
+}

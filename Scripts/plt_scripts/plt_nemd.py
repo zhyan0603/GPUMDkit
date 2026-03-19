@@ -203,7 +203,7 @@ class NEMD_Processor:
         Q = ((Q_in + Q_out) / 2).reshape(1, -1)  # eV/ps
 
         model = read(self.path['model'])
-        group = model.get_array("group")
+        group = model.get_array("group")[:, 0]
         coords_heat = model.positions[(group == 1), direction].mean()
         coords_cold = model.positions[(group == N_temp_group - 1), direction].mean()
         xticks_length = np.linspace(coords_heat, coords_cold, N_temp_group - 1) * 0.1
@@ -343,17 +343,17 @@ class NEMD_Processor:
             # (d) SHC spectral conductance
             subplot2grid((2, 4), (1, 1), colspan=3)
             set_fig_properties([gca()])
-            plot(Reformed_SHC_data['nu'][:, -2], Reformed_SHC_data['k_g_wi'][:, -2], linewidth=2, color='C1')
+            plot(Reformed_SHC_data['nu'][:, -2], Reformed_SHC_data['k_g_wi'][:, -2], linewidth=2, color='C1', label='In-plane component')
             plt.fill_between(Reformed_SHC_data['nu'][:, -2],
                              Reformed_SHC_data['k_g_wi'][:, -2] - Reformed_SHC_data['k_g_wi'][:, -1],
                              Reformed_SHC_data['k_g_wi'][:, -2] + Reformed_SHC_data['k_g_wi'][:, -1],
                              facecolor='C1', alpha=0.3)
-            plot(Reformed_SHC_data['nu'][:, -2], Reformed_SHC_data['k_g_wo'][:, -2], linewidth=2, color='C2')
+            plot(Reformed_SHC_data['nu'][:, -2], Reformed_SHC_data['k_g_wo'][:, -2], linewidth=2, color='C2', label='Out-of-plane component')
             plt.fill_between(Reformed_SHC_data['nu'][:, -2],
                              Reformed_SHC_data['k_g_wo'][:, -2] - Reformed_SHC_data['k_g_wo'][:, -1],
                              Reformed_SHC_data['k_g_wo'][:, -2] + Reformed_SHC_data['k_g_wo'][:, -1],
                              facecolor='C2', alpha=0.3)
-            plot(Reformed_SHC_data['nu'][:, -2], Reformed_SHC_data['k_g_wt'][:, -2], linewidth=2, color='C0')
+            plot(Reformed_SHC_data['nu'][:, -2], Reformed_SHC_data['k_g_wt'][:, -2], linewidth=2, color='C0', label='Total')
             plt.fill_between(Reformed_SHC_data['nu'][:, -2],
                              Reformed_SHC_data['k_g_wt'][:, -2] - Reformed_SHC_data['k_g_wt'][:, -1],
                              Reformed_SHC_data['k_g_wt'][:, -2] + Reformed_SHC_data['k_g_wt'][:, -1],
@@ -364,9 +364,10 @@ class NEMD_Processor:
             #      ha='left', va='top', transform=plt.gca().transAxes, color="C2")
             # text(0.45, 0.7, f"$G_{{tot}}$ = {res_s['tot_ave']:.3f} ± {res_s['tot_std']:.2f} MW/m$^2$K",
             #      ha='left', va='top', transform=plt.gca().transAxes, color="C0")
+            legend(frameon=False, fontsize=fs)
             xlim(0, self.cutoff_freq)
             ylabel(r'$g$($\omega$) (MW/m$^2$/K/THz)')
-            xlabel(r'$\nu$ (THz)')
+            xlabel(r'$\omega/2\pi$ (THz)')
             title('(d) Spectral thermal conductance')
 
             plt.subplots_adjust(wspace=1, hspace=0.3)

@@ -12,7 +12,31 @@ document.addEventListener('DOMContentLoaded', () => {
                 entry.target.classList.add('visible');
                 observer.unobserve(entry.target); // Only animate once
             }
+            // 3. Mobile Navigation Menu Toggle
+    const mobileMenuBtn = document.querySelector('.mobile-menu-btn');
+    const navLinks = document.querySelector('.nav-links');
+
+    if (mobileMenuBtn && navLinks) {
+        mobileMenuBtn.addEventListener('click', () => {
+            navLinks.classList.toggle('active');
+            // Toggle icon between hamburger and close
+            if (navLinks.classList.contains('active')) {
+                mobileMenuBtn.innerHTML = '✕';
+            } else {
+                mobileMenuBtn.innerHTML = '☰';
+            }
         });
+
+        // Close menu when clicking outside
+        document.addEventListener('click', (e) => {
+            if (!navLinks.contains(e.target) && !mobileMenuBtn.contains(e.target)) {
+                navLinks.classList.remove('active');
+                mobileMenuBtn.innerHTML = '☰';
+            }
+        });
+    }
+
+});
     }, observerOptions);
 
     const scrollElements = document.querySelectorAll('.animate-on-scroll');
