@@ -158,8 +158,8 @@ class EMD_Processor:
                          res[key_map["k_in"] + "_ave"] + res[key_map["k_in"] + "_std"], color='C0', alpha=0.2)
             xlim([0, Time_upper])
             xlabel('Correlation Time (ns)')
-            ylabel(r'$\kappa^{in}$ (W/mK)')
-            title(fr"(b) $\kappa_{{in}}$ = {res[key_map['k_in'] + '_ave']:.2f} ± {res[key_map['k_in'] + '_std']:.2f} W/mK")
+            ylabel(r'$\kappa_{\mathrm{in}}$ (W/mK)')
+            title(rf"$\kappa_{{\mathrm{{in}}}}$ = {res[key_map['k_in'] + '_ave']:.2f} ± {res[key_map['k_in'] + '_std']:.2f} W/mK")
 
             # (c) OUT component
             subplot(2, 2, 3)
@@ -172,8 +172,8 @@ class EMD_Processor:
                          res[key_map["k_out"] + "_ave"] + res[key_map["k_out"] + "_std"], color='C0', alpha=0.2)
             xlim([0, Time_upper])
             xlabel('Correlation Time (ns)')
-            ylabel(r'$\kappa^{out}$ (W/mK)')
-            title(fr"(c) $\kappa_{{out}}$ = {res[key_map['k_out'] + '_ave']:.2f} ± {res[key_map['k_out'] + '_std']:.2f} W/mK")
+            ylabel(r'$\kappa_{\mathrm{out}}$ (W/mK)')
+            title(rf"$\kappa_{{\mathrm{{out}}}}$ = {res[key_map['k_out'] + '_ave']:.2f} ± {res[key_map['k_out'] + '_std']:.2f} W/mK")
 
             # (d) TOT
             subplot(2, 2, 4)
@@ -186,8 +186,8 @@ class EMD_Processor:
                          res[key_map["k_tot"] + "_ave"] + res[key_map["k_tot"] + "_std"], color='C0', alpha=0.2)
             xlim([0, Time_upper])
             xlabel('Correlation Time (ns)')
-            ylabel(r'$\kappa^{tot}$ (W/mK)')
-            title(fr"(d) $\kappa_{{tot}}$ = {res[key_map['k_tot'] + '_ave']:.2f} ± {res[key_map['k_tot'] + '_std']:.2f} W/mK")
+            ylabel(r'$\kappa_{\mathrm{tot}}$ (W/mK)')
+            title(rf"$\kappa_{{\mathrm{{tot}}}}$ = {res[key_map['k_tot'] + '_ave']:.2f} ± {res[key_map['k_tot'] + '_std']:.2f} W/mK")
 
         elif self.direction == "z":
             figure(figsize=(10, 4))

@@ -283,11 +283,11 @@ class HNEMD_Processor:
             plot(t, Reformed_HNEMD_data[f"{key}_out"][:, -1], color='C2', lw=3)
             plot(t, Reformed_HNEMD_data[f"{key}_tot"][:, -1], color='C0', lw=3)
 
-            text(0.95, 0.93, f"$\kappa_{{in}}$ = {res_h[f'{key}_in_ave']:.3f} ± {res_h[f'{key}_in_std']:.2f} W/mK",
+            text(0.95, 0.93, f"$\\kappa_{{\\mathrm{{in}}}}$ = {res_h[f'{key}_in_ave']:.3f} ± {res_h[f'{key}_in_std']:.2f} W/mK",
                  ha='right', va='top', transform=plt.gca().transAxes, color='C1')
-            text(0.95, 0.83, f"$\kappa_{{out}}$ = {res_h[f'{key}_out_ave']:.3f} ± {res_h[f'{key}_out_std']:.2f} W/mK",
+            text(0.95, 0.83, f"$\\kappa_{{\\mathrm{{out}}}}$ = {res_h[f'{key}_out_ave']:.3f} ± {res_h[f'{key}_out_std']:.2f} W/mK",
                  ha='right', va='top', transform=plt.gca().transAxes, color='C2')
-            text(0.95, 0.73, f"$\kappa_{{tot}}$ = {res_h[f'{key}_tot_ave']:.3f} ± {res_h[f'{key}_tot_std']:.2f} W/mK",
+            text(0.95, 0.73, f"$\\kappa_{{\\mathrm{{tot}}}}$ = {res_h[f'{key}_tot_ave']:.3f} ± {res_h[f'{key}_tot_std']:.2f} W/mK",
                  ha='right', va='top', transform=plt.gca().transAxes, color='C0')
             xlim(0, Time_upper)
             xlabel('time (ns)')
@@ -306,17 +306,17 @@ class HNEMD_Processor:
                 # (c) SHC
                 subplot2grid((2, 4), (1, 1), colspan=3)
                 set_fig_properties([gca()])
-                plot(Reformed_SHC_data['nu'][:, -2], Reformed_SHC_data['k_g_wi'][:, -2], linewidth=2, color='C1')
+                plot(Reformed_SHC_data['nu'][:, -2], Reformed_SHC_data['k_g_wi'][:, -2], linewidth=2, color='C1', label='In-plane component')
                 fill_between(Reformed_SHC_data['nu'][:, -2],
                              Reformed_SHC_data['k_g_wi'][:, -2] - Reformed_SHC_data['k_g_wi'][:, -1],
                              Reformed_SHC_data['k_g_wi'][:, -2] + Reformed_SHC_data['k_g_wi'][:, -1],
                              facecolor='C1', alpha=0.3)
-                plot(Reformed_SHC_data['nu'][:, -2], Reformed_SHC_data['k_g_wo'][:, -2], linewidth=2, color='C2')
+                plot(Reformed_SHC_data['nu'][:, -2], Reformed_SHC_data['k_g_wo'][:, -2], linewidth=2, color='C2', label='Out-of-plane component')
                 fill_between(Reformed_SHC_data['nu'][:, -2],
                              Reformed_SHC_data['k_g_wo'][:, -2] - Reformed_SHC_data['k_g_wo'][:, -1],
                              Reformed_SHC_data['k_g_wo'][:, -2] + Reformed_SHC_data['k_g_wo'][:, -1],
                              facecolor='C2', alpha=0.3)
-                plot(Reformed_SHC_data['nu'][:, -2], Reformed_SHC_data['k_g_wt'][:, -2], linewidth=2, color='C0')
+                plot(Reformed_SHC_data['nu'][:, -2], Reformed_SHC_data['k_g_wt'][:, -2], linewidth=2, color='C0', label='Total')
                 fill_between(Reformed_SHC_data['nu'][:, -2],
                              Reformed_SHC_data['k_g_wt'][:, -2] - Reformed_SHC_data['k_g_wt'][:, -1],
                              Reformed_SHC_data['k_g_wt'][:, -2] + Reformed_SHC_data['k_g_wt'][:, -1],
@@ -327,6 +327,7 @@ class HNEMD_Processor:
                 #      ha='left', va='top', transform=gca().transAxes, color='C2')
                 # text(0.6, 0.7, f"$\\kappa_{{tot}}$ = {res_s['tot_ave']:.2f} ± {res_s['tot_std']:.2f} W/mK",
                 #      ha='left', va='top', transform=gca().transAxes, color='C0')
+                legend(frameon=False, fontsize=fs)
                 xlim(0, self.cutoff_freq)
                 axhline(y=0, color='k', linestyle='--')
                 ylabel(r'$\kappa$($\omega$) (W/m/K/THz)')
