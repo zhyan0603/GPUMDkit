@@ -9,6 +9,7 @@
 <p style="text-align: justify;"><strong>GPUMDkit</strong> is a toolkit for the GPUMD (<em>Graphics Processing Units Molecular Dynamics</em>) and NEP (<em>neuroevolution potential</em>) program. It offers a user-friendly command-line interface to streamline common scripts and workflows, simplifying tasks such as script invocation, format conversion, structure sampling, NEP construction workflow, and various analysis, aiming to improve user productivity.</p>
 </div>
 
+
 ## Features
 - **Simplified Script Invocation**: Easily run scripts for GPUMD and NEP.
 - **Workflow Automation**: Automate common tasks to save time and reduce manual intervention.
@@ -95,7 +96,7 @@ There are two options, <u>*interactive mode*</u> and <u>*command-line mode*</u>
            | |_| |  __/| |_| | |  | | |_| |   <| | |_
             \____|_|    \___/|_|  |_|____/|_|\_\_|\__|
     
-            GPUMDkit Version 1.5.0 (dev) (2025-01-05)
+            GPUMDkit Version 1.5.3 (dev) (2026-03-18)
       Core Developer: Zihan YAN (yanzihan@westlake.edu.cn)
     
      ----------------------- GPUMD -----------------------
@@ -123,13 +124,14 @@ the help information:
 
 ```
 +==================================================================================================+
-|                              GPUMDkit 1.5.0 (dev) (2025-01-05) Usage                             |
+|                              GPUMDkit 1.5.3 (dev) (2026-03-18) Usage                             |
 +======================================== Conversions =============================================+
 | -out2xyz       Convert OUTCAR to extxyz       | -pos2exyz     Convert POSCAR to extxyz           |
 | -cif2pos       Convert cif to POSCAR          | -pos2lmp      Convert POSCAR to LAMMPS           |
 | -cif2exyz      Convert cif to extxyz          | -lmp2exyz     Convert LAMMPS-dump to extxyz      |
 | -addgroup      Add group label                | -addweight    Add weight to the struct in extxyz |
-| Developing...                                 | Developing...                                    |
+| -cp2k2xyz      Convert CP2K file to extxyz    | -traj2exyz    Convert ASE traj to extxyz         |
+| -xdat2exyz     Convert XDATCAR to extxyz      | Developing...                                    |
 +========================================= Analysis ===============================================+
 | -range         Print range of energy etc.     | -max_rmse     Get max RMSE from extxyz           |
 | -min_dist      Get min_dist between atoms     | -min_dist_pbc Get min_dist considering PBC       |
@@ -156,7 +158,7 @@ the help information:
 
 ```
 +=====================================================================================================+
-|                              GPUMDkit 1.5.0 (dev) (2025-01-05) Plotting Usage                       |
+|                              GPUMDkit 1.5.3 (dev) (2026-03-18) Plotting Usage                       |
 +=============================================== Plot Types ==========================================+
 | thermo          Plot thermo info                   | train          Plot NEP train results          |
 | prediction      Plot NEP prediction results        | train_test     Plot NEP train and test results |
@@ -166,10 +168,14 @@ the help information:
 | restart         Plot parameters in nep.restart     | dimer          Plot dimer plot                 |
 | force_errors    Plot force errors                  | des            Plot descriptors                |
 | charge          Plot charge distribution           | lr             Plot learning rate              |
-| doas            Plot density of atomistic states   | arrhenius_d    Plot Arrhenius diffusivity      |
-| arrhenius_sigma Plot Arrhenius sigma               | net_force      Plot net force distribution     |
+| doas            Plot density of atomistic states   | net_force      Plot net force distribution     |
+| sigma           Plot Arrhenius sigma               | D              Plot Arrhenius diffusivity      |
+| sigma_xyz       Plot directional Arrhenius sigma   | D_xyz          Plot directional Arrhenius D    |
 | emd             Plot EMD results                   | nemd           Plot NEMD results               |
 | hnemd           Plot HNEMD results                 | pdos           Plot VAC and PDOS               |
+| plane-grid      Plot displacement plane grid       | parity_density Plot parity plot density        |
+| cohesive        Plot cohsive energy                | viscosity      Plot visconsity                 |
+| rdf_pmf         Plot potential of mean force (PMF) |                                                |
 +=====================================================================================================+
 | For detailed usage and examples, use: gpumdkit.sh -plt <plot_type> -h                               |
 +=====================================================================================================+
@@ -243,10 +249,6 @@ Also, welcome to join our QQ group ([825696376](https://qun.qq.com/universal-sha
 
 ## Citation
 
-As of now, `GPUMDkit` is a open-source tool for everyone to use. If you find it helpful, please ⭐ [star us on GitHub](https://github.com/zhyan0603/GPUMDkit). Thanks for your support! Moreover, we also recommend citing the following publications if they are relevant to your work:
+**GPUMDkit** is an open-source tool freely available for everyone. If you find it helpful in your research or workflow, please ⭐ [star us on GitHub](https://github.com/zhyan0603/GPUMDkit). Additionally, if GPUMDkit contributes to your published work, please cite our paper:
 
-[1] Z. Yan and Y. Zhu, [Impact of Lithium Nonstoichiometry on Ionic Diffusion in Tetragonal Garnet-Type Li<sub>7</sub>La<sub>3</sub>Zr<sub>2</sub>O<sub>12</sub>](https://doi.org/10.1021/acs.chemmater.4c02454), Chem. Mater. 2024, 36, 23, 11551–11557.
-
-[2] Z. Yan, Z. Fan and Y. Zhu, [Improving robustness and training efficiency of machine-learned potentials by incorporating short-range empirical potentials](https://doi.org/10.1021/acs.jcim.5c02335), J. Chem. Inf. Model. 2026, 66, 3, 1406–1413.
-
-> **Note:** These citations are **not mandatory** and should **only** be included if they contribute to your research.
+> Z. Yan, D. Li, X. Wu, Z. Liu, C. Hua, B. Situ, H. Yang, S. Tang, B. Tang, Z. Wang, S. Yi, H. Wang, D. Huang, K. Li, Q. Guo, Z. Chen, K. Xu, Y. Wang, Z. Wang, G. Tang, S. Liu, Z. Fan, and Y. Zhu. **GPUMDkit: A User-Friendly Toolkit for GPUMD and NEP**. [arXiv:2603.17367](https://arxiv.org/abs/2603.17367). 

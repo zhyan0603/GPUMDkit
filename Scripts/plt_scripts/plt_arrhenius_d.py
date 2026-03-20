@@ -1,3 +1,15 @@
+"""
+This script reads msd.out files from temperature-specific folders (e.g., 600K, 700K, etc.), 
+calculates the diffusion coefficients, and plots them in an Arrhenius plot. 
+It also fits the data to extract the activation energy. 
+
+Author: Zihan YAN (yanzihan@westlake.edu.cn)
+Last modified: 2026-03-19
+
+Usage:
+    python plt_arrhenius_d.py [save]
+"""
+
 import os
 import sys
 import numpy as np
