@@ -1,4 +1,3 @@
-#!/usr/bin/env python3
 """
 Plot GPUMD viscosity.out: stress autocorrelation and viscosity components.
 https://gpumd.org/dev/gpumd/output_files/viscosity_out.html#viscosity-out
