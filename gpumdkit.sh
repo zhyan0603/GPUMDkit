@@ -10,7 +10,7 @@ if [ -z "$GPUMDkit_path" ]; then
     exit 1
 fi
 
-VERSION="1.5.3 (dev) (2026-03-18)"
+VERSION="1.5.3 (dev) (2026-03-24)"
 
 plt_path="${GPUMDkit_path}/Scripts/plt_scripts"
 analyzer_path="${GPUMDkit_path}/Scripts/analyzer"
@@ -158,6 +158,7 @@ function plot_info_table(){
     echo "| prediction      Plot NEP prediction results        | train_test     Plot NEP train and test results |"
     echo "| msd             Plot mean square displacement      | msd_conv       Plot the convergence of MSD     |"
     echo "| msd_all         Plot MSD of all species            | sdc            Plot self diffusion coefficient |"
+    echo "| msd_sdc         Plot MSD and SDC together          | cohesive       Plot cohsive energy             |"
     echo "| rdf             Plot radial distribution function  | vac            Plot velocity autocorrelation   |"
     echo "| restart         Plot parameters in nep.restart     | dimer          Plot dimer plot                 |"
     echo "| force_errors    Plot force errors                  | des            Plot descriptors                |"
@@ -168,8 +169,7 @@ function plot_info_table(){
     echo "| emd             Plot EMD results                   | nemd           Plot NEMD results               |"
     echo "| hnemd           Plot HNEMD results                 | pdos           Plot VAC and PDOS               |"
     echo "| plane-grid      Plot displacement plane grid       | parity_density Plot parity plot density        |"
-    echo "| cohesive        Plot cohsive energy                | viscosity      Plot visconsity                 |"
-    echo "| rdf_pmf         Plot potential of mean force (PMF) |                                                |"
+    echo "| rdf_pmf         Plot potential of mean force (PMF) | viscosity      Plot visconsity                 |"
     echo "+=====================================================================================================+"
     echo "| For detailed usage and examples, use: gpumdkit.sh -plt <plot_type> -h                               |"
     echo "+=====================================================================================================+"
@@ -236,6 +236,7 @@ if [ ! -z "$1" ]; then
                     "msd") python ${plt_path}/plt_msd.py $3 ;;
                     "msd_all") python ${plt_path}/plt_msd_all.py $3 ${@:4} ;;
                     "msd_conv") python ${plt_path}/plt_msd_convergence_check.py $3 ;;
+                    "msd_sdc") python ${plt_path}/plt_msd_sdc.py $3 ;;
                     "sdc") python ${plt_path}/plt_sdc.py $3 ;;
                     "rdf") python ${plt_path}/plt_rdf.py ${@:3} ;;
                     "vac") python ${plt_path}/plt_vac.py $3 ;;
