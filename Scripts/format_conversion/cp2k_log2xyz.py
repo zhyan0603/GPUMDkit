@@ -153,8 +153,8 @@ def extract_stress_gpa(log):
         matches = re.findall(r'STRESS\|\s+[xyz]\s+([-\d\.E+\-]+)\s+([-\d\.E+\-]+)\s+([-\d\.E+\-]+)', log, re.IGNORECASE)
         if len(matches) >= 3:
             stress_bar = [float(v) for row in matches[:3] for v in row]
-            # Convert bar to GPa: 1 bar = 0.1 GPa
-            return [s * 0.1 for s in stress_bar]
+            # Convert bar to GPa: 1 bar = 0.0001 GPa
+            return [s * 0.0001 for s in stress_bar]
     
     return None
 
