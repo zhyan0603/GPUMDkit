@@ -50,8 +50,8 @@ for folder in os.listdir(current_dir):
             if os.path.exists(msd_file):
                 dts, msd_all, msd_x, msd_y, msd_z = read_msd_file(msd_file)
 
-                start = int(len(dts) * 0.15)
-                end = int(len(dts) * 0.3)
+                start = int(len(dts) * 0.4)
+                end = int(len(dts) * 0.8)
                 k_all, _ = np.polyfit(dts[start:end], msd_all[start:end], 1)
                 k_x, _ = np.polyfit(dts[start:end], msd_x[start:end], 1)
                 k_y, _ = np.polyfit(dts[start:end], msd_y[start:end], 1)

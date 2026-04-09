@@ -43,8 +43,8 @@ for folder in os.listdir(current_dir):
             if os.path.exists(msd_file):
                 dts, msds_all = read_msd_file(msd_file)
                 
-                start = int(len(dts) * 0.15)
-                end = int(len(dts) * 0.3)
+                start = int(len(dts) * 0.4)
+                end = int(len(dts) * 0.8)
                 k_all, _ = np.polyfit(dts[start:end], msds_all[start:end], 1)
                 D_all = k_all * 1e-4 / 6
                 temps.append(temp)
