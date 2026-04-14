@@ -9,6 +9,19 @@ echo " | Calling the script in Scripts/workflow          |"
 echo " | Script: scf_batch_pretreatment_cp2k.py          |"
 echo " | Developer: Zihan YAN (yanzihan@westlake.edu.cn) |"
 echo " >-------------------------------------------------<"
+echo " >-------------------- NOTICE  --------------------<"
+echo " | Please ensure your cp2k.inp file is configured  |"
+echo " | to read coordinates from 'pos.xyz'.             |"
+echo " | Refer to Scripts/workflow/cp2k_template.inp     |"
+echo " >-------------------------------------------------<"
+
+read -p " Are you ready to continue? [y/N]: " confirm
+if [[ "$confirm" != [yY]* ]]; then
+    echo " Operation cancelled. Exiting..."
+    exit
+fi
+
+echo " ---------------------------------------------------"
 echo " Input <extxyz_file> <template.inp> <prefix_name>"
 echo " Examp: dump.xyz template.inp H2O"
 echo " ------------>>"
