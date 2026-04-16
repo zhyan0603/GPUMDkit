@@ -12,6 +12,10 @@ fi
 
 VERSION="1.5.3 (dev) (2026-04-14)"
 
+# Source common utilities and help system
+source "${GPUMDkit_path}/src/gpumdkit_utils.sh"
+source "${GPUMDkit_path}/src/gpumdkit_help.sh"
+
 plt_path="${GPUMDkit_path}/Scripts/plt_scripts"
 analyzer_path="${GPUMDkit_path}/Scripts/analyzer"
 calc_path="${GPUMDkit_path}/Scripts/calculators"
@@ -123,90 +127,34 @@ function main(){
 #--------------------- help info ----------------------
 # This function is used to show the help information
 # It will show the usage of each function
-
-function help_info_table(){
-    echo "+==================================================================================================+"
-    echo "|                              GPUMDkit ${VERSION} Usage                             |"
-    echo "+======================================== Conversions =============================================+"
-    echo "| -out2xyz       Convert OUTCAR to extxyz       | -pos2exyz     Convert POSCAR to extxyz           |"
-    echo "| -cif2pos       Convert cif to POSCAR          | -pos2lmp      Convert POSCAR to LAMMPS           |"
-    echo "| -cif2exyz      Convert cif to extxyz          | -lmp2exyz     Convert LAMMPS-dump to extxyz      |"
-    echo "| -addgroup      Add group label                | -addweight    Add weight to the struct in extxyz |"
-    echo "| -cp2k2xyz      Convert CP2K file to extxyz    | -traj2exyz    Convert ASE traj to extxyz         |"
-    echo "| -xdat2exyz     Convert XDATCAR to extxyz      | Developing...                                    |"
-    echo "+========================================= Analysis ===============================================+"
-    echo "| -range         Print range of energy etc.     | -max_rmse     Get max RMSE from extxyz           |"
-    echo "| -min_dist      Get min_dist between atoms     | -min_dist_pbc Get min_dist considering PBC       |"
-    echo "| -filter_box    Filter struct by box limits    | -filter_value Filter struct by value (efs)       |"
-    echo "| -filter_dist   Filter struct by min_dist      | -analyze_comp Analyze composition of extxyz      |"
-    echo "| -pynep         Sample struct by pynep         | Developing...                                    |"
-    echo "+====================================== Misc Utilities ============================================+"
-    echo "| -plt           Plot scripts                   | -get_frame     Extract the specified frame       |"
-    echo "| -calc          Calculators                    | -frame_range   Extract frames by fraction range  |"
-    echo "| -clean         Clear files for work_dir       | -clean_xyz     Clean extra info in XYZ file      |"
-    echo "| -time          Time consuming Analyzer        | -update        Update GPUMDkit                   |"
-    echo "+==================================================================================================+"
-    echo "| For detailed usage and examples, use: gpumdkit.sh -<option> -h                                   |"
-    echo "+==================================================================================================+"
-}
-
-function plot_info_table(){
-    echo "+=====================================================================================================+"
-    echo "|                              GPUMDkit ${VERSION} Plotting Usage                       |"
-    echo "+=============================================== Plot Types ==========================================+"
-    echo "| thermo          Plot thermo info                   | train          Plot NEP train results          |"
-    echo "| prediction      Plot NEP prediction results        | train_test     Plot NEP train and test results |"
-    echo "| msd             Plot mean square displacement      | msd_conv       Plot the convergence of MSD     |"
-    echo "| msd_all         Plot MSD of all species            | sdc            Plot self diffusion coefficient |"
-    echo "| msd_sdc         Plot MSD and SDC together          | cohesive       Plot cohsive energy             |"
-    echo "| rdf             Plot radial distribution function  | vac            Plot velocity autocorrelation   |"
-    echo "| restart         Plot parameters in nep.restart     | dimer          Plot dimer plot                 |"
-    echo "| force_errors    Plot force errors                  | des            Plot descriptors                |"
-    echo "| charge          Plot charge distribution           | lr             Plot learning rate              |"
-    echo "| doas            Plot density of atomistic states   | net_force      Plot net force distribution     |"
-    echo "| sigma           Plot Arrhenius sigma               | D              Plot Arrhenius diffusivity      |"
-    echo "| sigma_xyz       Plot directional Arrhenius sigma   | D_xyz          Plot directional Arrhenius D    |"
-    echo "| emd             Plot EMD results                   | nemd           Plot NEMD results               |"
-    echo "| hnemd           Plot HNEMD results                 | pdos           Plot VAC and PDOS               |"
-    echo "| plane-grid      Plot displacement plane grid       | parity_density Plot parity plot density        |"
-    echo "| rdf_pmf         Plot potential of mean force (PMF) | viscosity      Plot visconsity                 |"
-    echo "+=====================================================================================================+"
-    echo "| For detailed usage and examples, use: gpumdkit.sh -plt <plot_type> -h                               |"
-    echo "+=====================================================================================================+"
-}
-
-# function citation(){
-# echo "+-----------------------------------------------------------------------+"
-# echo "|                     THANK YOU FOR USING GPUMDKIT                      |"
-# echo "+-----------------------------------------------------------------------+"
-# echo "│ If you find it useful, please star us on GitHub and cite our paper:   │"
-# echo "│                                                                       │"
-# echo "│ Z. Yan, D. Li, X. Wu, Z. Liu, C. Hua, B. Situ, H. Yang, S. Tang,      │"
-# echo "│ B. Tang, Z. Wang, S. Yi, H. Wang, D. Huang, K. Li, Q. Guo, Z. Chen,   │"
-# echo "│ K. Xu, Y. Wang, Z. Wang, G. Tang, S. Liu, Z. Fan, Y. Zhu.             │"
-# echo "│ GPUMDkit: A User-Friendly Toolkit for GPUMD and NEP. arXiv:2603.17367 │"
-# echo "│                                                                       │"
-# echo "| Welcome to join our QQ group (825696376) for support and discussions! │"
-# echo "+-----------------------------------------------------------------------+"
-# }
-
-function citation(){
-echo " +------------------------------------------------------+"
-echo " |           THANK YOU FOR USING GPUMDKIT               |"
-echo " +------------------------------------------------------+"
-echo " │ If you find it useful, please cite our paper:        │"
-echo " │                                                      │"
-echo " │ GPUMDkit: A User-Friendly Toolkit for GPUMD and NEP  │"
-echo " |       (https://arxiv.org/abs/2603.17367)             │"
-echo " │                                                      │"
-echo " |     Welcome to join our QQ group (825696376) !       │"
-echo " +------------------------------------------------------+"
-}
+# Help functions are now in gpumdkit_help.sh
 
 #--------------------- command line ----------------------
 if [ ! -z "$1" ]; then
     case $1 in
         -h|-help) help_info_table ;;
+        -plt|-calc)
+            if [ "$2" == "-h" ] || [ -z "$2" ]; then
+                if [ "$1" == "-plt" ]; then
+                    plot_info_table
+                elif [ "$1" == "-calc" ]; then
+                    calc_info_table
+                fi
+                exit 0
+            fi
+            ;;
+    esac
+    
+    # Check for -h flag on any option
+    if [ "$2" == "-h" ]; then
+        if ! show_option_help "$1"; then
+            echo "No detailed help available for: $1"
+            echo "Try using -h for general help."
+        fi
+        exit 0
+    fi
+    
+    case $1 in
         -clean) 
             source ${utils_path}/clean_extra_files.sh
             clean_extra_files ;;
@@ -220,7 +168,7 @@ if [ ! -z "$1" ]; then
                 nep|gnep) bash ${analyzer_path}/time_consuming_nep.sh ;;                
                 *)
                     echo " See the codes in analyzer folder for more details"
-                    echo " Code path: ${analyzer_path}/time_consuming_*.sh"
+                    echo "Code path: ${analyzer_path}/time_consuming_*.sh"
                     exit 1 ;;
             esac ;;
         -plt)
@@ -272,7 +220,7 @@ if [ ! -z "$1" ]; then
             else
                 plot_info_table
                 echo " See the codes in plt_scripts for more details"
-                echo " Code path: ${GPUMDkit_path}/Scripts/plt_scripts"
+                echo "Code path: ${GPUMDkit_path}/Scripts/plt_scripts"
             fi ;;
 
         -calc)
@@ -280,350 +228,327 @@ if [ ! -z "$1" ]; then
                 case $2 in
                     ionic-cond)
                         if [ ! -z "$3" ] && [ ! -z "$4" ] ; then
-                            echo " Calling script by Zihan YAN. "
-                            echo " Code path: ${calc_path}/calc_ion_conductivity.py"
+                            echo "Calling script by Zihan YAN."
+                            echo "Code path: ${calc_path}/calc_ion_conductivity.py"
                             python ${calc_path}/calc_ion_conductivity.py $3 $4
                         else
-                            echo " Usage: -calc ion-cond <element> <charge>"
-                            echo " Examp: gpumdkit.sh -calc ion-cond Li 1"
-                            echo " See the codes in calculators folder for more details"
-                            echo " Code path: ${calc_path}/calc_ion_conductivity.py"
+                            echo "Error: Missing required arguments for ionic conductivity calculation."
+                            echo "Usage: gpumdkit.sh -calc ionic-cond <element> <charge>"
+                            echo "Example: gpumdkit.sh -calc ionic-cond Li 1"
+                            echo "Code path: ${calc_path}/calc_ion_conductivity.py"
                             exit 1
                         fi ;;
                     nep)
                         if [ ! -z "$3" ] && [ ! -z "$4" ] && [ ! -z "$5" ]; then
-                            echo " Calling script by Zihan YAN. "
-                            echo " Code path: ${calc_path}/calc_properties_with_nep.py"
+                            echo "Calling script by Zihan YAN."
+                            echo "Code path: ${calc_path}/calc_properties_with_nep.py"
                             python ${calc_path}/calc_properties_with_nep.py $3 $4 $5
                         else
-                            echo " Usage: -calc nep <input.xyz> <output.xyz> <nep_model>"
-                            echo " Examp: gpumdkit.sh -calc nep input.xyz output.xyz nep.txt"
-                            echo " See the codes in calculators folder for more details"
-                            echo " Code path: ${calc_path}/calc_properties_with_nep.py"
+                            echo "Error: Missing required arguments for NEP property calculation."
+                            echo "Usage: gpumdkit.sh -calc nep <input.xyz> <output.xyz> <nep_model>"
+                            echo "Example: gpumdkit.sh -calc nep input.xyz output.xyz nep.txt"
+                            echo "Code path: ${calc_path}/calc_properties_with_nep.py"
                             exit 1
                         fi ;;
                     des)
                         if [ ! -z "$3" ] && [ ! -z "$4" ] && [ ! -z "$5" ] && [ ! -z "$6" ]; then
-                            echo " Calling script by Zihan YAN. "
-                            echo " Code path: ${calc_path}/calc_descriptors.py"
+                            echo "Calling script by Zihan YAN."
+                            echo "Code path: ${calc_path}/calc_descriptors.py"
                             python ${calc_path}/calc_descriptors.py $3 $4 $5 $6
                         else
-                            echo " Usage: -calc des <input.xyz> <output.npy> <nep_model> <element>"
-                            echo " Examp: gpumdkit.sh -calc des train.xyz des_Li.npy nep.txt Li"
-                            echo " See the codes in calculators folder for more details"
-                            echo " Code path: ${calc_path}/calc_descriptors.py"
+                            echo "Error: Missing required arguments for descriptor calculation."
+                            echo "Usage: gpumdkit.sh -calc des <input.xyz> <output.npy> <nep_model> <element>"
+                            echo "Example: gpumdkit.sh -calc des train.xyz des_Li.npy nep.txt Li"
+                            echo "Code path: ${calc_path}/calc_descriptors.py"
                             exit 1
                         fi ;; 
                     doas)
                         if [ ! -z "$3" ] && [ ! -z "$4" ] && [ ! -z "$5" ]; then
-                            echo " Calling script by Zihan YAN. "
-                            echo " Code path: ${calc_path}/calc_doas.py"
+                            echo "Calling script by Zihan YAN."
+                            echo "Code path: ${calc_path}/calc_doas.py"
                             python ${calc_path}/calc_doas.py $3 $4 $5
                         else
-                            echo " Usage: -calc doas <input.xyz> <nep_model> <output_file>"
-                            echo " Examp: gpumdkit.sh -calc doas dump.xyz nep.txt doas.out"
-                            echo " See the codes in calculators folder for more details"
-                            echo " Code path: ${calc_path}/calc_doas.py"
+                            echo "Error: Missing required arguments for DOAS calculation."
+                            echo "Usage: gpumdkit.sh -calc doas <input.xyz> <nep_model> <output_file>"
+                            echo "Example: gpumdkit.sh -calc doas dump.xyz nep.txt doas.out"
+                            echo "Code path: ${calc_path}/calc_doas.py"
                             exit 1
                         fi ;;
                     nlist)
-                        echo " Calling script by Denan LI. "
-                        echo " Code path: ${calc_path}/calc_neighbor_list.py"
+                        echo "Calling script by Denan LI."
+                        echo "Code path: ${calc_path}/calc_neighbor_list.py"
                         python ${calc_path}/calc_neighbor_list.py ${@:3} ;;
                     disp)
-                        echo " Calling script by Denan LI. "
-                        echo " Code path: ${calc_path}/calc_displacement.py"
+                        echo "Calling script by Denan LI."
+                        echo "Code path: ${calc_path}/calc_displacement.py"
                         python ${calc_path}/calc_displacement.py ${@:3} ;;
                     avg-struct)
-                        echo " Calling script by Denan LI. "
-                        echo " Code path: ${calc_path}/calc_averaged_structure.py"
+                        echo "Calling script by Denan LI."
+                        echo "Code path: ${calc_path}/calc_averaged_structure.py"
                         python ${calc_path}/calc_averaged_structure.py ${@:3} ;;
                     oct-tilt)
-                        echo " Calling script by Denan LI. "
-                        echo " Code path: ${calc_path}/calc_oct_tilt.py"
+                        echo "Calling script by Denan LI."
+                        echo "Code path: ${calc_path}/calc_oct_tilt.py"
                         python ${calc_path}/calc_oct_tilt.py ${@:3} ;;
                     pol-abo3)
-                        echo " Calling script by Denan LI. "
-                        echo " Code path: ${calc_path}/calc_polarization_abo3.py"
+                        echo "Calling script by Denan LI."
+                        echo "Code path: ${calc_path}/calc_polarization_abo3.py"
                         python ${calc_path}/calc_polarization_abo3.py ${@:3} ;;
                     *)
-                        echo " See the codes in calculators folder for more details"
-                        echo " Code path: ${calc_path}"; exit 1 ;;
+                        echo "Error: Unknown calculator type. Use gpumdkit.sh -calc -h to see available calculators."
+                        echo "Code path: ${calc_path}"
+                        exit 1 ;;
                 esac
             else
-                echo " See the codes in calculators folder for more details"
-                echo " Code path: ${calc_path}"
+                calc_info_table
+                echo "Code path: ${calc_path}"
             fi ;;
 
         -range)
             if [ ! -z "$2" ] && [ "$2" != "-h" ] && [ ! -z "$3" ]  ; then
-                echo " Calling script by Zihan YAN. "
-                echo " Code path: ${analyzer_path}/energy_force_virial_analyzer.py"
+                echo "Calling script by Zihan YAN."
+                echo "Code path: ${analyzer_path}/energy_force_virial_analyzer.py"
                 python ${analyzer_path}/energy_force_virial_analyzer.py $2 $3 ${@:4}
             else
                 echo " Usage: -range <exyzfile> <property> [hist] (eg. gpumdkit.sh -range train.xyz energy hist)" 
                 echo " See the source code of energy_force_virial_analyzer.py for more details"
-                echo " Code path: Code path: ${analyzer_path}/energy_force_virial_analyzer.py"
+                echo "Code path: Code path: ${analyzer_path}/energy_force_virial_analyzer.py"
             fi ;;
 
         -replicate)
             if [ ! -z "$2" ] && [ "$2" != "-h" ] && [ ! -z "$3" ] ; then
-                echo " Calling script by Boyi SITU. "
-                echo " Code path: ${format_conv_path}/replicate.py"
+                echo "Calling script by Boyi SITU."
+                echo "Code path: ${format_conv_path}/replicate.py"
                 python ${format_conv_path}/replicate.py $2 $3 ${@:4}
             else
                 echo " Please give the file name suffix (e.g. input.xyz or output.vasp)"
                 echo " Usage 1: -replicate <inputfile> <outputfile> a b c" 
                 echo " Usage 2: -replicate <inputfile> <outputfile> target_num"
                 echo " See the source code of replicate.py for more details"
-                echo " Code path: Code path: ${format_conv_path}/replicate.py"
+                echo "Code path: Code path: ${format_conv_path}/replicate.py"
             fi ;;
 
         -out2xyz)
             if [ ! -z "$2" ] && [ "$2" != "-h" ]; then
-                echo " Calling script by Yanzhou WANG et al. "
+                echo "Calling script by Yanzhou WANG et al."
                 bash ${format_conv_path}/out2xyz.sh $2
-                echo " Code path: ${format_conv_path}/out2xyz.sh"
+                echo "Code path: ${format_conv_path}/out2xyz.sh"
             else
                 echo " Usage: -out2xyz dir_name (eg. gpumdkit.sh -out2xyz .)"
                 echo " See the source code of out2xyz.sh for more details"
-                echo " Code path: ${format_conv_path}/out2xyz.sh"
+                echo "Code path: ${format_conv_path}/out2xyz.sh"
             fi ;;
 
         -out2exyz)
             if [ ! -z "$2" ] && [ "$2" != "-h" ]; then
-                echo " Calling script by Zihan YAN et al. "
+                echo "Calling script by Zihan YAN et al."
                 python ${format_conv_path}/out2exyz.py $2
-                echo " Code path: ${format_conv_path}/out2exyz.py"
+                echo "Code path: ${format_conv_path}/out2exyz.py"
             else
                 echo " Usage: -out2exyz dir_name (eg. gpumdkit.sh -out2exyz .)"
                 echo " See the source code of out2exyz.py for more details"
-                echo " Code path: ${format_conv_path}/out2exyz.py"               
+                echo "Code path: ${format_conv_path}/out2exyz.py"               
             fi ;;
 
         -cp2k2xyz)
-            echo " Calling script by Chen HUA "
+            echo "Calling script by Chen HUA."
             python ${format_conv_path}/cp2k_log2xyz.py
-            echo " Code path: ${format_conv_path}/cp2k_log2xyz.py" ;;
+            echo "Code path: ${format_conv_path}/cp2k_log2xyz.py" ;;
 
         -pos2exyz)
             if [ ! -z "$2" ] && [ "$2" != "-h" ] && [ ! -z "$3" ] ; then
-                echo " Calling script by Zihan YAN "
-                echo " Code path: ${format_conv_path}/pos2exyz.py"
+                echo "Calling script by Zihan YAN "
+                echo "Code path: ${format_conv_path}/pos2exyz.py"
                 python ${format_conv_path}/pos2exyz.py $2 $3
             else
                 echo " Usage: -pos2exyz POSCAR model.xyz"
                 echo " See the source code of pos2exyz.py for more details"
-                echo " Code path: ${format_conv_path}/pos2exyz.py"
+                echo "Code path: ${format_conv_path}/pos2exyz.py"
             fi ;;
 
         -cif2pos)
             if [ ! -z "$2" ] && [ "$2" != "-h" ] && [ ! -z "$3" ] ; then
-                echo " Calling script by Boyi SITU "
-                echo " Code path: ${format_conv_path}/cif2pos.py"
+                echo "Calling script by Boyi SITU "
+                echo "Code path: ${format_conv_path}/cif2pos.py"
                 python ${format_conv_path}/cif2pos.py $2 $3
             else
                 echo " Usage: -cif2pos input.cif POSCAR.vasp"
                 echo " See the source code of cif2pos.py for more details"
-                echo " Code path: ${format_conv_path}/cif2pos.py"
+                echo "Code path: ${format_conv_path}/cif2pos.py"
             fi ;;
 
         -cif2exyz)
             if [ ! -z "$2" ] && [ "$2" != "-h" ] && [ ! -z "$3" ] ; then
-                echo " Calling script by Boyi SITU "
-                echo " Code path: ${format_conv_path}/cif2exyz.py"
+                echo "Calling script by Boyi SITU "
+                echo "Code path: ${format_conv_path}/cif2exyz.py"
                 python ${format_conv_path}/cif2exyz.py $2 $3
             else
                 echo " Usage: -cif2exyz input.cif model.xyz"
                 echo " See the source code of cif2exyz.py for more details"
-                echo " Code path: ${format_conv_path}/cif2exyz.py"
+                echo "Code path: ${format_conv_path}/cif2exyz.py"
             fi ;;
 
         -exyz2pos)
-            if [ ! -z "$2" ] && [ "$2" != "-h" ] ; then
-                echo " Calling script by Zihan YAN "
-                echo " Code path: ${format_conv_path}/exyz2pos.py"
-                python ${format_conv_path}/exyz2pos.py $2
-            else
-                echo " Usage: -exyz2pos model.xyz"
-                echo " See the source code of exyz2pos.py for more details"
-                echo " Code path: ${format_conv_path}/exyz2pos.py"
-            fi ;;
+            python "${format_conv_path}/exyz2pos.py" "${@:2}" ;;
 
         -xdat2exyz)
             if [ ! -z "$2" ] && [ "$2" != "-h" ] ; then
-                echo " Calling script by Zihan YAN "
-                echo " Code path: ${format_conv_path}/xdatcar2exyz.py"
+                echo "Calling script by Zihan YAN "
+                echo "Code path: ${format_conv_path}/xdatcar2exyz.py"
                 python ${format_conv_path}/xdatcar2exyz.py $2 $3
             else
                 echo " Usage: -xdat2exyz XDATCAR model.xyz"
                 echo " See the source code of xdatcar2exyz.py for more details"
-                echo " Code path: ${format_conv_path}/xdatcar2exyz.py"
+                echo "Code path: ${format_conv_path}/xdatcar2exyz.py"
             fi ;;
 
         -pos2lmp)
             if [ ! -z "$2" ] && [ "$2" != "-h" ] && [ ! -z "$3" ] ; then
-                echo " Calling script by Zihan YAN "
-                echo " Code path: ${format_conv_path}/pos2lmp.py"
+                echo "Calling script by Zihan YAN "
+                echo "Code path: ${format_conv_path}/pos2lmp.py"
                 python ${format_conv_path}/pos2lmp.py $2 $3
             else
                 echo " Usage: -pos2lmp POSCAR lammps.data"
                 echo " See the source code of pos2lmp.py for more details"
-                echo " Code path: ${format_conv_path}/pos2lmp.py"
+                echo "Code path: ${format_conv_path}/pos2lmp.py"
             fi ;;
 
         -lmp2exyz)
             if [ ! -z "$2" ] && [ "$2" != "-h" ] && [ ! -z "$3" ] ; then
-                echo " Calling script by Zihan YAN "
-                echo " Code path: ${format_conv_path}/lmp2exyz.py"
+                echo "Calling script by Zihan YAN "
+                echo "Code path: ${format_conv_path}/lmp2exyz.py"
                 python ${format_conv_path}/lmp2exyz.py $2 ${@:3}
             else
                 echo " Usage: -lmp2exyz <dump_file> <element1> <element2> ..."
                 echo " See the source code of lmp2exyz.py for more details"
-                echo " Code path: ${format_conv_path}/lmp2exyz.py"
+                echo "Code path: ${format_conv_path}/lmp2exyz.py"
             fi ;;
 
         -traj2exyz)
             if [ ! -z "$2" ] && [ "$2" != "-h" ] && [ ! -z "$3" ] ; then
-                echo " Calling script by Zihan YAN "
-                echo " Code path: ${format_conv_path}/traj2exyz.py"
+                echo "Calling script by Zihan YAN "
+                echo "Code path: ${format_conv_path}/traj2exyz.py"
                 python ${format_conv_path}/traj2exyz.py $2 $3
             else
                 echo " Usage: -traj2exyz <input.traj> <output.xyz>"
                 echo " See the source code of traj2exyz.py for more details"
-                echo " Code path: ${format_conv_path}/traj2exyz.py"
+                echo "Code path: ${format_conv_path}/traj2exyz.py"
             fi ;;
 
         -addgroup|-addlabel)
             if [ ! -z "$2" ] && [ "$2" != "-h" ] && [ ! -z "$3" ] ; then
-                echo " Calling script by Zihan YAN "
-                echo " Code path: ${format_conv_path}/add_groups.py"
+                echo "Calling script by Zihan YAN "
+                echo "Code path: ${format_conv_path}/add_groups.py"
                 python ${format_conv_path}/add_groups.py $2 ${@:3}
             else
                 echo " Usage: -addgroup <POSCAR> <element1> <element2> ..."
                 echo " See the source code of add_groups.py for more details"
-                echo " Code path: ${format_conv_path}/add_groups.py"
+                echo "Code path: ${format_conv_path}/add_groups.py"
             fi ;;
 
         -addweight)
             if [ ! -z "$2" ] && [ "$2" != "-h" ] && [ ! -z "$3" ] && [ ! -z "$4" ]; then
-                echo " Calling script by Zihan YAN "
-                echo " Code path: ${format_conv_path}/add_weight.py"
+                echo "Calling script by Zihan YAN "
+                echo "Code path: ${format_conv_path}/add_weight.py"
                 python ${format_conv_path}/add_weight.py $2 $3 $4
             else
                 echo " Usage: -addweight <input.xyz> <output.xyz> <weight> "
                 echo " See the source code of add_groups.py for more details"
-                echo " Code path: ${format_conv_path}/add_weight.py"
+                echo "Code path: ${format_conv_path}/add_weight.py"
             fi ;;
 
         -get_frame)
             if [ ! -z "$2" ] && [ "$2" != "-h" ] && [ ! -z "$3" ] ; then
-                echo " Calling script by Zihan YAN "
-                echo " Code path: ${format_conv_path}/get_frame.py"
+                echo "Calling script by Zihan YAN "
+                echo "Code path: ${format_conv_path}/get_frame.py"
                 python ${format_conv_path}/get_frame.py $2 $3
             else
                 echo " Usage: -get_frame <exyzfile> <frame_index>"
                 echo " See the source code of get_frame.py for more details"
-                echo " Code path: ${format_conv_path}/get_frame.py"
+                echo "Code path: ${format_conv_path}/get_frame.py"
             fi ;;
 
         -clean_xyz)
             if [ ! -z "$2" ] && [ "$2" != "-h" ] && [ ! -z "$3" ] ; then
-                echo " Calling script by Zihan YAN "
-                echo " Code path: ${format_conv_path}/clean_xyz.py"
+                echo "Calling script by Zihan YAN "
+                echo "Code path: ${format_conv_path}/clean_xyz.py"
                 python ${format_conv_path}/clean_xyz.py $2 $3
             else
                 echo " Usage: -clean_xyz <input.xyz> <output.xyz>"
                 echo " See the source code of clean_xyz.py for more details"
-                echo " Code path: ${format_conv_path}/clean_xyz.py"
+                echo "Code path: ${format_conv_path}/clean_xyz.py"
             fi ;;
 
         -min_dist)
-            if [ ! -z "$2" ] && [ "$2" != "-h" ]; then
-                echo " Calling script by Zihan YAN "
-                echo " Code path: ${analyzer_path}/get_min_dist.py"
-                python ${analyzer_path}/get_min_dist.py $2
-            else
-                echo " Usage: -min_dist <exyzfile>"
-                echo " See the source code of get_min_dist.py for more details"
-                echo " Code path: ${analyzer_path}/get_min_dist.py"
-            fi ;;
+            python "${analyzer_path}/get_min_dist.py" "${@:2}" ;;
 
         -min_dist_pbc)
-            if [ ! -z "$2" ] && [ "$2" != "-h" ]; then
-                echo " Calling script by Zihan YAN "
-                echo " Code path: ${analyzer_path}/get_min_dist_pbc.py"
-                python ${analyzer_path}/get_min_dist_pbc.py $2
-            else
-                echo " Usage: -min_dist_pbc <exyzfile>"
-                echo " See the source code of get_min_dist_pbc.py for more details"
-                echo " Code path: ${analyzer_path}/get_min_dist_pbc.py"
-            fi ;;
+            python "${analyzer_path}/get_min_dist_pbc.py" "${@:2}" ;;
 
         -filter_dist)
             if [ ! -z "$2" ] && [ "$2" != "-h" ] && [ ! -z "$3" ]; then
-                echo " Calling script by Zihan YAN "
-                echo " Code path: ${analyzer_path}/filter_structures_by_distance.py"
+                echo "Calling script by Zihan YAN "
+                echo "Code path: ${analyzer_path}/filter_structures_by_distance.py"
                 python ${analyzer_path}/filter_structures_by_distance.py $2 $3
             else
                 echo " Usage: -filter_xyz <exyzfile> <min_dist>"
                 echo " See the source code of filter_structures_by_distance.py for more details"
-                echo " Code path: ${analyzer_path}/filter_structures_by_distance.py"
+                echo "Code path: ${analyzer_path}/filter_structures_by_distance.py"
             fi ;;
 
         -filter_dist_pbc)
             if [ ! -z "$2" ] && [ "$2" != "-h" ] && [ ! -z "$3" ]; then
-                echo " Calling script by Zihan YAN "
-                echo " Code path: ${analyzer_path}/filter_structures_by_distance_pbc.py"
+                echo "Calling script by Zihan YAN "
+                echo "Code path: ${analyzer_path}/filter_structures_by_distance_pbc.py"
                 python ${analyzer_path}/filter_structures_by_distance_pbc.py $2 $3
             else
                 echo " Usage: -filter_xyz_pbc <exyzfile> <min_dist>"
                 echo " See the source code of filter_structures_by_distance_pbc.py for more details"
-                echo " Code path: ${analyzer_path}/filter_structures_by_distance_pbc.py"
+                echo "Code path: ${analyzer_path}/filter_structures_by_distance_pbc.py"
             fi ;;
 
         -filter_box)
             if [ ! -z "$2" ] && [ "$2" != "-h" ] && [ ! -z "$3" ] ; then
-                echo " Calling script by Zihan YAN "
-                echo " Code path: ${analyzer_path}/filter_exyz_by_box.py"
+                echo "Calling script by Zihan YAN "
+                echo "Code path: ${analyzer_path}/filter_exyz_by_box.py"
                 python ${analyzer_path}/filter_exyz_by_box.py $2 $3
             else
                 echo " Usage: -filter_box <exyzfile> <lattice limit>"
                 echo " See the source code of filter_exyz_by_box.py for more details"
-                echo " Code path: ${analyzer_path}/filter_exyz_by_box.py"
+                echo "Code path: ${analyzer_path}/filter_exyz_by_box.py"
             fi ;;
 
         -filter_value)
             if [ ! -z "$2" ] && [ "$2" != "-h" ] && [ ! -z "$3" ] ; then
-                echo " Calling script by Zihan YAN "
-                echo " Code path: ${analyzer_path}/filter_exyz_by_value.py"
+                echo "Calling script by Zihan YAN "
+                echo "Code path: ${analyzer_path}/filter_exyz_by_value.py"
                 python ${analyzer_path}/filter_exyz_by_value.py $2 $3 $4
             else
                 echo " Usage: -filter_value <exyzfile> <property> <value>"
                 echo " See the source code of filter_exyz_by_value.py for more details"
-                echo " Code path: ${analyzer_path}/filter_exyz_by_value.py"
+                echo "Code path: ${analyzer_path}/filter_exyz_by_value.py"
             fi ;;
 
         -filter_range)
             if [ ! -z "$2" ] && [ "$2" != "-h" ] && [ ! -z "$3" ] ; then
-                echo " Calling script by Zihan YAN "
-                echo " Code path: ${analyzer_path}/filter_dist_range.py"
+                echo "Calling script by Zihan YAN "
+                echo "Code path: ${analyzer_path}/filter_dist_range.py"
                 python ${analyzer_path}/filter_dist_range.py $2 $3 $4 $5 $6
             else
                 echo " Usage: -filter_range <exyzfile> <element1> <element2> <min_dist> <max_dist>"
                 echo " See the source code of filter_dist_range.py for more details"
-                echo " Code path: ${analyzer_path}/filter_dist_range.py"
+                echo "Code path: ${analyzer_path}/filter_dist_range.py"
             fi ;;
 
         -analyze_comp)
             if [ ! -z "$2" ] && [ "$2" != "-h" ]; then
-                echo " Calling script by Zihan YAN "
-                echo " Code path: ${analyzer_path}/analyze_composition.py"
+                echo "Calling script by Zihan YAN "
+                echo "Code path: ${analyzer_path}/analyze_composition.py"
                 python ${analyzer_path}/analyze_composition.py $2
             else
                 echo " Usage: -analyze_composition <exyzfile>"
                 echo " See the source code of analyze_composition.py for more details"
-                echo " Code path: ${analyzer_path}/analyze_composition.py"
+                echo "Code path: ${analyzer_path}/analyze_composition.py"
                 exit 1
             fi ;;
 
@@ -639,46 +564,46 @@ if [ ! -z "$1" ]; then
 
         -frame_range)
             if [ ! -z "$2" ] && [ "$2" != "-h" ] && [ ! -z "$3" ] && [ ! -z "$4" ] ; then
-                echo " Calling script by Zihan YAN "
-                echo " Code path: ${sample_path}/frame_range.py"
+                echo "Calling script by Zihan YAN "
+                echo "Code path: ${sample_path}/frame_range.py"
                 python ${sample_path}/frame_range.py $2 $3 $4
             else
                 echo " Usage: -frame_range <exyzfile> <start_frac> <end_frac>"
                 echo " Examp: gpumdkit.sh -frame_range dump.xyz 0.2 0.5"
                 echo " See the source code of frame_range.py for more details"
-                echo " Code path: ${sample_path}/frame_range.py"
+                echo "Code path: ${sample_path}/frame_range.py"
             fi ;;
 
         -re_atoms)
-            echo " Calling script by Dian HUANG et al. "
+            echo "Calling script by Dian HUANG et al."
             python ${utils_path}/renumber_atoms.py $2 $3 ;;
 
         -cbc)
             if [ ! -z "$2" ] && [ "$2" != "-h" ] ; then
-                echo " Calling script by Zihan YAN "
+                echo "Calling script by Zihan YAN "
                 python ${analyzer_path}/charge_balance_check.py $2
             else
                 echo " Usage: -cbc <exyzfile>"
                 echo " See the source code of charge_balance_check.py for more details"
-                echo " Code path: ${analyzer_path}/charge_balance_check.py"
+                echo "Code path: ${analyzer_path}/charge_balance_check.py"
             fi ;;
 
         -pda)
             if [ ! -z "$2" ] && [ "$2" != "-h" ] && [ ! -z "$3" ] && [ ! -z "$4" ] && [ ! -z "$5" ] ; then
-                echo " Calling script by Zihan YAN "
-                echo " Code path: ${analyzer_path}/probability_density_analysis.py"
+                echo "Calling script by Zihan YAN "
+                echo "Code path: ${analyzer_path}/probability_density_analysis.py"
                 python ${analyzer_path}/probability_density_analysis.py $2 $3 $4 $5
             else
                 echo " Usage: -pda <ref_struct> <trajectory_file> <species> <interval>"
                 echo " Examp: gpumdkit.sh -pda LLZO.vasp dump.xyz Li 0.25"
                 echo " See the source code of probability_density_analysis.py for more details"
-                echo " Code path: ${analyzer_path}/probability_density_analysis.py"
+                echo "Code path: ${analyzer_path}/probability_density_analysis.py"
             fi ;;
 
         -hbond)
-            echo " Calling script by Zherui CHEN "
+            echo "Calling script by Zherui CHEN."
             python ${GPUMD_path}/tools/Analysis_and_Processing/hydrogen_bond_analysis/Hydrogen-bond-analysis.py ${@:2}
-            echo " Code path: ${GPUMD_path}/tools/Analysis_and_Processing/hydrogen_bond_analysis/Hydrogen-bond-analysis.py" ;;
+            echo "Code path: ${GPUMD_path}/tools/Analysis_and_Processing/hydrogen_bond_analysis/Hydrogen-bond-analysis.py" ;;
 
         *)
             # echo " Unknown option: $1 "; help_info_table; exit 1 ;;
