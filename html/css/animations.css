@@ -1,15 +1,16 @@
 .slide > * {
   opacity: 0;
-  transform: translateY(16px);
-  animation: fadeUp 0.55s ease forwards;
+  transform: translateY(18px);
+  animation: rise .58s cubic-bezier(.2,.65,.2,1) forwards;
 }
 
-.slide > *:nth-child(2) { animation-delay: 0.05s; }
-.slide > *:nth-child(3) { animation-delay: 0.1s; }
-.slide > *:nth-child(4) { animation-delay: 0.15s; }
-.slide > *:nth-child(5) { animation-delay: 0.2s; }
+.slide > *:nth-child(2) { animation-delay: .05s; }
+.slide > *:nth-child(3) { animation-delay: .1s; }
+.slide > *:nth-child(4) { animation-delay: .15s; }
+.slide > *:nth-child(5) { animation-delay: .2s; }
+.slide > *:nth-child(6) { animation-delay: .25s; }
 
-@keyframes fadeUp {
+@keyframes rise {
   to {
     opacity: 1;
     transform: translateY(0);
