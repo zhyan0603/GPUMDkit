@@ -1,0 +1,180 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>GPUMDkit 介绍与教程</title>
+  <link rel="stylesheet" href="css/base.css" />
+  <link rel="stylesheet" href="css/navigation.css" />
+  <link rel="stylesheet" href="css/cover.css" />
+  <link rel="stylesheet" href="css/modules.css" />
+  <link rel="stylesheet" href="css/animations.css" />
+</head>
+<body>
+  <img class="brand-logo" src="../docs/Gallery/gpumdkit_logo_lateral.png" alt="GPUMDkit Logo" />
+
+  <button id="outlineToggle" class="outline-toggle" aria-label="打开目录">☰ 大纲</button>
+
+  <aside id="outline" class="outline">
+    <h2>GPUMDkit PPT 大纲</h2>
+    <ul id="outlineList"></ul>
+  </aside>
+
+  <main id="deck" class="deck">
+    <section class="slide cover" data-title="封面">
+      <div class="decor-circle"></div>
+      <div class="decor-circle small"></div>
+      <h1>GPUMDkit：介绍与教程</h1>
+      <p>面向 GPUMD 与 NEP 的高效命令行工具箱</p>
+      <p class="sub">基于仓库 docs 与各目录 README 内容整理</p>
+    </section>
+
+    <section class="slide" data-title="目录总览">
+      <h2>目录总览</h2>
+      <div class="grid two">
+        <div class="card">1. GPUMDkit 是什么</div>
+        <div class="card">2. 安装与快速启动</div>
+        <div class="card">3. 交互模式 vs 命令行模式</div>
+        <div class="card">4. 核心功能模块总览</div>
+        <div class="card">5. 可视化与分析画廊</div>
+        <div class="card">6. 活性学习与极化材料分析</div>
+        <div class="card">7. 实战命令清单</div>
+        <div class="card">8. 资源与扩展</div>
+      </div>
+    </section>
+
+    <section class="slide" data-title="项目介绍">
+      <h2>GPUMDkit 是什么？</h2>
+      <ul>
+        <li>为 <strong>GPUMD</strong> 与 <strong>NEP</strong> 提供统一命令入口。</li>
+        <li>支持 <strong>格式转换</strong>、<strong>结构采样</strong>、<strong>工作流自动化</strong>、<strong>计算器</strong>、<strong>分析器</strong>、<strong>绘图脚本</strong>。</li>
+        <li>具备交互式菜单与命令行双模式，适配初学者与高通量用户。</li>
+        <li>支持自定义命令与 Bash 补全，便于个人化扩展。</li>
+      </ul>
+      <div class="gallery one">
+        <img src="../docs/Gallery/gpumdkit_logo.png" alt="GPUMDkit" />
+      </div>
+    </section>
+
+    <section class="slide" data-title="安装与快速开始">
+      <h2>安装与快速开始</h2>
+      <div class="code-block">
+        <pre>git clone https://github.com/zhyan0603/GPUMDkit.git
+cd GPUMDkit
+source ./install.sh
+source ~/.bashrc</pre>
+      </div>
+      <ul>
+        <li>推荐在独立 Python 环境安装增强依赖（如 neptrain / ase / pymatgen / dpdata）。</li>
+        <li>启动：<code>gpumdkit.sh</code>（交互模式）或 <code>gpumdkit.sh -h</code>（命令行模式）。</li>
+      </ul>
+    </section>
+
+    <section class="slide" data-title="两种使用模式">
+      <h2>两种使用模式</h2>
+      <div class="grid two">
+        <div class="card">
+          <h3>交互模式</h3>
+          <p>适合新手与复杂流程，按菜单编号逐步执行。</p>
+          <p><code>gpumdkit.sh</code></p>
+        </div>
+        <div class="card">
+          <h3>命令行模式</h3>
+          <p>适合批处理与自动化脚本，直接执行子命令。</p>
+          <p><code>gpumdkit.sh -plt train</code></p>
+        </div>
+      </div>
+      <div class="code-block">
+        <pre># 常见命令
+gpumdkit.sh -out2xyz .
+gpumdkit.sh -calc ionic-cond Li 1
+gpumdkit.sh -range train.xyz force</pre>
+      </div>
+    </section>
+
+    <section class="slide module-slide" data-title="功能模块 I">
+      <h2>核心功能模块 I</h2>
+      <div class="grid three">
+        <div class="card"><strong>格式转换</strong><br/>VASP / CP2K / ABACUS / LAMMPS / CIF / extxyz</div>
+        <div class="card"><strong>结构采样</strong><br/>uniform / random / neptrain FPS / 扰动结构</div>
+        <div class="card"><strong>Workflow 自动化</strong><br/>SCF 与 MD 批处理预处理</div>
+      </div>
+      <div class="gallery three">
+        <img src="../docs/Gallery/train.png" alt="train" />
+        <img src="../docs/Gallery/thermo.png" alt="thermo" />
+        <img src="../docs/Gallery/msd.png" alt="msd" />
+      </div>
+    </section>
+
+    <section class="slide module-slide" data-title="功能模块 II">
+      <h2>核心功能模块 II</h2>
+      <div class="grid three">
+        <div class="card"><strong>Calculators</strong><br/>离子电导、DOAS、NEB、描述符等</div>
+        <div class="card"><strong>Analyzer</strong><br/>范围统计、最短距离、过滤、组分分析</div>
+        <div class="card"><strong>Plot Scripts</strong><br/>NEP训练、热力学、输运、结构分析可视化</div>
+      </div>
+      <div class="gallery three">
+        <img src="../docs/Gallery/force_errors.png" alt="force errors" />
+        <img src="../docs/Gallery/doas.png" alt="doas" />
+        <img src="../docs/Gallery/range_force.png" alt="range force" />
+      </div>
+    </section>
+
+    <section class="slide" data-title="进阶专题">
+      <h2>进阶专题：活性学习与极化材料分析</h2>
+      <ul>
+        <li><strong>Active Learning Workflow</strong>：MD 采样 → 过滤/筛选 → SCF 标注 → NEP 预测与迭代。</li>
+        <li><strong>Polar Material Analysis</strong>：nlist / disp / avg-struct / oct-tilt / pol-abo3 + plane-grid 可视化。</li>
+      </ul>
+      <div class="gallery two">
+        <img src="../docs/Gallery/PTO-STO.png" alt="PTO STO" />
+        <img src="../docs/Gallery/PTO_STO_superlattice.png" alt="superlattice" />
+      </div>
+    </section>
+
+    <section class="slide" data-title="可视化画廊">
+      <h2>可视化画廊（来自 docs/Gallery）</h2>
+      <div class="gallery four">
+        <img src="../docs/Gallery/prediction.png" alt="prediction" />
+        <img src="../docs/Gallery/train_test.png" alt="train test" />
+        <img src="../docs/Gallery/parity_plot_density.png" alt="parity density" />
+        <img src="../docs/Gallery/hnemd.png" alt="hnemd" />
+        <img src="../docs/Gallery/emd.png" alt="emd" />
+        <img src="../docs/Gallery/nemd.png" alt="nemd" />
+        <img src="../docs/Gallery/vac_pdos.png" alt="vac pdos" />
+        <img src="../docs/Gallery/Arrhenius_D.png" alt="arrhenius D" />
+      </div>
+    </section>
+
+    <section class="slide" data-title="教程路径建议">
+      <h2>教程路径建议（新用户）</h2>
+      <ol>
+        <li>安装并运行 <code>gpumdkit.sh -h</code> 熟悉命令总览。</li>
+        <li>先做格式转换：OUTCAR/POSCAR/CIF/LAMMPS ↔ extxyz。</li>
+        <li>进入采样与过滤：构建更高质量训练数据。</li>
+        <li>使用 calculators + analyzer 做性质计算与质量检查。</li>
+        <li>使用 -plt 系列完成训练和模拟结果可视化。</li>
+        <li>最后尝试 workflow 与 active learning 自动化。</li>
+      </ol>
+    </section>
+
+    <section class="slide" data-title="结束页">
+      <h2>谢谢观看</h2>
+      <p>文档入口：<code>docs/tutorials/*.md</code> 与 <code>Scripts/*/README.md</code></p>
+      <p>仓库：<code>zhyan0603/GPUMDkit</code></p>
+      <p class="sub">按键说明：←/→ 或 ↑/↓ 切换；点击左侧大纲快速跳转。</p>
+      <img class="qr" src="../docs/Gallery/gpumdkit_qqgroup.jpg" alt="QQ Group" />
+    </section>
+  </main>
+
+  <div class="controls">
+    <button id="prevBtn">◀ 上一页</button>
+    <span id="pageIndicator">1 / 1</span>
+    <button id="nextBtn">下一页 ▶</button>
+  </div>
+
+  <div class="progress"><span id="progressBar"></span></div>
+
+  <script src="js/presentation.js"></script>
+</body>
+</html>

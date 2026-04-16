@@ -1,0 +1,31 @@
+.cover {
+  position: relative;
+  overflow: hidden;
+}
+
+.cover h1 {
+  background: linear-gradient(90deg, #cbe3ff, #86ffd1);
+  -webkit-background-clip: text;
+  color: transparent;
+}
+
+.decor-circle {
+  position: absolute;
+  width: 440px;
+  height: 440px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(92, 184, 255, 0.26), transparent 70%);
+  right: -90px;
+  top: -90px;
+  pointer-events: none;
+}
+
+.decor-circle.small {
+  width: 320px;
+  height: 320px;
+  left: -80px;
+  bottom: -80px;
+  top: auto;
+  right: auto;
+  background: radial-gradient(circle, rgba(134, 255, 209, 0.2), transparent 70%);
+}

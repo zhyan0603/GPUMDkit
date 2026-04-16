@@ -1,0 +1,17 @@
+.module-slide .card {
+  min-height: 138px;
+  font-size: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+}
+
+.slide .gallery img {
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
+}
+
+.slide .gallery img:hover {
+  transform: translateY(-4px) scale(1.02);
+  box-shadow: 0 14px 28px rgba(0, 0, 0, 0.34);
+}
