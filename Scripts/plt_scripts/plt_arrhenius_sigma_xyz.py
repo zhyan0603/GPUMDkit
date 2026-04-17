@@ -1,16 +1,12 @@
 """
 This script processes MSD and thermo data from multiple temperature folders (e.g., 400K, 500K) 
-to calculate ionic conductivity and its temperature dependence. 
-It extracts volume from thermo.out, calculates diffusivity from msd.out, 
+to calculate ionic conductivity and its temperature dependence for different directions. 
+It extracts volume from thermo.out, calculates diffusivity from msd.out for x, y, z directions, 
 computes conductivity using the Nernst-Einstein relation, 
-and plots ln(sigma*T) vs 1000/T to determine activation energy. 
+and plots ln(sigma*T) vs 1000/T to determine activation energy for each direction. 
 The script also extrapolates conductivity to 300K based on the fitted Arrhenius behavior.
 
-Author: Zihan YAN (yanzihan@westlake.edu.cn)
-Last modified: 2026-03-19
-
-Usage:
-    python plt_arrhenius_sigma_xyz.py [save]
+Author: Modified from original by Zihan YAN (yanzihan@westlake.edu.cn)
 """
 
 import re
@@ -21,9 +17,45 @@ import matplotlib.pyplot as plt
 from matplotlib import get_backend
 import scipy.constants as consts
 from ase.io import read
+from scipy.stats import linregress
+import matplotlib.ticker as ticker
+import warnings
+warnings.filterwarnings('ignore', category=UserWarning, module='matplotlib')
 
-# Set plot font size
-plt.rcParams.update({'font.size': 10})
+plt.rcParams.update({
+    "font.family": "sans-serif",
+    "font.sans-serif": ["Arial", "DejaVu Sans"],
+    "font.size": 11,
+    "axes.labelsize": 11.5,
+    "axes.titlesize": 12,
+    "xtick.labelsize": 11,
+    "ytick.labelsize": 11,
+    "legend.fontsize": 11,
+    "figure.figsize": (4.3, 3.8),  
+    "axes.spines.top": True,
+    "axes.spines.right": True,
+    "axes.linewidth": 0.8,
+})
+
+k = 8.617333262145e-5
+
+def fit_arrhenius(T, sigma_T):
+    """Fit Arrhenius equation to calculate activation energy"""
+    mask = ~np.isnan(sigma_T) & ~np.isnan(T) & (sigma_T > 0)
+    T_valid, val_valid = T[mask], sigma_T[mask]
+    if len(T_valid) < 2: 
+        return None, None, None, None
+    
+    x = 1000 / T_valid
+    y = np.log10(val_valid) 
+    res = linregress(x, y)
+    Ea = -res.slope * k * 1000 * np.log(10)  
+    return Ea, res.intercept, res.slope, res.rvalue
+
+def tick_function(X):
+    """Convert inverse temperature back to temperature for top axis"""
+    V = 1000 / X  
+    return ["%.0f" % z for z in V]
 
 # Get current directory and temperature folders (e.g., 400K, 500K)
 base_dir = os.getcwd()
@@ -36,6 +68,9 @@ temp_folders = sorted(temp_folders, key=lambda x: int(x[:-1]))  # Sort by temper
 
 if not temp_folders:
     raise ValueError("No valid temperature folders (e.g., 400K, 500K) found in current directory")
+
+# Define colors following PRL style
+default_colors = ['#2A9D8F', '#D62828', '#457B9D', '#E9C46A']
 
 # Get structure label from current directory name
 cell = os.path.basename(base_dir)
@@ -81,7 +116,9 @@ group_sigmas_all = []
 group_sigmas_x = []
 group_sigmas_y = []
 group_sigmas_z = []
-fig, ax1 = plt.subplots(figsize=(5, 3.4), dpi=150)
+
+# Create figure with PRL style
+fig, ax = plt.subplots(figsize=(4.3, 3.8))
 
 # Process each temperature folder
 for temp_folder in temp_folders:
@@ -176,6 +213,24 @@ group_sigmas_x = np.array(group_sigmas_x)[sorted_indices]
 group_sigmas_y = np.array(group_sigmas_y)[sorted_indices]
 group_sigmas_z = np.array(group_sigmas_z)[sorted_indices]
 
+# Prepare data for plotting
+x_min, x_max = 1000/np.max(group_Ts), 1000/np.min(group_Ts)
+x_fit_range = np.linspace(x_min, x_max, 100)
+
+# Calculate activation energies for each direction
+Ea_all, intercept_all, slope_all, r_all = fit_arrhenius(group_Ts, group_sigmaTs_all)
+Ea_x, intercept_x, slope_x, r_x = fit_arrhenius(group_Ts, group_sigmaTs_x)
+Ea_y, intercept_y, slope_y, r_y = fit_arrhenius(group_Ts, group_sigmaTs_y)
+Ea_z, intercept_z, slope_z, r_z = fit_arrhenius(group_Ts, group_sigmaTs_z)
+
+# Prepare labels with activation energies
+labels_with_ea = [
+    (f'Total ({Ea_all:.3f} eV)', group_sigmaTs_all, intercept_all, slope_all, '#457B9D', 'o'),
+    (f'X ({Ea_x:.3f} eV)', group_sigmaTs_x, intercept_x, slope_x, '#D62828', 's'),
+    (f'Y ({Ea_y:.3f} eV)', group_sigmaTs_y, intercept_y, slope_y, '#2A9D8F', '^'),
+    (f'Z ({Ea_z:.3f} eV)', group_sigmaTs_z, intercept_z, slope_z, '#E9C46A', 'd')
+]
+
 # Print conductivity tables
 w_t, w_all, w_xyz = 10, 16, 12
 line = f"+{'-'*(w_t+2)}-{'-'*(w_all+2)}-{'-'*(w_xyz+2)}-{'-'*(w_xyz+2)}-{'-'*(w_xyz+2)}+"
@@ -202,88 +257,59 @@ for temp, s_all, s_x, s_y, s_z in zip(group_Ts, group_sigmaTs_all, group_sigmaTs
     )
 print(line)
 
-# Plot scatter points
-ax1.scatter(1000 / group_Ts, np.log(group_sigmaTs_all), color='C4', s=30, label=r'$\sigma T$ total')
-ax1.scatter(1000 / group_Ts, np.log(group_sigmaTs_x), color='C0', s=25, label=r'$\sigma T$ x')
-ax1.scatter(1000 / group_Ts, np.log(group_sigmaTs_y), color='C2', s=25, label=r'$\sigma T$ y')
-ax1.scatter(1000 / group_Ts, np.log(group_sigmaTs_z), color='C3', s=25, label=r'$\sigma T$ z')
-
-# Perform linear fitting
-invT = 1000 / np.array(group_Ts)
-ln_sigmaT_all = np.log(np.array(group_sigmaTs_all))
-ln_sigmaT_x = np.log(np.array(group_sigmaTs_x))
-ln_sigmaT_y = np.log(np.array(group_sigmaTs_y))
-ln_sigmaT_z = np.log(np.array(group_sigmaTs_z))
-
-k_all, b_all = np.polyfit(invT, ln_sigmaT_all, 1)
-k_x, b_x = np.polyfit(invT, ln_sigmaT_x, 1)
-k_y, b_y = np.polyfit(invT, ln_sigmaT_y, 1)
-k_z, b_z = np.polyfit(invT, ln_sigmaT_z, 1)
-
-Ea_all = -k_all * 1000 * consts.k / consts.e
-Ea_x = -k_x * 1000 * consts.k / consts.e
-Ea_y = -k_y * 1000 * consts.k / consts.e
-Ea_z = -k_z * 1000 * consts.k / consts.e
-
-print(f"\n{cell}, Ea_all: {Ea_all:.3f} eV")
+# Print activation energies
+print(f"\n{cell}, Ea_total: {Ea_all:.3f} eV")
 print(f"{cell}, Ea_x: {Ea_x:.3f} eV")
 print(f"{cell}, Ea_y: {Ea_y:.3f} eV")
 print(f"{cell}, Ea_z: {Ea_z:.3f} eV")
 
-# Plot fitted lines
-ax1.plot(invT, k_all * invT + b_all, linestyle='-', linewidth=2, color='C4')
-ax1.plot(invT, k_x * invT + b_x, linestyle='--', linewidth=1.5, color='C0')
-ax1.plot(invT, k_y * invT + b_y, linestyle='--', linewidth=1.5, color='C2')
-ax1.plot(invT, k_z * invT + b_z, linestyle='--', linewidth=1.5, color='C3')
+# Plot each direction
+for label, sigmaT_data, intercept, slope, color, marker in labels_with_ea:
+    # Fitted line
+    y_fit_ln = (slope * x_fit_range + intercept) * np.log(10)
+    ax.plot(x_fit_range, y_fit_ln, '--', c=color, linewidth=1.5)
+    # Data points
+    ax.plot(1000/group_Ts, np.log(sigmaT_data), marker, label=label, 
+            c=color, markersize=8, markerfacecolor='none', markeredgewidth=1.5)
 
-# Extrapolate from lowest temperature to 300K
-specified_temperature = 300
-x_ext = 1000 / np.arange(min(group_Ts), specified_temperature - 1, -10)  # Start from lowest T to 300K
+# Set axis labels with proper formatting
+ax.set_xlabel('1000/T (1/K)', labelpad=7)
+ax.set_ylabel(r'ln($\sigma$T) (S$\cdot$K/cm)')
 
-ax1.plot(x_ext, k_all * x_ext + b_all, linestyle='--', color='C4', alpha=0.5)
-ax1.plot(x_ext, k_x * x_ext + b_x, linestyle=':', color='C0', alpha=0.5)
-ax1.plot(x_ext, k_y * x_ext + b_y, linestyle=':', color='C2', alpha=0.5)
-ax1.plot(x_ext, k_z * x_ext + b_z, linestyle=':', color='C3', alpha=0.5)
+# Add legend
+ax.legend(loc='lower left', frameon=False, fontsize=11)
 
-ln_sigmaT_300_all = k_all * 1000 / specified_temperature + b_all
-ln_sigmaT_300_x = k_x * 1000 / specified_temperature + b_x
-ln_sigmaT_300_y = k_y * 1000 / specified_temperature + b_y
-ln_sigmaT_300_z = k_z * 1000 / specified_temperature + b_z
+# Add secondary x-axis on top showing actual temperature
+ax_top = ax.secondary_xaxis('top')
+ax_top.set_xlabel('Temperature (K)', labelpad=7)
+xticks = ax.get_xticks()
+ax_top.set_xticks(xticks)
+ax_top.set_xticklabels([f'{int(1000/xt)}' if xt>0 else '' for xt in xticks])
 
-sigma_300K_all = np.exp(ln_sigmaT_300_all) / specified_temperature
-sigma_300K_x = np.exp(ln_sigmaT_300_x) / specified_temperature
-sigma_300K_y = np.exp(ln_sigmaT_300_y) / specified_temperature
-sigma_300K_z = np.exp(ln_sigmaT_300_z) / specified_temperature
+# Format y-axis
+ax.yaxis.set_major_formatter(ticker.FormatStrFormatter('%.1f'))
 
-print(f"at {specified_temperature}K, {cell}: Sigma_all = {sigma_300K_all:.3e} S/cm")
-print(f"at {specified_temperature}K, {cell}: Sigma_x = {sigma_300K_x:.3e} S/cm")
-print(f"at {specified_temperature}K, {cell}: Sigma_y = {sigma_300K_y:.3e} S/cm")
-print(f"at {specified_temperature}K, {cell}: Sigma_z = {sigma_300K_z:.3e} S/cm")
+# Calculate conductivity at 300K for each direction
+target_T = 300
+sig_300_all = (10**(slope_all * (1000/target_T) + intercept_all)) / target_T
+sig_300_x = (10**(slope_x * (1000/target_T) + intercept_x)) / target_T
+sig_300_y = (10**(slope_y * (1000/target_T) + intercept_y)) / target_T
+sig_300_z = (10**(slope_z * (1000/target_T) + intercept_z)) / target_T
 
-# Set axis labels
-ax1.set_xlabel("1000/T (1/K)", fontsize=10)
-ax1.set_ylabel(r"ln($\sigma \cdot T$) (K S/cm)", fontsize=10)
-ax1.legend(loc='lower left', fontsize=8, frameon=True)
+print(f"at {target_T}K, {cell}: Sigma_total = {sig_300_all:.3e} S/cm")
+print(f"at {target_T}K, {cell}: Sigma_x = {sig_300_x:.3e} S/cm")
+print(f"at {target_T}K, {cell}: Sigma_y = {sig_300_y:.3e} S/cm")
+print(f"at {target_T}K, {cell}: Sigma_z = {sig_300_z:.3e} S/cm")
 
-# Add top temperature axis
-def tick_function(X):
-    V = 1000 / X
-    return ["%.0f" % z for z in V]
+# Adjust layout and save
+plt.tight_layout()
 
-ax2 = ax1.twiny()
-ax2.set_xticks(ax1.get_xticks())
-ax2.set_xbound(ax1.get_xbound())
-ax2.set_xticklabels(tick_function(ax1.get_xticks()))
-ax2.set_xlabel("T (K)", fontsize=10)
-
-# Save and show plot
-fig.tight_layout()
 if len(sys.argv) > 1 and sys.argv[1] == 'save':
-    fig.savefig('Arrhenius_sigma_xyz.png', dpi=300)
+    plt.savefig('Arrhenius_sigma_xyz.png', dpi=300, bbox_inches='tight')
 else:
     if get_backend().lower() in ['agg', 'cairo', 'pdf', 'ps', 'svg']:
         print("Unable to display the plot due to the non-interactive backend.")
         print("The plot has been automatically saved as 'Arrhenius_sigma_xyz.png'.")
-        fig.savefig('Arrhenius_sigma_xyz.png', dpi=300)
+        plt.savefig('Arrhenius_sigma_xyz.png', dpi=300, bbox_inches='tight')
     else:
         plt.show()

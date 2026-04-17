@@ -13,7 +13,15 @@ def read_data(file_name):
 
 # Determine the input file and elements to plot
 input_file = sys.argv[1] 
-elements_to_plot = sys.argv[2:] if len(sys.argv) > 2 else None
+
+# Check if last argument is 'save' and handle accordingly
+should_save = len(sys.argv) > 1 and sys.argv[-1] == 'save'
+if should_save:
+    # Exclude the last 'save' argument when getting elements
+    elements_to_plot = sys.argv[2:-1] if len(sys.argv) > 3 else None
+else:
+    # Include all arguments after the input file as elements
+    elements_to_plot = sys.argv[2:] if len(sys.argv) > 2 else None
 
 # Read the data from the file
 time, msd_data, num_groups = read_data(input_file)
@@ -46,7 +54,7 @@ plt.ylabel(r'MSD ($\AA^2$)')
 plt.legend()
 plt.tight_layout()
 
-if len(sys.argv) > 1 and sys.argv[1] == 'save':
+if should_save:
     plt.savefig('msd_all.png', dpi=300)
 else:
     # Handle saving or displaying the plot
