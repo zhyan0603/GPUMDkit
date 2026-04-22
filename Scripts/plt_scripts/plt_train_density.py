@@ -35,7 +35,7 @@ def calculate_limits(train_data, padding=0.08):
     return data_min - padding * data_range, data_max + padding * data_range
 
 # Create a subplot with 2 rows and 2 columns 
-fig, axs = plt.subplots(2, 2, figsize=(9, 7), dpi=150)
+fig, axs = plt.subplots(2, 2, figsize=(9, 7), dpi=100)
 
 if loss[0, 0] == 100:
     xlabel = 'Generation/100'
@@ -128,7 +128,8 @@ else:
     axs[1, 1].text(0.7, 0.12, r'R$^2$'+f': {stress_r2:.4f}\nMAE: {stress_mae:.4f} GPa\nRMSE: {stress_rmse:.4f} GPa', 
                 transform=axs[1, 1].transAxes, fontsize=10, verticalalignment='center', horizontalalignment='center')
 
-plt.tight_layout()
+# plt.tight_layout()
+fig.subplots_adjust(top=0.968,bottom=0.088,left=0.086,right=0.983,hspace=0.22,wspace=0.24)
 
 if len(sys.argv) > 1 and sys.argv[1] == 'save':
     plt.savefig('train_density.png', dpi=300)
