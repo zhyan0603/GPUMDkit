@@ -62,7 +62,7 @@ axs[0, 1].set_xlim(xmin_energy, xmax_energy)
 axs[0, 1].set_ylim(xmin_energy, xmax_energy)
 
 axs[0, 1].hist2d(energy_data[:, 0], energy_data[:, 1], 
-                 bins=100, cmap='Blues', cmin=1, norm=LogNorm(), alpha=0.9,
+                 bins=100, cmap='Blues', cmin=1, norm=LogNorm(), 
                  range=[[xmin_energy, xmax_energy], [xmin_energy, xmax_energy]])
 
 axs[0, 1].plot([xmin_energy, xmax_energy], [xmin_energy, xmax_energy], linewidth=1.5, color='grey', linestyle='--')
@@ -85,7 +85,7 @@ axs[1, 0].set_xlim(xmin_force, xmax_force)
 axs[1, 0].set_ylim(xmin_force, xmax_force)
 
 axs[1, 0].hist2d(f_target, f_pred, 
-                 bins=150, cmap='Oranges', cmin=1, norm=LogNorm(), alpha=0.9,
+                 bins=150, cmap='Oranges', cmin=1, norm=LogNorm(),
                  range=[[xmin_force, xmax_force], [xmin_force, xmax_force]])
 
 axs[1, 0].plot([xmin_force, xmax_force], [xmin_force, xmax_force], linewidth=1.5, color='grey', linestyle='--')
@@ -113,7 +113,7 @@ else:
     axs[1, 1].set_ylim(xmin_stress, xmax_stress)
     
     axs[1, 1].hist2d(s_target, s_pred, 
-                     bins=150, cmap='Greens', cmin=1, norm=LogNorm(), alpha=0.9,
+                     bins=150, cmap='Greens', cmin=1, norm=LogNorm(),
                      range=[[xmin_stress, xmax_stress], [xmin_stress, xmax_stress]])
         
     axs[1, 1].plot([xmin_stress, xmax_stress], [xmin_stress, xmax_stress], linewidth=1.5, color='grey', linestyle='--')
