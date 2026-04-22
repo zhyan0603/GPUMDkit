@@ -10,7 +10,7 @@ if [ -z "$GPUMDkit_path" ]; then
     exit 1
 fi
 
-VERSION="1.5.3 (dev) (2026-04-14)"
+VERSION="1.5.4 (dev) (2026-04-22)"
 
 plt_path="${GPUMDkit_path}/Scripts/plt_scripts"
 analyzer_path="${GPUMDkit_path}/Scripts/analyzer"
@@ -229,7 +229,8 @@ if [ ! -z "$1" ]; then
                     "thermo") python ${plt_path}/plt_thermo.py $3 ;;
                     "thermo2") python ${plt_path}/plt_thermo2.py $3 ;;
                     "thermo3") python ${plt_path}/plt_thermo3.py $3 ;;                        
-                    "train") python ${plt_path}/plt_train.py $3 ;;                 
+                    "train") python ${plt_path}/plt_train.py $3 ;;
+                    "train_density") python ${plt_path}/plt_train_density.py $3 ;;                 
                     "prediction"|"test") python ${plt_path}/plt_prediction.py $3 ;; 
                     "parity_density") python ${plt_path}/plt_parity_density.py $3 ;;
                     "train_test") python ${plt_path}/plt_train_test.py $3 ;;
