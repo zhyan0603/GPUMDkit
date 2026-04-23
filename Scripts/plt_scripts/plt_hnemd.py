@@ -22,7 +22,7 @@ def set_fig_properties(ax_list, tl=4, tw=1.2, tlm=4):
         ax.tick_params(which='both', length=tl, width=tw, direction='in', right=True, top=True)
         ax.tick_params(which='minor', length=tlm)
 
-trap = np.trapezoid if hasattr(np, "trapezoid") else np.trapz
+trap = np.trapezoid if hasattr(np, "trapezoid") else getattr(np, "trapz")
 
 def print_usage():
     """Print usage instructions"""

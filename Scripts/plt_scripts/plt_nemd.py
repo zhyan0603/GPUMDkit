@@ -21,6 +21,8 @@ def set_fig_properties(ax_list, tl=4, tw=1.2, tlm=4):
         ax.tick_params(which='both', length=tl, width=tw, direction='in', right=True, top=True)
         ax.tick_params(which='minor', length=tlm)
 
+trap = np.trapezoid if hasattr(np, "trapezoid") else getattr(np, "trapz")
+
 def print_usage():
     """Print usage instructions"""
     print("Usage: gpumdkit -plt nemd [real_length] [scale_eff_size] [cutoff_freq] [save]")
@@ -149,7 +151,7 @@ class NEMD_Processor:
         if 'Results' not in Reformed_SHC_data:
             Reformed_SHC_data['Results'] = {}
         for key, col in zip(["in", "out", "tot"], ["k_g_wi", "k_g_wo", "k_g_wt"]):
-            values = [np.trapz(Reformed_SHC_data[col][:, i], dx=Reformed_SHC_data["nu"][0, 0]) for i in range(N_repeat)]
+            values = [trap(Reformed_SHC_data[col][:, i], dx=Reformed_SHC_data["nu"][0, 0]) for i in range(N_repeat)]
             Reformed_SHC_data['Results'][f"{key}_ave"] = np.mean(values)
             Reformed_SHC_data['Results'][f"{key}_std"] = np.std(values) / np.sqrt(N_repeat)
 
@@ -203,7 +205,11 @@ class NEMD_Processor:
         Q = ((Q_in + Q_out) / 2).reshape(1, -1)  # eV/ps
 
         model = read(self.path['model'])
-        group = model.get_array("group")[:, 0]
+        group_arr = model.get_array('group')
+        if group_arr.ndim == 1:
+            group = group_arr
+        else:
+            group = group_arr[:, 0]
         coords_heat = model.positions[(group == 1), direction].mean()
         coords_cold = model.positions[(group == N_temp_group - 1), direction].mean()
         xticks_length = np.linspace(coords_heat, coords_cold, N_temp_group - 1) * 0.1
