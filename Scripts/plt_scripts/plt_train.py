@@ -89,7 +89,7 @@ axs[1, 0].plot([xmin_force, xmax_force], [xmin_force, xmax_force], linewidth=2, 
 axs[1, 0].set_xlabel(r'DFT force (eV/$  \mathrm{\AA}  $)', fontsize=10)
 axs[1, 0].set_ylabel(r'NEP force (eV/$  \mathrm{\AA}  $)', fontsize=10)
 axs[1, 0].tick_params(axis='both', labelsize=10)
-axs[1, 0].legend(['fx', 'fy', 'fz'])
+axs[1, 0].legend(['fx', 'fy', 'fz'], loc='upper left')
 axs[1, 0].axis('tight')
 
 # Calculate and display RMSE, MAE, and R² for forces
