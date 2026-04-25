@@ -42,11 +42,11 @@ fig, axs = plt.subplots(2, 2, figsize=(9, 7), dpi=100)
 
 if loss[0, 0] == 100:
     xlabel = 'Generation/100'
-    plot_cols = slice(1, 7)  # loss[:, 1:7]
+    plot_cols = slice(1, 7) # loss[:, 1:7]
     legend_labels = ['Total', 'L1-Reg', 'L2-Reg', 'Energy-train', 'Force-train', 'Virial-train']
 elif loss[0, 0] == 1:
     xlabel = 'Epoch'
-    plot_cols = slice(1, 5)  # loss[:, 1:5]
+    plot_cols = slice(1, 5) # loss[:, 1:5]
     legend_labels = ['Total', 'Energy-train', 'Force-train', 'Virial-train']
 else:
     raise ValueError("Unexpected loss data format.")
@@ -76,7 +76,7 @@ axs[0, 1].axis('tight')
 energy_rmse = calculate_rmse(energy_data[:, 0], energy_data[:, 1]) * 1000
 energy_mae = calculate_mae(energy_data[:, 0], energy_data[:, 1]) * 1000
 energy_r2 = calculate_r2(energy_data[:, 0], energy_data[:, 1])
-axs[0, 1].text(0.7, 0.12, r'R$^2$'+f': {energy_r2:.4f}\nMAE: {energy_mae:.2f} meV/atom\nRMSE: {energy_rmse:.2f} meV/atom', 
+axs[0, 1].text(0.7, 0.12, r'R$  ^2  $'+f': {energy_r2:.4f}\nMAE: {energy_mae:.2f} meV/atom\nRMSE: {energy_rmse:.2f} meV/atom',
                transform=axs[0, 1].transAxes, fontsize=10, verticalalignment='center', horizontalalignment='center')
 #axs[0, 1].text(-0.07, 1.03, "(b)", transform=axs[0, 1].transAxes, fontsize=12, va='top', ha='right')
 
@@ -86,26 +86,28 @@ axs[1, 0].set_xlim(xmin_force, xmax_force)
 axs[1, 0].set_ylim(xmin_force, xmax_force)
 axs[1, 0].plot(force_data[:, 3:6], force_data[:, 0:3], '.', markersize=10)
 axs[1, 0].plot([xmin_force, xmax_force], [xmin_force, xmax_force], linewidth=2, color='grey', linestyle='--')
-axs[1, 0].set_xlabel(r'DFT force (eV/$\mathrm{\AA}$)', fontsize=10)
-axs[1, 0].set_ylabel(r'NEP force (eV/$\mathrm{\AA}$)', fontsize=10)
+axs[1, 0].set_xlabel(r'DFT force (eV/$  \mathrm{\AA}  $)', fontsize=10)
+axs[1, 0].set_ylabel(r'NEP force (eV/$  \mathrm{\AA}  $)', fontsize=10)
 axs[1, 0].tick_params(axis='both', labelsize=10)
-axs[1, 0].legend(['fx', 'fy', 'fz'], loc='upper left')
+axs[1, 0].legend(['fx', 'fy', 'fz'])
 axs[1, 0].axis('tight')
 
 # Calculate and display RMSE, MAE, and R² for forces
-force_rmse = [calculate_rmse(force_data[:, i], force_data[:, i + 3]) for i in range(3)]
-force_mae = [calculate_mae(force_data[:, i], force_data[:, i + 3]) for i in range(3)]
-force_r2 = [calculate_r2(force_data[:, i], force_data[:, i + 3]) for i in range(3)]
-mean_force_rmse = np.mean(force_rmse) * 1000
-mean_force_mae = np.mean(force_mae) * 1000
-mean_force_r2 = np.mean(force_r2)
-axs[1, 0].text(0.7, 0.12, 
-               r'R$^2$'+f': {mean_force_r2:.4f}\nMAE: {mean_force_mae:.2f} meV/'+r'$\mathrm{{\AA}}$'
-               +f'\nRMSE: {mean_force_rmse:.2f} meV/'+r'$\mathrm{{\AA}}$', 
+force_pred_flat = force_data[:, 0:3].flatten()
+force_actual_flat = force_data[:, 3:6].flatten()
+force_rmse = calculate_rmse(force_pred_flat, force_actual_flat) * 1000
+force_mae = calculate_mae(force_pred_flat, force_actual_flat) * 1000
+force_r2 = calculate_r2(force_pred_flat, force_actual_flat)
+mean_force_rmse = force_rmse
+mean_force_mae = force_mae
+mean_force_r2 = force_r2
+axs[1, 0].text(0.7, 0.12,
+               r'R$  ^2  $'+f': {mean_force_r2:.4f}\nMAE: {mean_force_mae:.2f} meV/'+r'$  \mathrm{{\AA}}  $'
+               +f'\nRMSE: {mean_force_rmse:.2f} meV/'+r'$  \mathrm{{\AA}}  $',
                transform=axs[1, 0].transAxes, fontsize=10, verticalalignment='center', horizontalalignment='center')
 #axs[1, 0].text(-0.07, 1.03, "(c)", transform=axs[1, 0].transAxes, fontsize=12, va='top', ha='right')
 
-# Plotting the stress figure 
+# Plotting the stress figure
 if stress_data.shape[0] == 0:
     axs[1, 1].axis('off')
 else:
@@ -119,21 +121,21 @@ else:
     axs[1, 1].tick_params(axis='both', labelsize=10)
     axs[1, 1].legend(['xx', 'yy', 'zz', 'xy', 'yz', 'zx'], loc='upper left')
     axs[1, 1].axis('tight')
-
     # Calculate and display RMSE, MAE, and R² for stresses
-    stress_rmse = [calculate_rmse(stress_data[:, i], stress_data[:, i + 6]) for i in range(6)]
-    stress_mae = [calculate_mae(stress_data[:, i], stress_data[:, i + 6]) for i in range(6)]
-    stress_r2 = [calculate_r2(stress_data[:, i], stress_data[:, i + 6]) for i in range(6)]
-    mean_stress_rmse = np.mean(stress_rmse)
-    mean_stress_mae = np.mean(stress_mae)
-    mean_stress_r2 = np.mean(stress_r2)
-    axs[1, 1].text(0.7, 0.12, r'R$^2$'+f': {mean_stress_r2:.4f}\nMAE: {mean_stress_mae:.4f} GPa\nRMSE: {mean_stress_rmse:.4f} GPa', 
-                transform=axs[1, 1].transAxes, fontsize=10, verticalalignment='center', horizontalalignment='center')
+    stress_pred_flat = stress_data[:, 0:6].flatten()
+    stress_actual_flat = stress_data[:, 6:12].flatten()
+    stress_rmse = calculate_rmse(stress_pred_flat, stress_actual_flat)
+    stress_mae = calculate_mae(stress_pred_flat, stress_actual_flat)
+    stress_r2 = calculate_r2(stress_pred_flat, stress_actual_flat)
+    mean_stress_rmse = stress_rmse
+    mean_stress_mae = stress_mae
+    mean_stress_r2 = stress_r2
+    axs[1, 1].text(0.7, 0.12, r'R$  ^2  $'+f': {mean_stress_r2:.4f}\nMAE: {mean_stress_mae:.4f} GPa\nRMSE: {mean_stress_rmse:.4f} GPa',
+                 transform=axs[1, 1].transAxes, fontsize=10, verticalalignment='center', horizontalalignment='center')
 
 # Adjust layout for better spacing
 plt.tight_layout()
 #fig.subplots_adjust(top=0.968,bottom=0.088,left=0.086,right=0.983,hspace=0.22,wspace=0.24)
-
 if len(sys.argv) > 1 and sys.argv[1] == 'save':
     plt.savefig('train.png', dpi=300)
 else:
