@@ -85,7 +85,7 @@ atoms = read(xyz_file, format='extxyz')
 num_ions = sum(1 for atom in atoms if atom.symbol in ['Li', 'Na'])
 
 # Check for replicate parameter in run.in
-run_in_path = os.path.join(base_dir, 'run.in')
+run_in_path = os.path.join(base_dir, temp_folders[0], 'run.in')
 rep_factor = 1
 if os.path.exists(run_in_path):
     with open(run_in_path, 'r') as f:
