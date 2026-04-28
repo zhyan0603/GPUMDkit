@@ -232,7 +232,7 @@ if len(raw_group_Ts) > 0:
     # Calculate conductivity at 300K
     target_T = 300
     sig_300 = (10**(slope * (1000/target_T) + intercept)) / target_T
-    print(f"at {target_T}K, {cell}: Sigma = {sig_300:.3e} S/cm = {sig_300*1000:.3e} mS/cm")
+    print(f"at {target_T}K, {cell}: Sigma = {sig_300:.3e} S/cm = {sig_300*1000:.3f} mS/cm")
 
     # Generate temperature and conductivity arrays for export
     temp_array = group_Ts.tolist()
