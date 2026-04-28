@@ -26,21 +26,30 @@ def load_bec(filename):
 
 
 pred_train, tgt_train = load_bec('bec_train.out')
-pred_test, tgt_test = load_bec('bec_test.out')
+try:
+    pred_test, tgt_test = load_bec('bec_test.out')
+    has_test = True
+except (OSError, IOError):
+    has_test = False
 
 fig, ax = plt.subplots(figsize=(5, 5), dpi=100)
 
 x_train = tgt_train.ravel()
 y_train = pred_train.ravel()
-x_test = tgt_test.ravel()
-y_test = pred_test.ravel()
 
-xmin, xmax = calculate_limits(x_train, x_test)
+if has_test:
+    x_test = tgt_test.ravel()
+    y_test = pred_test.ravel()
+    xmin, xmax = calculate_limits(x_train, x_test)
+else:
+    xmin, xmax = calculate_limits(x_train, x_train)
+
 ax.set_xlim(xmin, xmax)
 ax.set_ylim(xmin, xmax)
 
 ax.plot(x_train, y_train, '.', markersize=10, label='Train', color=train_color)
-ax.plot(x_test, y_test, '.', markersize=10, label='Test', color=test_color)
+if has_test:
+    ax.plot(x_test, y_test, '.', markersize=10, label='Test', color=test_color)
 ax.plot([xmin, xmax], [xmin, xmax], linewidth=1, color='red')
 
 ax.set_xlabel('DFT BEC (e)', fontsize=10)
@@ -49,9 +58,10 @@ ax.tick_params(axis='both', labelsize=10)
 ax.legend(frameon=False, loc='upper left')
 
 train_rmse = calculate_rmse(y_train, x_train)
-test_rmse = calculate_rmse(y_test, x_test)
 ax.text(0.35, 0.15, f'RMSE (Train): {train_rmse:.4f} e', transform=ax.transAxes, fontsize=10, verticalalignment='center')
-ax.text(0.35, 0.07, f'RMSE (Test): {test_rmse:.4f} e', transform=ax.transAxes, fontsize=10, verticalalignment='center')
+if has_test:
+    test_rmse = calculate_rmse(y_test, x_test)
+    ax.text(0.35, 0.07, f'RMSE (Test): {test_rmse:.4f} e', transform=ax.transAxes, fontsize=10, verticalalignment='center')
 
 plt.tight_layout()
 
