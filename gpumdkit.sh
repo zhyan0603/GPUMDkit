@@ -10,7 +10,7 @@ if [ -z "$GPUMDkit_path" ]; then
     exit 1
 fi
 
-VERSION="1.5.3 (dev) (2026-04-14)"
+VERSION="1.5.4 (dev) (2026-04-22)"
 
 plt_path="${GPUMDkit_path}/Scripts/plt_scripts"
 analyzer_path="${GPUMDkit_path}/Scripts/analyzer"
@@ -170,6 +170,7 @@ function plot_info_table(){
     echo "| hnemd           Plot HNEMD results                 | pdos           Plot VAC and PDOS               |"
     echo "| plane-grid      Plot displacement plane grid       | parity_density Plot parity plot density        |"
     echo "| rdf_pmf         Plot potential of mean force (PMF) | viscosity      Plot visconsity                 |"
+    echo "| born_charge     Plot Born effective charges        |                                                |"
     echo "+=====================================================================================================+"
     echo "| For detailed usage and examples, use: gpumdkit.sh -plt <plot_type> -h                               |"
     echo "+=====================================================================================================+"
@@ -229,10 +230,12 @@ if [ ! -z "$1" ]; then
                     "thermo") python ${plt_path}/plt_thermo.py $3 ;;
                     "thermo2") python ${plt_path}/plt_thermo2.py $3 ;;
                     "thermo3") python ${plt_path}/plt_thermo3.py $3 ;;                        
-                    "train") python ${plt_path}/plt_train.py $3 ;;                 
+                    "train") python ${plt_path}/plt_train.py $3 ;;
+                    "train_density") python ${plt_path}/plt_train_density.py $3 ;;                 
                     "prediction"|"test") python ${plt_path}/plt_prediction.py $3 ;; 
                     "parity_density") python ${plt_path}/plt_parity_density.py $3 ;;
                     "train_test") python ${plt_path}/plt_train_test.py $3 ;;
+                    "born_charge"|"bec") python ${plt_path}/plt_born_charge.py $3 ;;
                     "msd") python ${plt_path}/plt_msd.py $3 ;;
                     "msd_all") python ${plt_path}/plt_msd_all.py $3 ${@:4} ;;
                     "msd_conv") python ${plt_path}/plt_msd_convergence_check.py $3 ;;

@@ -23,7 +23,7 @@ _gpumdkit_completions() {
 
         # Secondary options for -plt
         -plt)
-            COMPREPLY=($(compgen -W "thermo thermo2 thermo3 train prediction test train_test msd msd_all msd_conv sdc rdf vac restart dimer force_error des doas charge lr parity_density arrhenius_d arrhenius_sigma sigma D sigma_xyz D_xyz net_force emd nemd hnemd pdos plane-grid cohesive viscosity rdf_pmf" -- "$cur")) ;;
+            COMPREPLY=($(compgen -W "thermo thermo2 thermo3 train train_density prediction test train_test msd msd_all msd_conv sdc rdf vac restart dimer force_error des doas charge lr parity_density arrhenius_d arrhenius_sigma sigma D sigma_xyz D_xyz net_force emd nemd hnemd pdos plane-grid cohesive viscosity rdf_pmf" -- "$cur")) ;;
 
         # Secondary options for -calc
         -calc)

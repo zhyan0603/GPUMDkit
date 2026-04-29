@@ -6,14 +6,12 @@ CONTACT="yanzihan@westlake.edu.cn"
 
 # New features (one per line, in an array)
 NEW_FEATURES=(
-    "add -plt sigma_xyz/D_xyz"
-    "add -traj2exyz"
-    "add -xdat2exyz"
+    "add -plt train_density"
 )
 
 # Bug fixes (one per line, in an array)
 BUG_FIXES=(
-    "fix -min_dist"
+    "None"
 )
 
 # === Formatted Output Logic ===

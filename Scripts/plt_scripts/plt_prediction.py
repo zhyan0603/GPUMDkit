@@ -60,8 +60,10 @@ axs[1].legend(['fx', 'fy', 'fz'], loc='upper left')
 axs[1].axis('tight')
 
 # Calculate and display RMSE for forces
-force_rmse = [calculate_rmse(force_data[:, i], force_data[:, i + 3]) for i in range(3)]
-mean_force_rmse = np.mean(force_rmse) * 1000
+force_pred_flat = force_data[:, 0:3].flatten()
+force_actual_flat = force_data[:, 3:6].flatten()
+force_rmse = calculate_rmse(force_pred_flat, force_actual_flat) * 1000
+mean_force_rmse = force_rmse
 axs[1].text(0.35, 0.08, rf'RMSE: {mean_force_rmse:.2f} meV/$\mathrm{{\AA}}$', transform=axs[1].transAxes, fontsize=11, verticalalignment='center')
 #axs[1].text(-0.1, 1.03, "(b)", transform=axs[1].transAxes, fontsize=13, va='top', ha='right')
 
@@ -78,8 +80,10 @@ axs[2].legend(['xx', 'yy', 'zz', 'xy', 'yz', 'zx'], loc='upper left')
 axs[2].axis('tight')
 
 # Calculate and display RMSE for stresses
-stress_rmse = [calculate_rmse(stress_data[:, i], stress_data[:, i + 6]) for i in range(6)]
-mean_stress_rmse = np.mean(stress_rmse)
+stress_pred_flat = stress_data[:, 0:6].flatten()
+stress_actual_flat = stress_data[:, 6:12].flatten()
+stress_rmse = calculate_rmse(stress_pred_flat, stress_actual_flat)
+mean_stress_rmse = stress_rmse
 axs[2].text(0.35, 0.08, f'RMSE: {mean_stress_rmse:.4f} GPa', transform=axs[2].transAxes, fontsize=11, verticalalignment='center')
 #axs[2].text(-0.1, 1.03, "(c)", transform=axs[2].transAxes, fontsize=13, va='top', ha='right')
 

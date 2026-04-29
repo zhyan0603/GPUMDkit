@@ -65,10 +65,14 @@ axs[1].tick_params(axis='both', labelsize=10)
 axs[1].legend(frameon=False, loc='upper left')
 
 # Calculate and display RMSE for forces
-force_train_rmse = [calculate_rmse(force_train[:, i], force_train[:, i + 3]) for i in range(3)]
-force_test_rmse = [calculate_rmse(force_test[:, i], force_test[:, i + 3]) for i in range(3)]
-mean_force_train_rmse = np.mean(force_train_rmse) * 1000
-mean_force_test_rmse = np.mean(force_test_rmse) * 1000
+force_train_pred_flat = force_train[:, 0:3].flatten()
+force_train_actual_flat = force_train[:, 3:6].flatten()
+force_test_pred_flat = force_test[:, 0:3].flatten()
+force_test_actual_flat = force_test[:, 3:6].flatten()
+force_train_rmse = calculate_rmse(force_train_pred_flat, force_train_actual_flat) * 1000
+force_test_rmse = calculate_rmse(force_test_pred_flat, force_test_actual_flat) * 1000
+mean_force_train_rmse = force_train_rmse
+mean_force_test_rmse = force_test_rmse
 axs[1].text(0.35, 0.2, f'RMSE (Train): {mean_force_train_rmse:.2f} meV/'+r'$\mathrm{{\AA}}$', transform=axs[1].transAxes, fontsize=10, verticalalignment='center')
 axs[1].text(0.35, 0.1, f'RMSE (Test): {mean_force_test_rmse:.2f} meV/'+r'$\mathrm{{\AA}}$', transform=axs[1].transAxes, fontsize=10, verticalalignment='center')
 #axs[1].text(-0.1, 1.03, "(b)", transform=axs[1].transAxes, fontsize=13, va='top', ha='right')
@@ -86,10 +90,14 @@ axs[2].tick_params(axis='both', labelsize=10)
 axs[2].legend(frameon=False, loc='upper left')
 
 # Calculate and display RMSE for stresses
-stress_train_rmse = [calculate_rmse(stress_train[:, i], stress_train[:, i + 6]) for i in range(6)]
-stress_test_rmse = [calculate_rmse(stress_test[:, i], stress_test[:, i + 6]) for i in range(6)]
-mean_stress_train_rmse = np.mean(stress_train_rmse)
-mean_stress_test_rmse = np.mean(stress_test_rmse)
+stress_train_pred_flat = stress_train[:, 0:6].flatten()
+stress_train_actual_flat = stress_train[:, 6:12].flatten()
+stress_test_pred_flat = stress_test[:, 0:6].flatten()
+stress_test_actual_flat = stress_test[:, 6:12].flatten()
+stress_train_rmse = calculate_rmse(stress_train_pred_flat, stress_train_actual_flat)
+stress_test_rmse = calculate_rmse(stress_test_pred_flat, stress_test_actual_flat)
+mean_stress_train_rmse = stress_train_rmse
+mean_stress_test_rmse = stress_test_rmse
 axs[2].text(0.4, 0.2, f'RMSE (Train): {mean_stress_train_rmse:.3f} GPa', transform=axs[2].transAxes, fontsize=10, verticalalignment='center')
 axs[2].text(0.4, 0.1, f'RMSE (Test): {mean_stress_test_rmse:.3f} GPa', transform=axs[2].transAxes, fontsize=10, verticalalignment='center')
 #axs[2].text(-0.1, 1.03, "(c)", transform=axs[2].transAxes, fontsize=13, va='top', ha='right')
