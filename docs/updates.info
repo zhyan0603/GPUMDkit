@@ -1,12 +1,13 @@
 # === User Configuration Section: Only modify these variables ===
-VERSION="1.5.3"
-RELEASE_DATE="2026-03-18"
+VERSION="1.5.4"
+RELEASE_DATE="2026-04-29"
 HOME_PAGE="https://zhyan0603.github.io/GPUMDkit"
 CONTACT="yanzihan@westlake.edu.cn"
 
 # New features (one per line, in an array)
 NEW_FEATURES=(
     "add -plt train_density"
+    "add -plt bec"
 )
 
 # Bug fixes (one per line, in an array)

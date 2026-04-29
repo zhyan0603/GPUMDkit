@@ -111,7 +111,9 @@ gpumdkit.sh -plt born_charge
 gpumdkit.sh -plt bec          # Alternative command
 ```
 
-![](../../docs/Gallery/born_charge.png)
+<div align="center">
+    <img src="../../docs/Gallery/born_charge.png" alt="born charge" width="45%" />
+</div>
 
 ---
 
