@@ -98,6 +98,23 @@ gpumdkit.sh -plt train_test
 
 ---
 
+#### plt_born_charge.py
+
+Creates parity plots for Born effective charges (BEC) on training and testing datasets. Structures with all-zero reference BEC are filtered out.
+
+**Input Files:** `bec_train.out`, `bec_test.out`
+
+**Usage:**
+
+```bash
+gpumdkit.sh -plt born_charge
+gpumdkit.sh -plt bec          # Alternative command
+```
+
+![](../../docs/Gallery/born_charge.png)
+
+---
+
 #### plt_parity_density.py
 
 Generates density-based parity plots for energies, forces, and stresses, useful for large datasets.
