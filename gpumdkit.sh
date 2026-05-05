@@ -459,7 +459,7 @@ if [ ! -z "$1" ]; then
                 echo " Code path: ${format_conv_path}/xdatcar2exyz.py"
                 python ${format_conv_path}/xdatcar2exyz.py $2 $3
             else
-                echo " Usage: -xdat2exyz XDATCAR model.xyz"
+                echo " Usage: -xdat2exyz XDATCAR dump.xyz"
                 echo " See the source code of xdatcar2exyz.py for more details"
                 echo " Code path: ${format_conv_path}/xdatcar2exyz.py"
             fi ;;
