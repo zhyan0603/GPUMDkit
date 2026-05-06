@@ -148,6 +148,10 @@ if sns_installed:
     side_kde.set_xticks([])
     side_kde.set_yticks([])
 
+np.savetxt('pca_sample.txt', proj_sample, fmt='%.8f', header='sample_x sample_y', comments='')
+np.savetxt('pca_train.txt', proj_train, fmt='%.8f', header='train_x train_y', comments='')
+np.savetxt('pca_selected.txt', proj_selected, fmt='%.8f', header='selected_x selected_y', comments='')
+
 plt.tight_layout()
 #plt.show()
 plt.savefig('select.png')
