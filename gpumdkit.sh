@@ -329,6 +329,10 @@ if [ ! -z "$1" ]; then
                             echo " Code path: ${calc_path}/calc_doas.py"
                             exit 1
                         fi ;;
+                    minimize)
+                        echo " Calling script by Zihan YAN. "
+                        echo " Code path: ${calc_path}/calc_minimize.py"
+                        python ${calc_path}/calc_minimize.py ${@:3} ;;                     
                     msd)
                         echo " Calling script by Zihan YAN. "
                         echo " Code path: ${calc_path}/calc_msd.py"
