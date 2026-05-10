@@ -1,5 +1,10 @@
 #!/bin/bash
 
+# GPUMDkit - A User-Friendly Toolkit for GPUMD and NEP
+# Project URL: https://github.com/your-repo/GPUMDkit
+
+# Description: Main entry point for GPUMDkit interactive and command-line interface
+
 # You need to set the path of GPUMD and GPUMDkit in your ~/.bashrc, for example
 # export GPUMDkit_path=/home/yanzihan/software/GPUMDkit
 
@@ -10,7 +15,7 @@ if [ -z "$GPUMDkit_path" ]; then
     exit 1
 fi
 
-VERSION="1.5.4 (dev) (2026-04-22)"
+VERSION="1.5.5 (dev) (2026-05-10)"
 
 plt_path="${GPUMDkit_path}/Scripts/plt_scripts"
 analyzer_path="${GPUMDkit_path}/Scripts/analyzer"
@@ -23,11 +28,12 @@ sample_path="${GPUMDkit_path}/Scripts/sample_structures"
 #--------------------- main script ----------------------
 # Show the menu
 function menu(){
-echo " ----------------------- GPUMD -----------------------"
+echo " ---------------------- GPUMD ------------------------"
 echo " 1) Format Conversion          2) Sample Structures   "
 echo " 3) Workflow                   4) Calculators         "
-echo " 5) Analyzer                   6) Developing ...      "
-echo " 0) Quit!"
+echo " 5) Analyzer                   6) Plot & Visualization"
+echo " 7) Utilities                  8) Developing...       "
+echo " 0) Exit                                              "
 }
 
 # Function main
@@ -108,6 +114,7 @@ function main(){
                 "409") f409_calc_oct_tilt ;;
                 "410") f410_calc_polarization_abo3 ;;
                 "411") f411_minimize_structure_by_nep ;;
+                "412") f412_calc_msd_from_trajectory ;;
             esac ;;           
         "5")
             source ${GPUMDkit_path}/src/f5_analyzers.sh

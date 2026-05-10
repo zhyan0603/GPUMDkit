@@ -191,6 +191,23 @@ echo " Code path: ${GPUMDkit_path}/Scripts/calculators/calc_minimize.py"
 echo " ---------------------------------------------------"
 }
 
+function f412_calc_msd_from_trajectory(){
+echo " >-------------------------------------------------<"
+echo " | This function calls the script in calculators   |"
+echo " | Script: calc_msd.py                             |"
+echo " | Developer: Zihan YAN (yanzihan@westlake.edu.cn) |"
+echo " >-------------------------------------------------<"
+echo " Input <extxyz_file> <element_symbol> <dt_fs> [max_corr_steps]"
+echo "   Optional argument: max_corr_steps (default: frame number)"
+echo " Example: dump.xyz Li 10"
+echo " ------------>>"
+read -p " " input_calc_msd
+echo " ---------------------------------------------------"
+python ${GPUMDkit_path}/Scripts/calculators/calc_msd.py ${input_calc_msd}
+echo " Code path: ${GPUMDkit_path}/Scripts/calculators/calc_msd.py"
+echo " ---------------------------------------------------"
+}
+
 # main function of calculators
 function f4_calculators(){
 echo " +----------------------------------------------------------+"
@@ -207,12 +224,13 @@ echo " | 408) Calc averaged structure                             |"
 echo " | 409) Calc octahedral tilt                                |"
 echo " | 410) Calc polarization for ABO3                          |"
 echo " | 411) Minimize structure by nep                           |"
+echo " | 412) Calc mean square displacement (MSD) from trajectory |"
 echo " +----------------------------------------------------------+"
 echo " | 000) Return to the main menu                             |"
 echo " +----------------------------------------------------------+"
 echo " Input the function number:"
 
-valid_menu_choices=("000" "401" "402" "403" "404" "405" "406" "407" "408" "409" "410" "411")
+valid_menu_choices=("000" "401" "402" "403" "404" "405" "406" "407" "408" "409" "410" "411" "412")
 read -p " " num_choice
 while ! echo "${valid_menu_choices[@]}" | grep -wq "$num_choice"
 do
@@ -233,6 +251,7 @@ case $num_choice in
     "409") f409_calc_oct_tilt ;;
     "410") f410_calc_polarization_abo3 ;;
     "411") f411_minimize_structure_by_nep ;;
+    "412") f412_calc_msd_from_trajectory ;;
     "000") menu; main ;;
 esac
 }
