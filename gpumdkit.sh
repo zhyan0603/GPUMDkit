@@ -157,57 +157,38 @@ function main(){
 # It will show the usage of each function
 
 function help_info_table(){
-    echo "+=============================================================================================================+"
-    echo "|                                       GPUMDkit ${VERSION} Command Help                                    |"
-    echo "+======================================= General / Entry Commands ============================================+"
-    echo "| -h | -help   Show this help table                 | -plt <type>         Plot and visualization tools        |"
-    echo "| -calc <type> Calculator tools                      | -time <gpumd|nep>   Time-consuming analyzer             |"
-    echo "| -update | -U Update GPUMDkit                       | -clean              Clean extra files in current dir    |"
-    echo "+==================================== Format Conversion / Structure IO =======================================+"
-    echo "| -out2xyz      OUTCAR -> xyz/extxyz                 | -out2exyz           OUTCAR -> extxyz                    |"
-    echo "| -cp2k2xyz     CP2K log -> xyz                       | -xdat2exyz          XDATCAR -> extxyz                   |"
-    echo "| -cif2pos      cif -> POSCAR                         | -cif2exyz           cif -> extxyz                        |"
-    echo "| -pos2exyz     POSCAR -> extxyz                      | -exyz2pos           extxyz -> POSCAR                    |"
-    echo "| -pos2lmp      POSCAR -> LAMMPS data                | -lmp2exyz           LAMMPS dump -> extxyz               |"
-    echo "| -traj2exyz    ASE traj -> extxyz                   | -replicate          Replicate structure/supercell       |"
-    echo "| -addgroup|-addlabel Add group labels               | -addweight          Add structure weight in extxyz      |"
-    echo "| -clean_xyz    Clean extra fields in xyz            | -get_frame          Extract one frame                    |"
-    echo "| -frame_range  Extract frames by fraction range     | -re_atoms           Renumber atom IDs                   |"
-    echo "+======================================== Analysis / Filtering ===============================================+"
-    echo "| -range        Energy/force/virial statistics       | -analyze_comp       Analyze composition                 |"
-    echo "| -chem_species Analyze chemical species              | -get_volume         Print box volume info               |"
-    echo "| -min_dist     Min distance (no PBC)                | -min_dist_pbc       Min distance with PBC               |"
-    echo "| -filter_dist  Filter by min distance (no PBC)      | -filter_dist_pbc    Filter by min distance (PBC)        |"
-    echo "| -filter_box   Filter by box limits                 | -filter_value       Filter by property value            |"
-    echo "| -filter_range Filter by element-pair distance range| -cbc                Charge balance check                |"
-    echo "| -pda          Probability density analysis         | -hbond              Hydrogen-bond analysis              |"
-    echo "| -pynep        Parallel pynep structure sampler     |                                                         |"
-    echo "+=============================================================================================================+"
-    echo "| Detailed usage: gpumdkit.sh -<option> -h    Plot details: gpumdkit.sh -plt <type> -h                      |"
-    echo "+=============================================================================================================+"
-}
-
-function plot_info_table(){
-    echo "+=============================================================================================================+"
-    echo "|                                      GPUMDkit ${VERSION} Plotting Help                                    |"
-    echo "+=============================================================================================================+"
-    echo "| Usage: gpumdkit.sh -plt <type>                          Help for one plot: gpumdkit.sh -plt <type> -h      |"
-    echo "+===================================== NEP Training & Evaluation ============================================+"
-    echo "| train       prediction   train_test   parity_density   train_density   restart   charge   born_charge(bec) |"
-    echo "| dimer       force_errors des          lr                                                                     |"
-    echo "+======================================= Diffusion & Transport ===============================================+"
-    echo "| msd         msd_conv     msd_all      sdc              msd_sdc                                              |"
-    echo "| sigma(arrhenius_sigma)   D(arrhenius_d)               sigma_xyz          D_xyz                              |"
-    echo "+======================================= MD & Structural Analysis ============================================+"
-    echo "| thermo      thermo2      thermo3      rdf              rdf_pmf          vac                                 |"
-    echo "| cohesive    net_force    plane-grid                                                                  |"
-    echo "+========================================== Heat Transport ===================================================+"
-    echo "| emd         nemd         hnemd        viscosity                                                         |"
-    echo "+============================================= Phonons ======================================================+"
-    echo "| pdos        doas                                                                                          |"
-    echo "+=============================================================================================================+"
-    echo "| See scripts in: Scripts/plt_scripts                                                                        |"
-    echo "+=============================================================================================================+"
+    echo "+-------------------------------------------------------------------------------------------------------+"
+    echo "|                          GPUMDkit ${VERSION} Command Help                               |"
+    echo "+-------------------------------------------------------------------------------------------------------+"
+    echo "|                                          MAIN FUNCTIONS                                               |"
+    echo "+-------------------------------------------------------------------------------------------------------+"
+    echo "| -h            Show this help table            | -plt <type>        Plot and visualization tools       |"
+    echo "| -calc <type>  Calculator tools                | -time <gpumd|nep>  Time-consuming analyzer            |"
+    echo "| -update       Update GPUMDkit                 | -clean             Clean extra files in current dir   |"
+    echo "+-------------------------------------------------------------------------------------------------------+"
+    echo "|                                         FORMAT CONVERSION                                             |"
+    echo "+-------------------------------------------------------------------------------------------------------+"
+    echo "| -out2xyz      OUTCAR -> extxyz (shell)        | -out2exyz          OUTCAR -> extxyz (python)          |"
+    echo "| -cp2k2xyz     CP2K log -> xyz                 | -xdat2exyz         XDATCAR -> extxyz                  |"
+    echo "| -cif2pos      cif -> POSCAR                   | -cif2exyz          cif -> extxyz                      |"
+    echo "| -pos2exyz     POSCAR -> extxyz                | -exyz2pos          extxyz -> POSCAR                   |"
+    echo "| -pos2lmp      POSCAR -> LAMMPS data           | -lmp2exyz          LAMMPS dump -> extxyz              |"
+    echo "| -traj2exyz    ASE traj -> extxyz              | -replicate         Replicate structure                |"
+    echo "| -addgroup     Add group labels                | -addweight         Add structure weight in extxyz     |"
+    echo "| -clean_xyz    Clean extra info in extxyz      | -get_frame         Extract specific frame             |"
+    echo "| -frame_range  Extract frames by range         |                                                       |"
+    echo "+-------------------------------------------------------------------------------------------------------+"
+    echo "|                                            ANALYSIS                                                   |"
+    echo "+-------------------------------------------------------------------------------------------------------+"
+    echo "| -range        Energy/force/virial statistics  | -analyze_comp      Analyze composition                |"
+    echo "| -chem_species Analyze chemical species        | -cbc               Charge balance check               |"
+    echo "| -min_dist     Min distance (no PBC)           | -min_dist_pbc      Min distance with PBC              |"
+    echo "| -filter_dist  Filter by min_dist (no PBC)     | -filter_dist_pbc   Filter by min_dist (PBC)           |"
+    echo "| -pda          Probability density analysis    | -hbond             Hydrogen-bond analysis             |"
+    echo "| -pynep        FPS sampling by PyNEP           |                                                       |"
+    echo "+-------------------------------------------------------------------------------------------------------+"
+    echo "| Detailed usage: gpumdkit.sh -<option> -h    Plot details: gpumdkit.sh -plt <type> -h                  |"
+    echo "+-------------------------------------------------------------------------------------------------------+"
 }
 
 # function citation(){
@@ -304,10 +285,11 @@ if [ ! -z "$1" ]; then
                         echo " | set and charge_train.out.                                |"
                         echo " +----------------------------------------------------------+"
                         python ${plt_path}/plt_charge.py $3 ;;
-                    *) plot_info_table; exit 1 ;;
+                    *) source ${GPUMDkit_path}/src/f6_plots.sh; f6_plots_two_column; exit 1 ;;
                 esac
             else
-                plot_info_table
+                source ${GPUMDkit_path}/src/f6_plots.sh
+                f6_plots_two_column
                 echo " See the codes in plt_scripts for more details"
                 echo " Code path: ${GPUMDkit_path}/Scripts/plt_scripts"
             fi ;;
