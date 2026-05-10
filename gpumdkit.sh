@@ -45,7 +45,7 @@ function main(){
         "2" "201" "202" "203" "204" "205" 
         "3" "301" "302" "303" 
         "4" "401" "402" "403" "404" "405" "406" "407" "408" "409" "410" "411" "412"
-        "5" "501" "502"
+        "5" "501" "502" "503" "504" "505" "506" "507" "508"
         "6"
     ) 
     read -p " " choice
@@ -122,6 +122,12 @@ function main(){
                 "5") f5_analyzers ;;
                 "501") f501_analyze_composition ;;
                 "502") f502_find_outliers ;;
+                "503") f503_analyze_chem_species ;;
+                "504") f504_charge_balance_check ;;
+                "505") f505_energy_force_virial_analyzer ;;
+                "506") f506_filter_structures_by_distance ;;
+                "507") f507_get_min_dist ;;
+                "508") f508_probability_density_analysis ;;
             esac ;;  
         "6")
             echo " Developing ..." ;;
