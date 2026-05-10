@@ -130,7 +130,8 @@ function main(){
                 "508") f508_probability_density_analysis ;;
             esac ;;  
         "6")
-            echo " Developing ..." ;;
+            source ${GPUMDkit_path}/src/f6_plots.sh
+            f6_plots ;;
         *)
             echo " Incorrect Options"
             ;;
