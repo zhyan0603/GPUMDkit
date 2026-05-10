@@ -407,9 +407,9 @@ echo " 000) Return to the main menu"
 echo " ------------>>"
 echo " Input the function number:"
 
-arry_num_choice=("000" "101" "102" "103" "104" "105" "106" "107" "108" "109" "110" "111" "112" "113" "114" "115" "116" "117" "118") 
+array_num_choice=("000" "101" "102" "103" "104" "105" "106" "107" "108" "109" "110" "111" "112" "113" "114" "115" "116" "117" "118") 
 read -p " " num_choice
-while ! echo "${arry_num_choice[@]}" | grep -wq "$num_choice" 
+while ! echo "${array_num_choice[@]}" | grep -wq "$num_choice" 
 do
   echo " ------------>>"
   echo " Please reinput function number..."
