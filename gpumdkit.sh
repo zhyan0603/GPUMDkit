@@ -131,7 +131,12 @@ function main(){
             esac ;;  
         "6")
             source ${GPUMDkit_path}/src/f6_plots.sh
-            f6_plots ;;
+            terminal_width=$(tput cols 2>/dev/null || echo 80)
+            if [ "$terminal_width" -ge 98 ]; then
+                f6_plots_two_column
+            else
+                f6_plots_one_column
+            fi ;;
         *)
             echo " Incorrect Options"
             ;;
