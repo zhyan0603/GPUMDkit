@@ -404,14 +404,14 @@ echo " xdat2exyz) Convert XDATCAR to extxyz (also: gpumdkit.sh -xdat2exyz)"
 echo " pos2lmp)   Convert POSCAR to LAMMPS data (also: gpumdkit.sh -pos2lmp)"
 echo " lmp2exyz)  Convert LAMMPS dump to extxyz (also: gpumdkit.sh -lmp2exyz)"
 echo " traj2exyz) Convert ASE traj to extxyz (also: gpumdkit.sh -traj2exyz)"
-echo " Tip: operations above also support gpumdkit.sh -addgroup/-addweight/-get_frame/-clean_xyz/-replicate"
+echo " CLI mode: gpumdkit.sh -addgroup/-addweight/-get_frame/-clean_xyz/-replicate"
 echo " 000) Return to the main menu"
 echo " ------------>>"
 echo " Input the function number or converter keyword:"
 
-array_num_choice=("000" "101" "102" "103" "104" "105" "106" "107" "108" "109" "110" "out2exyz" "pos2exyz" "cif2pos" "cif2exyz" "xdat2exyz" "pos2lmp" "lmp2exyz" "traj2exyz") 
+valid_menu_choices=("000" "101" "102" "103" "104" "105" "106" "107" "108" "109" "110" "out2exyz" "pos2exyz" "cif2pos" "cif2exyz" "xdat2exyz" "pos2lmp" "lmp2exyz" "traj2exyz") 
 read -p " " num_choice
-while ! echo "${array_num_choice[@]}" | grep -wq "$num_choice" 
+while ! echo "${valid_menu_choices[@]}" | grep -wq "$num_choice" 
 do
   echo " ------------>>"
   echo " Please reinput function number or converter keyword..."
