@@ -22,30 +22,14 @@ echo " ---------------------------------------------------"
 
 # Sample structures by pynep
 function f202_pynep_sample_structures(){
-# YELLOW="\033[1;33m"; RESET="\033[0m"
-# echo -en "${YELLOW}"
 echo " +-------------------------------------------------+"
-echo " | PyNEP package is no longer actively maintained  |"
-echo " |       Recommend using function 203 instead      |"
-echo " |  Moreover, qNEP model is not supported for now. |"
+echo " |  Function 202 (pynep sampling) is deprecated.   |"
+echo " |  It is no longer actively maintained.           |"
+echo " |  Please use 203) neptrain sampling instead.     |"
+echo " |  If you still insist on pynep, run directly:    |"
+echo " |                 gpumdkit.sh -pynep              |"
 echo " +-------------------------------------------------+"
-# echo -en "${RESET}"
-echo " +-------------------------------------------------+"
-echo " |     To use parallel version, please use:        |"
-echo " |            gpumdkit.sh -pynep                   |"
-echo " +-------------------------------------------------+"
-echo " >-------------------------------------------------<"
-echo " | Calling the script in Scripts/sample_structures |"
-echo " | Script: pynep_select_structs.py                 |"
-echo " | Developer: Zihan YAN (yanzihan@westlake.edu.cn) |"
-echo " >-------------------------------------------------<"
-echo " Input <sample.xyz> <train.xyz> <nep_model>"
-echo " Examp: dump.xyz train.xyz nep.txt "
-echo " ------------>>"
-read -p " " sample_choice
-echo " ---------------------------------------------------"
-python ${GPUMDkit_path}/Scripts/sample_structures/pynep_select_structs.py ${sample_choice}
-echo " Code path: ${GPUMDkit_path}/Scripts/sample_structures/pynep_select_structs.py"
+exit 0
 }
 
 # Parallel sample structures by pynep
@@ -87,7 +71,7 @@ echo " ------------>>"
 read -p " " sample_choice
 echo " ---------------------------------------------------"
 python ${GPUMDkit_path}/Scripts/sample_structures/neptrain_select_structs.py ${sample_choice}
-rm dpdispatcher.log
+rm -f dpdispatcher.log
 echo " Code path: ${GPUMDkit_path}/Scripts/sample_structures/neptrain_select_structs.py"
 echo " ---------------------------------------------------"
 }
@@ -132,19 +116,23 @@ echo " ---------------------------------------------------"
 
 #--------------------- function 2 ----------------------
 function f2_sample_structures(){
-echo " ------------>>"
-echo " 201) Sample structures from extxyz"
-echo " 202) Sample structures by pynep"
-echo " 203) Sample structures by neptrain"
-echo " 204) Perturb structure"
-echo " 205) Select max force deviation structs"
-echo " 000) Return to the main menu"
-echo " ------------>>"
+echo " +-------------------------------------------------------------+"
+echo " |                   SAMPLE STRUCTURE TOOLS                    |"
+echo " +-------------------------------------------------------------+"
+echo " | 201) Sample structures from extxyz                          |"
+echo " | 202) PyNEP sampling [deprecated; exits with notice]         |"
+echo " | 203) Sample structures by neptrain                          |"
+echo " | 204) Perturb structure                                      |"
+echo " | 205) Select max force deviation structs                     |"
+echo " +-------------------------------------------------------------+"
+echo " | CLI tip: use gpumdkit.sh -pynep if you must run pynep       |"
+echo " | 000) Return to the main menu                                |"
+echo " +-------------------------------------------------------------+"
 echo " Input the function number:"
 
-arry_num_choice=("000" "201" "202" "203" "204" "205") 
+valid_menu_choices=("000" "201" "202" "203" "204" "205")
 read -p " " num_choice
-while ! echo "${arry_num_choice[@]}" | grep -wq "$num_choice" 
+while ! echo "${valid_menu_choices[@]}" | grep -wq "$num_choice"
 do
   echo " ------------>>"
   echo " Please reinput function number..."
