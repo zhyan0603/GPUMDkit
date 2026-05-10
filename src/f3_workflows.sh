@@ -62,14 +62,15 @@ function f301_scf_batch_pretreatment(){
 
 # main function of workflow
 function f3_workflow_dev(){
-echo " +-------------------------------------------------------------+"
-echo " |                        WORKFLOW TOOLS                       |"
-echo " +-------------------------------------------------------------+"
-echo " | 301) SCF batch pretreatment                                 |"
-echo " | 302) MD sample batch pretreatment (gpumd)                   |"
-echo " | 303) MD sample batch pretreatment (lmp)                     |"
-echo " | 000) Return to the main menu                                |"
-echo " +-------------------------------------------------------------+"
+echo " +---------------------------------------------------------+"
+echo " |                      WORKFLOW TOOLS                     |"
+echo " +---------------------------------------------------------+"
+echo " | 301) SCF batch pretreatment                             |"
+echo " | 302) MD sample batch pretreatment (gpumd)               |"
+echo " | 303) MD sample batch pretreatment (lmp)                 |"
+echo " +---------------------------------------------------------+"
+echo " | 000) Return to the main menu                            |"
+echo " +---------------------------------------------------------+"
 echo " Input the function number:"
 
 valid_menu_choices=("000" "301" "302" "303")

@@ -107,6 +107,7 @@ function main(){
                 "408") f408_calc_averaged_structure ;;
                 "409") f409_calc_oct_tilt ;;
                 "410") f410_calc_polarization_abo3 ;;
+                "411") f411_minimize_structure_by_nep ;;
             esac ;;           
         "5")
             source ${GPUMDkit_path}/src/f5_analyzers.sh
