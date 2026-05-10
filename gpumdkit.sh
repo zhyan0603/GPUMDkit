@@ -35,7 +35,7 @@ function main(){
     echo " ------------>>"
     echo ' Input the function number:'
     array_choice=(
-        "0" "1" "101" "102" "103" "104" "105"
+        "0" "1" "101" "102" "103" "104" "105" "106" "107" "108" "109" "110" "111" "112" "113" "114" "115" "116" "117" "118"
         "2" "201" "202" "203" "204" "205" 
         "3" "301" "302" "303" 
         "4" "401" "402" "403" "404" "405" "406" "407" "408" "409" "410"
@@ -64,6 +64,19 @@ function main(){
                 "103") f103_cp2k2xyz ;;
                 "104") f104_abacus2xyz ;;
                 "105") f105_extxyz2poscar ;;
+                "106") f106_out2exyz ;;
+                "107") f107_pos2extxyz ;;
+                "108") f108_cif2poscar ;;
+                "109") f109_cif2extxyz ;;
+                "110") f110_xdatcar2extxyz ;;
+                "111") f111_poscar2lammps ;;
+                "112") f112_lammps2extxyz ;;
+                "113") f113_traj2extxyz ;;
+                "114") f114_add_group_labels ;;
+                "115") f115_add_weight ;;
+                "116") f116_get_frame ;;
+                "117") f117_clean_xyz ;;
+                "118") f118_replicate_structure ;;
             esac ;;
         "2")
             source ${GPUMDkit_path}/src/f2_sample_structures.sh
