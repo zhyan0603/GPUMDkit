@@ -34,14 +34,16 @@ echo " ---------------------------------------------------"
 
 # SCF batch pretreatment (main function)
 function f301_scf_batch_pretreatment(){ 
-    echo " ------------>>"
-    echo " 1) VASP scf batch pretreatment"
-    echo " 2) CP2K scf batch pretreatment"
-    echo " ------------>>"
+    echo " +-------------------------------------------------------------+"
+    echo " |                 SCF BATCH PRETREATMENT TOOLS               |"
+    echo " +-------------------------------------------------------------+"
+    echo " | 1) VASP SCF batch pretreatment                              |"
+    echo " | 2) CP2K SCF batch pretreatment                              |"
+    echo " +-------------------------------------------------------------+"
     echo " Input the function number:"
-    arry_num_choice=("1" "2") 
+    valid_menu_choices=("1" "2")
     read -p " " num_choice
-    while ! echo "${arry_num_choice[@]}" | grep -wq "$num_choice" 
+    while ! echo "${valid_menu_choices[@]}" | grep -wq "$num_choice"
     do
       echo " ------------>>"
       echo " Please reinput function number..."
@@ -60,17 +62,19 @@ function f301_scf_batch_pretreatment(){
 
 # main function of workflow
 function f3_workflow_dev(){
-echo " ------------>>"
-echo " 301) SCF batch pretreatment"
-echo " 302) MD sample batch pretreatment (gpumd)"
-echo " 303) MD sample batch pretreatment (lmp)"
-echo " 000) Return to the main menu"
-echo " ------------>>"
+echo " +-------------------------------------------------------------+"
+echo " |                        WORKFLOW TOOLS                       |"
+echo " +-------------------------------------------------------------+"
+echo " | 301) SCF batch pretreatment                                 |"
+echo " | 302) MD sample batch pretreatment (gpumd)                   |"
+echo " | 303) MD sample batch pretreatment (lmp)                     |"
+echo " | 000) Return to the main menu                                |"
+echo " +-------------------------------------------------------------+"
 echo " Input the function number:"
 
-arry_num_choice=("000" "301" "302" "303") 
+valid_menu_choices=("000" "301" "302" "303")
 read -p " " num_choice
-while ! echo "${arry_num_choice[@]}" | grep -wq "$num_choice" 
+while ! echo "${valid_menu_choices[@]}" | grep -wq "$num_choice"
 do
   echo " ------------>>"
   echo " Please reinput function number..."

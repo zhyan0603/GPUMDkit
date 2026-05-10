@@ -168,24 +168,26 @@ echo " ---------------------------------------------------"
 
 # main function of calculators
 function f4_calculators(){
-echo " ------------>>"
-echo " 401) Calc ionic conductivity"
-echo " 402) Calc properties by nep"
-echo " 403) Calc descriptors of specific elements"
-echo " 404) Calc density of atomistic states (DOAS)"
-echo " 405) Calc nudged elastic band (NEB) by nep"
-echo " 406) Build neighbor list"
-echo " 407) Calc displacement from trajectory"
-echo " 408) Calc averaged structure"
-echo " 409) Calc octahedral tilt"
-echo " 410) Calc polarization for ABO3"
-echo " 000) Return to the main menu"
-echo " ------------>>"
+echo " +-------------------------------------------------------------+"
+echo " |                       CALCULATOR TOOLS                      |"
+echo " +-------------------------------------------------------------+"
+echo " | 401) Calc ionic conductivity                                |"
+echo " | 402) Calc properties by nep                                 |"
+echo " | 403) Calc descriptors of specific elements                  |"
+echo " | 404) Calc density of atomistic states (DOAS)               |"
+echo " | 405) Calc nudged elastic band (NEB) by nep                 |"
+echo " | 406) Build neighbor list                                    |"
+echo " | 407) Calc displacement from trajectory                      |"
+echo " | 408) Calc averaged structure                                |"
+echo " | 409) Calc octahedral tilt                                   |"
+echo " | 410) Calc polarization for ABO3                             |"
+echo " | 000) Return to the main menu                                |"
+echo " +-------------------------------------------------------------+"
 echo " Input the function number:"
 
-arry_num_choice=("000" "401" "402" "403" "404" "405" "406" "407" "408" "409" "410")
+valid_menu_choices=("000" "401" "402" "403" "404" "405" "406" "407" "408" "409" "410")
 read -p " " num_choice
-while ! echo "${arry_num_choice[@]}" | grep -wq "$num_choice" 
+while ! echo "${valid_menu_choices[@]}" | grep -wq "$num_choice"
 do
   echo " ------------>>"
   echo " Please reinput function number..."
