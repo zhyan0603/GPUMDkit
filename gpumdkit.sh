@@ -64,11 +64,11 @@ function main(){
                 "103") f103_cp2k2xyz ;;
                 "104") f104_abacus2xyz ;;
                 "105") f105_extxyz2poscar ;;
-                "106") f114_add_group_labels ;;
-                "107") f115_add_weight ;;
-                "108") f116_get_frame ;;
-                "109") f117_clean_xyz ;;
-                "110") f118_replicate_structure ;;
+                "106") f106_add_group_labels ;;
+                "107") f107_add_weight ;;
+                "108") f108_get_frame ;;
+                "109") f109_clean_xyz ;;
+                "110") f110_replicate_structure ;;
             esac ;;
         "2")
             source ${GPUMDkit_path}/src/f2_sample_structures.sh

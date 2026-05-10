@@ -160,148 +160,12 @@ echo " Code path: ${GPUMDkit_path}/Scripts/format_conversion/exyz2pos.py"
 echo " ---------------------------------------------------"
 }
 
-# Convert OUTCAR to extxyz (Python version)
-function f106_out2exyz(){
-echo " >-------------------------------------------------<"
-echo " | Calling the script in Scripts/format_conversion |"
-echo " | Script: out2exyz.py                             |"
-echo " | Developer: Zihan YAN et al.                     |"
-echo " >-------------------------------------------------<"
-echo " Input the directory containing OUTCARs"
-echo " Example: ./ "
-echo " ------------>>"
-read -r -p " " dir_outcars
-echo " ---------------------------------------------------"
-python ${GPUMDkit_path}/Scripts/format_conversion/out2exyz.py "${dir_outcars}"
-echo " Code path: ${GPUMDkit_path}/Scripts/format_conversion/out2exyz.py"
-echo " ---------------------------------------------------"
-}
-
-# Convert POSCAR to extxyz
-function f107_pos2extxyz(){
-echo " >-------------------------------------------------<"
-echo " | Calling the script in Scripts/format_conversion |"
-echo " | Script: pos2exyz.py                             |"
-echo " | Developer: Zihan YAN                            |"
-echo " >-------------------------------------------------<"
-echo " Input <POSCAR_pattern> <output.xyz>"
-echo " Example: POSCAR model.xyz"
-echo " ------------>>"
-read -r -a pos2extxyz_args
-echo " ---------------------------------------------------"
-python ${GPUMDkit_path}/Scripts/format_conversion/pos2exyz.py "${pos2extxyz_args[@]}"
-echo " Code path: ${GPUMDkit_path}/Scripts/format_conversion/pos2exyz.py"
-echo " ---------------------------------------------------"
-}
-
-# Convert CIF to POSCAR
-function f108_cif2poscar(){
-echo " >-------------------------------------------------<"
-echo " | Calling the script in Scripts/format_conversion |"
-echo " | Script: cif2pos.py                              |"
-echo " | Developer: Boyi SITU                            |"
-echo " >-------------------------------------------------<"
-echo " Input <input.cif> <output.vasp>"
-echo " Example: input.cif POSCAR.vasp"
-echo " ------------>>"
-read -r -a cif2pos_args
-echo " ---------------------------------------------------"
-python ${GPUMDkit_path}/Scripts/format_conversion/cif2pos.py "${cif2pos_args[@]}"
-echo " Code path: ${GPUMDkit_path}/Scripts/format_conversion/cif2pos.py"
-echo " ---------------------------------------------------"
-}
-
-# Convert CIF to extxyz
-function f109_cif2extxyz(){
-echo " >-------------------------------------------------<"
-echo " | Calling the script in Scripts/format_conversion |"
-echo " | Script: cif2exyz.py                             |"
-echo " | Developer: Boyi SITU                            |"
-echo " >-------------------------------------------------<"
-echo " Input <input.cif> <output.xyz>"
-echo " Example: input.cif model.xyz"
-echo " ------------>>"
-read -r -a cif2extxyz_args
-echo " ---------------------------------------------------"
-python ${GPUMDkit_path}/Scripts/format_conversion/cif2exyz.py "${cif2extxyz_args[@]}"
-echo " Code path: ${GPUMDkit_path}/Scripts/format_conversion/cif2exyz.py"
-echo " ---------------------------------------------------"
-}
-
-# Convert XDATCAR to extxyz
-function f110_xdatcar2extxyz(){
-echo " >-------------------------------------------------<"
-echo " | Calling the script in Scripts/format_conversion |"
-echo " | Script: xdatcar2exyz.py                         |"
-echo " | Developer: Zihan YAN                            |"
-echo " >-------------------------------------------------<"
-echo " Input <XDATCAR> <output.xyz>"
-echo " Example: XDATCAR dump.xyz"
-echo " ------------>>"
-read -r -a xdatcar_args
-echo " ---------------------------------------------------"
-python ${GPUMDkit_path}/Scripts/format_conversion/xdatcar2exyz.py "${xdatcar_args[@]}"
-echo " Code path: ${GPUMDkit_path}/Scripts/format_conversion/xdatcar2exyz.py"
-echo " ---------------------------------------------------"
-}
-
-# Convert POSCAR to LAMMPS data
-function f111_poscar2lammps(){
-echo " >-------------------------------------------------<"
-echo " | Calling the script in Scripts/format_conversion |"
-echo " | Script: pos2lmp.py                              |"
-echo " | Developer: Zihan YAN                            |"
-echo " >-------------------------------------------------<"
-echo " Input <POSCAR> <lammps.data>"
-echo " Example: POSCAR lammps.data"
-echo " ------------>>"
-read -r -a pos2lmp_args
-echo " ---------------------------------------------------"
-python ${GPUMDkit_path}/Scripts/format_conversion/pos2lmp.py "${pos2lmp_args[@]}"
-echo " Code path: ${GPUMDkit_path}/Scripts/format_conversion/pos2lmp.py"
-echo " ---------------------------------------------------"
-}
-
-# Convert LAMMPS dump to extxyz
-function f112_lammps2extxyz(){
-echo " >-------------------------------------------------<"
-echo " | Calling the script in Scripts/format_conversion |"
-echo " | Script: lmp2exyz.py                             |"
-echo " | Developer: Zihan YAN                            |"
-echo " >-------------------------------------------------<"
-echo " Input <dump_file> <element1> <element2> ..."
-echo " Example: dump.lammpstrj Li O"
-echo " ------------>>"
-read -r -a lmp2extxyz_args
-echo " ---------------------------------------------------"
-python ${GPUMDkit_path}/Scripts/format_conversion/lmp2exyz.py "${lmp2extxyz_args[@]}"
-echo " Code path: ${GPUMDkit_path}/Scripts/format_conversion/lmp2exyz.py"
-echo " ---------------------------------------------------"
-}
-
-# Convert ASE traj to extxyz
-function f113_traj2extxyz(){
-echo " >-------------------------------------------------<"
-echo " | Calling the script in Scripts/format_conversion |"
-echo " | Script: traj2exyz.py                            |"
-echo " | Developer: Zihan YAN                            |"
-echo " >-------------------------------------------------<"
-echo " Input <input.traj> <output.xyz>"
-echo " Example: input.traj output.xyz"
-echo " ------------>>"
-read -r -a traj2extxyz_args
-echo " ---------------------------------------------------"
-python ${GPUMDkit_path}/Scripts/format_conversion/traj2exyz.py "${traj2extxyz_args[@]}"
-echo " Code path: ${GPUMDkit_path}/Scripts/format_conversion/traj2exyz.py"
-echo " ---------------------------------------------------"
-}
-
 # Add group labels
-function f114_add_group_labels(){
+function f106_add_group_labels(){
 echo " >-------------------------------------------------<"
 echo " | Calling the script in Scripts/format_conversion |"
 echo " | Script: add_groups.py                           |"
-echo " | Developer: Zihan YAN                            |"
+echo " | Developer: Zihan YAN (yanzihan@westlake.edu.cn) |"
 echo " >-------------------------------------------------<"
 echo " Input <POSCAR> <element1> <element2> ..."
 echo " Example: POSCAR Li Y Cl"
@@ -314,11 +178,11 @@ echo " ---------------------------------------------------"
 }
 
 # Add weight to extxyz
-function f115_add_weight(){
+function f107_add_weight(){
 echo " >-------------------------------------------------<"
 echo " | Calling the script in Scripts/format_conversion |"
 echo " | Script: add_weight.py                           |"
-echo " | Developer: Zihan YAN                            |"
+echo " | Developer: Zihan YAN (yanzihan@westlake.edu.cn) |"
 echo " >-------------------------------------------------<"
 echo " Input <input.xyz> <output.xyz> <weight>"
 echo " Example: train.xyz train_weighted.xyz 5"
@@ -331,11 +195,11 @@ echo " ---------------------------------------------------"
 }
 
 # Get a single frame from extxyz
-function f116_get_frame(){
+function f108_get_frame(){
 echo " >-------------------------------------------------<"
 echo " | Calling the script in Scripts/format_conversion |"
 echo " | Script: get_frame.py                            |"
-echo " | Developer: Zihan YAN                            |"
+echo " | Developer: Zihan YAN (yanzihan@westlake.edu.cn) |"
 echo " >-------------------------------------------------<"
 echo " Input <input.xyz> <frame_index>"
 echo " Example: train.xyz 1"
@@ -348,11 +212,11 @@ echo " ---------------------------------------------------"
 }
 
 # Clean extra info in XYZ file
-function f117_clean_xyz(){
+function f109_clean_xyz(){
 echo " >-------------------------------------------------<"
 echo " | Calling the script in Scripts/format_conversion |"
 echo " | Script: clean_xyz.py                            |"
-echo " | Developer: Zihan YAN                            |"
+echo " | Developer: Zihan YAN (yanzihan@westlake.edu.cn) |"
 echo " >-------------------------------------------------<"
 echo " Input <input.xyz> <output.xyz>"
 echo " Example: train.xyz train_clean.xyz"
@@ -365,11 +229,11 @@ echo " ---------------------------------------------------"
 }
 
 # Replicate structure
-function f118_replicate_structure(){
+function f110_replicate_structure(){
 echo " >-------------------------------------------------<"
 echo " | Calling the script in Scripts/format_conversion |"
 echo " | Script: replicate.py                            |"
-echo " | Developer: Boyi SITU                            |"
+echo " | Developer: Boyi SITU (situboyi@westlake.edu.cn) |"
 echo " >-------------------------------------------------<"
 echo " Input <inputfile> <outputfile> <a b c / target_num>"
 echo " Example 1: POSCAR POSCAR_222.vasp 2 2 2"
@@ -382,32 +246,161 @@ echo " Code path: ${GPUMDkit_path}/Scripts/format_conversion/replicate.py"
 echo " ---------------------------------------------------"
 }
 
+# Convert OUTCAR to extxyz (Python version)
+function out2exyz(){
+echo " >-------------------------------------------------<"
+echo " | Calling the script in Scripts/format_conversion |"
+echo " | Script: out2exyz.py                             |"
+echo " | Developer: Zihan YAN (yanzihan@westlake.edu.cn) |"
+echo " >-------------------------------------------------<"
+echo " Input the directory containing OUTCARs"
+echo " Example: ./ "
+echo " ------------>>"
+read -r -p " " dir_outcars
+echo " ---------------------------------------------------"
+python ${GPUMDkit_path}/Scripts/format_conversion/out2exyz.py "${dir_outcars}"
+echo " Code path: ${GPUMDkit_path}/Scripts/format_conversion/out2exyz.py"
+echo " ---------------------------------------------------"
+}
+
+# Convert POSCAR to extxyz
+function pos2extxyz(){
+echo " >-------------------------------------------------<"
+echo " | Calling the script in Scripts/format_conversion |"
+echo " | Script: pos2exyz.py                             |"
+echo " | Developer: Zihan YAN (yanzihan@westlake.edu.cn) |"
+echo " >-------------------------------------------------<"
+echo " Input <POSCAR> <output.xyz>"
+echo " Example: POSCAR model.xyz"
+echo " ------------>>"
+read -r -a pos2extxyz_args
+echo " ---------------------------------------------------"
+python ${GPUMDkit_path}/Scripts/format_conversion/pos2exyz.py "${pos2extxyz_args[@]}"
+echo " Code path: ${GPUMDkit_path}/Scripts/format_conversion/pos2exyz.py"
+echo " ---------------------------------------------------"
+}
+
+# Convert CIF to POSCAR
+function cif2poscar(){
+echo " >-------------------------------------------------<"
+echo " | Calling the script in Scripts/format_conversion |"
+echo " | Script: cif2pos.py                              |"
+echo " | Developer: Boyi SITU (situboyi@westlake.edu.cn) |"
+echo " >-------------------------------------------------<"
+echo " Input <input.cif> <output.vasp>"
+echo " Example: input.cif POSCAR.vasp"
+echo " ------------>>"
+read -r -a cif2pos_args
+echo " ---------------------------------------------------"
+python ${GPUMDkit_path}/Scripts/format_conversion/cif2pos.py "${cif2pos_args[@]}"
+echo " Code path: ${GPUMDkit_path}/Scripts/format_conversion/cif2pos.py"
+echo " ---------------------------------------------------"
+}
+
+# Convert CIF to extxyz
+function cif2extxyz(){
+echo " >-------------------------------------------------<"
+echo " | Calling the script in Scripts/format_conversion |"
+echo " | Script: cif2exyz.py                             |"
+echo " | Developer: Boyi SITU (situboyi@westlake.edu.cn) |"
+echo " >-------------------------------------------------<"
+echo " Input <input.cif> <output.xyz>"
+echo " Example: input.cif model.xyz"
+echo " ------------>>"
+read -r -a cif2extxyz_args
+echo " ---------------------------------------------------"
+python ${GPUMDkit_path}/Scripts/format_conversion/cif2exyz.py "${cif2extxyz_args[@]}"
+echo " Code path: ${GPUMDkit_path}/Scripts/format_conversion/cif2exyz.py"
+echo " ---------------------------------------------------"
+}
+
+# Convert XDATCAR to extxyz
+function xdatcar2extxyz(){
+echo " >-------------------------------------------------<"
+echo " | Calling the script in Scripts/format_conversion |"
+echo " | Script: xdatcar2exyz.py                         |"
+echo " | Developer: Zihan YAN (yanzihan@westlake.edu.cn) |"
+echo " >-------------------------------------------------<"
+echo " Input <XDATCAR> <output.xyz>"
+echo " Example: XDATCAR dump.xyz"
+echo " ------------>>"
+read -r -a xdatcar_args
+echo " ---------------------------------------------------"
+python ${GPUMDkit_path}/Scripts/format_conversion/xdatcar2exyz.py "${xdatcar_args[@]}"
+echo " Code path: ${GPUMDkit_path}/Scripts/format_conversion/xdatcar2exyz.py"
+echo " ---------------------------------------------------"
+}
+
+# Convert POSCAR to LAMMPS data
+function poscar2lammps(){
+echo " >-------------------------------------------------<"
+echo " | Calling the script in Scripts/format_conversion |"
+echo " | Script: pos2lmp.py                              |"
+echo " | Developer: Zihan YAN (yanzihan@westlake.edu.cn) |"
+echo " >-------------------------------------------------<"
+echo " Input <POSCAR> <lammps.data>"
+echo " Example: POSCAR lammps.data"
+echo " ------------>>"
+read -r -a pos2lmp_args
+echo " ---------------------------------------------------"
+python ${GPUMDkit_path}/Scripts/format_conversion/pos2lmp.py "${pos2lmp_args[@]}"
+echo " Code path: ${GPUMDkit_path}/Scripts/format_conversion/pos2lmp.py"
+echo " ---------------------------------------------------"
+}
+
+# Convert LAMMPS dump to extxyz
+function lammps2extxyz(){
+echo " >-------------------------------------------------<"
+echo " | Calling the script in Scripts/format_conversion |"
+echo " | Script: lmp2exyz.py                             |"
+echo " | Developer: Zihan YAN (yanzihan@westlake.edu.cn) |"
+echo " >-------------------------------------------------<"
+echo " Input <dump_file> <element1> <element2> ..."
+echo " Example: dump.lammpstrj Li O"
+echo " ------------>>"
+read -r -a lmp2extxyz_args
+echo " ---------------------------------------------------"
+python ${GPUMDkit_path}/Scripts/format_conversion/lmp2exyz.py "${lmp2extxyz_args[@]}"
+echo " Code path: ${GPUMDkit_path}/Scripts/format_conversion/lmp2exyz.py"
+echo " ---------------------------------------------------"
+}
+
+# Convert ASE traj to extxyz
+function traj2extxyz(){
+echo " >-------------------------------------------------<"
+echo " | Calling the script in Scripts/format_conversion |"
+echo " | Script: traj2exyz.py                            |"
+echo " | Developer: Zihan YAN (yanzihan@westlake.edu.cn) |"
+echo " >-------------------------------------------------<"
+echo " Input <input.traj> <output.xyz>"
+echo " Example: input.traj output.xyz"
+echo " ------------>>"
+read -r -a traj2extxyz_args
+echo " ---------------------------------------------------"
+python ${GPUMDkit_path}/Scripts/format_conversion/traj2exyz.py "${traj2extxyz_args[@]}"
+echo " Code path: ${GPUMDkit_path}/Scripts/format_conversion/traj2exyz.py"
+echo " ---------------------------------------------------"
+}
+
 #--------------------- function 1 ----------------------
 function f1_format_conversion(){
-echo " ------------>>"
-echo " 101) Convert VASP to extxyz"
-echo " 102) Convert mtp to extxyz"
-echo " 103) Convert CP2K to extxyz"
-echo " 104) Convert ABACUS to extxyz"
-echo " 105) Convert extxyz to POSCAR"
-echo " 106) Add group labels"
-echo " 107) Add weight to extxyz"
-echo " 108) Extract frame from extxyz"
-echo " 109) Clean extra info in XYZ"
-echo " 110) Replicate structure"
-echo " ---------------- Simple CLI-style converters ----------------"
-echo " out2exyz)  Convert OUTCAR to extxyz (also: gpumdkit.sh -out2exyz)"
-echo " pos2exyz)  Convert POSCAR to extxyz (also: gpumdkit.sh -pos2exyz)"
-echo " cif2pos)   Convert CIF to POSCAR (also: gpumdkit.sh -cif2pos)"
-echo " cif2exyz)  Convert CIF to extxyz (also: gpumdkit.sh -cif2exyz)"
-echo " xdat2exyz) Convert XDATCAR to extxyz (also: gpumdkit.sh -xdat2exyz)"
-echo " pos2lmp)   Convert POSCAR to LAMMPS data (also: gpumdkit.sh -pos2lmp)"
-echo " lmp2exyz)  Convert LAMMPS dump to extxyz (also: gpumdkit.sh -lmp2exyz)"
-echo " traj2exyz) Convert ASE traj to extxyz (also: gpumdkit.sh -traj2exyz)"
-echo " CLI mode: gpumdkit.sh -addgroup/-addweight/-get_frame/-clean_xyz/-replicate"
-echo " 000) Return to the main menu"
-echo " ------------>>"
-echo " Input the function number or converter keyword:"
+    echo " +-------------------------------------------------------------+"
+    echo " |                   FORMAT CONVERSION TOOLS                   |"
+    echo " +-------------------------------------------------------------+"
+    echo " | 101) VASP to extxyz            106) Add group labels        |"
+    echo " | 102) MTP to extxyz             107) Add weight to extxyz    |"
+    echo " | 103) CP2K to extxyz            108) Extract frame extxyz    |"
+    echo " | 104) ABACUS to extxyz          109) Clean XYZ info          |"
+    echo " | 105) extxyz to POSCAR          110) Replicate structure     |"
+    echo " +-------------------------------------------------------------+"
+    echo " | out2exyz) OUTCAR to extxyz     xdat2exyz) XDATCAR to extxyz |"
+    echo " | pos2exyz) POSCAR to extxyz     pos2lmp)   POSCAR to LAMMPS  |"
+    echo " | cif2pos)  CIF to POSCAR        lmp2exyz)  LAMMPS to extxyz  |"
+    echo " | cif2exyz) CIF to extxyz        traj2exyz) ASE traj to extxyz|"
+    echo " +-------------------------------------------------------------+"
+    echo " | 000) Return to main menu                                    |"
+    echo " +-------------------------------------------------------------+"
+    echo " Input the function number or converter keyword:"
 
 valid_menu_choices=(
     "000" "101" "102" "103" "104" "105" "106" "107" "108" "109" "110" \
@@ -422,26 +415,24 @@ do
 done
 
 case $num_choice in
-    # Numeric entries are reserved for interactive operation-style tools.
     "101") f101_out2xyz ;;
     "102") f102_mtp2xyz ;;
     "103") f103_cp2k2xyz ;;
     "104") f104_abacus2xyz ;;
     "105") f105_extxyz2poscar ;;
-    "106") f114_add_group_labels ;;
-    "107") f115_add_weight ;;
-    "108") f116_get_frame ;;
-    "109") f117_clean_xyz ;;
-    "110") f118_replicate_structure ;;
-    # CLI-style converters are selected by the same keywords used in gpumdkit.sh -xx mode.
-    "out2exyz") f106_out2exyz ;;
-    "pos2exyz") f107_pos2extxyz ;;
-    "cif2pos") f108_cif2poscar ;;
-    "cif2exyz") f109_cif2extxyz ;;
-    "xdat2exyz") f110_xdatcar2extxyz ;;
-    "pos2lmp") f111_poscar2lammps ;;
-    "lmp2exyz") f112_lammps2extxyz ;;
-    "traj2exyz") f113_traj2extxyz ;;
+    "106") f106_add_group_labels ;;
+    "107") f107_add_weight ;;
+    "108") f108_get_frame ;;
+    "109") f109_clean_xyz ;;
+    "110") f110_replicate_structure ;;
+    "out2exyz") out2exyz ;;
+    "pos2exyz") pos2extxyz ;;
+    "cif2pos") cif2poscar ;;
+    "cif2exyz") cif2extxyz ;;
+    "xdat2exyz") xdatcar2extxyz ;;
+    "pos2lmp") poscar2lammps ;;
+    "lmp2exyz") lammps2extxyz ;;
+    "traj2exyz") traj2extxyz ;;
     "000") menu; main ;;
 esac
 }
