@@ -47,7 +47,7 @@ function main(){
         "4" "401" "402" "403" "404" "405" "406" "407" "408" "409" "410" "411" "412"
         "5" "501" "502" "503" "504" "505" "506" "507" "508"
         "6"
-        "7" "701" "702" "703" "704"
+        "7" "703"
     ) 
     read -p " " choice
     while ! echo "${array_choice[@]}" | grep -wq "$choice" 
@@ -142,10 +142,7 @@ function main(){
             source ${GPUMDkit_path}/src/f7_utilities.sh
             case $choice in
                 "7") f7_utilities ;;
-                "701") f701_clean_workdir ;;
-                "702") f702_update_gpumdkit ;;
                 "703") f703_time_consuming_analyzer ;;
-                "704") f704_renumber_atoms ;;
             esac ;;
         *)
             echo " Incorrect Options"
