@@ -390,29 +390,31 @@ echo " 102) Convert mtp to extxyz"
 echo " 103) Convert CP2K to extxyz"
 echo " 104) Convert ABACUS to extxyz"
 echo " 105) Convert extxyz to POSCAR"
-echo " 106) Convert OUTCAR to extxyz (Python)"
-echo " 107) Convert POSCAR to extxyz"
-echo " 108) Convert CIF to POSCAR"
-echo " 109) Convert CIF to extxyz"
-echo " 110) Convert XDATCAR to extxyz"
-echo " 111) Convert POSCAR to LAMMPS data"
-echo " 112) Convert LAMMPS dump to extxyz"
-echo " 113) Convert ASE traj to extxyz"
-echo " 114) Add group labels"
-echo " 115) Add weight to extxyz"
-echo " 116) Extract frame from extxyz"
-echo " 117) Clean extra info in XYZ"
-echo " 118) Replicate structure"
+echo " 106) Add group labels"
+echo " 107) Add weight to extxyz"
+echo " 108) Extract frame from extxyz"
+echo " 109) Clean extra info in XYZ"
+echo " 110) Replicate structure"
+echo " ---------------- Simple CLI-style converters ----------------"
+echo " out2exyz)  Convert OUTCAR to extxyz (also: gpumdkit.sh -out2exyz)"
+echo " pos2exyz)  Convert POSCAR to extxyz (also: gpumdkit.sh -pos2exyz)"
+echo " cif2pos)   Convert CIF to POSCAR (also: gpumdkit.sh -cif2pos)"
+echo " cif2exyz)  Convert CIF to extxyz (also: gpumdkit.sh -cif2exyz)"
+echo " xdat2exyz) Convert XDATCAR to extxyz (also: gpumdkit.sh -xdat2exyz)"
+echo " pos2lmp)   Convert POSCAR to LAMMPS data (also: gpumdkit.sh -pos2lmp)"
+echo " lmp2exyz)  Convert LAMMPS dump to extxyz (also: gpumdkit.sh -lmp2exyz)"
+echo " traj2exyz) Convert ASE traj to extxyz (also: gpumdkit.sh -traj2exyz)"
+echo " Tip: operations above also support gpumdkit.sh -addgroup/-addweight/-get_frame/-clean_xyz/-replicate"
 echo " 000) Return to the main menu"
 echo " ------------>>"
-echo " Input the function number:"
+echo " Input the function number or converter keyword:"
 
-array_num_choice=("000" "101" "102" "103" "104" "105" "106" "107" "108" "109" "110" "111" "112" "113" "114" "115" "116" "117" "118") 
+array_num_choice=("000" "101" "102" "103" "104" "105" "106" "107" "108" "109" "110" "out2exyz" "pos2exyz" "cif2pos" "cif2exyz" "xdat2exyz" "pos2lmp" "lmp2exyz" "traj2exyz") 
 read -p " " num_choice
 while ! echo "${array_num_choice[@]}" | grep -wq "$num_choice" 
 do
   echo " ------------>>"
-  echo " Please reinput function number..."
+  echo " Please reinput function number or converter keyword..."
   read -p " " num_choice
 done
 
@@ -422,19 +424,19 @@ case $num_choice in
     "103") f103_cp2k2xyz ;;
     "104") f104_abacus2xyz ;;
     "105") f105_extxyz2poscar ;;
-    "106") f106_out2exyz ;;
-    "107") f107_pos2extxyz ;;
-    "108") f108_cif2poscar ;;
-    "109") f109_cif2extxyz ;;
-    "110") f110_xdatcar2extxyz ;;
-    "111") f111_poscar2lammps ;;
-    "112") f112_lammps2extxyz ;;
-    "113") f113_traj2extxyz ;;
-    "114") f114_add_group_labels ;;
-    "115") f115_add_weight ;;
-    "116") f116_get_frame ;;
-    "117") f117_clean_xyz ;;
-    "118") f118_replicate_structure ;;
+    "106") f114_add_group_labels ;;
+    "107") f115_add_weight ;;
+    "108") f116_get_frame ;;
+    "109") f117_clean_xyz ;;
+    "110") f118_replicate_structure ;;
+    "out2exyz") f106_out2exyz ;;
+    "pos2exyz") f107_pos2extxyz ;;
+    "cif2pos") f108_cif2poscar ;;
+    "cif2exyz") f109_cif2extxyz ;;
+    "xdat2exyz") f110_xdatcar2extxyz ;;
+    "pos2lmp") f111_poscar2lammps ;;
+    "lmp2exyz") f112_lammps2extxyz ;;
+    "traj2exyz") f113_traj2extxyz ;;
     "000") menu; main ;;
 esac
 }
