@@ -144,7 +144,7 @@ function help_info_table(){
     echo "| -min_dist      Get min_dist between atoms     | -min_dist_pbc Get min_dist considering PBC       |"
     echo "| -filter_box    Filter struct by box limits    | -filter_value Filter struct by value (efs)       |"
     echo "| -filter_dist   Filter struct by min_dist      | -analyze_comp Analyze composition of extxyz      |"
-    echo "| -pynep         Run pynep sampler (deprecated) | Developing...                                    |"
+    echo "| -pynep         Run pynep sampler              | Developing...                                    |"
     echo "+====================================== Misc Utilities ============================================+"
     echo "| -plt           Plot scripts                   | -get_frame     Extract the specified frame       |"
     echo "| -calc          Calculators                    | -frame_range   Extract frames by fraction range  |"

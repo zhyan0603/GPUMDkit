@@ -24,7 +24,7 @@ echo " ---------------------------------------------------"
 function f202_pynep_sample_structures(){
 echo " +-------------------------------------------------+"
 echo " |  Function 202 (pynep sampling) is deprecated.   |"
-echo " |  It is no longer actively maintained.           |"
+echo " |  PyNEP package is no longer actively maintained.|"
 echo " |  Please use 203) neptrain sampling instead.     |"
 echo " |  If you still insist on pynep, run directly:    |"
 echo " |                 gpumdkit.sh -pynep              |"
@@ -74,6 +74,12 @@ python ${GPUMDkit_path}/Scripts/sample_structures/neptrain_select_structs.py ${s
 rm -f dpdispatcher.log
 echo " Code path: ${GPUMDkit_path}/Scripts/sample_structures/neptrain_select_structs.py"
 echo " ---------------------------------------------------"
+echo " "
+echo " +--------------------------------------------------------+"
+echo " | For this function, please cite the NepTrain paper:     |"
+echo " | Chen et al. Comput. Phys. Commun., 2025, 317, 109859.  |"
+echo " | URL: https://doi.org/10.1016/j.cpc.2025.109859         |"
+echo " +--------------------------------------------------------+"
 }
 
 # Perturb structure
@@ -116,18 +122,17 @@ echo " ---------------------------------------------------"
 
 #--------------------- function 2 ----------------------
 function f2_sample_structures(){
-echo " +-------------------------------------------------------------+"
-echo " |                   SAMPLE STRUCTURE TOOLS                    |"
-echo " +-------------------------------------------------------------+"
-echo " | 201) Sample structures from extxyz                          |"
-echo " | 202) PyNEP sampling [deprecated; exits with notice]         |"
-echo " | 203) Sample structures by neptrain                          |"
-echo " | 204) Perturb structure                                      |"
-echo " | 205) Select max force deviation structs                     |"
-echo " +-------------------------------------------------------------+"
-echo " | CLI tip: use gpumdkit.sh -pynep if you must run pynep       |"
-echo " | 000) Return to the main menu                                |"
-echo " +-------------------------------------------------------------+"
+echo " +------------------------------------------------------+"
+echo " |                 SAMPLE STRUCTURE TOOLS               |"
+echo " +------------------------------------------------------+"
+echo " | 201) Sample structures from extxyz                   |"
+echo " | 202) FPS sampling by PyNEP [deprecated]              |"
+echo " | 203) FPS sampling by NepTrain [preferred]            |"
+echo " | 204) Perturb structure                               |"
+echo " | 205) Select max force deviation structs              |"
+echo " +------------------------------------------------------+"
+echo " | 000) Return to the main menu                         |"
+echo " +------------------------------------------------------+"
 echo " Input the function number:"
 
 valid_menu_choices=("000" "201" "202" "203" "204" "205")
