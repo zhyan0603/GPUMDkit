@@ -409,7 +409,10 @@ echo " 000) Return to the main menu"
 echo " ------------>>"
 echo " Input the function number or converter keyword:"
 
-valid_menu_choices=("000" "101" "102" "103" "104" "105" "106" "107" "108" "109" "110" "out2exyz" "pos2exyz" "cif2pos" "cif2exyz" "xdat2exyz" "pos2lmp" "lmp2exyz" "traj2exyz") 
+valid_menu_choices=(
+    "000" "101" "102" "103" "104" "105" "106" "107" "108" "109" "110"
+    "out2exyz" "pos2exyz" "cif2pos" "cif2exyz" "xdat2exyz" "pos2lmp" "lmp2exyz" "traj2exyz"
+) 
 read -p " " num_choice
 while ! echo "${valid_menu_choices[@]}" | grep -wq "$num_choice" 
 do
