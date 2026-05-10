@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # GPUMDkit - A User-Friendly Toolkit for GPUMD and NEP
-# Project URL: https://github.com/your-repo/GPUMDkit
+# Project URL: https://github.com/zhyan0603/GPUMDkit
 
 # Description: Main entry point for GPUMDkit interactive and command-line interface
 
