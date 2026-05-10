@@ -419,6 +419,7 @@ do
 done
 
 case $num_choice in
+    # Numeric entries are reserved for interactive operation-style tools.
     "101") f101_out2xyz ;;
     "102") f102_mtp2xyz ;;
     "103") f103_cp2k2xyz ;;
@@ -429,6 +430,7 @@ case $num_choice in
     "108") f116_get_frame ;;
     "109") f117_clean_xyz ;;
     "110") f118_replicate_structure ;;
+    # CLI-style converters are selected by the same keywords used in gpumdkit.sh -xx mode.
     "out2exyz") f106_out2exyz ;;
     "pos2exyz") f107_pos2extxyz ;;
     "cif2pos") f108_cif2poscar ;;
