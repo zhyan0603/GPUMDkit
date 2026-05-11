@@ -17,15 +17,23 @@ gpumdkit.sh
 You'll see the following menu:
 
 ```
- ------------>>
- 101) Convert VASP to extxyz
- 102) Convert mtp to extxyz
- 103) Convert CP2K to extxyz
- 104) Convert ABACUS to extxyz
- 105) Convert extxyz to POSCAR
- 000) Return to the main menu
- ------------>>
- Input the function number:
+ +-------------------------------------------------------------+
+ |                   FORMAT CONVERSION TOOLS                   |
+ +-------------------------------------------------------------+
+ | 101) VASP to extxyz            106) Add group labels        |
+ | 102) MTP to extxyz             107) Add weight to extxyz    |
+ | 103) CP2K to extxyz            108) Extract frame extxyz    |
+ | 104) ABACUS to extxyz          109) Clean XYZ info          |
+ | 105) extxyz to POSCAR          110) Replicate structure     |
+ +-------------------------------------------------------------+
+ | out2exyz) OUTCAR to extxyz     xdat2exyz) XDATCAR to extxyz |
+ | pos2exyz) POSCAR to extxyz     pos2lmp)   POSCAR to LAMMPS  |
+ | cif2pos)  CIF to POSCAR        lmp2exyz)  LAMMPS to extxyz  |
+ | cif2exyz) CIF to extxyz        traj2exyz) ASE traj to extxyz|
+ +-------------------------------------------------------------+
+ | 000) Return to main menu                                    |
+ +-------------------------------------------------------------+
+ Input the function number or converter keyword:
 ```
 
 for `101`:

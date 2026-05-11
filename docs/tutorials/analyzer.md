@@ -26,11 +26,21 @@ gpumdkit.sh
 You'll see the following menu:
 
 ```
- ------------>>
- 501) Analyze composition of extxyz
- 502) Find outliers of extxyz
- 000) Return to the main menu
- ------------>>
+ +------------------------------------------------------+
+ |                    ANALYZER TOOLS                    |
+ +------------------------------------------------------+
+ | 501) Analyze composition of extxyz                   |
+ | 502) Find outliers of extxyz                         |
+ | 503) Analyze chemical species of extxyz              |
+ | 504) Check charge balance of extxyz                  |
+ | 505) Analyze energy/force/virial range               |
+ | 506) Filter structures by minimum distance           |
+ | 507) Get minimum interatomic distance                |
+ | 508) Probability density analysis                    |
+ +------------------------------------------------------+
+ | 000) Return to the main menu                         |
+ +------------------------------------------------------+
+ Input the function number:
 ```
 
 for `501`:
@@ -59,6 +69,84 @@ for `502`:
  Enter energy RMSE threshold (meV/atom): 1
  Enter force RMSE threshold (meV/Å): 60
  Enter stress RMSE threshold (GPa): 0.03
+```
+
+for `503`:
+
+```
+ >-------------------------------------------------<
+ | This function calls the script in analyzer      |
+ | Script: analyze_chem_species.py                 |
+ | Developer: Zihan YAN (yanzihan@westlake.edu.cn) |
+ >-------------------------------------------------<
+ Input <input.xyz> you want to analyze
+ Example: train.xyz
+ ------------>>
+```
+
+for `504`:
+
+```
+ >-------------------------------------------------<
+ | This function calls the script in analyzer      |
+ | Script: charge_balance_check.py                 |
+ | Developer: Zihan YAN (yanzihan@westlake.edu.cn) |
+ >-------------------------------------------------<
+ Input <input.xyz> you want to analyze
+ Examp: train.xyz
+ ------------>>
+```
+
+for `505`:
+
+```
+ >-------------------------------------------------<
+ | This function calls the script in analyzer      |
+ | Script: energy_force_virial_analyzer.py         |
+ | Developer: Zihan YAN (yanzihan@westlake.edu.cn) |
+ >-------------------------------------------------<
+ Input <input.xyz> and property (energy/force/virial)
+ Example: train.xyz force
+ ------------>>
+```
+
+for `506`:
+
+```
+ >-------------------------------------------------<
+ | This function calls the script in analyzer      |
+ | Script: filter_structures_by_distance.py        |
+ | Developer: Zihan YAN (yanzihan@westlake.edu.cn) |
+ >-------------------------------------------------<
+ Input <input.xyz> and <min_dist>
+ Example: dump.xyz 1.5
+ ------------>>
+```
+
+for `507`:
+
+```
+ >-------------------------------------------------<
+ | This function calls the script in analyzer      |
+ | Script: get_min_dist.py / get_min_dist_pbc.py   |
+ | Developer: Zihan YAN (yanzihan@westlake.edu.cn) |
+ >-------------------------------------------------<
+ Input <input.xyz> you want to analyze
+ Example: dump.xyz
+ ------------>>
+```
+
+for `508`:
+
+```
+ >-------------------------------------------------<
+ | This function calls the script in analyzer      |
+ | Script: probability_density_analysis.py         |
+ | Developer: Zihan YAN (yanzihan@westlake.edu.cn) |
+ >-------------------------------------------------<
+ Input <ref_struct> <trajectory_file> <species> <interval>
+ Example: LLZO.vasp dump.xyz Li 0.25
+ ------------>>
 ```
 
 Follow the prompts to complete the function.
