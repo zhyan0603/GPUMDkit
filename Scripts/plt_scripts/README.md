@@ -268,7 +268,7 @@ gpumdkit.sh -plt msd_all msd.out Li P S
 
 Checks convergence of MSD calculations across different time windows.
 
-**Input File:** `msd.out` (computed with `save_every` option)
+**Input File:** `msd_step*.out` (computed with `save_every` option)
 
 **Usage:**
 ```bash
