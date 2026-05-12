@@ -252,8 +252,8 @@ Plots MSD for all atomic species separately when using `all_groups` in GPUMD.
 
 **Usage:**
 ```bash
-gpumdkit.sh -plt msd_all <species1> <species2> ...
-gpumdkit.sh -plt msd_all Li P S
+gpumdkit.sh -plt msd_all msd.out <species1> <species2> ...
+gpumdkit.sh -plt msd_all msd.out Li P S
 ```
 
 **Requirements:** Must use `all_groups` in the `compute_msd` command in `run.in`.
