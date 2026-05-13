@@ -26,14 +26,24 @@ gpumdkit.sh
 You'll see the following menu:
 
 ```
- ------------>>
- 401) Calc ionic conductivity
- 402) Calc properties by nep
- 403) Calc descriptors of specific elements
- 404) Calc density of atomistic states (DOAS)
- 405) Calc nudged elastic band (NEB) by nep
- 000) Return to the main menu
- ------------>>
+ +----------------------------------------------------------+
+ |                     CALCULATOR TOOLS                     |
+ +----------------------------------------------------------+
+ | 401) Calc ionic conductivity                             |
+ | 402) Calc properties by nep                              |
+ | 403) Calc descriptors of specific elements               |
+ | 404) Calc density of atomistic states (DOAS)             |
+ | 405) Calc nudged elastic band (NEB) by nep               |
+ | 406) Build neighbor list                                 |
+ | 407) Calc displacement from trajectory                   |
+ | 408) Calc averaged structure                             |
+ | 409) Calc octahedral tilt                                |
+ | 410) Calc polarization for ABO3                          |
+ | 411) Minimize structure by nep                           |
+ | 412) Calc mean square displacement (MSD) from trajectory |
+ +----------------------------------------------------------+
+ | 000) Return to the main menu                             |
+ +----------------------------------------------------------+
  Input the function number:
 ```
 
@@ -98,6 +108,41 @@ for `405`:
  >-------------------------------------------------<
  Input <initial_struct> <final_struct> <n_image> <nep_model>
  Examp: IS.xyz FS.xyz 5 nep.txt
+ ------------>>
+```
+
+for `406-410`:
+
+See https://gpumdkit.cn/htmls/polar_material_analysis.html for details
+
+for `411`:
+
+```
+ >-------------------------------------------------<
+ | This function calls the script in calculators   |
+ | Script: minimize_structure_by_nep.py            |
+ | Developer: Zihan YAN (yanzihan@westlake.edu.cn) |
+ >-------------------------------------------------<
+ Input <structure_file> <nep.txt> [fmax=0.01] [max_steps=1000]
+ Supported structure formats: POSCAR, .xyz
+ Optional arguments:
+  fmax: Force convergence threshold in eV/Ang (default: 0.01)
+  max_steps: Maximum number of optimization steps (default: 1000)
+ Example: POSCAR nep.txt 0.01 1000
+ ------------>>
+```
+
+for `412`:
+
+```
+ >-------------------------------------------------<
+ | This function calls the script in calculators   |
+ | Script: calc_msd.py                             |
+ | Developer: Zihan YAN (yanzihan@westlake.edu.cn) |
+ >-------------------------------------------------<
+ Input <extxyz_file> <element_symbol> <dt_fs> [max_corr_steps]
+   Optional argument: max_corr_steps (default: frame number)
+ Example: dump.xyz Li 10
  ------------>>
 ```
 

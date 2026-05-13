@@ -46,20 +46,22 @@ gpumdkit.sh
 
 You'll see:
 ```
-         ____ ____  _   _ __  __ ____  _    _ _
-        / ___|  _ \| | | |  \/  |  _ \| | _(_) |_
-       | |  _| |_) | | | | |\/| | | | | |/ / | __|
-       | |_| |  __/| |_| | |  | | |_| |   <| | |_
-        \____|_|    \___/|_|  |_|____/|_|\_\_|\__|
+           ____ ____  _   _ __  __ ____  _    _ _
+          / ___|  _ \| | | |  \/  |  _ \| | _(_) |_
+         | |  _| |_) | | | | |\/| | | | | |/ / | __|
+         | |_| |  __/| |_| | |  | | |_| |   <| | |_
+          \____|_|    \___/|_|  |_|____/|_|\_\_|\__|
 
-        GPUMDkit Version 1.4.2 (dev) (2025-12-17)
-  Core Developer: Zihan YAN (yanzihan@westlake.edu.cn)
+          GPUMDkit Version 1.5.5 (dev) (2026-05-10)
+    Core Developer: Zihan YAN (yanzihan@westlake.edu.cn)
+ Main Contributors: Denan LI, Xin WU, Zhoulin LIU & Chen HUA
 
- ----------------------- GPUMD -----------------------
+ ---------------------- GPUMD ------------------------
  1) Format Conversion          2) Sample Structures
  3) Workflow                   4) Calculators
- 5) Analyzer                   6) Developing ...
- 0) Quit!
+ 5) Analyzer                   6) Visualization
+ 7) Utilities                  8) Developing...
+ 0) Exit
  ------------>>
  Input the function number:
 ```
@@ -80,28 +82,38 @@ gpumdkit.sh -h
 You will see:
 
 ```
-+==================================================================================================+
-|                              GPUMDkit 1.4.2 (dev) (2025-12-17) Usage                             |
-+======================================== Conversions =============================================+
-| -out2xyz       Convert OUTCAR to extxyz       | -pos2exyz     Convert POSCAR to extxyz           |
-| -cif2pos       Convert cif to POSCAR          | -pos2lmp      Convert POSCAR to LAMMPS           |
-| -cif2exyz      Convert cif to extxyz          | -lmp2exyz     Convert LAMMPS-dump to extxyz      |
-| -addgroup      Add group label                | -addweight    Add weight to the struct in extxyz |
-| Developing...                                 | Developing...                                    |
-+========================================= Analysis ===============================================+
-| -range         Print range of energy etc.     | -max_rmse     Get max RMSE from extxyz           |
-| -min_dist      Get min_dist between atoms     | -min_dist_pbc Get min_dist considering PBC       |
-| -filter_box    Filter struct by box limits    | -filter_value Filter struct by value (efs)       |
-| -filter_dist   Filter struct by min_dist      | -analyze_comp Analyze composition of extxyz      |
-| -pynep         Sample struct by pynep         | Developing...                                    |
-+====================================== Misc Utilities ============================================+
-| -plt           Plot scripts                   | -get_frame     Extract the specified frame       |
-| -calc          Calculators                    | -clean_xyz     Clean extra info in XYZ file      |
-| -clean         Clear files for work_dir       | -time          Time consuming Analyzer           |
-| -update        Update GPUMDkit                | Developing...                                    |
-+==================================================================================================+
-| For detailed usage and examples, use: gpumdkit.sh -<option> -h                                   |
-+==================================================================================================+
++-------------------------------------------------------------------------------------------------------+
+|                          GPUMDkit 1.5.5 (dev) (2026-05-10) Command Help                               |
++-------------------------------------------------------------------------------------------------------+
+|                                          MAIN FUNCTIONS                                               |
++-------------------------------------------------------------------------------------------------------+
+| -h            Show this help table            | -plt <type>        Plot and visualization tools       |
+| -calc <type>  Calculator tools                | -time <gpumd|nep>  Time-consuming analyzer            |
+| -update       Update GPUMDkit                 | -clean             Clean extra files in current dir   |
++-------------------------------------------------------------------------------------------------------+
+|                                         FORMAT CONVERSION                                             |
++-------------------------------------------------------------------------------------------------------+
+| -out2xyz      OUTCAR -> extxyz (shell)        | -out2exyz          OUTCAR -> extxyz (python)          |
+| -cp2k2xyz     CP2K log -> xyz                 | -xdat2exyz         XDATCAR -> extxyz                  |
+| -cif2pos      cif -> POSCAR                   | -cif2exyz          cif -> extxyz                      |
+| -pos2exyz     POSCAR -> extxyz                | -exyz2pos          extxyz -> POSCAR                   |
+| -pos2lmp      POSCAR -> LAMMPS data           | -lmp2exyz          LAMMPS dump -> extxyz              |
+| -traj2exyz    ASE traj -> extxyz              | -replicate         Replicate structure                |
+| -addgroup     Add group labels                | -addweight         Add structure weight in extxyz     |
+| -clean_xyz    Clean extra info in extxyz      | -get_frame         Extract specific frame             |
+| -frame_range  Extract frames by range         |                                                       |
++-------------------------------------------------------------------------------------------------------+
+|                                            ANALYSIS                                                   |
++-------------------------------------------------------------------------------------------------------+
+| -range        Energy/force/virial statistics  | -analyze_comp      Analyze composition                |
+| -chem_species Analyze chemical species        | -cbc               Charge balance check               |
+| -min_dist     Min distance (no PBC)           | -min_dist_pbc      Min distance with PBC              |
+| -filter_dist  Filter by min_dist (no PBC)     | -filter_dist_pbc   Filter by min_dist (PBC)           |
+| -pda          Probability density analysis    | -hbond             Hydrogen-bond analysis             |
+| -pynep        FPS sampling by PyNEP           |                                                       |
++-------------------------------------------------------------------------------------------------------+
+| Detailed usage: gpumdkit.sh -<option> -h    Plot details: gpumdkit.sh -plt <type> -h                  |
++-------------------------------------------------------------------------------------------------------+
 ```
 
 **Best for:**
@@ -119,15 +131,23 @@ Convert structure files between different formats:
 #### Interactive mode (option 1)
 
 ```shell
- ------------>>
- 101) Convert VASP to extxyz
- 102) Convert mtp to extxyz
- 103) Convert CP2K to extxyz
- 104) Convert ABACUS to extxyz
- 105) Convert extxyz to POSCAR
- 000) Return to the main menu
- ------------>>
- Input the function number:
+ +-------------------------------------------------------------+
+ |                   FORMAT CONVERSION TOOLS                   |
+ +-------------------------------------------------------------+
+ | 101) VASP to extxyz            106) Add group labels        |
+ | 102) MTP to extxyz             107) Add weight to extxyz    |
+ | 103) CP2K to extxyz            108) Extract frame extxyz    |
+ | 104) ABACUS to extxyz          109) Clean XYZ info          |
+ | 105) extxyz to POSCAR          110) Replicate structure     |
+ +-------------------------------------------------------------+
+ | out2exyz) OUTCAR to extxyz     xdat2exyz) XDATCAR to extxyz |
+ | pos2exyz) POSCAR to extxyz     pos2lmp)   POSCAR to LAMMPS  |
+ | cif2pos)  CIF to POSCAR        lmp2exyz)  LAMMPS to extxyz  |
+ | cif2exyz) CIF to extxyz        traj2exyz) ASE traj to extxyz|
+ +-------------------------------------------------------------+
+ | 000) Return to main menu                                    |
+ +-------------------------------------------------------------+
+ Input the function number or converter keyword:
 ```
 
 #### Command-line mode
@@ -161,14 +181,17 @@ Select diverse structures for training:
 #### Interactive mode (option 2)
 
 ```shell
- ------------>>
- 201) Sample structures from extxyz
- 202) Sample structures by pynep
- 203) Sample structures by neptrain
- 204) Perturb structure
- 205) Select max force deviation structs
- 000) Return to the main menu
- ------------>>
+ +------------------------------------------------------+
+ |                 SAMPLE STRUCTURE TOOLS               |
+ +------------------------------------------------------+
+ | 201) Sample structures from extxyz                   |
+ | 202) FPS sampling by PyNEP [deprecated]              |
+ | 203) FPS sampling by NepTrain [preferred]            |
+ | 204) Perturb structure                               |
+ | 205) Select max force deviation structs              |
+ +------------------------------------------------------+
+ | 000) Return to the main menu                         |
+ +------------------------------------------------------+
  Input the function number:
 ```
 
@@ -181,12 +204,15 @@ Batch processing for high-throughput calculations:
 #### Interactive mode (option 3)
 
 ```
- ------------>>
- 301) SCF batch pretreatment
- 302) MD sample batch pretreatment (gpumd)
- 303) MD sample batch pretreatment (lmp)
- 000) Return to the main menu
- ------------>>
+ +---------------------------------------------------------+
+ |                      WORKFLOW TOOLS                     |
+ +---------------------------------------------------------+
+ | 301) SCF batch pretreatment                             |
+ | 302) MD sample batch pretreatment (gpumd)               |
+ | 303) MD sample batch pretreatment (lmp)                 |
+ +---------------------------------------------------------+
+ | 000) Return to the main menu                            |
+ +---------------------------------------------------------+
  Input the function number:
 ```
 
@@ -199,14 +225,24 @@ Compute material properties:
 #### Interactive mode (option 4)
 
 ```shell
- ------------>>
- 401) Calc ionic conductivity
- 402) Calc properties by nep
- 403) Calc descriptors of specific elements
- 404) Calc density of atomistic states (DOAS)
- 405) Calc nudged elastic band (NEB) by nep
- 000) Return to the main menu
- ------------>>
+ +----------------------------------------------------------+
+ |                     CALCULATOR TOOLS                     |
+ +----------------------------------------------------------+
+ | 401) Calc ionic conductivity                             |
+ | 402) Calc properties by nep                              |
+ | 403) Calc descriptors of specific elements               |
+ | 404) Calc density of atomistic states (DOAS)             |
+ | 405) Calc nudged elastic band (NEB) by nep               |
+ | 406) Build neighbor list                                 |
+ | 407) Calc displacement from trajectory                   |
+ | 408) Calc averaged structure                             |
+ | 409) Calc octahedral tilt                                |
+ | 410) Calc polarization for ABO3                          |
+ | 411) Minimize structure by nep                           |
+ | 412) Calc mean square displacement (MSD) from trajectory |
+ +----------------------------------------------------------+
+ | 000) Return to the main menu                             |
+ +----------------------------------------------------------+
  Input the function number:
 ```
 
@@ -232,11 +268,20 @@ Validate and filter structure files:
 #### Interactive mode (option 5)
 
 ```
- ------------>>
- 501) Analyze composition of extxyz
- 502) Find outliers of extxyz
- 000) Return to the main menu
- ------------>>
+ +------------------------------------------------------+
+ |                    ANALYZER TOOLS                    |
+ +------------------------------------------------------+
+ | 501) Analyze composition of extxyz                   |
+ | 502) Find outliers of extxyz                         |
+ | 503) Analyze chemical species of extxyz              |
+ | 504) Check charge balance of extxyz                  |
+ | 505) Analyze energy/force/virial range               |
+ | 506) Filter structures by minimum distance           |
+ | 507) Get minimum interatomic distance                |
+ | 508) Probability density analysis                    |
+ +------------------------------------------------------+
+ | 000) Return to the main menu                         |
+ +------------------------------------------------------+
  Input the function number:
 ```
 

@@ -94,6 +94,7 @@ echo " | Script: calc_neighbor_list.py                   |"
 echo " | Developer: Denan LI (lidenan@westlake.edu.cn)   |"
 echo " >-------------------------------------------------<"
 echo " Input script arguments (eg. -c 4 -n 12 -C Pb Sr -E O)"
+echo " See https://gpumdkit.cn/htmls/polar_material_analysis.html for details"
 echo " ------------>>"
 read -p " " input_calc_neighbor_list
 echo " ---------------------------------------------------"
@@ -110,6 +111,7 @@ echo " | Script: calc_displacement.py                    |"
 echo " | Developer: Denan LI (lidenan@westlake.edu.cn)   |"
 echo " >-------------------------------------------------<"
 echo " Input script arguments (eg. -i movie.xyz -n nl-Pb-O.dat -o displacements.dat)"
+echo " See https://gpumdkit.cn/htmls/polar_material_analysis.html for details"
 echo " ------------>>"
 read -p " " input_calc_displacement
 echo " ---------------------------------------------------"
@@ -126,6 +128,7 @@ echo " | Script: calc_averaged_structure.py              |"
 echo " | Developer: Denan LI (lidenan@westlake.edu.cn)   |"
 echo " >-------------------------------------------------<"
 echo " Input script arguments (eg. -i movie.xyz -l 0.2 -o averaged_structure.xyz)"
+echo " See https://gpumdkit.cn/htmls/polar_material_analysis.html for details"
 echo " ------------>>"
 read -p " " input_calc_averaged_structure
 echo " ---------------------------------------------------"
@@ -142,6 +145,7 @@ echo " | Script: calc_oct_tilt.py                        |"
 echo " | Developer: Denan LI (lidenan@westlake.edu.cn)   |"
 echo " >-------------------------------------------------<"
 echo " Input script arguments (eg. -i model.xyz -n nl-Ti-O.dat -o octahedral_tilt.dat)"
+echo " See https://gpumdkit.cn/htmls/polar_material_analysis.html for details"
 echo " ------------>>"
 read -p " " input_calc_oct_tilt
 echo " ---------------------------------------------------"
@@ -158,6 +162,7 @@ echo " | Script: calc_polarization_abo3.py               |"
 echo " | Developer: Denan LI (lidenan@westlake.edu.cn)   |"
 echo " >-------------------------------------------------<"
 echo " Input script arguments (eg. --nl-ba nl-Ti-A.dat --nl-bo nl-Ti-O.dat --bec Pb=2.5 Sr=2.0 Ti=4.0 O=-2.0)"
+echo " See https://gpumdkit.cn/htmls/polar_material_analysis.html for details"
 echo " ------------>>"
 read -p " " input_calc_polarization_abo3
 echo " ---------------------------------------------------"
@@ -166,26 +171,68 @@ echo " Code path: ${GPUMDkit_path}/Scripts/calculators/calc_polarization_abo3.py
 echo " ---------------------------------------------------"
 }
 
+function f411_minimize_structure_by_nep(){
+echo " >-------------------------------------------------<"
+echo " | This function calls the script in calculators   |"
+echo " | Script: minimize_structure_by_nep.py            |"
+echo " | Developer: Zihan YAN (yanzihan@westlake.edu.cn) |"
+echo " >-------------------------------------------------<"
+echo " Input <structure_file> <nep.txt> [fmax=0.01] [max_steps=1000]"
+echo " Supported structure formats: POSCAR, .xyz"
+echo " Optional arguments: "
+echo "  fmax: Force convergence threshold in eV/Ang (default: 0.01)"
+echo "  max_steps: Maximum number of optimization steps (default: 1000)"
+echo " Example: POSCAR nep.txt 0.01 1000"
+echo " ------------>>"
+read -p " " input_minimize_structure
+echo " ---------------------------------------------------"
+python ${GPUMDkit_path}/Scripts/calculators/calc_minimize.py ${input_minimize_structure}
+echo " Code path: ${GPUMDkit_path}/Scripts/calculators/calc_minimize.py"
+echo " ---------------------------------------------------"
+}
+
+function f412_calc_msd_from_trajectory(){
+echo " >-------------------------------------------------<"
+echo " | This function calls the script in calculators   |"
+echo " | Script: calc_msd.py                             |"
+echo " | Developer: Zihan YAN (yanzihan@westlake.edu.cn) |"
+echo " >-------------------------------------------------<"
+echo " Input <extxyz_file> <element_symbol> <dt_fs> [max_corr_steps]"
+echo "   Optional argument: max_corr_steps (default: frame number)"
+echo " Example: dump.xyz Li 10"
+echo " ------------>>"
+read -p " " input_calc_msd
+echo " ---------------------------------------------------"
+python ${GPUMDkit_path}/Scripts/calculators/calc_msd.py ${input_calc_msd}
+echo " Code path: ${GPUMDkit_path}/Scripts/calculators/calc_msd.py"
+echo " ---------------------------------------------------"
+}
+
 # main function of calculators
 function f4_calculators(){
-echo " ------------>>"
-echo " 401) Calc ionic conductivity"
-echo " 402) Calc properties by nep"
-echo " 403) Calc descriptors of specific elements"
-echo " 404) Calc density of atomistic states (DOAS)"
-echo " 405) Calc nudged elastic band (NEB) by nep"
-echo " 406) Build neighbor list"
-echo " 407) Calc displacement from trajectory"
-echo " 408) Calc averaged structure"
-echo " 409) Calc octahedral tilt"
-echo " 410) Calc polarization for ABO3"
-echo " 000) Return to the main menu"
-echo " ------------>>"
+echo " +----------------------------------------------------------+"
+echo " |                     CALCULATOR TOOLS                     |"
+echo " +----------------------------------------------------------+"
+echo " | 401) Calc ionic conductivity                             |"
+echo " | 402) Calc properties by nep                              |"
+echo " | 403) Calc descriptors of specific elements               |"
+echo " | 404) Calc density of atomistic states (DOAS)             |"
+echo " | 405) Calc nudged elastic band (NEB) by nep               |"
+echo " | 406) Build neighbor list                                 |"
+echo " | 407) Calc displacement from trajectory                   |"
+echo " | 408) Calc averaged structure                             |"
+echo " | 409) Calc octahedral tilt                                |"
+echo " | 410) Calc polarization for ABO3                          |"
+echo " | 411) Minimize structure by nep                           |"
+echo " | 412) Calc mean square displacement (MSD) from trajectory |"
+echo " +----------------------------------------------------------+"
+echo " | 000) Return to the main menu                             |"
+echo " +----------------------------------------------------------+"
 echo " Input the function number:"
 
-arry_num_choice=("000" "401" "402" "403" "404" "405" "406" "407" "408" "409" "410")
+valid_menu_choices=("000" "401" "402" "403" "404" "405" "406" "407" "408" "409" "410" "411" "412")
 read -p " " num_choice
-while ! echo "${arry_num_choice[@]}" | grep -wq "$num_choice" 
+while ! echo "${valid_menu_choices[@]}" | grep -wq "$num_choice"
 do
   echo " ------------>>"
   echo " Please reinput function number..."
@@ -203,6 +250,8 @@ case $num_choice in
     "408") f408_calc_averaged_structure ;;
     "409") f409_calc_oct_tilt ;;
     "410") f410_calc_polarization_abo3 ;;
+    "411") f411_minimize_structure_by_nep ;;
+    "412") f412_calc_msd_from_trajectory ;;
     "000") menu; main ;;
 esac
 }

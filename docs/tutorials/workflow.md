@@ -22,12 +22,16 @@ gpumdkit.sh
 You'll see the following menu:
 
 ```
- ------------>>
- 301) SCF batch pretreatment
- 302) MD sample batch pretreatment (gpumd)
- 303) MD sample batch pretreatment (lmp)
- 000) Return to the main menu
- ------------>>
+ +---------------------------------------------------------+
+ |                      WORKFLOW TOOLS                     |
+ +---------------------------------------------------------+
+ | 301) SCF batch pretreatment                             |
+ | 302) MD sample batch pretreatment (gpumd)               |
+ | 303) MD sample batch pretreatment (lmp)                 |
+ +---------------------------------------------------------+
+ | 000) Return to the main menu                            |
+ +---------------------------------------------------------+
+ Input the function number:
 ```
 
 ---

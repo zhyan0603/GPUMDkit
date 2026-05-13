@@ -1,5 +1,10 @@
 #!/bin/bash
 
+# GPUMDkit - A User-Friendly Toolkit for GPUMD and NEP
+# Project URL: https://github.com/zhyan0603/GPUMDkit
+
+# Description: Main entry point for GPUMDkit interactive and command-line interface
+
 # You need to set the path of GPUMD and GPUMDkit in your ~/.bashrc, for example
 # export GPUMDkit_path=/home/yanzihan/software/GPUMDkit
 
@@ -10,7 +15,7 @@ if [ -z "$GPUMDkit_path" ]; then
     exit 1
 fi
 
-VERSION="1.5.4 (dev) (2026-04-22)"
+VERSION="1.5.5 (dev) (2026-05-10)"
 
 plt_path="${GPUMDkit_path}/Scripts/plt_scripts"
 analyzer_path="${GPUMDkit_path}/Scripts/analyzer"
@@ -23,11 +28,12 @@ sample_path="${GPUMDkit_path}/Scripts/sample_structures"
 #--------------------- main script ----------------------
 # Show the menu
 function menu(){
-echo " ----------------------- GPUMD -----------------------"
+echo " ---------------------- GPUMD ------------------------"
 echo " 1) Format Conversion          2) Sample Structures   "
 echo " 3) Workflow                   4) Calculators         "
-echo " 5) Analyzer                   6) Developing ...      "
-echo " 0) Quit!"
+echo " 5) Analyzer                   6) Visualization       "
+echo " 7) Utilities                  8) Developing...       "
+echo " 0) Exit                                              "
 }
 
 # Function main
@@ -35,12 +41,13 @@ function main(){
     echo " ------------>>"
     echo ' Input the function number:'
     array_choice=(
-        "0" "1" "101" "102" "103" "104" "105"
+        "0" "1" "101" "102" "103" "104" "105" "106" "107" "108" "109" "110"
         "2" "201" "202" "203" "204" "205" 
         "3" "301" "302" "303" 
-        "4" "401" "402" "403" "404" "405" "406" "407" "408" "409" "410"
-        "5" "501" "502"
+        "4" "401" "402" "403" "404" "405" "406" "407" "408" "409" "410" "411" "412"
+        "5" "501" "502" "503" "504" "505" "506" "507" "508"
         "6"
+        "7" "701"
     ) 
     read -p " " choice
     while ! echo "${array_choice[@]}" | grep -wq "$choice" 
@@ -64,6 +71,11 @@ function main(){
                 "103") f103_cp2k2xyz ;;
                 "104") f104_abacus2xyz ;;
                 "105") f105_extxyz2poscar ;;
+                "106") f106_add_group_labels ;;
+                "107") f107_add_weight ;;
+                "108") f108_get_frame ;;
+                "109") f109_clean_xyz ;;
+                "110") f110_replicate_structure ;;
             esac ;;
         "2")
             source ${GPUMDkit_path}/src/f2_sample_structures.sh
@@ -102,6 +114,8 @@ function main(){
                 "408") f408_calc_averaged_structure ;;
                 "409") f409_calc_oct_tilt ;;
                 "410") f410_calc_polarization_abo3 ;;
+                "411") f411_minimize_structure_by_nep ;;
+                "412") f412_calc_msd_from_trajectory ;;
             esac ;;           
         "5")
             source ${GPUMDkit_path}/src/f5_analyzers.sh
@@ -109,9 +123,27 @@ function main(){
                 "5") f5_analyzers ;;
                 "501") f501_analyze_composition ;;
                 "502") f502_find_outliers ;;
+                "503") f503_analyze_chem_species ;;
+                "504") f504_charge_balance_check ;;
+                "505") f505_energy_force_virial_analyzer ;;
+                "506") f506_filter_structures_by_distance ;;
+                "507") f507_get_min_dist ;;
+                "508") f508_probability_density_analysis ;;
             esac ;;  
         "6")
-            echo " Developing ..." ;;
+            source ${GPUMDkit_path}/src/f6_plots.sh
+            terminal_width=$(tput cols 2>/dev/null || echo 80)
+            if [ "$terminal_width" -ge 98 ]; then
+                f6_plots_two_column
+            else
+                f6_plots_one_column
+            fi ;;
+        "7")
+            source ${GPUMDkit_path}/src/f7_utilities.sh
+            case $choice in
+                "7") f7_utilities ;;
+                "701") f701_time_consuming_analyzer ;;
+            esac ;;
         *)
             echo " Incorrect Options"
             ;;
@@ -125,55 +157,38 @@ function main(){
 # It will show the usage of each function
 
 function help_info_table(){
-    echo "+==================================================================================================+"
-    echo "|                              GPUMDkit ${VERSION} Usage                             |"
-    echo "+======================================== Conversions =============================================+"
-    echo "| -out2xyz       Convert OUTCAR to extxyz       | -pos2exyz     Convert POSCAR to extxyz           |"
-    echo "| -cif2pos       Convert cif to POSCAR          | -pos2lmp      Convert POSCAR to LAMMPS           |"
-    echo "| -cif2exyz      Convert cif to extxyz          | -lmp2exyz     Convert LAMMPS-dump to extxyz      |"
-    echo "| -addgroup      Add group label                | -addweight    Add weight to the struct in extxyz |"
-    echo "| -cp2k2xyz      Convert CP2K file to extxyz    | -traj2exyz    Convert ASE traj to extxyz         |"
-    echo "| -xdat2exyz     Convert XDATCAR to extxyz      | Developing...                                    |"
-    echo "+========================================= Analysis ===============================================+"
-    echo "| -range         Print range of energy etc.     | -max_rmse     Get max RMSE from extxyz           |"
-    echo "| -min_dist      Get min_dist between atoms     | -min_dist_pbc Get min_dist considering PBC       |"
-    echo "| -filter_box    Filter struct by box limits    | -filter_value Filter struct by value (efs)       |"
-    echo "| -filter_dist   Filter struct by min_dist      | -analyze_comp Analyze composition of extxyz      |"
-    echo "| -pynep         Sample struct by pynep         | Developing...                                    |"
-    echo "+====================================== Misc Utilities ============================================+"
-    echo "| -plt           Plot scripts                   | -get_frame     Extract the specified frame       |"
-    echo "| -calc          Calculators                    | -frame_range   Extract frames by fraction range  |"
-    echo "| -clean         Clear files for work_dir       | -clean_xyz     Clean extra info in XYZ file      |"
-    echo "| -time          Time consuming Analyzer        | -update        Update GPUMDkit                   |"
-    echo "+==================================================================================================+"
-    echo "| For detailed usage and examples, use: gpumdkit.sh -<option> -h                                   |"
-    echo "+==================================================================================================+"
-}
-
-function plot_info_table(){
-    echo "+=====================================================================================================+"
-    echo "|                              GPUMDkit ${VERSION} Plotting Usage                       |"
-    echo "+=============================================== Plot Types ==========================================+"
-    echo "| thermo          Plot thermo info                   | train          Plot NEP train results          |"
-    echo "| prediction      Plot NEP prediction results        | train_test     Plot NEP train and test results |"
-    echo "| msd             Plot mean square displacement      | msd_conv       Plot the convergence of MSD     |"
-    echo "| msd_all         Plot MSD of all species            | sdc            Plot self diffusion coefficient |"
-    echo "| msd_sdc         Plot MSD and SDC together          | cohesive       Plot cohsive energy             |"
-    echo "| rdf             Plot radial distribution function  | vac            Plot velocity autocorrelation   |"
-    echo "| restart         Plot parameters in nep.restart     | dimer          Plot dimer plot                 |"
-    echo "| force_errors    Plot force errors                  | des            Plot descriptors                |"
-    echo "| charge          Plot charge distribution           | lr             Plot learning rate              |"
-    echo "| doas            Plot density of atomistic states   | net_force      Plot net force distribution     |"
-    echo "| sigma           Plot Arrhenius sigma               | D              Plot Arrhenius diffusivity      |"
-    echo "| sigma_xyz       Plot directional Arrhenius sigma   | D_xyz          Plot directional Arrhenius D    |"
-    echo "| emd             Plot EMD results                   | nemd           Plot NEMD results               |"
-    echo "| hnemd           Plot HNEMD results                 | pdos           Plot VAC and PDOS               |"
-    echo "| plane-grid      Plot displacement plane grid       | parity_density Plot parity plot density        |"
-    echo "| rdf_pmf         Plot potential of mean force (PMF) | viscosity      Plot visconsity                 |"
-    echo "| born_charge     Plot Born effective charges        |                                                |"
-    echo "+=====================================================================================================+"
-    echo "| For detailed usage and examples, use: gpumdkit.sh -plt <plot_type> -h                               |"
-    echo "+=====================================================================================================+"
+    echo "+-------------------------------------------------------------------------------------------------------+"
+    echo "|                          GPUMDkit ${VERSION} Command Help                               |"
+    echo "+-------------------------------------------------------------------------------------------------------+"
+    echo "|                                          MAIN FUNCTIONS                                               |"
+    echo "+-------------------------------------------------------------------------------------------------------+"
+    echo "| -h            Show this help table            | -plt <type>        Plot and visualization tools       |"
+    echo "| -calc <type>  Calculator tools                | -time <gpumd|nep>  Time-consuming analyzer            |"
+    echo "| -update       Update GPUMDkit                 | -clean             Clean extra files in current dir   |"
+    echo "+-------------------------------------------------------------------------------------------------------+"
+    echo "|                                         FORMAT CONVERSION                                             |"
+    echo "+-------------------------------------------------------------------------------------------------------+"
+    echo "| -out2xyz      OUTCAR -> extxyz (shell)        | -out2exyz          OUTCAR -> extxyz (python)          |"
+    echo "| -cp2k2xyz     CP2K log -> xyz                 | -xdat2exyz         XDATCAR -> extxyz                  |"
+    echo "| -cif2pos      cif -> POSCAR                   | -cif2exyz          cif -> extxyz                      |"
+    echo "| -pos2exyz     POSCAR -> extxyz                | -exyz2pos          extxyz -> POSCAR                   |"
+    echo "| -pos2lmp      POSCAR -> LAMMPS data           | -lmp2exyz          LAMMPS dump -> extxyz              |"
+    echo "| -traj2exyz    ASE traj -> extxyz              | -replicate         Replicate structure                |"
+    echo "| -addgroup     Add group labels                | -addweight         Add structure weight in extxyz     |"
+    echo "| -clean_xyz    Clean extra info in extxyz      | -get_frame         Extract specific frame             |"
+    echo "| -frame_range  Extract frames by range         |                                                       |"
+    echo "+-------------------------------------------------------------------------------------------------------+"
+    echo "|                                            ANALYSIS                                                   |"
+    echo "+-------------------------------------------------------------------------------------------------------+"
+    echo "| -range        Energy/force/virial statistics  | -analyze_comp      Analyze composition                |"
+    echo "| -chem_species Analyze chemical species        | -cbc               Charge balance check               |"
+    echo "| -min_dist     Min distance (no PBC)           | -min_dist_pbc      Min distance with PBC              |"
+    echo "| -filter_dist  Filter by min_dist (no PBC)     | -filter_dist_pbc   Filter by min_dist (PBC)           |"
+    echo "| -pda          Probability density analysis    | -hbond             Hydrogen-bond analysis             |"
+    echo "| -pynep        FPS sampling by PyNEP           |                                                       |"
+    echo "+-------------------------------------------------------------------------------------------------------+"
+    echo "| Detailed usage: gpumdkit.sh -<option> -h    Plot details: gpumdkit.sh -plt <type> -h                  |"
+    echo "+-------------------------------------------------------------------------------------------------------+"
 }
 
 # function citation(){
@@ -270,10 +285,11 @@ if [ ! -z "$1" ]; then
                         echo " | set and charge_train.out.                                |"
                         echo " +----------------------------------------------------------+"
                         python ${plt_path}/plt_charge.py $3 ;;
-                    *) plot_info_table; exit 1 ;;
+                    *) source ${GPUMDkit_path}/src/f6_plots.sh; f6_plots_two_column; exit 1 ;;
                 esac
             else
-                plot_info_table
+                source ${GPUMDkit_path}/src/f6_plots.sh
+                f6_plots_two_column
                 echo " See the codes in plt_scripts for more details"
                 echo " Code path: ${GPUMDkit_path}/Scripts/plt_scripts"
             fi ;;
