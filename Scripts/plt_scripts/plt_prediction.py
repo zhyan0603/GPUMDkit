@@ -143,11 +143,11 @@ def plot_parity_with_marginals(ax, true, pred, xlabel, ylabel, color, mae_text, 
 
     r2_val = r2_score_np(true, pred)
     ax.text(0.05, 0.96, f'$R^2 = {r2_val:.4f}$',
-            transform=ax.transAxes, color='black', fontsize=12, va='top')
+            transform=ax.transAxes, color='black', fontsize=11, va='top')
     ax.text(0.05, 0.86, mae_text,
-            transform=ax.transAxes, color='black', fontsize=12, va='top')
+            transform=ax.transAxes, color='black', fontsize=11, va='top')
     ax.text(0.05, 0.76, rmse_text,
-            transform=ax.transAxes, color='black', fontsize=12, va='top')
+            transform=ax.transAxes, color='black', fontsize=11, va='top')
 
     add_marginal_distributions(ax, true, pred, color, bins=35)
 
@@ -157,7 +157,7 @@ def plot_parity_with_marginals(ax, true, pred, xlabel, ylabel, color, mae_text, 
 # =========================
 # Figure and colors - Changed to 1x3 layout
 # =========================
-fig, axs = plt.subplots(1, 3, figsize=(14, 4.4), dpi=100)
+fig, axs = plt.subplots(1, 3, figsize=(12, 4.0), dpi=100)
 
 energy_color = '#1f77b4'   # blue
 force_color = '#2ca02c'    # green
@@ -180,7 +180,7 @@ plot_parity_with_marginals(
     'DFT energy (eV/atom)',
     'NEP energy (eV/atom)',
     energy_color,
-    f'MAE = {energy_mae:.2f} meV/atom',
+    f'MAE = {energy_mae:.2f} meV/atom', 
     f'RMSE = {energy_rmse:.2f} meV/atom'
 )
 
@@ -250,11 +250,11 @@ plt.tight_layout()
 plt.subplots_adjust(wspace=0.2)
 
 if len(sys.argv) > 1 and sys.argv[1] == 'save':
-    plt.savefig('parity_plot.png', dpi=300, bbox_inches='tight')
+    plt.savefig('prediction.png', dpi=300, bbox_inches='tight')
 else:
     from matplotlib import get_backend
     if get_backend().lower() in ['agg', 'cairo', 'pdf', 'ps', 'svg']:
-        print("Non-interactive backend detected. Plot saved as 'train.png'.")
-        plt.savefig('parity_plot.png', dpi=300, bbox_inches='tight')
+        print("Non-interactive backend detected. Plot saved as 'prediction.png'.")
+        plt.savefig('prediction.png', dpi=300, bbox_inches='tight')
     else:
         plt.show()
