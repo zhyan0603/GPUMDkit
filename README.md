@@ -230,6 +230,7 @@ gpumdkit.sh -plt train
 <div align="center">
     <img src="./docs/Gallery/train.png" alt="msd" width="75%" />
 </div>
+
 ##### Example 5: Plot the parity plots
 
 To visualize the parity plots:
