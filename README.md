@@ -90,20 +90,22 @@ There are two options, <u>*interactive mode*</u> and <u>*command-line mode*</u>
 3. Follow the on-screen prompts to interactively select and run the desired function.
 
     ```
-             ____ ____  _   _ __  __ ____  _    _ _
-            / ___|  _ \| | | |  \/  |  _ \| | _(_) |_
-           | |  _| |_) | | | | |\/| | | | | |/ / | __|
-           | |_| |  __/| |_| | |  | | |_| |   <| | |_
-            \____|_|    \___/|_|  |_|____/|_|\_\_|\__|
+               ____ ____  _   _ __  __ ____  _    _ _
+              / ___|  _ \| | | |  \/  |  _ \| | _(_) |_
+             | |  _| |_) | | | | |\/| | | | | |/ / | __|
+             | |_| |  __/| |_| | |  | | |_| |   <| | |_
+              \____|_|    \___/|_|  |_|____/|_|\_\_|\__|
     
-            GPUMDkit Version 1.5.3 (dev) (2026-03-18)
-      Core Developer: Zihan YAN (yanzihan@westlake.edu.cn)
+              GPUMDkit Version 1.5.5 (dev) (2026-05-10)
+        Core Developer: Zihan YAN (yanzihan@westlake.edu.cn)
+     Main Contributors: Denan LI, Xin WU, Zhoulin LIU & Chen HUA
     
-     ----------------------- GPUMD -----------------------
+     ---------------------- GPUMD ------------------------
      1) Format Conversion          2) Sample Structures
      3) Workflow                   4) Calculators
-     5) Analyzer                   6) Developing ...
-     0) Quit!
+     5) Analyzer                   6) Visualization
+     7) Utilities                  8) Developing...
+     0) Exit
      ------------>>
      Input the function number:
     ```
@@ -123,29 +125,38 @@ gpumdkit.sh -h
 the help information:
 
 ```
-+==================================================================================================+
-|                              GPUMDkit 1.5.3 (dev) (2026-03-18) Usage                             |
-+======================================== Conversions =============================================+
-| -out2xyz       Convert OUTCAR to extxyz       | -pos2exyz     Convert POSCAR to extxyz           |
-| -cif2pos       Convert cif to POSCAR          | -pos2lmp      Convert POSCAR to LAMMPS           |
-| -cif2exyz      Convert cif to extxyz          | -lmp2exyz     Convert LAMMPS-dump to extxyz      |
-| -addgroup      Add group label                | -addweight    Add weight to the struct in extxyz |
-| -cp2k2xyz      Convert CP2K file to extxyz    | -traj2exyz    Convert ASE traj to extxyz         |
-| -xdat2exyz     Convert XDATCAR to extxyz      | Developing...                                    |
-+========================================= Analysis ===============================================+
-| -range         Print range of energy etc.     | -max_rmse     Get max RMSE from extxyz           |
-| -min_dist      Get min_dist between atoms     | -min_dist_pbc Get min_dist considering PBC       |
-| -filter_box    Filter struct by box limits    | -filter_value Filter struct by value (efs)       |
-| -filter_dist   Filter struct by min_dist      | -analyze_comp Analyze composition of extxyz      |
-| -pynep         Sample struct by pynep         | Developing...                                    |
-+====================================== Misc Utilities ============================================+
-| -plt           Plot scripts                   | -get_frame     Extract the specified frame       |
-| -calc          Calculators                    | -frame_range   Extract frames by fraction range  |
-| -clean         Clear files for work_dir       | -clean_xyz     Clean extra info in XYZ file      |
-| -time          Time consuming Analyzer        | -update        Update GPUMDkit                   |
-+==================================================================================================+
-| For detailed usage and examples, use: gpumdkit.sh -<option> -h                                   |
-+==================================================================================================+
++-------------------------------------------------------------------------------------------------------+
+|                          GPUMDkit 1.5.5 (dev) (2026-05-10) Command Help                               |
++-------------------------------------------------------------------------------------------------------+
+|                                          MAIN FUNCTIONS                                               |
++-------------------------------------------------------------------------------------------------------+
+| -h            Show this help table            | -plt <type>        Plot and visualization tools       |
+| -calc <type>  Calculator tools                | -time <gpumd|nep>  Time-consuming analyzer            |
+| -update       Update GPUMDkit                 | -clean             Clean extra files in current dir   |
++-------------------------------------------------------------------------------------------------------+
+|                                         FORMAT CONVERSION                                             |
++-------------------------------------------------------------------------------------------------------+
+| -out2xyz      OUTCAR -> extxyz (shell)        | -out2exyz          OUTCAR -> extxyz (python)          |
+| -cp2k2xyz     CP2K log -> xyz                 | -xdat2exyz         XDATCAR -> extxyz                  |
+| -cif2pos      cif -> POSCAR                   | -cif2exyz          cif -> extxyz                      |
+| -pos2exyz     POSCAR -> extxyz                | -exyz2pos          extxyz -> POSCAR                   |
+| -pos2lmp      POSCAR -> LAMMPS data           | -lmp2exyz          LAMMPS dump -> extxyz              |
+| -traj2exyz    ASE traj -> extxyz              | -replicate         Replicate structure                |
+| -addgroup     Add group labels                | -addweight         Add structure weight in extxyz     |
+| -clean_xyz    Clean extra info in extxyz      | -get_frame         Extract specific frame             |
+| -frame_range  Extract frames by range         |                                                       |
++-------------------------------------------------------------------------------------------------------+
+|                                            ANALYSIS                                                   |
++-------------------------------------------------------------------------------------------------------+
+| -range        Energy/force/virial statistics  | -analyze_comp      Analyze composition                |
+| -chem_species Analyze chemical species        | -cbc               Charge balance check               |
+| -min_dist     Min distance (no PBC)           | -min_dist_pbc      Min distance with PBC              |
+| -filter_dist  Filter by min_dist (no PBC)     | -filter_dist_pbc   Filter by min_dist (PBC)           |
+| -pda          Probability density analysis    | -hbond             Hydrogen-bond analysis             |
+| -pynep        FPS sampling by PyNEP           |                                                       |
++-------------------------------------------------------------------------------------------------------+
+| Detailed usage: gpumdkit.sh -<option> -h    Plot details: gpumdkit.sh -plt <type> -h                  |
++-------------------------------------------------------------------------------------------------------+
 ```
 
 ##### Example 2: View help information for -plt
@@ -157,28 +168,45 @@ gpumdkit.sh -plt -h
 the help information:
 
 ```
-+=====================================================================================================+
-|                              GPUMDkit 1.5.3 (dev) (2026-03-18) Plotting Usage                       |
-+=============================================== Plot Types ==========================================+
-| thermo          Plot thermo info                   | train          Plot NEP train results          |
-| prediction      Plot NEP prediction results        | train_test     Plot NEP train and test results |
-| msd             Plot mean square displacement      | msd_conv       Plot the convergence of MSD     |
-| msd_all         Plot MSD of all species            | sdc            Plot self diffusion coefficient |
-| rdf             Plot radial distribution function  | vac            Plot velocity autocorrelation   |
-| restart         Plot parameters in nep.restart     | dimer          Plot dimer plot                 |
-| force_errors    Plot force errors                  | des            Plot descriptors                |
-| charge          Plot charge distribution           | lr             Plot learning rate              |
-| doas            Plot density of atomistic states   | net_force      Plot net force distribution     |
-| sigma           Plot Arrhenius sigma               | D              Plot Arrhenius diffusivity      |
-| sigma_xyz       Plot directional Arrhenius sigma   | D_xyz          Plot directional Arrhenius D    |
-| emd             Plot EMD results                   | nemd           Plot NEMD results               |
-| hnemd           Plot HNEMD results                 | pdos           Plot VAC and PDOS               |
-| plane-grid      Plot displacement plane grid       | parity_density Plot parity plot density        |
-| cohesive        Plot cohsive energy                | viscosity      Plot visconsity                 |
-| rdf_pmf         Plot potential of mean force (PMF) |                                                |
-+=====================================================================================================+
-| For detailed usage and examples, use: gpumdkit.sh -plt <plot_type> -h                               |
-+=====================================================================================================+
+ +-----------------------------------------------------------------------------------------------+
+ |                     GPUMDkit 1.5.5 (dev) (2026-05-10) PLOT & VISUALIZATION TOOLS              |
+ +-----------------------------------------------------------------------------------------------+
+ |  Usage: gpumdkit.sh -plt <type>                        Help: gpumdkit.sh -plt <type> -h       |
+ +-----------------------------------------------------------------------------------------------+
+ |                                    NEP Training & Evaluation                                  |
+ +-----------------------------------------------------------------------------------------------+
+ |  train          - NEP training results           prediction     - NEP prediction results      |
+ |  train_test     - NEP train and test results     parity_density - Parity density plot         |
+ |  train_density  - Training results density plot  restart        - Parameters in nep.restart   |
+ |  charge         - Charge distribution            born_charge    - Born effective charges      |
+ |  dimer          - Dimer energy/force curve       force_errors   - Force errors                |
+ |  des            - Descriptors                    lr             - Learning rate for gnep      |
+ +-----------------------------------------------------------------------------------------------+
+ |                                     Diffusion & Transport                                     |
+ +-----------------------------------------------------------------------------------------------+
+ |  msd            - Mean square displacement       msd_conv       - MSD convergence             |
+ |  msd_all        - MSD for all species            sdc            - Self diffusion coefficient  |
+ |  msd_sdc        - MSD and SDC together           sigma          - Arrhenius ionic conductivity|
+ |  D              - Arrhenius diffusivity          sigma_xyz      - Directional Arrhenius sigma |
+ |  D_xyz          - Directional Arrhenius D                                                     |
+ +-----------------------------------------------------------------------------------------------+
+ |                                    MD & Structural Analysis                                   |
+ +-----------------------------------------------------------------------------------------------+
+ |  thermo         - thermo info in thermo.out      thermo2/3      - Thermo in different styles  |
+ |  rdf            - Radial distribution function   rdf_pmf        - Potential of mean force     |
+ |  vac            - Velocity autocorrelation       cohesive       - Cohesive energy curve       |
+ |  net_force      - Net force distribution         plane-grid     - Displacement plane grid     |
+ |  doas           - Density of atomistic states                                                 |
+ +-----------------------------------------------------------------------------------------------+
+ |                                        Heat Transport                                         |
+ +-----------------------------------------------------------------------------------------------+
+ |  emd            - EMD results                    nemd           - NEMD results                |
+ |  hnemd          - HNEMD results                  viscosity      - Viscosity                   |
+ +-----------------------------------------------------------------------------------------------+
+ |                                          Phonons                                              |
+ +-----------------------------------------------------------------------------------------------+
+ |  pdos           - VAC and PDOS                                                                |
+ +-----------------------------------------------------------------------------------------------+
 ```
 
 ##### Example 3: Convert VASP OUTCARs to extxyz
@@ -202,8 +230,19 @@ gpumdkit.sh -plt train
 <div align="center">
     <img src="./docs/Gallery/train.png" alt="msd" width="75%" />
 </div>
+##### Example 5: Plot the parity plots
 
-##### Example 5: Plot thermo evolution
+To visualize the parity plots:
+
+```
+gpumdkit.sh -plt test
+```
+
+<div align="center">
+    <img src="./docs/Gallery/prediction.png" alt="msd" width="95%" />
+</div>
+
+##### Example 6: Plot thermo evolution
 
 To visualize `thermo` evolution from `thermo.out` :
 
