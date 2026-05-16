@@ -1,10 +1,21 @@
-#!/usr/bin/env python3
-# -*- coding: utf-8 -*-
-
-# Convert CP2K outputs (.log) together with structure files (.xyz or .inp) into an extended XYZ format
-# containing energy, atomic forces, and virial tensor.
-# Requirements: Each subdirectory must contain at least one .xyz/.inp and one .log file (cp2k.log preferred).
-# Outputs: cp2k_exyz.xyz (extended XYZ trajectory), Logfile.txt (processing summary and diagnostics).
+"""
+=============================================================================
+GPUMDkit: A User-Friendly Toolkit for GPUMD and NEP
+Repository: https://github.com/zhyan0603/GPUMDkit
+Citation: Z. Yan et al., GPUMDkit: A User-Friendly Toolkit for GPUMD and NEP,
+          MGE Advances, 2026, e70074 (https://doi.org/10.1002/mgea.70074)
+=============================================================================
+Script:     cp2k_log2xyz.py
+Category:   Format Conversion Scripts
+Purpose:    Convert CP2K outputs (.log) together with structure files (.xyz
+            or .inp) into extended XYZ format with energy, forces, and virial.
+Usage:      python cp2k_log2xyz.py
+Output:
+  cp2k_exyz.xyz (extended XYZ trajectory), Logfile.txt (processing summary)
+Author:     Chen HUA (huachen23@mails.ucas.ac.cn)
+Last-modified: 2026-05-16
+=============================================================================
+"""
 
 import re
 from pathlib import Path

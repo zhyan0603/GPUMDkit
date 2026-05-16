@@ -1,10 +1,23 @@
 """
-    Purpose:
-        Convert mtp input file format to xyz.
-    Ref:
-        dpdata: https://github.com/deepmodeling/dpdata
-    Run:
-        python mtp2xyz.py train.cfg Symbol1 Symbol2 Symbol3 ...
+=============================================================================
+GPUMDkit: A User-Friendly Toolkit for GPUMD and NEP
+Repository: https://github.com/zhyan0603/GPUMDkit
+Citation: Z. Yan et al., GPUMDkit: A User-Friendly Toolkit for GPUMD and NEP,
+          MGE Advances, 2026, e70074 (https://doi.org/10.1002/mgea.70074)
+=============================================================================
+Script:     mtp2xyz.py
+Category:   Format Conversion Scripts
+Purpose:    Convert MTP (Machine Learning Interatomic Potential) input file
+            format to extended XYZ using dpdata.
+Usage:      python mtp2xyz.py <train.cfg> <Symbol1> <Symbol2> ...
+Arguments:
+  train.cfg   MTP training data file
+  SymbolX     Chemical element symbols in order
+Output:
+  Converted structure in extxyz format (printed to terminal or saved)
+Author:     Ke XU (kickhsu@gmail.com)
+Last-modified: 2026-05-16
+=============================================================================
 """
 
 import os

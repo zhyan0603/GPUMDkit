@@ -1,3 +1,24 @@
+"""
+=============================================================================
+GPUMDkit: A User-Friendly Toolkit for GPUMD and NEP
+Repository: https://github.com/zhyan0603/GPUMDkit
+Citation: Z. Yan et al., GPUMDkit: A User-Friendly Toolkit for GPUMD and NEP,
+          MGE Advances, 2026, e70074 (https://doi.org/10.1002/mgea.70074)
+=============================================================================
+Script:     abacus2xyz_scf.py
+Category:   Format Conversion Scripts
+Purpose:    Convert ABACUS SCF output files to extended XYZ format.
+Usage:      python abacus2xyz_scf.py <dir> <extxyz>
+Arguments:
+  dir      Directory containing ABACUS SCF outputs
+  extxyz   Output extxyz file
+Output:
+  <extxyz>  (converted structures in extxyz format)
+Author:     Benrui Tang (tang070205@proton.me)
+Last-modified: 2026-05-16
+=============================================================================
+"""
+
 import os, sys, json
 import numpy as np
 from ase.io import read, write

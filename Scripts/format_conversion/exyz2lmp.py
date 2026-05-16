@@ -1,3 +1,25 @@
+"""
+=============================================================================
+GPUMDkit: A User-Friendly Toolkit for GPUMD and NEP
+Repository: https://github.com/zhyan0603/GPUMDkit
+Citation: Z. Yan et al., GPUMDkit: A User-Friendly Toolkit for GPUMD and NEP,
+          MGE Advances, 2026, e70074 (https://doi.org/10.1002/mgea.70074)
+=============================================================================
+Script:     exyz2lmp.py
+Category:   Format Conversion Scripts
+Purpose:    Convert extended XYZ file to LAMMPS data format with proper
+            atom type mapping.
+Usage:      python exyz2lmp.py <extxyz_file> <lammps_data_file>
+Arguments:
+  extxyz_file      Input extxyz file
+  lammps_data_file Output LAMMPS data file
+Output:
+  <lammps_data_file>  (LAMMPS data format structure)
+Author:     Zihan YAN (yanzihan@westlake.edu.cn)
+Last-modified: 2026-05-16
+=============================================================================
+"""
+
 import sys
 from ase.io import read, write
 

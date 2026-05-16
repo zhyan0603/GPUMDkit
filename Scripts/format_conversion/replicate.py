@@ -1,3 +1,27 @@
+"""
+=============================================================================
+GPUMDkit: A User-Friendly Toolkit for GPUMD and NEP
+Repository: https://github.com/zhyan0603/GPUMDkit
+Citation: Z. Yan et al., GPUMDkit: A User-Friendly Toolkit for GPUMD and NEP,
+          MGE Advances, 2026, e70074 (https://doi.org/10.1002/mgea.70074)
+=============================================================================
+Script:     replicate.py
+Category:   Format Conversion Scripts
+Purpose:    Replicate a unit cell to generate a supercell with a target
+            number of atoms, finding the nearest compatible supercell size.
+Usage:      python replicate.py input.vasp output.vasp a b c
+            python replicate.py input.vasp output.vasp target_num
+Arguments:
+  input.vasp       Input structure file
+  output.vasp      Output supercell file
+  target_n_atoms   Target number of atoms in the supercell
+Output:
+  <output.vasp>  (replicated supercell structure)
+Author:     Boyi SITU (situboyi@westlake.edu.cn)
+Last-modified: 2026-05-16
+=============================================================================
+"""
+
 import sys
 import os
 import math
