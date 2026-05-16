@@ -1,3 +1,28 @@
+"""
+=============================================================================
+GPUMDkit: A User-Friendly Toolkit for GPUMD and NEP
+Repository: https://github.com/zhyan0603/GPUMDkit
+Citation: Z. Yan et al., GPUMDkit: A User-Friendly Toolkit for GPUMD and NEP,
+          MGE Advances, 2026, e70074 (https://doi.org/10.1002/mgea.70074)
+=============================================================================
+Script:     select_max_modev.py
+Category:   Sample Structure Scripts
+Purpose:    Extract the top N structures with the highest max force
+            deviation from active learning output (active.out + active.xyz).
+Usage:      python select_max_modev.py <top_n> <min_deviation>
+Arguments:
+  top_n          Number of top structures to extract
+  min_deviation  Minimum force deviation threshold for filtering
+Input files:
+  active.out     Max force deviation per structure
+  active.xyz     Corresponding structures in extxyz format
+Output:
+  selected.xyz
+Author:     Zihan YAN (yanzihan@westlake.edu.cn)
+Last-modified: 2026-05-16
+=============================================================================
+"""
+
 import sys
 import numpy as np
 from ase.io import read, write

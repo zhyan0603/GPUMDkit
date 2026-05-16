@@ -1,6 +1,10 @@
-#--------------------- function 3 workflow ----------------------
-# These functions are used to do the workflow
-# See the source codes in Scripts/workflow for more details
+# ============================================================
+# GPUMDkit workflow module
+# Repository: https://github.com/zhyan0603/GPUMDkit
+# Citation: Z. Yan et al., GPUMDkit: A User-Friendly Toolkit
+#           for GPUMD and NEP, MGE Advances, 2026, e70074
+# Author: Zihan YAN (yanzihan@westlake.edu.cn)
+# ============================================================
 
 # CP2K scf batch pretreatment
 function cp2k_batch_pretreatment(){

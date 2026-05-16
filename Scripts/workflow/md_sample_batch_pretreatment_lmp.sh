@@ -1,4 +1,19 @@
 #!/bin/bash
+# =============================================================================
+# GPUMDkit: A User-Friendly Toolkit for GPUMD and NEP
+# Repository: https://github.com/zhyan0603/GPUMDkit
+# Citation: Z. Yan et al., GPUMDkit: A User-Friendly Toolkit for GPUMD and NEP,
+#           MGE Advances, 2026, e70074 (https://doi.org/10.1002/mgea.70074)
+# =============================================================================
+# Script:     md_sample_batch_pretreatment_lmp.sh
+# Category:   Workflow Scripts
+# Purpose:    Batch pretreatment of structures for LAMMPS MD sampling:
+#             rename VASP/XYZ files, generate lammps input and data files,
+#             and create struct_md directories.
+# Usage:      source md_sample_batch_pretreatment_lmp.sh
+# Author:     Zihan YAN (yanzihan@westlake.edu.cn)
+# Last-modified: 2026-05-16
+# =============================================================================
 
 function f303_md_sample_batch_pretreatment_lmp(){
     echo " ------------>>"

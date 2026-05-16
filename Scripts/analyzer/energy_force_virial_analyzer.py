@@ -1,3 +1,26 @@
+"""
+=============================================================================
+GPUMDkit: A User-Friendly Toolkit for GPUMD and NEP
+Repository: https://github.com/zhyan0603/GPUMDkit
+Citation: Z. Yan et al., GPUMDkit: A User-Friendly Toolkit for GPUMD and NEP,
+          MGE Advances, 2026, e70074 (https://doi.org/10.1002/mgea.70074)
+=============================================================================
+Script:     energy_force_virial_analyzer.py
+Category:   Analyzer Scripts
+Purpose:    Compute the range (min, max) of energy, force, or virial in an
+            extxyz file. Optionally plot a histogram.
+Usage:      python energy_force_virial_analyzer.py <filename> <property> [hist]
+Arguments:
+  filename   Input extxyz file
+  property   Property to analyze: energy, force, or virial
+  hist       (optional) If "hist", plot a histogram
+Output:
+  Printed min/max values. PNG histogram if requested.
+Author:     Zihan YAN (yanzihan@westlake.edu.cn)
+Last-modified: 2026-05-16
+=============================================================================
+"""
+
 import sys
 import numpy as np
 from ase.io import read

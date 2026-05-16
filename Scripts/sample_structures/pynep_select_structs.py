@@ -1,3 +1,28 @@
+"""
+=============================================================================
+GPUMDkit: A User-Friendly Toolkit for GPUMD and NEP
+Repository: https://github.com/zhyan0603/GPUMDkit
+Citation: Z. Yan et al., GPUMDkit: A User-Friendly Toolkit for GPUMD and NEP,
+          MGE Advances, 2026, e70074 (https://doi.org/10.1002/mgea.70074)
+=============================================================================
+Script:     pynep_select_structs.py
+Category:   Sample Structure Scripts
+Purpose:    Select diverse structures from a sampledata set using
+            farthest-point sampling on pynep descriptors, relative to
+            an existing training set.
+Usage:      python pynep_select_structs.py <sampledata_file> <traindata_file> <nep_model_file>
+Arguments:
+  sampledata_file  Extxyz file with candidate structures
+  traindata_file   Extxyz file with existing training structures
+  nep_model_file   NEP model file (e.g., nep.txt)
+Output:
+  selected.xyz     Selected diverse structures
+  select.png       PCA visualization of descriptor space
+Author:     Zihan YAN (yanzihan@westlake.edu.cn)
+Last-modified: 2026-05-16
+=============================================================================
+"""
+
 import sys
 import numpy as np
 from ase.io import read, write

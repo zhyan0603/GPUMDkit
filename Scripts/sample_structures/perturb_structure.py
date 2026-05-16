@@ -1,3 +1,29 @@
+"""
+=============================================================================
+GPUMDkit: A User-Friendly Toolkit for GPUMD and NEP
+Repository: https://github.com/zhyan0603/GPUMDkit
+Citation: Z. Yan et al., GPUMDkit: A User-Friendly Toolkit for GPUMD and NEP,
+          MGE Advances, 2026, e70074 (https://doi.org/10.1002/mgea.70074)
+=============================================================================
+Script:     perturb_structure.py
+Category:   Sample Structure Scripts
+Purpose:    Generate perturbed structures from a POSCAR/CONTCAR file using
+            dpdata. Supports cell and atom perturbations with different
+            perturbation styles (normal, uniform, const).
+Usage:      python perturb_structure.py <input.vasp> <pert_num> <cell_pert_fraction> <atom_pert_distance> <atom_pert_style>
+Arguments:
+  input.vasp           Input POSCAR/CONTCAR file
+  pert_num             Number of perturbed structures to generate
+  cell_pert_fraction   Fraction of cell perturbation
+  atom_pert_distance   Distance of atom perturbation (Angstrom)
+  atom_pert_style      Style: normal, uniform, or const
+Output:
+  POSCAR_*.vasp  (perturbed structures in VASP POSCAR format)
+Author:     Zihan YAN (yanzihan@westlake.edu.cn)
+Last-modified: 2026-05-16
+=============================================================================
+"""
+
 import argparse
 import sys
 import dpdata

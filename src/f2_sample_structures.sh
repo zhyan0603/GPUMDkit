@@ -1,5 +1,10 @@
-#--------------------- function 2 sample structures ----------------------
-# These functions are used to sample structures
+# ============================================================
+# GPUMDkit sample structures module
+# Repository: https://github.com/zhyan0603/GPUMDkit
+# Citation: Z. Yan et al., GPUMDkit: A User-Friendly Toolkit
+#           for GPUMD and NEP, MGE Advances, 2026, e70074
+# Author: Zihan YAN (yanzihan@westlake.edu.cn)
+# ============================================================
 
 # Sample structures from extxyz (uniform or random)
 function f201_sample_structures(){
