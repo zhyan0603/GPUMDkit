@@ -5,17 +5,21 @@
 
 # Description: Main entry point for GPUMDkit interactive and command-line interface
 
+# Copyright (c) 2024-2026 Zihan YAN and GPUMDkit contributors
+# License: GPL-3.0 License
+# Contact Zihan YAN (yanzihan@westlake.edu.cn) if you have any questions or suggestions!
+
 # You need to set the path of GPUMD and GPUMDkit in your ~/.bashrc, for example
 # export GPUMDkit_path=/home/yanzihan/software/GPUMDkit
 
 if [ -z "$GPUMDkit_path" ]; then
-    echo "Error: GPUMDkit_path is not set."
-    echo "Please set it in your ~/.bashrc, e.g.:"
-    echo "  export GPUMDkit_path=/home/yanzihan/software/GPUMDkit"
+    echo " Error: GPUMDkit_path is not set."
+    echo " Please set it in your ~/.bashrc, e.g.:"
+    echo "   export GPUMDkit_path=/home/yanzihan/software/GPUMDkit"
     exit 1
 fi
 
-VERSION="1.5.5 (dev) (2026-05-10)"
+VERSION="1.5.5 (dev) (2026-05-16)"
 
 plt_path="${GPUMDkit_path}/Scripts/plt_scripts"
 analyzer_path="${GPUMDkit_path}/Scripts/analyzer"
@@ -213,7 +217,8 @@ echo " +------------------------------------------------------+"
 echo " │ If you find it useful, please cite our paper:        │"
 echo " │                                                      │"
 echo " │ GPUMDkit: A User-Friendly Toolkit for GPUMD and NEP  │"
-echo " |       (https://arxiv.org/abs/2603.17367)             │"
+echo " |           MGE Advances, 2026, 4, e70074              |"
+echo " |       (https://doi.org/10.1002/mgea.70074)           │"
 echo " │                                                      │"
 echo " |     Welcome to join our QQ group (825696376) !       │"
 echo " +------------------------------------------------------+"
