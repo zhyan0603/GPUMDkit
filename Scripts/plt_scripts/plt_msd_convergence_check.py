@@ -1,8 +1,33 @@
+"""
+=============================================================================
+GPUMDkit: A User-Friendly Toolkit for GPUMD and NEP
+Repository: https://github.com/zhyan0603/GPUMDkit
+Citation: Z. Yan et al., GPUMDkit: A User-Friendly Toolkit for GPUMD and NEP,
+          MGE Advances, 2026, e70074 (https://doi.org/10.1002/mgea.70074)
+=============================================================================
+Script:     plt_msd_convergence_check.py
+Category:   Plot Scripts
+Purpose:    Check convergence of MSD calculations across different time
+            windows by analyzing msd_step*.out files.
+Usage:      gpumdkit.sh -plt msd_conv
+            python plt_msd_convergence_check.py
+Output:
+  msd_convergence.png  (if save is used, or if backend is non-interactive)
+Author:     Zihan YAN (yanzihan@westlake.edu.cn)
+Last-modified: 2026-05-16
+=============================================================================
+"""
+
 import sys
 import numpy as np
 import matplotlib.pyplot as plt
 import glob
 import os
+
+plt.rcParams.update({
+    "font.family": "sans-serif",
+    "font.sans-serif": ["Arial", "DejaVu Sans", "Liberation Sans"],
+})
 
 # Function to read data from the given file
 def read_data(file_name):

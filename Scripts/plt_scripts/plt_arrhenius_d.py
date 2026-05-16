@@ -2,6 +2,8 @@
 =============================================================================
 GPUMDkit: A User-Friendly Toolkit for GPUMD and NEP
 Repository: https://github.com/zhyan0603/GPUMDkit
+Citation: Z. Yan et al., GPUMDkit: A User-Friendly Toolkit for GPUMD and NEP,
+          MGE Advances, 2026, e70074 (https://doi.org/10.1002/mgea.70074)
 =============================================================================
 Script:     plt_arrhenius_d.py
 Category:   Plot Scripts
@@ -13,7 +15,7 @@ Usage:      gpumdkit.sh -plt D/arrhenius_d [save]
             python plt_arrhenius_d.py [save]
 
 Arguments:
-  save    Save the plot as 'Arrhenius_D.png' instead of displaying it
+  save      Save the plot as 'Arrhenius_D.png' instead of displaying it
 
 Output:
   Arrhenius_D.png  (if save is used, or if backend is non-interactive)

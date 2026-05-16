@@ -1,8 +1,36 @@
+"""
+=============================================================================
+GPUMDkit: A User-Friendly Toolkit for GPUMD and NEP
+Repository: https://github.com/zhyan0603/GPUMDkit
+Citation: Z. Yan et al., GPUMDkit: A User-Friendly Toolkit for GPUMD and NEP,
+          MGE Advances, 2026, e70074 (https://doi.org/10.1002/mgea.70074)
+=============================================================================
+Script:     plt_dimer.py
+Category:   Plot Scripts
+Purpose:    Plot dimer interaction curves (energy and force vs distance)
+            for a pair of atoms using a NEP model.
+Usage:      gpumdkit.sh -plt dimer <element1> <element2> <nep_dir>
+            python plt_dimer.py <element1> <element2> <nep_dir>
+Arguments:
+  element1, element2  Atom symbols (e.g., Li Li)
+  nep_dir             Path to the NEP potential file (e.g., ./nep.txt)
+Output:
+  Display of dimer interaction curve
+Author:     Zihan YAN (yanzihan@westlake.edu.cn)
+Last-modified: 2026-05-16
+=============================================================================
+"""
+
 import numpy as np
 import matplotlib.pyplot as plt
 from ase import Atoms
 from calorine.calculators import CPUNEP
 import sys
+
+plt.rcParams.update({
+    "font.family": "sans-serif",
+    "font.sans-serif": ["Arial", "DejaVu Sans", "Liberation Sans"],
+})
 
 # Check the number of command-line arguments
 if len(sys.argv) < 4:

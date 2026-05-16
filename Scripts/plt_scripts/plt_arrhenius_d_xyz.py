@@ -1,13 +1,24 @@
 """
-This script reads MSD data from multiple temperature folders (e.g., 600K, 700K, etc.), 
-calculates diffusion coefficients (D) for all directions and individual x, y, z components, 
-and plots the Arrhenius relationship (log10(D) vs. 1000/T). 
-It also fits the data to extract activation energies (Ea) for each component. 
-
-Author: Modified from original by Zihan YAN (yanzihan@westlake.edu.cn)
-
-Usage:
-    python plt_arrhenius_d_xyz.py [save]
+=============================================================================
+GPUMDkit: A User-Friendly Toolkit for GPUMD and NEP
+Repository: https://github.com/zhyan0603/GPUMDkit
+Citation: Z. Yan et al., GPUMDkit: A User-Friendly Toolkit for GPUMD and NEP,
+          MGE Advances, 2026, e70074 (https://doi.org/10.1002/mgea.70074)
+=============================================================================
+Script:     plt_arrhenius_d_xyz.py
+Category:   Plot Scripts
+Purpose:    Calculate diffusion coefficients from msd.out in temperature
+            folders for x/y/z directions, generate an Arrhenius plot, and
+            extract activation energy for each component.
+Usage:      gpumdkit.sh -plt D_xyz [save]
+            python plt_arrhenius_d_xyz.py [save]
+Arguments:
+  save      Save the plot as 'Arrhenius_D_xyz.png' instead of displaying it
+Output:
+  Arrhenius_D_xyz.png  (if save is used)
+Author:     Zihan YAN (yanzihan@westlake.edu.cn)
+Last-modified: 2026-05-16
+=============================================================================
 """
 
 import os

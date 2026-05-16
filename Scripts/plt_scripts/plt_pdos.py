@@ -1,8 +1,24 @@
 """
-@Author   : Ziyang Wang (m15566605404@163.com)
-@Remark   : Post-processing script for VAC (Velocity Autocorrelation) and PDOS (Phonon Density of States)
-            Calculates normalized VAC, PDOS, and Heat Capacity (Cv) from GPUMD outputs.
-@Modified : Added logic to parse 'group' keyword in compute_dos to determine num_atoms correctly.
+=============================================================================
+GPUMDkit: A User-Friendly Toolkit for GPUMD and NEP
+Repository: https://github.com/zhyan0603/GPUMDkit
+Citation: Z. Yan et al., GPUMDkit: A User-Friendly Toolkit for GPUMD and NEP,
+          MGE Advances, 2026, e70074 (https://doi.org/10.1002/mgea.70074)
+=============================================================================
+Script:     plt_pdos.py
+Category:   Plot Scripts
+Purpose:    Post-processing for VAC (Velocity Autocorrelation) and PDOS
+            (Phonon Density of States). Calculates normalized VAC, PDOS,
+            and Heat Capacity (Cv) from GPUMD outputs.
+Usage:      gpumdkit.sh -plt pdos [save]
+            python plt_pdos.py [save]
+Arguments:
+  save      Save plots as 'vac_pdos.png' and 'heat_capacity.png'
+Output:
+  vac_pdos.png, heat_capacity.png  (if save is used)
+Author:     Ziyang Wang (m15566605404@163.com)
+Last-modified: 2026-05-16
+=============================================================================
 """
 
 import pandas as pd
@@ -16,6 +32,8 @@ from ase.io import read
 # Figure Properties
 aw, lw, fs = 1.2, 2, 12
 matplotlib.rc('font', size=fs)
+matplotlib.rc('font', family='sans-serif')
+matplotlib.rc('font', **{'sans-serif': ['Arial', 'DejaVu Sans', 'Liberation Sans']})
 matplotlib.rc('axes', linewidth=aw)
 
 def set_fig_properties(ax_list, tl=4, tw=1.2, tlm=4):

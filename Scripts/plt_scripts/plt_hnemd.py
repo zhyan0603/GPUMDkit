@@ -1,7 +1,26 @@
 """
-@Author   : Xin Wu
-@Contact  : xinwuchn97@gmial.com
-@Remark   : Post-processing script for HNEMD (Homogenous Non-Equilibrium Molecular Dynamics) thermal conductivity calculations
+=============================================================================
+GPUMDkit: A User-Friendly Toolkit for GPUMD and NEP
+Repository: https://github.com/zhyan0603/GPUMDkit
+Citation: Z. Yan et al., GPUMDkit: A User-Friendly Toolkit for GPUMD and NEP,
+          MGE Advances, 2026, e70074 (https://doi.org/10.1002/mgea.70074)
+=============================================================================
+Script:     plt_hnemd.py
+Category:   Plot Scripts
+Purpose:    Post-processing for HNEMD (Homogeneous Non-Equilibrium Molecular
+            Dynamics) thermal conductivity calculations, including running
+            average and optional SHC spectral analysis.
+Usage:      gpumdkit.sh -plt hnemd [scale_eff_size] [cutoff_freq] [save]
+            python plt_hnemd.py [scale_eff_size] [cutoff_freq] [save]
+Arguments:
+  scale_eff_size  Scale factor for effective cross-sectional area (default: 1)
+  cutoff_freq     Cutoff frequency for SHC in THz (default: 60)
+  save            Save the plot as 'hnemd.png' instead of displaying it
+Output:
+  hnemd.png    (if save is used)
+Author:     Xin Wu (xinwuchn97@gmial.com)
+Last-modified: 2026-05-16
+=============================================================================
 """
 
 import pandas as pd
@@ -14,6 +33,8 @@ from ase.io import read
 # Figure Properties
 aw, fs = 1.2, 12
 matplotlib.rc('font', size=fs)
+matplotlib.rc('font', family='sans-serif')
+matplotlib.rc('font', **{'sans-serif': ['Arial', 'DejaVu Sans', 'Liberation Sans']})
 matplotlib.rc('axes', linewidth=aw)
 
 def set_fig_properties(ax_list, tl=4, tw=1.2, tlm=4):

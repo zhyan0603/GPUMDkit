@@ -1,17 +1,33 @@
 """
-This script reads SDC data from 'msd.out', plots the full range of SDC vs time, 
-and includes an inset showing the last 80% of the data with a moving average overlay. 
-
-Author: Zihan YAN (yanzihan@westlake.edu.cn)
-Last modified: 2026-03-19
-
-Usage:
-    python plt_sdc.py [save]
-"""    
+=============================================================================
+GPUMDkit: A User-Friendly Toolkit for GPUMD and NEP
+Repository: https://github.com/zhyan0603/GPUMDkit
+Citation: Z. Yan et al., GPUMDkit: A User-Friendly Toolkit for GPUMD and NEP,
+          MGE Advances, 2026, e70074 (https://doi.org/10.1002/mgea.70074)
+=============================================================================
+Script:     plt_sdc.py
+Category:   Plot Scripts
+Purpose:    Plot self-diffusion coefficient (SDC) vs time from msd.out with
+            an inset showing the last 80% of data with moving average overlay.
+Usage:      gpumdkit.sh -plt sdc
+            python plt_sdc.py [save]
+Arguments:
+  save      Save the plot as 'SDC.png' instead of displaying it
+Output:
+  SDC.png   (if save is used, or if backend is non-interactive)
+Author:     Zihan YAN (yanzihan@westlake.edu.cn)
+Last-modified: 2026-05-16
+=============================================================================
+"""
 
 import sys
 import numpy as np
 import matplotlib.pyplot as plt
+
+plt.rcParams.update({
+    "font.family": "sans-serif",
+    "font.sans-serif": ["Arial", "DejaVu Sans", "Liberation Sans"],
+})
 
 # Function to read data from file
 def read_data(file_name):

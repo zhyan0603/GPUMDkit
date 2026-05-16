@@ -1,16 +1,23 @@
 """
-Plot GPUMD cohesive.out: isotropic scaling factor vs cohesive energy.
-
-File format:
-- column 1: scaling factor (dimensionless)
-- column 2: potential energy (eV) after minimization
-
-Author: Qilin Guo (guoqilin@buaa.edu.cn)
-Modified by Zihan Yan (yanzihan@westlake.edu.cn)
-Last modified: 2026-03-18
-
-Usage:
-  python plot_cohesive.py [save]
+=============================================================================
+GPUMDkit: A User-Friendly Toolkit for GPUMD and NEP
+Repository: https://github.com/zhyan0603/GPUMDkit
+Citation: Z. Yan et al., GPUMDkit: A User-Friendly Toolkit for GPUMD and NEP,
+          MGE Advances, 2026, e70074 (https://doi.org/10.1002/mgea.70074)
+=============================================================================
+Script:     plt_cohesive.py
+Category:   Plot Scripts
+Purpose:    Plot cohesive energy curve from GPUMD cohesive.out: isotropic
+            scaling factor vs cohesive energy.
+Usage:      gpumdkit.sh -plt cohesive [save]
+            python plt_cohesive.py [save]
+Arguments:
+  save      Save the plot as 'Cohesive.png' instead of displaying it
+Output:
+  Cohesive.png  (if save is used)
+Author:     Qilin Guo (guoqilin@buaa.edu.cn), Zihan YAN (yanzihan@westlake.edu.cn)
+Last-modified: 2026-05-16
+=============================================================================
 """
 
 import os

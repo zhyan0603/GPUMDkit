@@ -1,6 +1,33 @@
+"""
+=============================================================================
+GPUMDkit: A User-Friendly Toolkit for GPUMD and NEP
+Repository: https://github.com/zhyan0603/GPUMDkit
+Citation: Z. Yan et al., GPUMDkit: A User-Friendly Toolkit for GPUMD and NEP,
+          MGE Advances, 2026, e70074 (https://doi.org/10.1002/mgea.70074)
+=============================================================================
+Script:     plt_train_test.py
+Category:   Plot Scripts
+Purpose:    Combined parity plots for both NEP training and testing datasets
+            (energy, forces, stresses).
+Usage:      gpumdkit.sh -plt train_test [save]
+            python plt_train_test.py [save]
+Arguments:
+  save      Save the plot as 'train_test.png' instead of displaying it
+Output:
+  train_test.png  (if save is used, or if backend is non-interactive)
+Author:     Zihan YAN (yanzihan@westlake.edu.cn)
+Last-modified: 2026-05-16
+=============================================================================
+"""
+
 import sys
 import matplotlib.pyplot as plt
 import numpy as np
+
+plt.rcParams.update({
+    "font.family": "sans-serif",
+    "font.sans-serif": ["Arial", "DejaVu Sans", "Liberation Sans"],
+})
 
 # Load data
 energy_train = np.loadtxt('energy_train.out')
