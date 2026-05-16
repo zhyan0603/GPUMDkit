@@ -1,3 +1,30 @@
+"""
+=============================================================================
+GPUMDkit: A User-Friendly Toolkit for GPUMD and NEP
+Repository: https://github.com/zhyan0603/GPUMDkit
+Citation: Z. Yan et al., GPUMDkit: A User-Friendly Toolkit for GPUMD and NEP,
+          MGE Advances, 2026, e70074 (https://doi.org/10.1002/mgea.70074)
+=============================================================================
+Script:     calc_displacement.py
+Category:   Calculator Scripts
+Purpose:    Calculate atomic displacements from trajectory/model and a
+            neighbor list using the ferrodispcalc package.
+Usage:      python calc_displacement.py -i <input.xyz> -n <nl-file> -o <output.dat> [options]
+Arguments:
+  -i, --input   Input xyz file (default: model.xyz)
+  -n            Neighbor list file (required)
+  -o, --output  Output file for displacement data
+  -s            Start index for slicing frames
+  -t            Stop index for slicing frames
+  -p            Step for slicing frames
+  -l            Use the last frames (integer for count, float for ratio)
+Output:
+  Atomic displacement data saved to output file
+Author:     Denan LI (lidenan@westlake.edu.cn)
+Last-modified: 2026-05-16
+=============================================================================
+"""
+
 from ase.io import read
 import argparse
 import numpy as np

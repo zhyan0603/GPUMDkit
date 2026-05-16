@@ -1,3 +1,29 @@
+"""
+=============================================================================
+GPUMDkit: A User-Friendly Toolkit for GPUMD and NEP
+Repository: https://github.com/zhyan0603/GPUMDkit
+Citation: Z. Yan et al., GPUMDkit: A User-Friendly Toolkit for GPUMD and NEP,
+          MGE Advances, 2026, e70074 (https://doi.org/10.1002/mgea.70074)
+=============================================================================
+Script:     calc_averaged_structure.py
+Category:   Calculator Scripts
+Purpose:    Calculate and save the averaged structure from trajectory frames
+            using the ferrodispcalc package.
+Usage:      python calc_averaged_structure.py -i <movie.xyz> -o <output.xyz> [options]
+Arguments:
+  -i, --input   Input trajectory file (default: movie.xyz)
+  -s            Start index
+  -t            End index
+  -p            Step (process every p-th frame)
+  -l            Fraction or number of last frames to average
+  -o, --output  Output averaged structure file (required)
+Output:
+  Averaged structure in extxyz format
+Author:     Denan LI (lidenan@westlake.edu.cn)
+Last-modified: 2026-05-16
+=============================================================================
+"""
+
 from ase.io import read, write
 import argparse
 import math

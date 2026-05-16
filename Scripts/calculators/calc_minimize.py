@@ -1,8 +1,26 @@
 """
-This script performs structure relaxation using calorine.
-It reads a single structure from POSCAR or extxyz file, performs energy minimization,
-and outputs the optimization trajectory to minimize.xyz in extxyz format.
-The force convergence threshold and maximum steps can be specified via command line arguments.
+=============================================================================
+GPUMDkit: A User-Friendly Toolkit for GPUMD and NEP
+Repository: https://github.com/zhyan0603/GPUMDkit
+Citation: Z. Yan et al., GPUMDkit: A User-Friendly Toolkit for GPUMD and NEP,
+          MGE Advances, 2026, e70074 (https://doi.org/10.1002/mgea.70074)
+=============================================================================
+Script:     calc_minimize.py
+Category:   Calculator Scripts
+Purpose:    Perform structure relaxation using calorine (CPUNEP) from a
+            POSCAR or extxyz file with configurable force convergence and
+            max optimization steps.
+Usage:      python calc_minimize.py <structure_file> <nep.txt> [fmax=0.01] [max_steps=1000]
+Arguments:
+  structure_file  Input structure file (POSCAR or .xyz)
+  nep.txt         Path to the NEP model file
+  fmax            Force convergence threshold (eV/A, default: 0.01)
+  max_steps       Max optimization steps (default: 1000)
+Output:
+  minimize.xyz  (optimization trajectory in extxyz format)
+Author:     Zihan YAN (yanzihan@westlake.edu.cn)
+Last-modified: 2026-05-16
+=============================================================================
 """
 
 import sys

@@ -1,3 +1,33 @@
+"""
+=============================================================================
+GPUMDkit: A User-Friendly Toolkit for GPUMD and NEP
+Repository: https://github.com/zhyan0603/GPUMDkit
+Citation: Z. Yan et al., GPUMDkit: A User-Friendly Toolkit for GPUMD and NEP,
+          MGE Advances, 2026, e70074 (https://doi.org/10.1002/mgea.70074)
+=============================================================================
+Script:     calc_polarization_abo3.py
+Category:   Calculator Scripts
+Purpose:    Calculate local polarization for ABO3 perovskite systems from
+            neighbor lists using the ferrodispcalc package.
+Usage:      python calc_polarization_abo3.py -i <model.xyz> --nl-ba <nl-B-A.dat>
+            --nl-bo <nl-B-O.dat> [options]
+Arguments:
+  -i, --input   Input xyz file (default: model.xyz)
+  --nl-ba       Neighbor list file for B-A pairs (required)
+  --nl-bo       Neighbor list file for B-O pairs (required)
+  -o, --output  Output text file (default: polarization.dat)
+  --bec         Born effective charge terms in the format Element=value (required)
+  -s            Start index for slicing frames
+  -t            Stop index for slicing frames
+  -p            Step for slicing frames
+  -l            Use the last frames (integer for count, float for ratio)
+Output:
+  Polarization data printed or saved to file
+Author:     Denan LI (lidenan@westlake.edu.cn)
+Last-modified: 2026-05-16
+=============================================================================
+"""
+
 from ase.io import read
 import argparse
 import math
