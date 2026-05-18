@@ -36,11 +36,6 @@ To install `GPUMDkit`, follow these steps:
     cd GPUMDkit; source ./install.sh
     ```
     
-    then
-    
-    ```sh
-    source ~/.bashrc
-    ```
 
 ## Dependencies
 

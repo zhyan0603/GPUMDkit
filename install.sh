@@ -51,10 +51,8 @@ else
     echo -e "\033[31mError: gpumdkit.sh not found in ${INSTALL_DIR}!\033[0m"
 fi
 
-# 5. Final instructions
+# 5. Make variables available in current shell
+source "${RC_FILE}"
 echo "------------------------------------------------------"
-echo -e "\033[32mInstallation Complete!\033[0m"
-echo ""
-echo "Please run the following command to refresh your shell:"
-echo -e "\033[1;33m  source ${RC_FILE}\033[0m"
+echo -e "\033[32mInstallation Complete! GPUMDkit is ready to use.\033[0m"
 echo "------------------------------------------------------"
