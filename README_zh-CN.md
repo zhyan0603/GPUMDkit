@@ -2,9 +2,9 @@
   <img src="./docs/Gallery/gpumdkit_logo.png" width="25%" alt="GPUMDkit Logo">
 </p>
 <p align="center">
-  <strong>English</strong>
+  <a href="./README.md">English</a>
   &nbsp;·&nbsp;
-  <a href="./README_zh-CN.md">简体中文</a>
+  <strong>简体中文</strong>
   &nbsp;·&nbsp;
   <a href="https://zhyan0603.github.io/GPUMDkit/">Website</a> &nbsp;·&nbsp;
   <a href="https://zhyan0603.github.io/GPUMDkit/htmls/tutorials.html">Documentation</a>
@@ -19,81 +19,82 @@
   <img src="https://img.shields.io/github/languages/code-size/zhyan0603/GPUMDkit" alt="Code Size">
   <a href="https://github.com/zhyan0603/GPUMDkit/graphs/contributors"><img src="https://img.shields.io/github/contributors/zhyan0603/GPUMDkit?style=flat-square&color=brightgreen" alt="Contributors"></a>
 </p>
-<p style="text-align: justify;"><strong>GPUMDkit</strong> is a toolkit for the GPUMD (<em>Graphics Processing Units Molecular Dynamics</em>) and NEP (<em>neuroevolution potential</em>) program. It offers a user-friendly command-line interface to streamline common scripts and workflows, simplifying tasks such as script invocation, format conversion, structure sampling, NEP construction workflow, and various analysis, aiming to improve user productivity.</p>
+<p style="text-align: justify;"><strong>GPUMDkit</strong> 是面向 GPUMD（<em>Graphics Processing Units Molecular Dynamics</em>）和 NEP（<em>neuroevolution potential</em>）程序的工具包。它提供用户友好的命令行界面，简化常见脚本和工作流程，涵盖脚本调用、格式转换、结构采样、NEP 构建流程及各类分析，旨在提升用户工作效率。</p>
 
-## Features
-- **Simplified Script Invocation**: Easily run scripts for GPUMD and NEP.
-- **Workflow Automation**: Automate common tasks to save time and reduce manual intervention.
-- **User-Friendly Interface**: Intuitive shell commands designed to enhance user experience.
 
-## Installation
-To install `GPUMDkit`, follow these steps:
+## 功能特点
+- **简化脚本调用**：轻松运行 GPUMD 和 NEP 相关脚本。
+- **工作流自动化**：自动化常见任务，节省时间，减少人工干预。
+- **用户友好界面**：直观的 shell 命令，提升使用体验。
 
-1. Clone the repository or download the whole project.
+## 安装
+按以下步骤安装 `GPUMDkit`：
+
+1. 克隆仓库或下载整个项目。
 
     ```
     git clone https://github.com/zhyan0603/GPUMDkit.git
     ```
 
-    use `-b` options if you want to download the specified branch, for example:
+    如需下载指定分支，可使用 `-b` 参数，例如：
 
     ```
     git clone -b dev https://github.com/zhyan0603/GPUMDkit.git
     ```
 
-2. Run the following command:
-   
+2. 执行以下命令：
+
     ```
     cd GPUMDkit; source ./install.sh
     ```
-    
 
-## Dependencies
 
-Some advanced features of `GPUMDkit` require some Python packages:
+## 依赖项
+
+`GPUMDkit` 的部分高级功能需要以下 Python 包：
 
 ```bash
-# Create a clean conda environment
+# 创建干净的 conda 环境
 conda create -n gpumdkit python=3.12
 conda activate gpumdkit
 
-# Install the required packages
+# 安装所需包
 pip install neptrain ase pymatgen dpdata
 ```
 
-Tip: Make sure the `gpumdkit` environment is activated before using `GPUMDkit` features.
+提示：使用 `GPUMDkit` 功能前，请确保已激活 `gpumdkit` 环境。
 
-## Update
+## 更新
 
-If your device has access to `github`, simply run this command:
+如果设备可以访问 `github`，直接运行：
 
 ```
 gpumdkit.sh -update
 ```
 
-Otherwise you will need to download the new package manually.
+否则需要手动下载新版本：
 
 ```
 wget https://github.com/zhyan0603/GPUMDkit/archive/refs/heads/main.zip
 ```
 
-## Usage
+## 使用方法
 
-There are two options, <u>*interactive mode*</u> and <u>*command-line mode*</u>
+提供两种模式：<u>*交互模式*</u> 和 <u>*命令行模式*</u>
 
-#### Interactive Mode
+#### 交互模式
 
 ---
 
-1. Open your terminal.
+1. 打开终端。
 
-2. Execute the `gpumdkit.sh` script:
+2. 执行 `gpumdkit.sh`：
 
    ```
    gpumdkit.sh
    ```
 
-3. Follow the on-screen prompts to interactively select and run the desired function.
+3. 根据屏幕提示交互式选择并运行所需功能。
 
     ```
                ____ ____  _   _ __  __ ____  _    _ _
@@ -101,34 +102,34 @@ There are two options, <u>*interactive mode*</u> and <u>*command-line mode*</u>
              | |  _| |_) | | | | |\/| | | | | |/ / | __|
              | |_| |  __/| |_| | |  | | |_| |   <| | |_
               \____|_|    \___/|_|  |_|____/|_|\_\_|\__|
-    
+
               GPUMDkit Version 1.5.5 (dev) (2026-05-10)
         Core Developer: Zihan YAN (yanzihan@westlake.edu.cn)
      Main Contributors: Denan LI, Xin WU, Zhoulin LIU & Chen HUA
-    
-     ---------------------- GPUMD ------------------------
-     1) Format Conversion          2) Sample Structures
-     3) Workflow                   4) Calculators
-     5) Analyzer                   6) Visualization
-     7) Utilities                  8) Developing...
-     0) Exit
-     ------------>>
-     Input the function number:
+
+      ---------------------- GPUMD ------------------------
+      1) Format Conversion          2) Sample Structures
+      3) Workflow                   4) Calculators
+      5) Analyzer                   6) Visualization
+      7) Utilities                  8) Developing...
+      0) Exit
+      ------------>>
+      Input the function number:
     ```
 
-#### Command-Line Mode
+#### 命令行模式
 
 ----
 
-For users familiar with the `GPUMDkit` , the command-line mode allows for faster execution by directly passing arguments to `gpumdkit.sh`. Here are some examples:
+对于熟悉 `GPUMDkit` 的用户，命令行模式可直接向 `gpumdkit.sh` 传递参数，执行更快捷。以下是一些示例：
 
-##### Example 1: View help information
+##### 示例 1：查看帮助信息
 
 ```
 gpumdkit.sh -h
 ```
 
-the help information:
+帮助信息如下：
 
 ```
 +-------------------------------------------------------------------------------------------------------+
@@ -165,13 +166,13 @@ the help information:
 +-------------------------------------------------------------------------------------------------------+
 ```
 
-##### Example 2: View help information for -plt
+##### 示例 2：查看 -plt 帮助信息
 
 ```
 gpumdkit.sh -plt -h
 ```
 
-the help information:
+帮助信息如下：
 
 ```
  +-----------------------------------------------------------------------------------------------+
@@ -215,19 +216,19 @@ the help information:
  +-----------------------------------------------------------------------------------------------+
 ```
 
-##### Example 3: Convert VASP OUTCARs to extxyz
+##### 示例 3：转换 VASP OUTCAR 为 extxyz
 
-To convert a `VASP` `OUTCARs` to an extended XYZ format (`extxyz`) file, use the following command:
+将 `VASP` `OUTCAR` 文件转换为 extxyz 格式：
 
 ```
-gpumdkit.sh -out2xyz <dir_of_OUTCARs>
+gpumdkit.sh -out2xyz <OUTCAR所在目录>
 
-Example: gpumdkit.sh -out2xyz .
+示例: gpumdkit.sh -out2xyz .
 ```
 
-##### Example 4: Plot loss and parity plots
+##### 示例 4：绘制损失曲线和 parity 图
 
-To visualize the evolution of various terms and parity plots:
+可视化训练过程中各项损失函数的变化和 parity 图：
 
 ```
 gpumdkit.sh -plt train
@@ -237,9 +238,7 @@ gpumdkit.sh -plt train
     <img src="./docs/Gallery/train.png" alt="msd" width="75%" />
 </div>
 
-##### Example 5: Plot the parity plots
-
-To visualize the parity plots:
+##### 示例 5：绘制 parity 图
 
 ```
 gpumdkit.sh -plt test
@@ -249,9 +248,9 @@ gpumdkit.sh -plt test
     <img src="./docs/Gallery/prediction.png" alt="msd" width="95%" />
 </div>
 
-##### Example 6: Plot thermo evolution
+##### 示例 6：绘制 thermo 演化图
 
-To visualize `thermo` evolution from `thermo.out` :
+可视化 `thermo.out` 中的热力学量演化：
 
 ```
 gpumdkit.sh -plt thermo
@@ -259,42 +258,42 @@ gpumdkit.sh -plt thermo
 
 ![](./docs/Gallery/thermo.png)
 
-You can also save images as PNG if your device doesn't support visualization:
+如果当前设备不支持显示图形，也可以将图片保存为 PNG：
 
 ```
 gpumdkit.sh -plt thermo save
 ```
 
-Refer to our [documentation](https://zhyan0603.github.io/GPUMDkit/htmls/tutorials.html) for more detailed examples and command options.
+更多详细示例和命令选项请参考我们的[文档](https://zhyan0603.github.io/GPUMDkit/htmls/tutorials.html)。
 
-#### Custom Commands
+#### 自定义命令
 
-`GPUMDkit` now supports custom commands via `~/.gpumdkit.in`.
+`GPUMDkit` 支持通过 `~/.gpumdkit.in` 文件自定义命令。
 
-You can add your own shortcuts (e.g., `gpumdkit.sh -yourcommand`) by defining some functions in this file. This allows you to extend `GPUMDkit` with personal scripts. See [here](https://zhyan0603.github.io/GPUMDkit/htmls/custom_commands.html) for the detail usage.
+你可以在该文件中定义函数来添加自己的快捷命令（例如 `gpumdkit.sh -yourcommand`），从而扩展 `GPUMDkit` 的功能。详细用法请参见[此处](https://zhyan0603.github.io/GPUMDkit/htmls/custom_commands.html)。
 
-#### Tab Completion Support
+#### Tab 补全支持
 
-`gpumdkit.sh` provides optional Bash `Tab` completion to enhance the command-line experience. This feature allows you to auto-complete primary options (e.g., `-h`, `-plt`, `-calc`) and their secondary parameters (e.g., `thermo`, `train`) by pressing the `Tab` key.
+`gpumdkit.sh` 提供了可选的 Bash `Tab` 补全功能，增强命令行使用体验。按 `Tab` 键即可自动补全主选项（如 `-h`、`-plt`、`-calc`）及其二级参数（如 `thermo`、`train`）。
 
-##### Usage Examples
+##### 使用示例
 
-- Type `gpumdkit.sh -<Tab>` to see all available options.
-- Type `gpumdkit.sh -plt <Tab>` to list plotting sub-options like `thermo`, `train`, etc.
-- Type `gpumdkit.sh -time <Tab>` to see calculator options like `gpumd`, `nep`.
+- 输入 `gpumdkit.sh -<Tab>` 查看所有可用选项。
+- 输入 `gpumdkit.sh -plt <Tab>` 列出绘图子选项，如 `thermo`、`train` 等。
+- 输入 `gpumdkit.sh -time <Tab>` 查看计算器选项，如 `gpumd`、`nep`。
 
-## Join Us 
+## 加入我们
 
-We’d love your help to improve **GPUMDkit**! Contribute by:
+欢迎为 **GPUMDkit** 贡献力量！参与方式：
 
-- Adding Python/Shell scripts via [Pull Requests](https://github.com/zhyan0603/GPUMDkit/pulls).
-- Report issues or suggest features via [issues](https://github.com/zhyan0603/GPUMDkit/issues).
-- Contacting me at [yanzihan@westlake.edu.cn](mailto:yanzihan@westlake.edu.cn).
+- 通过 [Pull Requests](https://github.com/zhyan0603/GPUMDkit/pulls) 贡献 Python/Shell 脚本。
+- 通过 [issues](https://github.com/zhyan0603/GPUMDkit/issues) 报告问题或提出功能建议。
+- 通过邮箱 [yanzihan@westlake.edu.cn](mailto:yanzihan@westlake.edu.cn) 联系我。
 
-Also, welcome to join our QQ group ([825696376](https://qun.qq.com/universal-share/share?ac=1&authKey=buBNi1ADDzIFF2oZ1yA5FywG3LA9EL9yKZmb%2BN2MMz7nNuuxTas54wH7BgPEqP0s&busi_data=eyJncm91cENvZGUiOiI4MjU2OTYzNzYiLCJ0b2tlbiI6IlRxL1RLTDlOK3U2ekRSUXJ1TkNTUWd3ODNVV3BrdG9HN2lWWmJKMHAraGlDNzBZWFFyRUY2dUlSaW8rbUd4MisiLCJ1aW4iOiIxNDg5NjQ3MTc5In0%3D&data=fa4zSsT_IdI4ftCT_wwpytYHf--TaTB35lH0Jac5JHVpYoyXw3_3bZ1l1NZejsOZnGJku5u3BCbf5_bgrCkhZg&svctype=4&tempid=h5_group_info)). Let’s build something useful together! 🌟
+也欢迎加入我们的 QQ 群（[825696376](https://qun.qq.com/universal-share/share?ac=1&authKey=buBNi1ADDzIFF2oZ1yA5FywG3LA9EL9yKZmb%2BN2MMz7nNuuxTas54wH7BgPEqP0s&busi_data=eyJncm91cENvZGUiOiI4MjU2OTYzNzYiLCJ0b2tlbiI6IlRxL1RLTDlOK3U2ekRSUXJ1TkNTUWd3ODNVV3BrdG9HN2lWWmJKMHAraGlDNzBZWFFyRUY2dUlSaW8rbUd4MisiLCJ1aW4iOiIxNDg5NjQ3MTc5In0%3D&data=fa4zSsT_IdI4ftCT_wwpytYHf--TaTB35lH0Jac5JHVpYoyXw3_3bZ1l1NZejsOZnGJku5u3BCbf5_bgrCkhZg&svctype=4&tempid=h5_group_info)）。一起创造有用的工具！🌟
 
-## Citation
+## 引用
 
-**GPUMDkit** is an open-source tool freely available for everyone. If you find it helpful in your research or workflow, please ⭐ [star us on GitHub](https://github.com/zhyan0603/GPUMDkit). Additionally, if GPUMDkit contributes to your published work, please cite our paper:
+**GPUMDkit** 是一款面向所有人的开源工具。如果在你的研究或工作中它有所帮助，欢迎 ⭐ [在 GitHub 上给我们点亮 Star](https://github.com/zhyan0603/GPUMDkit)。此外，如果 GPUMDkit 对你的发表工作有贡献，请引用我们的论文：
 
-> Z. Yan\*, D. Li, X. Wu, Z. Liu, C. Hua, B. Situ, H. Yang, S. Tang, B. Tang, Z. Wang, S. Yi, H. Wang, D. Huang, K. Li, Q. Guo, Z. Chen, K. Xu, Y. Wang, Z. Wang, G. Tang, S. Liu, Z. Fan, and Y. Zhu\*. **GPUMDkit: A User-Friendly Toolkit for GPUMD and NEP**. [MGE Advances, 2026, 4, e70074](https://doi.org/10.1002/mgea.70074). 
+> Z. Yan\*, D. Li, X. Wu, Z. Liu, C. Hua, B. Situ, H. Yang, S. Tang, B. Tang, Z. Wang, S. Yi, H. Wang, D. Huang, K. Li, Q. Guo, Z. Chen, K. Xu, Y. Wang, Z. Wang, G. Tang, S. Liu, Z. Fan, and Y. Zhu\*. **GPUMDkit: A User-Friendly Toolkit for GPUMD and NEP**. [MGE Advances, 2026, 4, e70074](https://doi.org/10.1002/mgea.70074).
