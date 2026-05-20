@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="./docs/Gallery/gpumdkit_logo.png" width="25%" alt="GPUMDkit Logo">
+  <img src="./docs/Gallery/gpumdkit_logo_lateral.png" width="55%" alt="GPUMDkit Logo">
 </p>
 <p align="center">
   <strong>English</strong>

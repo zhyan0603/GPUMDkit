@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="./docs/Gallery/gpumdkit_logo.png" width="25%" alt="GPUMDkit Logo">
+  <img src="./docs/Gallery/gpumdkit_logo_lateral.png" width="55%" alt="GPUMDkit Logo">
 </p>
 <p align="center">
   <a href="./README.md">English</a>
@@ -102,11 +102,11 @@ wget https://github.com/zhyan0603/GPUMDkit/archive/refs/heads/main.zip
              | |  _| |_) | | | | |\/| | | | | |/ / | __|
              | |_| |  __/| |_| | |  | | |_| |   <| | |_
               \____|_|    \___/|_|  |_|____/|_|\_\_|\__|
-
+    
               GPUMDkit Version 1.5.5 (dev) (2026-05-10)
         Core Developer: Zihan YAN (yanzihan@westlake.edu.cn)
      Main Contributors: Denan LI, Xin WU, Zhoulin LIU & Chen HUA
-
+    
       ---------------------- GPUMD ------------------------
       1) Format Conversion          2) Sample Structures
       3) Workflow                   4) Calculators
