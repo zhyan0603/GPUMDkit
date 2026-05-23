@@ -189,7 +189,7 @@ function help_info_table(){
     echo "| -min_dist     Min distance (no PBC)           | -min_dist_pbc      Min distance with PBC              |"
     echo "| -filter_dist  Filter by min_dist (no PBC)     | -filter_dist_pbc   Filter by min_dist (PBC)           |"
     echo "| -pda          Probability density analysis    | -hbond             Hydrogen-bond analysis             |"
-    echo "| -pynep        FPS sampling by PyNEP           | -filter_box        Filter by box-edge length         |"
+    echo "| -pynep        FPS sampling by PyNEP           | -filter_box        Filter by box-edge length          |"
     echo "+-------------------------------------------------------------------------------------------------------+"
     echo "| Detailed usage: gpumdkit.sh -<option> -h    Plot details: gpumdkit.sh -plt <type> -h                  |"
     echo "+-------------------------------------------------------------------------------------------------------+"
