@@ -1,8 +1,25 @@
 """
-Performing NEB calculations with NEP model (Using NepTrainKit).
-
-Usage:
-    python neb_calculation.py <initial_structure> <final_structure> <n_image> <nep_model>
+=============================================================================
+GPUMDkit: A User-Friendly Toolkit for GPUMD and NEP
+Repository: https://github.com/zhyan0603/GPUMDkit
+Citation: Z. Yan et al., GPUMDkit: A User-Friendly Toolkit for GPUMD and NEP,
+          MGE Advances, 2026, e70074 (https://doi.org/10.1002/mgea.70074)
+=============================================================================
+Script:     neb_calculation_neptrain.py
+Category:   Calculator Scripts
+Purpose:    Perform NEB calculations with a NEP model using NepTrainKit.
+Usage:      python neb_calculation_neptrain.py <initial_structure> <final_structure>
+            <n_image> <nep_model>
+Arguments:
+  initial_structure  Path to the initial structure XYZ file
+  final_structure    Path to the final structure XYZ file
+  n_image            Number of intermediate images
+  nep_model          Path to the NEP model file
+Output:
+  NEB barrier profile plot
+Author:     Zhoulin LIU (1776627910@qq.com)
+Last-modified: 2026-05-16
+=============================================================================
 """
 import os
 import sys

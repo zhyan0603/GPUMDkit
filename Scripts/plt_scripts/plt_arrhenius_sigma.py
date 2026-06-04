@@ -1,9 +1,24 @@
 """
-This script processes GPUMD outputs to plot the Arrhenius relationship for conductivity (sigma) as a function of temperature. 
-It reads MSD and thermo data from specified temperature folders, calculates diffusivity and conductivity, and fits the data 
-to extract activation energy. The plot follows PRL journal style with professional academic formatting.
-
-Author: Modified from original by Zihan YAN (yanzihan@westlake.edu.cn)
+=============================================================================
+GPUMDkit: A User-Friendly Toolkit for GPUMD and NEP
+Repository: https://github.com/zhyan0603/GPUMDkit
+Citation: Z. Yan et al., GPUMDkit: A User-Friendly Toolkit for GPUMD and NEP,
+          MGE Advances, 2026, e70074 (https://doi.org/10.1002/mgea.70074)
+=============================================================================
+Script:     plt_arrhenius_sigma.py
+Category:   Plot Scripts
+Purpose:    Calculate ionic conductivity from MSD and thermo data in
+            temperature folders, generate an Arrhenius plot (ln(sigma*T)
+            vs 1000/T), and extract activation energy.
+Usage:      gpumdkit.sh -plt sigma [save]
+            python plt_arrhenius_sigma.py [save]
+Arguments:
+  save      Save the plot as 'Arrhenius_sigma.png' instead of displaying it
+Output:
+  Arrhenius_sigma.png  (if save is used)
+Author:     Zihan YAN (yanzihan@westlake.edu.cn)
+Last-modified: 2026-05-16
+=============================================================================
 """
 
 import re

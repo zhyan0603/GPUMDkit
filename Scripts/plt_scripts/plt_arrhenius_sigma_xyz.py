@@ -1,12 +1,25 @@
 """
-This script processes MSD and thermo data from multiple temperature folders (e.g., 400K, 500K) 
-to calculate ionic conductivity and its temperature dependence for different directions. 
-It extracts volume from thermo.out, calculates diffusivity from msd.out for x, y, z directions, 
-computes conductivity using the Nernst-Einstein relation, 
-and plots ln(sigma*T) vs 1000/T to determine activation energy for each direction. 
-The script also extrapolates conductivity to 300K based on the fitted Arrhenius behavior.
-
-Author: Modified from original by Zihan YAN (yanzihan@westlake.edu.cn)
+=============================================================================
+GPUMDkit: A User-Friendly Toolkit for GPUMD and NEP
+Repository: https://github.com/zhyan0603/GPUMDkit
+Citation: Z. Yan et al., GPUMDkit: A User-Friendly Toolkit for GPUMD and NEP,
+          MGE Advances, 2026, e70074 (https://doi.org/10.1002/mgea.70074)
+=============================================================================
+Script:     plt_arrhenius_sigma_xyz.py
+Category:   Plot Scripts
+Purpose:    Calculate ionic conductivity from MSD and thermo data in temperature
+            folders, plot Arrhenius relationship for x/y/z directions, and
+            extract activation energy for each direction using the
+            Nernst-Einstein relation.
+Usage:      gpumdkit.sh -plt sigma_xyz [save]
+            python plt_arrhenius_sigma_xyz.py [save]
+Arguments:
+  save      Save the plot as 'Arrhenius_sigma_xyz.png' instead of displaying it
+Output:
+  Arrhenius_sigma_xyz.png  (if save is used)
+Author:     Zihan YAN (yanzihan@westlake.edu.cn)
+Last-modified: 2026-05-16
+=============================================================================
 """
 
 import re
@@ -24,7 +37,7 @@ warnings.filterwarnings('ignore', category=UserWarning, module='matplotlib')
 
 plt.rcParams.update({
     "font.family": "sans-serif",
-    "font.sans-serif": ["Arial", "DejaVu Sans"],
+    "font.sans-serif": ["Arial", "DejaVu Sans", "Liberation Sans"],
     "font.size": 11,
     "axes.labelsize": 11.5,
     "axes.titlesize": 12,

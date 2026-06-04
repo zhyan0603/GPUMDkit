@@ -7,12 +7,6 @@
 #SBATCH --ntasks-per-node=1
 cd $SLURM_SUBMIT_DIR
 
-#---------------------------------  ATTENTION  -----------------------------------------#
-# 1. This is a workflow script for Neuroevolution potential (NEP).                      #
-# 2. You need to set up some varibles to run it correctly.                              #
-# 3. Please contact me if you have any questions. (E-mail: yanzihan@westlake.edu.cn)    #
-#---------------------------------------------------------------------------------------#
-
 # source your submit_template.sh script
 # It is recommended that you copy it to another path,
 # otherwise there will be code conflicts when use 'git pull' command to update GPUMDkit.

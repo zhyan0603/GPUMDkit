@@ -1,8 +1,35 @@
+"""
+=============================================================================
+GPUMDkit: A User-Friendly Toolkit for GPUMD and NEP
+Repository: https://github.com/zhyan0603/GPUMDkit
+Citation: Z. Yan et al., GPUMDkit: A User-Friendly Toolkit for GPUMD and NEP,
+          MGE Advances, 2026, e70074 (https://doi.org/10.1002/mgea.70074)
+=============================================================================
+Script:     plt_thermo2.py
+Category:   Plot Scripts
+Purpose:    Alternative thermodynamic property visualization from thermo.out
+            with different layout and style.
+Usage:      gpumdkit.sh -plt thermo2 [save]
+            python plt_thermo2.py [save]
+Arguments:
+  save      Save the plot as 'thermo.png' instead of displaying it
+Output:
+  thermo.png  (if save is used, or if backend is non-interactive)
+Author:     Zihan YAN (yanzihan@westlake.edu.cn)
+Last-modified: 2026-05-16
+=============================================================================
+"""
+
 import os
 import sys
 import numpy as np
 import matplotlib.pyplot as plt
 from matplotlib.ticker import ScalarFormatter
+
+plt.rcParams.update({
+    "font.family": "sans-serif",
+    "font.sans-serif": ["Arial", "DejaVu Sans", "Liberation Sans"],
+})
 
 def calculate_angle(x, y):
     dot_product = np.einsum('ij,ij->i', x, y)

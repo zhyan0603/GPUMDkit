@@ -1,3 +1,27 @@
+"""
+=============================================================================
+GPUMDkit: A User-Friendly Toolkit for GPUMD and NEP
+Repository: https://github.com/zhyan0603/GPUMDkit
+Citation: Z. Yan et al., GPUMDkit: A User-Friendly Toolkit for GPUMD and NEP,
+          MGE Advances, 2026, e70074 (https://doi.org/10.1002/mgea.70074)
+=============================================================================
+Script:     charge_balance_check.py
+Category:   Analyzer Scripts
+Purpose:    Check oxidation-state balance for all structures in an extxyz
+            file. Outputs separate files for balanced and unbalanced
+            structures.
+Usage:      python charge_balance_check.py <input.xyz>
+Arguments:
+  input.xyz  Input extxyz file
+Output:
+  balanced.xyz     Structures with balanced oxidation states
+  unbalanced.xyz   Structures with unbalanced oxidation states
+  indices.txt      Summary of indices and output files
+Author:     Zihan YAN (yanzihan@westlake.edu.cn)
+Last-modified: 2026-05-16
+=============================================================================
+"""
+
 import sys
 from ase.io import read, write
 from ase.data import atomic_numbers

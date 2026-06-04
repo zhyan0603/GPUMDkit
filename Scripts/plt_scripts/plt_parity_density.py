@@ -1,3 +1,23 @@
+"""
+=============================================================================
+GPUMDkit: A User-Friendly Toolkit for GPUMD and NEP
+Repository: https://github.com/zhyan0603/GPUMDkit
+Citation: Z. Yan et al., GPUMDkit: A User-Friendly Toolkit for GPUMD and NEP,
+          MGE Advances, 2026, e70074 (https://doi.org/10.1002/mgea.70074)
+=============================================================================
+Script:     plt_parity_density.py
+Category:   Plot Scripts
+Purpose:    Generate density-based parity plots for energies, forces, and
+            stresses, especially useful for large NEP training datasets.
+Usage:      gpumdkit.sh -plt parity_density
+            python plt_parity_density.py
+Output:
+  parity_density_plot.png  (if save is used, or if backend is non-interactive)
+Author:     Zihan YAN (yanzihan@westlake.edu.cn)
+Last-modified: 2026-05-16
+=============================================================================
+"""
+
 import sys
 import matplotlib.pyplot as plt
 import numpy as np
@@ -5,6 +25,11 @@ from matplotlib.colors import LogNorm
 from matplotlib.ticker import LogFormatterMathtext, LogLocator
 from matplotlib.gridspec import GridSpec
 from sklearn.metrics import mean_squared_error, mean_absolute_error, r2_score
+
+plt.rcParams.update({
+    "font.family": "sans-serif",
+    "font.sans-serif": ["Arial", "DejaVu Sans", "Liberation Sans"],
+})
 
 # Configuration
 FONT_SIZE = 10
@@ -120,13 +145,13 @@ cb3.update_ticks()
 plt.subplots_adjust(top=0.968, bottom=0.122, left=0.073, right=0.983, hspace=0.2, wspace=0.286)
 
 if len(sys.argv) > 1 and sys.argv[1] == 'save':
-    plt.savefig('parity_plot_density.png', dpi=300)
+    plt.savefig('parity_density_plot.png', dpi=300)
 else:
     # Check if the current backend is non-interactive
     from matplotlib import get_backend
     if get_backend().lower() in ['agg', 'cairo', 'pdf', 'ps', 'svg']:
         print("Unable to display the plot due to the non-interactive backend.")
-        print("The plot has been automatically saved as 'parity_plot_density.png'.")
-        plt.savefig('parity_plot_density.png', dpi=300)
+        print("The plot has been automatically saved as 'parity_density_plot.png'.")
+        plt.savefig('parity_density_plot.png', dpi=300)
     else:
         plt.show()

@@ -1,7 +1,31 @@
+"""
+=============================================================================
+GPUMDkit: A User-Friendly Toolkit for GPUMD and NEP
+Repository: https://github.com/zhyan0603/GPUMDkit
+Citation: Z. Yan et al., GPUMDkit: A User-Friendly Toolkit for GPUMD and NEP,
+          MGE Advances, 2026, e70074 (https://doi.org/10.1002/mgea.70074)
+=============================================================================
+Script:     plt_nep_restart.py
+Category:   Plot Scripts
+Purpose:    Visualize parameters stored in nep.restart file from NEP training.
+Usage:      gpumdkit.sh -plt restart
+            python plt_nep_restart.py
+Output:
+  Display of NEP restart parameters plot
+Author:     Zihan YAN (yanzihan@westlake.edu.cn)
+Last-modified: 2026-05-16
+=============================================================================
+"""
+
 import os
 import sys
 import numpy as np
 import matplotlib.pyplot as plt
+
+plt.rcParams.update({
+    "font.family": "sans-serif",
+    "font.sans-serif": ["Arial", "DejaVu Sans", "Liberation Sans"],
+})
 
 # Function to read two-column data from a file
 def read_data(file_path):

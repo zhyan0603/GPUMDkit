@@ -1,3 +1,24 @@
+"""
+=============================================================================
+GPUMDkit: A User-Friendly Toolkit for GPUMD and NEP
+Repository: https://github.com/zhyan0603/GPUMDkit
+Citation: Z. Yan et al., GPUMDkit: A User-Friendly Toolkit for GPUMD and NEP,
+          MGE Advances, 2026, e70074 (https://doi.org/10.1002/mgea.70074)
+=============================================================================
+Script:     traj2exyz.py
+Category:   Format Conversion Scripts
+Purpose:    Convert an ASE .traj trajectory file to extended XYZ format.
+Usage:      python traj2exyz.py <input.traj> <output.xyz>
+Arguments:
+  input.traj   Input ASE trajectory file
+  output.xyz   Output extxyz file
+Output:
+  <output.xyz>  (converted trajectory in extxyz format)
+Author:     Zihan YAN (yanzihan@westlake.edu.cn)
+Last-modified: 2026-05-16
+=============================================================================
+"""
+
 import sys
 import os
 from ase.io import read, write

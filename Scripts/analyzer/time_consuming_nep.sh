@@ -1,4 +1,21 @@
 #!/bin/bash
+# =============================================================================
+# GPUMDkit: A User-Friendly Toolkit for GPUMD and NEP
+# Repository: https://github.com/zhyan0603/GPUMDkit
+# Citation: Z. Yan et al., GPUMDkit: A User-Friendly Toolkit for GPUMD and NEP,
+#           MGE Advances, 2026, e70074 (https://doi.org/10.1002/mgea.70074)
+# =============================================================================
+# Script:     time_consuming_nep.sh
+# Category:   Analyzer Scripts
+# Purpose:    Monitor NEP training progress in real time by tracking
+#            loss.out, and display time difference, time left, and
+#            estimated completion time.
+# Usage:      ./time_consuming_nep.sh
+# Output:
+#   Real-time table of current step, time diff, time left, and finish time
+# Author:     Zihan YAN (yanzihan@westlake.edu.cn)
+# Last-modified: 2026-05-16
+# =============================================================================
 
 # Get total steps from nep.in
 if [ -f "nep.in" ]; then

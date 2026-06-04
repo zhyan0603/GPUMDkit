@@ -1,31 +1,25 @@
 """
-Mean Square Displacement (MSD) Calculator from extxyz Trajectory
-
-Reads an extxyz trajectory file, extracts positions of a target element,
-unwraps coordinates across periodic boundaries if needed, and computes
-the directional MSD (x, y, z) via the Wiener-Khinchin FFT algorithm.
-
-Usage:
-    python calc_msd.py <extxyz_file> <element_symbol> <dt_fs> [max_corr_steps]
-
+=============================================================================
+GPUMDkit: A User-Friendly Toolkit for GPUMD and NEP
+Repository: https://github.com/zhyan0603/GPUMDkit
+Citation: Z. Yan et al., GPUMDkit: A User-Friendly Toolkit for GPUMD and NEP,
+          MGE Advances, 2026, e70074 (https://doi.org/10.1002/mgea.70074)
+=============================================================================
+Script:     calc_msd.py
+Category:   Calculator Scripts
+Purpose:    Compute directional MSD (x, y, z) from an extxyz trajectory via
+            the Wiener-Khinchin FFT algorithm for a target element.
+Usage:      python calc_msd.py <extxyz_file> <element_symbol> <dt_fs> [max_corr_steps]
 Arguments:
-    extxyz_file     Path to the input extxyz trajectory file
-    element_symbol  Chemical symbol of the element to analyze (e.g. Li, O, Na)
-    dt_fs           Time step between consecutive frames [fs]
-    max_corr_steps  (Optional) Maximum number of correlation lag steps to output.
-                    Output time range will be [dt_fs, max_corr_steps * dt_fs].
-                    If omitted, all lag times up to (n_frames - 2) are written.
-
+  extxyz_file       Path to the input extxyz trajectory file
+  element_symbol    Chemical symbol (e.g., Li, O, Na)
+  dt_fs             Time step between consecutive frames (fs)
+  max_corr_steps    Max correlation lag steps (optional)
 Output:
-    msd.out - Four-column ASCII file:
-              Col 1: Time (ps)
-              Col 2: MSD_x (Ang^2)
-              Col 3: MSD_y (Ang^2)
-              Col 4: MSD_z (Ang^2)
-
-Example:
-    python calc_msd.py traj.xyz Li 2.0
-    python calc_msd.py traj.xyz Li 2.0 5000
+  msd.out  (4-column: Time/ps, MSD_x, MSD_y, MSD_z)
+Author:     Zihan YAN (yanzihan@westlake.edu.cn)
+Last-modified: 2026-05-16
+=============================================================================
 """
 
 import sys

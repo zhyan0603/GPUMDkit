@@ -1,3 +1,26 @@
+"""
+=============================================================================
+GPUMDkit: A User-Friendly Toolkit for GPUMD and NEP
+Repository: https://github.com/zhyan0603/GPUMDkit
+Citation: Z. Yan et al., GPUMDkit: A User-Friendly Toolkit for GPUMD and NEP,
+          MGE Advances, 2026, e70074 (https://doi.org/10.1002/mgea.70074)
+=============================================================================
+Script:     plt_prediction.py
+Category:   Plot Scripts
+Purpose:    Visualize NEP prediction results with parity plots for energy,
+            forces, and stresses, including marginal distributions and
+            residual histograms.
+Usage:      gpumdkit.sh -plt prediction [save]
+            python plt_prediction.py [save]
+Arguments:
+  save      Save the plot as 'prediction.png' instead of displaying it
+Output:
+  prediction.png  (if save is used, or if backend is non-interactive)
+Author:     Zihan YAN (yanzihan@westlake.edu.cn)
+Last-modified: 2026-05-16
+=============================================================================
+"""
+
 import sys
 import numpy as np
 import matplotlib
@@ -34,7 +57,7 @@ force_data = np.loadtxt('force_train.out')
 stress_data = np.loadtxt('stress_train.out')
 
 # Filter invalid stress rows
-valid_rows = ~np.any(np.abs(stress_data[:, :12]) > 1e6, axis=1)
+valid_rows = ~np.any(np.abs(stress_data[:, :12]) >= 1e6, axis=1)
 stress_data = stress_data[valid_rows]
 
 # =========================

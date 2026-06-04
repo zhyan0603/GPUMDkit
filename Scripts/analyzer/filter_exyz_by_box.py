@@ -1,3 +1,25 @@
+"""
+=============================================================================
+GPUMDkit: A User-Friendly Toolkit for GPUMD and NEP
+Repository: https://github.com/zhyan0603/GPUMDkit
+Citation: Z. Yan et al., GPUMDkit: A User-Friendly Toolkit for GPUMD and NEP,
+          MGE Advances, 2026, e70074 (https://doi.org/10.1002/mgea.70074)
+=============================================================================
+Script:     filter_exyz_by_box.py
+Category:   Analyzer Scripts
+Purpose:    Filter structures by a maximum box-edge length. Structures with
+            any box edge exceeding the limit are discarded.
+Usage:      python filter_exyz_by_box.py <input_file> <edge_limit>
+Arguments:
+  input_file   Input extxyz file
+  edge_limit   Maximum allowed box-edge length (Angstrom)
+Output:
+  filtered_by_box.xyz
+Author:     Zihan YAN (yanzihan@westlake.edu.cn)
+Last-modified: 2026-05-16
+=============================================================================
+"""
+
 import sys
 from ase.io import read, write
 import numpy as np

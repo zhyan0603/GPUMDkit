@@ -1,6 +1,33 @@
-# Script to find outliers in training data based on RMSE thresholds for energy, force, and stress.
-# It is still during development and may not handle all cases perfectly.
-# Author: Zihan YAN (yanzihan@westlake.edu.cn)
+"""
+=============================================================================
+GPUMDkit: A User-Friendly Toolkit for GPUMD and NEP
+Repository: https://github.com/zhyan0603/GPUMDkit
+Citation: Z. Yan et al., GPUMDkit: A User-Friendly Toolkit for GPUMD and NEP,
+          MGE Advances, 2026, e70074 (https://doi.org/10.1002/mgea.70074)
+=============================================================================
+Script:     find_outliers.py
+Category:   Analyzer Scripts
+Purpose:    Find outlier structures in NEP training data based on RMSE
+            thresholds for energy, force, and stress. Selected outliers
+            are saved to selected.xyz, and the remaining to remained.xyz.
+Usage:      python find_outliers.py [energy_thresh_meV force_thresh_meV stress_thresh_GPa]
+Arguments:
+  energy_thresh_meV  (optional) Energy RMSE threshold in meV/atom
+  force_thresh_meV   (optional) Force RMSE threshold in meV/Angstrom
+  stress_thresh_GPa  (optional) Stress RMSE threshold in GPa
+Input files:
+  train.xyz          Training structures
+  energy_train.out   NEP vs DFT energy per structure
+  force_train.out    NEP vs DFT force components
+  stress_train.out   NEP vs DFT stress components
+Output:
+  selected.xyz       High-error structures
+  remained.xyz       Structures below all thresholds
+  selected_remained.png  Comparison plot
+Author:     Zihan YAN (yanzihan@westlake.edu.cn)
+Last-modified: 2026-05-16
+=============================================================================
+"""
 
 import sys
 import matplotlib.pyplot as plt

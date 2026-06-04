@@ -1,3 +1,26 @@
+"""
+=============================================================================
+GPUMDkit: A User-Friendly Toolkit for GPUMD and NEP
+Repository: https://github.com/zhyan0603/GPUMDkit
+Citation: Z. Yan et al., GPUMDkit: A User-Friendly Toolkit for GPUMD and NEP,
+          MGE Advances, 2026, e70074 (https://doi.org/10.1002/mgea.70074)
+=============================================================================
+Script:     calc_properties_with_nep.py
+Category:   Calculator Scripts
+Purpose:    Calculate energy, forces, and stress for structures using a NEP
+            model via calorine, and write results to an output extxyz file.
+Usage:      python calc_properties_with_nep.py <input.xyz> <output.xyz> <nep.txt>
+Arguments:
+  input.xyz   Input extxyz file
+  output.xyz  Output extxyz file with computed properties
+  nep.txt     Path to the NEP model file
+Output:
+  <output.xyz>  (structures with NEP-computed energy, forces, stress)
+Author:     Zihan YAN (yanzihan@westlake.edu.cn)
+Last-modified: 2026-05-16
+=============================================================================
+"""
+
 import sys
 import numpy as np
 from ase import Atoms

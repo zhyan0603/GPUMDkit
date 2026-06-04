@@ -1,3 +1,23 @@
+"""
+=============================================================================
+GPUMDkit: A User-Friendly Toolkit for GPUMD and NEP
+Repository: https://github.com/zhyan0603/GPUMDkit
+Citation: Z. Yan et al., GPUMDkit: A User-Friendly Toolkit for GPUMD and NEP,
+          MGE Advances, 2026, e70074 (https://doi.org/10.1002/mgea.70074)
+=============================================================================
+Script:     plt_force_errors.py
+Category:   Plot Scripts
+Purpose:    Plot force error evaluation metrics (force magnitude errors and
+            angle errors) from force_train.out.
+Usage:      gpumdkit.sh -plt force_errors
+            python plt_force_errors.py
+Output:
+  Display of force error metrics plot
+Author:     Zihan YAN (yanzihan@westlake.edu.cn)
+Last-modified: 2026-05-16
+=============================================================================
+"""
+
 import sys
 import numpy as np
 import matplotlib.pyplot as plt
@@ -5,6 +25,11 @@ from matplotlib.gridspec import GridSpec
 from matplotlib.ticker import ScalarFormatter
 from collections import Counter
 from scipy import interpolate
+
+plt.rcParams.update({
+    "font.family": "sans-serif",
+    "font.sans-serif": ["Arial", "DejaVu Sans", "Liberation Sans"],
+})
 
 # Load data from 'force_train.out' file
 data = np.loadtxt('force_train.out', skiprows=1)  # Assuming the first row is the header

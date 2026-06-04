@@ -5,17 +5,21 @@
 
 # Description: Main entry point for GPUMDkit interactive and command-line interface
 
+# Copyright (c) 2024-2026 Zihan YAN and GPUMDkit contributors
+# License: GPL-3.0 License
+# Contact Zihan YAN (yanzihan@westlake.edu.cn) if you have any questions or suggestions!
+
 # You need to set the path of GPUMD and GPUMDkit in your ~/.bashrc, for example
 # export GPUMDkit_path=/home/yanzihan/software/GPUMDkit
 
 if [ -z "$GPUMDkit_path" ]; then
-    echo "Error: GPUMDkit_path is not set."
-    echo "Please set it in your ~/.bashrc, e.g.:"
-    echo "  export GPUMDkit_path=/home/yanzihan/software/GPUMDkit"
+    echo " Error: GPUMDkit_path is not set."
+    echo " Please set it in your ~/.bashrc, e.g.:"
+    echo "   export GPUMDkit_path=/home/yanzihan/software/GPUMDkit"
     exit 1
 fi
 
-VERSION="1.5.5 (dev) (2026-05-10)"
+VERSION="1.5.5 (dev) (2026-05-16)"
 
 plt_path="${GPUMDkit_path}/Scripts/plt_scripts"
 analyzer_path="${GPUMDkit_path}/Scripts/analyzer"
@@ -185,7 +189,7 @@ function help_info_table(){
     echo "| -min_dist     Min distance (no PBC)           | -min_dist_pbc      Min distance with PBC              |"
     echo "| -filter_dist  Filter by min_dist (no PBC)     | -filter_dist_pbc   Filter by min_dist (PBC)           |"
     echo "| -pda          Probability density analysis    | -hbond             Hydrogen-bond analysis             |"
-    echo "| -pynep        FPS sampling by PyNEP           |                                                       |"
+    echo "| -pynep        FPS sampling by PyNEP           | -filter_box        Filter by box-edge length          |"
     echo "+-------------------------------------------------------------------------------------------------------+"
     echo "| Detailed usage: gpumdkit.sh -<option> -h    Plot details: gpumdkit.sh -plt <type> -h                  |"
     echo "+-------------------------------------------------------------------------------------------------------+"
@@ -213,7 +217,8 @@ echo " +------------------------------------------------------+"
 echo " │ If you find it useful, please cite our paper:        │"
 echo " │                                                      │"
 echo " │ GPUMDkit: A User-Friendly Toolkit for GPUMD and NEP  │"
-echo " |       (https://arxiv.org/abs/2603.17367)             │"
+echo " |           MGE Advances, 2026, 4, e70074              |"
+echo " |       (https://doi.org/10.1002/mgea.70074)           │"
 echo " │                                                      │"
 echo " |     Welcome to join our QQ group (825696376) !       │"
 echo " +------------------------------------------------------+"
@@ -390,7 +395,7 @@ if [ ! -z "$1" ]; then
             else
                 echo " Usage: -range <exyzfile> <property> [hist] (eg. gpumdkit.sh -range train.xyz energy hist)" 
                 echo " See the source code of energy_force_virial_analyzer.py for more details"
-                echo " Code path: Code path: ${analyzer_path}/energy_force_virial_analyzer.py"
+                echo " Code path: ${analyzer_path}/energy_force_virial_analyzer.py"
             fi ;;
 
         -replicate)
@@ -403,7 +408,7 @@ if [ ! -z "$1" ]; then
                 echo " Usage 1: -replicate <inputfile> <outputfile> a b c" 
                 echo " Usage 2: -replicate <inputfile> <outputfile> target_num"
                 echo " See the source code of replicate.py for more details"
-                echo " Code path: Code path: ${format_conv_path}/replicate.py"
+                echo " Code path: ${format_conv_path}/replicate.py"
             fi ;;
 
         -out2xyz)

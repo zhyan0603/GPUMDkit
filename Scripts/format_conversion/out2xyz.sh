@@ -1,12 +1,23 @@
 #!/bin/bash
-### HOW TO USE #################################################################################
-### SYNTAX: ./outcar2nep-exyz.sh dire_name
-###     NOTE: 1).'dire_name' is the directory containing OUTCARs
-### Email: yanzhowang@gmail.com if any questions
-### Modified by Yuwen Zhang
-### Modified by Shunda Chen
-### Modified by Zihan Yan
-################################################################################################
+# =============================================================================
+# GPUMDkit: A User-Friendly Toolkit for GPUMD and NEP
+# Repository: https://github.com/zhyan0603/GPUMDkit
+# Citation: Z. Yan et al., GPUMDkit: A User-Friendly Toolkit for GPUMD and NEP,
+#           MGE Advances, 2026, e70074 (https://doi.org/10.1002/mgea.70074)
+# =============================================================================
+# Script:     out2xyz.sh
+# Category:   Format Conversion Scripts
+# Purpose:    Convert VASP OUTCAR files to extended XYZ format for NEP
+#             training, handling both converged and non-converged calculations.
+# Usage:      ./out2xyz.sh <dire_name>
+# Arguments:
+#   dire_name  Directory containing OUTCAR files
+# Output:
+#   NEPdataset/train.xyz  (converted dataset in extxyz format)
+# Author:     Yuwen Zhang, Shunda Chen, Zihan YAN (yanzihan@westlake.edu.cn)
+# Last-modified: 2026-05-16
+# =============================================================================
+
 #--- DEFAULT ASSIGNMENTS ---------------------------------------------------------------------
 isol_ener=0     # Shifted energy, specify the value?
 viri_logi=1     # Logical value for virial, true=1, false=0

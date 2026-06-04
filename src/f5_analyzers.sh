@@ -1,6 +1,10 @@
-#--------------------- function 5 analyzer ----------------------
-# These functions are used to do the analyzers
-# See the source codes in Scripts/analyzer for more details
+# ============================================================
+# GPUMDkit analyzer module
+# Repository: https://github.com/zhyan0603/GPUMDkit
+# Citation: Z. Yan et al., GPUMDkit: A User-Friendly Toolkit
+#           for GPUMD and NEP, MGE Advances, 2026, e70074
+# Author: Zihan YAN (yanzihan@westlake.edu.cn)
+# ============================================================
 
 # Analyze composition of extxyz
 function f501_analyze_composition(){

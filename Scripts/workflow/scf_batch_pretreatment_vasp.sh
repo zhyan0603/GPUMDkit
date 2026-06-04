@@ -1,4 +1,19 @@
 #!/bin/bash
+# =============================================================================
+# GPUMDkit: A User-Friendly Toolkit for GPUMD and NEP
+# Repository: https://github.com/zhyan0603/GPUMDkit
+# Citation: Z. Yan et al., GPUMDkit: A User-Friendly Toolkit for GPUMD and NEP,
+#           MGE Advances, 2026, e70074 (https://doi.org/10.1002/mgea.70074)
+# =============================================================================
+# Script:     scf_batch_pretreatment_vasp.sh
+# Category:   Workflow Scripts
+# Purpose:    Batch pretreatment of structures for VASP SCF calculations:
+#             rename VASP/XYZ files, generate POSCAR files, create
+#             struct_fp directories for INCAR/POTCAR/KPOINTS.
+# Usage:      source scf_batch_pretreatment_vasp.sh
+# Author:     Zihan YAN (yanzihan@westlake.edu.cn)
+# Last-modified: 2026-05-16
+# =============================================================================
 
 function vasp_scf_batch_pretreatment(){
     echo " ------------>>"

@@ -1,5 +1,6 @@
 # Contributing to GPUMDkit
 
+
 Thank you for your interest in contributing to `GPUMDkit`! We appreciate your time and effort in helping improve this toolkit. `GPUMDkit` is an open-source package, and we welcome contributions from the community, whether you're fixing bugs, adding new features, improving documentation, or suggesting enhancements.
 
 ---
@@ -137,6 +138,8 @@ The structure of `GPUMDkit` consists of:
   - `f3_workflows.sh`
   - `f4_calculators.sh`
   - `f5_analyzers.sh`
+  - `f6_plots.sh`
+  - `f7_utilities.sh`
 - **`docs/`**: Documentation files
 
 #### Interactive Mode Contributions

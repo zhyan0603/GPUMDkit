@@ -1,6 +1,10 @@
-#--------------------- function 4 calculators ----------------------
-# These functions are used to do the calculators
-# See the source codes in Scripts/calculators for more details
+# ============================================================
+# GPUMDkit calculators module
+# Repository: https://github.com/zhyan0603/GPUMDkit
+# Citation: Z. Yan et al., GPUMDkit: A User-Friendly Toolkit
+#           for GPUMD and NEP, MGE Advances, 2026, e70074
+# Author: Zihan YAN (yanzihan@westlake.edu.cn)
+# ============================================================
 
 # Calculate ionic conductivity
 function f401_calc_ionic_conductivity(){

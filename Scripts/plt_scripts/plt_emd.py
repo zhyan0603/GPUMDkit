@@ -1,7 +1,25 @@
 """
-@Author   : Xin Wu
-@Contact  : xinwuchn97@gmial.com
-@Remark   : Post-processing script for EMD (Equilibrium Molecular Dynamics) thermal conductivity calculations
+=============================================================================
+GPUMDkit: A User-Friendly Toolkit for GPUMD and NEP
+Repository: https://github.com/zhyan0603/GPUMDkit
+Citation: Z. Yan et al., GPUMDkit: A User-Friendly Toolkit for GPUMD and NEP,
+          MGE Advances, 2026, e70074 (https://doi.org/10.1002/mgea.70074)
+=============================================================================
+Script:     plt_emd.py
+Category:   Plot Scripts
+Purpose:    Post-processing for EMD (Equilibrium Molecular Dynamics) thermal
+            conductivity calculations, including HAC, running thermal
+            conductivity, and results printing.
+Usage:      gpumdkit.sh -plt emd <direction> [save]
+            python plt_emd.py <x|y|z> [save]
+Arguments:
+  direction  Heat transfer direction: x, y, or z
+  save       Save the plot as 'emd.png' instead of displaying it
+Output:
+  emd.png    (if save is used)
+Author:     Xin Wu (xinwuchn97@gmial.com)
+Last-modified: 2026-05-16
+=============================================================================
 """
 
 from pylab import *
@@ -12,6 +30,8 @@ import os
 # Figure Properties
 aw, fs = 1.2, 12
 matplotlib.rc('font', size=fs)
+matplotlib.rc('font', family='sans-serif')
+matplotlib.rc('font', **{'sans-serif': ['Arial', 'DejaVu Sans', 'Liberation Sans']})
 matplotlib.rc('axes', linewidth=aw)
 
 def set_fig_properties(ax_list, tl=4, tw=1.2, tlm=4):

@@ -1,3 +1,27 @@
+"""
+=============================================================================
+GPUMDkit: A User-Friendly Toolkit for GPUMD and NEP
+Repository: https://github.com/zhyan0603/GPUMDkit
+Citation: Z. Yan et al., GPUMDkit: A User-Friendly Toolkit for GPUMD and NEP,
+          MGE Advances, 2026, e70074 (https://doi.org/10.1002/mgea.70074)
+=============================================================================
+Script:     calc_descriptors.py
+Category:   Calculator Scripts
+Purpose:    Compute and save NEP descriptors for a target element from a
+            multi-frame extxyz file.
+Usage:      python calc_descriptors.py <input.xyz> <output.npy> <nep.txt> <element>
+Arguments:
+  input.xyz   Input extxyz file
+  output.npy  Output .npy file for descriptors
+  nep.txt     Path to the NEP model file
+  element     Target element symbol
+Output:
+  <output.npy>  (NEP descriptors array)
+Author:     Zihan YAN (yanzihan@westlake.edu.cn)
+Last-modified: 2026-05-16
+=============================================================================
+"""
+
 import numpy as np
 from ase.io import read
 from calorine.nep import get_descriptors

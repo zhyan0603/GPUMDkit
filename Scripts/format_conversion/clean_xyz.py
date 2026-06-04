@@ -1,3 +1,25 @@
+"""
+=============================================================================
+GPUMDkit: A User-Friendly Toolkit for GPUMD and NEP
+Repository: https://github.com/zhyan0603/GPUMDkit
+Citation: Z. Yan et al., GPUMDkit: A User-Friendly Toolkit for GPUMD and NEP,
+          MGE Advances, 2026, e70074 (https://doi.org/10.1002/mgea.70074)
+=============================================================================
+Script:     clean_xyz.py
+Category:   Format Conversion Scripts
+Purpose:    Remove stress, virial, and force information from an extxyz
+            training file, keeping only structural information.
+Usage:      python clean_xyz.py <input.xyz> [output.xyz]
+Arguments:
+  input.xyz    Input extxyz training file
+  output.xyz   Output cleaned extxyz file (optional)
+Output:
+  Cleaned extxyz file with only structural information
+Author:     Zihan YAN (yanzihan@westlake.edu.cn)
+Last-modified: 2026-05-16
+=============================================================================
+"""
+
 from ase.io import read, write
 import sys
 

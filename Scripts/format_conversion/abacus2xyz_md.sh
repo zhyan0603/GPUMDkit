@@ -1,11 +1,23 @@
 #!/bin/bash
-### HOW TO USE #################################################################################
-### SYNTAX: ./abacus2xyz_md.sh dire_name
-###     NOTE: 1).'dire_name' is the directory containing running_md.log and MD_dump file.
-### Email: tang070205@proton.me if any questions
-### Modified from multipleFrames-outcars2nep-exyz.sh
-### Modified by Benrui Tang
-################################################################################################
+# =============================================================================
+# GPUMDkit: A User-Friendly Toolkit for GPUMD and NEP
+# Repository: https://github.com/zhyan0603/GPUMDkit
+# Citation: Z. Yan et al., GPUMDkit: A User-Friendly Toolkit for GPUMD and NEP,
+#           MGE Advances, 2026, e70074 (https://doi.org/10.1002/mgea.70074)
+# =============================================================================
+# Script:     abacus2xyz_md.sh
+# Category:   Format Conversion Scripts
+# Purpose:    Convert ABACUS MD trajectory files (running_md.log and MD_dump)
+#             to extended XYZ format for NEP training.
+# Usage:      ./abacus2xyz_md.sh <dire_name>
+# Arguments:
+#   dire_name  Directory containing running_md.log and MD_dump files
+# Output:
+#   NEPdataset/train.xyz  (converted dataset in extxyz format)
+# Author:     Benrui Tang (tang070205@proton.me)
+# Last-modified: 2026-05-16
+# =============================================================================
+
 #--- DEFAULT ASSIGNMENTS ---------------------------------------------------------------------
 isol_ener=0     # Shifted energy, specify the value?
 viri_logi=1     # Logical value for virial, true=1, false=0

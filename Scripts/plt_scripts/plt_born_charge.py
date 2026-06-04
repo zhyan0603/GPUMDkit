@@ -1,6 +1,32 @@
+"""
+=============================================================================
+GPUMDkit: A User-Friendly Toolkit for GPUMD and NEP
+Repository: https://github.com/zhyan0603/GPUMDkit
+Citation: Z. Yan et al., GPUMDkit: A User-Friendly Toolkit for GPUMD and NEP,
+          MGE Advances, 2026, e70074 (https://doi.org/10.1002/mgea.70074)
+=============================================================================
+Script:     plt_born_charge.py
+Category:   Plot Scripts
+Purpose:    Parity plots for Born effective charges (BEC) on training and
+            testing datasets. Structures with all-zero reference BEC are
+            filtered out.
+Usage:      gpumdkit.sh -plt born_charge
+            python plt_born_charge.py
+Output:
+  Display of BEC parity plot
+Author:     Denan LI (lidenan@westlake.edu.cn)
+Last-modified: 2026-05-16
+=============================================================================
+"""
+
 import sys
 import matplotlib.pyplot as plt
 import numpy as np
+
+plt.rcParams.update({
+    "font.family": "sans-serif",
+    "font.sans-serif": ["Arial", "DejaVu Sans", "Liberation Sans"],
+})
 
 train_color = '#237B9F'
 test_color = '#EC817E'

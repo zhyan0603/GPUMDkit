@@ -1,3 +1,31 @@
+"""
+=============================================================================
+GPUMDkit: A User-Friendly Toolkit for GPUMD and NEP
+Repository: https://github.com/zhyan0603/GPUMDkit
+Citation: Z. Yan et al., GPUMDkit: A User-Friendly Toolkit for GPUMD and NEP,
+          MGE Advances, 2026, e70074 (https://doi.org/10.1002/mgea.70074)
+=============================================================================
+Script:     calc_neighbor_list.py
+Category:   Calculator Scripts
+Purpose:    Build and save neighbor lists between center and neighbor atoms
+            using the ferrodispcalc package.
+Usage:      python calc_neighbor_list.py -c <cutoff> -n <neighbor_num>
+            -C <center_elements> -E <neighbor_elements> [options]
+Arguments:
+  -i, --input       Input structure file (default: model.xyz)
+  -x, --index       Which frame to read from the input file (default: 0)
+  -c, --cutoff      Cutoff distance (required)
+  -n, --neighbor-num  Number of neighbors (required)
+  -C                Center element symbols (e.g., Pb Sr)
+  -E                Neighbor element symbols (e.g., O)
+  -o, --output      Output file path (default: nl-<center>-<neighbor>.dat)
+Output:
+  nl-<center>-<neighbor>.dat (neighbor list file)
+Author:     Denan LI (lidenan@westlake.edu.cn)
+Last-modified: 2026-05-16
+=============================================================================
+"""
+
 from ase.io import read
 import argparse
 
