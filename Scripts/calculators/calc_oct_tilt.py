@@ -1,3 +1,30 @@
+"""
+=============================================================================
+GPUMDkit: A User-Friendly Toolkit for GPUMD and NEP
+Repository: https://github.com/zhyan0603/GPUMDkit
+Citation: Z. Yan et al., GPUMDkit: A User-Friendly Toolkit for GPUMD and NEP,
+          MGE Advances, 2026, e70074 (https://doi.org/10.1002/mgea.70074)
+=============================================================================
+Script:     calc_oct_tilt.py
+Category:   Calculator Scripts
+Purpose:    Calculate octahedral tilt angles from trajectory/model and B-O
+            neighbor list for perovskite systems using ferrodispcalc.
+Usage:      python calc_oct_tilt.py -i <input.xyz> -n <nl-B-O.dat> -o <output.dat> [options]
+Arguments:
+  -i, --input   Input xyz file (default: model.xyz)
+  -n            Neighbor list file for B-O pairs (required)
+  -o, --output  Output file for tilt data
+  -s            Start index for slicing frames
+  -t            Stop index for slicing frames
+  -p            Step for slicing frames
+  -l            Use the last frames (integer for count, float for ratio)
+Output:
+  Octahedral tilt angles saved to output file
+Author:     Denan LI (lidenan@westlake.edu.cn)
+Last-modified: 2026-05-16
+=============================================================================
+"""
+
 from ase.io import read
 import argparse
 import math

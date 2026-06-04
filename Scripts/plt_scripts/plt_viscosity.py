@@ -1,15 +1,23 @@
 """
-Plot GPUMD viscosity.out: stress autocorrelation and viscosity components.
-https://gpumd.org/dev/gpumd/output_files/viscosity_out.html#viscosity-out
-
-Columns: time, S_diag(3), S_off(6), eta_diag(3), eta_off(6).
-Derived: η_L = (1/3)(η_xx+η_yy+η_zz), η_S = (1/3)(η_xy+η_xz+η_yz), η_B = η_L - (4/3)η_S.
-
-Author: Qilin Guo (guoqilin@buaa.edu.cn)
-Modified by Shengjie Tang (tangshengjie@westlake.edu.cn)
-
-Usage:
-    python plt_viscosity.py
+=============================================================================
+GPUMDkit: A User-Friendly Toolkit for GPUMD and NEP
+Repository: https://github.com/zhyan0603/GPUMDkit
+Citation: Z. Yan et al., GPUMDkit: A User-Friendly Toolkit for GPUMD and NEP,
+          MGE Advances, 2026, e70074 (https://doi.org/10.1002/mgea.70074)
+=============================================================================
+Script:     plt_viscosity.py
+Category:   Plot Scripts
+Purpose:    Plot stress autocorrelation and viscosity components from
+            viscosity.out, including diagonal and off-diagonal components.
+Usage:      gpumdkit.sh -plt viscosity [save]
+            python plt_viscosity.py [save]
+Arguments:
+  save      Save the plot as 'viscosity.png' instead of displaying it
+Output:
+  viscosity.png  (if save is used, or if backend is non-interactive)
+Author:     Qilin Guo (guoqilin@buaa.edu.cn), Shengjie Tang (tangshengjie@westlake.edu.cn)
+Last-modified: 2026-05-16
+=============================================================================
 """
 
 import sys
@@ -18,6 +26,11 @@ import numpy as np
 import matplotlib.pyplot as plt
 from matplotlib.pyplot import Axes
 import matplotlib.gridspec as gridspec
+
+plt.rcParams.update({
+    "font.family": "sans-serif",
+    "font.sans-serif": ["Arial", "DejaVu Sans", "Liberation Sans"],
+})
 
 # Column layout (0-based): time, then S and eta components
 TIME = 0
@@ -33,10 +46,6 @@ LABELS_ETA_DIAG = [r"$\eta_{xx}$", r"$\eta_{yy}$", r"$\eta_{zz}$"]
 LABELS_ETA_OFF = [r"$\eta_{xy}$", r"$\eta_{xz}$", r"$\eta_{yz}$", r"$\eta_{yx}$", r"$\eta_{zx}$", r"$\eta_{zy}$"]
 
 COLORS = ["#1f77b4", "#2ca02c", "#d62728", "#ff7f0e", "#9467bd", "#8c564b"]
-
-# font settings
-# plt.rcParams["font.family"] = "sans-serif"
-# plt.rcParams["font.sans-serif"] = ["Arial"]
 
 # linestyles for distinguish off-diagonal components
 

@@ -1,12 +1,28 @@
 """
-This script reads msd.out files from temperature-specific folders (e.g., 600K, 700K, etc.), 
-calculates the diffusion coefficients, and plots them in an Arrhenius plot. 
-It also fits the data to extract the activation energy. 
+=============================================================================
+GPUMDkit: A User-Friendly Toolkit for GPUMD and NEP
+Repository: https://github.com/zhyan0603/GPUMDkit
+Citation: Z. Yan et al., GPUMDkit: A User-Friendly Toolkit for GPUMD and NEP,
+          MGE Advances, 2026, e70074 (https://doi.org/10.1002/mgea.70074)
+=============================================================================
+Script:     plt_arrhenius_d.py
+Category:   Plot Scripts
+Purpose:    Compute diffusion coefficients from msd.out in temperature folders
+            (e.g., 600K, 700K, etc.), generate an Arrhenius plot, and extract 
+            activation energy.
 
-Author: Modified from original by Zihan YAN (yanzihan@westlake.edu.cn)
+Usage:      gpumdkit.sh -plt D/arrhenius_d [save]
+            python plt_arrhenius_d.py [save]
 
-Usage:
-    python plt_arrhenius_d.py [save]
+Arguments:
+  save      Save the plot as 'Arrhenius_D.png' instead of displaying it
+
+Output:
+  Arrhenius_D.png  (if save is used, or if backend is non-interactive)
+
+Author:     Zihan YAN (yanzihan@westlake.edu.cn)
+Last-modified: 2026-05-15
+=============================================================================    
 """
 
 import os

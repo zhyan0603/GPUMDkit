@@ -33,7 +33,7 @@ The format conversion scripts provide seamless interconversion between:
 | Add weight | - | `gpumdkit.sh -addweight <in> <out> <weight>` |
 | Replicate1 | - | `gpumdkit.sh -replicate input.vasp output.vasp 2 2 2` |
 | Replicate2 | - | `gpumdkit.sh -replicate input.vasp output.vasp <target_num>` |
-| Get frame | - | `gpumdkit.sh -ge_frame <extxyz> <index>` |
+| Get frame | - | `gpumdkit.sh -get_frame <extxyz> <index>` |
 
 ---
 

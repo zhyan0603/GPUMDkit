@@ -1,4 +1,22 @@
 #!/bin/bash
+# =============================================================================
+# GPUMDkit: A User-Friendly Toolkit for GPUMD and NEP
+# Repository: https://github.com/zhyan0603/GPUMDkit
+# Citation: Z. Yan et al., GPUMDkit: A User-Friendly Toolkit for GPUMD and NEP,
+#           MGE Advances, 2026, e70074 (https://doi.org/10.1002/mgea.70074)
+# =============================================================================
+# Script:     time_consuming_gpumd.sh
+# Category:   Analyzer Scripts
+# Purpose:    Monitor GPUMD simulation progress in real time by tracking
+#            neighbor.out, and display speed, total time, and estimated
+#            completion time.
+# Usage:      ./time_consuming_gpumd.sh
+# Output:
+#   Real-time table of current frame, speed, total time, time left,
+#   and estimated end time
+# Author:     Zihan YAN (yanzihan@westlake.edu.cn)
+# Last-modified: 2026-05-16
+# =============================================================================
 
 # Get the total number of frames from the "run" file
 frames=$(grep run run.in | awk '{sum += $2} END {print sum}')

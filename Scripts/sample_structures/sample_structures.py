@@ -1,3 +1,28 @@
+"""
+=============================================================================
+GPUMDkit: A User-Friendly Toolkit for GPUMD and NEP
+Repository: https://github.com/zhyan0603/GPUMDkit
+Citation: Z. Yan et al., GPUMDkit: A User-Friendly Toolkit for GPUMD and NEP,
+          MGE Advances, 2026, e70074 (https://doi.org/10.1002/mgea.70074)
+=============================================================================
+Script:     sample_structures.py
+Category:   Sample Structure Scripts
+Purpose:    Uniformly or randomly sample a specified number of frames from
+            an extxyz trajectory, with an option to skip initial frames.
+Usage:      python sample_structures.py <extxyz_file> <method> <num_samples> [skip_initial]
+Arguments:
+  extxyz_file  Input extxyz trajectory file
+  method       Sampling method: uniform or random
+  num_samples  Number of frames to sample
+  skip_initial (optional) Number of initial frames to skip (default: 0)
+Output:
+  sampled_structures.xyz
+Author:     Zihan YAN (yanzihan@westlake.edu.cn)
+Modified by: Dr. Huan Wang (huan.wang@whut.edu.cn)
+Last-modified: 2026-05-16
+=============================================================================
+"""
+
 import argparse
 import numpy as np
 import textwrap

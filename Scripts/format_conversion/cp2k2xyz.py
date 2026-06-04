@@ -1,8 +1,26 @@
-#python cp2k2xyz.py [pos.xyz] [frc.xyz] [cell.cell] [-shifted yes/no]
-#-shifted yes, energy shift; -shifted no, not energy shift; The default is "-shifted no".
-#If only entering "python cp2k2xyz.py", read according to the default file name; Otherwise, read according to the input file name.
-#Merge the box information, atomic coordinates, and atomic forces outputted by CP2K AIMD into the xyz file
-#Shift total energy to ~0 by substracting atomic energies using the least square method.
+"""
+=============================================================================
+GPUMDkit: A User-Friendly Toolkit for GPUMD and NEP
+Repository: https://github.com/zhyan0603/GPUMDkit
+Citation: Z. Yan et al., GPUMDkit: A User-Friendly Toolkit for GPUMD and NEP,
+          MGE Advances, 2026, e70074 (https://doi.org/10.1002/mgea.70074)
+=============================================================================
+Script:     cp2k2xyz.py
+Category:   Format Conversion Scripts
+Purpose:    Merge box information, atomic coordinates, and forces output by
+            CP2K AIMD into XYZ format; shift total energy using least squares.
+Usage:      python cp2k2xyz.py [pos.xyz] [frc.xyz] [cell.cell] [-shifted yes/no]
+Arguments:
+  pos.xyz        CP2K position output
+  frc.xyz        CP2K force output
+  cell.cell      CP2K cell file
+  -shifted yes/no  Whether to apply energy shift (default: no)
+Output:
+  Converted XYZ file with forces and cell information
+Author:     Ke XU (kickhsu@gmail.com)
+Last-modified: 2026-05-16
+=============================================================================
+"""
 
 import numpy as np
 import sys

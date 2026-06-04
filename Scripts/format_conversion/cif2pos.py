@@ -1,9 +1,22 @@
 """
-Convert CIF file to VASP POSCAR format using ASE.
-Usage:
-    python cif2pos.py input.cif output.vasp
-    Author: Boyi Situ (situboyi@westlake.edu.cn)
-    Date: 2025-08-21
+=============================================================================
+GPUMDkit: A User-Friendly Toolkit for GPUMD and NEP
+Repository: https://github.com/zhyan0603/GPUMDkit
+Citation: Z. Yan et al., GPUMDkit: A User-Friendly Toolkit for GPUMD and NEP,
+          MGE Advances, 2026, e70074 (https://doi.org/10.1002/mgea.70074)
+=============================================================================
+Script:     cif2pos.py
+Category:   Format Conversion Scripts
+Purpose:    Convert CIF file to VASP POSCAR format using ASE.
+Usage:      python cif2pos.py <input.cif> <output.vasp>
+Arguments:
+  input.cif    Input CIF file
+  output.vasp  Output VASP POSCAR file
+Output:
+  <output.vasp>  (converted structure in POSCAR format)
+Author:     Boyi Situ (situboyi@westlake.edu.cn)
+Last-modified: 2026-05-16
+=============================================================================
 """
 
 import sys

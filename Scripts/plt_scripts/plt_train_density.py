@@ -1,7 +1,34 @@
+"""
+=============================================================================
+GPUMDkit: A User-Friendly Toolkit for GPUMD and NEP
+Repository: https://github.com/zhyan0603/GPUMDkit
+Citation: Z. Yan et al., GPUMDkit: A User-Friendly Toolkit for GPUMD and NEP,
+          MGE Advances, 2026, e70074 (https://doi.org/10.1002/mgea.70074)
+=============================================================================
+Script:     plt_train_density.py
+Category:   Plot Scripts
+Purpose:    Generate density-based parity plots for NEP training results
+            (energy, forces, stresses), useful for large datasets.
+Usage:      gpumdkit.sh -plt train_density [save]
+            python plt_train_density.py [save]
+Arguments:
+  save      Save the plot as 'train_density.png' instead of displaying it
+Output:
+  train_density.png  (if save is used, or if backend is non-interactive)
+Author:     Zihan YAN (yanzihan@westlake.edu.cn)
+Last-modified: 2026-05-16
+=============================================================================
+"""
+
 import sys
 import matplotlib.pyplot as plt
 import numpy as np
 from matplotlib.colors import LogNorm  
+
+plt.rcParams.update({
+    "font.family": "sans-serif",
+    "font.sans-serif": ["Arial", "DejaVu Sans", "Liberation Sans"],
+})  
 
 # Load data
 loss = np.loadtxt('loss.out')
@@ -61,7 +88,7 @@ xmin_energy, xmax_energy = calculate_limits(energy_data[:, 0])
 axs[0, 1].set_xlim(xmin_energy, xmax_energy)
 axs[0, 1].set_ylim(xmin_energy, xmax_energy)
 
-axs[0, 1].hist2d(energy_data[:, 0], energy_data[:, 1], 
+axs[0, 1].hist2d(energy_data[:, 1], energy_data[:, 0], 
                  bins=100, cmap='Blues', cmin=1, norm=LogNorm(), 
                  range=[[xmin_energy, xmax_energy], [xmin_energy, xmax_energy]])
 
@@ -77,8 +104,8 @@ axs[0, 1].text(0.7, 0.12, r'R$^2$'+f': {energy_r2:.4f}\nMAE: {energy_mae:.2f} me
                transform=axs[0, 1].transAxes, fontsize=10, verticalalignment='center', horizontalalignment='center')
 
 
-f_target = force_data[:, 0:3].flatten()
-f_pred = force_data[:, 3:6].flatten()
+f_pred = force_data[:, 0:3].flatten()
+f_target = force_data[:, 3:6].flatten()
 
 xmin_force, xmax_force = calculate_limits(f_target)
 axs[1, 0].set_xlim(xmin_force, xmax_force)
@@ -105,8 +132,8 @@ axs[1, 0].text(0.7, 0.12,
 if stress_data.shape[0] == 0:
     axs[1, 1].axis('off')
 else:
-    s_target = stress_data[:, 0:6].flatten()
-    s_pred = stress_data[:, 6:12].flatten()
+    s_pred = stress_data[:, 0:6].flatten()
+    s_target = stress_data[:, 6:12].flatten()
 
     xmin_stress, xmax_stress = calculate_limits(s_target)
     axs[1, 1].set_xlim(xmin_stress, xmax_stress)

@@ -1,7 +1,25 @@
 """
-This script is used to calculate the density of atomistic states (DOAS) proposed by Wang et al.
-It reads and optimizes structures using NEP_CPU, and computes the per-atom energies.
-You can use -plt doas [element] to visualize the results.
+=============================================================================
+GPUMDkit: A User-Friendly Toolkit for GPUMD and NEP
+Repository: https://github.com/zhyan0603/GPUMDkit
+Citation: Z. Yan et al., GPUMDkit: A User-Friendly Toolkit for GPUMD and NEP,
+          MGE Advances, 2026, e70074 (https://doi.org/10.1002/mgea.70074)
+=============================================================================
+Script:     calc_doas.py
+Category:   Calculator Scripts
+Purpose:    Calculate the density of atomistic states (DOAS) proposed by
+            Wang et al. by reading and optimizing structures with NEP_CPU
+            and computing per-atom energies.
+Usage:      python calc_doas.py <input.xyz> <nep.txt> <output.txt>
+Arguments:
+  input.xyz   Input extxyz file
+  nep.txt     Path to the NEP model file
+  output.txt  Output text file for grouped atomic energies
+Output:
+  <output.txt>  (per-atom energies grouped by element)
+Author:     Zihan YAN (yanzihan@westlake.edu.cn)
+Last-modified: 2026-05-16
+=============================================================================
 """
 import sys
 from tqdm import tqdm

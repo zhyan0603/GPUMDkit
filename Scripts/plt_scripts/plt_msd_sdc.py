@@ -1,16 +1,33 @@
 """
-This script reads data from 'msd.out' and plots both MSD and SDC data 
-side-by-side. The left plot shows MSD vs time with slope annotations. 
-The right plot shows SDC vs time with an inset showing the last 80% 
-of the data with a moving average overlay.
-
-Usage:
-    python plt_msd_sdc.py [save]
+=============================================================================
+GPUMDkit: A User-Friendly Toolkit for GPUMD and NEP
+Repository: https://github.com/zhyan0603/GPUMDkit
+Citation: Z. Yan et al., GPUMDkit: A User-Friendly Toolkit for GPUMD and NEP,
+          MGE Advances, 2026, e70074 (https://doi.org/10.1002/mgea.70074)
+=============================================================================
+Script:     plt_msd_sdc.py
+Category:   Plot Scripts
+Purpose:    Plot MSD and SDC data side-by-side from msd.out with slope
+            annotations and moving average overlay.
+Usage:      gpumdkit.sh -plt msd_sdc [save]
+            python plt_msd_sdc.py [save]
+Arguments:
+  save      Save the plot as 'MSD_SDC.png' instead of displaying it
+Output:
+  MSD_SDC.png  (if save is used, or if backend is non-interactive)
+Author:     Zihan YAN (yanzihan@westlake.edu.cn)
+Last-modified: 2026-05-16
+=============================================================================
 """
 
 import sys
 import numpy as np
 import matplotlib.pyplot as plt
+
+plt.rcParams.update({
+    "font.family": "sans-serif",
+    "font.sans-serif": ["Arial", "DejaVu Sans", "Liberation Sans"],
+})
 
 # Function to read all required data from file
 def read_data(file_name):

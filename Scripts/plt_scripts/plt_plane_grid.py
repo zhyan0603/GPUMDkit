@@ -1,3 +1,28 @@
+"""
+=============================================================================
+GPUMDkit: A User-Friendly Toolkit for GPUMD and NEP
+Repository: https://github.com/zhyan0603/GPUMDkit
+Citation: Z. Yan et al., GPUMDkit: A User-Friendly Toolkit for GPUMD and NEP,
+          MGE Advances, 2026, e70074 (https://doi.org/10.1002/mgea.70074)
+=============================================================================
+Script:     plt_plane_grid.py
+Category:   Plot Scripts
+Purpose:    Map displacement data onto a 3D grid and plot selected XY/XZ/YZ
+            plane profiles from ferrodispcalc.
+Usage:      gpumdkit.sh -plt plane-grid -i model.xyz -d displacements.dat -e <elements> [options]
+            python plt_plane_grid.py -i model.xyz -d displacements.dat -e <elements> [options]
+Arguments:
+  -i model.xyz           Input structure file
+  -d displacements.dat   Displacement data file
+  -e elements            Elements to include (e.g., Pb Sr)
+  --select-xy, etc.      Select specific plane and indices
+Output:
+  Plane grid displacement plot
+Author:     Denan LI (lidenan@westlake.edu.cn)
+Last-modified: 2026-05-16
+=============================================================================
+"""
+
 from ase.io import read
 import argparse
 import numpy as np

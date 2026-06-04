@@ -1,3 +1,25 @@
+"""
+=============================================================================
+GPUMDkit: A User-Friendly Toolkit for GPUMD and NEP
+Repository: https://github.com/zhyan0603/GPUMDkit
+Citation: Z. Yan et al., GPUMDkit: A User-Friendly Toolkit for GPUMD and NEP,
+          MGE Advances, 2026, e70074 (https://doi.org/10.1002/mgea.70074)
+=============================================================================
+Script:     get_min_dist.py
+Category:   Analyzer Scripts
+Purpose:    Compute the minimum interatomic distance for each element pair
+            across all frames in an extxyz file (no PBC, faster for large
+            systems).
+Usage:      python get_min_dist.py <file_name>
+Arguments:
+  file_name  Input extxyz file
+Output:
+  Table of minimum distances for each element pair and overall minimum
+Author:     Zihan YAN (yanzihan@westlake.edu.cn)
+Last-modified: 2026-05-16
+=============================================================================
+"""
+
 import sys
 import numpy as np
 from ase.io import read

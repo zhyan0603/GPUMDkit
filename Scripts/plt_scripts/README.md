@@ -252,8 +252,8 @@ Plots MSD for all atomic species separately when using `all_groups` in GPUMD.
 
 **Usage:**
 ```bash
-gpumdkit.sh -plt msd_all <species1> <species2> ...
-gpumdkit.sh -plt msd_all Li P S
+gpumdkit.sh -plt msd_all msd.out <species1> <species2> ...
+gpumdkit.sh -plt msd_all msd.out Li P S
 ```
 
 **Requirements:** Must use `all_groups` in the `compute_msd` command in `run.in`.
@@ -268,7 +268,7 @@ gpumdkit.sh -plt msd_all Li P S
 
 Checks convergence of MSD calculations across different time windows.
 
-**Input File:** `msd.out` (computed with `save_every` option)
+**Input File:** `msd_step*.out` (computed with `save_every` option)
 
 **Usage:**
 ```bash
@@ -663,7 +663,7 @@ gpumdkit.sh -plt net_force train.xyz
 | `nemd` | NEMD outputs | NEMD thermal transport |
 | `hnemd` | HNEMD outputs | HNEMD thermal transport |
 | `arrhenius_d` | Multiple MSD | Arrhenius diffusivity |
-| `arrhenius_sigma` | Conductivity data | Arrhenius conductivity |
+| `arrhenius_sigma` | Multiple MSD | Arrhenius conductivity |
 
 ## Contributing
 
@@ -681,26 +681,46 @@ See [CONTRIBUTING.md](../../CONTRIBUTING.md) for detailed guidelines.
 
 For quick reference, here's the complete command list:
 
-```bash
-gpumdkit.sh -plt
-+=====================================================================================================+
-|                              GPUMDkit 1.4.2 (dev) (2025-12-17) Plotting Usage                      |
-+=============================================== Plot Types ==========================================+
-| thermo          Plot thermo info                   | train          Plot NEP train results          |
-| prediction      Plot NEP prediction results        | train_test     Plot NEP train and test results |
-| msd             Plot mean square displacement      | msd_conv       Plot the convergence of MSD     |
-| msd_all         Plot MSD of all species            | sdc            Plot self diffusion coefficient |
-| rdf             Plot radial distribution function  | vac            Plot velocity autocorrelation   |
-| restart         Plot parameters in nep.restart     | dimer          Plot dimer plot                 |
-| force_errors    Plot force errors                  | des            Plot descriptors                |
-| charge          Plot charge distribution           | lr             Plot learning rate              |
-| doas            Plot density of atomistic states   | arrhenius_d    Plot Arrhenius diffusivity      |
-| arrhenius_sigma Plot Arrhenius sigma               | net_force      Plot net force distribution     |
-| emd             Plot EMD results                   | nemd           Plot NEMD results               |
-| hnemd           Plot HNEMD results                 | parity_density Parity plots with density       |
-+=====================================================================================================+
-| For detailed usage and examples, use: gpumdkit.sh -plt <plot_type> -h                              |
-+=====================================================================================================+
+```
+ +-----------------------------------------------------------------------------------------------+
+ |                     GPUMDkit 1.5.5 (dev) (2026-05-10) PLOT & VISUALIZATION TOOLS              |
+ +-----------------------------------------------------------------------------------------------+
+ |  Usage: gpumdkit.sh -plt <type>                        Help: gpumdkit.sh -plt <type> -h       |
+ +-----------------------------------------------------------------------------------------------+
+ |                                    NEP Training & Evaluation                                  |
+ +-----------------------------------------------------------------------------------------------+
+ |  train          - NEP training results           prediction     - NEP prediction results      |
+ |  train_test     - NEP train and test results     parity_density - Parity density plot         |
+ |  train_density  - Training results density plot  restart        - Parameters in nep.restart   |
+ |  charge         - Charge distribution            born_charge    - Born effective charges      |
+ |  dimer          - Dimer energy/force curve       force_errors   - Force errors                |
+ |  des            - Descriptors                    lr             - Learning rate for gnep      |
+ +-----------------------------------------------------------------------------------------------+
+ |                                     Diffusion & Transport                                     |
+ +-----------------------------------------------------------------------------------------------+
+ |  msd            - Mean square displacement       msd_conv       - MSD convergence             |
+ |  msd_all        - MSD for all species            sdc            - Self diffusion coefficient  |
+ |  msd_sdc        - MSD and SDC together           sigma          - Arrhenius ionic conductivity|
+ |  D              - Arrhenius diffusivity          sigma_xyz      - Directional Arrhenius sigma |
+ |  D_xyz          - Directional Arrhenius D                                                     |
+ +-----------------------------------------------------------------------------------------------+
+ |                                    MD & Structural Analysis                                   |
+ +-----------------------------------------------------------------------------------------------+
+ |  thermo         - thermo info in thermo.out      thermo2/3      - Thermo in different styles  |
+ |  rdf            - Radial distribution function   rdf_pmf        - Potential of mean force     |
+ |  vac            - Velocity autocorrelation       cohesive       - Cohesive energy curve       |
+ |  net_force      - Net force distribution         plane-grid     - Displacement plane grid     |
+ |  doas           - Density of atomistic states                                                 |
+ +-----------------------------------------------------------------------------------------------+
+ |                                        Heat Transport                                         |
+ +-----------------------------------------------------------------------------------------------+
+ |  emd            - EMD results                    nemd           - NEMD results                |
+ |  hnemd          - HNEMD results                  viscosity      - Viscosity                   |
+ +-----------------------------------------------------------------------------------------------+
+ |                                          Phonons                                              |
+ +-----------------------------------------------------------------------------------------------+
+ |  pdos           - VAC and PDOS                                                                |
+ +-----------------------------------------------------------------------------------------------+
 ```
 
 ---
