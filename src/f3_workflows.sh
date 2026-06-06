@@ -39,7 +39,7 @@ echo " ---------------------------------------------------"
 # SCF batch pretreatment (main function)
 function f301_scf_batch_pretreatment(){ 
     echo " +-------------------------------------------------------------+"
-    echo " |                 SCF BATCH PRETREATMENT TOOLS               |"
+    echo " |                 SCF BATCH PRETREATMENT TOOLS                |"
     echo " +-------------------------------------------------------------+"
     echo " | 1) VASP SCF batch pretreatment                              |"
     echo " | 2) CP2K SCF batch pretreatment                              |"
