@@ -35,7 +35,7 @@ def print_usage():
     print("                     - S_eff: real or effective area of the system")
     print("  cutoff_freq   : Optional, Cutoff frequency for SHC calculation in THz (default: 60)")
     print("  save          : Optional, save the plot as 'nemd.png'")
-    print("  !!! Note !!!  : If no SHC data, set [scale_eff_size] and [cutoff_freq] to any number as placeholders when using 'save'.")
+    print("  !!! Note !!!  : If no SHC data, set [scale_eff_size] and [cutoff_freq] to any non-zero number as placeholders when using 'save'.")
 
 class NEMD_Processor:
     def __init__(self, _directory, _real_length=None, _scale_eff_size=1, _cutoff_freq=60, _scale_vacuum=1):
@@ -164,6 +164,7 @@ class NEMD_Processor:
         Reformed_NEMD_data = {}
 
         # Get parameters from run.in
+        direction = None  # heat transfer axis; set by compute_shc, else auto-detected below
         with open(self.path['run'], 'r') as file:
             found_nemd = False
             for line in file:
@@ -210,6 +211,14 @@ class NEMD_Processor:
             group = group_arr
         else:
             group = group_arr[:, 0]
+
+        if direction is None:
+            # No compute_shc in run.in: infer the heat transfer axis as the
+            # Cartesian direction where the source/sink groups are most separated
+            heat_pos = model.positions[(group == 1)].mean(axis=0)
+            cold_pos = model.positions[(group == N_temp_group - 1)].mean(axis=0)
+            direction = int(np.argmax(np.abs(heat_pos - cold_pos)))
+
         coords_heat = model.positions[(group == 1), direction].mean()
         coords_cold = model.positions[(group == N_temp_group - 1), direction].mean()
         xticks_length = np.linspace(coords_heat, coords_cold, N_temp_group - 1) * 0.1
