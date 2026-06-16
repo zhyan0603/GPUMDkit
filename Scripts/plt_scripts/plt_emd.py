@@ -79,7 +79,7 @@ class EMD_Processor:
         with open(self.path['run'], 'r') as file:
             for line in file:
                 if 'time_step' in line:
-                    time_step = int(line.split()[1])
+                    time_step = float(line.split()[1])
                 if 'compute_hac' in line:
                     N_hac_data = int(int(line.split()[2]) / int(line.split()[3]))
                     Max_cor_time = int(int(line.split()[1]) * int(line.split()[2]))
@@ -87,7 +87,7 @@ class EMD_Processor:
         N_repeat = len(raw_data) // N_hac_data
         if len(raw_data) % N_hac_data != 0:
             raise ValueError(f"The MD calculation seems to be not completed, please check it!")
-        Time_upper = Max_cor_time * 1e-6  # ns
+        Time_upper = Max_cor_time * time_step * 1e-6  # ns
 
         # Classify and process data initially
         for col in raw_data.columns:
