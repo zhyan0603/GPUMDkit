@@ -44,9 +44,8 @@ def convert_poscar_to_extxyz(poscar_filenames, extxyz_filename):
 if __name__ == '__main__':
     # Check if the number of arguments is correct
     if len(sys.argv) < 3:
-        print("Usage: python pos2exyz.py <POSCAR> <extxyz_filename>")
-        print("Example 1: python pos2exyz.py POSCAR model.xyz")
-        # print("Example 2: python pos2exyz.py 'POSCAR*' train.xyz")
+        print("Usage: python pos2exyz.py <POSCAR> <output.xyz>")
+        print("   or: gpumdkit.sh -pos2exyz <POSCAR> <output.xyz>")
         sys.exit(1)
 
     poscar_filename_pattern = sys.argv[1]

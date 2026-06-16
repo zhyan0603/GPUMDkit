@@ -19,39 +19,38 @@ Last-modified: 2026-05-16
 =============================================================================
 """
 
-import argparse
 import sys
 from ase.io import read, write
 
-# 1. Setup Argument Parser for positional arguments
-parser = argparse.ArgumentParser(
-    description=" Convert VASP XDATCAR to extxyz format."
-)
-parser.add_argument("input", help=" Path to the input XDATCAR file")
-parser.add_argument("output", help=" Path to the output .xyz file")
+# Check arguments
+if len(sys.argv) < 3:
+    print("Usage: python xdatcar2exyz.py <XDATCAR> <output.xyz>")
+    print("   or: gpumdkit.sh -xdat2exyz <XDATCAR> <output.xyz>")
+    sys.exit(1)
 
-args = parser.parse_args()
+input_file = sys.argv[1]
+output_file = sys.argv[2]
 
-# 2. Execute conversion logic
+# Execute conversion logic
 try:
-    print(f" Reading XDATCAR: {args.input} ...")
+    print(f" Reading XDATCAR: {input_file} ...")
     
     # Read all frames from the trajectory (index=":")
     # ASE automatically parses scaling, lattice, and species
-    trajectory = read(args.input, index=":", format="vasp-xdatcar")
+    trajectory = read(input_file, index=":", format="vasp-xdatcar")
     
     num_frames = len(trajectory)
     print(f" Detected {num_frames} frames.")
     
-    print(f" Writing to extxyz: {args.output} ...")
+    print(f" Writing to extxyz: {output_file} ...")
     
     # Writing in extxyz format preserves the Lattice matrix in the header
-    write(args.output, trajectory, format="extxyz")
+    write(output_file, trajectory, format="extxyz")
     
     print(" Conversion complete.")
 
 except FileNotFoundError:
-    print(f" Error: Could not find '{args.input}'. Please check the path.")
+    print(f" Error: Could not find '{input_file}'. Please check the path.")
     sys.exit(1)
 except Exception as e:
     print(f" An unexpected error occurred: {e}")

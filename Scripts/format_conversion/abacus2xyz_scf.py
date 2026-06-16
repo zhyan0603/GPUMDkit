@@ -26,6 +26,7 @@ from ase.io import read, write
 def main():
     if len(sys.argv) != 3:
         print("Usage: python abacus2xyz_scf.py <dir> <extxyz>")
+        print("   or: gpumdkit.sh -abacus2xyz <dir> <extxyz>")
         sys.exit(1)
 if __name__ == "__main__":
     main()

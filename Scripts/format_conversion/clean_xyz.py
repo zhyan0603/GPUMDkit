@@ -23,6 +23,12 @@ Last-modified: 2026-05-16
 from ase.io import read, write
 import sys
 
+# Check arguments
+if len(sys.argv) < 3:
+    print("Usage: python clean_xyz.py <input.xyz> <output.xyz>")
+    print("   or: gpumdkit.sh -clean_xyz <input.xyz> <output.xyz>")
+    sys.exit(1)
+
 # Read all frames from the input train.xyz file
 frames = read(sys.argv[1], index=':')
 

@@ -30,6 +30,7 @@ def convert_poscar_to_lammps(poscar_path, lammps_data_path):
 if __name__ == "__main__":
     if len(sys.argv) != 3:
         print("Usage: python pos2lmp.py <poscar_file> <lammps_data_file>")
+        print("   or: gpumdkit.sh -pos2lmp <poscar_file> <lammps_data_file>")
         sys.exit(1)
     
     poscar_file = sys.argv[1]

@@ -22,6 +22,12 @@ Last-modified: 2026-05-16
 import sys
 from ase.io import read, write
 
+# Check arguments
+if len(sys.argv) < 3:
+    print("Usage: python get_frame.py <input.xyz> <frame_number>")
+    print("   or: gpumdkit.sh -get_frame <input.xyz> <frame_number>")
+    sys.exit(1)
+
 def get_frame():
     input_file = sys.argv[1]
     frame_number = int(sys.argv[2])

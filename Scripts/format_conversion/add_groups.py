@@ -24,6 +24,12 @@ import sys
 from ase.io import read, write
 import numpy as np
 
+# Check arguments
+if len(sys.argv) < 3:
+    print("Usage: python add_groups.py <input.xyz> <element1> <element2> ...")
+    print("   or: gpumdkit.sh -addgroup <input.xyz> <element1> <element2> ...")
+    sys.exit(1)
+
 # Read the file name from command line arguments
 file_name = sys.argv[1]
 

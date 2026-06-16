@@ -48,7 +48,8 @@ def lmp2exyz(dump_file, elements):
 
 if __name__ == '__main__':
     if len(sys.argv) < 3:
-        print(" Usage: python lmp2exyz.py <dump_file> <element1> <element2> ...")
+        print("Usage: python lmp2exyz.py <dump_file> <element1> <element2> ...")
+        print("   or: gpumdkit.sh -lmp2exyz <dump_file> <element1> <element2> ...")
         sys.exit(1)
     
     dump_file = sys.argv[1]

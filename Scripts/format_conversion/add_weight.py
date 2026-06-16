@@ -28,7 +28,8 @@ from ase.io import read, write
 def main():
     # Check if the correct number of arguments are provided
     if len(sys.argv) != 4:
-        print("Usage: python script.py <input_file> <output_file> <new_weight>")
+        print("Usage: python add_weight.py <input.xyz> <output.xyz> <weight>")
+        print("   or: gpumdkit.sh -addweight <input.xyz> <output.xyz> <weight>")
         sys.exit(1)
 
     # Parse command line arguments

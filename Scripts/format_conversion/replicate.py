@@ -106,8 +106,10 @@ def reorder_atoms_by_input_species_order(atoms, original_atoms):
 
 def main():
     if len(sys.argv) < 4:
-        print(" Usage 1: python replicate.py input.vasp output.vasp a b c")
-        print(" Usage 2: python replicate.py input.vasp output.vasp target_num")
+        print("Usage 1: python replicate.py input.vasp output.vasp a b c")
+        print("Usage 2: python replicate.py input.vasp output.vasp target_num")
+        print("   or: gpumdkit.sh -replicate input.vasp output.vasp a b c")
+        print("   or: gpumdkit.sh -replicate input.vasp output.vasp target_num")
         sys.exit(1)
 
     infile = sys.argv[1]

@@ -24,7 +24,8 @@ from ase.io import read, write
 
 # Check command line arguments
 if len(sys.argv) != 3:
-    print(" Usage: python cif2exyz.py input.cif output.xyz")
+    print("Usage: python cif2exyz.py <input.cif> <output.xyz>")
+    print("   or: gpumdkit.sh -cif2exyz <input.cif> <output.xyz>")
     sys.exit(1)
 
 # Read input and output file paths

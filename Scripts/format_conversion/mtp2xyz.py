@@ -132,6 +132,11 @@ def dump_xyz(frames):
 
 
 if __name__ == "__main__":
+    # Check arguments
+    if len(sys.argv) < 3:
+        print("Usage: python mtp2xyz.py <train.cfg> <Symbol1> <Symbol2> ...")
+        sys.exit(1)
+    
     type_to_symbol = {i: s for i, s in enumerate(sys.argv[2:])}
     frames = load_cfg(sys.argv[1], type_to_symbol)
     #dump_nep(frames)

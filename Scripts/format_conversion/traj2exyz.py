@@ -47,9 +47,10 @@ def convert_traj_to_extxyz(input_file, output_file):
 if __name__ == "__main__":
     # Check if correct number of arguments are provided
     if len(sys.argv) != 3:
-        print(" Usage: python traj2exyz.py <input.traj> <output.xyz>")
-        sys.stdout.flush()
-    else:
-        input_path = sys.argv[1]
-        output_path = sys.argv[2]
-        convert_traj_to_extxyz(input_path, output_path)
+        print("Usage: python traj2exyz.py <input.traj> <output.xyz>")
+        print("   or: gpumdkit.sh -traj2exyz <input.traj> <output.xyz>")
+        sys.exit(1)
+    
+    input_path = sys.argv[1]
+    output_path = sys.argv[2]
+    convert_traj_to_extxyz(input_path, output_path)

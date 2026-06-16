@@ -45,7 +45,7 @@ def split_xyz_to_individual_models(input_xyz_filename):
 if __name__ == '__main__':
     # Check if the number of arguments is correct
     if len(sys.argv) < 2:
-        print(" Usage: python script_name.py <input_xyz_filename>")
+        print("Usage: python split_single_xyz.py <input.xyz>")
         sys.exit(1)
 
     # Get input XYZ filename from command line argument

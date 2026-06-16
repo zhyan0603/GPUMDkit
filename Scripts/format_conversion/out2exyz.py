@@ -23,6 +23,12 @@ from ase.io import read, write
 from ase import Atoms, Atom
 from tqdm import tqdm
 
+# Check arguments
+if len(sys.argv) < 2:
+    print("Usage: python out2exyz.py <directory>")
+    print("   or: gpumdkit.sh -out2exyz <directory>")
+    sys.exit(1)
+
 def Convert_atoms(atom):
     xx,yy,zz,yz,xz,xy = -atom.calc.results['stress']*atom.get_volume() 
     atom.info['virial'] = np.array([(xx, xy, xz), (xy, yy, yz), (xz, yz, zz)])

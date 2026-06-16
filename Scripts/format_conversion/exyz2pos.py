@@ -30,7 +30,13 @@ def print_progress_bar(iteration, total, length=50):
     if iteration == total:
         print()
 
-input_file = sys.argv[1] if len(sys.argv) > 1 else 'train.xyz'
+# Check arguments
+if len(sys.argv) < 2:
+    print("Usage: python exyz2pos.py <input.xyz>")
+    print("   or: gpumdkit.sh -exyz2pos <input.xyz>")
+    sys.exit(1)
+
+input_file = sys.argv[1]
 
 # Read all frames
 frames = read(input_file, index=':')
