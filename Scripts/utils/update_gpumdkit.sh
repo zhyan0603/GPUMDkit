@@ -45,21 +45,10 @@ if [ "$local_commit" = "$remote_commit" ]; then
     echo "No updates available: Local $current_branch branch is up to date."
 else
     echo "Updates detected, pulling latest code for branch $current_branch..."
-    # Update permissions and pull code
-    if [ -f "gpumdkit.sh" ]; then
-        chmod -x gpumdkit.sh
-    else
-        echo "Warning: gpumdkit.sh not found, skipping permission change."
-    fi
 
     # Pull latest code
     if git pull origin "$current_branch"; then
         echo "Code successfully updated."
-        # Restore executable permission for gpumdkit.sh
-        if [ -f "gpumdkit.sh" ]; then
-            chmod +x gpumdkit.sh
-            echo "Restored executable permission for gpumdkit.sh."
-        fi
     else
         echo "Error: Failed to pull code. Check Git configuration or network connection."
         exit 1
