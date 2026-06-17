@@ -19,7 +19,7 @@ if [ -z "$GPUMDkit_path" ]; then
     exit 1
 fi
 
-VERSION="1.5.5 (dev) (2026-05-16)"
+VERSION="1.5.6 (dev) (2026-06-17)"
 
 plt_path="${GPUMDkit_path}/Scripts/plt_scripts"
 analyzer_path="${GPUMDkit_path}/Scripts/analyzer"
@@ -668,6 +668,9 @@ if [ ! -z "$1" ]; then
         -pynep)
             source ${GPUMDkit_path}/src/f2_sample_structures.sh
             parallel_pynep_sample_structures ;;
+
+        -nep_modifier)
+            source ${GPUMDkit_path}/Scripts/utils/nep_modifier/nep_modifier.py ;;
 
         -frame_range)
             if [ ! -z "$2" ] && [ "$2" != "-h" ] && [ ! -z "$3" ] && [ ! -z "$4" ] ; then

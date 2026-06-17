@@ -13,7 +13,7 @@ _gpumdkit_completions() {
     prev="${COMP_WORDS[COMP_CWORD-1]}" # Previous word
 
     # List of primary options (extracted from gpumdkit.sh)
-    local opts="-h -update -help -clean -time -plt -calc -cbc -range -out2xyz -xml2xyz -pos2exyz -cif2pos -cif2exyz -exyz2pos -pos2lmp -lmp2exyz -traj2exyz -cp2k2xyz -addgroup -addlabel -addweight -min_dist -min_dist_pbc -filter_dist -filter_dist_pbc -filter_box -filter_value -get_frame -clean_xyz -get_volume -analyze_comp -replicate -hbond -pda -pynep -frame_range -chem_species -xdat2exyz"
+    local opts="-h -update -help -clean -time -plt -calc -cbc -range -out2xyz -xml2xyz -pos2exyz -cif2pos -cif2exyz -exyz2pos -pos2lmp -lmp2exyz -traj2exyz -cp2k2xyz -addgroup -addlabel -addweight -min_dist -min_dist_pbc -filter_dist -filter_dist_pbc -filter_box -filter_value -get_frame -clean_xyz -get_volume -analyze_comp -replicate -hbond -pda -pynep -frame_range -chem_species -xdat2exyz -nep_modifier"
 
     # Provide secondary completion based on the previous word
     case "$prev" in
