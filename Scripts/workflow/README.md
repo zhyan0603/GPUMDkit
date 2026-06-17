@@ -1,129 +1,74 @@
-#### workflow_activate_learning_dev.sh
+<div align="center">
+  <h1>🔧 Workflow Scripts</h1>
+    <p style="text-align: justify;">This directory contains automation scripts for high-throughput computational workflows, particularly for NEP model development and active learning cycles.</p>
+</div>
+
+## Overview
+
+Workflow scripts automate repetitive tasks in computational materials research:
+
+- **SCF Batch preprocessin**: Set up VASP/CP2K single-point energy calculations
+- **MD sampling**: Prepare molecular dynamics simulations with GPUMD/LAMMPS
+- **Active learning**: Iterative NEP model improvement workflows
 
 ---
 
-See this [Tutorial](../../Tutorials/Tutorials_workflow_activate_learning.md) for running the workflow script.
+## Via interactive mode
 
+Access workflow tools through `gpumdkit.sh` interactive mode:
 
+```bash
+         ____ ____  _   _ __  __ ____  _    _ _
+        / ___|  _ \| | | |  \/  |  _ \| | _(_) |_
+       | |  _| |_) | | | | |\/| | | | | |/ / | __|
+       | |_| |  __/| |_| | |  | | |_| |   <| | |_
+        \____|_|    \___/|_|  |_|____/|_|\_\_|\__|
 
-#### scf_batch_pretreatment.sh
+        GPUMDkit Version 1.4.2 (dev) (2025-12-17)
+  Core Developer: Zihan YAN (yanzihan@westlake.edu.cn)
 
----
-
-This script automates the preprocessing of `POSCAR` or `extxyz` files for *self-consistent field* (`SCF`) calculations. The script includes the following steps:
-
-1. Converts a `.xyz` file to `POSCAR` format using `GPUMDkit` if no `.vasp` files are found in the current directory.
-2. Renames and organizes `.vasp` files into a `struct_fp` directory.
-3. Creates individual directories for each `POSCAR` file, setting up symbolic links to the necessary `VASP` input files.
-4. Generates a `presub.sh` script to automate running `VASP` `SCF` calculations.
-
-#### Usage
-
-1. Prepare the environment:
-
-   Ensure all `.vasp` files or a single `.xyz` file are in the current directory.
-
-2. Enter:
-
-   ```bash
-   bash scf_batch_pretreatment.sh
-   ```
-
-3. You will see the following prompt: 
-
-   ```sh
-    Starting SCF batch pretreatment...
-    Found 8 .vasp files.
-    >-------------------------------------------------<
-    | This function calls the script in Scripts       |
-    | Script: scf_batch_pretreatment.sh               |
-    | Developer: Zihan YAN (yanzihan@westlake.edu.cn) |
-    >-------------------------------------------------<
-   
-    We recommend using the prefix to locate the structure.
-    The folder name will be added to the second line of XYZ.
-    config_type=<prefix>_<ID>
-    ------------>>
-    Please enter the prefix of directory (e.g. FAPBI3_iter01)
-   ```
-
-4. Enter the `prefix` of the folder name:
-
-   ```sh
-   FAPBI3_iter01
-   ```
-
-​		The script `scf_batch_pretreatment.sh` in the `Scripts` will be called to perform the pretreatment.
-
- 5. You will see the following prompts:
-
-    ```
-     >-----------------------------------------------------<
-     ATTENTION: Place POTCAR, KPOINTS and INCAR in 'fp' Dir.
-     ATTENTION: Place POTCAR, KPOINTS and INCAR in 'fp' Dir.
-     ATTENTION: Place POTCAR, KPOINTS and INCAR in 'fp' Dir.
-     >-----------------------------------------------------<
-    ```
-
-
-You need to prepare the `POTCAR`, `KPOINTS`, and `INCAR` files and place them in a directory named `fp`.
-
-
-
-#### md_sample_batch_pretreatment_gpumd.sh
+ ----------------------- GPUMD -----------------------
+ 1) Format Conversion          2) Sample Structures
+ 3) Workflow                   4) Calculators
+ 5) Analyzer                   6) Developing ...
+ 0) Quit!
+ ------------>>
+ Input the function number:
+ 3
+ ------------>>
+ 301) SCF batch pretreatment
+ 302) MD sample batch pretreatment (gpumd)
+ 303) MD sample batch pretreatment (lmp)
+ 000) Return to the main menu
+ ------------>>
+ Input the function number:
+```
 
 ---
 
-This script automates the preprocessing of `POSCAR` or `extxyz` files for MD sampling using `GPUMD`. 
+### workflow_active_learning_dev.sh
 
-1. If `.vasp` files are found in the current directory, it will convert them to `extxyz` format to prepare the `model.xyz` file for `GPUMD`. If `.vasp` files are not found, the `.xyz` file will be read and all frames in it will be split into a individual sample.
-2. Renames and organizes `.xyz` files into a `struct_md` directory.
-3. Creates individual directories for each `model.xyz` file, setting up symbolic links to the necessary `GPUMD` input files.
-4. Generates a `presub.sh` script to automate running MD simulations.
+Implements automated active learning cycles for iterative NEP model improvement.
 
-#### Usage
+**Purpose:** Automates the active learning pipeline:
 
-1. Prepare the environment:
+1. Generate candidate structures (MD sampling)
+2. Evaluate with current NEP model
+3. Select uncertain structures
+4. Run DFT calculations
+5. Add to training set
+6. Retrain NEP model
 
-   Ensure all `.vasp` files or a single `.xyz` file are in the current directory.
+**Status:** Development version - **under active development**
 
-2. Enter:
-
-   ```bash
-   bash md_sample_batch_pretreatment_gpumd.sh
-   ```
-
-3. You will see the following prompt: 
-
-   ```sh
-    Starting MD sample batch pretreatment...
-    No .vasp files found, but found one XYZ file.
-    Converting it to model.xyz using GPUMDkit...
-    All frames from "NEP-dataset.xyz" have been split into individual model files.
-    20 model.xyz files were generated.
-    >-------------------------------------------------<
-    | This function calls the script in Scripts       |
-    | Script: md_sample_batch_pretreatment.sh         |
-    | Developer: Zihan YAN (yanzihan@westlake.edu.cn) |
-    >-------------------------------------------------<
-   ```
-
-4. You will see the following prompts:
-
-   ````
-   ```
-   >-----------------------------------------------<
-   ATTENTION: Place run.in and nep.txt in 'md' Dir. 
-   ATTENTION: Place run.in and nep.txt in 'md' Dir. 
-   ATTENTION: Place run.in and nep.txt in 'md' Dir. 
-   >-----------------------------------------------<
-   ```
-   ````
-
-You need to prepare the `run.in` and`nep.txt` files and place them in a directory named `md`.
-
-
+**Documentation:** See detailed tutorial in [docs/tutorials/](../../docs/tutorials/)
 
 ---
 
-Thank you for using `GPUMDkit`! If you have any questions or need further assistance, feel free to open an issue on our GitHub repository or contact Zihan YAN (yanzihan@westlake.edu.cn).
+## Contributing
+
+To add new workflow capabilities, see [CONTRIBUTING.md](../../CONTRIBUTING.md) for detailed guidelines.
+
+---
+
+Thank you for using GPUMDkit! For questions about workflows or to share your workflow adaptations, please open an issue on our [GitHub repository](https://github.com/zhyan0603/GPUMDkit/issues) or contact Zihan YAN (yanzihan@westlake.edu.cn).

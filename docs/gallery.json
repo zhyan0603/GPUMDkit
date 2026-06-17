@@ -1,0 +1,102 @@
+[
+    {
+        "title": "NEP Training",
+        "image": "Gallery/train.png",
+        "command": "gpumdkit.sh -plt train"
+    },
+    {
+        "title": "Thermodynamic Analysis",
+        "image": "Gallery/thermo.png",
+        "command": "gpumdkit.sh -plt thermo"
+    },    
+    {
+        "title": "Parity Plot",
+        "image": "Gallery/prediction.png",
+        "command": "gpumdkit.sh -plt prediction/test"
+    },
+    {
+        "title": "Parity Plot (train vs test)",
+        "image": "Gallery/train_test.png",
+        "command": "gpumdkit.sh -plt train_test"
+    },    
+    {
+        "title": "Parity Plot (Density)",
+        "image": "Gallery/parity_plot_density.png",
+        "command": "gpumdkit.sh -plt parity_density"
+    },    
+    {
+        "title": "MSD Analysis",
+        "image": "Gallery/msd.png",
+        "command": "gpumdkit.sh -plt msd"
+    },
+    {
+        "title": "MSD all",
+        "image": "Gallery/msd_all.png",
+        "command": "gpumdkit.sh -plt msd_all"
+    },
+    {
+        "title": "MSD Convergence",
+        "image": "Gallery/msd_convergence.png",
+        "command": "gpumdkit.sh -plt msd_conv"
+    },
+    {
+        "title": "SDC",
+        "image": "Gallery/sdc.png",
+        "command": "gpumdkit.sh -plt sdc"
+    },            
+    {
+        "title": "Arrhenius Plot",
+        "image": "Gallery/Arrhenius_D.png",
+        "command": "gpumdkit.sh -plt D/sigma"
+    },
+    {
+        "title": "RDF",
+        "image": "Gallery/rdf1.png",
+        "command": "gpumdkit.sh -plt rdf"
+    },
+    {
+        "title": "VAC & PDOS",
+        "image": "Gallery/vac_pdos.png",
+        "command": "gpumdkit.sh -plt pdos"
+    },
+    {
+        "title": "Charge Distribution",
+        "image": "Gallery/charge.png",
+        "command": "gpumdkit.sh -plt charge"
+    },    
+    {
+        "title": "Descriptor",
+        "image": "Gallery/des_umap.png",
+        "command": "gpumdkit.sh -plt des"
+    },
+    {
+        "title": "Dimer Plot",
+        "image": "Gallery/dimer.png",
+        "command": "gpumdkit.sh -plt dimer"
+    },
+    {
+        "title": "DOAS Analysis",
+        "image": "Gallery/doas.png",
+        "command": "gpumdkit.sh -plt doas"
+    },
+    {
+        "title": "EMD",
+        "image": "Gallery/emd.png",
+        "command": "gpumdkit.sh -plt emd"
+    },
+    {
+        "title": "NEMD",
+        "image": "Gallery/nemd.png",
+        "command": "gpumdkit.sh -plt nemd"
+    },    
+    {
+        "title": "HEMD",
+        "image": "Gallery/hnemd.png",
+        "command": "gpumdkit.sh -plt hnemd"
+    },
+    {
+        "title": "Force Errors",
+        "image": "Gallery/force_errors.png",
+        "command": "gpumdkit.sh -plt force_errors"
+    }                       
+]

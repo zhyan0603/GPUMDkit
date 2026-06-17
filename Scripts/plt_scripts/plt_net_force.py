@@ -1,3 +1,26 @@
+"""
+=============================================================================
+GPUMDkit: A User-Friendly Toolkit for GPUMD and NEP
+Repository: https://github.com/zhyan0603/GPUMDkit
+Citation: Z. Yan et al., GPUMDkit: A User-Friendly Toolkit for GPUMD and NEP,
+          MGE Advances, 2026, e70074 (https://doi.org/10.1002/mgea.70074)
+=============================================================================
+Script:     plt_net_force.py
+Category:   Plot Scripts
+Purpose:    Plot distribution of net forces on structures to identify
+            problematic configurations in training datasets.
+Usage:      gpumdkit.sh -plt net_force <extxyzfile>
+            python plt_net_force.py <extxyzfile> [save]
+Arguments:
+  extxyzfile  Path to the extended XYZ file (e.g., train.xyz)
+  save        Save the plot as 'net_force_distribution.png' instead of displaying it
+Output:
+  net_force_distribution.png  (if save is used, or if backend is non-interactive)
+Author:     Zihan YAN (yanzihan@westlake.edu.cn)
+Last-modified: 2026-05-16
+=============================================================================
+"""
+
 import numpy as np
 import matplotlib.pyplot as plt
 import os
@@ -86,7 +109,8 @@ def plot_net_force_distribution(net_forces, output_base, save_flag):
     """
     # Simple style settings
     plt.rcParams.update({
-        'font.family': 'Arial',
+        'font.family': 'sans-serif',
+        'font.sans-serif': ['Arial', 'DejaVu Sans', 'Liberation Sans'],
         'font.size': 10,
         'axes.labelsize': 11,
         'axes.titlesize': 11,
@@ -120,7 +144,7 @@ def plot_net_force_distribution(net_forces, output_base, save_flag):
     
     # Set axes
     ax.set_xscale('log')
-    ax.set_xlabel('Net Force (eV/Å)')
+    ax.set_xlabel(r'Net Force (eV/$\mathrm{{\AA}}$)')
     ax.set_ylabel('Density')
     
     # Add grid for better readability
@@ -177,14 +201,14 @@ def check_convergence(xyz_file, threshold=0.001, save_flag=False):
             f.write(f"Net force statistics - {xyz_file}\n")
             f.write("="*50 + "\n")
             f.write(f"Total frames: {total_frames}\n")
-            f.write(f"Suspicious frames (>{threshold} eV/Å): {unconverged}\n")
+            f.write(f"Suspicious frames (>{threshold} eV/Angstrom): {unconverged}\n")
             f.write(f"Suspicious ratio: {unconverged_ratio:.2f}%\n")
-            f.write(f"Median net force: {median_force:.6f} eV/Å\n")
-            f.write(f"Max net force: {np.max(net_forces):.6f} eV/Å\n")
-            f.write(f"Min net force: {np.min(net_forces):.6f} eV/Å\n")
+            f.write(f"Median net force: {median_force:.6f} eV/Angstrom\n")
+            f.write(f"Max net force: {np.max(net_forces):.6f} eV/Angstrom\n")
+            f.write(f"Min net force: {np.min(net_forces):.6f} eV/Angstrom\n")
         
         print(f" Suspicious ratio: {unconverged_ratio:.2f}%")
-        print(f" Median net force: {median_force:.6f} eV/Å")
+        print(f" Median net force: {median_force:.6f} eV/Angstrom")
         print(f" Results saved to: {stats_file}")
         print(" "+"-"*40)
     else:
@@ -199,7 +223,7 @@ def main():
     xyz_file = sys.argv[1]
     save_flag = len(sys.argv) > 2 and sys.argv[2].lower() == 'save'
     
-    # Check convergence with threshold 0.001 eV/Å
+    # Check convergence with threshold 0.001 eV/Angstrom
     check_convergence(xyz_file, threshold=0.001, save_flag=save_flag)
 
 if __name__ == "__main__":

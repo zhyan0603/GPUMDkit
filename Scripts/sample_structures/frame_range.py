@@ -1,3 +1,26 @@
+"""
+=============================================================================
+GPUMDkit: A User-Friendly Toolkit for GPUMD and NEP
+Repository: https://github.com/zhyan0603/GPUMDkit
+Citation: Z. Yan et al., GPUMDkit: A User-Friendly Toolkit for GPUMD and NEP,
+          MGE Advances, 2026, e70074 (https://doi.org/10.1002/mgea.70074)
+=============================================================================
+Script:     frame_range.py
+Category:   Sample Structure Scripts
+Purpose:    Extract a range of frames from an extxyz trajectory by start
+            and end fractions (e.g., first 80% or last 50%).
+Usage:      python frame_range.py <input.xyz> <start_fraction> <end_fraction>
+Arguments:
+  input.xyz       Input extxyz trajectory file
+  start_fraction  Start fraction (0.0 to 1.0, e.g., 0 for beginning)
+  end_fraction    End fraction (0.0 to 1.0, e.g., 0.8 for first 80%)
+Output:
+  <input>_<start>_<end>.xyz
+Author:     Zihan YAN (yanzihan@westlake.edu.cn)
+Last-modified: 2026-05-16
+=============================================================================
+"""
+
 import sys
 from ase.io import read, write
 

@@ -1,16 +1,22 @@
 #!/bin/bash
-
-# Check if the first argument ($1) exists and is not empty
-log_file="${1:-log}"  # If $1 is not provided, default to "log"
-
-# Check if the log file exists
-if [ ! -f "$log_file" ]; then
-    echo "Error: $log_file does not exist. Please provide a valid log file path."
-    exit 1
-fi
-
-# Get the number of atoms (remove the trailing dot if any)
-atom_num=$(grep "Number of atoms" "$log_file" | tail -1 | awk '{print $5}' | sed 's/\.$//')
+# =============================================================================
+# GPUMDkit: A User-Friendly Toolkit for GPUMD and NEP
+# Repository: https://github.com/zhyan0603/GPUMDkit
+# Citation: Z. Yan et al., GPUMDkit: A User-Friendly Toolkit for GPUMD and NEP,
+#           MGE Advances, 2026, e70074 (https://doi.org/10.1002/mgea.70074)
+# =============================================================================
+# Script:     time_consuming_gpumd.sh
+# Category:   Analyzer Scripts
+# Purpose:    Monitor GPUMD simulation progress in real time by tracking
+#            neighbor.out, and display speed, total time, and estimated
+#            completion time.
+# Usage:      ./time_consuming_gpumd.sh
+# Output:
+#   Real-time table of current frame, speed, total time, time left,
+#   and estimated end time
+# Author:     Zihan YAN (yanzihan@westlake.edu.cn)
+# Last-modified: 2026-05-16
+# =============================================================================
 
 # Get the total number of frames from the "run" file
 frames=$(grep run run.in | awk '{sum += $2} END {print sum}')
@@ -80,7 +86,6 @@ calculate_times() {
 
 # Output initial results (printed only once)
 echo " ----------------- System Information ----------------"
-echo " num of atoms: $atom_num"
 echo " total frames: $frames"
 echo " -----------------------------------------------------"
 

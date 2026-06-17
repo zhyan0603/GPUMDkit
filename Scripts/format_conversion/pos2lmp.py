@@ -1,3 +1,24 @@
+"""
+=============================================================================
+GPUMDkit: A User-Friendly Toolkit for GPUMD and NEP
+Repository: https://github.com/zhyan0603/GPUMDkit
+Citation: Z. Yan et al., GPUMDkit: A User-Friendly Toolkit for GPUMD and NEP,
+          MGE Advances, 2026, e70074 (https://doi.org/10.1002/mgea.70074)
+=============================================================================
+Script:     pos2lmp.py
+Category:   Format Conversion Scripts
+Purpose:    Convert VASP POSCAR file to LAMMPS data format using OVITO.
+Usage:      python pos2lmp.py <poscar_file> <lammps_data_file>
+Arguments:
+  poscar_file      Input VASP POSCAR file
+  lammps_data_file Output LAMMPS data file
+Output:
+  <lammps_data_file>  (LAMMPS data format structure)
+Author:     Zihan YAN (yanzihan@westlake.edu.cn)
+Last-modified: 2026-05-16
+=============================================================================
+"""
+
 import sys
 from ovito.io import import_file, export_file
 

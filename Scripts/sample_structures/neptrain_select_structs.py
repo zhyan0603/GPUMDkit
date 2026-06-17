@@ -1,3 +1,29 @@
+"""
+=============================================================================
+GPUMDkit: A User-Friendly Toolkit for GPUMD and NEP
+Repository: https://github.com/zhyan0603/GPUMDkit
+Citation: Z. Yan et al., GPUMDkit: A User-Friendly Toolkit for GPUMD and NEP,
+          MGE Advances, 2026, e70074 (https://doi.org/10.1002/mgea.70074)
+=============================================================================
+Script:     neptrain_select_structs.py
+Category:   Sample Structure Scripts
+Purpose:    Select diverse structures from a sampledata set using
+            farthest-point sampling on NepTrain descriptors, relative to
+            an existing training set.
+Usage:      python neptrain_select_structs.py <sampledata_file> <traindata_file> <nep_model_file>
+Arguments:
+  sampledata_file  Extxyz file with candidate structures
+  traindata_file   Extxyz file with existing training structures
+  nep_model_file   NEP model file (e.g., nep.txt)
+Output:
+  selected.xyz     Selected diverse structures
+  select.png       PCA visualization of descriptor space
+  pca_sample.txt / pca_train.txt / pca_selected.txt  PCA projections
+Author:     Benrui TANG (tang070205@proton.me)
+Last-modified: 2026-05-16
+=============================================================================
+"""
+
 import sys
 import numpy as np
 from ase.io import read, write
@@ -147,6 +173,10 @@ if sns_installed:
     sns.kdeplot(y=proj_selected[:, 1], color='C2', ax=side_kde, fill=True, alpha=0.4)
     side_kde.set_xticks([])
     side_kde.set_yticks([])
+
+np.savetxt('pca_sample.txt', proj_sample, fmt='%.8f', header='sample_x sample_y', comments='')
+np.savetxt('pca_train.txt', proj_train, fmt='%.8f', header='train_x train_y', comments='')
+np.savetxt('pca_selected.txt', proj_selected, fmt='%.8f', header='selected_x selected_y', comments='')
 
 plt.tight_layout()
 #plt.show()

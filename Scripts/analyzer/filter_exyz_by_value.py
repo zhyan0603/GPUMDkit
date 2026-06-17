@@ -1,3 +1,25 @@
+"""
+=============================================================================
+GPUMDkit: A User-Friendly Toolkit for GPUMD and NEP
+Repository: https://github.com/zhyan0603/GPUMDkit
+Citation: Z. Yan et al., GPUMDkit: A User-Friendly Toolkit for GPUMD and NEP,
+          MGE Advances, 2026, e70074 (https://doi.org/10.1002/mgea.70074)
+=============================================================================
+Script:     filter_exyz_by_value.py
+Category:   Analyzer Scripts
+Purpose:    Filter structures based on energy, force, or virial thresholds.
+Usage:      python filter_exyz_by_value.py <input_file> <property> <threshold>
+Arguments:
+  input_file  Input extxyz file
+  property    Filtering property: energy, force, or virial
+  threshold   Maximum allowed value for the specified property
+Output:
+  filtered.xyz
+Author:     Zihan YAN (yanzihan@westlake.edu.cn)X
+Last-modified: 2026-05-16
+=============================================================================
+"""
+
 import sys
 from ase.io import read, write
 

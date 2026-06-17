@@ -1,19 +1,23 @@
 """
-This script calculates diffusivity and ionic conductivity from MSD data (msd.out)
-obtained via GPUMD. It computes directional (x, y, z) and total diffusivities
-and converts them to ionic conductivities by Nernst-Einstein equation.
-
-Usage:
-1. Run the script with:
-   python script.py <element> <charge>
-   - <element>: Chemical species (e.g., Li).
-   - <charge>: Ion charge (e.g., 1 for Li⁺).
-2. If required files (`thermo.out` and `model.xyz`) are not found, the script
-   will prompt for manual input of structure volume, temperature, and number of ions.
-
-Author: Zihan YAN
-Modified by: Shengjie Tang
-Date: Sep 1, 2025
+=============================================================================
+GPUMDkit: A User-Friendly Toolkit for GPUMD and NEP
+Repository: https://github.com/zhyan0603/GPUMDkit
+Citation: Z. Yan et al., GPUMDkit: A User-Friendly Toolkit for GPUMD and NEP,
+          MGE Advances, 2026, e70074 (https://doi.org/10.1002/mgea.70074)
+=============================================================================
+Script:     calc_ion_conductivity.py
+Category:   Calculator Scripts
+Purpose:    Calculate diffusivity and ionic conductivity from MSD data
+            (msd.out) via the Nernst-Einstein equation.
+Usage:      python calc_ion_conductivity.py <element> <charge>
+Arguments:
+  element  Chemical species (e.g., Li)
+  charge   Ion charge (e.g., 1 for Li+)
+Output:
+  Calculated diffusivity and ionic conductivity (printed to terminal)
+Author:     Zihan YAN (yanzihan@westlake.edu.cn), Shengjie Tang (tangshengjie@westlake.edu.cn)
+Last-modified: 2026-05-16
+=============================================================================
 """
 
 import os
@@ -100,7 +104,7 @@ def calculate_diffusivity_and_conductivity(filepath, structure_volume, species_c
     k_total, _ = np.polyfit(dts[start:end], msd_total[start:end], 1)
 
     # Compute diffusivity D (cm^2/s) for each direction and total
-    D_x = k_x * 1e-4 / 2  # maybe?
+    D_x = k_x * 1e-4 / 2  # Convert from Å^2/ps to cm^2/s
     D_y = k_y * 1e-4 / 2
     D_z = k_z * 1e-4 / 2
     D_total = k_total * 1e-4 / 6

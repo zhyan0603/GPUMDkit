@@ -1,3 +1,26 @@
+"""
+=============================================================================
+GPUMDkit: A User-Friendly Toolkit for GPUMD and NEP
+Repository: https://github.com/zhyan0603/GPUMDkit
+Citation: Z. Yan et al., GPUMDkit: A User-Friendly Toolkit for GPUMD and NEP,
+          MGE Advances, 2026, e70074 (https://doi.org/10.1002/mgea.70074)
+=============================================================================
+Script:     plt_arrhenius_sigma.py
+Category:   Plot Scripts
+Purpose:    Calculate ionic conductivity from MSD and thermo data in
+            temperature folders, generate an Arrhenius plot (ln(sigma*T)
+            vs 1000/T), and extract activation energy.
+Usage:      gpumdkit.sh -plt sigma [save]
+            python plt_arrhenius_sigma.py [save]
+Arguments:
+  save      Save the plot as 'Arrhenius_sigma.png' instead of displaying it
+Output:
+  Arrhenius_sigma.png  (if save is used)
+Author:     Zihan YAN (yanzihan@westlake.edu.cn)
+Last-modified: 2026-05-16
+=============================================================================
+"""
+
 import re
 import os
 import sys
@@ -7,9 +30,45 @@ from matplotlib import get_backend
 from matplotlib.lines import Line2D
 import scipy.constants as consts
 from ase.io import read
+from scipy.stats import linregress
+import matplotlib.ticker as ticker
+import warnings
+warnings.filterwarnings('ignore', category=UserWarning, module='matplotlib')
 
-# Set plot font size
-plt.rcParams.update({'font.size': 10})
+plt.rcParams.update({
+    "font.family": "sans-serif",
+    "font.sans-serif": ["Arial", "DejaVu Sans", "Liberation Sans"],  
+    "font.size": 11,
+    "axes.labelsize": 11.5,
+    "axes.titlesize": 12,
+    "xtick.labelsize": 11,
+    "ytick.labelsize": 11,
+    "legend.fontsize": 11,
+    "figure.figsize": (4.3, 3.8),  
+    "axes.spines.top": True,
+    "axes.spines.right": True,
+    "axes.linewidth": 0.8,
+})
+
+k = 8.617333262145e-5
+
+def fit_arrhenius(T, sigma_T):
+    """Fit Arrhenius equation to calculate activation energy"""
+    mask = ~np.isnan(sigma_T) & ~np.isnan(T) & (sigma_T > 0)
+    T_valid, val_valid = T[mask], sigma_T[mask]
+    if len(T_valid) < 2: 
+        return None, None, None, None
+    
+    x = 1000 / T_valid
+    y = np.log10(val_valid) 
+    res = linregress(x, y)
+    Ea = -res.slope * k * 1000 * np.log(10)  
+    return Ea, res.intercept, res.slope, res.rvalue
+
+def tick_function(X):
+    """Convert inverse temperature back to temperature for top axis"""
+    V = 1000 / X  
+    return ["%.0f" % z for z in V]
 
 # Get current directory and temperature folders (e.g., 400K, 500K)
 base_dir = os.getcwd()
@@ -23,8 +82,9 @@ temp_folders = sorted(temp_folders, key=lambda x: int(x[:-1]))  # Sort by temper
 if not temp_folders:
     raise ValueError("No valid temperature folders (e.g., 400K, 500K) found in current directory")
 
-# Define color for plotting
-color = '#FF5D5D'
+# Define colors following PRL style
+default_colors = ['#457B9D', '#D62828', '#2A9D8F', '#E9C46A']
+color = default_colors[0]  # Using first PRL-style color
 
 # Get structure label from current directory name
 cell = os.path.basename(base_dir)
@@ -39,7 +99,7 @@ atoms = read(xyz_file, format='extxyz')
 num_ions = sum(1 for atom in atoms if atom.symbol in ['Li', 'Na'])
 
 # Check for replicate parameter in run.in
-run_in_path = os.path.join(base_dir, 'run.in')
+run_in_path = os.path.join(base_dir, temp_folders[0], 'run.in')
 rep_factor = 1
 if os.path.exists(run_in_path):
     with open(run_in_path, 'r') as f:
@@ -61,15 +121,9 @@ else:
     print("[Note] No run.in file found, assuming no replication")
 
 # Initialize lists for plotting and data storage
-group_Ts = []
-group_sigmaTs = []
-group_sigmas = []
-fig, ax1 = plt.subplots(figsize=(6, 3.5), dpi=150)
-
-# Print header for conductivity data
-print("\nConductivity Data:")
-print(f"{'T (K)':<6} {'Sigma (S/cm)':<15} {'Sigma·T (K·S/cm)':<15}")
-print("-" * 36)
+raw_group_Ts = []
+raw_group_sigmaTs = []
+raw_group_sigmas = []
 
 # Process each temperature folder
 for temp_folder in temp_folders:
@@ -105,12 +159,12 @@ for temp_folder in temp_folders:
         end = int(len(dts) * 0.8)
 
         # Calculate diffusivity
-        k, _ = np.polyfit(dts[start:end], msds[start:end], 1)
-        D = k * 1e-4 / 6  # Convert A²/ps to cm²/s
+        k_diff, _ = np.polyfit(dts[start:end], msds[start:end], 1)
+        D = k_diff * 1e-4 / 6  # Convert A/ps to cm/s
 
         # Calculate conductivity
         z = 1  # Species charge
-        vol_cm3 = volume * 1e-24  # Convert volume to cm³
+        vol_cm3 = volume * 1e-24  # Convert volume to cm^3
         conversion_factor = (num_ions / (vol_cm3 * consts.N_A) * z**2 * (consts.N_A * consts.e)**2 / (consts.R * temp))
         conductivity = conversion_factor * D
         sigma_T = conductivity * temp
@@ -119,72 +173,99 @@ for temp_folder in temp_folders:
             print(f"[Skip] {temp_folder}: Invalid sigma_T = {sigma_T}")
             continue
 
-        # Store data and print conductivity
-        group_Ts.append(temp)
-        group_sigmaTs.append(sigma_T)
-        group_sigmas.append(conductivity)
-        print(f"{temp:<6} {conductivity:<15.3e} {sigma_T:<15.3e}")
-
-        ax1.scatter(1000 / temp, np.log(sigma_T), color=color, s=20, alpha=0.8)
+        # Store data
+        raw_group_Ts.append(temp)
+        raw_group_sigmaTs.append(sigma_T)
+        raw_group_sigmas.append(conductivity)
 
     except Exception as e:
         print(f"[Error] Processing {temp_folder}: {e}")
         continue
-print("-" * 36)
 
+# Sort by temperature
+if len(raw_group_Ts) > 0:
+    sorted_indices = np.argsort(raw_group_Ts)
+    group_Ts = np.array(raw_group_Ts)[sorted_indices]
+    group_sigmaTs = np.array(raw_group_sigmaTs)[sorted_indices]
+    group_sigmas = np.array(raw_group_sigmas)[sorted_indices]
 
-if len(group_Ts) < 2:
-    raise ValueError("Insufficient data points for fitting, need at least two temperatures")
+    # Print header for conductivity data
+    w_t, w_sigma, w_sigmaT = 10, 16, 18
+    line = f"+{'-'*(w_t+2)}-{'-'*(w_sigma+2)}-{'-'*(w_sigmaT+2)}+"
+    print(line)
+    print(f"| {'Conductivity (unit: S/cm, Sigma*T: K S/cm)':^{len(line)-4}} |")
+    print(line)
+    print(f"| {'T (K)':^{w_t}} | {'Sigma':^{w_sigma}} | {'Sigma*T':^{w_sigmaT}} |")
+    print(line)
 
-# Perform linear fitting
-invT = 1000 / np.array(group_Ts)
-ln_sigmaT = np.log(np.array(group_sigmaTs))
-k, b = np.polyfit(invT, ln_sigmaT, 1)
-Ea = -k * 1000 * consts.k / consts.e
-print(f"\n{cell}, Ea: {Ea:.3f} eV")
+    # Print conductivity data in sorted order
+    for temp, conductivity, sigma_T in zip(group_Ts, group_sigmas, group_sigmaTs):
+        print(f"| {temp:^{w_t}d} | {conductivity:^{w_sigma}.3e} | {sigma_T:^{w_sigmaT}.3e} |")
 
-# Plot fitted line
-ax1.plot(invT, k * invT + b, linestyle='-', linewidth=2, color=color, label=cell, alpha=0.8)
+    print(line)
 
-# Set axis labels
-ax1.set_xlabel("1000/T (1/K)", fontsize=10)
-ax1.set_ylabel(r"ln($\sigma \cdot T$) (K S/cm)", fontsize=10)
+    if len(group_Ts) < 2:
+        raise ValueError("Insufficient data points for fitting, need at least two temperatures")
 
-# Add legend
-legend_element = Line2D([0], [0], marker='o', linestyle='-', color=color, label=cell,
-                        markersize=5, linewidth=2, alpha=0.8)
-ax1.legend(handles=[legend_element], loc='lower left', bbox_to_anchor=(0.015, 0.02), fontsize=8, frameon=True)
+    # Create figure with PRL style
+    fig, ax = plt.subplots(figsize=(4.3, 3.8))
 
-# Extrapolate from lowest temperature to 300K
-specified_temperature = 300
-x_ext = 1000 / np.arange(min(group_Ts), specified_temperature - 1, -10)  # Start from lowest T to 300K
-y_ext = k * x_ext + b
-ax1.plot(x_ext, y_ext, linestyle='--', color=color, alpha=0.5)
+    # Calculate activation energy using the new function
+    Ea, intercept, slope, r_value = fit_arrhenius(group_Ts, group_sigmaTs)
 
-ln_sigmaT_300 = k * 1000 / specified_temperature + b
-sigma_300K = np.exp(ln_sigmaT_300) / specified_temperature
-print(f"at {specified_temperature}K, {cell}: Sigma = {sigma_300K:.3e} S/cm")
+    # Prepare data for plotting
+    x_fit_range = np.linspace(1000/np.max(group_Ts), 1000/np.min(group_Ts), 100)
+    y_fit_ln = (slope * x_fit_range + intercept) * np.log(10)
 
-def tick_function(X):
-    V = 1000 / X  
-    return ["%.0f" % z for z in V]
+    # Plot fitted line
+    ax.plot(x_fit_range, y_fit_ln, '--', c=color, linewidth=1.5)
 
-# Add top temperature axis
-ax2 = ax1.twiny()
-x_min, x_max = ax1.get_xlim()
-ax2.set_xticks(ax1.get_xticks())
-ax2.set_xbound(ax1.get_xbound())
-ax2.set_xticklabels(tick_function(ax1.get_xticks()))
-ax2.set_xlabel("T (K)", fontsize=10)
+    # Plot data points
+    ax.plot(1000/group_Ts, np.log(group_sigmaTs), 'o', label=f'{cell} ({Ea:.3f} eV)', 
+            c=color, markersize=8, markerfacecolor='none', markeredgewidth=1.5)
 
-# Save and show plot
-fig.tight_layout()
-if len(sys.argv) > 1 and sys.argv[1] == 'save':
-    fig.savefig('Arrhenius.png', dpi=300)
-else:
-    if get_backend().lower() in ['agg', 'cairo', 'pdf', 'ps', 'svg']:
-        print("Unable to display the plot due to the non-interactive backend.")
-        print("The plot has been automatically saved as 'Arrhenius.png'.")
-        fig.savefig('Arrhenius.png', dpi=300)
+    # Set axis labels with proper formatting
+    ax.set_xlabel('1000/T (1/K)', labelpad=7)
+    ax.set_ylabel(r'ln($\sigma$T) (S$\cdot$K/cm)')
+
+    # Add legend
+    ax.legend(loc='lower left', frameon=False, fontsize=11)
+
+    # Add secondary x-axis on top showing actual temperature
+    ax_top = ax.secondary_xaxis('top')
+    ax_top.set_xlabel('Temperature (K)', labelpad=7)
+    xticks = ax.get_xticks()
+    ax_top.set_xticks(xticks)
+    ax_top.set_xticklabels([f'{int(1000/xt)}' if xt>0 else '' for xt in xticks])
+
+    # Format y-axis
+    ax.yaxis.set_major_formatter(ticker.FormatStrFormatter('%.1f'))
+
+    # Print results
+    print(f"\n{cell}, Ea: {Ea:.3f} eV")
+
+    # Calculate conductivity at 300K
+    target_T = 300
+    sig_300 = (10**(slope * (1000/target_T) + intercept)) / target_T
+    print(f"at {target_T}K, {cell}: Sigma = {sig_300:.3e} S/cm = {sig_300*1000:.3f} mS/cm")
+
+    # Generate temperature and conductivity arrays for export
+    temp_array = group_Ts.tolist()
+    conductivity_array = [float(f'{val:.3e}') for val in group_sigmas.tolist()]
+    
+    print("\nExportable arrays for Python:")
+    print(f"temperatures = {temp_array}")
+    print(f"conductivity_values = {conductivity_array}")
+
+    # Adjust layout and save
+    plt.tight_layout()
+
+    if len(sys.argv) > 1 and sys.argv[1] == 'save':
+        plt.savefig('Arrhenius_sigma.png', dpi=300, bbox_inches='tight')
     else:
-        plt.show()
+        if get_backend().lower() in ['agg', 'cairo', 'pdf', 'ps', 'svg']:
+            print("Unable to display the plot due to the non-interactive backend.")
+            print("The plot has been automatically saved as 'Arrhenius_sigma.png'.")
+            plt.savefig('Arrhenius_sigma.png', dpi=300, bbox_inches='tight')
+        else:
+            plt.show()

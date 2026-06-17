@@ -1,3 +1,25 @@
+"""
+=============================================================================
+GPUMDkit: A User-Friendly Toolkit for GPUMD and NEP
+Repository: https://github.com/zhyan0603/GPUMDkit
+Citation: Z. Yan et al., GPUMDkit: A User-Friendly Toolkit for GPUMD and NEP,
+          MGE Advances, 2026, e70074 (https://doi.org/10.1002/mgea.70074)
+=============================================================================
+Script:     get_min_dist_pbc.py
+Category:   Analyzer Scripts
+Purpose:    Compute the minimum interatomic distance for each element pair
+            across all frames in an extxyz file, accounting for periodic
+            boundary conditions.
+Usage:      python get_min_dist_pbc.py <file_name>
+Arguments:
+  file_name  Input extxyz file
+Output:
+  Table of minimum distances for each element pair and overall minimum
+Author:     Zihan YAN (yanzihan@westlake.edu.cn)
+Last-modified: 2026-05-16
+=============================================================================
+"""
+
 import sys
 import numpy as np
 from ase.io import read
@@ -86,7 +108,13 @@ print(" +---------------------------+")
 for i, sym1 in enumerate(unique_symbols):
     for sym2 in unique_symbols[i:]:
         pair = f"{sym1}-{sym2}"
-        distance = min_distances[pair]
-        print(f" |   {pair:<6}  |     {distance:>5.3f}     |")
+        if pair in min_distances:
+            distance = min_distances[pair]
+            print(f" |   {pair:<6}  |     {distance:>5.3f}     |")
+        else:
+            print(f" |   {pair:<6}  |       N/A     |")
 print(" +---------------------------+")
-print(f" Overall min_distance: {overall_min_distance:.3f} Å")
+if overall_min_distance < float('inf'):
+    print(f" Overall min_distance: {overall_min_distance:.3f} Å")
+else:
+    print(" Overall min_distance: N/A")

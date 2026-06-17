@@ -1,6 +1,35 @@
+"""
+=============================================================================
+GPUMDkit: A User-Friendly Toolkit for GPUMD and NEP
+Repository: https://github.com/zhyan0603/GPUMDkit
+Citation: Z. Yan et al., GPUMDkit: A User-Friendly Toolkit for GPUMD and NEP,
+          MGE Advances, 2026, e70074 (https://doi.org/10.1002/mgea.70074)
+=============================================================================
+Script:     plt_msd_all.py
+Category:   Plot Scripts
+Purpose:    Plot MSD for all atomic species separately when using all_groups
+            in GPUMD compute_msd command.
+Usage:      gpumdkit.sh -plt msd_all msd.out <species1> <species2> ...
+            python plt_msd_all.py msd.out <species1> <species2> ... [save]
+Arguments:
+  msd.out        Path to MSD output file
+  species        Element symbols to plot (e.g., Li P S)
+  save           Save the plot as PNG instead of displaying it
+Output:
+  msd_all.png  (if save is used, or if backend is non-interactive)
+Author:     Zihan YAN (yanzihan@westlake.edu.cn)
+Last-modified: 2026-05-16
+=============================================================================
+"""
+
 import sys
 import numpy as np
 import matplotlib.pyplot as plt
+
+plt.rcParams.update({
+    "font.family": "sans-serif",
+    "font.sans-serif": ["Arial", "DejaVu Sans", "Liberation Sans"],
+})
 
 # Function to read data from the given file
 def read_data(file_name):
@@ -13,7 +42,15 @@ def read_data(file_name):
 
 # Determine the input file and elements to plot
 input_file = sys.argv[1] 
-elements_to_plot = sys.argv[2:] if len(sys.argv) > 2 else None
+
+# Check if last argument is 'save' and handle accordingly
+should_save = len(sys.argv) > 1 and sys.argv[-1] == 'save'
+if should_save:
+    # Exclude the last 'save' argument when getting elements
+    elements_to_plot = sys.argv[2:-1] if len(sys.argv) > 3 else None
+else:
+    # Include all arguments after the input file as elements
+    elements_to_plot = sys.argv[2:] if len(sys.argv) > 2 else None
 
 # Read the data from the file
 time, msd_data, num_groups = read_data(input_file)
@@ -46,7 +83,7 @@ plt.ylabel(r'MSD ($\AA^2$)')
 plt.legend()
 plt.tight_layout()
 
-if len(sys.argv) > 1 and sys.argv[1] == 'save':
+if should_save:
     plt.savefig('msd_all.png', dpi=300)
 else:
     # Handle saving or displaying the plot

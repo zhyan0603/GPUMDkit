@@ -1,9 +1,39 @@
+"""
+=============================================================================
+GPUMDkit: A User-Friendly Toolkit for GPUMD and NEP
+Repository: https://github.com/zhyan0603/GPUMDkit
+Citation: Z. Yan et al., GPUMDkit: A User-Friendly Toolkit for GPUMD and NEP,
+          MGE Advances, 2026, e70074 (https://doi.org/10.1002/mgea.70074)
+=============================================================================
+Script:     plt_descriptors_compare.py
+Category:   Plot Scripts
+Purpose:    Compare NEP descriptors from multiple training sets or models
+            using dimensionality reduction for visualization.
+Usage:      gpumdkit.sh -plt des_compare
+            python plt_descriptors_compare.py method nep.txt element train1.xyz [train2.xyz ...]
+Arguments:
+  method    Dimensionality reduction method: 'pca' or 'umap'
+  nep.txt   Path to the NEP model file
+  element   Element symbol for descriptor calculation
+  train.xyz Training data files
+Output:
+  descriptors.png  (if save is used)
+Author:     Zihan YAN (yanzihan@westlake.edu.cn)
+Last-modified: 2026-05-16
+=============================================================================
+"""
+
 import numpy as np
 from ase.io import read
 from calorine.nep import get_descriptors
 import sys
 import os
 import matplotlib.pyplot as plt
+
+plt.rcParams.update({
+    "font.family": "sans-serif",
+    "font.sans-serif": ["Arial", "DejaVu Sans", "Liberation Sans"],
+})
 
 
 def print_progress_bar(iteration, total, prefix='', suffix='', decimals=1, length=50, fill='█'):

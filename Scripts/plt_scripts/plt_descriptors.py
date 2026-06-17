@@ -1,7 +1,35 @@
+"""
+=============================================================================
+GPUMDkit: A User-Friendly Toolkit for GPUMD and NEP
+Repository: https://github.com/zhyan0603/GPUMDkit
+Citation: Z. Yan et al., GPUMDkit: A User-Friendly Toolkit for GPUMD and NEP,
+          MGE Advances, 2026, e70074 (https://doi.org/10.1002/mgea.70074)
+=============================================================================
+Script:     plt_descriptors.py
+Category:   Plot Scripts
+Purpose:    Visualize high-dimensional NEP descriptors using dimensionality
+            reduction (PCA or UMAP) with configurable file paths and labels.
+Usage:      gpumdkit.sh -plt des <method>
+            python plt_descriptors.py <method> <file1> <file2> ...
+Arguments:
+  method    Dimensionality reduction method: 'pca' or 'umap'
+  file1...  Paths to .npy files containing descriptors
+Output:
+  Display of descriptor visualization plot
+Author:     Zihan YAN (yanzihan@westlake.edu.cn)
+Last-modified: 2026-05-16
+=============================================================================
+"""
+
 import sys
 import os
 import numpy as np
 import matplotlib.pyplot as plt
+
+plt.rcParams.update({
+    "font.family": "sans-serif",
+    "font.sans-serif": ["Arial", "DejaVu Sans", "Liberation Sans"],
+})
 
 # Configuration for custom file paths and legend labels (edit as needed)
 FILE_CONFIG = [

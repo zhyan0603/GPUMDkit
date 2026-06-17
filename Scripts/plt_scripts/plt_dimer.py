@@ -1,8 +1,36 @@
+"""
+=============================================================================
+GPUMDkit: A User-Friendly Toolkit for GPUMD and NEP
+Repository: https://github.com/zhyan0603/GPUMDkit
+Citation: Z. Yan et al., GPUMDkit: A User-Friendly Toolkit for GPUMD and NEP,
+          MGE Advances, 2026, e70074 (https://doi.org/10.1002/mgea.70074)
+=============================================================================
+Script:     plt_dimer.py
+Category:   Plot Scripts
+Purpose:    Plot dimer interaction curves (energy and force vs distance)
+            for a pair of atoms using a NEP model.
+Usage:      gpumdkit.sh -plt dimer <element1> <element2> <nep_dir>
+            python plt_dimer.py <element1> <element2> <nep_dir>
+Arguments:
+  element1, element2  Atom symbols (e.g., Li Li)
+  nep_dir             Path to the NEP potential file (e.g., ./nep.txt)
+Output:
+  Display of dimer interaction curve
+Author:     Zihan YAN (yanzihan@westlake.edu.cn)
+Last-modified: 2026-05-16
+=============================================================================
+"""
+
 import numpy as np
 import matplotlib.pyplot as plt
 from ase import Atoms
 from calorine.calculators import CPUNEP
 import sys
+
+plt.rcParams.update({
+    "font.family": "sans-serif",
+    "font.sans-serif": ["Arial", "DejaVu Sans", "Liberation Sans"],
+})
 
 # Check the number of command-line arguments
 if len(sys.argv) < 4:
@@ -16,9 +44,9 @@ symbol2 = sys.argv[2]  # Type of the second atom
 nep_path = sys.argv[3]  # Directory of the NEP potential file
 
 # Set the range and step size for distances
-start_distance = 0.1  # Starting distance in Ångström
-end_distance = 6.0    # Ending distance in Ångström
-step_size = 0.01      # Step size in Ångström
+start_distance = 0.1  # Starting distance in Angstrom
+end_distance = 6.0    # Ending distance in Angstrom
+step_size = 0.01      # Step size in Angstrom
 
 # Initialize arrays for results
 distances = np.arange(start_distance, end_distance + step_size, step_size)
@@ -61,7 +89,7 @@ energies_shifted = energies - reference_energy
 # Save data to file after calculations
 with open(f'dimer_{symbol1}_{symbol2}.txt', 'w') as f:
     # Write the header
-    f.write('Distance (Å)  Energy (eV)  Force (eV/Å)\n')
+    f.write('Distance (Angstrom)  Energy (eV)  Force (eV/Angstrom)\n')
     
     # Write shifted energy and force data
     for i, distance in enumerate(distances):
@@ -72,27 +100,27 @@ fig, axs = plt.subplots(2, 1, figsize=(6, 6), dpi=150)
 
 # Plot energy difference vs. distance
 axs[0].plot(distances, energies_shifted, marker='o')
-axs[0].set_xlabel('Dimer Distance (Å)')
+axs[0].set_xlabel(r'Dimer Distance ($\mathrm{{\AA}}$)')
 axs[0].set_ylabel(r'$\Delta$E (eV)')
 title = f"{symbol1}-{symbol2} Dimer Interaction"
 axs[0].set_title(title)
 
 # Plot force vs. distance
 axs[1].plot(distances, forces, marker='o', color='C1')
-axs[1].set_xlabel('Dimer Distance (Å)')
-axs[1].set_ylabel('Fx (eV/Å)')
+axs[1].set_xlabel(r'Dimer Distance ($\mathrm{{\AA}}$)')
+axs[1].set_ylabel(r'Fx (eV/$\mathrm{{\AA}}$)')
 
 # Adjust layout and display the plot
 plt.tight_layout()
 
 if len(sys.argv) > 4 and sys.argv[4] == 'save':
-    plt.savefig('dimer.png', dpi=300)
+    plt.savefig(f'dimer-{symbol1}-{symbol2}.png', dpi=300)
 else:
     # Check if the current backend is non-interactive
     from matplotlib import get_backend
     if get_backend().lower() in ['agg', 'cairo', 'pdf', 'ps', 'svg']:
         print("Unable to display the plot due to the non-interactive backend.")
-        print("The plot has been automatically saved as 'dimer.png'.")
+        print(f"The plot has been automatically saved as 'dimer-{symbol1}-{symbol2}.png'.")
         plt.savefig(f'dimer-{symbol1}-{symbol2}.png', dpi=300)
     else:
         plt.show()

@@ -1,3 +1,24 @@
+"""
+=============================================================================
+GPUMDkit: A User-Friendly Toolkit for GPUMD and NEP
+Repository: https://github.com/zhyan0603/GPUMDkit
+Citation: Z. Yan et al., GPUMDkit: A User-Friendly Toolkit for GPUMD and NEP,
+          MGE Advances, 2026, e70074 (https://doi.org/10.1002/mgea.70074)
+=============================================================================
+Script:     pos2exyz.py
+Category:   Format Conversion Scripts
+Purpose:    Convert one or more VASP POSCAR files to extended XYZ format.
+Usage:      python pos2exyz.py <POSCAR> <output.xyz>
+Arguments:
+  POSCAR       One or more VASP POSCAR files
+  output.xyz   Output extxyz file
+Output:
+  <output.xyz>  (converted structures in extxyz format)
+Author:     Zihan YAN (yanzihan@westlake.edu.cn)
+Last-modified: 2026-05-16
+=============================================================================
+"""
+
 import sys
 import glob
 from ase.io import read, write
@@ -25,7 +46,7 @@ if __name__ == '__main__':
     if len(sys.argv) < 3:
         print("Usage: python pos2exyz.py <POSCAR> <extxyz_filename>")
         print("Example 1: python pos2exyz.py POSCAR model.xyz")
-        print("Example 2: python pos2exyz.py 'POSCAR*' train.xyz")
+        # print("Example 2: python pos2exyz.py 'POSCAR*' train.xyz")
         sys.exit(1)
 
     poscar_filename_pattern = sys.argv[1]

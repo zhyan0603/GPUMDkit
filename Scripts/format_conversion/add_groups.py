@@ -1,3 +1,25 @@
+"""
+=============================================================================
+GPUMDkit: A User-Friendly Toolkit for GPUMD and NEP
+Repository: https://github.com/zhyan0603/GPUMDkit
+Citation: Z. Yan et al., GPUMDkit: A User-Friendly Toolkit for GPUMD and NEP,
+          MGE Advances, 2026, e70074 (https://doi.org/10.1002/mgea.70074)
+=============================================================================
+Script:     add_groups.py
+Category:   Format Conversion Scripts
+Purpose:    Add group information to atoms in a structure file based on
+            element types, outputting the result to stdout.
+Usage:      python add_groups.py <input.xyz> <element1> <element2> ...
+Arguments:
+  input.xyz   Input structure file
+  elementX    Element symbols to assign group indices
+Output:
+  Modified structure with group information (printed to stdout)
+Author:     Zihan YAN (yanzihan@westlake.edu.cn)
+Last-modified: 2026-05-16
+=============================================================================
+"""
+
 import sys
 from ase.io import read, write
 import numpy as np

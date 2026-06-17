@@ -1,39 +1,72 @@
-### calc_ion_conductivity.py
+<div align="center">
+  <h1>🧮 Calculator Scripts</h1>
+    <p style="text-align: justify;">This directory contains computational tools for calculating various material properties using NEP models and analyzing simulation data.</p>
+</div>
+
+## Overview
+
+The calculator scripts provide functionality for:
+- Ionic conductivity and diffusivity calculations
+- Property predictions using NEP models
+- Descriptor calculations for PCA or UMAP analysis
+- Density of atomistic states (DOAS)
+- Nudged elastic band (NEB) calculations
+- Neighbor list construction for targeted center/neighbor elements
+- Displacement calculation from trajectory + neighbor list
+- Averaged structure generation from trajectory slices
+- Octahedral tilt calculation from B-O neighbor lists
+- Local polarization calculation for ABO3 systems
+- Radial distribution function (RDF) calculations
 
 ---
 
-This script will read the `msd.out` file and then calculate the diffusivity and ionic conductivity.
+## Scripts
+
+### calc_ion_conductivity.py
+
+Calculates ionic diffusivity and conductivity from mean square displacement (MSD) data.
+
+#### Input Files
+- `msd.out` - MSD data from GPUMD (required)
+- `thermo.out` - Temperature data (optional, for automatic temperature detection)
+- `model.xyz` - Structure file (optional, for automatic volume/atom count detection)
+- `run.in` - MD input file (optional, for replicate detection)
 
 #### Usage
 
+**Command-line mode:**
+
+```bash
+gpumdkit.sh -calc ionic-cond <element> <charge>
 ```
+
+**Direct execution:**
+```bash
 python calc_ion_conductivity.py <element> <charge>
 ```
 
-- `<element>`: Chemical species (e.g., Li).
-- `<charge>`: Ion charge (e.g., 1 for Li⁺).
+#### Parameters
+- `<element>`: Chemical species symbol (e.g., Li, Na, O)
+- `<charge>`: Formal charge of the ion (e.g., 1 for Li⁺, -2 for O²⁻)
 
-#### Example
+#### Examples
 
-```sh
-python calc_ion_conductivity.py Li 1
+**Automatic mode** (with thermo.out and model.xyz present):
+
+```bash
+gpumdkit.sh -calc ionic-cond Li 1
 ```
 
-If required files (`thermo.out` and `model.xyz`) are not found, the script will prompt for manual input of structure `volume`, `number of ions`, and `temperature`.
-
-```
+**Manual input mode** (if files not found):
+```bash
+gpumdkit.sh -calc ionic-cond Li 1
+# Script will prompt:
 Files 'thermo.out' and 'model.xyz' are not found.
 Please provide the following values:
 --------------------------->
 Enter average temperature (in K): 800
 Enter system volume (in Å^3): 16785
 Enter number of ions: 448
-```
-
-#### Command-Line Mode Example
-
-```
-gpumdkit.sh -calc ion-cond Li 1
 ```
 
 #### Output
@@ -52,50 +85,328 @@ Ionic Conductivity:
   Sigma_total: 2.261e-02 mS/cm
 ```
 
-### calc_properties_with_nep.py
-
 ---
 
-This script will calculate energies, forces, and stresses by using the `calorine` package.
+### calc_properties_with_nep.py
+
+Calculates energies, forces, and stresses for structures using a NEP model. You can provide a clean extxyz file and use a `nep.txt` to label the reference values for energies, forces, and stresses. 
+
+***Note that you must know what you are doing and this is not a substitute for DFT calculations.***
+
+Unless you have a well-trained NEP model and you want to use it as a DFT surrogate, you probably shouldn't use this feature. See [this article]([ https://doi.org/10.48550/arXiv.2504.15925](https://doi.org/10.48550/arXiv.2504.15925)) if you are interesting in it.
+
+#### Input Files
+- A clean structure file in `extxyz` format with energy, force, and virial/stress. 
+
+  (use `gpumdkit.sh -clean_xyz train.xyz` to remove the original values)
+
+- NEP model file (nep.txt)
 
 #### Usage
 
+**Command-line mode:**
+```bash
+gpumdkit.sh -calc nep <input.xyz> <output.xyz> <nep.txt>
 ```
-python calc_properties_with_nep.py <input.xyz> <output.xyz> <nep_model>
+
+**Direct execution:**
+```bash
+python calc_properties_with_nep.py <input.xyz> <output.xyz> <nep.txt>
 ```
 
 #### Example
 
-```sh
-python calc_properties_with_nep.py input.xyz output.xyz nep.txt
+```bash
+# Predict properties for a test set
+gpumdkit.sh -calc nep structures.xyz predictions.xyz nep.txt
 ```
+
+#### Requirements
+- Python package: `calorine` 
+
+```bash
+pip install calorine
+```
+
+---
+
+### calc_descriptors.py
+
+Calculates descriptors for the specific species, which can be used for dimensionality reduction and structure analysis.
+
+#### Usage
+
+**Command-line mode:**
+```bash
+gpumdkit.sh -calc des <input.xyz> <output.npy> <nep.txt> <element>
+```
+
+**Direct execution:**
+```bash
+python calc_descriptors.py <input.xyz> <output.npy> <nep.txt> <element>
+```
+
+#### Parameters
+- `<input.xyz>`: Input structure file
+- `<output.npy>`: Output `npy` file with high-dimensional descriptors
+- `<nep.txt>`: NEP model file
+- `<element>`: Target element for descriptor calculations
+
+#### Examples
+
+```bash
+# Calculate descriptors using UMAP
+gpumdkit.sh -calc des train.xyz descriptors.npy nep.txt Li
+```
+
+#### Output
+- NumPy array file (.npy) containing descriptor vectors
+- Can be visualized using `gpumdkit.sh -plt des`
+
+#### Applications
+- **Training set analysis**: Check if training data covers configuration space
+- **Model comparison**: Compare descriptor distributions across different models
+
+#### Reference
+See [arXiv:2504.15925](https://doi.org/10.48550/arXiv.2504.15925) if you are interesting in it.
+
+---
+
+### calc_doas.py
+
+Calculates the [density of atomistic states (DOAS)](https://doi.org/10.1002/anie.202215544) by optimizing structures and computing per-atom energies.
+
+#### Usage
+
+**Command-line mode:**
+```bash
+gpumdkit.sh -calc doas <input.xyz> <nep.txt> <doas.out>
+```
+
+**Direct execution:**
+```bash
+python calc_doas.py <input.xyz> <nep.txt> <doas.out>
+```
+
+#### Parameters
+- `<input.xyz>`: Input structure file
+- `<nep.txt>`: NEP model file for structure optimization and atomistic-energies calculation
+- `<output.txt>`: Output file with grouped atomic energies by element
+
+#### Example
+
+```bash
+# Calculate DOAS
+gpumdkit.sh -calc doas structures.xyz nep.txt doas.out
+
+# Visualize results
+gpumdkit.sh -plt doas doas.txt <species>
+gpumdkit.sh -plt doas doas.txt Li
+```
+
+#### Process
+1. Reads all structures from input file
+2. Optimizes each structure using NEP (BFGS, fmax=0.05 eV/Å)
+3. Extracts per-atom energies from optimized structures
+4. Groups energies by element type
+5. Outputs distribution for each element
+
+You can also do the `minimize` and atomistic energy calculations in `gpumd`, which is prefered for large-scale structures.
+
+---
+
+### calc_neighbor_list.py
+
+Builds neighbor lists for selected center and neighbor elements.
+
+#### Usage
+
+**Command-line mode:**
+```bash
+gpumdkit.sh -calc nlist -i model.xyz -c 4 -n 12 -C Pb Sr -E O
+```
+
+**Direct execution:**
+```bash
+python calc_neighbor_list.py -i model.xyz -c 4 -n 12 -C Pb Sr -E O
+```
+
+---
+
+### calc_displacement.py
+
+Calculates displacements from a trajectory and a neighbor list file.
+
+#### Usage
+
+**Command-line mode:**
+```bash
+gpumdkit.sh -calc disp -i movie.xyz -n nl-Pb-O.dat -o displacements.dat
+```
+
+**Direct execution:**
+```bash
+python calc_displacement.py -i movie.xyz -n nl-Pb-O.dat -o displacements.dat
+```
+
+---
+
+### calc_averaged_structure.py
+
+Generates an averaged structure from selected trajectory frames.
+
+#### Usage
+
+**Command-line mode:**
+```bash
+gpumdkit.sh -calc avg-struct -i movie.xyz -l 0.2 -o averaged_structure.xyz
+```
+
+**Direct execution:**
+```bash
+python calc_averaged_structure.py -i movie.xyz -l 0.2 -o averaged_structure.xyz
+```
+
+---
+
+### calc_oct_tilt.py
+
+Calculates octahedral tilt angles from trajectory/model and a B-O neighbor list.
+
+#### Usage
+
+**Command-line mode:**
+```bash
+gpumdkit.sh -calc oct-tilt -i model.xyz -n nl-Ti-O.dat -o octahedral_tilt.dat
+```
+
+**Direct execution:**
+```bash
+python calc_oct_tilt.py -i model.xyz -n nl-Ti-O.dat -o octahedral_tilt.dat
+```
+
+---
+
+### calc_polarization_abo3.py
+
+Calculates local polarization for ABO3 systems using B-A and B-O neighbor lists.
+
+#### Usage
+
+**Command-line mode:**
+```bash
+gpumdkit.sh -calc pol-abo3 -i model.xyz --nl-ba nl-Ti-A.dat --nl-bo nl-Ti-O.dat --bec Pb=2.5 Sr=2.0 Ti=4.0 O=-2.0
+```
+
+**Direct execution:**
+```bash
+python calc_polarization_abo3.py -i model.xyz --nl-ba nl-Ti-A.dat --nl-bo nl-Ti-O.dat --bec Pb=2.5 Sr=2.0 Ti=4.0 O=-2.0
+```
+
+---
+
+### neb_calculation.py
+
+Performs nudged elastic band (NEB) calculations to find minimum energy pathways between initial and final states.
+
+#### Usage
+
+**Direct execution only:**
+```bash
+python neb_calculation.py <initial.xyz> <final.xyz> <n_images> <nep.txt>
+```
+
+#### Parameters
+- `<initial.xyz>`: Initial structure file
+- `<final.xyz>`: Final structure file
+- `<n_images>`: Number of intermediate images
+- `<nep.txt>`: NEP model for energy/force calculations
+
+#### Example
+
+```bash
+# Calculate Li migration pathway with 9 intermediate images
+python neb_calculation.py init.xyz fin.xyz 9 nep.txt
+```
+
+#### Interactive Options
+```
+ Input the function number:
+ 4
+ ------------>>
+ 401) Calc ionic conductivity
+ 402) Calc properties by nep
+ 403) Calc descriptors of specific elements
+ 404) Calc density of atomistic states (DOAS)
+ 405) Calc nudged elastic band (NEB) by nep
+ 406) Build neighbor list
+ 407) Calc displacement from trajectory
+ 408) Calc averaged structure
+ 409) Calc octahedral tilt
+ 410) Calc polarization for ABO3
+ 000) Return to the main menu
+ ------------>>
+ Input the function number:
+ 405
+ >-------------------------------------------------<
+ | This function calls the script in calculators   |
+ | Script: neb_calculation.py                      |
+ | Developer: Zhoulin LIU (1776627910@qq.com)      |
+ >-------------------------------------------------<
+ Input <initial_struct> <final_struct> <n_image> <nep_model>
+ Examp: IS.xyz FS.xyz 5 nep.txt
+ ------------>>
+```
+
+---
+
+### Additional Requirement For Neighbor/Displacement/Polarization/Tilt/Plane Workflow
+
+The scripts `calc_neighbor_list.py`, `calc_displacement.py`, `calc_averaged_structure.py`, `calc_oct_tilt.py`, `calc_polarization_abo3.py`, and `plt_plane_grid.py` require:
+
+```bash
+pip3 install git+https://github.com/MoseyQAQ/ferrodispcalc.git
+```
+
+---
 
 ### rdf_calculator_ovito.py
 
----
-
-This script will read the `dump.xyz` file and then calculate the RDF by using the `ovito` package.
+Calculates radial distribution function (RDF) using OVITO's analysis tools.
 
 #### Usage
 
-```
-python rdf_calculator_ovito.py <extxyz_file> <cutoff> <bins>
+**Direct execution:**
+```bash
+python rdf_calculator_ovito.py <input.xyz> <cutoff> <bins>
 ```
 
-- `<extxyz_file>`: The path to the `extxyz` file.
-- `<cutoff>`: The cutoff used in the RDF calculation.
-- `<bins>`: The bins used in the RDF calculation.
+#### Parameters
+- `<input.xyz>`: Input structure file (can be single frame or trajectory)
+- `<cutoff>`: Maximum distance for RDF calculation (Angstroms)
+- `<bins>`: Number of histogram bins for RDF
 
 #### Example
 
-```sh
-python rdf_calculator_ovito.py dump.xyz 6 400
+```bash
+# Calculate RDF with 6 Å cutoff and 400 bins
+python rdf_calculator_ovito.py trajectory.xyz 6.0 400
 ```
 
-This command will read the `dump.xyz` file and calculate the RDF by using the `ovito` package and output the `rdf.txt` file.
+#### Visualization
+After calculation:
+```bash
+gpumdkit.sh -plt rdf    
+```
 
-
+**Note**: It is recommended to use the `compute_rdf` command in `gpumd`.
 
 ---
 
-Thank you for using `GPUMDkit`! If you have any questions or need further assistance, feel free to open an issue on our GitHub repository or contact Zihan YAN (yanzihan@westlake.edu.cn).
+## Contributing
+
+See [CONTRIBUTING.md](../../CONTRIBUTING.md) for detailed guidelines.
+
+---
+
+Thank you for using GPUMDkit! If you have questions or need assistance with calculator scripts, please open an issue on our [GitHub repository](https://github.com/zhyan0603/GPUMDkit/issues) or contact Zihan YAN (yanzihan@westlake.edu.cn).

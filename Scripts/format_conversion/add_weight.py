@@ -1,11 +1,24 @@
 """
-This script is used to add a weight value to the 'Weight' attribute of each structure in an input file and save the modified structures to an output file.
-
-Usage:
-    python add_weight.py <input_file> <output_file> <new_weight>
-
-Example:
-    python add_weight.py input.xyz output.xyz 5
+=============================================================================
+GPUMDkit: A User-Friendly Toolkit for GPUMD and NEP
+Repository: https://github.com/zhyan0603/GPUMDkit
+Citation: Z. Yan et al., GPUMDkit: A User-Friendly Toolkit for GPUMD and NEP,
+          MGE Advances, 2026, e70074 (https://doi.org/10.1002/mgea.70074)
+=============================================================================
+Script:     add_weight.py
+Category:   Format Conversion Scripts
+Purpose:    Add a weight value to the 'Weight' attribute of each structure
+            in an input file and save the modified structures.
+Usage:      python add_weight.py <input_file> <output_file> <new_weight>
+Arguments:
+  input_file   Input structure file
+  output_file  Output structure file with added weight
+  new_weight   Weight value to assign
+Output:
+  <output_file>  (structures with updated Weight attribute)
+Author:     Zihan YAN (yanzihan@westlake.edu.cn)
+Last-modified: 2026-05-16
+=============================================================================
 """
 
 import os
