@@ -670,7 +670,7 @@ if [ ! -z "$1" ]; then
             parallel_pynep_sample_structures ;;
 
         -nep_modifier)
-            source ${GPUMDkit_path}/Scripts/utils/nep_modifier/nep_modifier.py ;;
+            python ${GPUMDkit_path}/Scripts/utils/nep_modifier/nep_modifier.py ;;
 
         -frame_range)
             if [ ! -z "$2" ] && [ "$2" != "-h" ] && [ ! -z "$3" ] && [ ! -z "$4" ] ; then
