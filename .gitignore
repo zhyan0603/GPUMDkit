@@ -16,6 +16,9 @@ build/
 .DS_Store
 Thumbs.db
 
+# Opencode
+.opencode
+
 # Temporary / generated files
 *.log
 temp_*.xyz
