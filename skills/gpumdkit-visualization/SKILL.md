@@ -213,4 +213,4 @@ All plotting scripts require:
 
 ## Detailed Documentation
 
-See [plot_scripts.md](../../docs/tutorials/plot_scripts.md) for comprehensive guide.
+See [plot_scripts.md](../../docs/tutorials/en/plot_scripts.md) for comprehensive guide.

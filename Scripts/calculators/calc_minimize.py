@@ -32,6 +32,14 @@ from ase.optimize import BFGS
 from calorine.calculators import CPUNEP
 import os
 
+
+def print_dependency_notice():
+    print(" This function requires the calorine package.")
+    print(" If you use this function, we recommend citing:")
+    print(" Lindgren et al., J. Open Source Softw. 9, 6264 (2024).")
+    print(" https://doi.org/10.21105/joss.06264")
+
+
 class TrajectoryCallback:
     """Callback class to save trajectory during optimization."""
     def __init__(self, atoms):
@@ -50,6 +58,8 @@ def main():
         print("  fmax: Force convergence threshold in eV/Ang (default: 0.01)")
         print("  max_steps: Maximum number of optimization steps (default: 1000)")
         sys.exit(1)
+
+    print_dependency_notice()
 
     structure_file = sys.argv[1]  # Structure file (POSCAR or extxyz)
     model_path = sys.argv[2]  # Path to the model for CPUNEP

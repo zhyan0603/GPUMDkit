@@ -15,7 +15,7 @@ Arguments:
   threshold   Maximum allowed value for the specified property
 Output:
   filtered.xyz
-Author:     Zihan YAN (yanzihan@westlake.edu.cn)X
+Author:     Zihan YAN (yanzihan@westlake.edu.cn)
 Last-modified: 2026-05-16
 =============================================================================
 """
@@ -57,6 +57,6 @@ def main():
 
 if __name__ == "__main__":
     if len(sys.argv) != 4:
-        print("Usage: python script.py <input_file> <property> <threshold>")
+        print("Usage: python filter_exyz_by_value.py <input_file> <property> <threshold>")
         sys.exit(1)
     main()

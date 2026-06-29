@@ -6,40 +6,21 @@
 # Author: Zihan YAN (yanzihan@westlake.edu.cn)
 # ============================================================
 
-# Convert VASP to extxyz
+# Convert VASP OUTCAR to extxyz
 function f101_out2xyz(){
 echo " >-------------------------------------------------<"
 echo " | Calling the script in Scripts/format_conversion |"
 echo " | Script: out2xyz.sh                              |"
 echo " | Developer: Yanzhou WANG (yanzhowang@gmail.com)  |"
 echo " >-------------------------------------------------<"
-echo " Choose the type of conversion:"
-echo " 1) OUTCAR to extxyz"
-echo " 2) vasprun.xml to extxyz"
+echo " Input the directory containing OUTCARs"
+echo " Example: ./ "
 echo " ------------>>"
-read -p " " outcar_type
-if [ "$outcar_type" == "1" ]; then
-    echo " Input the directory containing OUTCARs"
-    echo " Examp: ./ "
-    echo " ------------>>"
-    read -p " " dir_outcars
-    echo " ---------------------------------------------------"
-    bash ${GPUMDkit_path}/Scripts/format_conversion/out2xyz.sh ${dir_outcars}
-    echo " Code path: ${GPUMDkit_path}/Scripts/format_conversion/out2xyz.sh"
-    echo " ---------------------------------------------------"
-elif [ "$outcar_type" == "2" ]; then
-    echo " Input the directory containing vasprun.xml files"
-    echo " Examp: ./ "
-    echo " ------------>>"
-    read -p " " dir_vasprun
-    echo " ---------------------------------------------------"
-    python ${GPUMDkit_path}/Scripts/format_conversion/xml2xyz.py ${dir_vasprun}
-    echo " Code path: ${GPUMDkit_path}/Scripts/format_conversion/xml2xyz.py"
-    echo " ---------------------------------------------------"
-else
-    echo " Your input is illegal, please try again"
-    return
-fi
+read -p " " dir_outcars
+echo " ---------------------------------------------------"
+bash ${GPUMDkit_path}/Scripts/format_conversion/out2xyz.sh ${dir_outcars}
+echo " Code path: ${GPUMDkit_path}/Scripts/format_conversion/out2xyz.sh"
+echo " ---------------------------------------------------"
 }
 
 # Convert mtp to extxyz
@@ -50,7 +31,7 @@ echo " | Script: mtp2xyz.py                              |"
 echo " | Developer: Ke XU (kickhsu@gmail.com)            |"
 echo " >-------------------------------------------------<"
 echo " Input <filename.cfg> <Symbol1 Symbol2 Symbol3 ...>"
-echo " Examp: train.cfg Pd Ag"
+echo " Example: train.cfg Pd Ag"
 echo " ------------>>"
 read -p " " mtp_variables
 echo " ---------------------------------------------------"
@@ -127,7 +108,7 @@ echo " ------------>>"
 read -p " " abacus_type
 if [ "$abacus_type" == "1" ]; then
     echo " Input the directory containing running_scf.log"
-    echo " Examp: ./ "
+    echo " Example: ./ "
     echo " ------------>>"
     read -p " " dir_abacus_scf
     echo " ---------------------------------------------------"
@@ -156,7 +137,7 @@ echo " | Script: exyz2pos.py                             |"
 echo " | Developer: Zihan YAN (yanzihan@westlake.edu.cn) |"
 echo " >-------------------------------------------------<"
 echo " Input the name of extxyz"
-echo " Examp: ./train.xyz "
+echo " Example: ./train.xyz "
 echo " ------------>>"
 read -p " " filename
 echo " ---------------------------------------------------"

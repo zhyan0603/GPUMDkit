@@ -30,6 +30,13 @@ except ImportError:
     sys.exit(1)
 
 
+def print_dependency_notice():
+    print(" This function requires the calorine package.")
+    print(" If you use this function, we recommend citing:")
+    print(" Lindgren et al., J. Open Source Softw. 9, 6264 (2024).")
+    print(" https://doi.org/10.21105/joss.06264")
+
+
 # ─── helpers ──────────────────────────────────────────────────────────────────
 
 def banner(title):
@@ -334,4 +341,5 @@ def main():
 
 
 if __name__ == "__main__":
+    print_dependency_notice()
     main()

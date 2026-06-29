@@ -7,7 +7,7 @@
 
 Workflow scripts automate repetitive tasks in computational materials research:
 
-- **SCF Batch preprocessin**: Set up VASP/CP2K single-point energy calculations
+- **SCF batch preprocessing**: Set up VASP/CP2K single-point energy calculations
 - **MD sampling**: Prepare molecular dynamics simulations with GPUMD/LAMMPS
 - **Active learning**: Iterative NEP model improvement workflows
 
@@ -24,14 +24,16 @@ Access workflow tools through `gpumdkit.sh` interactive mode:
        | |_| |  __/| |_| | |  | | |_| |   <| | |_
         \____|_|    \___/|_|  |_|____/|_|\_\_|\__|
 
-        GPUMDkit Version 1.4.2 (dev) (2025-12-17)
+        GPUMDkit Version 1.5.6 (dev) (2026-06-17)
   Core Developer: Zihan YAN (yanzihan@westlake.edu.cn)
+ Main Contributors: Denan LI, Xin WU, Zhoulin LIU & Chen HUA
 
  ----------------------- GPUMD -----------------------
- 1) Format Conversion          2) Sample Structures
- 3) Workflow                   4) Calculators
- 5) Analyzer                   6) Developing ...
- 0) Quit!
+  1) Format Conversion          2) Sample Structures
+  3) Workflow                   4) Calculators
+  5) Analyzer                   6) Visualization
+  7) Utilities                  8) Developing...
+  0) Exit
  ------------>>
  Input the function number:
  3
@@ -45,6 +47,47 @@ Access workflow tools through `gpumdkit.sh` interactive mode:
 ```
 
 ---
+
+## Workflow Entries
+
+### 301) SCF batch pretreatment
+
+This entry prepares folders for single-point calculations. For VASP, keep either `.vasp` structures or one `.xyz` file in the current directory before running the script.
+
+- If `.vasp` files are present, the script processes the `.vasp` files.
+- If both `.vasp` and `.xyz` files are present, the script prints a notice and only processes `.vasp` files.
+- If no `.vasp` file is present and multiple `.xyz` files are detected, the script asks which `.xyz` file to process.
+
+After running, the script creates `struct_fp/`, `fp/`, and `fp_sample_*` directories. Put `INCAR`, `POTCAR`, and `KPOINTS` into the generated `fp/` directory; each calculation folder links to these files.
+
+For CP2K, enter `3) Workflow`, then `301) SCF batch pretreatment`, and choose the CP2K branch. The CP2K script asks for:
+
+```text
+<input.xyz> <template.inp> <prefix>
+```
+
+The repository provides `Scripts/workflow/cp2k_template.inp` as a starting template.
+
+
+
+### 302) MD sample batch pretreatment (GPUMD)
+
+This entry prepares GPUMD MD sampling folders. Start from `.vasp` structures, or from one selected `.xyz` trajectory/structure file if no `.vasp` files are present.
+
+- If `.vasp` files are present, they are converted to extxyz files and processed.
+- If both `.vasp` and `.xyz` files are present, only `.vasp` files are processed.
+- If multiple `.xyz` files are detected without `.vasp` files, the script asks which one to use.
+
+After running, put `nep.txt` and `run_*.in` files into the generated `md/` directory. The sample folders link `run_1.in`, `run_2.in`, ... as their `run.in`.
+
+
+
+### 303) MD sample batch pretreatment (LAMMPS)
+
+This entry prepares LAMMPS MD sampling folders. The input-file selection rules are the same as function 302.
+
+After running, put `lmprun.in` and `nep.txt` into the generated `md/` directory. The sample folders link `lammps.data`, `lmprun.in`, and `nep.txt`.
+
 
 ### workflow_active_learning_dev.sh
 

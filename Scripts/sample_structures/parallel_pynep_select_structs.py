@@ -10,12 +10,12 @@ Category:   Sample Structure Scripts
 Purpose:    Parallelized version of pynep_select_structs.py. Select diverse
             structures using farthest-point sampling on pynep descriptors
             with multi-processing for descriptor computation and I/O.
-Usage:      python parallel_pynep_select_structs.py <sampledata_file> <traindata_file> <nep_model_file> [threads]
+Usage:      python parallel_pynep_select_structs.py <sampledata_file> <traindata_file> <nep_model_file> <threads>
 Arguments:
   sampledata_file  Extxyz file with candidate structures
   traindata_file   Extxyz file with existing training structures
   nep_model_file   NEP model file (e.g., nep.txt)
-  threads          (optional) Number of parallel workers
+  threads          Number of parallel workers
 Output:
   selected.xyz     Selected diverse structures
   select.png       PCA visualization of descriptor space
@@ -36,6 +36,12 @@ import multiprocessing
 import argparse
 import time
 import os
+
+
+def print_dependency_notice():
+    print(" This function requires the pynep package.")
+    print(" This PyNEP sampling entry is deprecated. We recommend using NepTrain sampling instead.")
+
 
 def get_num_frames(file_path):
     count = 0
@@ -120,8 +126,8 @@ def calculate_descriptors(data, desc_type, max_workers=None):
 
 # Check command line arguments
 if len(sys.argv) < 4:
-    print(" Usage: python pynep_select_structs.py <sampledata_file> <traindata_file> <nep_model_file>")
-    print(" Examp: python pynep_select_structs.py dump.xyz train.xyz nep.txt")
+    print(" Usage: python parallel_pynep_select_structs.py <sampledata_file> <traindata_file> <nep_model_file> <threads>")
+    print(" Example: python parallel_pynep_select_structs.py dump.xyz train.xyz nep.txt 8")
     sys.exit(1)
 
 # Parse command-line arguments
@@ -131,6 +137,8 @@ parser.add_argument('traindata_file', type=str, help='Path to traindata file')
 parser.add_argument('nep_model_file', type=str, help='Path to NEP model file')
 parser.add_argument('threads', type=int, default=multiprocessing.cpu_count(), help='Number of threads for parallel processing')
 args = parser.parse_args()
+
+print_dependency_notice()
 
 # Function to load data from file
 def load_data(file_path):

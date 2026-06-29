@@ -188,10 +188,35 @@ function help_info_table(){
     echo "| -chem_species Analyze chemical species        | -cbc               Charge balance check               |"
     echo "| -min_dist     Min distance (no PBC)           | -min_dist_pbc      Min distance with PBC              |"
     echo "| -filter_dist  Filter by min_dist (no PBC)     | -filter_dist_pbc   Filter by min_dist (PBC)           |"
-    echo "| -pda          Probability density analysis    | -hbond             Hydrogen-bond analysis             |"
-    echo "| -pynep        FPS sampling by PyNEP           | -filter_box        Filter by box-edge length          |"
+    echo "| -pda          Probability density analysis    | -filter_box        Filter by box-edge length          |"
+    echo "| -pynep        Deprecated PyNEP sampling       |                                                       |"
     echo "+-------------------------------------------------------------------------------------------------------+"
     echo "| Detailed usage: gpumdkit.sh -<option> -h    Plot details: gpumdkit.sh -plt <type> -h                  |"
+    echo "+-------------------------------------------------------------------------------------------------------+"
+}
+
+function calculator_help_table(){
+    echo "+-------------------------------------------------------------------------------------------------------+"
+    echo "|                                      CALCULATOR TOOLS                                                 |"
+    echo "+-------------------------------------------------------------------------------------------------------+"
+    echo "| Usage: gpumdkit.sh -calc <type> [args...]                                                             |"
+    echo "+-------------------------------------------------------------------------------------------------------+"
+    echo "| ionic-cond <element> <charge>                 Calculate ionic conductivity from MSD data              |"
+    echo "| nep <input.xyz> <output.xyz> <nep_model>      Calculate energy/force/virial with a NEP model          |"
+    echo "| des <input.xyz> <output.npy> <nep_model> <el> Calculate NEP descriptors for one element               |"
+    echo "| doas <input.xyz> <nep_model> <output.txt>     Calculate density of atomistic states                   |"
+    echo "| neb <initial.xyz> <final.xyz> <n_images> <nep> Run NEB calculation with a NEP model                   |"
+    echo "| minimize <structure> <nep_model> [fmax] [n]   Minimize a structure with a NEP model                   |"
+    echo "| msd <trajectory.xyz> <element> <dt_fs> [n]    Calculate MSD from an extxyz trajectory                 |"
+    echo "| nlist [script args...]                        Build neighbor lists                                    |"
+    echo "| disp [script args...]                         Calculate displacement from trajectory                  |"
+    echo "| avg-struct [script args...]                   Calculate averaged structure                            |"
+    echo "| oct-tilt [script args...]                     Calculate octahedral tilt                               |"
+    echo "| pol-abo3 [script args...]                     Calculate local polarization for ABO3                   |"
+    echo "+-------------------------------------------------------------------------------------------------------+"
+    echo "| Examples: gpumdkit.sh -calc ionic-cond Li 1                                                           |"
+    echo "|           gpumdkit.sh -calc msd dump.xyz Li 10                                                        |"
+    echo "|           gpumdkit.sh -calc nlist -i model.xyz -c 4 -n 12 -C Ti -E O                                  |"
     echo "+-------------------------------------------------------------------------------------------------------+"
 }
 
@@ -308,10 +333,22 @@ if [ ! -z "$1" ]; then
                             echo " Code path: ${calc_path}/calc_ion_conductivity.py"
                             python ${calc_path}/calc_ion_conductivity.py $3 $4
                         else
-                            echo " Usage: -calc ion-cond <element> <charge>"
-                            echo " Examp: gpumdkit.sh -calc ion-cond Li 1"
+                            echo " Usage: -calc ionic-cond <element> <charge>"
+                            echo " Example: gpumdkit.sh -calc ionic-cond Li 1"
                             echo " See the codes in calculators folder for more details"
                             echo " Code path: ${calc_path}/calc_ion_conductivity.py"
+                            exit 1
+                        fi ;;
+                    neb)
+                        if [ ! -z "$3" ] && [ ! -z "$4" ] && [ ! -z "$5" ] && [ ! -z "$6" ]; then
+                            echo " Calling script by Zhoulin LIU. "
+                            echo " Code path: ${calc_path}/neb_calculation.py"
+                            python ${calc_path}/neb_calculation.py ${@:3}
+                        else
+                            echo " Usage: -calc neb <initial_structure> <final_structure> <n_images> <nep_model>"
+                            echo " Example: gpumdkit.sh -calc neb init.xyz final.xyz 9 nep.txt"
+                            echo " See the codes in calculators folder for more details"
+                            echo " Code path: ${calc_path}/neb_calculation.py"
                             exit 1
                         fi ;;
                     nep)
@@ -321,7 +358,7 @@ if [ ! -z "$1" ]; then
                             python ${calc_path}/calc_properties_with_nep.py $3 $4 $5
                         else
                             echo " Usage: -calc nep <input.xyz> <output.xyz> <nep_model>"
-                            echo " Examp: gpumdkit.sh -calc nep input.xyz output.xyz nep.txt"
+                            echo " Example: gpumdkit.sh -calc nep input.xyz output.xyz nep.txt"
                             echo " See the codes in calculators folder for more details"
                             echo " Code path: ${calc_path}/calc_properties_with_nep.py"
                             exit 1
@@ -333,7 +370,7 @@ if [ ! -z "$1" ]; then
                             python ${calc_path}/calc_descriptors.py $3 $4 $5 $6
                         else
                             echo " Usage: -calc des <input.xyz> <output.npy> <nep_model> <element>"
-                            echo " Examp: gpumdkit.sh -calc des train.xyz des_Li.npy nep.txt Li"
+                            echo " Example: gpumdkit.sh -calc des train.xyz des_Li.npy nep.txt Li"
                             echo " See the codes in calculators folder for more details"
                             echo " Code path: ${calc_path}/calc_descriptors.py"
                             exit 1
@@ -345,7 +382,7 @@ if [ ! -z "$1" ]; then
                             python ${calc_path}/calc_doas.py $3 $4 $5
                         else
                             echo " Usage: -calc doas <input.xyz> <nep_model> <output_file>"
-                            echo " Examp: gpumdkit.sh -calc doas dump.xyz nep.txt doas.out"
+                            echo " Example: gpumdkit.sh -calc doas dump.xyz nep.txt doas.out"
                             echo " See the codes in calculators folder for more details"
                             echo " Code path: ${calc_path}/calc_doas.py"
                             exit 1
@@ -383,8 +420,7 @@ if [ ! -z "$1" ]; then
                         echo " Code path: ${calc_path}"; exit 1 ;;
                 esac
             else
-                echo " See the codes in calculators folder for more details"
-                echo " Code path: ${calc_path}"
+                calculator_help_table
             fi ;;
 
         -range)
@@ -598,7 +634,7 @@ if [ ! -z "$1" ]; then
                 echo " Code path: ${analyzer_path}/filter_structures_by_distance.py"
                 python ${analyzer_path}/filter_structures_by_distance.py $2 $3
             else
-                echo " Usage: -filter_xyz <exyzfile> <min_dist>"
+                echo " Usage: -filter_dist <exyzfile> <min_dist>"
                 echo " See the source code of filter_structures_by_distance.py for more details"
                 echo " Code path: ${analyzer_path}/filter_structures_by_distance.py"
             fi ;;
@@ -609,7 +645,7 @@ if [ ! -z "$1" ]; then
                 echo " Code path: ${analyzer_path}/filter_structures_by_distance_pbc.py"
                 python ${analyzer_path}/filter_structures_by_distance_pbc.py $2 $3
             else
-                echo " Usage: -filter_xyz_pbc <exyzfile> <min_dist>"
+                echo " Usage: -filter_dist_pbc <exyzfile> <min_dist>"
                 echo " See the source code of filter_structures_by_distance_pbc.py for more details"
                 echo " Code path: ${analyzer_path}/filter_structures_by_distance_pbc.py"
             fi ;;
@@ -679,7 +715,7 @@ if [ ! -z "$1" ]; then
                 python ${sample_path}/frame_range.py $2 $3 $4
             else
                 echo " Usage: -frame_range <exyzfile> <start_frac> <end_frac>"
-                echo " Examp: gpumdkit.sh -frame_range dump.xyz 0.2 0.5"
+                echo " Example: gpumdkit.sh -frame_range dump.xyz 0.2 0.5"
                 echo " See the source code of frame_range.py for more details"
                 echo " Code path: ${sample_path}/frame_range.py"
             fi ;;
@@ -705,7 +741,7 @@ if [ ! -z "$1" ]; then
                 python ${analyzer_path}/probability_density_analysis.py $2 $3 $4 $5
             else
                 echo " Usage: -pda <ref_struct> <trajectory_file> <species> <interval>"
-                echo " Examp: gpumdkit.sh -pda LLZO.vasp dump.xyz Li 0.25"
+                echo " Example: gpumdkit.sh -pda LLZO.vasp dump.xyz Li 0.25"
                 echo " See the source code of probability_density_analysis.py for more details"
                 echo " Code path: ${analyzer_path}/probability_density_analysis.py"
             fi ;;

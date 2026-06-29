@@ -33,7 +33,7 @@ done
 # Display files to delete
 if [ ${#delete_files[@]} -eq 0 ]; then
     echo "No files to delete."
-    exit 0
+    return 0
 else
     echo "The following files will be deleted:"
     echo "---------------------------------------"
@@ -57,7 +57,7 @@ if [[ "$user_input" == "y" || "$user_input" == "yes" ]]; then
     echo "Files deleted."
 elif [[ "$user_input" == "n" || "$user_input" == "no" ]]; then
     echo "Operation canceled. No files were deleted."
-    exit 0
+    return 0
 else
     # Add extra files to keep based on user input
     extra_keep_files=($user_input)

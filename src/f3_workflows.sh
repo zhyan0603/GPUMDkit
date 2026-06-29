@@ -27,7 +27,7 @@ fi
 
 echo " ---------------------------------------------------"
 echo " Input <extxyz_file> <template.inp> <prefix_name>"
-echo " Examp: dump.xyz template.inp H2O"
+echo " Example: dump.xyz template.inp H2O"
 echo " ------------>>"
 read -p " " input_results
 echo " ---------------------------------------------------"

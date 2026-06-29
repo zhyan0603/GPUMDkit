@@ -47,7 +47,7 @@ trap = np.trapezoid if hasattr(np, "trapezoid") else getattr(np, "trapz")
 
 def print_usage():
     """Print usage instructions"""
-    print("Usage: gpumdkit -plt hnemd [scale_eff_size] [cutoff_freq] [save]")
+    print("Usage: gpumdkit.sh -plt hnemd [scale_eff_size] [cutoff_freq] [save]")
     print("Params:")
     print("  scale_eff_size: Optional, Scale factor for effective cross-sectional area (default: 1)")
     print("                   • For 3D bulk systems: use 1")

@@ -30,6 +30,7 @@ Last-modified: 2026-05-16
 """
 
 import sys
+import os
 import matplotlib.pyplot as plt
 import numpy as np
 
@@ -104,6 +105,14 @@ def select_outliers(rmse_func, err_func, thresh, n_struct):
     return selected
 
 # Load data
+required_files = ['energy_train.out', 'force_train.out', 'stress_train.out', 'train.xyz']
+for f in required_files:
+    if not os.path.exists(f):
+        print(f"Error: Required file '{f}' not found.")
+        print(f"Please ensure the following files exist in the current directory:")
+        print(f"  train.xyz, energy_train.out, force_train.out, stress_train.out")
+        sys.exit(1)
+
 energy_train = np.loadtxt('energy_train.out')
 force_train = np.loadtxt('force_train.out')
 stress_train = np.loadtxt('stress_train.out')
@@ -259,4 +268,4 @@ axs[2].text(0.4, 0.1, f'RMSE (Rem): {mean_stress_rmse:.3f} GPa', transform=axs[2
 # Adjust layout
 plt.tight_layout()
 fig.subplots_adjust(top=0.968, bottom=0.16, left=0.086, right=0.983, hspace=0.2, wspace=0.25)
-plt.savefig('slected_remained.png', dpi=300)
+plt.savefig('selected_remained.png', dpi=300)

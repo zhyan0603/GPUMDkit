@@ -45,7 +45,7 @@ def set_fig_properties(ax_list, tl=4, tw=1.2, tlm=4):
 trap = np.trapezoid if hasattr(np, "trapezoid") else np.trapz
 
 def print_usage():
-    print("Usage: python plt_vac_dos.py [save]")
+    print("Usage: python plt_pdos.py [save]")
     print("  save : Optional. If provided, saves figures (.png) and data (.xlsx).")
 
 class VAC_DOS_Processor:

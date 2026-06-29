@@ -30,7 +30,7 @@ from ase.io import read
 
 # Check if required arguments are provided
 if len(sys.argv) != 5:
-    print("Usage: python script.py <ref_struct> <trajectory_file> <species> <interval>")
+    print("Usage: python probability_density_analysis.py <ref_struct> <trajectory_file> <species> <interval>")
     sys.exit(1)
 
 # Parse command-line arguments

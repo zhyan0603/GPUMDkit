@@ -145,9 +145,9 @@ gpumdkit.sh -range train.xyz energy
 
 ## Detailed Documentation
 
-- [Format Conversion Guide](../../docs/tutorials/format_conversion.md)
-- [Calculators Guide](../../docs/tutorials/calculators.md)
-- [Analyzer Guide](../../docs/tutorials/analyzer.md)
-- [Visualization Guide](../../docs/tutorials/plot_scripts.md)
-- [Workflow Guide](../../docs/tutorials/workflow.md)
-- [Sampling Guide](../../docs/tutorials/sample_structures.md)
+- [Format Conversion Guide](../../docs/tutorials/en/format_conversion.md)
+- [Calculators Guide](../../docs/tutorials/en/calculator_scripts.md)
+- [Analyzer Guide](../../docs/tutorials/en/analyzer_scripts.md)
+- [Visualization Guide](../../docs/tutorials/en/plot_scripts.md)
+- [Workflow Guide](../../docs/tutorials/en/workflow_scripts.md)
+- [Sampling Guide](../../docs/tutorials/en/structure_sampling.md)

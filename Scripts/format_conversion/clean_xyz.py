@@ -9,10 +9,10 @@ Script:     clean_xyz.py
 Category:   Format Conversion Scripts
 Purpose:    Remove stress, virial, and force information from an extxyz
             training file, keeping only structural information.
-Usage:      python clean_xyz.py <input.xyz> [output.xyz]
+Usage:      python clean_xyz.py <input.xyz> <output.xyz>
 Arguments:
   input.xyz    Input extxyz training file
-  output.xyz   Output cleaned extxyz file (optional)
+  output.xyz   Output cleaned extxyz file
 Output:
   Cleaned extxyz file with only structural information
 Author:     Zihan YAN (yanzihan@westlake.edu.cn)

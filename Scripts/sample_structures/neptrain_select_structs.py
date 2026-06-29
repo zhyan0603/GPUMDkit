@@ -33,6 +33,13 @@ from NepTrain.core.nep import *
 from scipy.spatial.distance import cdist
 
 
+def print_dependency_notice():
+    print(" This function requires the NepTrain package.")
+    print(" If you use this function, we recommend citing:")
+    print(" Chen et al., Comput. Phys. Commun. 317, 109859 (2025).")
+    print(" https://doi.org/10.1016/j.cpc.2025.109859")
+
+
 def print_progress_bar(iteration, total, prefix='', suffix='', decimals=1, length=50, fill='█'):
     percent = ("{0:." + str(decimals) + "f}").format(100 * (iteration / float(total)))
     filled_length = int(length * iteration // total)
@@ -89,9 +96,11 @@ def FarthestPointSample(new_data, now_data=[], min_distance=None, min_select=1, 
 
 # Check command line arguments
 if len(sys.argv) < 4:
-    print(" Usage: python pynep_select_structs.py <sampledata_file> <traindata_file> <nep_model_file>")
-    print(" Examp: python pynep_select_structs.py dump.xyz train.xyz nep.txt")
+    print(" Usage: python neptrain_select_structs.py <sampledata_file> <traindata_file> <nep_model_file>")
+    print(" Example: python neptrain_select_structs.py dump.xyz train.xyz nep.txt")
     sys.exit(1)
+
+print_dependency_notice()
 
 # Load data
 sampledata = read(sys.argv[1], ':')

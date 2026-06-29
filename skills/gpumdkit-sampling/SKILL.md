@@ -16,7 +16,8 @@ allowed-tools: Bash(gpumdkit *) Bash(python3 *)
 | Method | Menu | Description |
 |--------|------|-------------|
 | Uniform/Random | 201 | Select evenly spaced or random frames |
-| FPS by PyNEP | 202 | Farthest point sampling (deprecated) |
+| PyNEP notice | 202 | Prints a notice only; run PyNEP through `gpumdkit.sh -pynep` |
+| FPS by PyNEP | `-pynep` | Farthest point sampling (deprecated compatibility entry) |
 | FPS by NepTrain | 203 | Farthest point sampling (preferred) |
 | Perturbation | 204 | Generate perturbed structures |
 | Force Deviation | 205 | Select high-force-deviation structures |
@@ -77,8 +78,8 @@ python Scripts/sample_structures/neptrain_select_structs.py dump.xyz train.xyz n
 #### Using PyNEP (Deprecated)
 
 ```bash
-# Direct execution
-python Scripts/sample_structures/pynep_select_structs.py <sample.xyz> <train.xyz> <nep.txt>
+# GPUMDkit entry
+gpumdkit.sh -pynep
 
 # Note: PyNEP package is no longer actively maintained
 # Use NepTrain (method 203) instead
@@ -189,14 +190,14 @@ python Scripts/sample_structures/perturb_structure.py POSCAR 50 0.05 0.3 uniform
 # 4. Add to training set
 ```
 
-### Parallel FPS Sampling (Advanced)
+### PyNEP Compatibility Path
 
 ```bash
-# Parallel version for large datasets
-python Scripts/sample_structures/parallel_pynep_select_structs.py <sample.xyz> <train.xyz> <nep.txt> [threads]
+# gpumdkit.sh -pynep calls the parallel PyNEP compatibility script.
+gpumdkit.sh -pynep
 
-# Example with 8 threads
-python Scripts/sample_structures/parallel_pynep_select_structs.py dump.xyz train.xyz nep.txt 8
+# Example input after launching:
+dump.xyz train.xyz nep.txt 8
 ```
 
 ## Dependencies
@@ -225,4 +226,4 @@ pip install neptrain  # For FPS by NepTrain
 
 ## Detailed Documentation
 
-See [sample_structures.md](../../docs/tutorials/sample_structures.md) for comprehensive guide.
+See [structure_sampling.md](../../docs/tutorials/en/structure_sampling.md) for comprehensive guide.

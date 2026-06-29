@@ -31,6 +31,12 @@ from sklearn.decomposition import PCA
 from pynep.calculate import NEP
 from pynep.select import FarthestPointSample
 
+
+def print_dependency_notice():
+    print(" This function requires the pynep package.")
+    print(" This PyNEP sampling entry is deprecated. We recommend using NepTrain sampling instead.")
+
+
 def print_progress_bar(iteration, total, prefix='', suffix='', decimals=1, length=50, fill='█'):
     percent = ("{0:." + str(decimals) + "f}").format(100 * (iteration / float(total)))
     filled_length = int(length * iteration // total)
@@ -66,8 +72,10 @@ def calculate_descriptors():
 # Check command line arguments
 if len(sys.argv) < 4:
     print(" Usage: python pynep_select_structs.py <sampledata_file> <traindata_file> <nep_model_file>")
-    print(" Examp: python pynep_select_structs.py dump.xyz train.xyz nep.txt")
+    print(" Example: python pynep_select_structs.py dump.xyz train.xyz nep.txt")
     sys.exit(1)
+
+print_dependency_notice()
 
 # Load data
 sampledata = read(sys.argv[1], ':')

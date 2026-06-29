@@ -20,11 +20,11 @@ allowed-tools: Bash(gpumdkit *) Bash(python3 *)
 | Chemical Species | Menu 503 | List unique elements |
 | Charge Balance | `-cbc` | Check oxidation-state balance |
 | Property Range | `-range` | Energy/force/virial statistics |
-| Distance Filter | Menu 506 | Filter by minimum distance (no PBC) |
-| Distance Filter (PBC) | Menu 506b | Filter by minimum distance (with PBC) |
+| Distance Filter | `-filter_dist` or Menu 506 | Filter by minimum distance (no PBC) |
+| Distance Filter (PBC) | `-filter_dist_pbc` | Filter by minimum distance with PBC |
 | Minimum Distance | `-min_dist` | Calculate min distances (no PBC) |
 | Minimum Distance (PBC) | `-min_dist_pbc` | Calculate min distances (with PBC) |
-| Probability Density | Menu 508 | 3D diffusion channel analysis |
+| Probability Density | `-pda` or Menu 508 | 3D diffusion channel analysis |
 
 ## Command Reference
 
@@ -86,14 +86,13 @@ gpumdkit.sh  # Select: 5) Analyzer -> 503
 
 #### By Minimum Distance (No PBC)
 ```bash
-gpumdkit.sh  # Select: 5) Analyzer -> 506
-# Input: extxyz file, distance threshold
+gpumdkit.sh -filter_dist dump.xyz 1.5
 # Output: filtered_<file>.xyz, filtered_out_<file>.xyz
 ```
 
 #### By Minimum Distance (With PBC)
 ```bash
-gpumdkit.sh  # Select: 5) Analyzer -> 506b
+gpumdkit.sh -filter_dist_pbc dump.xyz 1.5
 # More accurate for periodic systems
 ```
 
@@ -138,9 +137,9 @@ gpumdkit.sh  # Select: 5) Analyzer -> 502
 ### Probability Density Analysis
 ```bash
 # Calculate 3D probability density of mobile ions
-gpumdkit.sh  # Select: 5) Analyzer -> 508
+gpumdkit.sh -pda LLZO.vasp dump.xyz Li 0.25
 
-# Parameters (interactive):
+# Parameters:
 # - Reference structure (POSCAR)
 # - Trajectory file (extxyz)
 # - Mobile species (e.g., Li)
@@ -170,7 +169,7 @@ gpumdkit.sh  # Select: 5) Analyzer -> 502
 ### Structure Filtering Pipeline
 ```bash
 # 1. Filter by distance
-gpumdkit.sh  # Select: 5) Analyzer -> 506
+gpumdkit.sh -filter_dist_pbc dump.xyz 1.5
 
 # 2. Filter by box size
 gpumdkit.sh -filter_box filtered.xyz 20
@@ -182,7 +181,7 @@ gpumdkit.sh -filter_value filtered_by_box.xyz force 15
 ### Diffusion Channel Analysis
 ```bash
 # 1. Calculate probability density
-gpumdkit.sh  # Select: 5) Analyzer -> 508
+gpumdkit.sh -pda LLZO.vasp dump.xyz Li 0.25
 
 # 2. Visualize with VESTA or similar
 # Open probability_density_0.25.vasp
@@ -215,6 +214,8 @@ python Scripts/analyzer/get_volume.py
 | `-min_dist` | Min distance (no PBC) | `gpumdkit.sh -min_dist <file>` |
 | `-min_dist_pbc` | Min distance (PBC) | `gpumdkit.sh -min_dist_pbc <file>` |
 | `-cbc` | Charge balance | `gpumdkit.sh -cbc <file>` |
+| `-filter_dist` | Filter by minimum distance | `gpumdkit.sh -filter_dist <file> <min_dist>` |
+| `-filter_dist_pbc` | Filter by minimum distance with PBC | `gpumdkit.sh -filter_dist_pbc <file> <min_dist>` |
 | `-filter_range` | Filter by distance range | `gpumdkit.sh -filter_range <file> <e1> <e2> <min> <max>` |
 | `-filter_box` | Filter by box size | `gpumdkit.sh -filter_box <file> <limit>` |
 | `-filter_value` | Filter by property | `gpumdkit.sh -filter_value <file> <prop> <thresh>` |
@@ -232,4 +233,4 @@ python Scripts/analyzer/get_volume.py
 
 ## Detailed Documentation
 
-See [analyzer.md](../../docs/tutorials/analyzer.md) for comprehensive guide.
+See [analyzer_scripts.md](../../docs/tutorials/en/analyzer_scripts.md) for comprehensive guide.

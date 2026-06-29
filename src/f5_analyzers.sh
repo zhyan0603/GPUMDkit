@@ -62,7 +62,7 @@ echo " | Script: charge_balance_check.py                 |"
 echo " | Developer: Zihan YAN (yanzihan@westlake.edu.cn) |"
 echo " >-------------------------------------------------<"
 echo " Input <input.xyz> you want to analyze"
-echo " Examp: train.xyz"
+echo " Example: train.xyz"
 echo " ------------>>"
 read -p " " input_extxyz
 echo " ---------------------------------------------------"

@@ -1,0 +1,49 @@
+category	command	syntax	description_en	description_zh	status
+main	-h	gpumdkit.sh -h	Show general command help	显示通用命令帮助	stable
+main	-update	gpumdkit.sh -update	Update GPUMDkit from GitHub	从 GitHub 更新 GPUMDkit	stable
+main	-clean	gpumdkit.sh -clean	Clean extra files in current directory	清理当前目录中的冗余文件	stable
+format	-out2xyz	gpumdkit.sh -out2xyz <dir>	Convert VASP OUTCAR files to extxyz (shell version)	将 VASP OUTCAR 转换为 extxyz（shell 版本）	stable
+format	-out2exyz	gpumdkit.sh -out2exyz <dir>	Convert VASP OUTCAR files to extxyz (Python version)	将 VASP OUTCAR 转换为 extxyz（Python 版本）	stable
+format	-cp2k2xyz	gpumdkit.sh -cp2k2xyz	Convert CP2K output to xyz/extxyz	转换 CP2K 输出为 xyz/extxyz	stable
+format	-xdat2exyz	gpumdkit.sh -xdat2exyz <XDATCAR> <output.xyz>	Convert XDATCAR to extxyz	将 XDATCAR 转换为 extxyz	stable
+format	-cif2pos	gpumdkit.sh -cif2pos <input.cif> <output.vasp>	Convert CIF to POSCAR/VASP	将 CIF 转换为 POSCAR/VASP	stable
+format	-cif2exyz	gpumdkit.sh -cif2exyz <input.cif> <output.xyz>	Convert CIF to extxyz	将 CIF 转换为 extxyz	stable
+format	-pos2exyz	gpumdkit.sh -pos2exyz <POSCAR> <output.xyz>	Convert POSCAR to extxyz	将 POSCAR 转换为 extxyz	stable
+format	-exyz2pos	gpumdkit.sh -exyz2pos <input.xyz>	Convert extxyz frames to POSCAR files	将 extxyz 帧转换为 POSCAR 文件	stable
+format	-pos2lmp	gpumdkit.sh -pos2lmp <POSCAR> <output.data>	Convert POSCAR to LAMMPS data	将 POSCAR 转换为 LAMMPS data	stable
+format	-lmp2exyz	gpumdkit.sh -lmp2exyz <dump> <element...>	Convert LAMMPS dump to extxyz	将 LAMMPS dump 转换为 extxyz	stable
+format	-traj2exyz	gpumdkit.sh -traj2exyz <input.traj> <output.xyz>	Convert ASE trajectory to extxyz	将 ASE trajectory 转换为 extxyz	stable
+format	-replicate	gpumdkit.sh -replicate <input> <output> a b c	Replicate a structure by cell factors	按晶胞倍数扩胞	stable
+format	-replicate	gpumdkit.sh -replicate <input> <output> <target_num>	Replicate a structure toward a target atom count	按目标原子数扩胞	stable
+format	-addgroup	gpumdkit.sh -addgroup <POSCAR> <element...>	Add GPUMD group labels	添加 GPUMD group 标签	stable
+format	-addweight	gpumdkit.sh -addweight <input.xyz> <output.xyz> <weight>	Add structure weights to extxyz	为 extxyz 添加结构权重	stable
+format	-get_frame	gpumdkit.sh -get_frame <input.xyz> <frame_index>	Extract one frame from extxyz	从 extxyz 提取单帧	stable
+format	-clean_xyz	gpumdkit.sh -clean_xyz <input.xyz> <output.xyz>	Remove extra properties from extxyz	清理 extxyz 中的冗余属性	stable
+format	-frame_range	gpumdkit.sh -frame_range <input.xyz> <start_frac> <end_frac>	Extract frames by fractional range	按比例范围提取帧	stable
+sampling	-pynep	gpumdkit.sh -pynep	Run PyNEP FPS sampling	运行 PyNEP FPS 采样	deprecated
+calc	-calc ionic-cond	gpumdkit.sh -calc ionic-cond <element> <charge>	Calculate ionic conductivity	计算离子电导率	stable
+calc	-calc nep	gpumdkit.sh -calc nep <input.xyz> <output.xyz> <nep.txt>	Predict properties with a NEP model	使用 NEP 模型预测性质	stable
+calc	-calc des	gpumdkit.sh -calc des <input.xyz> <output.npy> <nep.txt> <element>	Calculate NEP descriptors	计算 NEP 描述符	stable
+calc	-calc doas	gpumdkit.sh -calc doas <input.xyz> <nep.txt> <output.txt>	Calculate density of atomistic states	计算原子态密度	stable
+calc	-calc neb	gpumdkit.sh -calc neb <initial.xyz> <final.xyz> <n_images> <nep.txt>	Run NEB with a NEP model	使用 NEP 模型运行 NEB	stable
+calc	-calc minimize	gpumdkit.sh -calc minimize <structure> <nep.txt> [fmax] [max_steps]	Minimize a structure with a NEP model	使用 NEP 模型优化结构	stable
+calc	-calc msd	gpumdkit.sh -calc msd <trajectory.xyz> <element> <dt_fs> [max_corr_steps]	Calculate MSD from trajectory	从轨迹计算 MSD	stable
+calc	-calc nlist	gpumdkit.sh -calc nlist [args...]	Build neighbor lists	构建邻居列表	stable
+calc	-calc disp	gpumdkit.sh -calc disp [args...]	Calculate displacements	计算位移	stable
+calc	-calc avg-struct	gpumdkit.sh -calc avg-struct [args...]	Calculate averaged structure	计算平均结构	stable
+calc	-calc oct-tilt	gpumdkit.sh -calc oct-tilt [args...]	Calculate octahedral tilt	计算八面体倾斜	stable
+calc	-calc pol-abo3	gpumdkit.sh -calc pol-abo3 [args...]	Calculate ABO3 local polarization	计算 ABO3 局域极化	stable
+analyze	-range	gpumdkit.sh -range <input.xyz> <energy|force|virial> [hist]	Analyze property ranges	分析性质范围	stable
+analyze	-analyze_comp	gpumdkit.sh -analyze_comp <input.xyz>	Analyze structure composition	分析结构成分	stable
+analyze	-chem_species	gpumdkit.sh -chem_species <input.xyz>	List chemical species	列出化学元素	stable
+analyze	-cbc	gpumdkit.sh -cbc <input.xyz>	Check charge balance	检查电荷平衡	stable
+analyze	-min_dist	gpumdkit.sh -min_dist <input.xyz>	Calculate minimum distance without PBC	计算无 PBC 最小距离	stable
+analyze	-min_dist_pbc	gpumdkit.sh -min_dist_pbc <input.xyz>	Calculate minimum distance with PBC	计算带 PBC 最小距离	stable
+analyze	-filter_dist	gpumdkit.sh -filter_dist <input.xyz> <min_dist>	Filter structures by minimum distance	按最小距离过滤结构	stable
+analyze	-filter_dist_pbc	gpumdkit.sh -filter_dist_pbc <input.xyz> <min_dist>	Filter structures by minimum distance with PBC	按带 PBC 最小距离过滤结构	stable
+analyze	-filter_box	gpumdkit.sh -filter_box <input.xyz> <edge_limit>	Filter structures by box-edge limit	按盒子边长过滤结构	stable
+analyze	-filter_value	gpumdkit.sh -filter_value <input.xyz> <property> <threshold>	Filter structures by property threshold	按性质阈值过滤结构	stable
+analyze	-filter_range	gpumdkit.sh -filter_range <input.xyz> <element1> <element2> <min_dist> <max_dist>	Filter by element-pair distance range	按元素对距离范围过滤	stable
+analyze	-pda	gpumdkit.sh -pda <ref_struct> <trajectory.xyz> <species> <interval>	Calculate probability density	计算概率密度	stable
+utility	-time	gpumdkit.sh -time <gpumd|nep>	Monitor GPUMD or NEP progress	监控 GPUMD 或 NEP 进度	stable
+utility	-nep_modifier	gpumdkit.sh -nep_modifier	Modify NEP model interactively	交互式修改 NEP 模型	stable

@@ -6,7 +6,7 @@ const mainContentText = `
          | |_| |  __/| |_| | |  | | |_| |   <| | |_
           \____|_|    \___/|_|  |_|____/|_|\_\_|\__|
 
-          GPUMDkit Version 1.5.5 (dev) (2026-05-16)
+          GPUMDkit Version 1.5.6 (dev) (2026-06-17)
     Core Developer: Zihan YAN (yanzihan@westlake.edu.cn)
  Main Contributors: Denan LI, Xin WU, Zhoulin LIU & Chen HUA
 
@@ -57,7 +57,7 @@ const logsCommand2 = `
 `;
 
 const helpContentText = ` +-------------------------------------------------------------------------------------------------------+
-|                          GPUMDkit 1.5.5 (dev) (2026-05-16) Command Help                               |
+|                          GPUMDkit 1.5.6 (dev) (2026-06-17) Command Help                               |
 +-------------------------------------------------------------------------------------------------------+
 |                                          MAIN FUNCTIONS                                               |
 +-------------------------------------------------------------------------------------------------------+
@@ -84,13 +84,13 @@ const helpContentText = ` +-----------------------------------------------------
 | -min_dist     Min distance (no PBC)           | -min_dist_pbc      Min distance with PBC              |
 | -filter_dist  Filter by min_dist (no PBC)     | -filter_dist_pbc   Filter by min_dist (PBC)           |
 | -pda          Probability density analysis    | -hbond             Hydrogen-bond analysis             |
-| -pynep        FPS sampling by PyNEP           | -filter_box        Filter by box-edge length          |
+| -pynep        Deprecated PyNEP sampling       | -filter_box        Filter by box-edge length          |
 +-------------------------------------------------------------------------------------------------------+
 | Detailed usage: gpumdkit.sh -<option> -h    Plot details: gpumdkit.sh -plt <type> -h                  |
 +-------------------------------------------------------------------------------------------------------+`;
 
 const plotContentText = `  +-----------------------------------------------------------------------------------------------+
- |                     GPUMDkit 1.5.5 (dev) (2026-05-16) PLOT & VISUALIZATION TOOLS              |
+ |                     GPUMDkit 1.5.6 (dev) (2026-06-17) PLOT & VISUALIZATION TOOLS              |
  +-----------------------------------------------------------------------------------------------+
  |  Usage: gpumdkit.sh -plt <type>                        Help: gpumdkit.sh -plt <type> -h       |
  +-----------------------------------------------------------------------------------------------+

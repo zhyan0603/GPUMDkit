@@ -77,7 +77,7 @@ def process_structure(idx_atoms):
 def main():
     # Check if input file is provided
     if len(sys.argv) != 2:
-        print("Usage: python process_structures.py <input.extxyz>", file=sys.stderr)
+        print("Usage: python charge_balance_check.py <input.extxyz>", file=sys.stderr)
         sys.exit(1)
     
     input_file = sys.argv[1]

@@ -9,7 +9,7 @@ Script:     out2exyz.py
 Category:   Format Conversion Scripts
 Purpose:    Convert VASP OUTCAR files to extended XYZ format with energy,
             forces, stress, and virial information.
-Usage:      python out2exyz.py [directory with OUTCARs]
+Usage:      python out2exyz.py <directory>
 Output:
   Converted structures in extxyz format
 Author:     Zihan YAN (yanzihan@westlake.edu.cn)

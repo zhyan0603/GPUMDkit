@@ -10,12 +10,13 @@ Category:   Workflow Scripts
 Purpose:    Batch pretreatment of structures for CP2K SCF calculations.
             Reads structures from extxyz/VASP files, copies a CP2K template,
             and populates the CELL section with the correct lattice vectors.
-Usage:      python scf_batch_pretreatment_cp2k.py <xyz_file> [template]
+Usage:      python scf_batch_pretreatment_cp2k.py <extxyz_file> <template_inp> <prefix>
 Arguments:
-  xyz_file  Input extxyz file with structures
-  template  (optional) CP2K input template (default: cp2k_template.inp)
+  extxyz_file   Input extxyz file with structures
+  template_inp  CP2K input template
+  prefix        Prefix for output directories
 Output:
-  struct_fp/ directory with POSCAR_*.vasp and cp2k input files
+  <prefix>_<index>/ directories with input.inp and pos.xyz files
 Author:     Zihan YAN (yanzihan@westlake.edu.cn)
 Last-modified: 2026-05-16
 =============================================================================

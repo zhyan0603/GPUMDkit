@@ -220,5 +220,5 @@ gpumdkit.sh  # Select: 3) Workflow -> 301
 
 ## Detailed Documentation
 
-- [Workflow Guide](../../docs/tutorials/workflow.md)
-- [Active Learning Guide](../../docs/tutorials/workflow_active_learning.md)
+- [Workflow Guide](../../docs/tutorials/en/workflow_scripts.md)
+- [Active Learning Guide](../../docs/tutorials/en/active_learning_workflow.md)

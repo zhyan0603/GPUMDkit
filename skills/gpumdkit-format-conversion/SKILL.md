@@ -14,7 +14,7 @@ allowed-tools: Bash(gpumdkit *) Bash(python3 *)
 
 | Format | Extensions | Description |
 |--------|-----------|-------------|
-| VASP | POSCAR, OUTCAR, XDATCAR, vasprun.xml | Vienna Ab initio Simulation Package |
+| VASP | POSCAR, OUTCAR, XDATCAR | Vienna Ab initio Simulation Package |
 | LAMMPS | .data, dump.* | Large-scale Atomic/Molecular Massively Parallel Simulator |
 | CP2K | .log, pos.xyz, frc.xyz, cell.cell | Quantum chemistry and solid state physics |
 | ABACUS | running_scf.log, running_md.log | Atomic-orbital Based Ab-initio Computation at UStc |
@@ -170,4 +170,4 @@ Most Python scripts require:
 
 ## Detailed Documentation
 
-See [format_conversion.md](../../docs/tutorials/format_conversion.md) for comprehensive guide.
+See [format_conversion.md](../../docs/tutorials/en/format_conversion.md) for comprehensive guide.

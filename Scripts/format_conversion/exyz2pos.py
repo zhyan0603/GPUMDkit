@@ -8,7 +8,7 @@ Citation: Z. Yan et al., GPUMDkit: A User-Friendly Toolkit for GPUMD and NEP,
 Script:     exyz2pos.py
 Category:   Format Conversion Scripts
 Purpose:    Convert extended XYZ file(s) to VASP POSCAR format(s).
-Usage:      python exyz2pos.py [extxyz_file]
+Usage:      python exyz2pos.py <input.xyz>
 Arguments:
   extxyz_file Input extxyz file (default: train.xyz)
 Output:

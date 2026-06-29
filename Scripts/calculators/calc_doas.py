@@ -30,10 +30,20 @@ from ase.optimize import BFGS
 from calorine.calculators import CPUNEP
 from collections import defaultdict
 
+
+def print_dependency_notice():
+    print(" This function requires the calorine package.")
+    print(" If you use this function, we recommend citing:")
+    print(" Lindgren et al., J. Open Source Softw. 9, 6264 (2024).")
+    print(" https://doi.org/10.21105/joss.06264")
+
+
 # Specify input and output files
 input_file = sys.argv[1]  # Input extxyz file
 model_path = sys.argv[2]  # Path to the model for CPUNEP
 output_file = sys.argv[3]  # Output text file for grouped atomic energies
+
+print_dependency_notice()
 
 # Read input file containing all structures
 structures = read(input_file, index=':')  # Read all frames

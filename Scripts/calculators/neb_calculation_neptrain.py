@@ -38,7 +38,7 @@ logger.add(sys.stderr, level="INFO")
 # ----------------------------------------------
 
 if len(sys.argv) != 5:
-    print("python neb_calculation.py <initial_structure> <final_structure> <n_image> <nep_model>")
+    print("python neb_calculation_neptrain.py <initial_structure> <final_structure> <n_image> <nep_model>")
     sys.exit(1)
 
 initial_file = sys.argv[1]

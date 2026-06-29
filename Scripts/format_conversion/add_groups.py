@@ -8,13 +8,13 @@ Citation: Z. Yan et al., GPUMDkit: A User-Friendly Toolkit for GPUMD and NEP,
 Script:     add_groups.py
 Category:   Format Conversion Scripts
 Purpose:    Add group information to atoms in a structure file based on
-            element types, outputting the result to stdout.
+            element types, outputting the result to model.xyz.
 Usage:      python add_groups.py <input.xyz> <element1> <element2> ...
 Arguments:
   input.xyz   Input structure file
   elementX    Element symbols to assign group indices
 Output:
-  Modified structure with group information (printed to stdout)
+  model.xyz  Structure with group information
 Author:     Zihan YAN (yanzihan@westlake.edu.cn)
 Last-modified: 2026-05-16
 =============================================================================

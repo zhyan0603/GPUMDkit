@@ -14,6 +14,7 @@ to effectively use GPUMDkit functionality.
 | [gpumdkit-visualization](gpumdkit-visualization/SKILL.md) | Plotting and visualization |
 | [gpumdkit-workflows](gpumdkit-workflows/SKILL.md) | Batch processing and automation |
 | [gpumdkit-sampling](gpumdkit-sampling/SKILL.md) | Structure sampling and selection |
+| [gpumdkit-contributing](gpumdkit-contributing/SKILL.md) | Code conventions and adding new features |
 
 ## Usage with Different Agent Tools
 
@@ -42,6 +43,7 @@ ln -s ../../skills/gpumdkit-analyzers .
 ln -s ../../skills/gpumdkit-visualization .
 ln -s ../../skills/gpumdkit-workflows .
 ln -s ../../skills/gpumdkit-sampling .
+ln -s ../../skills/gpumdkit-contributing .
 cd ../..
 ```
 
@@ -60,6 +62,7 @@ ln -s ../../skills/gpumdkit-analyzers .
 ln -s ../../skills/gpumdkit-visualization .
 ln -s ../../skills/gpumdkit-workflows .
 ln -s ../../skills/gpumdkit-sampling .
+ln -s ../../skills/gpumdkit-contributing .
 cd ../..
 ```
 

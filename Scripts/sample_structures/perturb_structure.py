@@ -28,9 +28,15 @@ import argparse
 import sys
 import dpdata
 
+
+def print_dependency_notice():
+    print(" This function requires the dpdata package.")
+    print(" If you use this function, we recommend citing dpdata according to its official documentation.")
+
+
 def parse_args():
     parser = argparse.ArgumentParser(
-             description="Usage: python script.py <input.vasp> <pert_num> <cell_pert_fraction> <atom_pert_distance> <atom_pert_style>")
+             description="Usage: python perturb_structure.py <input.vasp> <pert_num> <cell_pert_fraction> <atom_pert_distance> <atom_pert_style>")
     parser.add_argument('input_file', help='The path to POSCAR/CONTCAR file')
     parser.add_argument('pert_num', type=int, default=20, help='The perturbation number')
     parser.add_argument('cell_pert_fraction', type=float, default=0.03, help='The fraction of cell perturbation')
@@ -46,6 +52,8 @@ def main():
         print("atom_pert_style options: 'normal', 'uniform', 'const'")
         print("dpdata documentation: https://docs.deepmodeling.com/projects/dpdata/en/master/index.html \n")
         sys.exit(1)
+
+    print_dependency_notice()
 
     # Read the POSCAR file and perform perturbation
     system = dpdata.System(args.input_file, fmt='vasp/poscar')

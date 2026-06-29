@@ -110,7 +110,7 @@ def plot_reduced_data(reduced_splits, labels, method):
 def main():
     # Check command-line arguments
     if len(sys.argv) < 3:
-        print("Usage: python scripts.py <method> <file1.npy> <file2.npy> ...")
+        print("Usage: python plt_descriptors.py <method> <file1.npy> <file2.npy> ...")
         print("Method: 'pca' or 'umap'")
         sys.exit(1)
     

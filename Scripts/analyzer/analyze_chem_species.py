@@ -9,9 +9,9 @@ Script:     analyze_chem_species.py
 Category:   Analyzer Scripts
 Purpose:    Identify all unique chemical elements present in an extxyz
             trajectory.
-Usage:      python analyze_chem_species.py <file.xyz>
+Usage:      python analyze_chem_species.py <input.xyz>
 Arguments:
-  file.xyz  Input extxyz file
+  input.xyz  Input extxyz file
 Output:
   List of unique chemical elements sorted by atomic number
 Author:     Zihan YAN (yanzihan@westlake.edu.cn)
@@ -27,7 +27,7 @@ from ase.data import chemical_symbols, atomic_numbers
 try:
     atoms_list = read(sys.argv[1], index=':')
 except IndexError:
-    print("Usage: python analyzer.py <filename.extxyz>")
+    print("Usage: python analyze_chem_species.py <input.xyz>")
     sys.exit(1)
 
 # Identify all unique elements present across all frames

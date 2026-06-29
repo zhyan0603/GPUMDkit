@@ -9,7 +9,7 @@ Contains functions for format conversion operations (Interactive mode `option 1`
 
 **Functions:**
 
-- `f101_out2xyz` - Convert VASP OUTCAR or vasprun.xml to extxyz
+- `f101_out2xyz` - Convert VASP OUTCAR to extxyz
 - `f102_mtp2xyz` - Convert MTP .cfg format to extxyz
 - `cp2k2xyz_chenhua` - Convert CP2K to extxyz (method by Chen HUA)
 - `cp2k2xyz_kexu` - Convert CP2K to extxyz (method by Ke XU)
@@ -35,8 +35,7 @@ Contains functions for structure sampling (Interactive mode `option 2`).
 
 **Functions:**
 - `f201_sample_structures` - Sample structures using uniform or random methods
-- `f202_pynep_sample_structures` - Sample structures using farthest point sampling (powered by PyNEP)
-- `parallel_pynep_sample_structures` - Parallel version of pynep sampling with multi-processing
+- `parallel_pynep_sample_structures` - Compatibility PyNEP sampling path used by `gpumdkit.sh -pynep`
 - `f203_neptrain_sample_structures` - Sample structures using farthest point sampling (powered by NepTrain)
 - `f204_perturb_structure` - Generate perturbed structures
 - `f205_select_max_force_deviation_structs` - Select structures with high force deviations
@@ -116,15 +115,15 @@ then you will see:
        | |_| |  __/| |_| | |  | | |_| |   <| | |_
         \____|_|    \___/|_|  |_|____/|_|\_\_|\__|
 
-        GPUMDkit Version 1.5.5 (dev) (2026-05-16)
+        GPUMDkit Version 1.5.6 (dev) (2026-06-17)
   Core Developer: Zihan YAN (yanzihan@westlake.edu.cn)
 
  ----------------------- GPUMD -----------------------
   1) Format Conversion          2) Sample Structures
   3) Workflow                   4) Calculators
-  5) Analyzer                   6) Plots
-  7) Utilities
-  0) Quit!
+  5) Analyzer                   6) Visualization
+  7) Utilities                  8) Developing...
+  0) Exit
  ------------>>
  Input the function number:
 ```

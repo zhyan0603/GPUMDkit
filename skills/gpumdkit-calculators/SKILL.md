@@ -238,4 +238,4 @@ pip3 install git+https://github.com/MoseyQAQ/ferrodispcalc.git
 
 ## Detailed Documentation
 
-See [calculators.md](../../docs/tutorials/calculators.md) for comprehensive guide.
+See [calculator_scripts.md](../../docs/tutorials/en/calculator_scripts.md) for comprehensive guide.

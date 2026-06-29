@@ -49,7 +49,7 @@ def filter_frames(input_file, output_file, edge_limit):
 
 if __name__ == "__main__":
     if len(sys.argv) != 3:
-        print("Usage: python script.py <input_file> <edge_limit>")
+        print("Usage: python filter_exyz_by_box.py <input_file> <edge_limit>")
         sys.exit(1)
 
     input_file = sys.argv[1]
@@ -57,4 +57,3 @@ if __name__ == "__main__":
     edge_limit = float(sys.argv[2])
 
     filter_frames(input_file, output_file, edge_limit)
-

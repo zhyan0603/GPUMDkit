@@ -32,10 +32,20 @@ import matplotlib.pyplot as plt
 from ase.constraints import FixAtoms
 from ase.io import Trajectory, write
 
+
+def print_dependency_notice():
+    print(" This function requires the calorine package.")
+    print(" If you use this function, we recommend citing:")
+    print(" Lindgren et al., J. Open Source Softw. 9, 6264 (2024).")
+    print(" https://doi.org/10.21105/joss.06264")
+
+
 # Check command-line arguments
 if len(sys.argv) != 5:
     print("python neb_calculation.py <initial_structure> <final_structure> <n_image> <nep_model>")
     sys.exit(1)
+
+print_dependency_notice()
 
 initial_file = sys.argv[1]
 final_file = sys.argv[2]

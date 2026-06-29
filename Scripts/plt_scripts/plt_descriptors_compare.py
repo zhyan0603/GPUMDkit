@@ -30,6 +30,14 @@ import sys
 import os
 import matplotlib.pyplot as plt
 
+
+def print_dependency_notice():
+    print(" This function requires the calorine package.")
+    print(" If you use this function, we recommend citing:")
+    print(" Lindgren et al., J. Open Source Softw. 9, 6264 (2024).")
+    print(" https://doi.org/10.21105/joss.06264")
+
+
 plt.rcParams.update({
     "font.family": "sans-serif",
     "font.sans-serif": ["Arial", "DejaVu Sans", "Liberation Sans"],
@@ -46,13 +54,15 @@ def print_progress_bar(iteration, total, prefix='', suffix='', decimals=1, lengt
 
 # Check command-line arguments
 if len(sys.argv) < 5:
-    print(" Usage: python calc_descriptors.py method nep.txt element train1.xyz [train2.xyz ...]")
+    print(" Usage: python plt_descriptors_compare.py method nep.txt element train1.xyz [train2.xyz ...]")
     print(" method: 'pca' or 'umap'")
     print(" element: chemical symbol (e.g., Li) or 'total'")
     sys.exit(1)
 
 method, model_file, target_element = sys.argv[1:4]
 xyz_files = sys.argv[4:]
+
+print_dependency_notice()
 
 # Validate method
 if method.lower() not in ['pca', 'umap']:

@@ -47,7 +47,7 @@ trap = np.trapezoid if hasattr(np, "trapezoid") else getattr(np, "trapz")
 
 def print_usage():
     """Print usage instructions"""
-    print("Usage: gpumdkit -plt nemd [real_length] [scale_eff_size] [cutoff_freq] [save]")
+    print("Usage: gpumdkit.sh -plt nemd [real_length] [scale_eff_size] [cutoff_freq] [save]")
     print("Params:")
     print("  real_length   : Real length of heat tranfer zone in nm (set to 'Auto', with auto-calculation)")
     print("  scale_eff_size: Optional, Scale factor for effective cross-sectional area (default: 1)")

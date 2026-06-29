@@ -26,6 +26,10 @@ function f302_md_sample_batch_pretreatment_gpumd(){
 
 	# Check if there are any .vasp files
 	if [ $num_vasp_files -gt 0 ]; then
+	    if [ $num_xyz_files -gt 0 ]; then
+	        echo " Notice: Found both .vasp and .xyz files in the current directory."
+	        echo " This workflow prioritizes .vasp files and will ignore .xyz files."
+	    fi
 	    # Create the struct directory and move .vasp files into it
 	    mkdir -p struct_md
 	    rename_seq=1
@@ -44,11 +48,22 @@ function f302_md_sample_batch_pretreatment_gpumd(){
 		done
 		num_xyz_files=$(find ./struct_md -maxdepth 1 -name "*.xyz" | wc -l)
 	else
-	    # Check if there is exactly one XYZ file
-	    if [ $num_xyz_files -eq 1 ]; then
-	        echo " No .vasp files found, but found one XYZ file."
-	        echo " Converting it to model.xyz using GPUMDkit..."
-	        python ${GPUMDkit_path}/Scripts/format_conversion/split_single_xyz.py *.xyz
+	    # Check available XYZ files
+	    if [ $num_xyz_files -ge 1 ]; then
+	        if [ $num_xyz_files -eq 1 ]; then
+	            xyz_file=$(find . -maxdepth 1 -name "*.xyz" | head -n 1)
+	            echo " No .vasp files found, but found one XYZ file: ${xyz_file#./}"
+	        else
+	            echo " No .vasp files found, but found multiple XYZ files:"
+	            select xyz_file in *.xyz; do
+	                if [ -n "$xyz_file" ]; then
+	                    break
+	                fi
+	                echo " Invalid selection. Please choose one XYZ file."
+	            done
+	        fi
+	        echo " Splitting ${xyz_file#./} to model_*.xyz using GPUMDkit..."
+	        python ${GPUMDkit_path}/Scripts/format_conversion/split_single_xyz.py "$xyz_file"
 	        
 	        mkdir -p struct_md
 	        mv *.xyz ./struct_md
@@ -56,7 +71,7 @@ function f302_md_sample_batch_pretreatment_gpumd(){
 	        
 	        # Perform additional operations if needed after moving .vasp files
 	    else
-	        echo " No .vasp files found and the XYZ file is not unique."
+	        echo " No .vasp files or .xyz files found."
 	        exit 1
 	    fi
 	fi

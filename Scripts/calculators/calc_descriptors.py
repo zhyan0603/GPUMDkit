@@ -28,6 +28,14 @@ from calorine.nep import get_descriptors
 import sys
 import os
 
+
+def print_dependency_notice():
+    print(" This function requires the calorine package.")
+    print(" If you use this function, we recommend citing:")
+    print(" Lindgren et al., J. Open Source Softw. 9, 6264 (2024).")
+    print(" https://doi.org/10.21105/joss.06264")
+
+
 def print_progress_bar(iteration, total, prefix='', suffix='', decimals=1, length=50, fill='█'):
     percent = ("{0:." + str(decimals) + "f}").format(100 * (iteration / float(total)))
     filled_length = int(length * iteration // total)
@@ -42,6 +50,8 @@ if len(sys.argv) != 5:
     sys.exit(1)
 
 input_file, output_file, model_file, target_element = sys.argv[1:5]
+
+print_dependency_notice()
 
 # Check if input and model files exist
 if not os.path.isfile(input_file) or not os.path.isfile(model_file):

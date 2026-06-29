@@ -27,6 +27,14 @@ from ase import Atoms
 from calorine.calculators import CPUNEP
 import sys
 
+
+def print_dependency_notice():
+    print(" This function requires the calorine package.")
+    print(" If you use this function, we recommend citing:")
+    print(" Lindgren et al., J. Open Source Softw. 9, 6264 (2024).")
+    print(" https://doi.org/10.21105/joss.06264")
+
+
 plt.rcParams.update({
     "font.family": "sans-serif",
     "font.sans-serif": ["Arial", "DejaVu Sans", "Liberation Sans"],
@@ -42,6 +50,8 @@ if len(sys.argv) < 4:
 symbol1 = sys.argv[1]  # Type of the first atom
 symbol2 = sys.argv[2]  # Type of the second atom
 nep_path = sys.argv[3]  # Directory of the NEP potential file
+
+print_dependency_notice()
 
 # Set the range and step size for distances
 start_distance = 0.1  # Starting distance in Angstrom

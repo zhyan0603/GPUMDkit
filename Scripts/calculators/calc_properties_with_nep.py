@@ -27,6 +27,14 @@ from ase import Atoms
 from ase.io import read, write
 from calorine.calculators import CPUNEP
 
+
+def print_dependency_notice():
+    print(" This function requires the calorine package.")
+    print(" If you use this function, we recommend citing:")
+    print(" Lindgren et al., J. Open Source Softw. 9, 6264 (2024).")
+    print(" https://doi.org/10.21105/joss.06264")
+
+
 def print_progress_bar(iteration, total, prefix='', suffix='', decimals=1, length=50, fill='█'):
     percent = ("{0:." + str(decimals) + "f}").format(100 * (iteration / float(total)))
     filled_length = int(length * iteration // total)
@@ -38,6 +46,8 @@ def print_progress_bar(iteration, total, prefix='', suffix='', decimals=1, lengt
 # Specify input and output files
 input_file = sys.argv[1]  # Input file
 output_file = sys.argv[2]  # Output file
+
+print_dependency_notice()
 
 # Read input file containing all structures
 structures = read(input_file, index=':')  # Read all frames

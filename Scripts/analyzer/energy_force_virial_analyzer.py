@@ -65,7 +65,7 @@ def plot_histogram(values, property_name):
 if __name__ == "__main__":
     # Check if the required arguments are provided
     if len(sys.argv) < 3:
-        print("Usage: python script.py <filename> <property> [hist]")
+        print("Usage: python energy_force_virial_analyzer.py <filename> <property> [hist]")
         sys.exit(1)
     
     filename = sys.argv[1]
@@ -84,4 +84,3 @@ if __name__ == "__main__":
     # Plot histogram if requested
     if plot_hist:
         plot_histogram(values, property_name)
-
