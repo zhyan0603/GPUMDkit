@@ -1515,26 +1515,67 @@
   <p style="text-align: justify;"><code>workflow_active_learning_dev.sh</code> 用于组织一轮 NEP 主动学习流程：运行 GPUMD 分子动力学、筛选结构、抽样、提交第一性原理计算，并进行 NEP 预测检查。</p>
 </div>
 
-<h3 id="_1">概览</h3>
-<p>该脚本用于处理 NEP 主动学习中常见的一轮流程：运行分子动力学、筛选结构、抽样、提交 SCF 计算，并整理后续 prediction 检查。</p>
+<p><strong>脚本位置：</strong> <code>Scripts/workflow/</code></p>
+<h2 id="_1">概览</h2>
+<p>该脚本自动化了 NEP 主动学习的一轮迭代。典型流程包括：</p>
+<table>
+<thead>
+<tr>
+<th>步骤</th>
+<th>操作</th>
+<th>目的</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>运行 MD 模拟</td>
+<td>使用当前 NEP 模型生成候选结构</td>
+</tr>
+<tr>
+<td>2</td>
+<td>过滤结构</td>
+<td>移除不合理的构型（短距离、大盒子）</td>
+</tr>
+<tr>
+<td>3</td>
+<td>采样结构</td>
+<td>选择多样性高或偏差大的结构进行 DFT 计算</td>
+</tr>
+<tr>
+<td>4</td>
+<td>运行 SCF 计算</td>
+<td>计算 DFT 参考能量/力</td>
+</tr>
+<tr>
+<td>5</td>
+<td>NEP 预测</td>
+<td>检查模型在新结构上的精度</td>
+</tr>
+</tbody>
+</table>
+<p>与菜单驱动的模块不同，这个工作流是一个需要按体系修改后直接运行的 shell 脚本：</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>bash<span class="w"> </span>Scripts/workflow/workflow_active_learning_dev.sh
+</code></pre></div>
+<p>下面按脚本中的主要代码块说明每一步的作用。</p>
 <h2 id="1-slurm">1. SLURM 设置</h2>
 <p>脚本开头包含集群提交参数，例如：</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="ch">#!/bin/bash -l</span>
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="c1">#SBATCH -p intel-sc3,intel-sc3-32c</span>
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="c1">#SBATCH -q huge</span>
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="c1">#SBATCH -N 1</span>
-<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="c1">#SBATCH -J workflow</span>
-<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a><span class="c1">#SBATCH -o workflow.log</span>
-<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="c1">#SBATCH --ntasks-per-node=1</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="ch">#!/bin/bash -l</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="c1">#SBATCH -p intel-sc3,intel-sc3-32c</span>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="c1">#SBATCH -q huge</span>
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="c1">#SBATCH -N 1</span>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="c1">#SBATCH -J workflow</span>
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a><span class="c1">#SBATCH -o workflow.log</span>
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="c1">#SBATCH --ntasks-per-node=1</span>
 </code></pre></div>
 <p>这些参数需要根据自己的集群环境修改。如果没有 SLURM 环境，也可以直接后台运行：</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>nohup<span class="w"> </span>bash<span class="w"> </span>workflow_active_learning_dev.sh<span class="w"> </span>&gt;<span class="w"> </span>workflow.log<span class="w"> </span><span class="m">2</span>&gt;<span class="p">&amp;</span><span class="m">1</span><span class="w"> </span><span class="p">&amp;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>nohup<span class="w"> </span>bash<span class="w"> </span>workflow_active_learning_dev.sh<span class="w"> </span>&gt;<span class="w"> </span>workflow.log<span class="w"> </span><span class="m">2</span>&gt;<span class="p">&amp;</span><span class="m">1</span><span class="w"> </span><span class="p">&amp;</span>
 </code></pre></div>
 <h2 id="2">2. 基本设置</h2>
 <p>脚本会进入提交目录，并加载提交模板：</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="nb">cd</span><span class="w"> </span><span class="nv">$SLURM_SUBMIT_DIR</span>
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="nb">source</span><span class="w"> </span><span class="si">${</span><span class="nv">GPUMDkit_path</span><span class="si">}</span>/Scripts/workflow/submit_template.sh
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="nv">python_pynep</span><span class="o">=</span>python
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="nb">cd</span><span class="w"> </span><span class="nv">$SLURM_SUBMIT_DIR</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="nb">source</span><span class="w"> </span><span class="si">${</span><span class="nv">GPUMDkit_path</span><span class="si">}</span>/Scripts/workflow/submit_template.sh
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="nv">python_pynep</span><span class="o">=</span>python
 </code></pre></div>
 <ul>
 <li><code>GPUMDkit_path</code> 是安装脚本写入的 GPUMDkit 路径。</li>
@@ -1543,13 +1584,13 @@
 <h2 id="3">3. 主要变量</h2>
 <p>这个工作流适合已经有初始 <code>nep.txt</code>、<code>nep.in</code>、<code>train.xyz</code> 和 GPUMD/DFT 输入文件，并希望在集群上自动扩展训练集的情况。</p>
 <p>脚本开头通常需要根据体系修改：</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="nv">work_dir</span><span class="o">=</span><span class="si">${</span><span class="nv">PWD</span><span class="si">}</span>
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="nv">prefix_name</span><span class="o">=</span>LiF_iter01
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="nv">min_dist</span><span class="o">=</span><span class="m">1</span>.4
-<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="nv">box_limit</span><span class="o">=</span><span class="m">13</span>
-<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="nv">max_fp_num</span><span class="o">=</span><span class="m">50</span>
-<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a><span class="nv">sample_method</span><span class="o">=</span>pynep
-<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="nv">pynep_sample_dist</span><span class="o">=</span><span class="m">0</span>.01
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="nv">work_dir</span><span class="o">=</span><span class="si">${</span><span class="nv">PWD</span><span class="si">}</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="nv">prefix_name</span><span class="o">=</span>LiF_iter01
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="nv">min_dist</span><span class="o">=</span><span class="m">1</span>.4
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="nv">box_limit</span><span class="o">=</span><span class="m">13</span>
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="nv">max_fp_num</span><span class="o">=</span><span class="m">50</span>
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a><span class="nv">sample_method</span><span class="o">=</span>pynep
+<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a><span class="nv">pynep_sample_dist</span><span class="o">=</span><span class="m">0</span>.01
 </code></pre></div>
 <ul>
 <li><code>prefix_name</code> 用于命名本轮计算。</li>
@@ -1572,22 +1613,22 @@
 <p>脚本会把公共输入移动到 <code>common/</code>，并创建 <code>00.modev/</code>、<code>01.select/</code> 等工作目录。</p>
 <h2 id="5">5. 文件组织</h2>
 <p>脚本会创建公共输入目录和 MD 目录：</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>mkdir<span class="w"> </span><span class="m">00</span>.modev<span class="w"> </span>common
-<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>mv<span class="w"> </span><span class="si">${</span><span class="nv">work_dir</span><span class="si">}</span>/<span class="o">{</span>nep.txt,nep.in,*.xyz,run.in,INCAR,KPOINTS,POTCAR<span class="o">}</span><span class="w"> </span>./common
-<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>cp<span class="w"> </span><span class="si">${</span><span class="nv">work_dir</span><span class="si">}</span>/common/<span class="nv">$sample_xyz_file</span><span class="w"> </span><span class="si">${</span><span class="nv">work_dir</span><span class="si">}</span>/00.modev
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>mkdir<span class="w"> </span><span class="m">00</span>.modev<span class="w"> </span>common
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>mv<span class="w"> </span><span class="si">${</span><span class="nv">work_dir</span><span class="si">}</span>/<span class="o">{</span>nep.txt,nep.in,*.xyz,run.in,INCAR,KPOINTS,POTCAR<span class="o">}</span><span class="w"> </span>./common
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>cp<span class="w"> </span><span class="si">${</span><span class="nv">work_dir</span><span class="si">}</span>/common/<span class="nv">$sample_xyz_file</span><span class="w"> </span><span class="si">${</span><span class="nv">work_dir</span><span class="si">}</span>/00.modev
 </code></pre></div>
 <ul>
 <li><code>00.modev</code>：用于运行 GPUMD MD 采样。</li>
 <li><code>common</code>：保存 <code>nep.txt</code>、<code>run.in</code>、结构文件和 DFT 输入文件等公共资源。</li>
 </ul>
 <h2 id="6-md">6. 提交 MD 任务</h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>submit_gpumd_array<span class="w"> </span>modev<span class="w"> </span><span class="si">${</span><span class="nv">sample_struct_num</span><span class="si">}</span>
-<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>sbatch<span class="w"> </span>submit.slurm
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>submit_gpumd_array<span class="w"> </span>modev<span class="w"> </span><span class="si">${</span><span class="nv">sample_struct_num</span><span class="si">}</span>
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>sbatch<span class="w"> </span>submit.slurm
 </code></pre></div>
 <p>脚本会通过提交模板创建数组任务。不同集群上的提交命令和模板可能需要自己修改。</p>
 <h2 id="7">7. 检查任务完成</h2>
 <p>脚本会持续检查 <code>00.modev/</code> 下各个 <code>sample_*/log</code> 文件，确认是否出现：</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>Finished<span class="w"> </span>running<span class="w"> </span>GPUMD.
+<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>Finished<span class="w"> </span>running<span class="w"> </span>GPUMD.
 </code></pre></div>
 <p>如果发现 <code>Error</code>，脚本会停止。</p>
 <h2 id="8">8. 分析和过滤结构</h2>
@@ -1600,10 +1641,10 @@
 <p>这些步骤会调用 analyzer 和 sample_structures 中的脚本。</p>
 <h2 id="9">9. 抽样方法</h2>
 <p>脚本根据 <code>sample_method</code> 选择抽样方式：</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="k">case</span><span class="w"> </span><span class="nv">$sample_method</span><span class="w"> </span><span class="k">in</span>
-<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a><span class="w">    </span><span class="s2">&quot;uniform&quot;</span><span class="o">)</span>
-<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a><span class="w">    </span><span class="s2">&quot;random&quot;</span><span class="o">)</span>
-<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a><span class="w">    </span><span class="s2">&quot;pynep&quot;</span><span class="o">)</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="k">case</span><span class="w"> </span><span class="nv">$sample_method</span><span class="w"> </span><span class="k">in</span>
+<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a><span class="w">    </span><span class="s2">&quot;uniform&quot;</span><span class="o">)</span>
+<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a><span class="w">    </span><span class="s2">&quot;random&quot;</span><span class="o">)</span>
+<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a><span class="w">    </span><span class="s2">&quot;pynep&quot;</span><span class="o">)</span>
 </code></pre></div>
 <ul>
 <li><code>uniform</code>：均匀抽帧；</li>
@@ -1612,7 +1653,7 @@
 </ul>
 <h2 id="10-scf">10. 提交 SCF 计算</h2>
 <p>抽样完成后，脚本会提交 VASP 单点计算：</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>submit_vasp_array<span class="w"> </span>scf<span class="w"> </span><span class="si">${</span><span class="nv">selected_struct_num</span><span class="si">}</span><span class="w"> </span><span class="si">${</span><span class="nv">prefix_name</span><span class="si">}</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>submit_vasp_array<span class="w"> </span>scf<span class="w"> </span><span class="si">${</span><span class="nv">selected_struct_num</span><span class="si">}</span><span class="w"> </span><span class="si">${</span><span class="nv">prefix_name</span><span class="si">}</span>
 </code></pre></div>
 <p>这里的 <code>prefix_name</code> 会用于计算目录命名，也方便后续追踪结构来源。</p>
 <h2 id="11-prediction">11. Prediction 步骤</h2>

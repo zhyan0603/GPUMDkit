@@ -21,13 +21,21 @@ Last-modified: 2026-05-16
 """
 
 import sys
-from ase.io import read, write
 
-# Check command line arguments
-if len(sys.argv) != 3:
+args = sys.argv[1:]
+if len(args) < 2 or args[0] in ("-h", "--help"):
     print(" Usage: gpumdkit.sh -cif2pos <input.cif> <output.vasp>")
     print("    or: python cif2pos.py <input.cif> <output.vasp>")
-    sys.exit(1)
+    print("")
+    print(" Arguments:")
+    print("   input.cif    Input CIF file")
+    print("   output.vasp  Output VASP POSCAR file")
+    print("")
+    print(" Example: gpumdkit.sh -cif2pos structure.cif POSCAR")
+    print("")
+    sys.exit(0 if args and args[0] in ("-h", "--help") else 1)
+
+from ase.io import read, write
 
 # Read input and output file paths
 cif_file = sys.argv[1]

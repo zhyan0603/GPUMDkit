@@ -586,6 +586,45 @@
     </span>
   </a>
   
+    <nav class="md-nav" aria-label="Deprecated PyNEP FPS">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#serial-pynep" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Serial PyNEP
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#parallel-pynep" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Parallel PyNEP
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#gpumdkit-entry" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        GPUMDkit Entry
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
 </li>
       
         <li class="md-nav__item">
@@ -1367,6 +1406,45 @@
     </span>
   </a>
   
+    <nav class="md-nav" aria-label="Deprecated PyNEP FPS">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#serial-pynep" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Serial PyNEP
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#parallel-pynep" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Parallel PyNEP
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#gpumdkit-entry" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        GPUMDkit Entry
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
 </li>
       
         <li class="md-nav__item">
@@ -1606,7 +1684,7 @@
 </code></pre></div>
 <p>This function requires the <code>NepTrain</code> package. If you use this function, we recommend citing the NepTrain paper printed by the script.</p>
 <h2 id="deprecated-pynep-fps">Deprecated PyNEP FPS</h2>
-<p>PyNEP FPS is kept for compatibility, but it is only exposed through the direct <code>-pynep</code> entry:</p>
+<p>PyNEP FPS is kept for compatibility, but it is only exposed through the direct <code>-pynep</code> entry.</p>
 <p>If you choose <code>202</code> from the interactive menu, it prints:</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>+-------------------------------------------------+
 <a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>| Function 202 is no longer supported here.       |
@@ -1616,21 +1694,29 @@
 <a id="__codelineno-9-6" name="__codelineno-9-6" href="#__codelineno-9-6"></a>|                 gpumdkit.sh -pynep              |
 <a id="__codelineno-9-7" name="__codelineno-9-7" href="#__codelineno-9-7"></a>+-------------------------------------------------+
 </code></pre></div>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a>gpumdkit.sh<span class="w"> </span>-pynep
+<h3 id="serial-pynep">Serial PyNEP</h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a>python<span class="w"> </span>Scripts/sample_structures/pynep_select_structs.py<span class="w"> </span>dump.xyz<span class="w"> </span>train.xyz<span class="w"> </span>nep.txt
+</code></pre></div>
+<h3 id="parallel-pynep">Parallel PyNEP</h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a>python<span class="w"> </span>Scripts/sample_structures/parallel_pynep_select_structs.py<span class="w"> </span>dump.xyz<span class="w"> </span>train.xyz<span class="w"> </span>nep.txt<span class="w"> </span><span class="m">8</span>
+</code></pre></div>
+<p>The last argument is the number of CPU threads.</p>
+<h3 id="gpumdkit-entry">GPUMDkit Entry</h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a>gpumdkit.sh<span class="w"> </span>-pynep
 </code></pre></div>
 <p>Then input:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a>dump.xyz train.xyz nep.txt 8
+<div class="highlight"><pre><span></span><code><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a>dump.xyz train.xyz nep.txt 8
 </code></pre></div>
 <p>This entry requires <code>pynep</code> and is kept for compatibility.</p>
 <h2 id="structure-perturbation">Structure Perturbation</h2>
 <p>Use perturbation when you want to generate initial structures around a known configuration.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a>python<span class="w"> </span>Scripts/sample_structures/perturb_structure.py<span class="w"> </span>POSCAR<span class="w"> </span><span class="m">20</span><span class="w"> </span><span class="m">0</span>.03<span class="w"> </span><span class="m">0</span>.2<span class="w"> </span>uniform
+<div class="highlight"><pre><span></span><code><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a>python<span class="w"> </span>Scripts/sample_structures/perturb_structure.py<span class="w"> </span>POSCAR<span class="w"> </span><span class="m">20</span><span class="w"> </span><span class="m">0</span>.03<span class="w"> </span><span class="m">0</span>.2<span class="w"> </span>uniform
 </code></pre></div>
 <p>From interactive mode, choose <code>204</code>. You will see:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a>Input &lt;input.vasp&gt; &lt;pert_num&gt; &lt;cell_pert_fraction&gt; &lt;atom_pert_distance&gt; &lt;atom_pert_style&gt;
-<a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a>The default parameters for perturb are 20 0.03 0.2 uniform
-<a id="__codelineno-13-3" name="__codelineno-13-3" href="#__codelineno-13-3"></a>Example: POSCAR 20 0.03 0.2 uniform
-<a id="__codelineno-13-4" name="__codelineno-13-4" href="#__codelineno-13-4"></a>------------&gt;&gt;
+<div class="highlight"><pre><span></span><code><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a>Input &lt;input.vasp&gt; &lt;pert_num&gt; &lt;cell_pert_fraction&gt; &lt;atom_pert_distance&gt; &lt;atom_pert_style&gt;
+<a id="__codelineno-15-2" name="__codelineno-15-2" href="#__codelineno-15-2"></a>The default parameters for perturb are 20 0.03 0.2 uniform
+<a id="__codelineno-15-3" name="__codelineno-15-3" href="#__codelineno-15-3"></a>Example: POSCAR 20 0.03 0.2 uniform
+<a id="__codelineno-15-4" name="__codelineno-15-4" href="#__codelineno-15-4"></a>------------&gt;&gt;
 </code></pre></div>
 <p>Arguments:</p>
 <table>
@@ -1667,18 +1753,18 @@
 <ul>
 <li><code>POSCAR_01.vasp</code>, <code>POSCAR_02.vasp</code>, ...</li>
 </ul>
-<p>This function requires <code>dpdata</code>.</p>
+<p>This function requires <code>dpdata</code>. If you use this function, we recommend citing the dpdata package.</p>
 <h2 id="force-deviation-selection">Force-Deviation Selection</h2>
 <p>Use this together with the GPUMD <code>active</code> command. The <code>active</code> command uses a committee model approach: multiple potentials predict forces for the same structure, and GPUMD records the maximum force deviation. <code>select_max_modev.py</code> selects structures with large force deviations from <code>active.out</code> and <code>active.xyz</code>, then writes them to <code>selected.xyz</code>.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a>python<span class="w"> </span>Scripts/sample_structures/select_max_modev.py<span class="w"> </span><span class="m">200</span><span class="w"> </span><span class="m">0</span>.15
+<div class="highlight"><pre><span></span><code><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a>python<span class="w"> </span>Scripts/sample_structures/select_max_modev.py<span class="w"> </span><span class="m">200</span><span class="w"> </span><span class="m">0</span>.15
 </code></pre></div>
 <p>From interactive mode, choose <code>205</code>. You will see:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a>+----------------------------------------------------+
-<a id="__codelineno-15-2" name="__codelineno-15-2" href="#__codelineno-15-2"></a>| Select max force deviation structs from active.xyz |
-<a id="__codelineno-15-3" name="__codelineno-15-3" href="#__codelineno-15-3"></a>|     generated by the active command in gpumd.      |
-<a id="__codelineno-15-4" name="__codelineno-15-4" href="#__codelineno-15-4"></a>+----------------------------------------------------+
-<a id="__codelineno-15-5" name="__codelineno-15-5" href="#__codelineno-15-5"></a>Input &lt;structs_num&gt; &lt;threshold&gt; (eg. 200 0.15)
-<a id="__codelineno-15-6" name="__codelineno-15-6" href="#__codelineno-15-6"></a>------------&gt;&gt;
+<div class="highlight"><pre><span></span><code><a id="__codelineno-17-1" name="__codelineno-17-1" href="#__codelineno-17-1"></a>+----------------------------------------------------+
+<a id="__codelineno-17-2" name="__codelineno-17-2" href="#__codelineno-17-2"></a>| Select max force deviation structs from active.xyz |
+<a id="__codelineno-17-3" name="__codelineno-17-3" href="#__codelineno-17-3"></a>|     generated by the active command in gpumd.      |
+<a id="__codelineno-17-4" name="__codelineno-17-4" href="#__codelineno-17-4"></a>+----------------------------------------------------+
+<a id="__codelineno-17-5" name="__codelineno-17-5" href="#__codelineno-17-5"></a>Input &lt;structs_num&gt; &lt;threshold&gt; (eg. 200 0.15)
+<a id="__codelineno-17-6" name="__codelineno-17-6" href="#__codelineno-17-6"></a>------------&gt;&gt;
 </code></pre></div>
 <p>Arguments:</p>
 <table>
@@ -1710,14 +1796,14 @@
 </ul>
 <h2 id="frame-range-extraction">Frame Range Extraction</h2>
 <p>Use this to extract a fraction of a trajectory:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a>python<span class="w"> </span>Scripts/sample_structures/frame_range.py<span class="w"> </span>dump.xyz<span class="w"> </span><span class="m">0</span><span class="w"> </span><span class="m">0</span>.8
+<div class="highlight"><pre><span></span><code><a id="__codelineno-18-1" name="__codelineno-18-1" href="#__codelineno-18-1"></a>python<span class="w"> </span>Scripts/sample_structures/frame_range.py<span class="w"> </span>dump.xyz<span class="w"> </span><span class="m">0</span><span class="w"> </span><span class="m">0</span>.8
 </code></pre></div>
 <p>This writes frames from 0% to 80% of the trajectory.</p>
 <h2 id="example-commands">Example Commands</h2>
 <p>An example sequence using several sampling-related tools:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-17-1" name="__codelineno-17-1" href="#__codelineno-17-1"></a>gpumdkit.sh<span class="w"> </span>-min_dist_pbc<span class="w"> </span>dump.xyz
-<a id="__codelineno-17-2" name="__codelineno-17-2" href="#__codelineno-17-2"></a>gpumdkit.sh<span class="w"> </span>-filter_box<span class="w"> </span>dump.xyz<span class="w"> </span><span class="m">13</span>
-<a id="__codelineno-17-3" name="__codelineno-17-3" href="#__codelineno-17-3"></a>python<span class="w"> </span>Scripts/sample_structures/neptrain_select_structs.py<span class="w"> </span>dump.xyz<span class="w"> </span>train.xyz<span class="w"> </span>nep.txt
+<div class="highlight"><pre><span></span><code><a id="__codelineno-19-1" name="__codelineno-19-1" href="#__codelineno-19-1"></a>gpumdkit.sh<span class="w"> </span>-min_dist_pbc<span class="w"> </span>dump.xyz
+<a id="__codelineno-19-2" name="__codelineno-19-2" href="#__codelineno-19-2"></a>gpumdkit.sh<span class="w"> </span>-filter_box<span class="w"> </span>dump.xyz<span class="w"> </span><span class="m">13</span>
+<a id="__codelineno-19-3" name="__codelineno-19-3" href="#__codelineno-19-3"></a>python<span class="w"> </span>Scripts/sample_structures/neptrain_select_structs.py<span class="w"> </span>dump.xyz<span class="w"> </span>train.xyz<span class="w"> </span>nep.txt
 </code></pre></div>
 <h2 id="common-mistakes">Common Mistakes</h2>
 <table>

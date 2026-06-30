@@ -470,11 +470,6 @@ if [ ! -z "$1" ]; then
         -pda)
             run_python_script "Zihan YAN (yanzihan@westlake.edu.cn)" "${analyzer_path}/probability_density_analysis.py" "${@:2}" ;;
 
-        -hbond)
-            echo " Calling script by Zherui CHEN "
-            python ${GPUMD_path}/tools/Analysis_and_Processing/hydrogen_bond_analysis/Hydrogen-bond-analysis.py ${@:2}
-            echo " Code path: ${GPUMD_path}/tools/Analysis_and_Processing/hydrogen_bond_analysis/Hydrogen-bond-analysis.py" ;;
-
         *)
             # echo " Unknown option: $1 "; help_info_table; exit 1 ;;
             alias_key="${1#-}"

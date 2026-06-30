@@ -21,16 +21,26 @@ Last-modified: 2026-05-16
 """
 
 import os, sys
+
+args = sys.argv[1:]
+if len(args) < 1 or args[0] in ("-h", "--help"):
+    print(" Usage: gpumdkit.sh -out2exyz <directory>")
+    print("    or: python out2exyz.py <directory>")
+    print("")
+    print(" Arguments:")
+    print("   directory   Root directory to search for OUTCAR files")
+    print("")
+    print(" Output:")
+    print("   train.xyz   Converted structures in extxyz format")
+    print("")
+    print(" Example: gpumdkit.sh -out2exyz .")
+    print("")
+    sys.exit(0 if args and args[0] in ("-h", "--help") else 1)
+
 import numpy as np
 from ase.io import read, write
 from ase import Atoms, Atom
 from tqdm import tqdm
-
-# Check arguments
-if len(sys.argv) < 2:
-    print(" Usage: gpumdkit.sh -out2exyz <directory>")
-    print("    or: python out2exyz.py <directory>")
-    sys.exit(1)
 
 def Convert_atoms(atom):
     xx,yy,zz,yz,xz,xy = -atom.calc.results['stress']*atom.get_volume() 

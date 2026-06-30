@@ -143,7 +143,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#overview" class="md-skip">
+        <a href="#what-it-does" class="md-skip">
           Skip to content
         </a>
       
@@ -517,10 +517,32 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#overview" class="md-nav__link">
+  <a href="#what-it-does" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Overview
+        What it does
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#before-you-start" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Before you start
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#supported-formats" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Supported formats
       
     </span>
   </a>
@@ -688,6 +710,39 @@
     <span class="md-ellipsis">
       
         Extract one frame
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#split-multi-frame-extxyz" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Split multi-frame extxyz
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#mtp-conversion" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        MTP conversion
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#abacus-conversion" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        ABACUS conversion
       
     </span>
   </a>
@@ -1432,10 +1487,32 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#overview" class="md-nav__link">
+  <a href="#what-it-does" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Overview
+        What it does
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#before-you-start" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Before you start
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#supported-formats" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Supported formats
       
     </span>
   </a>
@@ -1609,6 +1686,39 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#split-multi-frame-extxyz" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Split multi-frame extxyz
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#mtp-conversion" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        MTP conversion
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#abacus-conversion" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        ABACUS conversion
+      
+    </span>
+  </a>
+  
+</li>
+        
       </ul>
     </nav>
   
@@ -1661,8 +1771,12 @@
   <p style="text-align: justify;">GPUMDkit contains utilities for converting common atomistic simulation formats, with extra handling for metadata such as group labels, weights, and frame extraction.</p>
 </div>
 
-<p><strong>Script Location:</strong> <code>Scripts/format_conversion/</code></p>
-<h2 id="overview">Overview</h2>
+<h2 id="what-it-does">What it does</h2>
+<p>This module converts structure and trajectory files between common formats used in computational materials science. It supports VASP, LAMMPS, CP2K, ABACUS, CIF, ASE trajectories, and extxyz. It also provides tools for adding group labels, weights, extracting frames, and replicating structures.</p>
+<h2 id="before-you-start">Before you start</h2>
+<p><strong>Script location:</strong> <code>Scripts/format_conversion/</code></p>
+<p>Make sure GPUMDkit is installed. See <a href="quick_start.html">Quick Start</a> for installation instructions.</p>
+<h2 id="supported-formats">Supported formats</h2>
 <p>The format conversion module covers:</p>
 <ul>
 <li><strong>VASP</strong>: <code>POSCAR</code>, <code>CONTCAR</code>, <code>OUTCAR</code>, <code>XDATCAR</code></li>
@@ -1870,13 +1984,14 @@
 </table>
 <h2 id="common-examples">Common Examples</h2>
 <h3 id="convert-vasp-calculations-to-extxyz">Convert VASP calculations to extxyz</h3>
-<p>If each calculation directory contains an <code>OUTCAR</code>, run:</p>
+<p><strong>What it does:</strong> Searches a directory for VASP OUTCAR files and converts them into a single extxyz file for NEP training or analysis.</p>
+<p><strong>CLI mode:</strong></p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>gpumdkit.sh<span class="w"> </span>-out2xyz<span class="w"> </span>./vasp_results/
 </code></pre></div>
-<p>The shell version searches the target directory and converts VASP results into an extxyz file suitable for later analysis. If you prefer the Python implementation:</p>
+<p>The shell version searches the target directory and converts VASP results into an extxyz file. If you prefer the Python implementation:</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>gpumdkit.sh<span class="w"> </span>-out2exyz<span class="w"> </span>./vasp_results/
 </code></pre></div>
-<p>From interactive mode, choose <code>101</code>. You will see:</p>
+<p><strong>Interactive mode:</strong> Choose <code>101</code> from the format conversion menu. You will see:</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>&gt;-------------------------------------------------&lt;
 <a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>| Calling the script in Scripts/format_conversion |
 <a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>| Script: out2xyz.sh                              |
@@ -1886,12 +2001,14 @@
 <a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a>Example: ./
 <a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a>------------&gt;&gt;
 </code></pre></div>
+<p><strong>Output:</strong> An extxyz file containing the converted structures, suitable for NEP training or further analysis.</p>
 <h3 id="add-group-labels">Add group labels</h3>
-<p>Some GPUMD-related workflows use group labels for atom grouping, for example in species-specific MSD or diffusion calculations.</p>
+<p><strong>What it does:</strong> Adds atom group labels to a structure file. Group labels are required by some GPUMD-related workflows, such as species-specific MSD or diffusion calculations.</p>
+<p><strong>CLI mode:</strong></p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>gpumdkit.sh<span class="w"> </span>-addgroup<span class="w"> </span>POSCAR<span class="w"> </span>Li<span class="w"> </span>Y<span class="w"> </span>Cl
 </code></pre></div>
 <p>This command reads the input structure and writes an extxyz file with group information.</p>
-<p>From interactive mode, choose <code>106</code>. You will see:</p>
+<p><strong>Interactive mode:</strong> Choose <code>106</code> from the format conversion menu. You will see:</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>&gt;-------------------------------------------------&lt;
 <a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>| Calling the script in Scripts/format_conversion |
 <a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>| Script: add_groups.py                           |
@@ -1901,6 +2018,7 @@
 <a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a>Example: POSCAR Li Y Cl
 <a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a>------------&gt;&gt;
 </code></pre></div>
+<p><strong>Output:</strong> An extxyz file with group labels added.</p>
 <h2 id="script-details">Script Details</h2>
 <h3 id="poscar-to-extxyz">POSCAR to extxyz</h3>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>gpumdkit.sh<span class="w"> </span>-pos2exyz<span class="w"> </span>POSCAR<span class="w"> </span>model.xyz
@@ -1947,6 +2065,29 @@
 <div class="highlight"><pre><span></span><code><a id="__codelineno-17-1" name="__codelineno-17-1" href="#__codelineno-17-1"></a>gpumdkit.sh<span class="w"> </span>-get_frame<span class="w"> </span>dump.xyz<span class="w"> </span><span class="m">1000</span>
 </code></pre></div>
 <p>This extracts frame index <code>1000</code> from an extxyz trajectory.</p>
+<h3 id="split-multi-frame-extxyz">Split multi-frame extxyz</h3>
+<p><code>split_single_xyz.py</code> splits an extxyz file into individual frames, each written to a separate file.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-18-1" name="__codelineno-18-1" href="#__codelineno-18-1"></a>python<span class="w"> </span>Scripts/format_conversion/split_single_xyz.py<span class="w"> </span>dump.xyz
+</code></pre></div>
+<p>This creates <code>model_0.xyz</code>, <code>model_1.xyz</code>, ... for each frame in the trajectory.</p>
+<h3 id="mtp-conversion">MTP conversion</h3>
+<p>Convert MTP <code>.cfg</code> format to extxyz:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-19-1" name="__codelineno-19-1" href="#__codelineno-19-1"></a>gpumdkit.sh<span class="w">    </span><span class="c1"># Select: 1) Format Conversion → 102</span>
+</code></pre></div>
+<p>Interactive prompt:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-20-1" name="__codelineno-20-1" href="#__codelineno-20-1"></a>Input &lt;filename.cfg&gt; &lt;Symbol1 Symbol2 Symbol3 ...&gt;
+<a id="__codelineno-20-2" name="__codelineno-20-2" href="#__codelineno-20-2"></a>Example: train.cfg Pd Ag
+<a id="__codelineno-20-3" name="__codelineno-20-3" href="#__codelineno-20-3"></a>------------&gt;&gt;
+</code></pre></div>
+<h3 id="abacus-conversion">ABACUS conversion</h3>
+<p>Convert ABACUS output to extxyz:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-21-1" name="__codelineno-21-1" href="#__codelineno-21-1"></a>gpumdkit.sh<span class="w">    </span><span class="c1"># Select: 1) Format Conversion → 104</span>
+</code></pre></div>
+<p>The menu offers two options:</p>
+<ol>
+<li>SCF output (<code>running_scf.log</code>)</li>
+<li>MD output (<code>running_md.log</code>)</li>
+</ol>
 <h2 id="common-mistakes">Common Mistakes</h2>
 <table>
 <thead>

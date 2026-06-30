@@ -3,9 +3,17 @@
   <p style="text-align: justify;">GPUMDkit contains utilities for converting common atomistic simulation formats, with extra handling for metadata such as group labels, weights, and frame extraction.</p>
 </div>
 
-**Script Location:** `Scripts/format_conversion/`
+## What it does
 
-## Overview
+This module converts structure and trajectory files between common formats used in computational materials science. It supports VASP, LAMMPS, CP2K, ABACUS, CIF, ASE trajectories, and extxyz. It also provides tools for adding group labels, weights, extracting frames, and replicating structures.
+
+## Before you start
+
+**Script location:** `Scripts/format_conversion/`
+
+Make sure GPUMDkit is installed. See [Quick Start](quick_start.md) for installation instructions.
+
+## Supported formats
 
 The format conversion module covers:
 
@@ -96,19 +104,21 @@ Input the function number or converter keyword:
 
 ### Convert VASP calculations to extxyz
 
-If each calculation directory contains an `OUTCAR`, run:
+**What it does:** Searches a directory for VASP OUTCAR files and converts them into a single extxyz file for NEP training or analysis.
+
+**CLI mode:**
 
 ```bash
 gpumdkit.sh -out2xyz ./vasp_results/
 ```
 
-The shell version searches the target directory and converts VASP results into an extxyz file suitable for later analysis. If you prefer the Python implementation:
+The shell version searches the target directory and converts VASP results into an extxyz file. If you prefer the Python implementation:
 
 ```bash
 gpumdkit.sh -out2exyz ./vasp_results/
 ```
 
-From interactive mode, choose `101`. You will see:
+**Interactive mode:** Choose `101` from the format conversion menu. You will see:
 
 ```text
 >-------------------------------------------------<
@@ -121,9 +131,13 @@ Example: ./
 ------------>>
 ```
 
+**Output:** An extxyz file containing the converted structures, suitable for NEP training or further analysis.
+
 ### Add group labels
 
-Some GPUMD-related workflows use group labels for atom grouping, for example in species-specific MSD or diffusion calculations.
+**What it does:** Adds atom group labels to a structure file. Group labels are required by some GPUMD-related workflows, such as species-specific MSD or diffusion calculations.
+
+**CLI mode:**
 
 ```bash
 gpumdkit.sh -addgroup POSCAR Li Y Cl
@@ -131,7 +145,7 @@ gpumdkit.sh -addgroup POSCAR Li Y Cl
 
 This command reads the input structure and writes an extxyz file with group information.
 
-From interactive mode, choose `106`. You will see:
+**Interactive mode:** Choose `106` from the format conversion menu. You will see:
 
 ```text
 >-------------------------------------------------<
@@ -143,6 +157,8 @@ Input <POSCAR> <element1> <element2> ...
 Example: POSCAR Li Y Cl
 ------------>>
 ```
+
+**Output:** An extxyz file with group labels added.
 
 ## Script Details
 

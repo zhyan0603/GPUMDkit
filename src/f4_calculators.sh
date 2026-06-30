@@ -178,7 +178,7 @@ echo " ---------------------------------------------------"
 function f411_minimize_structure_by_nep(){
 echo " >-------------------------------------------------<"
 echo " | This function calls the script in calculators   |"
-echo " | Script: minimize_structure_by_nep.py            |"
+echo " | Script: calc_minimize.py                         |"
 echo " | Developer: Zihan YAN (yanzihan@westlake.edu.cn) |"
 echo " >-------------------------------------------------<"
 echo " Input <structure_file> <nep.txt> [fmax=0.01] [max_steps=1000]"

@@ -1,18 +1,22 @@
 <div align="center">
   <h1>🚀 Quick Start</h1>
-  <p style="text-align: justify;">This page introduces the basic installation and several common commands. GPUMDkit can be used through the interactive menu or by direct command-line options.</p>
+  <p style="text-align: justify;">This page helps you install GPUMDkit and run your first commands. You can use GPUMDkit through an interactive menu or direct command-line options.</p>
 </div>
 
-## 1. Prepare a Python Environment
+## What it does
 
-You can use a clean conda environment:
+GPUMDkit provides a single entry point for common tasks in computational materials science — format conversion, structure analysis, property calculation, and visualization — without writing custom scripts.
+
+## Before you start
+
+### 1. Prepare a Python environment
 
 ```bash
 conda create -n gpumdkit python=3.12
 conda activate gpumdkit
 ```
 
-Some optional functions use additional packages:
+Some optional functions require additional packages:
 
 ```bash
 pip install neptrain dpdata calorine
@@ -20,18 +24,13 @@ pip install neptrain dpdata calorine
 
 Other Python dependencies are loaded by the corresponding scripts. If a package is missing, Python will report it when that function is used.
 
-## 2. Install GPUMDkit
+### 2. Install GPUMDkit
 
-Clone the repository:
+Clone the repository and run the installer:
 
 ```bash
 git clone https://github.com/zhyan0603/GPUMDkit.git
 cd GPUMDkit
-```
-
-Run the installer:
-
-```bash
 source ./install.sh
 ```
 
@@ -70,58 +69,21 @@ New path:
 Replace the existing GPUMDkit configuration with the new path? [y/N]:
 ```
 
-Check the command:
+### 3. Verify the installation
 
 ```bash
 gpumdkit.sh -h
 ```
 
-The help table:
+This prints a help table listing all available options.
 
-```text
-+-------------------------------------------------------------------------------------------------------+
-|                          GPUMDkit 1.5.6 (dev) (2026-06-17) Command Help                               |
-+-------------------------------------------------------------------------------------------------------+
-|                                          MAIN FUNCTIONS                                               |
-+-------------------------------------------------------------------------------------------------------+
-| -h            Show this help table            | -plt <type>        Plot and visualization tools       |
-| -calc <type>  Calculator tools                | -time <gpumd|nep>  Time-consuming analyzer            |
-| -update       Update GPUMDkit                 | -clean             Clean extra files in current dir   |
-+-------------------------------------------------------------------------------------------------------+
-|                                         FORMAT CONVERSION                                             |
-+-------------------------------------------------------------------------------------------------------+
-| -out2xyz      OUTCAR -> extxyz (shell)        | -out2exyz          OUTCAR -> extxyz (python)          |
-| -cp2k2xyz     CP2K log -> xyz                 | -xdat2exyz         XDATCAR -> extxyz                  |
-| -cif2pos      cif -> POSCAR                   | -cif2exyz          cif -> extxyz                      |
-| -pos2exyz     POSCAR -> extxyz                | -exyz2pos          extxyz -> POSCAR                   |
-| -pos2lmp      POSCAR -> LAMMPS data           | -lmp2exyz          LAMMPS dump -> extxyz              |
-| -traj2exyz    ASE traj -> extxyz              | -replicate         Replicate structure                |
-| -addgroup     Add group labels                | -addweight         Add structure weight in extxyz     |
-| -clean_xyz    Clean extra info in extxyz      | -get_frame         Extract specific frame             |
-| -frame_range  Extract frames by range         |                                                       |
-+-------------------------------------------------------------------------------------------------------+
-|                                            ANALYSIS                                                   |
-+-------------------------------------------------------------------------------------------------------+
-| -range        Energy/force/virial statistics  | -analyze_comp      Analyze composition                |
-| -chem_species Analyze chemical species        | -cbc               Charge balance check               |
-| -min_dist     Min distance (no PBC)           | -min_dist_pbc      Min distance with PBC              |
-| -filter_dist  Filter by min_dist (no PBC)     | -filter_dist_pbc   Filter by min_dist (PBC)           |
-| -pda          Probability density analysis    | -filter_box        Filter by box-edge length          |
-| -pynep        Deprecated PyNEP sampling       | -nep_modifier      Modify NEP model interactively     |
-+-------------------------------------------------------------------------------------------------------+
-| Detailed usage: gpumdkit.sh -<option> -h    Plot details: gpumdkit.sh -plt <type> -h                  |
-+-------------------------------------------------------------------------------------------------------+
-```
-
-## 3. Usage Modes
-
-### Interactive Mode
+## Interactive mode
 
 ```bash
 gpumdkit.sh
 ```
 
-Main menu:
+This opens the main menu:
 
 ```text
            ____ ____  _   _ __  __ ____  _    _ _
@@ -144,41 +106,43 @@ Main menu:
  Input the function number:
 ```
 
-### Command-Line Mode
+Select a module by number. Each module provides sub-menus with specific functions.
+
+## CLI mode
 
 Direct commands use fixed positional arguments:
 
 ```bash
+gpumdkit.sh -<option> [args...]
+```
+
+Examples:
+
+```bash
 gpumdkit.sh -pos2exyz POSCAR model.xyz
 gpumdkit.sh -plt train
-gpumdkit.sh -plt thermo
+gpumdkit.sh -calc msd trajectory.xyz Li 10
 ```
 
-For example:
+The first example reads `POSCAR` and writes `model.xyz`.
+
+## Common examples
+
+### Convert a POSCAR to extxyz
 
 ```bash
 gpumdkit.sh -pos2exyz POSCAR model.xyz
 ```
 
-means reading `POSCAR` and writing `model.xyz`.
-
-## 4. Practical Examples
-
-### Convert POSCAR to extxyz
-
-```bash
-gpumdkit.sh -pos2exyz POSCAR model.xyz
-```
-
-### Add GPUMD Group Labels
+### Add GPUMD group labels
 
 ```bash
 gpumdkit.sh -addgroup POSCAR Li Y Cl
 ```
 
-Group labels are used by some GPUMD-related workflows and analyses that need atom grouping, such as species-specific MSD or diffusion calculations.
+Group labels are used by some GPUMD-related workflows that need atom grouping, such as species-specific MSD or diffusion calculations.
 
-### Plot NEP Training Results
+### Plot NEP training results
 
 ```bash
 gpumdkit.sh -plt train
@@ -188,7 +152,7 @@ gpumdkit.sh -plt train
   <img src="../../Gallery/train.png" alt="NEP training results" width="72%" />
 </div>
 
-### Plot NEP Test Results
+### Plot NEP test results
 
 ```bash
 gpumdkit.sh -plt test
@@ -198,7 +162,7 @@ gpumdkit.sh -plt test
   <img src="../../Gallery/prediction.png" alt="NEP test results" width="72%" />
 </div>
 
-### Plot Thermodynamic Data
+### Plot thermodynamic data
 
 ```bash
 gpumdkit.sh -plt thermo
@@ -208,7 +172,7 @@ gpumdkit.sh -plt thermo
   <img src="../../Gallery/thermo.png" alt="Thermo plot" width="72%" />
 </div>
 
-### Plot MSD and Self-Diffusion Coefficient
+### Plot MSD and self-diffusion coefficient
 
 ```bash
 gpumdkit.sh -plt msd
@@ -220,12 +184,8 @@ gpumdkit.sh -plt sdc
   <img src="../../Gallery/sdc.png" alt="SDC plot" width="45%" />
 </div>
 
-## 5. Help
+## Notes
 
-```bash
-gpumdkit.sh -h
-gpumdkit.sh -plt -h
-gpumdkit.sh -calc -h
-gpumdkit.sh -plt train -h
-gpumdkit.sh -calc msd -h
-```
+- Use `gpumdkit.sh -h` to see all available options.
+- Use `gpumdkit.sh -<option> -h` to get help for a specific option (e.g., `gpumdkit.sh -plt train -h`).
+- For detailed usage of each module, see the corresponding tutorial pages linked in the [index](index.md).

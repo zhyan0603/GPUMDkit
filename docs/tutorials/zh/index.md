@@ -3,18 +3,25 @@
   <p style="text-align: justify;">欢迎使用 <strong>GPUMDkit</strong>，这是一个面向 GPUMD 和 NEP 的命令行工具包。</p>
 </div>
 
-## 什么是 GPUMDkit？
+## 功能简介
 
-GPUMDkit 简化了计算材料科学中的常见任务：
+GPUMDkit 帮助你在计算材料科学研究中完成常见任务，无需编写自定义脚本。它支持格式转换、结构分析、性质计算、可视化和批量工作流——全部通过一个命令行工具完成。
 
-- **格式转换**：在 VASP、LAMMPS、CP2K、ABACUS、CIF 和 extxyz 格式之间转换
-- **可视化**：用于 NEP 训练、MD 模拟和分析的绘图工具
-- **计算器**：计算离子电导率、描述符、MSD、NEB 等
-- **分析工具**：结构验证、过滤、成分分析
-- **工作流**：DFT 和 MD 模拟的批处理
-- **结构采样**：使用均匀、随机或 FPS 方法选择结构
+## 常见任务
 
-## 快速开始
+| 我想要... | 教程 |
+|-----------|------|
+| 安装 GPUMDkit 并运行第一个命令 | [快速入门](快速入门.md) |
+| 将 VASP、LAMMPS、CP2K 或 CIF 文件转换为 extxyz | [格式转换](格式转换.md) |
+| 检查结构距离、过滤数据集或查找异常值 | [分析工具](分析工具.md) |
+| 计算 MSD、离子电导率或描述符 | [计算器脚本](计算器脚本.md) |
+| 分析极性材料、铁电体或 ABO3 体系 | [极性材料分析](极性材料分析.md) |
+| 绘制 NEP 训练结果或热力学数据 | [绘图脚本](绘图脚本.md) |
+| 运行批量 DFT 或 MD 模拟 | [工作流脚本](工作流脚本.md) |
+| 从数据集中选择代表性结构 | [结构采样](结构采样.md) |
+| 添加自己的 GPUMDkit 快捷命令 | [自定义命令](自定义命令.md) |
+
+## 准备工作
 
 ### 安装
 
@@ -32,20 +39,43 @@ conda activate gpumdkit
 pip install neptrain dpdata calorine
 ```
 
-### 使用方法
+## 交互模式
 
 ```bash
-# 交互模式
 gpumdkit.sh
-
-# 命令行模式
-gpumdkit.sh -<选项> [参数...]
-
-# 获取帮助
-gpumdkit.sh -h
 ```
 
-## 教程列表
+打开菜单后，按数字选择模块。
+
+## 命令行模式
+
+```bash
+gpumdkit.sh -<选项> [参数...]
+```
+
+例如：
+
+```bash
+gpumdkit.sh -pos2exyz POSCAR model.xyz
+gpumdkit.sh -plt train
+gpumdkit.sh -calc msd trajectory.xyz Li 10
+```
+
+使用 `gpumdkit.sh -h` 查看所有可用选项。
+
+## 模块概览
+
+| 模块 | 菜单 | CLI | 描述 |
+|------|------|-----|------|
+| 格式转换 | 1 | `-out2xyz`, `-pos2exyz` | 文件转换 |
+| 结构采样 | 2 | `-neptrain`、交互菜单 | 结构采样 |
+| 工作流 | 3 | - | 批处理 |
+| 计算器 | 4 | `-calc <类型>` | 属性计算 |
+| 分析工具 | 5 | `-range`, `-min_dist` | 结构分析 |
+| 可视化 | 6 | `-plt <类型>` | 绘图工具 |
+| 实用工具 | 7 | `-time`, `-clean` | 实用功能 |
+
+## 全部教程
 
 | 教程 | 描述 |
 |------|------|
@@ -61,39 +91,6 @@ gpumdkit.sh -h
 | [主动学习工作流](主动学习工作流.md) | 批量主动学习流程说明 |
 | [极性材料分析](极性材料分析.md) | 铁电和极化相关工具 |
 | [贡献指南](贡献指南.md) | 开发和贡献说明 |
-
-## 示例：转换 VASP OUTCAR
-
-```bash
-gpumdkit.sh -out2xyz ./vasp_results/
-```
-
-## 示例：绘制 NEP 结果
-
-```bash
-gpumdkit.sh -plt train
-gpumdkit.sh -plt prediction
-```
-
-## 示例：离子电导率
-
-```bash
-gpumdkit.sh -calc msd trajectory.xyz Li 10
-gpumdkit.sh -calc ionic-cond Li 1
-gpumdkit.sh -plt msd
-```
-
-## 模块概览
-
-| 模块 | 菜单 | CLI | 描述 |
-|------|------|-----|------|
-| 格式转换 | 1 | `-out2xyz`, `-pos2exyz` | 文件转换 |
-| 结构采样 | 2 | `-neptrain`、交互菜单 | 结构采样 |
-| 工作流 | 3 | - | 批处理 |
-| 计算器 | 4 | `-calc <类型>` | 属性计算 |
-| 分析工具 | 5 | `-range`, `-min_dist` | 结构分析 |
-| 可视化 | 6 | `-plt <类型>` | 绘图工具 |
-| 实用工具 | 7 | `-time`, `-clean` | 实用功能 |
 
 ## 链接
 

@@ -21,13 +21,24 @@ Last-modified: 2026-05-16
 """
 
 import sys
-from ase.io import read, write
 
-# Check arguments
-if len(sys.argv) < 3:
+args = sys.argv[1:]
+if len(args) < 2 or args[0] in ("-h", "--help"):
     print(" Usage: gpumdkit.sh -get_frame <input.xyz> <frame_number>")
     print("    or: python get_frame.py <input.xyz> <frame_number>")
-    sys.exit(1)
+    print("")
+    print(" Arguments:")
+    print("   input.xyz      Input extxyz trajectory file")
+    print("   frame_number   Frame number to extract (1-indexed)")
+    print("")
+    print(" Output:")
+    print("   frame_<N>.xyz  Extracted single frame")
+    print("")
+    print(" Example: gpumdkit.sh -get_frame train.xyz 10")
+    print("")
+    sys.exit(0 if args and args[0] in ("-h", "--help") else 1)
+
+from ase.io import read, write
 
 def get_frame():
     input_file = sys.argv[1]

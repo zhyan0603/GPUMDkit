@@ -9,11 +9,14 @@ Script:     replicate.py
 Category:   Format Conversion Scripts
 Purpose:    Replicate a unit cell to generate a supercell with a target
             number of atoms, finding the nearest compatible supercell size.
-Usage:      python replicate.py input.vasp output.vasp a b c
+Usage:      gpumdkit.sh -replicate input.vasp output.vasp a b c
+            gpumdkit.sh -replicate input.vasp output.vasp target_num
+            python replicate.py input.vasp output.vasp a b c
             python replicate.py input.vasp output.vasp target_num
 Arguments:
   input.vasp       Input structure file
   output.vasp      Output supercell file
+  a b c            Replication factors along x, y, z axes
   target_n_atoms   Target number of atoms in the supercell
 Output:
   <output.vasp>  (replicated supercell structure)
@@ -25,6 +28,25 @@ Last-modified: 2026-05-16
 import sys
 import os
 import math
+
+args = sys.argv[1:]
+if len(args) not in (3, 5) or args[0] in ("-h", "--help"):
+    print(" Usage 1: gpumdkit.sh -replicate input.vasp output.vasp a b c")
+    print(" Usage 2: gpumdkit.sh -replicate input.vasp output.vasp target_num")
+    print("    or: python replicate.py input.vasp output.vasp a b c")
+    print("    or: python replicate.py input.vasp output.vasp target_num")
+    print("")
+    print(" Arguments:")
+    print("   input.vasp    Input structure file (any ASE-supported format)")
+    print("   output.vasp   Output supercell file")
+    print("   a b c         Replication factors along x, y, z axes")
+    print("   target_num    Target number of atoms (auto-finds best a,b,c)")
+    print("")
+    print(" Example: gpumdkit.sh -replicate POSCAR supercell.vasp 2 2 2")
+    print("          gpumdkit.sh -replicate POSCAR supercell.vasp 256")
+    print("")
+    sys.exit(0 if args and args[0] in ("-h", "--help") else 1)
+
 import numpy as np
 from ase.io import read, write
 from ase.build import make_supercell
@@ -105,22 +127,16 @@ def reorder_atoms_by_input_species_order(atoms, original_atoms):
     return reordered_atoms
 
 def main():
-    if len(sys.argv) < 4:
-        print(" Usage 1: gpumdkit.sh -replicate input.vasp output.vasp a b c")
-        print(" Usage 2: gpumdkit.sh -replicate input.vasp output.vasp target_num")
-        print("    or: python replicate.py input.vasp output.vasp a b c")
-        print("    or: python replicate.py input.vasp output.vasp target_num")
-        sys.exit(1)
-
     infile = sys.argv[1]
     outfile = sys.argv[2]
-    args = sys.argv[3:]
+    args_inner = sys.argv[3:]
 
-    # Infer input/output format
+    # Infer input/output format from file extension
+    # When there is no extension (e.g. POSCAR), let ASE auto-detect
     in_ext = os.path.splitext(infile)[1][1:].lower()
     out_ext = os.path.splitext(outfile)[1][1:].lower()
-    in_format = "extxyz" if in_ext == "xyz" else in_ext or "extxyz"
-    out_format = "extxyz" if out_ext == "xyz" else out_ext or "extxyz"
+    in_format = "extxyz" if in_ext == "xyz" else (in_ext if in_ext else None)
+    out_format = "extxyz" if out_ext == "xyz" else (out_ext if out_ext else "vasp")
     
     try:
         atoms = read(infile, format=in_format)
@@ -129,19 +145,19 @@ def main():
         sys.exit(1)
     
     n_atoms = len(atoms)
-    
-    if len(args) == 1:  # Target atom number
+
+    if len(args_inner) == 1:  # Target atom number
         try:
-            target_num = int(args[0])
+            target_num = int(args_inner[0])
         except ValueError:
             print(" Error: num must be an integer")
             sys.exit(1)
         a, b, c = find_nearest_supercell(atoms, target_num)
         total_atoms = n_atoms * a * b * c
         print(f"Original atoms: {n_atoms}, Target: {target_num}, Selected: {a}x{b}x{c} (total {total_atoms} atoms)")
-    elif len(args) == 3:  # a b c
+    elif len(args_inner) == 3:  # a b c
         try:
-            a, b, c = map(int, args)
+            a, b, c = map(int, args_inner)
         except ValueError:
             print(" Error: a, b, c must be integers")
             sys.exit(1)

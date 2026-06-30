@@ -1502,7 +1502,19 @@
 <p>Choose:</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>3) Workflow
 </code></pre></div>
-<p>Typical workflow menu:</p>
+<p>The workflow menu looks like:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>+---------------------------------------------------------+
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>|                      WORKFLOW TOOLS                     |
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>+---------------------------------------------------------+
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>| 301) SCF batch pretreatment                             |
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>| 302) MD sample batch pretreatment (gpumd)               |
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>| 303) MD sample batch pretreatment (lmp)                 |
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a>+---------------------------------------------------------+
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>| 000) Return to the main menu                            |
+<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a>+---------------------------------------------------------+
+<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a>Input the function number:
+</code></pre></div>
+<p>Available entries:</p>
 <table>
 <thead>
 <tr>
@@ -1515,17 +1527,17 @@
 <tr>
 <td>301</td>
 <td>SCF batch pretreatment</td>
-<td>prepare single-point DFT calculations</td>
+<td>Prepare single-point DFT calculations</td>
 </tr>
 <tr>
 <td>302</td>
 <td>MD sample batch pretreatment (GPUMD)</td>
-<td>prepare GPUMD sampling calculations</td>
+<td>Prepare GPUMD sampling calculations</td>
 </tr>
 <tr>
 <td>303</td>
 <td>MD sample batch pretreatment (LAMMPS)</td>
-<td>prepare LAMMPS sampling calculations</td>
+<td>Prepare LAMMPS sampling calculations</td>
 </tr>
 </tbody>
 </table>
@@ -1533,8 +1545,8 @@
 <p>Use this when you have many structures and want to prepare single-point DFT calculations.</p>
 <h3 id="vasp">VASP</h3>
 <p>Interactive mode:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>gpumdkit.sh
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="c1"># choose 3 -&gt; 301 -&gt; VASP</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>gpumdkit.sh
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="c1"># choose 3 -&gt; 301 -&gt; VASP</span>
 </code></pre></div>
 <p>Before running, put structure files in the current directory. The script checks files in this order:</p>
 <ol>
@@ -1544,91 +1556,91 @@
 <li>if no <code>.vasp</code> file exists and multiple <code>.xyz</code> files exist, it asks you to choose one.</li>
 </ol>
 <p>Typical input directory before running:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>current directory/
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>├── POSCAR_1.vasp
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>├── POSCAR_2.vasp
-<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>└── POSCAR_3.vasp
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>current directory/
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>├── POSCAR_1.vasp
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>├── POSCAR_2.vasp
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>└── POSCAR_3.vasp
 </code></pre></div>
 <p>or:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>current directory/
-<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>└── sampled.xyz
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>current directory/
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>└── sampled.xyz
 </code></pre></div>
 <p>After running, the script creates:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>current directory/
-<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>├── struct_fp/
-<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>│   ├── POSCAR_1.vasp
-<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>│   ├── POSCAR_2.vasp
-<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>│   └── ...
-<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>├── fp/
-<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a>├── &lt;prefix&gt;_1/
-<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a>├── &lt;prefix&gt;_2/
-<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a>└── presub.sh
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>current directory/
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>├── struct_fp/
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>│   ├── POSCAR_1.vasp
+<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a>│   ├── POSCAR_2.vasp
+<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a>│   └── ...
+<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a>├── fp/
+<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a>├── &lt;prefix&gt;_1/
+<a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a>├── &lt;prefix&gt;_2/
+<a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a>└── presub.sh
 </code></pre></div>
 <p>You must place <code>INCAR</code>, <code>POTCAR</code>, and <code>KPOINTS</code> in the generated <code>fp/</code> directory after the script creates it. The calculation folders link to files in <code>fp/</code>.</p>
 <p>The <code>prefix</code> you input during the workflow becomes the calculation folder prefix. When <code>out2xyz</code> is later used to extract results, the folder name is stored as <code>config_type</code> in the extxyz file, which makes it easier to trace where each structure came from.</p>
 <h3 id="cp2k">CP2K</h3>
 <p>CP2K SCF batch pretreatment is available from the workflow menu and can also be called directly:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>gpumdkit.sh
-<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a><span class="c1"># choose 3 -&gt; 301 -&gt; CP2K</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>gpumdkit.sh
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a><span class="c1"># choose 3 -&gt; 301 -&gt; CP2K</span>
 </code></pre></div>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>python<span class="w"> </span>Scripts/workflow/scf_batch_pretreatment_cp2k.py<span class="w"> </span>train.xyz<span class="w"> </span>template.inp<span class="w"> </span>calc
+<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>python<span class="w"> </span>Scripts/workflow/scf_batch_pretreatment_cp2k.py<span class="w"> </span>train.xyz<span class="w"> </span>template.inp<span class="w"> </span>calc
 </code></pre></div>
 <p>The interactive wrapper asks for:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>&lt;extxyz_file&gt; &lt;template.inp&gt; &lt;prefix_name&gt;
+<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>&lt;extxyz_file&gt; &lt;template.inp&gt; &lt;prefix_name&gt;
 </code></pre></div>
 <p>Example:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>dump.xyz template.inp H2O
+<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a>dump.xyz template.inp H2O
 </code></pre></div>
 <p>The template should be configured to read coordinates from <code>pos.xyz</code>. A reference template is available at:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a>Scripts/workflow/cp2k_template.inp
+<div class="highlight"><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a>Scripts/workflow/cp2k_template.inp
 </code></pre></div>
 <p>The script creates <code>&lt;prefix&gt;_&lt;index&gt;/</code> directories, writes <code>input.inp</code>, and writes <code>pos.xyz</code> for each structure.</p>
 <h2 id="md-sampling-pretreatment">MD Sampling Pretreatment</h2>
 <h3 id="gpumd">GPUMD</h3>
 <p>Interactive mode:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a>gpumdkit.sh
-<a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a><span class="c1"># choose 3 -&gt; 302</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a>gpumdkit.sh
+<a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a><span class="c1"># choose 3 -&gt; 302</span>
 </code></pre></div>
 <p>Typical preparation:
 Before running, put <code>.vasp</code> files or one extxyz file in the current directory. The detection order is the same as the VASP SCF workflow: <code>.vasp</code> files are preferred; if multiple <code>.xyz</code> files are found without <code>.vasp</code>, the script asks you to choose one.</p>
 <p>Typical input directory:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a>current directory/
-<a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a>├── POSCAR_1.vasp
-<a id="__codelineno-12-3" name="__codelineno-12-3" href="#__codelineno-12-3"></a>└── POSCAR_2.vasp
+<div class="highlight"><pre><span></span><code><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a>current directory/
+<a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a>├── POSCAR_1.vasp
+<a id="__codelineno-13-3" name="__codelineno-13-3" href="#__codelineno-13-3"></a>└── POSCAR_2.vasp
 </code></pre></div>
 <p>or:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a>current directory/
-<a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a>└── dump.xyz
+<div class="highlight"><pre><span></span><code><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a>current directory/
+<a id="__codelineno-14-2" name="__codelineno-14-2" href="#__codelineno-14-2"></a>└── dump.xyz
 </code></pre></div>
 <p>After running, the script creates:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a>current directory/
-<a id="__codelineno-14-2" name="__codelineno-14-2" href="#__codelineno-14-2"></a>├── struct_md/
-<a id="__codelineno-14-3" name="__codelineno-14-3" href="#__codelineno-14-3"></a>│   ├── model_1.xyz
-<a id="__codelineno-14-4" name="__codelineno-14-4" href="#__codelineno-14-4"></a>│   ├── model_2.xyz
-<a id="__codelineno-14-5" name="__codelineno-14-5" href="#__codelineno-14-5"></a>│   └── ...
-<a id="__codelineno-14-6" name="__codelineno-14-6" href="#__codelineno-14-6"></a>├── md/
-<a id="__codelineno-14-7" name="__codelineno-14-7" href="#__codelineno-14-7"></a>├── sample_1/
-<a id="__codelineno-14-8" name="__codelineno-14-8" href="#__codelineno-14-8"></a>├── sample_2/
-<a id="__codelineno-14-9" name="__codelineno-14-9" href="#__codelineno-14-9"></a>└── presub.sh
+<div class="highlight"><pre><span></span><code><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a>current directory/
+<a id="__codelineno-15-2" name="__codelineno-15-2" href="#__codelineno-15-2"></a>├── struct_md/
+<a id="__codelineno-15-3" name="__codelineno-15-3" href="#__codelineno-15-3"></a>│   ├── model_1.xyz
+<a id="__codelineno-15-4" name="__codelineno-15-4" href="#__codelineno-15-4"></a>│   ├── model_2.xyz
+<a id="__codelineno-15-5" name="__codelineno-15-5" href="#__codelineno-15-5"></a>│   └── ...
+<a id="__codelineno-15-6" name="__codelineno-15-6" href="#__codelineno-15-6"></a>├── md/
+<a id="__codelineno-15-7" name="__codelineno-15-7" href="#__codelineno-15-7"></a>├── sample_1/
+<a id="__codelineno-15-8" name="__codelineno-15-8" href="#__codelineno-15-8"></a>├── sample_2/
+<a id="__codelineno-15-9" name="__codelineno-15-9" href="#__codelineno-15-9"></a>└── presub.sh
 </code></pre></div>
 <p>You must place <code>nep.txt</code> and <code>run_*.in</code> files in the generated <code>md/</code> directory. The script links <code>run_1.in</code> to <code>sample_1/run.in</code>, <code>run_2.in</code> to <code>sample_2/run.in</code>, and so on.</p>
 <h3 id="lammps">LAMMPS</h3>
 <p>Interactive mode:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a>gpumdkit.sh
-<a id="__codelineno-15-2" name="__codelineno-15-2" href="#__codelineno-15-2"></a><span class="c1"># choose 3 -&gt; 303</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a>gpumdkit.sh
+<a id="__codelineno-16-2" name="__codelineno-16-2" href="#__codelineno-16-2"></a><span class="c1"># choose 3 -&gt; 303</span>
 </code></pre></div>
 <p>Typical preparation:
 Before running, put <code>.vasp</code> files or one extxyz file in the current directory. <code>.vasp</code> files are preferred when both formats exist.</p>
 <p>After running, the script creates LAMMPS data files in <code>struct_md/</code>, sample folders, and an <code>md/</code> directory:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a>current directory/
-<a id="__codelineno-16-2" name="__codelineno-16-2" href="#__codelineno-16-2"></a>├── struct_md/
-<a id="__codelineno-16-3" name="__codelineno-16-3" href="#__codelineno-16-3"></a>│   ├── lammps_1.data
-<a id="__codelineno-16-4" name="__codelineno-16-4" href="#__codelineno-16-4"></a>│   ├── lammps_2.data
-<a id="__codelineno-16-5" name="__codelineno-16-5" href="#__codelineno-16-5"></a>│   └── ...
-<a id="__codelineno-16-6" name="__codelineno-16-6" href="#__codelineno-16-6"></a>├── md/
-<a id="__codelineno-16-7" name="__codelineno-16-7" href="#__codelineno-16-7"></a>├── sample_1/
-<a id="__codelineno-16-8" name="__codelineno-16-8" href="#__codelineno-16-8"></a>├── sample_2/
-<a id="__codelineno-16-9" name="__codelineno-16-9" href="#__codelineno-16-9"></a>└── presub.sh
+<div class="highlight"><pre><span></span><code><a id="__codelineno-17-1" name="__codelineno-17-1" href="#__codelineno-17-1"></a>current directory/
+<a id="__codelineno-17-2" name="__codelineno-17-2" href="#__codelineno-17-2"></a>├── struct_md/
+<a id="__codelineno-17-3" name="__codelineno-17-3" href="#__codelineno-17-3"></a>│   ├── lammps_1.data
+<a id="__codelineno-17-4" name="__codelineno-17-4" href="#__codelineno-17-4"></a>│   ├── lammps_2.data
+<a id="__codelineno-17-5" name="__codelineno-17-5" href="#__codelineno-17-5"></a>│   └── ...
+<a id="__codelineno-17-6" name="__codelineno-17-6" href="#__codelineno-17-6"></a>├── md/
+<a id="__codelineno-17-7" name="__codelineno-17-7" href="#__codelineno-17-7"></a>├── sample_1/
+<a id="__codelineno-17-8" name="__codelineno-17-8" href="#__codelineno-17-8"></a>├── sample_2/
+<a id="__codelineno-17-9" name="__codelineno-17-9" href="#__codelineno-17-9"></a>└── presub.sh
 </code></pre></div>
 <p>You must place <code>lmprun.in</code> and <code>nep.txt</code> in the generated <code>md/</code> directory.</p>
 <h2 id="active-learning-style-workflow">Active-Learning Style Workflow</h2>
@@ -1646,12 +1658,12 @@ Before running, put <code>.vasp</code> files or one extxyz file in the current d
 <p>For the development active-learning script, see <a href="active_learning_workflow.html">Active Learning</a>.</p>
 <h2 id="template-based-temperature-series">Template-Based Temperature Series</h2>
 <p>For a simple temperature series, a shell loop is often enough:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-17-1" name="__codelineno-17-1" href="#__codelineno-17-1"></a><span class="k">for</span><span class="w"> </span>temp<span class="w"> </span><span class="k">in</span><span class="w"> </span><span class="m">300</span><span class="w"> </span><span class="m">500</span><span class="w"> </span><span class="m">700</span><span class="w"> </span><span class="m">900</span><span class="p">;</span><span class="w"> </span><span class="k">do</span>
-<a id="__codelineno-17-2" name="__codelineno-17-2" href="#__codelineno-17-2"></a><span class="w">    </span>mkdir<span class="w"> </span>-p<span class="w"> </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">temp</span><span class="si">}</span><span class="s2">K&quot;</span>
-<a id="__codelineno-17-3" name="__codelineno-17-3" href="#__codelineno-17-3"></a><span class="w">    </span>cp<span class="w"> </span>model.xyz<span class="w"> </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">temp</span><span class="si">}</span><span class="s2">K/&quot;</span>
-<a id="__codelineno-17-4" name="__codelineno-17-4" href="#__codelineno-17-4"></a><span class="w">    </span>cp<span class="w"> </span>nep.txt<span class="w"> </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">temp</span><span class="si">}</span><span class="s2">K/&quot;</span>
-<a id="__codelineno-17-5" name="__codelineno-17-5" href="#__codelineno-17-5"></a><span class="w">    </span>sed<span class="w"> </span><span class="s2">&quot;s/TEMPERATURE/</span><span class="nv">$temp</span><span class="s2">/g&quot;</span><span class="w"> </span>run_template.in<span class="w"> </span>&gt;<span class="w"> </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">temp</span><span class="si">}</span><span class="s2">K/run.in&quot;</span>
-<a id="__codelineno-17-6" name="__codelineno-17-6" href="#__codelineno-17-6"></a><span class="k">done</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-18-1" name="__codelineno-18-1" href="#__codelineno-18-1"></a><span class="k">for</span><span class="w"> </span>temp<span class="w"> </span><span class="k">in</span><span class="w"> </span><span class="m">300</span><span class="w"> </span><span class="m">500</span><span class="w"> </span><span class="m">700</span><span class="w"> </span><span class="m">900</span><span class="p">;</span><span class="w"> </span><span class="k">do</span>
+<a id="__codelineno-18-2" name="__codelineno-18-2" href="#__codelineno-18-2"></a><span class="w">    </span>mkdir<span class="w"> </span>-p<span class="w"> </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">temp</span><span class="si">}</span><span class="s2">K&quot;</span>
+<a id="__codelineno-18-3" name="__codelineno-18-3" href="#__codelineno-18-3"></a><span class="w">    </span>cp<span class="w"> </span>model.xyz<span class="w"> </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">temp</span><span class="si">}</span><span class="s2">K/&quot;</span>
+<a id="__codelineno-18-4" name="__codelineno-18-4" href="#__codelineno-18-4"></a><span class="w">    </span>cp<span class="w"> </span>nep.txt<span class="w"> </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">temp</span><span class="si">}</span><span class="s2">K/&quot;</span>
+<a id="__codelineno-18-5" name="__codelineno-18-5" href="#__codelineno-18-5"></a><span class="w">    </span>sed<span class="w"> </span><span class="s2">&quot;s/TEMPERATURE/</span><span class="nv">$temp</span><span class="s2">/g&quot;</span><span class="w"> </span>run_template.in<span class="w"> </span>&gt;<span class="w"> </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">temp</span><span class="si">}</span><span class="s2">K/run.in&quot;</span>
+<a id="__codelineno-18-6" name="__codelineno-18-6" href="#__codelineno-18-6"></a><span class="k">done</span>
 </code></pre></div>
 <p>Then submit the generated folders according to your local cluster system.</p>
 <h2 id="practical-notes">Practical Notes</h2>

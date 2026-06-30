@@ -1004,6 +1004,45 @@
     </span>
   </a>
   
+    <nav class="md-nav" aria-label="PyNEP 旧入口">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#pynep_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        串行 PyNEP
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#pynep_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        并行 PyNEP
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#gpumdkit" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        GPUMDkit 入口
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
 </li>
       
         <li class="md-nav__item">
@@ -1032,7 +1071,7 @@
   <a href="#_5" class="md-nav__link">
     <span class="md-ellipsis">
       
-        示例命令
+        帧范围提取
       
     </span>
   </a>
@@ -1041,6 +1080,17 @@
       
         <li class="md-nav__item">
   <a href="#_6" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        示例命令
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_7" class="md-nav__link">
     <span class="md-ellipsis">
       
         常见问题
@@ -1356,6 +1406,45 @@
     </span>
   </a>
   
+    <nav class="md-nav" aria-label="PyNEP 旧入口">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#pynep_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        串行 PyNEP
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#pynep_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        并行 PyNEP
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#gpumdkit" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        GPUMDkit 入口
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
 </li>
       
         <li class="md-nav__item">
@@ -1384,7 +1473,7 @@
   <a href="#_5" class="md-nav__link">
     <span class="md-ellipsis">
       
-        示例命令
+        帧范围提取
       
     </span>
   </a>
@@ -1393,6 +1482,17 @@
       
         <li class="md-nav__item">
   <a href="#_6" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        示例命令
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_7" class="md-nav__link">
     <span class="md-ellipsis">
       
         常见问题
@@ -1578,7 +1678,7 @@
 </code></pre></div>
 <p>该功能需要 <code>NepTrain</code>，运行时会提示相关引用。</p>
 <h2 id="pynep">PyNEP 旧入口</h2>
-<p>PyNEP FPS 仍然保留兼容，但只通过 <code>-pynep</code> 入口调用：</p>
+<p>PyNEP FPS 仍然保留兼容，但只通过 <code>-pynep</code> 入口调用。</p>
 <p>如果在交互菜单中选择 <code>202</code>，会看到：</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>+-------------------------------------------------+
 <a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>| Function 202 is no longer supported here.       |
@@ -1588,20 +1688,28 @@
 <a id="__codelineno-9-6" name="__codelineno-9-6" href="#__codelineno-9-6"></a>|                 gpumdkit.sh -pynep              |
 <a id="__codelineno-9-7" name="__codelineno-9-7" href="#__codelineno-9-7"></a>+-------------------------------------------------+
 </code></pre></div>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a>gpumdkit.sh<span class="w"> </span>-pynep
+<h3 id="pynep_1">串行 PyNEP</h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a>python<span class="w"> </span>Scripts/sample_structures/pynep_select_structs.py<span class="w"> </span>dump.xyz<span class="w"> </span>train.xyz<span class="w"> </span>nep.txt
+</code></pre></div>
+<h3 id="pynep_2">并行 PyNEP</h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a>python<span class="w"> </span>Scripts/sample_structures/parallel_pynep_select_structs.py<span class="w"> </span>dump.xyz<span class="w"> </span>train.xyz<span class="w"> </span>nep.txt<span class="w"> </span><span class="m">8</span>
+</code></pre></div>
+<p>最后一个参数是 CPU 线程数。</p>
+<h3 id="gpumdkit">GPUMDkit 入口</h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a>gpumdkit.sh<span class="w"> </span>-pynep
 </code></pre></div>
 <p>随后输入：</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a>dump.xyz train.xyz nep.txt 8
+<div class="highlight"><pre><span></span><code><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a>dump.xyz train.xyz nep.txt 8
 </code></pre></div>
 <p>这个入口需要 <code>pynep</code>。</p>
 <h2 id="_3">结构扰动</h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a>python<span class="w"> </span>Scripts/sample_structures/perturb_structure.py<span class="w"> </span>POSCAR<span class="w"> </span><span class="m">20</span><span class="w"> </span><span class="m">0</span>.03<span class="w"> </span><span class="m">0</span>.2<span class="w"> </span>uniform
+<div class="highlight"><pre><span></span><code><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a>python<span class="w"> </span>Scripts/sample_structures/perturb_structure.py<span class="w"> </span>POSCAR<span class="w"> </span><span class="m">20</span><span class="w"> </span><span class="m">0</span>.03<span class="w"> </span><span class="m">0</span>.2<span class="w"> </span>uniform
 </code></pre></div>
 <p>交互模式选择 <code>204</code>，会看到：</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a>Input &lt;input.vasp&gt; &lt;pert_num&gt; &lt;cell_pert_fraction&gt; &lt;atom_pert_distance&gt; &lt;atom_pert_style&gt;
-<a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a>The default parameters for perturb are 20 0.03 0.2 uniform
-<a id="__codelineno-13-3" name="__codelineno-13-3" href="#__codelineno-13-3"></a>Example: POSCAR 20 0.03 0.2 uniform
-<a id="__codelineno-13-4" name="__codelineno-13-4" href="#__codelineno-13-4"></a>------------&gt;&gt;
+<div class="highlight"><pre><span></span><code><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a>Input &lt;input.vasp&gt; &lt;pert_num&gt; &lt;cell_pert_fraction&gt; &lt;atom_pert_distance&gt; &lt;atom_pert_style&gt;
+<a id="__codelineno-15-2" name="__codelineno-15-2" href="#__codelineno-15-2"></a>The default parameters for perturb are 20 0.03 0.2 uniform
+<a id="__codelineno-15-3" name="__codelineno-15-3" href="#__codelineno-15-3"></a>Example: POSCAR 20 0.03 0.2 uniform
+<a id="__codelineno-15-4" name="__codelineno-15-4" href="#__codelineno-15-4"></a>------------&gt;&gt;
 </code></pre></div>
 <p>参数含义：</p>
 <table>
@@ -1638,18 +1746,18 @@
 <ul>
 <li><code>POSCAR_01.vasp</code>、<code>POSCAR_02.vasp</code> 等</li>
 </ul>
-<p>该功能需要 <code>dpdata</code>。</p>
+<p>该功能需要 <code>dpdata</code>。使用此功能时建议引用 dpdata 包。</p>
 <h2 id="_4">最大力偏差结构选择</h2>
 <p>该功能需要配合 GPUMD 的 <code>active</code> 命令使用。<code>active</code> 通过委员会评审机制，让多条势函数对同一结构进行预测，并记录每个结构的最大力偏差。<code>select_max_modev.py</code> 会从 <code>active.out</code> 和 <code>active.xyz</code> 中选择力偏差较大的结构，写入 <code>selected.xyz</code>。</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a>python<span class="w"> </span>Scripts/sample_structures/select_max_modev.py<span class="w"> </span><span class="m">200</span><span class="w"> </span><span class="m">0</span>.15
+<div class="highlight"><pre><span></span><code><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a>python<span class="w"> </span>Scripts/sample_structures/select_max_modev.py<span class="w"> </span><span class="m">200</span><span class="w"> </span><span class="m">0</span>.15
 </code></pre></div>
 <p>交互模式选择 <code>205</code>，会看到：</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a>+----------------------------------------------------+
-<a id="__codelineno-15-2" name="__codelineno-15-2" href="#__codelineno-15-2"></a>| Select max force deviation structs from active.xyz |
-<a id="__codelineno-15-3" name="__codelineno-15-3" href="#__codelineno-15-3"></a>|     generated by the active command in gpumd.      |
-<a id="__codelineno-15-4" name="__codelineno-15-4" href="#__codelineno-15-4"></a>+----------------------------------------------------+
-<a id="__codelineno-15-5" name="__codelineno-15-5" href="#__codelineno-15-5"></a>Input &lt;structs_num&gt; &lt;threshold&gt; (eg. 200 0.15)
-<a id="__codelineno-15-6" name="__codelineno-15-6" href="#__codelineno-15-6"></a>------------&gt;&gt;
+<div class="highlight"><pre><span></span><code><a id="__codelineno-17-1" name="__codelineno-17-1" href="#__codelineno-17-1"></a>+----------------------------------------------------+
+<a id="__codelineno-17-2" name="__codelineno-17-2" href="#__codelineno-17-2"></a>| Select max force deviation structs from active.xyz |
+<a id="__codelineno-17-3" name="__codelineno-17-3" href="#__codelineno-17-3"></a>|     generated by the active command in gpumd.      |
+<a id="__codelineno-17-4" name="__codelineno-17-4" href="#__codelineno-17-4"></a>+----------------------------------------------------+
+<a id="__codelineno-17-5" name="__codelineno-17-5" href="#__codelineno-17-5"></a>Input &lt;structs_num&gt; &lt;threshold&gt; (eg. 200 0.15)
+<a id="__codelineno-17-6" name="__codelineno-17-6" href="#__codelineno-17-6"></a>------------&gt;&gt;
 </code></pre></div>
 <p>需要当前目录下有：</p>
 <ul>
@@ -1660,12 +1768,17 @@
 <ul>
 <li><code>selected.xyz</code></li>
 </ul>
-<h2 id="_5">示例命令</h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a>gpumdkit.sh<span class="w"> </span>-min_dist_pbc<span class="w"> </span>dump.xyz
-<a id="__codelineno-16-2" name="__codelineno-16-2" href="#__codelineno-16-2"></a>gpumdkit.sh<span class="w"> </span>-filter_box<span class="w"> </span>dump.xyz<span class="w"> </span><span class="m">13</span>
-<a id="__codelineno-16-3" name="__codelineno-16-3" href="#__codelineno-16-3"></a>python<span class="w"> </span>Scripts/sample_structures/neptrain_select_structs.py<span class="w"> </span>dump.xyz<span class="w"> </span>train.xyz<span class="w"> </span>nep.txt
+<h2 id="_5">帧范围提取</h2>
+<p>提取轨迹的一部分帧：</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-18-1" name="__codelineno-18-1" href="#__codelineno-18-1"></a>python<span class="w"> </span>Scripts/sample_structures/frame_range.py<span class="w"> </span>dump.xyz<span class="w"> </span><span class="m">0</span><span class="w"> </span><span class="m">0</span>.8
 </code></pre></div>
-<h2 id="_6">常见问题</h2>
+<p>这会写入轨迹 0% 到 80% 的帧。</p>
+<h2 id="_6">示例命令</h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-19-1" name="__codelineno-19-1" href="#__codelineno-19-1"></a>gpumdkit.sh<span class="w"> </span>-min_dist_pbc<span class="w"> </span>dump.xyz
+<a id="__codelineno-19-2" name="__codelineno-19-2" href="#__codelineno-19-2"></a>gpumdkit.sh<span class="w"> </span>-filter_box<span class="w"> </span>dump.xyz<span class="w"> </span><span class="m">13</span>
+<a id="__codelineno-19-3" name="__codelineno-19-3" href="#__codelineno-19-3"></a>python<span class="w"> </span>Scripts/sample_structures/neptrain_select_structs.py<span class="w"> </span>dump.xyz<span class="w"> </span>train.xyz<span class="w"> </span>nep.txt
+</code></pre></div>
+<h2 id="_7">常见问题</h2>
 <table>
 <thead>
 <tr>

@@ -3,7 +3,15 @@
   <p style="text-align: justify;">Analyzer scripts provide structure statistics, distance checks, filters, composition analysis, outlier detection, and time estimation for extxyz datasets.</p>
 </div>
 
-**Script Location:** `Scripts/analyzer/`
+## What it does
+
+This module helps you inspect, filter, and validate structure datasets. You can check composition, analyze property ranges, detect short contacts, filter structures by various criteria, find outliers in NEP training data, and estimate remaining simulation time.
+
+## Before you start
+
+**Script location:** `Scripts/analyzer/`
+
+Make sure GPUMDkit is installed. See [Quick Start](quick_start.md) for installation instructions.
 
 ## Overview
 
@@ -20,6 +28,7 @@
 | Property filter | `gpumdkit.sh -filter_value train.xyz force 20` | Filter by energy/force/virial threshold |
 | Pair-distance range | `gpumdkit.sh -filter_range dump.xyz Li Li 1.8 2.0` | Extract structures by pair distance |
 | Outlier detection | Menu 502 | Find high-RMSE structures in training set |
+| Probability density | `gpumdkit.sh -pda <ref> <traj> <element> <interval>` | 3D probability density for diffusion channels |
 | GPUMD time | `gpumdkit.sh -time gpumd` | Estimate remaining GPUMD run time |
 | NEP time | `gpumdkit.sh -time nep` | Estimate remaining NEP training time |
 
@@ -61,11 +70,15 @@ Most analyzer functions also have direct CLI shortcuts, which are listed in the 
 
 `analyze_composition.py` analyzes the composition of your extxyz file and lets you export subsets.
 
-**Input file:** `train.xyz` (extxyz format)
+**What it does:** Groups structures by chemical composition and shows how many structures belong to each composition. You can export subsets by composition.
+
+**CLI mode:**
 
 ```bash
 gpumdkit.sh -analyze_comp train.xyz
 ```
+
+**Interactive mode:** Choose `501` from the analyzer menu.
 
 **Output example:**
 
@@ -128,11 +141,15 @@ With `hist` option:
 
 `get_min_dist.py` calculates minimum interatomic distances without considering periodic boundary conditions. Fast but may be inaccurate for periodic systems.
 
-**Input file:** `dump.xyz` (extxyz format)
+**What it does:** Reports the minimum distance between each pair of elements in every frame, ignoring periodic boundary conditions.
+
+**CLI mode:**
 
 ```bash
 gpumdkit.sh -min_dist dump.xyz
 ```
+
+**Interactive mode:** Choose `507` from the analyzer menu.
 
 **Output example:**
 
@@ -152,15 +169,21 @@ Minimum interatomic distances:
 Overall min_distance: 1.587 Å
 ```
 
+**Notes:** Use this for a quick check. For periodic systems, prefer `-min_dist_pbc` for accurate results.
+
 ### With PBC (Accurate)
 
 `get_min_dist_pbc.py` calculates minimum interatomic distances considering periodic boundary conditions.
 
-**Input file:** `dump.xyz` (extxyz format)
+**What it does:** Reports the minimum distance between each pair of elements, accounting for periodic boundary conditions.
+
+**CLI mode:**
 
 ```bash
 gpumdkit.sh -min_dist_pbc dump.xyz
 ```
+
+**Interactive mode:** Choose `507` from the analyzer menu and answer `y` when asked whether to consider PBC.
 
 **Output example:**
 
@@ -338,11 +361,29 @@ gpumdkit.sh -time nep
 
 **Input files:** Reference structure (POSCAR), trajectory file (extxyz)
 
+**CLI mode:**
+
 ```bash
 gpumdkit.sh -pda LLZO.vasp dump.xyz Li 0.25
 ```
 
-**Output:** `probability_density_0.25.vasp` — probability density grid for visualization with VESTA or similar tools.
+**Arguments:**
+
+| Argument | Meaning |
+|----------|---------|
+| `LLZO.vasp` | Reference structure (POSCAR format) |
+| `dump.xyz` | Trajectory file (extxyz format) |
+| `Li` | Target mobile species |
+| `0.25` | Grid interval for the probability density (Å) |
+
+**Output:** `probability_density_0.25.vasp` — probability density grid in VASP format for visualization with VESTA or similar tools.
+
+**Visualization suggestions:**
+
+1. Open `probability_density_0.25.vasp` in VESTA
+2. Use "Edit → Data → Volumetric Data" to adjust isosurface levels
+3. Color the probability density by value to highlight preferred diffusion pathways
+4. Overlay with the crystal structure for context
 
 ---
 

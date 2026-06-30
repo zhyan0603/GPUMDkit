@@ -467,9 +467,11 @@ gpumdkit.sh -plt rdf_pmf
 
 ### plt_vac.py
 
-Plots velocity autocorrelation function.
+Plots velocity autocorrelation function (VAC). Useful for analyzing phonon properties and atomic dynamics.
 
-**Input File:** `vac.out`
+**Input File:** `sdc.out` (the VAC columns are read from this file by the plotting script)
+
+**Output:** Interactive plot or `vac.png` (with `save` option)
 
 ```bash
 gpumdkit.sh -plt vac
@@ -479,7 +481,11 @@ gpumdkit.sh -plt vac
 
 ### plt_cohesive.py
 
-Plots cohesive energy curve.
+Plots cohesive energy curve from `cohesive.out`. Useful for analyzing lattice stability and equilibrium lattice constants.
+
+**Input File:** `cohesive.out` (isotropic scaling factor vs cohesive energy)
+
+**Output:** Interactive plot or `cohesive.png` (with `save` option)
 
 ```bash
 gpumdkit.sh -plt cohesive
@@ -606,7 +612,7 @@ gpumdkit.sh -plt doas doas.out Li
 
 ## Plane-Grid Plot for Polar Materials
 
-This workflow maps displacement or polarization data onto a grid and plots selected plane profiles.
+This workflow maps displacement or polarization data onto a grid and plots selected plane profiles. For detailed usage and real-world examples, see **[Polar Material Analysis](polar_material_analysis.md)**.
 
 **Dependency:**
 
@@ -653,8 +659,8 @@ gpumdkit.sh -plt plane-grid -i averaged_structure.xyz -d displacements.dat -e Pb
 | `arrhenius_sigma` / `sigma` | `*K/{model.xyz, run.in, thermo.out, msd.out}` | Arrhenius ionic conductivity |
 | `rdf` | `rdf.out` | Radial distribution function |
 | `rdf_pmf` | `rdf.out` | RDF + potential of mean force |
-| `vac` | `vac.out` | Velocity autocorrelation |
-| `cohesive` | — | Cohesive energy curve |
+| `vac` | `sdc.out` | Velocity autocorrelation |
+| `cohesive` | `cohesive.out` | Cohesive energy curve |
 | `net_force` | `train.xyz` | Net force distribution |
 | `doas` | `doas.out` | Density of atomistic states |
 | `des` | `descriptors.npy` | Descriptor PCA/UMAP |

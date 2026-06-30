@@ -23,6 +23,22 @@ Last-modified: 2026-05-16
 """
 
 import sys
+
+args = sys.argv[1:]
+if len(args) < 1 or args[0] in ("-h", "--help"):
+    print(" Usage: gpumdkit.sh -min_dist_pbc <file_name>")
+    print("    or: python get_min_dist_pbc.py <file_name>")
+    print("")
+    print(" Arguments:")
+    print("   file_name   Input extxyz trajectory file")
+    print("")
+    print(" Output:")
+    print("   Table of minimum distances (with PBC) for each element pair")
+    print("")
+    print(" Example: gpumdkit.sh -min_dist_pbc train.xyz")
+    print("")
+    sys.exit(0 if args and args[0] in ("-h", "--help") else 1)
+
 import numpy as np
 from ase.io import read
 
@@ -51,12 +67,6 @@ def calculate_pairwise_distances(lattice_params, atom_coords, fractional=True):
     distances = np.min(all_distances, axis=-1)
     np.fill_diagonal(distances, 0)
     return distances
-
-# Check command-line arguments
-if len(sys.argv) != 2:
-    print(" Usage: gpumdkit.sh -min_dist_pbc <file_name>")
-    print("    or: python get_min_dist_pbc.py <file_name>")
-    sys.exit(1)
 
 # Read the file name from command line arguments
 file_name = sys.argv[1]

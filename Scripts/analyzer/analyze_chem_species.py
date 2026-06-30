@@ -21,14 +21,21 @@ Last-modified: 2026-05-16
 """
 
 import sys
-from ase.io import read
-from ase.data import chemical_symbols, atomic_numbers
 
-# Load all frames from the provided extxyz file
-if len(sys.argv) < 2:
+args = sys.argv[1:]
+if len(args) < 1 or args[0] in ("-h", "--help"):
     print(" Usage: gpumdkit.sh -chem_species <exyzfile>")
     print("    or: python analyze_chem_species.py <input.xyz>")
-    sys.exit(1)
+    print("")
+    print(" Arguments:")
+    print("   exyzfile    Input extxyz trajectory file")
+    print("")
+    print(" Example: gpumdkit.sh -chem_species train.xyz")
+    print("")
+    sys.exit(0 if args and args[0] in ("-h", "--help") else 1)
+
+from ase.io import read
+from ase.data import chemical_symbols, atomic_numbers
 
 atoms_list = read(sys.argv[1], index=':')
 

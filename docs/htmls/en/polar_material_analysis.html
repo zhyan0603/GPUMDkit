@@ -143,7 +143,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#dependency" class="md-skip">
+        <a href="#overview" class="md-skip">
           Skip to content
         </a>
       
@@ -739,6 +739,17 @@
       Table of contents
     </label>
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#overview" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Overview
+      
+    </span>
+  </a>
+  
+</li>
       
         <li class="md-nav__item">
   <a href="#dependency" class="md-nav__link">
@@ -1699,6 +1710,17 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
+  <a href="#overview" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Overview
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#dependency" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -2202,30 +2224,103 @@
 <li><code>oct-tilt</code> is for octahedral environments (requires 6 neighbors around each center).</li>
 <li><code>pol-abo3</code> is specific to <code>ABO3</code> polarization analysis.</li>
 </ul>
+<h2 id="overview">Overview</h2>
+<table>
+<thead>
+<tr>
+<th>Step</th>
+<th>CLI Command</th>
+<th>Main Input</th>
+<th>Output</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Build neighbor list</td>
+<td><code>gpumdkit.sh -calc nlist ...</code></td>
+<td><code>model.xyz</code></td>
+<td><code>nl-*.dat</code></td>
+</tr>
+<tr>
+<td>Calculate displacement</td>
+<td><code>gpumdkit.sh -calc disp ...</code></td>
+<td>trajectory + <code>nl-*.dat</code></td>
+<td><code>displacements.dat</code></td>
+</tr>
+<tr>
+<td>Average trajectory</td>
+<td><code>gpumdkit.sh -calc avg-struct ...</code></td>
+<td>trajectory</td>
+<td>averaged extxyz</td>
+</tr>
+<tr>
+<td>Octahedral tilt</td>
+<td><code>gpumdkit.sh -calc oct-tilt ...</code></td>
+<td>trajectory + B-O neighbor list</td>
+<td>tilt-angle table</td>
+</tr>
+<tr>
+<td>ABO3 polarization</td>
+<td><code>gpumdkit.sh -calc pol-abo3 ...</code></td>
+<td>trajectory + neighbor lists</td>
+<td>polarization table</td>
+</tr>
+<tr>
+<td>Plane-grid plot</td>
+<td><code>gpumdkit.sh -plt plane-grid ...</code></td>
+<td>structure + displacement data</td>
+<td>plane profile plot</td>
+</tr>
+</tbody>
+</table>
 <h2 id="dependency">Dependency</h2>
 <p>These scripts require <code>ferrodispcalc</code>:</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>pip3<span class="w"> </span>install<span class="w"> </span>git+https://github.com/MoseyQAQ/ferrodispcalc.git
 </code></pre></div>
 <h2 id="interactive-mode-entry">Interactive mode entry</h2>
 <p>Options <code>406-410</code> are the core functions for this tutorial. The sections below explain when to use each one and how to run it.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>gpumdkit.sh
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="c1"># choose 4) Calculators</span>
+</code></pre></div>
+<p>The calculator menu is:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>+----------------------------------------------------------+
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>|                     CALCULATOR TOOLS                     |
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>+----------------------------------------------------------+
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>| 401) Calc ionic conductivity                             |
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>| 402) Calc properties by nep                              |
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>| 403) Calc descriptors of specific elements               |
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a>| 404) Calc density of atomistic states (DOAS)             |
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>| 405) Calc nudged elastic band (NEB) by nep               |
+<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a>| 406) Build neighbor list                                 |
+<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a>| 407) Calc displacement from trajectory                   |
+<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a>| 408) Calc averaged structure                             |
+<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a>| 409) Calc octahedral tilt                                |
+<a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a>| 410) Calc polarization for ABO3                          |
+<a id="__codelineno-2-14" name="__codelineno-2-14" href="#__codelineno-2-14"></a>| 411) Minimize structure by nep                           |
+<a id="__codelineno-2-15" name="__codelineno-2-15" href="#__codelineno-2-15"></a>| 412) Calc mean square displacement (MSD) from trajectory |
+<a id="__codelineno-2-16" name="__codelineno-2-16" href="#__codelineno-2-16"></a>+----------------------------------------------------------+
+<a id="__codelineno-2-17" name="__codelineno-2-17" href="#__codelineno-2-17"></a>| 000) Return to the main menu                             |
+<a id="__codelineno-2-18" name="__codelineno-2-18" href="#__codelineno-2-18"></a>+----------------------------------------------------------+
+<a id="__codelineno-2-19" name="__codelineno-2-19" href="#__codelineno-2-19"></a>Input the function number:
+</code></pre></div>
 <p>For full argument details, use:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>gpumdkit.sh<span class="w"> </span>-calc<span class="w"> </span>nlist<span class="w"> </span>-h
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>gpumdkit.sh<span class="w"> </span>-calc<span class="w"> </span>disp<span class="w"> </span>-h
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>gpumdkit.sh<span class="w"> </span>-calc<span class="w"> </span>avg-struct<span class="w"> </span>-h
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>gpumdkit.sh<span class="w"> </span>-calc<span class="w"> </span>oct-tilt<span class="w"> </span>-h
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>gpumdkit.sh<span class="w"> </span>-calc<span class="w"> </span>pol-abo3<span class="w"> </span>-h
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>gpumdkit.sh<span class="w"> </span>-plt<span class="w"> </span>plane-grid<span class="w"> </span>-h
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>gpumdkit.sh<span class="w"> </span>-calc<span class="w"> </span>nlist<span class="w"> </span>-h
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>gpumdkit.sh<span class="w"> </span>-calc<span class="w"> </span>disp<span class="w"> </span>-h
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>gpumdkit.sh<span class="w"> </span>-calc<span class="w"> </span>avg-struct<span class="w"> </span>-h
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>gpumdkit.sh<span class="w"> </span>-calc<span class="w"> </span>oct-tilt<span class="w"> </span>-h
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>gpumdkit.sh<span class="w"> </span>-calc<span class="w"> </span>pol-abo3<span class="w"> </span>-h
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>gpumdkit.sh<span class="w"> </span>-plt<span class="w"> </span>plane-grid<span class="w"> </span>-h
 </code></pre></div>
 <h2 id="406-build-neighbor-list-calc_neighbor_listpy">406) Build neighbor list (<code>calc_neighbor_list.py</code>)</h2>
 <p>Build neighbor lists for selected center and neighbor elements.</p>
 <p>When to use it:
 This is usually the first step before <code>disp</code>, <code>oct-tilt</code>, and <code>pol-abo3</code>, because those scripts read <code>nl-*.dat</code> neighbor files.</p>
 <h3 id="usage">Usage</h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Example 1: Ti-O nearest 6 neighbors for octahedral analysis</span>
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>gpumdkit.sh<span class="w"> </span>-calc<span class="w"> </span>nlist<span class="w"> </span>-i<span class="w"> </span>model.xyz<span class="w"> </span>-c<span class="w"> </span><span class="m">4</span>.0<span class="w"> </span>-n<span class="w"> </span><span class="m">6</span><span class="w"> </span>-C<span class="w"> </span>Ti<span class="w"> </span>-E<span class="w"> </span>O<span class="w"> </span>-o<span class="w"> </span>nl-Ti-O.dat
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>
-<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="c1"># Example 2: Pb/Sr-O nearest 12 neighbors for A-site centered analysis</span>
-<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>gpumdkit.sh<span class="w"> </span>-calc<span class="w"> </span>nlist<span class="w"> </span>-i<span class="w"> </span>model.xyz<span class="w"> </span>-c<span class="w"> </span><span class="m">4</span>.0<span class="w"> </span>-n<span class="w"> </span><span class="m">12</span><span class="w"> </span>-C<span class="w"> </span>Pb<span class="w"> </span>Sr<span class="w"> </span>-E<span class="w"> </span>O
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Example 1: Ti-O nearest 6 neighbors for octahedral analysis</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>gpumdkit.sh<span class="w"> </span>-calc<span class="w"> </span>nlist<span class="w"> </span>-i<span class="w"> </span>model.xyz<span class="w"> </span>-c<span class="w"> </span><span class="m">4</span>.0<span class="w"> </span>-n<span class="w"> </span><span class="m">6</span><span class="w"> </span>-C<span class="w"> </span>Ti<span class="w"> </span>-E<span class="w"> </span>O<span class="w"> </span>-o<span class="w"> </span>nl-Ti-O.dat
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="c1"># Example 2: Pb/Sr-O nearest 12 neighbors for A-site centered analysis</span>
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>gpumdkit.sh<span class="w"> </span>-calc<span class="w"> </span>nlist<span class="w"> </span>-i<span class="w"> </span>model.xyz<span class="w"> </span>-c<span class="w"> </span><span class="m">4</span>.0<span class="w"> </span>-n<span class="w"> </span><span class="m">12</span><span class="w"> </span>-C<span class="w"> </span>Pb<span class="w"> </span>Sr<span class="w"> </span>-E<span class="w"> </span>O
 </code></pre></div>
 <h3 id="arguments-complete">Arguments (complete)</h3>
 <ul>
@@ -2254,11 +2349,11 @@ This is usually the first step before <code>disp</code>, <code>oct-tilt</code>, 
 <h2 id="407-calc-displacement-from-trajectory-calc_displacementpy">407) Calc displacement from trajectory (<code>calc_displacement.py</code>)</h2>
 <p>Compute local displacement vectors from a trajectory/model and a neighbor list.</p>
 <h3 id="usage_1">Usage</h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># Example 1: single-frame displacement from model.xyz</span>
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>gpumdkit.sh<span class="w"> </span>-calc<span class="w"> </span>disp<span class="w"> </span>-i<span class="w"> </span>model.xyz<span class="w"> </span>-n<span class="w"> </span>nl-Ti-O.dat<span class="w"> </span>-o<span class="w"> </span>disp_model.dat
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>
-<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="c1"># Example 2: use the last 20% frames in movie.xyz</span>
-<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>gpumdkit.sh<span class="w"> </span>-calc<span class="w"> </span>disp<span class="w"> </span>-i<span class="w"> </span>movie.xyz<span class="w"> </span>-n<span class="w"> </span>nl-Ti-O.dat<span class="w"> </span>-l<span class="w"> </span><span class="m">0</span>.2<span class="w"> </span>-o<span class="w"> </span>displacements.dat
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1"># Example 1: single-frame displacement from model.xyz</span>
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>gpumdkit.sh<span class="w"> </span>-calc<span class="w"> </span>disp<span class="w"> </span>-i<span class="w"> </span>model.xyz<span class="w"> </span>-n<span class="w"> </span>nl-Ti-O.dat<span class="w"> </span>-o<span class="w"> </span>disp_model.dat
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="c1"># Example 2: use the last 20% frames in movie.xyz</span>
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>gpumdkit.sh<span class="w"> </span>-calc<span class="w"> </span>disp<span class="w"> </span>-i<span class="w"> </span>movie.xyz<span class="w"> </span>-n<span class="w"> </span>nl-Ti-O.dat<span class="w"> </span>-l<span class="w"> </span><span class="m">0</span>.2<span class="w"> </span>-o<span class="w"> </span>displacements.dat
 </code></pre></div>
 <h3 id="arguments-complete_1">Arguments (complete)</h3>
 <ul>
@@ -2278,7 +2373,7 @@ This is usually the first step before <code>disp</code>, <code>oct-tilt</code>, 
   Select trailing frames.
   Integer: last <code>N</code> frames.
   <code>0 &lt; value &lt; 1</code>: last ratio of frames.</li>
-<li><code>--last</code> is mutually exclusive with <code>-s/-t/-p</code>.</li>
+<li><code>-l/--last</code> is mutually exclusive with <code>-s/-t/-p</code>.</li>
 </ul>
 <h3 id="output-file_1">Output file</h3>
 <ul>
@@ -2289,11 +2384,11 @@ This is usually the first step before <code>disp</code>, <code>oct-tilt</code>, 
 <p>Generate one averaged structure from selected trajectory frames.
 Use this after equilibration. For a solid near equilibrium, average a frame window at the target temperature and analyze that representative structure instead of processing every snapshot.</p>
 <h3 id="usage_2">Usage</h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Example 1: average all frames</span>
-<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>gpumdkit.sh<span class="w"> </span>-calc<span class="w"> </span>avg-struct<span class="w"> </span>-i<span class="w"> </span>movie.xyz<span class="w"> </span>-o<span class="w"> </span>averaged_structure.xyz
-<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>
-<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="c1"># Example 2: average selected frames (100:500:2)</span>
-<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>gpumdkit.sh<span class="w"> </span>-calc<span class="w"> </span>avg-struct<span class="w"> </span>-i<span class="w"> </span>movie.xyz<span class="w"> </span>-s<span class="w"> </span><span class="m">100</span><span class="w"> </span>-t<span class="w"> </span><span class="m">500</span><span class="w"> </span>-p<span class="w"> </span><span class="m">2</span><span class="w"> </span>-o<span class="w"> </span>avg_slice.xyz
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># Example 1: average all frames</span>
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>gpumdkit.sh<span class="w"> </span>-calc<span class="w"> </span>avg-struct<span class="w"> </span>-i<span class="w"> </span>movie.xyz<span class="w"> </span>-o<span class="w"> </span>averaged_structure.xyz
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>
+<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="c1"># Example 2: average selected frames (100:500:2)</span>
+<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a>gpumdkit.sh<span class="w"> </span>-calc<span class="w"> </span>avg-struct<span class="w"> </span>-i<span class="w"> </span>movie.xyz<span class="w"> </span>-s<span class="w"> </span><span class="m">100</span><span class="w"> </span>-t<span class="w"> </span><span class="m">500</span><span class="w"> </span>-p<span class="w"> </span><span class="m">2</span><span class="w"> </span>-o<span class="w"> </span>avg_slice.xyz
 </code></pre></div>
 <h3 id="arguments-complete_2">Arguments (complete)</h3>
 <ul>
@@ -2309,7 +2404,7 @@ Use this after equilibration. For a solid near equilibrium, average a frame wind
   Slice step. Default: <code>1</code>.</li>
 <li><code>-l, --last</code>:
   Select trailing frames (<code>last N</code> or <code>last ratio</code>).</li>
-<li><code>--last</code> is mutually exclusive with <code>-s/-t/-p</code>.</li>
+<li><code>-l/--last</code> is mutually exclusive with <code>-s/-t/-p</code>.</li>
 </ul>
 <h3 id="output-file_2">Output file</h3>
 <ul>
@@ -2320,11 +2415,11 @@ Use this after equilibration. For a solid near equilibrium, average a frame wind
 <p>Calculate octahedral tilt angles from a B-O neighbor list.
 This is commonly used to analyze octahedral rotation patterns in <code>ABO3</code> systems, such as <code>SrTiO3</code> and <code>PbZrO3</code>.</p>
 <h3 id="usage_3">Usage</h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1"># Example 1: octahedral tilt of the TiO6 octahedra from a single frame</span>
-<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>gpumdkit.sh<span class="w"> </span>-calc<span class="w"> </span>oct-tilt<span class="w"> </span>-i<span class="w"> </span>model.xyz<span class="w"> </span>-n<span class="w"> </span>nl-Ti-O.dat<span class="w"> </span>-o<span class="w"> </span>oct_tilt_model.dat
-<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>
-<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="c1"># Example 2: octahedral tilt of the TiO6 octahedra from the last 20% trajectory frames</span>
-<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>gpumdkit.sh<span class="w"> </span>-calc<span class="w"> </span>oct-tilt<span class="w"> </span>-i<span class="w"> </span>movie.xyz<span class="w"> </span>-n<span class="w"> </span>nl-Ti-O.dat<span class="w"> </span>-l<span class="w"> </span><span class="m">0</span>.2<span class="w"> </span>-o<span class="w"> </span>octahedral_tilt.dat
+<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="c1"># Example 1: octahedral tilt of the TiO6 octahedra from a single frame</span>
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>gpumdkit.sh<span class="w"> </span>-calc<span class="w"> </span>oct-tilt<span class="w"> </span>-i<span class="w"> </span>model.xyz<span class="w"> </span>-n<span class="w"> </span>nl-Ti-O.dat<span class="w"> </span>-o<span class="w"> </span>oct_tilt_model.dat
+<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>
+<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a><span class="c1"># Example 2: octahedral tilt of the TiO6 octahedra from the last 20% trajectory frames</span>
+<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a>gpumdkit.sh<span class="w"> </span>-calc<span class="w"> </span>oct-tilt<span class="w"> </span>-i<span class="w"> </span>movie.xyz<span class="w"> </span>-n<span class="w"> </span>nl-Ti-O.dat<span class="w"> </span>-l<span class="w"> </span><span class="m">0</span>.2<span class="w"> </span>-o<span class="w"> </span>octahedral_tilt.dat
 </code></pre></div>
 <h3 id="arguments-complete_3">Arguments (complete)</h3>
 <ul>
@@ -2342,7 +2437,7 @@ This is commonly used to analyze octahedral rotation patterns in <code>ABO3</cod
   Slice step. Default: <code>1</code>.</li>
 <li><code>-l, --last</code>:
   Select trailing frames (<code>last N</code> or <code>last ratio</code>).</li>
-<li><code>--last</code> is mutually exclusive with <code>-s/-t/-p</code>.</li>
+<li><code>-l/--last</code> is mutually exclusive with <code>-s/-t/-p</code>.</li>
 </ul>
 <h3 id="output-file_3">Output file</h3>
 <ul>
@@ -2352,13 +2447,13 @@ This is commonly used to analyze octahedral rotation patterns in <code>ABO3</cod
 <h2 id="410-calc-polarization-for-abo3-calc_polarization_abo3py">410) Calc polarization for ABO3 (<code>calc_polarization_abo3.py</code>)</h2>
 <p>Calculate local polarization vectors for <code>ABO3</code> systems.</p>
 <h3 id="usage_4">Usage</h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># Example 1: single-frame ABO3 polarization</span>
-<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>gpumdkit.sh<span class="w"> </span>-calc<span class="w"> </span>pol-abo3<span class="w"> </span>-i<span class="w"> </span>model.xyz<span class="w"> </span>--nl-ba<span class="w"> </span>nl-Ti-Pb.dat<span class="w"> </span>--nl-bo<span class="w"> </span>nl-Ti-O.dat<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a><span class="w">  </span>--bec<span class="w"> </span><span class="nv">Pb</span><span class="o">=</span><span class="m">2</span><span class="w"> </span><span class="nv">Sr</span><span class="o">=</span><span class="m">2</span><span class="w"> </span><span class="nv">Ti</span><span class="o">=</span><span class="m">4</span>.0<span class="w"> </span><span class="nv">O</span><span class="o">=</span>-2.0<span class="w"> </span>-o<span class="w"> </span>polarization_model.dat
-<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a>
-<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a><span class="c1"># Example 2: trajectory polarization on a selected frame window</span>
-<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a>gpumdkit.sh<span class="w"> </span>-calc<span class="w"> </span>pol-abo3<span class="w"> </span>-i<span class="w"> </span>movie.xyz<span class="w"> </span>--nl-ba<span class="w"> </span>nl-Ti-Pb.dat<span class="w"> </span>--nl-bo<span class="w"> </span>nl-Ti-O.dat<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a><span class="w">  </span>--bec<span class="w"> </span><span class="nv">Pb</span><span class="o">=</span><span class="m">2</span><span class="w"> </span><span class="nv">Ti</span><span class="o">=</span><span class="m">4</span>.0<span class="w"> </span><span class="nv">O</span><span class="o">=</span>-2.0<span class="w"> </span>-s<span class="w"> </span><span class="m">200</span><span class="w"> </span>-t<span class="w"> </span><span class="m">600</span><span class="w"> </span>-p<span class="w"> </span><span class="m">5</span><span class="w"> </span>-o<span class="w"> </span>polarization_slice.dat
+<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="c1"># Example 1: single-frame ABO3 polarization</span>
+<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>gpumdkit.sh<span class="w"> </span>-calc<span class="w"> </span>pol-abo3<span class="w"> </span>-i<span class="w"> </span>model.xyz<span class="w"> </span>--nl-ba<span class="w"> </span>nl-Ti-Pb.dat<span class="w"> </span>--nl-bo<span class="w"> </span>nl-Ti-O.dat<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a><span class="w">  </span>--bec<span class="w"> </span><span class="nv">Pb</span><span class="o">=</span><span class="m">2</span><span class="w"> </span><span class="nv">Sr</span><span class="o">=</span><span class="m">2</span><span class="w"> </span><span class="nv">Ti</span><span class="o">=</span><span class="m">4</span>.0<span class="w"> </span><span class="nv">O</span><span class="o">=</span>-2.0<span class="w"> </span>-o<span class="w"> </span>polarization_model.dat
+<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a>
+<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a><span class="c1"># Example 2: trajectory polarization on a selected frame window</span>
+<a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a>gpumdkit.sh<span class="w"> </span>-calc<span class="w"> </span>pol-abo3<span class="w"> </span>-i<span class="w"> </span>movie.xyz<span class="w"> </span>--nl-ba<span class="w"> </span>nl-Ti-Pb.dat<span class="w"> </span>--nl-bo<span class="w"> </span>nl-Ti-O.dat<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a><span class="w">  </span>--bec<span class="w"> </span><span class="nv">Pb</span><span class="o">=</span><span class="m">2</span><span class="w"> </span><span class="nv">Ti</span><span class="o">=</span><span class="m">4</span>.0<span class="w"> </span><span class="nv">O</span><span class="o">=</span>-2.0<span class="w"> </span>-s<span class="w"> </span><span class="m">200</span><span class="w"> </span>-t<span class="w"> </span><span class="m">600</span><span class="w"> </span>-p<span class="w"> </span><span class="m">5</span><span class="w"> </span>-o<span class="w"> </span>polarization_slice.dat
 </code></pre></div>
 <h3 id="arguments-complete_4">Arguments (complete)</h3>
 <ul>
@@ -2381,7 +2476,7 @@ This is commonly used to analyze octahedral rotation patterns in <code>ABO3</cod
   Slice step. Default: <code>1</code>.</li>
 <li><code>-l, --last</code>:
   Select trailing frames (<code>last N</code> or <code>last ratio</code>).</li>
-<li><code>--last</code> is mutually exclusive with <code>-s/-t/-p</code>.</li>
+<li><code>-l/--last</code> is mutually exclusive with <code>-s/-t/-p</code>.</li>
 </ul>
 <p>Important checks:</p>
 <ul>
@@ -2395,11 +2490,11 @@ This is commonly used to analyze octahedral rotation patterns in <code>ABO3</cod
 </ul>
 <h3 id="plane-grid-visualization-plt_plane_gridpy">Plane-grid visualization (<code>plt_plane_grid.py</code>)</h3>
 <p>You can visualize either <code>displacements.dat</code> or <code>polarization.dat</code>:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="c1"># Example 1: displacement map on Ti sites, first XY layer</span>
-<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>gpumdkit.sh<span class="w"> </span>-plt<span class="w"> </span>plane-grid<span class="w"> </span>-i<span class="w"> </span>model.xyz<span class="w"> </span>-d<span class="w"> </span>displacements.dat<span class="w"> </span>-e<span class="w"> </span>Ti<span class="w"> </span>--select-xy<span class="w"> </span><span class="m">0</span>
-<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>
-<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a><span class="c1"># Example 2: polarization map on Pb sites, XZ and YZ layers</span>
-<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a>gpumdkit.sh<span class="w"> </span>-plt<span class="w"> </span>plane-grid<span class="w"> </span>-i<span class="w"> </span>model.xyz<span class="w"> </span>-d<span class="w"> </span>polarization.dat<span class="w"> </span>-e<span class="w"> </span>Pb<span class="w"> </span>--select-xz<span class="w"> </span><span class="m">0</span><span class="w"> </span><span class="m">1</span><span class="w"> </span><span class="m">2</span><span class="w"> </span>--select-yz<span class="w"> </span><span class="m">3</span><span class="w"> </span><span class="m">4</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="c1"># Example 1: displacement map on Ti sites, first XY layer</span>
+<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>gpumdkit.sh<span class="w"> </span>-plt<span class="w"> </span>plane-grid<span class="w"> </span>-i<span class="w"> </span>model.xyz<span class="w"> </span>-d<span class="w"> </span>displacements.dat<span class="w"> </span>-e<span class="w"> </span>Ti<span class="w"> </span>--select-xy<span class="w"> </span><span class="m">0</span>
+<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a>
+<a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a><span class="c1"># Example 2: polarization map on Pb sites, XZ and YZ layers</span>
+<a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a>gpumdkit.sh<span class="w"> </span>-plt<span class="w"> </span>plane-grid<span class="w"> </span>-i<span class="w"> </span>model.xyz<span class="w"> </span>-d<span class="w"> </span>polarization.dat<span class="w"> </span>-e<span class="w"> </span>Pb<span class="w"> </span>--select-xz<span class="w"> </span><span class="m">0</span><span class="w"> </span><span class="m">1</span><span class="w"> </span><span class="m">2</span><span class="w"> </span>--select-yz<span class="w"> </span><span class="m">3</span><span class="w"> </span><span class="m">4</span>
 </code></pre></div>
 <p>Arguments (complete):</p>
 <ul>
@@ -2430,7 +2525,7 @@ This is commonly used to analyze octahedral rotation patterns in <code>ABO3</cod
 <li>Saves figures as <code>XY_*.png</code>, <code>XZ_*.png</code>, <code>YZ_*.png</code>.</li>
 </ul>
 <div align="center">
-    <img src="../Gallery/PTO_STO_superlattice.png" alt="PTO_STO" width="65%" />
+    <img src="../../Gallery/PTO_STO_superlattice.png" alt="PTO_STO" width="65%" />
 </div>
 
 <h2 id="output-files-at-a-glance">Output files at a glance</h2>
@@ -2478,89 +2573,89 @@ This is commonly used to analyze octahedral rotation patterns in <code>ABO3</cod
 <h2 id="real-examples">Real Examples</h2>
 <h3 id="temperature-driven-ferroelectric-to-paraelectric-phase-transition-for-pbtio3">Temperature-driven Ferroelectric-to-paraelectric phase transition for PbTiO3</h3>
 <p>Assume all files are in the current directory <code>./</code>:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>./
-<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>├── model.xyz
-<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a>├── 300K.xyz
-<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a>├── 350K.xyz
-<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a>├── 400K.xyz
-<a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a>├── ...
-<a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a>└── 800K.xyz
+<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a>./
+<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a>├── model.xyz
+<a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a>├── 300K.xyz
+<a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a>├── 350K.xyz
+<a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a>├── 400K.xyz
+<a id="__codelineno-10-6" name="__codelineno-10-6" href="#__codelineno-10-6"></a>├── ...
+<a id="__codelineno-10-7" name="__codelineno-10-7" href="#__codelineno-10-7"></a>└── 800K.xyz
 </code></pre></div>
 <p><code>model.xyz</code> is the initial structure used to run MD simulations. Each <code>TEMP K.xyz</code> is a trajectory at that temperature.</p>
 <h4 id="step-1-get-averaged-structures-from-the-last-half-of-each-trajectory">Step 1: get averaged structures from the last half of each trajectory</h4>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="k">for</span><span class="w"> </span>f<span class="w"> </span><span class="k">in</span><span class="w"> </span>*K.xyz<span class="p">;</span><span class="w"> </span><span class="k">do</span>
-<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a><span class="w">  </span><span class="nv">tag</span><span class="o">=</span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">f</span><span class="p">%.xyz</span><span class="si">}</span><span class="s2">&quot;</span>
-<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a><span class="w">  </span>gpumdkit.sh<span class="w"> </span>-calc<span class="w"> </span>avg-struct<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$f</span><span class="s2">&quot;</span><span class="w"> </span>-l<span class="w"> </span><span class="m">0</span>.5<span class="w"> </span>-o<span class="w"> </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">tag</span><span class="si">}</span><span class="s2">-avg.xyz&quot;</span>
-<a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a><span class="k">done</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a><span class="k">for</span><span class="w"> </span>f<span class="w"> </span><span class="k">in</span><span class="w"> </span>*K.xyz<span class="p">;</span><span class="w"> </span><span class="k">do</span>
+<a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a><span class="w">  </span><span class="nv">tag</span><span class="o">=</span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">f</span><span class="p">%.xyz</span><span class="si">}</span><span class="s2">&quot;</span>
+<a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a><span class="w">  </span>gpumdkit.sh<span class="w"> </span>-calc<span class="w"> </span>avg-struct<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$f</span><span class="s2">&quot;</span><span class="w"> </span>-l<span class="w"> </span><span class="m">0</span>.5<span class="w"> </span>-o<span class="w"> </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">tag</span><span class="si">}</span><span class="s2">-avg.xyz&quot;</span>
+<a id="__codelineno-11-4" name="__codelineno-11-4" href="#__codelineno-11-4"></a><span class="k">done</span>
 </code></pre></div>
 <p>This writes <code>300K-avg.xyz</code>, <code>350K-avg.xyz</code>, ..., <code>800K-avg.xyz</code>.</p>
 <h4 id="step-2-build-neighbor-lists-from-modelxyz">Step 2: build neighbor lists from <code>model.xyz</code></h4>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="c1"># B-O list: for each Ti, find the nearest 6 O atoms</span>
-<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a>gpumdkit.sh<span class="w"> </span>-calc<span class="w"> </span>nlist<span class="w"> </span>-i<span class="w"> </span>model.xyz<span class="w"> </span>-c<span class="w"> </span><span class="m">4</span>.0<span class="w"> </span>-n<span class="w"> </span><span class="m">6</span><span class="w"> </span>-C<span class="w"> </span>Ti<span class="w"> </span>-E<span class="w"> </span>O<span class="w"> </span>-o<span class="w"> </span>nl-Ti-O.dat
-<a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a>
-<a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a><span class="c1"># A-O list: for each Pb, find the nearest 12 O atoms</span>
-<a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a>gpumdkit.sh<span class="w"> </span>-calc<span class="w"> </span>nlist<span class="w"> </span>-i<span class="w"> </span>model.xyz<span class="w"> </span>-c<span class="w"> </span><span class="m">4</span>.0<span class="w"> </span>-n<span class="w"> </span><span class="m">12</span><span class="w"> </span>-C<span class="w"> </span>Pb<span class="w"> </span>-E<span class="w"> </span>O<span class="w"> </span>-o<span class="w"> </span>nl-Pb-O.dat
-<a id="__codelineno-10-6" name="__codelineno-10-6" href="#__codelineno-10-6"></a>
-<a id="__codelineno-10-7" name="__codelineno-10-7" href="#__codelineno-10-7"></a><span class="c1"># B-A list required by pol-abo3: for each Ti, find the nearest 8 Pb atoms</span>
-<a id="__codelineno-10-8" name="__codelineno-10-8" href="#__codelineno-10-8"></a>gpumdkit.sh<span class="w"> </span>-calc<span class="w"> </span>nlist<span class="w"> </span>-i<span class="w"> </span>model.xyz<span class="w"> </span>-c<span class="w"> </span><span class="m">5</span>.0<span class="w"> </span>-n<span class="w"> </span><span class="m">8</span><span class="w"> </span>-C<span class="w"> </span>Ti<span class="w"> </span>-E<span class="w"> </span>Pb<span class="w"> </span>-o<span class="w"> </span>nl-Ti-Pb.dat
+<div class="highlight"><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a><span class="c1"># B-O list: for each Ti, find the nearest 6 O atoms</span>
+<a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a>gpumdkit.sh<span class="w"> </span>-calc<span class="w"> </span>nlist<span class="w"> </span>-i<span class="w"> </span>model.xyz<span class="w"> </span>-c<span class="w"> </span><span class="m">4</span>.0<span class="w"> </span>-n<span class="w"> </span><span class="m">6</span><span class="w"> </span>-C<span class="w"> </span>Ti<span class="w"> </span>-E<span class="w"> </span>O<span class="w"> </span>-o<span class="w"> </span>nl-Ti-O.dat
+<a id="__codelineno-12-3" name="__codelineno-12-3" href="#__codelineno-12-3"></a>
+<a id="__codelineno-12-4" name="__codelineno-12-4" href="#__codelineno-12-4"></a><span class="c1"># A-O list: for each Pb, find the nearest 12 O atoms</span>
+<a id="__codelineno-12-5" name="__codelineno-12-5" href="#__codelineno-12-5"></a>gpumdkit.sh<span class="w"> </span>-calc<span class="w"> </span>nlist<span class="w"> </span>-i<span class="w"> </span>model.xyz<span class="w"> </span>-c<span class="w"> </span><span class="m">4</span>.0<span class="w"> </span>-n<span class="w"> </span><span class="m">12</span><span class="w"> </span>-C<span class="w"> </span>Pb<span class="w"> </span>-E<span class="w"> </span>O<span class="w"> </span>-o<span class="w"> </span>nl-Pb-O.dat
+<a id="__codelineno-12-6" name="__codelineno-12-6" href="#__codelineno-12-6"></a>
+<a id="__codelineno-12-7" name="__codelineno-12-7" href="#__codelineno-12-7"></a><span class="c1"># B-A list required by pol-abo3: for each Ti, find the nearest 8 Pb atoms</span>
+<a id="__codelineno-12-8" name="__codelineno-12-8" href="#__codelineno-12-8"></a>gpumdkit.sh<span class="w"> </span>-calc<span class="w"> </span>nlist<span class="w"> </span>-i<span class="w"> </span>model.xyz<span class="w"> </span>-c<span class="w"> </span><span class="m">5</span>.0<span class="w"> </span>-n<span class="w"> </span><span class="m">8</span><span class="w"> </span>-C<span class="w"> </span>Ti<span class="w"> </span>-E<span class="w"> </span>Pb<span class="w"> </span>-o<span class="w"> </span>nl-Ti-Pb.dat
 </code></pre></div>
 <h4 id="step-3-compute-displacement-and-polarization-for-each-temperature">Step 3: compute displacement and polarization for each temperature</h4>
 <p>Use Born effective charges (BEC), not nominal ionic charges. For PbTiO3 in this example:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a><span class="n">PTO</span> <span class="o">=</span> <span class="p">{</span>
-<a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a>    <span class="s1">&#39;Pb&#39;</span><span class="p">:</span> <span class="mf">3.44</span><span class="p">,</span>
-<a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a>    <span class="s1">&#39;Ti&#39;</span><span class="p">:</span> <span class="mf">5.18</span><span class="p">,</span>
-<a id="__codelineno-11-4" name="__codelineno-11-4" href="#__codelineno-11-4"></a>    <span class="s1">&#39;O&#39;</span><span class="p">:</span> <span class="o">-</span><span class="p">(</span><span class="mf">3.44</span> <span class="o">+</span> <span class="mf">5.18</span><span class="p">)</span> <span class="o">/</span> <span class="mi">3</span>
-<a id="__codelineno-11-5" name="__codelineno-11-5" href="#__codelineno-11-5"></a><span class="p">}</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a><span class="n">PTO</span> <span class="o">=</span> <span class="p">{</span>
+<a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a>    <span class="s1">&#39;Pb&#39;</span><span class="p">:</span> <span class="mf">3.44</span><span class="p">,</span>
+<a id="__codelineno-13-3" name="__codelineno-13-3" href="#__codelineno-13-3"></a>    <span class="s1">&#39;Ti&#39;</span><span class="p">:</span> <span class="mf">5.18</span><span class="p">,</span>
+<a id="__codelineno-13-4" name="__codelineno-13-4" href="#__codelineno-13-4"></a>    <span class="s1">&#39;O&#39;</span><span class="p">:</span> <span class="o">-</span><span class="p">(</span><span class="mf">3.44</span> <span class="o">+</span> <span class="mf">5.18</span><span class="p">)</span> <span class="o">/</span> <span class="mi">3</span>
+<a id="__codelineno-13-5" name="__codelineno-13-5" href="#__codelineno-13-5"></a><span class="p">}</span>
 </code></pre></div>
 <p>You can obtain BEC from your own DFPT calculation or from literature values. Thus use following commands to compute local displacement and polarization:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a><span class="k">for</span><span class="w"> </span>f<span class="w"> </span><span class="k">in</span><span class="w"> </span>*K.xyz<span class="p">;</span><span class="w"> </span><span class="k">do</span>
-<a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a><span class="w">  </span><span class="nv">tag</span><span class="o">=</span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">f</span><span class="p">%.xyz</span><span class="si">}</span><span class="s2">&quot;</span>
-<a id="__codelineno-12-3" name="__codelineno-12-3" href="#__codelineno-12-3"></a><span class="w">  </span>gpumdkit.sh<span class="w"> </span>-calc<span class="w"> </span>disp<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$f</span><span class="s2">&quot;</span><span class="w"> </span>-n<span class="w"> </span>nl-Ti-O.dat<span class="w"> </span>-l<span class="w"> </span><span class="m">0</span>.5<span class="w"> </span>-o<span class="w"> </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">tag</span><span class="si">}</span><span class="s2">-disp.dat&quot;</span>
-<a id="__codelineno-12-4" name="__codelineno-12-4" href="#__codelineno-12-4"></a><span class="w">  </span>gpumdkit.sh<span class="w"> </span>-calc<span class="w"> </span>pol-abo3<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$f</span><span class="s2">&quot;</span><span class="w"> </span>--nl-ba<span class="w"> </span>nl-Ti-Pb.dat<span class="w"> </span>--nl-bo<span class="w"> </span>nl-Ti-O.dat<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-12-5" name="__codelineno-12-5" href="#__codelineno-12-5"></a><span class="w">    </span>--bec<span class="w"> </span><span class="nv">Pb</span><span class="o">=</span><span class="m">3</span>.44<span class="w"> </span><span class="nv">Ti</span><span class="o">=</span><span class="m">5</span>.18<span class="w"> </span><span class="nv">O</span><span class="o">=</span>-2.8733333333<span class="w"> </span>-l<span class="w"> </span><span class="m">0</span>.5<span class="w"> </span>-o<span class="w"> </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">tag</span><span class="si">}</span><span class="s2">-pol.dat&quot;</span>
-<a id="__codelineno-12-6" name="__codelineno-12-6" href="#__codelineno-12-6"></a><span class="k">done</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a><span class="k">for</span><span class="w"> </span>f<span class="w"> </span><span class="k">in</span><span class="w"> </span>*K.xyz<span class="p">;</span><span class="w"> </span><span class="k">do</span>
+<a id="__codelineno-14-2" name="__codelineno-14-2" href="#__codelineno-14-2"></a><span class="w">  </span><span class="nv">tag</span><span class="o">=</span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">f</span><span class="p">%.xyz</span><span class="si">}</span><span class="s2">&quot;</span>
+<a id="__codelineno-14-3" name="__codelineno-14-3" href="#__codelineno-14-3"></a><span class="w">  </span>gpumdkit.sh<span class="w"> </span>-calc<span class="w"> </span>disp<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$f</span><span class="s2">&quot;</span><span class="w"> </span>-n<span class="w"> </span>nl-Ti-O.dat<span class="w"> </span>-l<span class="w"> </span><span class="m">0</span>.5<span class="w"> </span>-o<span class="w"> </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">tag</span><span class="si">}</span><span class="s2">-disp.dat&quot;</span>
+<a id="__codelineno-14-4" name="__codelineno-14-4" href="#__codelineno-14-4"></a><span class="w">  </span>gpumdkit.sh<span class="w"> </span>-calc<span class="w"> </span>pol-abo3<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$f</span><span class="s2">&quot;</span><span class="w"> </span>--nl-ba<span class="w"> </span>nl-Ti-Pb.dat<span class="w"> </span>--nl-bo<span class="w"> </span>nl-Ti-O.dat<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-14-5" name="__codelineno-14-5" href="#__codelineno-14-5"></a><span class="w">    </span>--bec<span class="w"> </span><span class="nv">Pb</span><span class="o">=</span><span class="m">3</span>.44<span class="w"> </span><span class="nv">Ti</span><span class="o">=</span><span class="m">5</span>.18<span class="w"> </span><span class="nv">O</span><span class="o">=</span>-2.8733333333<span class="w"> </span>-l<span class="w"> </span><span class="m">0</span>.5<span class="w"> </span>-o<span class="w"> </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">tag</span><span class="si">}</span><span class="s2">-pol.dat&quot;</span>
+<a id="__codelineno-14-6" name="__codelineno-14-6" href="#__codelineno-14-6"></a><span class="k">done</span>
 </code></pre></div>
 <h4 id="step-4-plot-displacement-and-polarization-maps-in-real-space">Step 4: plot displacement and polarization maps in real space</h4>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a><span class="k">for</span><span class="w"> </span>f<span class="w"> </span><span class="k">in</span><span class="w"> </span>*K.xyz<span class="p">;</span><span class="w"> </span><span class="k">do</span>
-<a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a><span class="w">  </span><span class="nv">tag</span><span class="o">=</span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">f</span><span class="p">%.xyz</span><span class="si">}</span><span class="s2">&quot;</span>
-<a id="__codelineno-13-3" name="__codelineno-13-3" href="#__codelineno-13-3"></a><span class="w">  </span>gpumdkit.sh<span class="w"> </span>-plt<span class="w"> </span>plane-grid<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">tag</span><span class="si">}</span><span class="s2">-avg.xyz&quot;</span><span class="w"> </span>-d<span class="w"> </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">tag</span><span class="si">}</span><span class="s2">-disp.dat&quot;</span><span class="w"> </span>-e<span class="w"> </span>Ti<span class="w"> </span>--select-xz<span class="w"> </span><span class="m">1</span><span class="w"> </span>-o<span class="w"> </span><span class="s2">&quot;plot-</span><span class="si">${</span><span class="nv">tag</span><span class="si">}</span><span class="s2">-disp&quot;</span>
-<a id="__codelineno-13-4" name="__codelineno-13-4" href="#__codelineno-13-4"></a><span class="w">  </span>gpumdkit.sh<span class="w"> </span>-plt<span class="w"> </span>plane-grid<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">tag</span><span class="si">}</span><span class="s2">-avg.xyz&quot;</span><span class="w"> </span>-d<span class="w"> </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">tag</span><span class="si">}</span><span class="s2">-pol.dat&quot;</span><span class="w"> </span>-e<span class="w"> </span>Ti<span class="w"> </span>--select-xz<span class="w"> </span><span class="m">1</span><span class="w"> </span>-o<span class="w"> </span><span class="s2">&quot;plot-</span><span class="si">${</span><span class="nv">tag</span><span class="si">}</span><span class="s2">-pol&quot;</span>
-<a id="__codelineno-13-5" name="__codelineno-13-5" href="#__codelineno-13-5"></a><span class="k">done</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a><span class="k">for</span><span class="w"> </span>f<span class="w"> </span><span class="k">in</span><span class="w"> </span>*K.xyz<span class="p">;</span><span class="w"> </span><span class="k">do</span>
+<a id="__codelineno-15-2" name="__codelineno-15-2" href="#__codelineno-15-2"></a><span class="w">  </span><span class="nv">tag</span><span class="o">=</span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">f</span><span class="p">%.xyz</span><span class="si">}</span><span class="s2">&quot;</span>
+<a id="__codelineno-15-3" name="__codelineno-15-3" href="#__codelineno-15-3"></a><span class="w">  </span>gpumdkit.sh<span class="w"> </span>-plt<span class="w"> </span>plane-grid<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">tag</span><span class="si">}</span><span class="s2">-avg.xyz&quot;</span><span class="w"> </span>-d<span class="w"> </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">tag</span><span class="si">}</span><span class="s2">-disp.dat&quot;</span><span class="w"> </span>-e<span class="w"> </span>Ti<span class="w"> </span>--select-xz<span class="w"> </span><span class="m">1</span><span class="w"> </span>-o<span class="w"> </span><span class="s2">&quot;plot-</span><span class="si">${</span><span class="nv">tag</span><span class="si">}</span><span class="s2">-disp&quot;</span>
+<a id="__codelineno-15-4" name="__codelineno-15-4" href="#__codelineno-15-4"></a><span class="w">  </span>gpumdkit.sh<span class="w"> </span>-plt<span class="w"> </span>plane-grid<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">tag</span><span class="si">}</span><span class="s2">-avg.xyz&quot;</span><span class="w"> </span>-d<span class="w"> </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">tag</span><span class="si">}</span><span class="s2">-pol.dat&quot;</span><span class="w"> </span>-e<span class="w"> </span>Ti<span class="w"> </span>--select-xz<span class="w"> </span><span class="m">1</span><span class="w"> </span>-o<span class="w"> </span><span class="s2">&quot;plot-</span><span class="si">${</span><span class="nv">tag</span><span class="si">}</span><span class="s2">-pol&quot;</span>
+<a id="__codelineno-15-5" name="__codelineno-15-5" href="#__codelineno-15-5"></a><span class="k">done</span>
 </code></pre></div>
 <h4 id="step-5-build-a-temperature-order-parameter-curve">Step 5: build a temperature-order-parameter curve</h4>
 <p>By analyzing the lattice of each temperature-averaged structure together with its polarization (<code>XX-pol.dat</code>), we can obtain the following figure:</p>
 <div align="center">
-    <img src="../Gallery/PTO-temp.png" alt="PTO-temp" width="65%" />
+    <img src="../../Gallery/PTO-temp.png" alt="PTO-temp" width="65%" />
 </div>
 
 <p>The trend shows a clear phase transition around <code>600 K</code>, where the polarization vanishes.</p>
 <h3 id="topological-structure-in-pbtio3srtio3-superlattice">Topological structure in PbTiO3/SrTiO3 superlattice</h3>
 <p>Assume <code>movie.xyz</code> is the trajectory of the PbTiO3/SrTiO3 superlattice in the current directory.</p>
 <h4 id="step-1-build-an-averaged-structure-from-the-last-25-frames">Step 1: build an averaged structure from the last 25% frames</h4>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a>gpumdkit.sh<span class="w"> </span>-calc<span class="w"> </span>avg-struct<span class="w"> </span>-i<span class="w"> </span>movie.xyz<span class="w"> </span>-l<span class="w"> </span><span class="m">0</span>.25<span class="w"> </span>-o<span class="w"> </span>model-avg.xyz
+<div class="highlight"><pre><span></span><code><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a>gpumdkit.sh<span class="w"> </span>-calc<span class="w"> </span>avg-struct<span class="w"> </span>-i<span class="w"> </span>movie.xyz<span class="w"> </span>-l<span class="w"> </span><span class="m">0</span>.25<span class="w"> </span>-o<span class="w"> </span>model-avg.xyz
 </code></pre></div>
 <h4 id="step-2-build-the-ti-neighbor-list">Step 2: build the Ti neighbor list</h4>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a>gpumdkit.sh<span class="w"> </span>-calc<span class="w"> </span>nlist<span class="w"> </span>-i<span class="w"> </span>model-avg.xyz<span class="w"> </span>-c<span class="w"> </span><span class="m">4</span>.0<span class="w"> </span>-n<span class="w"> </span><span class="m">6</span><span class="w"> </span>-C<span class="w"> </span>Ti<span class="w"> </span>-E<span class="w"> </span>O<span class="w"> </span>-o<span class="w"> </span>nl-Ti-O.dat
+<div class="highlight"><pre><span></span><code><a id="__codelineno-17-1" name="__codelineno-17-1" href="#__codelineno-17-1"></a>gpumdkit.sh<span class="w"> </span>-calc<span class="w"> </span>nlist<span class="w"> </span>-i<span class="w"> </span>model-avg.xyz<span class="w"> </span>-c<span class="w"> </span><span class="m">4</span>.0<span class="w"> </span>-n<span class="w"> </span><span class="m">6</span><span class="w"> </span>-C<span class="w"> </span>Ti<span class="w"> </span>-E<span class="w"> </span>O<span class="w"> </span>-o<span class="w"> </span>nl-Ti-O.dat
 </code></pre></div>
 <h4 id="step-3-plot-the-plane-grid-map">Step 3: plot the plane-grid map</h4>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a>gpumdkit.sh<span class="w"> </span>-calc<span class="w"> </span>disp<span class="w"> </span>-i<span class="w"> </span>movie.xyz<span class="w"> </span>-n<span class="w"> </span>nl-Ti-O.dat<span class="w"> </span>-l<span class="w"> </span><span class="m">0</span>.25<span class="w"> </span>-o<span class="w"> </span>disp-last25.dat
-<a id="__codelineno-16-2" name="__codelineno-16-2" href="#__codelineno-16-2"></a>gpumdkit.sh<span class="w"> </span>-plt<span class="w"> </span>plane-grid<span class="w"> </span>-i<span class="w"> </span>model-avg.xyz<span class="w"> </span>-d<span class="w"> </span>disp-last25.dat<span class="w"> </span>-e<span class="w"> </span>Ti<span class="w"> </span>--select-xy<span class="w"> </span><span class="m">0</span><span class="w"> </span>-o<span class="w"> </span>plot-topology
+<div class="highlight"><pre><span></span><code><a id="__codelineno-18-1" name="__codelineno-18-1" href="#__codelineno-18-1"></a>gpumdkit.sh<span class="w"> </span>-calc<span class="w"> </span>disp<span class="w"> </span>-i<span class="w"> </span>movie.xyz<span class="w"> </span>-n<span class="w"> </span>nl-Ti-O.dat<span class="w"> </span>-l<span class="w"> </span><span class="m">0</span>.25<span class="w"> </span>-o<span class="w"> </span>disp-last25.dat
+<a id="__codelineno-18-2" name="__codelineno-18-2" href="#__codelineno-18-2"></a>gpumdkit.sh<span class="w"> </span>-plt<span class="w"> </span>plane-grid<span class="w"> </span>-i<span class="w"> </span>model-avg.xyz<span class="w"> </span>-d<span class="w"> </span>disp-last25.dat<span class="w"> </span>-e<span class="w"> </span>Ti<span class="w"> </span>--select-xy<span class="w"> </span><span class="m">0</span><span class="w"> </span>-o<span class="w"> </span>plot-topology
 </code></pre></div>
 <div align="center">
-    <img src="../Gallery/PTO-STO.png" alt="PTO_STO" width="65%" />
+    <img src="../../Gallery/PTO-STO.png" alt="PTO_STO" width="65%" />
 </div>
 
-<p>This gives a map similar to the one shown earlier. In the PTO region, a vortex-like polarization pattern is visible, while polarization in the STO region is close to zero. By analyzing how polarization varies around the vortex core, you can estimate the local dielectric response, but that is beyond the scope of this tutorial.</p>
-<p>Note: this figure uses a different colormap from the default GPUMDkit plotting style. The default output does not look exactly the same, but you can get this style with small plotting-script changes.</p>
+<p>This gives a map similar to the one shown earlier. In the PTO region, a vortex-like polarization pattern is visible, while polarization in the STO region is close to zero.</p>
+<p>Note: the example figure uses a custom colormap. The default GPUMDkit output uses a different style, which can be adjusted by editing the plotting script.</p>
 <h3 id="other-systems">Other Systems</h3>
 <h4 id="organic-inorganic-hybrid-ferroelectrics">Organic-inorganic hybrid ferroelectrics</h4>
 <p>In many organic-inorganic ferroelectrics, polarization is strongly tied to anisotropic molecular units. A practical way to track molecular orientation is to use bond vectors.</p>
 <p>For TMCM-CdCl3, you can use the C-Cl bond direction of the TMCM molecule as an orientation proxy, then use it to estimate the polarization state:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-17-1" name="__codelineno-17-1" href="#__codelineno-17-1"></a><span class="c1"># Find the nearest Cl around each C (tune cutoff if needed)</span>
-<a id="__codelineno-17-2" name="__codelineno-17-2" href="#__codelineno-17-2"></a>gpumdkit.sh<span class="w"> </span>-calc<span class="w"> </span>nlist<span class="w"> </span>-i<span class="w"> </span>model.xyz<span class="w"> </span>-c<span class="w"> </span><span class="m">3</span><span class="w"> </span>-n<span class="w"> </span><span class="m">1</span><span class="w"> </span>-C<span class="w"> </span>C<span class="w"> </span>-E<span class="w"> </span>Cl<span class="w"> </span>-o<span class="w"> </span>nl-C-Cl.dat
-<a id="__codelineno-17-3" name="__codelineno-17-3" href="#__codelineno-17-3"></a>
-<a id="__codelineno-17-4" name="__codelineno-17-4" href="#__codelineno-17-4"></a><span class="c1"># Compute C-Cl bond vectors from the trajectory</span>
-<a id="__codelineno-17-5" name="__codelineno-17-5" href="#__codelineno-17-5"></a>gpumdkit.sh<span class="w"> </span>-calc<span class="w"> </span>disp<span class="w"> </span>-i<span class="w"> </span>movie.xyz<span class="w"> </span>-n<span class="w"> </span>nl-C-Cl.dat<span class="w"> </span>-o<span class="w"> </span>ccl_vectors.dat
+<div class="highlight"><pre><span></span><code><a id="__codelineno-19-1" name="__codelineno-19-1" href="#__codelineno-19-1"></a><span class="c1"># Find the nearest Cl around each C (tune cutoff if needed)</span>
+<a id="__codelineno-19-2" name="__codelineno-19-2" href="#__codelineno-19-2"></a>gpumdkit.sh<span class="w"> </span>-calc<span class="w"> </span>nlist<span class="w"> </span>-i<span class="w"> </span>model.xyz<span class="w"> </span>-c<span class="w"> </span><span class="m">3</span><span class="w"> </span>-n<span class="w"> </span><span class="m">1</span><span class="w"> </span>-C<span class="w"> </span>C<span class="w"> </span>-E<span class="w"> </span>Cl<span class="w"> </span>-o<span class="w"> </span>nl-C-Cl.dat
+<a id="__codelineno-19-3" name="__codelineno-19-3" href="#__codelineno-19-3"></a>
+<a id="__codelineno-19-4" name="__codelineno-19-4" href="#__codelineno-19-4"></a><span class="c1"># Compute C-Cl bond vectors from the trajectory</span>
+<a id="__codelineno-19-5" name="__codelineno-19-5" href="#__codelineno-19-5"></a>gpumdkit.sh<span class="w"> </span>-calc<span class="w"> </span>disp<span class="w"> </span>-i<span class="w"> </span>movie.xyz<span class="w"> </span>-n<span class="w"> </span>nl-C-Cl.dat<span class="w"> </span>-o<span class="w"> </span>ccl_vectors.dat
 </code></pre></div>
 <p><code>ccl_vectors.dat</code> can then be analyzed as an orientation order parameter. More details could be found at: Phys. Rev. Lett. 136, 016801</p>
 <h4 id="other-ferroelectric-families">Other ferroelectric families</h4>

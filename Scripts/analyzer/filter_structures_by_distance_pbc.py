@@ -24,6 +24,24 @@ Last-modified: 2026-05-16
 """
 
 import sys
+
+args = sys.argv[1:]
+if len(args) < 1 or args[0] in ("-h", "--help"):
+    print(" Usage: gpumdkit.sh -filter_dist_pbc <file_name> [distance_threshold]")
+    print("    or: python filter_structures_by_distance_pbc.py <file_name> [distance_threshold]")
+    print("")
+    print(" Arguments:")
+    print("   file_name           Input extxyz trajectory file")
+    print("   distance_threshold  (optional) Minimum allowed interatomic distance (Angstrom)")
+    print("")
+    print(" Output:")
+    print("   filtered_<file_name>       Structures that pass the filter")
+    print("   filtered_out_<file_name>   Structures that fail the filter")
+    print("")
+    print(" Example: gpumdkit.sh -filter_dist_pbc train.xyz 1.5")
+    print("")
+    sys.exit(0 if args and args[0] in ("-h", "--help") else 1)
+
 import numpy as np
 from ase.io import read, write
 from scipy.spatial.distance import pdist
@@ -61,12 +79,6 @@ def calculate_pairwise_distances(lattice_params, atom_coords, fractional=True):
     distances = np.min(all_distances, axis=-1)
     np.fill_diagonal(distances, 0)
     return distances
-
-# Check command-line arguments
-if len(sys.argv) < 2:
-    print(" Usage: gpumdkit.sh -filter_dist_pbc <file_name> [distance_threshold]")
-    print("    or: python filter_structures_by_distance_pbc.py <file_name> [distance_threshold]")
-    sys.exit(1)
 
 # Read the file name from command line arguments
 file_name = sys.argv[1]

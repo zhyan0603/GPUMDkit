@@ -20,6 +20,22 @@ Last-modified: 2026-05-16
 """
 
 import sys
+
+args = sys.argv[1:]
+if len(args) < 1 or args[0] in ("-h", "--help"):
+    print(" Usage: gpumdkit.sh -exyz2pos <input.xyz>")
+    print("    or: python exyz2pos.py <input.xyz>")
+    print("")
+    print(" Arguments:")
+    print("   input.xyz   Input extxyz trajectory file")
+    print("")
+    print(" Output:")
+    print("   POSCAR_*.vasp   POSCAR file(s) in VASP format (one per frame)")
+    print("")
+    print(" Example: gpumdkit.sh -exyz2pos train.xyz")
+    print("")
+    sys.exit(0 if args and args[0] in ("-h", "--help") else 1)
+
 from ase.io import read, write
 
 def print_progress_bar(iteration, total, length=50):
@@ -30,12 +46,6 @@ def print_progress_bar(iteration, total, length=50):
     # Print New Line on Complete
     if iteration == total:
         print()
-
-# Check arguments
-if len(sys.argv) < 2:
-    print(" Usage: gpumdkit.sh -exyz2pos <input.xyz>")
-    print("    or: python exyz2pos.py <input.xyz>")
-    sys.exit(1)
 
 input_file = sys.argv[1]
 

@@ -22,6 +22,23 @@ Last-modified: 2026-05-16
 """
 
 import sys
+
+args = sys.argv[1:]
+if len(args) < 2 or args[0] in ("-h", "--help"):
+    print(" Usage: gpumdkit.sh -lmp2exyz <dump_file> <element1> <element2> ...")
+    print("    or: python lmp2exyz.py <dump_file> <element1> <element2> ...")
+    print("")
+    print(" Arguments:")
+    print("   dump_file   Input LAMMPS dump file")
+    print("   elementX    Chemical element symbols in order of atomic types")
+    print("")
+    print(" Output:")
+    print("   dump.xyz    Converted structures in extxyz format")
+    print("")
+    print(" Example: gpumdkit.sh -lmp2exyz dump.lammps Si O")
+    print("")
+    sys.exit(0 if args and args[0] in ("-h", "--help") else 1)
+
 from ase.io import read, write
 
 def lmp2exyz(dump_file, elements):
@@ -48,12 +65,7 @@ def lmp2exyz(dump_file, elements):
 #   print(f" Converted {dump_file} to {extxyz_file}")
 
 if __name__ == '__main__':
-    if len(sys.argv) < 3:
-        print(" Usage: gpumdkit.sh -lmp2exyz <dump_file> <element1> <element2> ...")
-        print("    or: python lmp2exyz.py <dump_file> <element1> <element2> ...")
-        sys.exit(1)
-    
     dump_file = sys.argv[1]
     elements = sys.argv[2:]
-    
+
     lmp2exyz(dump_file, elements)

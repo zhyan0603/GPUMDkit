@@ -22,6 +22,23 @@ Last-modified: 2026-05-16
 """
 
 import sys
+
+args = sys.argv[1:]
+if len(args) < 2 or args[0] in ("-h", "--help"):
+    print(" Usage: gpumdkit.sh -filter_box <exyzfile> <edge_limit>")
+    print("    or: python filter_exyz_by_box.py <input_file> <edge_limit>")
+    print("")
+    print(" Arguments:")
+    print("   exyzfile    Input extxyz trajectory file")
+    print("   edge_limit  Maximum allowed box-edge length (Angstrom)")
+    print("")
+    print(" Output:")
+    print("   filtered_by_box.xyz  Structures that pass the filter")
+    print("")
+    print(" Example: gpumdkit.sh -filter_box train.xyz 20.0")
+    print("")
+    sys.exit(0 if args and args[0] in ("-h", "--help") else 1)
+
 from ase.io import read, write
 import numpy as np
 
@@ -49,11 +66,6 @@ def filter_frames(input_file, output_file, edge_limit):
     print(f"Number of structures discarded: {discarded_count}")
 
 if __name__ == "__main__":
-    if len(sys.argv) != 3:
-        print(" Usage: gpumdkit.sh -filter_box <exyzfile> <edge_limit>")
-        print("    or: python filter_exyz_by_box.py <input_file> <edge_limit>")
-        sys.exit(1)
-
     input_file = sys.argv[1]
     output_file = "filtered_by_box.xyz"
     edge_limit = float(sys.argv[2])

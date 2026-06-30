@@ -24,10 +24,19 @@ Last-modified: 2026-05-16
 
 import sys
 
-if len(sys.argv) < 3:
+args = sys.argv[1:]
+if len(args) < 2 or args[0] in ("-h", "--help"):
     print(" Usage: gpumdkit.sh -range <exyzfile> <property> [hist]")
     print("    or: python energy_force_virial_analyzer.py <filename> <property> [hist]")
-    sys.exit(1)
+    print("")
+    print(" Arguments:")
+    print("   exyzfile    Input extxyz trajectory file")
+    print("   property    Property to analyze: energy, force, or virial")
+    print("   hist        (optional) If 'hist', plot a histogram")
+    print("")
+    print(" Example: gpumdkit.sh -range train.xyz force hist")
+    print("")
+    sys.exit(0 if args and args[0] in ("-h", "--help") else 1)
 
 import numpy as np
 from ase.io import read

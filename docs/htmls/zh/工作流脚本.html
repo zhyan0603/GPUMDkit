@@ -1094,6 +1094,17 @@
   <a href="#_3" class="md-nav__link">
     <span class="md-ellipsis">
       
+        基于模板的温度系列
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_4" class="md-nav__link">
+    <span class="md-ellipsis">
+      
         使用建议
       
     </span>
@@ -1441,6 +1452,17 @@
   <a href="#_3" class="md-nav__link">
     <span class="md-ellipsis">
       
+        基于模板的温度系列
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_4" class="md-nav__link">
+    <span class="md-ellipsis">
+      
         使用建议
       
     </span>
@@ -1480,7 +1502,19 @@
 <p>选择：</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>3) Workflow
 </code></pre></div>
-<p>常见菜单：</p>
+<p>菜单如下：</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>+---------------------------------------------------------+
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>|                      WORKFLOW TOOLS                     |
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>+---------------------------------------------------------+
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>| 301) SCF batch pretreatment                             |
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>| 302) MD sample batch pretreatment (gpumd)               |
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>| 303) MD sample batch pretreatment (lmp)                 |
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a>+---------------------------------------------------------+
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>| 000) Return to the main menu                            |
+<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a>+---------------------------------------------------------+
+<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a>Input the function number:
+</code></pre></div>
+<p>常用功能：</p>
 <table>
 <thead>
 <tr>
@@ -1510,8 +1544,8 @@
 <h2 id="scf">SCF 批处理预处理</h2>
 <p>适用于已有多个结构，需要准备第一性原理单点计算的情况。</p>
 <h3 id="vasp">VASP</h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>gpumdkit.sh
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="c1"># 选择 3 -&gt; 301 -&gt; VASP</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>gpumdkit.sh
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="c1"># 选择 3 -&gt; 301 -&gt; VASP</span>
 </code></pre></div>
 <p>运行前，把结构文件放在当前目录。脚本按以下顺序检测：</p>
 <ol>
@@ -1521,87 +1555,87 @@
 <li>如果没有 <code>.vasp</code> 且存在多个 <code>.xyz</code>，会让用户选择一个。</li>
 </ol>
 <p>运行前的典型目录：</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>current directory/
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>├── POSCAR_1.vasp
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>├── POSCAR_2.vasp
-<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>└── POSCAR_3.vasp
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>current directory/
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>├── POSCAR_1.vasp
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>├── POSCAR_2.vasp
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>└── POSCAR_3.vasp
 </code></pre></div>
 <p>或：</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>current directory/
-<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>└── sampled.xyz
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>current directory/
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>└── sampled.xyz
 </code></pre></div>
 <p>运行后脚本会创建：</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>current directory/
-<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>├── struct_fp/
-<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>│   ├── POSCAR_1.vasp
-<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>│   ├── POSCAR_2.vasp
-<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>│   └── ...
-<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>├── fp/
-<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a>├── &lt;prefix&gt;_1/
-<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a>├── &lt;prefix&gt;_2/
-<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a>└── presub.sh
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>current directory/
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>├── struct_fp/
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>│   ├── POSCAR_1.vasp
+<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a>│   ├── POSCAR_2.vasp
+<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a>│   └── ...
+<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a>├── fp/
+<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a>├── &lt;prefix&gt;_1/
+<a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a>├── &lt;prefix&gt;_2/
+<a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a>└── presub.sh
 </code></pre></div>
 <p><code>fp/</code> 是脚本自动创建的。脚本结束后，需要用户把 <code>INCAR</code>、<code>POTCAR</code>、<code>KPOINTS</code> 放到 <code>fp/</code> 中，计算目录会链接这里的文件。</p>
 <p>运行过程中输入的 <code>prefix</code> 会作为计算文件夹名前缀。后续使用 <code>out2xyz</code> 提取结果时，文件夹名会作为 <code>config_type</code> 写入 extxyz，便于之后检查结构来源。</p>
 <h3 id="cp2k">CP2K</h3>
 <p>CP2K 可以从交互菜单进入，也可以直接命令行调用：</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>gpumdkit.sh
-<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a><span class="c1"># 选择 3 -&gt; 301 -&gt; CP2K</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>gpumdkit.sh
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a><span class="c1"># 选择 3 -&gt; 301 -&gt; CP2K</span>
 </code></pre></div>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>python<span class="w"> </span>Scripts/workflow/scf_batch_pretreatment_cp2k.py<span class="w"> </span>train.xyz<span class="w"> </span>template.inp<span class="w"> </span>calc
+<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>python<span class="w"> </span>Scripts/workflow/scf_batch_pretreatment_cp2k.py<span class="w"> </span>train.xyz<span class="w"> </span>template.inp<span class="w"> </span>calc
 </code></pre></div>
 <p>交互模式会要求输入：</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>&lt;extxyz_file&gt; &lt;template.inp&gt; &lt;prefix_name&gt;
+<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>&lt;extxyz_file&gt; &lt;template.inp&gt; &lt;prefix_name&gt;
 </code></pre></div>
 <p>示例：</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>dump.xyz template.inp H2O
+<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a>dump.xyz template.inp H2O
 </code></pre></div>
 <p>CP2K 模板应设置为从 <code>pos.xyz</code> 读取坐标。参考模板在：</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a>Scripts/workflow/cp2k_template.inp
+<div class="highlight"><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a>Scripts/workflow/cp2k_template.inp
 </code></pre></div>
 <p>脚本会为每个结构生成 <code>&lt;prefix&gt;_&lt;index&gt;/</code> 目录，并写入 <code>input.inp</code> 和 <code>pos.xyz</code>。</p>
 <h2 id="md">MD 采样预处理</h2>
 <h3 id="gpumd">GPUMD</h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a>gpumdkit.sh
-<a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a><span class="c1"># 选择 3 -&gt; 302</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a>gpumdkit.sh
+<a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a><span class="c1"># 选择 3 -&gt; 302</span>
 </code></pre></div>
 <p>运行前，把 <code>.vasp</code> 文件或一个 extxyz 文件放在当前目录。检测顺序与 VASP SCF 预处理一致：优先处理 <code>.vasp</code>；如果没有 <code>.vasp</code> 且存在多个 <code>.xyz</code>，会让用户选择一个。</p>
 <p>运行前典型目录：</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a>current directory/
-<a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a>├── POSCAR_1.vasp
-<a id="__codelineno-12-3" name="__codelineno-12-3" href="#__codelineno-12-3"></a>└── POSCAR_2.vasp
+<div class="highlight"><pre><span></span><code><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a>current directory/
+<a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a>├── POSCAR_1.vasp
+<a id="__codelineno-13-3" name="__codelineno-13-3" href="#__codelineno-13-3"></a>└── POSCAR_2.vasp
 </code></pre></div>
 <p>或：</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a>current directory/
-<a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a>└── dump.xyz
+<div class="highlight"><pre><span></span><code><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a>current directory/
+<a id="__codelineno-14-2" name="__codelineno-14-2" href="#__codelineno-14-2"></a>└── dump.xyz
 </code></pre></div>
 <p>运行后脚本会创建：</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a>current directory/
-<a id="__codelineno-14-2" name="__codelineno-14-2" href="#__codelineno-14-2"></a>├── struct_md/
-<a id="__codelineno-14-3" name="__codelineno-14-3" href="#__codelineno-14-3"></a>│   ├── model_1.xyz
-<a id="__codelineno-14-4" name="__codelineno-14-4" href="#__codelineno-14-4"></a>│   ├── model_2.xyz
-<a id="__codelineno-14-5" name="__codelineno-14-5" href="#__codelineno-14-5"></a>│   └── ...
-<a id="__codelineno-14-6" name="__codelineno-14-6" href="#__codelineno-14-6"></a>├── md/
-<a id="__codelineno-14-7" name="__codelineno-14-7" href="#__codelineno-14-7"></a>├── sample_1/
-<a id="__codelineno-14-8" name="__codelineno-14-8" href="#__codelineno-14-8"></a>├── sample_2/
-<a id="__codelineno-14-9" name="__codelineno-14-9" href="#__codelineno-14-9"></a>└── presub.sh
+<div class="highlight"><pre><span></span><code><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a>current directory/
+<a id="__codelineno-15-2" name="__codelineno-15-2" href="#__codelineno-15-2"></a>├── struct_md/
+<a id="__codelineno-15-3" name="__codelineno-15-3" href="#__codelineno-15-3"></a>│   ├── model_1.xyz
+<a id="__codelineno-15-4" name="__codelineno-15-4" href="#__codelineno-15-4"></a>│   ├── model_2.xyz
+<a id="__codelineno-15-5" name="__codelineno-15-5" href="#__codelineno-15-5"></a>│   └── ...
+<a id="__codelineno-15-6" name="__codelineno-15-6" href="#__codelineno-15-6"></a>├── md/
+<a id="__codelineno-15-7" name="__codelineno-15-7" href="#__codelineno-15-7"></a>├── sample_1/
+<a id="__codelineno-15-8" name="__codelineno-15-8" href="#__codelineno-15-8"></a>├── sample_2/
+<a id="__codelineno-15-9" name="__codelineno-15-9" href="#__codelineno-15-9"></a>└── presub.sh
 </code></pre></div>
 <p><code>md/</code> 是脚本自动创建的。脚本结束后，需要把 <code>nep.txt</code> 和 <code>run_*.in</code> 放入 <code>md/</code>。例如 <code>run_1.in</code> 会链接到 <code>sample_1/run.in</code>，<code>run_2.in</code> 会链接到 <code>sample_2/run.in</code>。</p>
 <h3 id="lammps">LAMMPS</h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a>gpumdkit.sh
-<a id="__codelineno-15-2" name="__codelineno-15-2" href="#__codelineno-15-2"></a><span class="c1"># 选择 3 -&gt; 303</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a>gpumdkit.sh
+<a id="__codelineno-16-2" name="__codelineno-16-2" href="#__codelineno-16-2"></a><span class="c1"># 选择 3 -&gt; 303</span>
 </code></pre></div>
 <p>运行前，把 <code>.vasp</code> 文件或一个 extxyz 文件放在当前目录；两种格式同时存在时优先处理 <code>.vasp</code>。</p>
 <p>运行后脚本会创建：</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a>current directory/
-<a id="__codelineno-16-2" name="__codelineno-16-2" href="#__codelineno-16-2"></a>├── struct_md/
-<a id="__codelineno-16-3" name="__codelineno-16-3" href="#__codelineno-16-3"></a>│   ├── lammps_1.data
-<a id="__codelineno-16-4" name="__codelineno-16-4" href="#__codelineno-16-4"></a>│   ├── lammps_2.data
-<a id="__codelineno-16-5" name="__codelineno-16-5" href="#__codelineno-16-5"></a>│   └── ...
-<a id="__codelineno-16-6" name="__codelineno-16-6" href="#__codelineno-16-6"></a>├── md/
-<a id="__codelineno-16-7" name="__codelineno-16-7" href="#__codelineno-16-7"></a>├── sample_1/
-<a id="__codelineno-16-8" name="__codelineno-16-8" href="#__codelineno-16-8"></a>├── sample_2/
-<a id="__codelineno-16-9" name="__codelineno-16-9" href="#__codelineno-16-9"></a>└── presub.sh
+<div class="highlight"><pre><span></span><code><a id="__codelineno-17-1" name="__codelineno-17-1" href="#__codelineno-17-1"></a>current directory/
+<a id="__codelineno-17-2" name="__codelineno-17-2" href="#__codelineno-17-2"></a>├── struct_md/
+<a id="__codelineno-17-3" name="__codelineno-17-3" href="#__codelineno-17-3"></a>│   ├── lammps_1.data
+<a id="__codelineno-17-4" name="__codelineno-17-4" href="#__codelineno-17-4"></a>│   ├── lammps_2.data
+<a id="__codelineno-17-5" name="__codelineno-17-5" href="#__codelineno-17-5"></a>│   └── ...
+<a id="__codelineno-17-6" name="__codelineno-17-6" href="#__codelineno-17-6"></a>├── md/
+<a id="__codelineno-17-7" name="__codelineno-17-7" href="#__codelineno-17-7"></a>├── sample_1/
+<a id="__codelineno-17-8" name="__codelineno-17-8" href="#__codelineno-17-8"></a>├── sample_2/
+<a id="__codelineno-17-9" name="__codelineno-17-9" href="#__codelineno-17-9"></a>└── presub.sh
 </code></pre></div>
 <p>脚本结束后，需要把 <code>lmprun.in</code> 和 <code>nep.txt</code> 放到 <code>md/</code> 中。</p>
 <h2 id="_2">主动学习式流程</h2>
@@ -1617,7 +1651,17 @@
 <li>重新训练 NEP。</li>
 </ol>
 <p>更完整的开发版主动学习脚本说明见 <a href="%E4%B8%BB%E5%8A%A8%E5%AD%A6%E4%B9%A0%E5%B7%A5%E4%BD%9C%E6%B5%81.html">主动学习</a>。</p>
-<h2 id="_3">使用建议</h2>
+<h2 id="_3">基于模板的温度系列</h2>
+<p>对于简单的温度系列模拟，使用 shell 循环即可：</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-18-1" name="__codelineno-18-1" href="#__codelineno-18-1"></a><span class="k">for</span><span class="w"> </span>temp<span class="w"> </span><span class="k">in</span><span class="w"> </span><span class="m">300</span><span class="w"> </span><span class="m">500</span><span class="w"> </span><span class="m">700</span><span class="w"> </span><span class="m">900</span><span class="p">;</span><span class="w"> </span><span class="k">do</span>
+<a id="__codelineno-18-2" name="__codelineno-18-2" href="#__codelineno-18-2"></a><span class="w">    </span>mkdir<span class="w"> </span>-p<span class="w"> </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">temp</span><span class="si">}</span><span class="s2">K&quot;</span>
+<a id="__codelineno-18-3" name="__codelineno-18-3" href="#__codelineno-18-3"></a><span class="w">    </span>cp<span class="w"> </span>model.xyz<span class="w"> </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">temp</span><span class="si">}</span><span class="s2">K/&quot;</span>
+<a id="__codelineno-18-4" name="__codelineno-18-4" href="#__codelineno-18-4"></a><span class="w">    </span>cp<span class="w"> </span>nep.txt<span class="w"> </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">temp</span><span class="si">}</span><span class="s2">K/&quot;</span>
+<a id="__codelineno-18-5" name="__codelineno-18-5" href="#__codelineno-18-5"></a><span class="w">    </span>sed<span class="w"> </span><span class="s2">&quot;s/TEMPERATURE/</span><span class="nv">$temp</span><span class="s2">/g&quot;</span><span class="w"> </span>run_template.in<span class="w"> </span>&gt;<span class="w"> </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">temp</span><span class="si">}</span><span class="s2">K/run.in&quot;</span>
+<a id="__codelineno-18-6" name="__codelineno-18-6" href="#__codelineno-18-6"></a><span class="k">done</span>
+</code></pre></div>
+<p>然后根据你的集群系统提交生成的文件夹。</p>
+<h2 id="_4">使用建议</h2>
 <ul>
 <li>工作流脚本和集群环境强相关，正式批量提交前先用少量结构测试。</li>
 <li>模板文件如 <code>INCAR</code>、<code>KPOINTS</code>、<code>POTCAR</code>、<code>run.in</code> 应仔细检查。</li>

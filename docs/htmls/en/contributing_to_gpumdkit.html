@@ -1727,7 +1727,16 @@
   <p style="text-align: justify;">Thank you for your interest in contributing to <strong>GPUMDkit</strong>! We appreciate your time and effort in helping improve this toolkit.</p>
 </div>
 
+<p align="center">
+  <strong>English</strong>
+  &nbsp;·&nbsp;
+  <a href="../zh/贡献指南.md">简体中文</a>
+</p>
+
 <p><code>GPUMDkit</code> is an open-source package, and we welcome contributions from the community, whether you're fixing bugs, adding new features, improving documentation, or suggesting enhancements.</p>
+<blockquote>
+<p><strong>Note</strong>: The authoritative version of this document is <a href="https://github.com/zhyan0603/GPUMDkit/blob/main/CONTRIBUTING.md"><code>CONTRIBUTING.md</code></a> in the repository root. This tutorial page mirrors its content.</p>
+</blockquote>
 <hr />
 <h2 id="table-of-contents">Table of Contents</h2>
 <ul>
@@ -1784,7 +1793,9 @@
 <h3 id="documentation">Documentation</h3>
 <ul>
 <li>Ensure that help messages (e.g., <code>-h</code> flags) are clear and accurate.</li>
-<li>Documentation files in the <code>docs/</code> directory will be updated by the maintainers, so you generally don't need to modify them.</li>
+<li>Tutorial documentation lives in <code>docs/tutorials/en/</code> (English) and <code>docs/tutorials/zh/</code> (Chinese).
+  If you add a new feature, consider updating the relevant tutorial page.</li>
+<li>After editing tutorial markdown files, rebuild the HTML with <code>mkdocs build -f docs/mkdocs.yml</code>.</li>
 </ul>
 <hr />
 <h2 id="reporting-bugs">Reporting Bugs</h2>
@@ -1834,7 +1845,8 @@
 <h3 id="making-changes">Making Changes</h3>
 <p>The structure of <code>GPUMDkit</code> consists of:
 - <strong><code>gpumdkit.sh</code></strong>: Main entry point (Bash script) handling both interactive menu mode and command-line mode
-- <strong><code>Scripts/</code></strong>: Python utility scripts organized by functionality
+- <strong><code>install.sh</code></strong>: Installation script that sets up environment variables and shell configuration
+- <strong><code>Scripts/</code></strong>: Python and Bash implementation scripts organized by functionality
   - <code>plt_scripts/</code>: Plotting scripts
   - <code>calculators/</code>: Calculation utilities
   - <code>format_conversion/</code>: Format conversion tools
@@ -1850,7 +1862,12 @@
   - <code>f5_analyzers.sh</code>
   - <code>f6_plots.sh</code>
   - <code>f7_utilities.sh</code>
-- <strong><code>docs/</code></strong>: Documentation files</p>
+- <strong><code>skills/</code></strong>: AI agent skill definitions (SKILL.md files for opencode/Claude Code integration)
+- <strong><code>docs/</code></strong>: Documentation files
+  - <code>tutorials/en/</code> and <code>tutorials/zh/</code>: Bilingual tutorial pages
+  - <code>mkdocs.yml</code>: MkDocs configuration for building tutorial HTML
+  - <code>command_reference.tsv</code>: Machine-readable command reference
+  - <code>htmls/</code>: Generated HTML output from MkDocs</p>
 <h4 id="interactive-mode-contributions">Interactive Mode Contributions</h4>
 <p>To add a new feature accessible through the interactive menu:</p>
 <ol>
@@ -1871,18 +1888,18 @@
 </li>
 </ol>
 <p>Add a new function:
-   <div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="k">function</span><span class="w"> </span>f106_new_converter<span class="o">(){</span>
+   <div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="k">function</span><span class="w"> </span>f111_new_converter<span class="o">(){</span>
 <a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot; &gt;-------------------------------------------------&lt;&quot;</span>
 <a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot; | Calling the script in Scripts/format_conversion |&quot;</span>
 <a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot; | Script: new_converter.py                        |&quot;</span>
 <a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot; | Developer: Your Name (your@email.com)           |&quot;</span>
 <a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot; &gt;-------------------------------------------------&lt;&quot;</span>
-<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot; Input the required parameters:&quot;</span>
+<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot; Input &lt;required_param1&gt; &lt;required_param2&gt;&quot;</span>
 <a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot; Example: input.xyz output.lmp&quot;</span>
 <a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot; ------------&gt;&gt;&quot;</span>
-<a id="__codelineno-6-10" name="__codelineno-6-10" href="#__codelineno-6-10"></a><span class="nb">read</span><span class="w"> </span>-p<span class="w"> </span><span class="s2">&quot; &quot;</span><span class="w"> </span>converter_params
+<a id="__codelineno-6-10" name="__codelineno-6-10" href="#__codelineno-6-10"></a><span class="nb">read</span><span class="w"> </span>-r<span class="w"> </span>-a<span class="w"> </span>converter_args
 <a id="__codelineno-6-11" name="__codelineno-6-11" href="#__codelineno-6-11"></a><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot; ---------------------------------------------------&quot;</span>
-<a id="__codelineno-6-12" name="__codelineno-6-12" href="#__codelineno-6-12"></a>python<span class="w"> </span><span class="si">${</span><span class="nv">GPUMDkit_path</span><span class="si">}</span>/Scripts/format_conversion/new_converter.py<span class="w"> </span><span class="si">${</span><span class="nv">converter_params</span><span class="si">}</span>
+<a id="__codelineno-6-12" name="__codelineno-6-12" href="#__codelineno-6-12"></a>python<span class="w"> </span><span class="si">${</span><span class="nv">GPUMDkit_path</span><span class="si">}</span>/Scripts/format_conversion/new_converter.py<span class="w"> </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">converter_args</span><span class="p">[@]</span><span class="si">}</span><span class="s2">&quot;</span>
 <a id="__codelineno-6-13" name="__codelineno-6-13" href="#__codelineno-6-13"></a><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot; Code path: </span><span class="si">${</span><span class="nv">GPUMDkit_path</span><span class="si">}</span><span class="s2">/Scripts/format_conversion/new_converter.py&quot;</span>
 <a id="__codelineno-6-14" name="__codelineno-6-14" href="#__codelineno-6-14"></a><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot; ---------------------------------------------------&quot;</span>
 <a id="__codelineno-6-15" name="__codelineno-6-15" href="#__codelineno-6-15"></a><span class="o">}</span>
@@ -1893,7 +1910,7 @@
    <div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="c1"># Find the menu() function and update it if needed</span>
 <a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a><span class="c1"># Find the array_choice array and add your new choice number</span>
 <a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a><span class="nv">array_choice</span><span class="o">=(</span>
-<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a><span class="w">    </span><span class="s2">&quot;0&quot;</span><span class="w"> </span><span class="s2">&quot;1&quot;</span><span class="w"> </span><span class="s2">&quot;101&quot;</span><span class="w"> </span><span class="s2">&quot;102&quot;</span><span class="w"> </span><span class="s2">&quot;103&quot;</span><span class="w"> </span><span class="s2">&quot;104&quot;</span><span class="w"> </span><span class="s2">&quot;105&quot;</span><span class="w"> </span><span class="s2">&quot;106&quot;</span><span class="w">  </span><span class="c1"># Added &quot;106&quot;</span>
+<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a><span class="w">    </span><span class="s2">&quot;0&quot;</span><span class="w"> </span><span class="s2">&quot;1&quot;</span><span class="w"> </span><span class="s2">&quot;101&quot;</span><span class="w"> </span><span class="s2">&quot;102&quot;</span><span class="w"> </span><span class="s2">&quot;103&quot;</span><span class="w"> </span><span class="s2">&quot;104&quot;</span><span class="w"> </span><span class="s2">&quot;105&quot;</span><span class="w"> </span><span class="s2">&quot;106&quot;</span><span class="w"> </span><span class="s2">&quot;107&quot;</span><span class="w"> </span><span class="s2">&quot;108&quot;</span><span class="w"> </span><span class="s2">&quot;109&quot;</span><span class="w"> </span><span class="s2">&quot;110&quot;</span><span class="w"> </span><span class="s2">&quot;111&quot;</span><span class="w">  </span><span class="c1"># Added &quot;111&quot;</span>
 <a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a><span class="w">    </span><span class="c1"># ... rest of choices</span>
 <a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a><span class="o">)</span>
 </code></pre></div></p>
@@ -1907,9 +1924,9 @@
 <a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a><span class="w">        </span><span class="nb">source</span><span class="w"> </span><span class="si">${</span><span class="nv">GPUMDkit_path</span><span class="si">}</span>/src/f1_format_conversions.sh
 <a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a><span class="w">        </span><span class="k">case</span><span class="w"> </span><span class="nv">$choice</span><span class="w"> </span><span class="k">in</span>
 <a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a><span class="w">            </span><span class="s2">&quot;1&quot;</span><span class="o">)</span><span class="w"> </span>f1_format_conversion<span class="w"> </span><span class="p">;;</span>
-<a id="__codelineno-8-8" name="__codelineno-8-8" href="#__codelineno-8-8"></a><span class="w">            </span><span class="s2">&quot;101&quot;</span><span class="o">)</span><span class="w"> </span>f101_out2xyz<span class="w"> </span><span class="p">;;</span>
-<a id="__codelineno-8-9" name="__codelineno-8-9" href="#__codelineno-8-9"></a><span class="w">            </span><span class="c1"># ... existing cases ...</span>
-<a id="__codelineno-8-10" name="__codelineno-8-10" href="#__codelineno-8-10"></a><span class="w">            </span><span class="s2">&quot;106&quot;</span><span class="o">)</span><span class="w"> </span>f106_new_converter<span class="w"> </span><span class="p">;;</span><span class="w">  </span><span class="c1"># Add your case</span>
+<a id="__codelineno-8-8" name="__codelineno-8-8" href="#__codelineno-8-8"></a><span class="w">             </span><span class="s2">&quot;101&quot;</span><span class="o">)</span><span class="w"> </span>f101_out2xyz<span class="w"> </span><span class="p">;;</span>
+<a id="__codelineno-8-9" name="__codelineno-8-9" href="#__codelineno-8-9"></a><span class="w">             </span><span class="c1"># ... existing cases ...</span>
+<a id="__codelineno-8-10" name="__codelineno-8-10" href="#__codelineno-8-10"></a><span class="w">             </span><span class="s2">&quot;111&quot;</span><span class="o">)</span><span class="w"> </span>f111_new_converter<span class="w"> </span><span class="p">;;</span><span class="w">  </span><span class="c1"># Add your case</span>
 <a id="__codelineno-8-11" name="__codelineno-8-11" href="#__codelineno-8-11"></a><span class="w">        </span><span class="k">esac</span><span class="w"> </span><span class="p">;;</span>
 <a id="__codelineno-8-12" name="__codelineno-8-12" href="#__codelineno-8-12"></a><span class="w">    </span><span class="c1"># ...</span>
 <a id="__codelineno-8-13" name="__codelineno-8-13" href="#__codelineno-8-13"></a><span class="k">esac</span>
@@ -1930,39 +1947,41 @@
    <div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="c1"># Example: Scripts/analyzer/analyze_bonds.py</span>
 <a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a><span class="kn">import</span><span class="w"> </span><span class="nn">sys</span>
 <a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a>
-<a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a><span class="k">def</span><span class="w"> </span><span class="nf">main</span><span class="p">():</span>
-<a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a>    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">sys</span><span class="o">.</span><span class="n">argv</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">3</span><span class="p">:</span>
-<a id="__codelineno-10-6" name="__codelineno-10-6" href="#__codelineno-10-6"></a>        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Usage: gpumdkit.sh -analyze_bonds &lt;input.xyz&gt; &lt;cutoff_distance&gt;&quot;</span><span class="p">)</span>
-<a id="__codelineno-10-7" name="__codelineno-10-7" href="#__codelineno-10-7"></a>        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Example: gpumdkit.sh -analyze_bonds structure.xyz 3.0&quot;</span><span class="p">)</span>
-<a id="__codelineno-10-8" name="__codelineno-10-8" href="#__codelineno-10-8"></a>        <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
-<a id="__codelineno-10-9" name="__codelineno-10-9" href="#__codelineno-10-9"></a>
-<a id="__codelineno-10-10" name="__codelineno-10-10" href="#__codelineno-10-10"></a>    <span class="n">input_file</span> <span class="o">=</span> <span class="n">sys</span><span class="o">.</span><span class="n">argv</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
-<a id="__codelineno-10-11" name="__codelineno-10-11" href="#__codelineno-10-11"></a>    <span class="n">cutoff</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">sys</span><span class="o">.</span><span class="n">argv</span><span class="p">[</span><span class="mi">2</span><span class="p">])</span>
-<a id="__codelineno-10-12" name="__codelineno-10-12" href="#__codelineno-10-12"></a>
-<a id="__codelineno-10-13" name="__codelineno-10-13" href="#__codelineno-10-13"></a>    <span class="c1"># Your implementation here</span>
-<a id="__codelineno-10-14" name="__codelineno-10-14" href="#__codelineno-10-14"></a>
-<a id="__codelineno-10-15" name="__codelineno-10-15" href="#__codelineno-10-15"></a><span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&quot;__main__&quot;</span><span class="p">:</span>
-<a id="__codelineno-10-16" name="__codelineno-10-16" href="#__codelineno-10-16"></a>    <span class="n">main</span><span class="p">()</span>
+<a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a><span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">sys</span><span class="o">.</span><span class="n">argv</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">3</span><span class="p">:</span>
+<a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a>    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Usage: gpumdkit.sh -analyze_bonds &lt;input.xyz&gt; &lt;cutoff_distance&gt;&quot;</span><span class="p">)</span>
+<a id="__codelineno-10-6" name="__codelineno-10-6" href="#__codelineno-10-6"></a>    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Example: gpumdkit.sh -analyze_bonds structure.xyz 3.0&quot;</span><span class="p">)</span>
+<a id="__codelineno-10-7" name="__codelineno-10-7" href="#__codelineno-10-7"></a>    <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+<a id="__codelineno-10-8" name="__codelineno-10-8" href="#__codelineno-10-8"></a>
+<a id="__codelineno-10-9" name="__codelineno-10-9" href="#__codelineno-10-9"></a><span class="n">input_file</span> <span class="o">=</span> <span class="n">sys</span><span class="o">.</span><span class="n">argv</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+<a id="__codelineno-10-10" name="__codelineno-10-10" href="#__codelineno-10-10"></a><span class="n">cutoff</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">sys</span><span class="o">.</span><span class="n">argv</span><span class="p">[</span><span class="mi">2</span><span class="p">])</span>
+<a id="__codelineno-10-11" name="__codelineno-10-11" href="#__codelineno-10-11"></a>
+<a id="__codelineno-10-12" name="__codelineno-10-12" href="#__codelineno-10-12"></a><span class="c1"># Your implementation here</span>
 </code></pre></div></p>
 </li>
+</ol>
+<blockquote>
+<p><strong>Note</strong>: GPUMDkit Python scripts are designed to run directly (not imported as modules).
+You may use a <code>main()</code> function with <code>if __name__ == "__main__":</code> guard if you prefer,
+but it is not required. Most existing scripts execute at module level.</p>
+</blockquote>
+<ol>
 <li>
 <p><strong>Add the command-line flag handler</strong> in <code>gpumdkit.sh</code>:
-   <div class="highlight"><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a><span class="c1"># Find the command-line parsing section (after line ~167)</span>
+   <div class="highlight"><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a><span class="c1"># Find the command-line parsing section (the large &quot;case $1 in&quot; block)</span>
 <a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a><span class="c1"># Add your new flag in the appropriate location</span>
 <a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a>
 <a id="__codelineno-11-4" name="__codelineno-11-4" href="#__codelineno-11-4"></a><span class="k">case</span><span class="w"> </span><span class="nv">$1</span><span class="w"> </span><span class="k">in</span>
 <a id="__codelineno-11-5" name="__codelineno-11-5" href="#__codelineno-11-5"></a><span class="w">    </span><span class="c1"># ... existing cases ...</span>
 <a id="__codelineno-11-6" name="__codelineno-11-6" href="#__codelineno-11-6"></a><span class="w">    </span>-analyze_bonds<span class="o">)</span>
-<a id="__codelineno-11-7" name="__codelineno-11-7" href="#__codelineno-11-7"></a><span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="o">[</span><span class="w"> </span>!<span class="w"> </span>-z<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$2</span><span class="s2">&quot;</span><span class="w"> </span><span class="o">]</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="o">[</span><span class="w"> </span>!<span class="w"> </span>-z<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$3</span><span class="s2">&quot;</span><span class="w"> </span><span class="o">]</span><span class="p">;</span><span class="w"> </span><span class="k">then</span>
-<a id="__codelineno-11-8" name="__codelineno-11-8" href="#__codelineno-11-8"></a><span class="w">            </span>python<span class="w"> </span><span class="si">${</span><span class="nv">analyzer_path</span><span class="si">}</span>/analyze_bonds.py<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$2</span><span class="s2">&quot;</span><span class="w"> </span><span class="s2">&quot;</span><span class="nv">$3</span><span class="s2">&quot;</span>
+<a id="__codelineno-11-7" name="__codelineno-11-7" href="#__codelineno-11-7"></a><span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="o">[</span><span class="w"> </span>!<span class="w"> </span>-z<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$2</span><span class="s2">&quot;</span><span class="w"> </span><span class="o">]</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="o">[</span><span class="w"> </span><span class="s2">&quot;</span><span class="nv">$2</span><span class="s2">&quot;</span><span class="w"> </span>!<span class="o">=</span><span class="w"> </span><span class="s2">&quot;-h&quot;</span><span class="w"> </span><span class="o">]</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="o">[</span><span class="w"> </span>!<span class="w"> </span>-z<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$3</span><span class="s2">&quot;</span><span class="w"> </span><span class="o">]</span><span class="p">;</span><span class="w"> </span><span class="k">then</span>
+<a id="__codelineno-11-8" name="__codelineno-11-8" href="#__codelineno-11-8"></a><span class="w">            </span>python<span class="w"> </span><span class="si">${</span><span class="nv">analyzer_path</span><span class="si">}</span>/analyze_bonds.py<span class="w"> </span><span class="nv">$2</span><span class="w"> </span><span class="nv">$3</span>
 <a id="__codelineno-11-9" name="__codelineno-11-9" href="#__codelineno-11-9"></a><span class="w">        </span><span class="k">else</span>
 <a id="__codelineno-11-10" name="__codelineno-11-10" href="#__codelineno-11-10"></a><span class="w">            </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot; Usage: gpumdkit.sh -analyze_bonds &lt;input.xyz&gt; &lt;cutoff_distance&gt;&quot;</span>
 <a id="__codelineno-11-11" name="__codelineno-11-11" href="#__codelineno-11-11"></a><span class="w">            </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot; Example: gpumdkit.sh -analyze_bonds structure.xyz 3.0&quot;</span>
 <a id="__codelineno-11-12" name="__codelineno-11-12" href="#__codelineno-11-12"></a><span class="w">            </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot; Code path: </span><span class="si">${</span><span class="nv">analyzer_path</span><span class="si">}</span><span class="s2">/analyze_bonds.py&quot;</span>
-<a id="__codelineno-11-13" name="__codelineno-11-13" href="#__codelineno-11-13"></a><span class="w">            </span><span class="nb">exit</span><span class="w"> </span><span class="m">1</span>
-<a id="__codelineno-11-14" name="__codelineno-11-14" href="#__codelineno-11-14"></a><span class="w">        </span><span class="k">fi</span><span class="w"> </span><span class="p">;;</span>
-<a id="__codelineno-11-15" name="__codelineno-11-15" href="#__codelineno-11-15"></a><span class="w">    </span><span class="c1"># ... rest of cases ...</span>
-<a id="__codelineno-11-16" name="__codelineno-11-16" href="#__codelineno-11-16"></a><span class="k">esac</span>
+<a id="__codelineno-11-13" name="__codelineno-11-13" href="#__codelineno-11-13"></a><span class="w">        </span><span class="k">fi</span><span class="w"> </span><span class="p">;;</span>
+<a id="__codelineno-11-14" name="__codelineno-11-14" href="#__codelineno-11-14"></a><span class="w">    </span><span class="c1"># ... rest of cases ...</span>
+<a id="__codelineno-11-15" name="__codelineno-11-15" href="#__codelineno-11-15"></a><span class="k">esac</span>
 </code></pre></div></p>
 </li>
 <li>
@@ -1983,50 +2002,87 @@
 </code></pre></div>
 <p>Add your new flag to the <code>opts</code> variable:
 <div class="highlight"><pre><span></span><code><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a><span class="c1"># Find the line with local opts=...</span>
-<a id="__codelineno-14-2" name="__codelineno-14-2" href="#__codelineno-14-2"></a><span class="nb">local</span><span class="w"> </span><span class="nv">opts</span><span class="o">=</span><span class="s2">&quot;-h -update -U -help -clean -time -plt -calc -analyze_bonds -range -out2xyz ...&quot;</span>
-<a id="__codelineno-14-3" name="__codelineno-14-3" href="#__codelineno-14-3"></a><span class="c1">#                                                      ^^^^^^^^^^^^^^ Add your flag here</span>
+<a id="__codelineno-14-2" name="__codelineno-14-2" href="#__codelineno-14-2"></a><span class="nb">local</span><span class="w"> </span><span class="nv">opts</span><span class="o">=</span><span class="s2">&quot;-h -help -update -U -clean -time -plt -calc ... -your_new_flag ...&quot;</span>
+<a id="__codelineno-14-3" name="__codelineno-14-3" href="#__codelineno-14-3"></a><span class="c1">#                                                        Add your flag here</span>
 </code></pre></div></p>
-<p>If your flag accepts secondary options (like <code>-plt</code> or <code>-calc</code>), add a case for it:
-<div class="highlight"><pre><span></span><code><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a><span class="k">case</span><span class="w"> </span><span class="s2">&quot;</span><span class="nv">$prev</span><span class="s2">&quot;</span><span class="w"> </span><span class="k">in</span>
-<a id="__codelineno-15-2" name="__codelineno-15-2" href="#__codelineno-15-2"></a><span class="w">    </span><span class="c1"># ... existing cases ...</span>
-<a id="__codelineno-15-3" name="__codelineno-15-3" href="#__codelineno-15-3"></a><span class="w">    </span>-analyze_bonds<span class="o">)</span>
-<a id="__codelineno-15-4" name="__codelineno-15-4" href="#__codelineno-15-4"></a><span class="w">        </span><span class="nv">COMPREPLY</span><span class="o">=(</span><span class="k">$(</span><span class="nb">compgen</span><span class="w"> </span>-f<span class="w"> </span>--<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$cur</span><span class="s2">&quot;</span><span class="k">)</span><span class="o">)</span><span class="w">  </span><span class="c1"># Complete with filenames</span>
-<a id="__codelineno-15-5" name="__codelineno-15-5" href="#__codelineno-15-5"></a><span class="w">        </span><span class="p">;;</span>
-<a id="__codelineno-15-6" name="__codelineno-15-6" href="#__codelineno-15-6"></a><span class="w">    </span><span class="c1"># ... rest of cases ...</span>
-<a id="__codelineno-15-7" name="__codelineno-15-7" href="#__codelineno-15-7"></a><span class="k">esac</span>
+<p>If your flag requires file arguments, add it to the existing file-completion case:
+<div class="highlight"><pre><span></span><code><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a><span class="c1"># Find the case for file-requiring flags and add yours with |</span>
+<a id="__codelineno-15-2" name="__codelineno-15-2" href="#__codelineno-15-2"></a>-out2xyz<span class="p">|</span>-out2exyz<span class="p">|</span>-...<span class="p">|</span>-your_new_flag<span class="o">)</span>
+<a id="__codelineno-15-3" name="__codelineno-15-3" href="#__codelineno-15-3"></a><span class="w">    </span><span class="nv">COMPREPLY</span><span class="o">=(</span><span class="k">$(</span><span class="nb">compgen</span><span class="w"> </span>-f<span class="w"> </span>--<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$cur</span><span class="s2">&quot;</span><span class="k">)</span><span class="o">)</span><span class="w"> </span><span class="p">;;</span>
+</code></pre></div></p>
+<p>If your flag accepts secondary options (like <code>-plt</code> or <code>-calc</code>), add a new case:
+<div class="highlight"><pre><span></span><code><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a><span class="k">case</span><span class="w"> </span><span class="s2">&quot;</span><span class="nv">$prev</span><span class="s2">&quot;</span><span class="w"> </span><span class="k">in</span>
+<a id="__codelineno-16-2" name="__codelineno-16-2" href="#__codelineno-16-2"></a><span class="w">    </span><span class="c1"># ... existing cases ...</span>
+<a id="__codelineno-16-3" name="__codelineno-16-3" href="#__codelineno-16-3"></a><span class="w">    </span>-your_new_flag<span class="o">)</span>
+<a id="__codelineno-16-4" name="__codelineno-16-4" href="#__codelineno-16-4"></a><span class="w">        </span><span class="nv">COMPREPLY</span><span class="o">=(</span><span class="k">$(</span><span class="nb">compgen</span><span class="w"> </span>-W<span class="w"> </span><span class="s2">&quot;option1 option2 option3&quot;</span><span class="w"> </span>--<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$cur</span><span class="s2">&quot;</span><span class="k">)</span><span class="o">)</span><span class="w"> </span><span class="p">;;</span>
+<a id="__codelineno-16-5" name="__codelineno-16-5" href="#__codelineno-16-5"></a><span class="w">    </span><span class="c1"># ... rest of cases ...</span>
+<a id="__codelineno-16-6" name="__codelineno-16-6" href="#__codelineno-16-6"></a><span class="k">esac</span>
 </code></pre></div></p>
 <h3 id="code-style-and-best-practices">Code Style and Best Practices</h3>
 <ul>
 <li><strong>Shell Scripts</strong>:</li>
 <li>Use <code>${variable}</code> for variable expansion</li>
+<li>Use <code>[ ! -z "$var" ]</code> for non-empty checks (project convention)</li>
+<li>Interactive functions should follow the banner format:
+    <div class="highlight"><pre><span></span><code><a id="__codelineno-17-1" name="__codelineno-17-1" href="#__codelineno-17-1"></a><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot; &gt;-------------------------------------------------&lt;&quot;</span>
+<a id="__codelineno-17-2" name="__codelineno-17-2" href="#__codelineno-17-2"></a><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot; | Calling the script in Scripts/&lt;category&gt;        |&quot;</span>
+<a id="__codelineno-17-3" name="__codelineno-17-3" href="#__codelineno-17-3"></a><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot; | Script: &lt;script_name&gt;.py                        |&quot;</span>
+<a id="__codelineno-17-4" name="__codelineno-17-4" href="#__codelineno-17-4"></a><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot; | Developer: &lt;Name&gt; (&lt;email&gt;)                     |&quot;</span>
+<a id="__codelineno-17-5" name="__codelineno-17-5" href="#__codelineno-17-5"></a><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot; &gt;-------------------------------------------------&lt;&quot;</span>
+</code></pre></div></li>
+<li>Use <code>read -r -a varname</code> for multi-word input, then pass with <code>"${varname[@]}"</code></li>
 <li>
-<p>Write code that is clear and easy to maintain</p>
+<p>Shell scripts in <code>src/</code> should start with a file header block:
+    <div class="highlight"><pre><span></span><code><a id="__codelineno-18-1" name="__codelineno-18-1" href="#__codelineno-18-1"></a><span class="c1"># ============================================================</span>
+<a id="__codelineno-18-2" name="__codelineno-18-2" href="#__codelineno-18-2"></a><span class="c1"># GPUMDkit &lt;module name&gt; module</span>
+<a id="__codelineno-18-3" name="__codelineno-18-3" href="#__codelineno-18-3"></a><span class="c1"># Repository: https://github.com/zhyan0603/GPUMDkit</span>
+<a id="__codelineno-18-4" name="__codelineno-18-4" href="#__codelineno-18-4"></a><span class="c1"># Author: &lt;Name&gt; (&lt;email&gt;)</span>
+<a id="__codelineno-18-5" name="__codelineno-18-5" href="#__codelineno-18-5"></a><span class="c1"># ============================================================</span>
+</code></pre></div></p>
 </li>
 <li>
 <p><strong>Python Scripts</strong>:</p>
 </li>
 <li>Write clear, maintainable code</li>
 <li>Use meaningful variable names</li>
+<li>Use <code>sys.argv</code> for argument parsing (consistent with most existing scripts)</li>
+<li>Provide clear usage messages with <code>print("Usage: ...")</code> and <code>print("Example: ...")</code></li>
+<li>If your script uses heavy/special packages (<code>NepTrain</code>, <code>calorine</code>, <code>dpdata</code>), add a
+    <code>print_dependency_notice()</code> function to inform users about citation recommendations</li>
 </ul>
 <h3 id="testing-your-changes">Testing Your Changes</h3>
-<p>Before submitting your contribution:</p>
+<p>Before submitting your contribution, run the relevant validation commands:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-19-1" name="__codelineno-19-1" href="#__codelineno-19-1"></a><span class="c1"># Shell syntax checks (always run these)</span>
+<a id="__codelineno-19-2" name="__codelineno-19-2" href="#__codelineno-19-2"></a>bash<span class="w"> </span>-n<span class="w"> </span>gpumdkit.sh
+<a id="__codelineno-19-3" name="__codelineno-19-3" href="#__codelineno-19-3"></a>find<span class="w"> </span>src<span class="w"> </span>Scripts<span class="w"> </span>-name<span class="w"> </span><span class="s1">&#39;*.sh&#39;</span><span class="w"> </span>-exec<span class="w"> </span>bash<span class="w"> </span>-n<span class="w"> </span><span class="o">{}</span><span class="w"> </span>+
+<a id="__codelineno-19-4" name="__codelineno-19-4" href="#__codelineno-19-4"></a>
+<a id="__codelineno-19-5" name="__codelineno-19-5" href="#__codelineno-19-5"></a><span class="c1"># Python syntax checks (for modified Python files)</span>
+<a id="__codelineno-19-6" name="__codelineno-19-6" href="#__codelineno-19-6"></a>python3<span class="w"> </span>-m<span class="w"> </span>py_compile<span class="w"> </span>path/to/modified_script.py
+<a id="__codelineno-19-7" name="__codelineno-19-7" href="#__codelineno-19-7"></a>
+<a id="__codelineno-19-8" name="__codelineno-19-8" href="#__codelineno-19-8"></a><span class="c1"># MkDocs build (if you modified documentation)</span>
+<a id="__codelineno-19-9" name="__codelineno-19-9" href="#__codelineno-19-9"></a>mkdocs<span class="w"> </span>build<span class="w"> </span>-f<span class="w"> </span>docs/mkdocs.yml
+<a id="__codelineno-19-10" name="__codelineno-19-10" href="#__codelineno-19-10"></a>
+<a id="__codelineno-19-11" name="__codelineno-19-11" href="#__codelineno-19-11"></a><span class="c1"># Check for trailing whitespace issues</span>
+<a id="__codelineno-19-12" name="__codelineno-19-12" href="#__codelineno-19-12"></a>git<span class="w"> </span>diff<span class="w"> </span>--check
+</code></pre></div>
+<p>Then test functionality:</p>
 <ol>
 <li>
 <p><strong>Test interactive mode</strong> (if applicable):
-   <div class="highlight"><pre><span></span><code><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a>gpumdkit.sh
-<a id="__codelineno-16-2" name="__codelineno-16-2" href="#__codelineno-16-2"></a><span class="c1"># Navigate to your new feature and test it thoroughly</span>
+   <div class="highlight"><pre><span></span><code><a id="__codelineno-20-1" name="__codelineno-20-1" href="#__codelineno-20-1"></a>gpumdkit.sh
+<a id="__codelineno-20-2" name="__codelineno-20-2" href="#__codelineno-20-2"></a><span class="c1"># Navigate to your new feature and test it thoroughly</span>
 </code></pre></div></p>
 </li>
 <li>
 <p><strong>Test command-line mode</strong> (if applicable):
-   <div class="highlight"><pre><span></span><code><a id="__codelineno-17-1" name="__codelineno-17-1" href="#__codelineno-17-1"></a>gpumdkit.sh<span class="w"> </span>-your_new_flag<span class="w"> </span><span class="o">[</span>arguments<span class="o">]</span>
-<a id="__codelineno-17-2" name="__codelineno-17-2" href="#__codelineno-17-2"></a>gpumdkit.sh<span class="w"> </span>-your_new_flag<span class="w"> </span>-h<span class="w">  </span><span class="c1"># Test help message</span>
+   <div class="highlight"><pre><span></span><code><a id="__codelineno-21-1" name="__codelineno-21-1" href="#__codelineno-21-1"></a>gpumdkit.sh<span class="w"> </span>-your_new_flag<span class="w"> </span><span class="o">[</span>arguments<span class="o">]</span>
+<a id="__codelineno-21-2" name="__codelineno-21-2" href="#__codelineno-21-2"></a>gpumdkit.sh<span class="w"> </span>-your_new_flag<span class="w"> </span>-h<span class="w">  </span><span class="c1"># Test help message</span>
 </code></pre></div></p>
 </li>
 <li>
 <p><strong>Test tab completion</strong> (if you modified <code>completion.sh</code>):
-   <div class="highlight"><pre><span></span><code><a id="__codelineno-18-1" name="__codelineno-18-1" href="#__codelineno-18-1"></a><span class="nb">source</span><span class="w"> </span>Scripts/utils/completion.sh
-<a id="__codelineno-18-2" name="__codelineno-18-2" href="#__codelineno-18-2"></a>gpumdkit.sh<span class="w"> </span>-&lt;TAB&gt;<span class="w">  </span><span class="c1"># Should show your new flag</span>
+   <div class="highlight"><pre><span></span><code><a id="__codelineno-22-1" name="__codelineno-22-1" href="#__codelineno-22-1"></a><span class="nb">source</span><span class="w"> </span>Scripts/utils/completion.sh
+<a id="__codelineno-22-2" name="__codelineno-22-2" href="#__codelineno-22-2"></a>gpumdkit.sh<span class="w"> </span>-&lt;TAB&gt;<span class="w">  </span><span class="c1"># Should show your new flag</span>
 </code></pre></div></p>
 </li>
 <li>
@@ -2047,19 +2103,19 @@
 <ol>
 <li>
 <p><strong>Commit your changes</strong>:
-   <div class="highlight"><pre><span></span><code><a id="__codelineno-19-1" name="__codelineno-19-1" href="#__codelineno-19-1"></a>git<span class="w"> </span>add<span class="w"> </span>.
-<a id="__codelineno-19-2" name="__codelineno-19-2" href="#__codelineno-19-2"></a>git<span class="w"> </span>commit<span class="w"> </span>-m<span class="w"> </span><span class="s2">&quot;your descriptive message&quot;</span>
+   <div class="highlight"><pre><span></span><code><a id="__codelineno-23-1" name="__codelineno-23-1" href="#__codelineno-23-1"></a>git<span class="w"> </span>add<span class="w"> </span>.
+<a id="__codelineno-23-2" name="__codelineno-23-2" href="#__codelineno-23-2"></a>git<span class="w"> </span>commit<span class="w"> </span>-m<span class="w"> </span><span class="s2">&quot;your descriptive message&quot;</span>
 </code></pre></div></p>
 </li>
 <li>
-<p><strong>Keep your branch updated</strong> with the upstream <code>main</code> branch:
-   <div class="highlight"><pre><span></span><code><a id="__codelineno-20-1" name="__codelineno-20-1" href="#__codelineno-20-1"></a>git<span class="w"> </span>fetch<span class="w"> </span>upstream
-<a id="__codelineno-20-2" name="__codelineno-20-2" href="#__codelineno-20-2"></a>git<span class="w"> </span>rebase<span class="w"> </span>upstream/main
+<p><strong>Keep your branch updated</strong> with the latest <code>dev</code> branch:
+   <div class="highlight"><pre><span></span><code><a id="__codelineno-24-1" name="__codelineno-24-1" href="#__codelineno-24-1"></a>git<span class="w"> </span>fetch<span class="w"> </span>origin
+<a id="__codelineno-24-2" name="__codelineno-24-2" href="#__codelineno-24-2"></a>git<span class="w"> </span>rebase<span class="w"> </span>origin/dev
 </code></pre></div></p>
 </li>
 <li>
 <p><strong>Push your branch</strong> to your fork:
-   <div class="highlight"><pre><span></span><code><a id="__codelineno-21-1" name="__codelineno-21-1" href="#__codelineno-21-1"></a>git<span class="w"> </span>push<span class="w"> </span>origin<span class="w"> </span>your-branch-name
+   <div class="highlight"><pre><span></span><code><a id="__codelineno-25-1" name="__codelineno-25-1" href="#__codelineno-25-1"></a>git<span class="w"> </span>push<span class="w"> </span>origin<span class="w"> </span>your-branch-name
 </code></pre></div></p>
 </li>
 <li>
@@ -2098,7 +2154,7 @@
 <li><strong>Contact maintainers</strong>: Reach out to the core developers listed in the README</li>
 </ul>
 <hr />
-<p>Thank you again for contributing to <code>GPUMDkit</code>! Your efforts help make this toolkit better for the entire GPUMD and NEP community. 🚀</p>
+<p>Thank you again for contributing to <code>GPUMDkit</code>! Your efforts help make this toolkit better for the entire GPUMD and NEP community.</p>
 
 
 

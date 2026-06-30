@@ -21,6 +21,20 @@ Last-modified: 2026-05-16
 """
 
 import sys
+
+args = sys.argv[1:]
+if len(args) < 2 or args[0] in ("-h", "--help"):
+    print(" Usage: gpumdkit.sh -pos2lmp <poscar_file> <lammps_data_file>")
+    print("    or: python pos2lmp.py <poscar_file> <lammps_data_file>")
+    print("")
+    print(" Arguments:")
+    print("   poscar_file       Input VASP POSCAR file")
+    print("   lammps_data_file  Output LAMMPS data file")
+    print("")
+    print(" Example: gpumdkit.sh -pos2lmp POSCAR data.lammps")
+    print("")
+    sys.exit(0 if args and args[0] in ("-h", "--help") else 1)
+
 from ovito.io import import_file, export_file
 
 def convert_poscar_to_lammps(poscar_path, lammps_data_path):
@@ -29,13 +43,8 @@ def convert_poscar_to_lammps(poscar_path, lammps_data_path):
     export_file(pipeline, lammps_data_path, "lammps/data", multiple_frames=False)
 
 if __name__ == "__main__":
-    if len(sys.argv) != 3:
-        print(" Usage: gpumdkit.sh -pos2lmp <poscar_file> <lammps_data_file>")
-        print("    or: python pos2lmp.py <poscar_file> <lammps_data_file>")
-        sys.exit(1)
-    
     poscar_file = sys.argv[1]
     lammps_data_file = sys.argv[2]
-    
+
     convert_poscar_to_lammps(poscar_file, lammps_data_file)
     print(f" Converted {poscar_file} to {lammps_data_file} successfully.")

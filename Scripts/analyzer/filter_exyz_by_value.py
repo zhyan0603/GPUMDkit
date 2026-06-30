@@ -22,6 +22,24 @@ Last-modified: 2026-05-16
 """
 
 import sys
+
+args = sys.argv[1:]
+if len(args) < 3 or args[0] in ("-h", "--help"):
+    print(" Usage: gpumdkit.sh -filter_value <input_file> <property> <threshold>")
+    print("    or: python filter_exyz_by_value.py <input_file> <property> <threshold>")
+    print("")
+    print(" Arguments:")
+    print("   input_file   Input extxyz trajectory file")
+    print("   property     Filtering property: energy, force, or virial")
+    print("   threshold    Maximum allowed value for the specified property")
+    print("")
+    print(" Output:")
+    print("   filtered.xyz  Structures that pass the filter")
+    print("")
+    print(" Example: gpumdkit.sh -filter_value train.xyz energy -3.5")
+    print("")
+    sys.exit(0 if args and args[0] in ("-h", "--help") else 1)
+
 from ase.io import read, write
 
 def main():
@@ -57,8 +75,4 @@ def main():
     write(output_filename, filtered_images)
 
 if __name__ == "__main__":
-    if len(sys.argv) != 4:
-        print(" Usage: gpumdkit.sh -filter_value <input_file> <property> <threshold>")
-        print("    or: python filter_exyz_by_value.py <input_file> <property> <threshold>")
-        sys.exit(1)
     main()

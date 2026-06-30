@@ -187,7 +187,7 @@ echo " | Calling the script in Scripts/format_conversion |"
 echo " | Script: get_frame.py                            |"
 echo " | Developer: Zihan YAN (yanzihan@westlake.edu.cn) |"
 echo " >-------------------------------------------------<"
-echo " Input <input.xyz> <frame_index>"
+echo " Input <input.xyz> <frame_number>"
 echo " Example: train.xyz 1"
 echo " ------------>>"
 read -r -a getframe_args

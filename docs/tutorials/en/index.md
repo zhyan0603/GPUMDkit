@@ -3,18 +3,25 @@
   <p style="text-align: justify;">Welcome to <strong>GPUMDkit</strong>, a command-line toolkit for GPUMD and NEP.</p>
 </div>
 
-## What is GPUMDkit?
+## What it does
 
-GPUMDkit streamlines common tasks in computational materials science:
+GPUMDkit helps you perform common tasks in computational materials science without writing custom scripts. It supports format conversion, structure analysis, property calculation, visualization, and batch workflows — all from one command-line tool.
 
-- **Format Conversion**: Convert between VASP, LAMMPS, CP2K, ABACUS, CIF, and extxyz formats
-- **Visualization**: Plotting tools for NEP training, MD simulations, and analysis
-- **Calculators**: Compute ionic conductivity, descriptors, MSD, NEB, and more
-- **Analyzers**: Structure validation, filtering, composition analysis
-- **Workflows**: Batch processing for DFT and MD simulations
-- **Sampling**: Structure selection using uniform, random, or FPS methods
+## Common Tasks
 
-## Quick Start
+| I want to... | Tutorial |
+|--------------|----------|
+| Install GPUMDkit and run my first command | [Quick Start](quick_start.md) |
+| Convert VASP, LAMMPS, CP2K, or CIF files to extxyz | [Format Conversion](format_conversion.md) |
+| Check structure distances, filter datasets, or find outliers | [Analyzer Scripts](analyzer_scripts.md) |
+| Calculate MSD, ionic conductivity, or descriptors | [Calculator Scripts](calculator_scripts.md) |
+| Analyze polar materials, ferroelectrics, or ABO3 systems | [Polar Material Analysis](polar_material_analysis.md) |
+| Plot NEP training results or thermodynamic data | [Plot Scripts](plot_scripts.md) |
+| Run batch DFT or MD simulations | [Workflow Scripts](workflow_scripts.md) |
+| Select representative structures from a dataset | [Structure Sampling](structure_sampling.md) |
+| Add my own shortcuts to GPUMDkit | [Custom Commands](custom_commands.md) |
+
+## Before you start
 
 ### Installation
 
@@ -32,20 +39,43 @@ conda activate gpumdkit
 pip install neptrain dpdata calorine
 ```
 
-### Usage
+## Interactive mode
 
 ```bash
-# Interactive mode
 gpumdkit.sh
-
-# Command-line mode
-gpumdkit.sh -<option> [args...]
-
-# Get help
-gpumdkit.sh -h
 ```
 
-## Tutorials
+This opens a menu where you can select modules by number.
+
+## CLI mode
+
+```bash
+gpumdkit.sh -<option> [args...]
+```
+
+For example:
+
+```bash
+gpumdkit.sh -pos2exyz POSCAR model.xyz
+gpumdkit.sh -plt train
+gpumdkit.sh -calc msd trajectory.xyz Li 10
+```
+
+Use `gpumdkit.sh -h` to see all available options.
+
+## Module Overview
+
+| Module | Menu | CLI | Description |
+|--------|------|-----|-------------|
+| Format Conversion | 1 | `-out2xyz`, `-pos2exyz` | File conversion |
+| Sample Structures | 2 | `-neptrain`, interactive menu | Structure sampling |
+| Workflow | 3 | - | Batch processing |
+| Calculators | 4 | `-calc <type>` | Property calculations |
+| Analyzer | 5 | `-range`, `-min_dist` | Structure analysis |
+| Visualization | 6 | `-plt <type>` | Plotting tools |
+| Utilities | 7 | `-time`, `-clean` | Utility functions |
+
+## All Tutorials
 
 | Tutorial | Description |
 |----------|-------------|
@@ -61,39 +91,6 @@ gpumdkit.sh -h
 | [Active Learning Workflow](active_learning_workflow.md) | Batch active-learning workflow notes |
 | [Polar Material Analysis](polar_material_analysis.md) | Ferroelectric and polarization tools |
 | [Contributing to GPUMDkit](contributing_to_gpumdkit.md) | Development notes |
-
-## Example: Convert VASP OUTCARs
-
-```bash
-gpumdkit.sh -out2xyz ./vasp_results/
-```
-
-## Example: Plot NEP Results
-
-```bash
-gpumdkit.sh -plt train
-gpumdkit.sh -plt prediction
-```
-
-## Example: Ionic Conductivity
-
-```bash
-gpumdkit.sh -calc msd trajectory.xyz Li 10
-gpumdkit.sh -calc ionic-cond Li 1
-gpumdkit.sh -plt msd
-```
-
-## Module Overview
-
-| Module | Menu | CLI | Description |
-|--------|------|-----|-------------|
-| Format Conversion | 1 | `-out2xyz`, `-pos2exyz` | File conversion |
-| Sample Structures | 2 | `-neptrain`, interactive menu | Structure sampling |
-| Workflow | 3 | - | Batch processing |
-| Calculators | 4 | `-calc <type>` | Property calculations |
-| Analyzer | 5 | `-range`, `-min_dist` | Structure analysis |
-| Visualization | 6 | `-plt <type>` | Plotting tools |
-| Utilities | 7 | `-time`, `-clean` | Utility functions |
 
 ## Links
 

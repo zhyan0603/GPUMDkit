@@ -21,8 +21,21 @@ Last-modified: 2026-05-16
 =============================================================================
 """
 
-import re
 import sys
+
+args = sys.argv[1:]
+if len(args) < 1 or args[0] in ("-h", "--help"):
+    print(" Usage: gpumdkit.sh -analyze_comp <exyzfile>")
+    print("    or: python analyze_composition.py <input.xyz>")
+    print("")
+    print(" Arguments:")
+    print("   exyzfile    Input extxyz trajectory file")
+    print("")
+    print(" Example: gpumdkit.sh -analyze_comp train.xyz")
+    print("")
+    sys.exit(0 if args and args[0] in ("-h", "--help") else 1)
+
+import re
 from ase.io import read, write
 from ase.data import atomic_numbers
 from collections import Counter
@@ -113,9 +126,5 @@ def analyze_xyz_compositions(filename):
 
 # Run the analysis
 if __name__ == "__main__":
-    if len(sys.argv) != 2:
-        print(" Usage: gpumdkit.sh -analyze_comp <exyzfile>")
-        print("    or: python analyze_composition.py <input.xyz>")
-        sys.exit(1)
-    filename = sys.argv[1]  # your extxyz file
+    filename = sys.argv[1]
     analyze_xyz_compositions(filename)

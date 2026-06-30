@@ -728,6 +728,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#rdf-calculation-with-ovito" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        RDF Calculation with OVITO
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#ferroelectric-and-polar-material-tools" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -735,67 +746,6 @@
       
     </span>
   </a>
-  
-    <nav class="md-nav" aria-label="Ferroelectric and Polar Material Tools">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#build-neighbor-lists" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Build Neighbor Lists
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#calculate-displacements" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Calculate Displacements
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#average-a-structure" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Average a Structure
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#octahedral-tilt" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Octahedral Tilt
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#abo3-polarization" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        ABO3 Polarization
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
   
 </li>
       
@@ -1553,6 +1503,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#rdf-calculation-with-ovito" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        RDF Calculation with OVITO
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#ferroelectric-and-polar-material-tools" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -1560,67 +1521,6 @@
       
     </span>
   </a>
-  
-    <nav class="md-nav" aria-label="Ferroelectric and Polar Material Tools">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#build-neighbor-lists" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Build Neighbor Lists
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#calculate-displacements" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Calculate Displacements
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#average-a-structure" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Average a Structure
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#octahedral-tilt" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Octahedral Tilt
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#abo3-polarization" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        ABO3 Polarization
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
   
 </li>
       
@@ -1697,28 +1597,28 @@
 </tr>
 <tr>
 <td>Neighbor list</td>
-<td><code>gpumdkit.sh -calc nlist [args...]</code></td>
-<td>structure</td>
+<td><code>gpumdkit.sh -calc nlist ...</code></td>
+<td>see <a href="polar_material_analysis.html">Polar Material Analysis</a></td>
 </tr>
 <tr>
 <td>Displacement</td>
-<td><code>gpumdkit.sh -calc disp [args...]</code></td>
-<td>trajectory + neighbor list</td>
+<td><code>gpumdkit.sh -calc disp ...</code></td>
+<td>see <a href="polar_material_analysis.html">Polar Material Analysis</a></td>
 </tr>
 <tr>
 <td>Average structure</td>
-<td><code>gpumdkit.sh -calc avg-struct [args...]</code></td>
-<td>trajectory</td>
+<td><code>gpumdkit.sh -calc avg-struct ...</code></td>
+<td>see <a href="polar_material_analysis.html">Polar Material Analysis</a></td>
 </tr>
 <tr>
 <td>Octahedral tilt</td>
-<td><code>gpumdkit.sh -calc oct-tilt [args...]</code></td>
-<td>trajectory + B-O neighbor list</td>
+<td><code>gpumdkit.sh -calc oct-tilt ...</code></td>
+<td>see <a href="polar_material_analysis.html">Polar Material Analysis</a></td>
 </tr>
 <tr>
 <td>ABO3 polarization</td>
-<td><code>gpumdkit.sh -calc pol-abo3 [args...]</code></td>
-<td>trajectory + neighbor lists</td>
+<td><code>gpumdkit.sh -calc pol-abo3 ...</code></td>
+<td>see <a href="polar_material_analysis.html">Polar Material Analysis</a></td>
 </tr>
 </tbody>
 </table>
@@ -1883,12 +1783,18 @@
 
 <h2 id="nep-property-prediction">NEP Property Prediction</h2>
 <p><code>calc_properties_with_nep.py</code> calculates energy, force, and stress for structures using a NEP model.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a>gpumdkit.sh<span class="w"> </span>-calc<span class="w"> </span>nep<span class="w"> </span>structures.xyz<span class="w"> </span>predictions.xyz<span class="w"> </span>nep.txt
+<p><strong>Dependency:</strong> <code>calorine</code></p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a>pip<span class="w"> </span>install<span class="w"> </span>calorine
 </code></pre></div>
-<p>This function is useful when you intentionally want to use a trained NEP model as a surrogate calculator. It should not be treated as a replacement for DFT unless the model quality has been carefully validated.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a>gpumdkit.sh<span class="w"> </span>-calc<span class="w"> </span>nep<span class="w"> </span>structures.xyz<span class="w"> </span>predictions.xyz<span class="w"> </span>nep.txt
+</code></pre></div>
+<p>Use this function to run predictions with a trained NEP model. For best results, validate model quality on your target structures before relying on the output.</p>
+<p><strong>Tip:</strong> Before prediction, you may want to clean the extxyz metadata:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a>gpumdkit.sh<span class="w"> </span>-clean_xyz<span class="w"> </span>train.xyz<span class="w"> </span>clean_train.xyz
+</code></pre></div>
 <h2 id="nep-descriptors">NEP Descriptors</h2>
 <p><code>calc_descriptors.py</code> extracts NEP descriptors for a selected element.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a>gpumdkit.sh<span class="w"> </span>-calc<span class="w"> </span>des<span class="w"> </span>train.xyz<span class="w"> </span>descriptors.npy<span class="w"> </span>nep.txt<span class="w"> </span>Li
+<div class="highlight"><pre><span></span><code><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a>gpumdkit.sh<span class="w"> </span>-calc<span class="w"> </span>des<span class="w"> </span>train.xyz<span class="w"> </span>descriptors.npy<span class="w"> </span>nep.txt<span class="w"> </span>Li
 </code></pre></div>
 <p>Use cases:</p>
 <ul>
@@ -1897,8 +1803,8 @@
 <li>inspect whether new data expands descriptor space.</li>
 </ul>
 <p>Plot descriptors with:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a>gpumdkit.sh<span class="w"> </span>-plt<span class="w"> </span>des<span class="w"> </span>pca
-<a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a>gpumdkit.sh<span class="w"> </span>-plt<span class="w"> </span>des<span class="w"> </span>umap
+<div class="highlight"><pre><span></span><code><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a>gpumdkit.sh<span class="w"> </span>-plt<span class="w"> </span>des<span class="w"> </span>pca
+<a id="__codelineno-14-2" name="__codelineno-14-2" href="#__codelineno-14-2"></a>gpumdkit.sh<span class="w"> </span>-plt<span class="w"> </span>des<span class="w"> </span>umap
 </code></pre></div>
 <div align="center">
   <img src="../../Gallery/des_umap.png" alt="Descriptor UMAP" width="52%" />
@@ -1906,8 +1812,8 @@
 
 <h2 id="density-of-atomistic-states">Density of Atomistic States</h2>
 <p><code>calc_doas.py</code> calculates density of atomistic states (DOAS), following the idea proposed by <a href="https://doi.org/10.1002/anie.202215544">Wang et al.</a>.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a>gpumdkit.sh<span class="w"> </span>-calc<span class="w"> </span>doas<span class="w"> </span>structures.xyz<span class="w"> </span>nep.txt<span class="w"> </span>doas.out
-<a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a>gpumdkit.sh<span class="w"> </span>-plt<span class="w"> </span>doas<span class="w"> </span>doas.out<span class="w"> </span>Li
+<div class="highlight"><pre><span></span><code><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a>gpumdkit.sh<span class="w"> </span>-calc<span class="w"> </span>doas<span class="w"> </span>structures.xyz<span class="w"> </span>nep.txt<span class="w"> </span>doas.out
+<a id="__codelineno-15-2" name="__codelineno-15-2" href="#__codelineno-15-2"></a>gpumdkit.sh<span class="w"> </span>-plt<span class="w"> </span>doas<span class="w"> </span>doas.out<span class="w"> </span>Li
 </code></pre></div>
 <p>The script:</p>
 <ol>
@@ -1917,13 +1823,13 @@
 <li>groups atomic energies by element;</li>
 <li>writes the grouped values to the output file.</li>
 </ol>
-<p>For very large systems, doing minimization and atomistic-energy extraction directly in GPUMD may be more efficient.</p>
+<p>For very large systems, running minimization and atomistic-energy extraction directly in GPUMD can be more efficient.</p>
 <div align="center">
   <img src="../../Gallery/doas.png" alt="Density of atomistic states" width="52%" />
 </div>
 
 <h2 id="neb-with-a-nep-model">NEB with a NEP Model</h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a>gpumdkit.sh<span class="w"> </span>-calc<span class="w"> </span>neb<span class="w"> </span>initial.xyz<span class="w"> </span>final.xyz<span class="w"> </span><span class="m">9</span><span class="w"> </span>nep.txt
+<div class="highlight"><pre><span></span><code><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a>gpumdkit.sh<span class="w"> </span>-calc<span class="w"> </span>neb<span class="w"> </span>initial.xyz<span class="w"> </span>final.xyz<span class="w"> </span><span class="m">9</span><span class="w"> </span>nep.txt
 </code></pre></div>
 <p>This runs a NEB calculation with <code>9</code> intermediate images. During execution, the script asks how atoms should be fixed:</p>
 <ul>
@@ -1933,7 +1839,11 @@
 <li><code>position</code>: fix atoms inside a coordinate range.</li>
 </ul>
 <h2 id="structure-minimization">Structure Minimization</h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a>gpumdkit.sh<span class="w"> </span>-calc<span class="w"> </span>minimize<span class="w"> </span>POSCAR<span class="w"> </span>nep.txt<span class="w"> </span><span class="m">0</span>.01<span class="w"> </span><span class="m">1000</span>
+<p><code>calc_minimize.py</code> minimizes a structure using a NEP model through <code>calorine</code>.</p>
+<p><strong>Dependency:</strong> <code>calorine</code></p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-17-1" name="__codelineno-17-1" href="#__codelineno-17-1"></a>pip<span class="w"> </span>install<span class="w"> </span>calorine
+</code></pre></div>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-18-1" name="__codelineno-18-1" href="#__codelineno-18-1"></a>gpumdkit.sh<span class="w"> </span>-calc<span class="w"> </span>minimize<span class="w"> </span>POSCAR<span class="w"> </span>nep.txt<span class="w"> </span><span class="m">0</span>.01<span class="w"> </span><span class="m">1000</span>
 </code></pre></div>
 <p>Arguments:</p>
 <table>
@@ -1967,32 +1877,48 @@
 <li><code>minimize.xyz</code></li>
 <li><code>minimize.log</code></li>
 </ul>
+<h2 id="rdf-calculation-with-ovito">RDF Calculation with OVITO</h2>
+<p><code>rdf_calculator_ovito.py</code> calculates radial distribution function using OVITO's analysis tools.</p>
+<p><strong>Dependency:</strong> OVITO</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-19-1" name="__codelineno-19-1" href="#__codelineno-19-1"></a>pip<span class="w"> </span>install<span class="w"> </span>ovito
+</code></pre></div>
+<p><strong>Input file:</strong> Structure file (single frame or trajectory)</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-20-1" name="__codelineno-20-1" href="#__codelineno-20-1"></a>python<span class="w"> </span>Scripts/calculators/rdf_calculator_ovito.py<span class="w"> </span>trajectory.xyz<span class="w"> </span><span class="m">6</span>.0<span class="w"> </span><span class="m">400</span>
+</code></pre></div>
+<p><strong>Parameters:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Argument</th>
+<th>Meaning</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>trajectory.xyz</code></td>
+<td>Input structure file</td>
+</tr>
+<tr>
+<td><code>6.0</code></td>
+<td>Maximum distance for RDF calculation (Å)</td>
+</tr>
+<tr>
+<td><code>400</code></td>
+<td>Number of histogram bins</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Visualization:</strong></p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-21-1" name="__codelineno-21-1" href="#__codelineno-21-1"></a>gpumdkit.sh<span class="w"> </span>-plt<span class="w"> </span>rdf
+</code></pre></div>
+<p><strong>Note:</strong> It is recommended to use the <code>compute_rdf</code> command directly in GPUMD when possible.</p>
+<hr />
 <h2 id="ferroelectric-and-polar-material-tools">Ferroelectric and Polar Material Tools</h2>
-<p>The following tools are useful for perovskite and polar-material analysis. They require <code>ferrodispcalc</code>:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a>pip3<span class="w"> </span>install<span class="w"> </span>git+https://github.com/MoseyQAQ/ferrodispcalc.git
+<p>Options <code>406–410</code> cover perovskite and polar-material analysis: neighbor lists, local displacements, averaged structures, octahedral tilt, and ABO3 polarization. These tools are built on <code>ferrodispcalc</code>.</p>
+<p><strong>Dependency:</strong></p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-22-1" name="__codelineno-22-1" href="#__codelineno-22-1"></a>pip3<span class="w"> </span>install<span class="w"> </span>git+https://github.com/MoseyQAQ/ferrodispcalc.git
 </code></pre></div>
-<p><code>ferrodispcalc</code> currently has no associated paper to cite.</p>
-<h3 id="build-neighbor-lists">Build Neighbor Lists</h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-17-1" name="__codelineno-17-1" href="#__codelineno-17-1"></a>gpumdkit.sh<span class="w"> </span>-calc<span class="w"> </span>nlist<span class="w"> </span>-i<span class="w"> </span>model.xyz<span class="w"> </span>-c<span class="w"> </span><span class="m">4</span>.0<span class="w"> </span>-n<span class="w"> </span><span class="m">6</span><span class="w"> </span>-C<span class="w"> </span>Ti<span class="w"> </span>-E<span class="w"> </span>O<span class="w"> </span>-o<span class="w"> </span>nl-Ti-O.dat
-</code></pre></div>
-<p>This creates a neighbor-list file where each row stores one center atom and its nearest neighbor atoms.</p>
-<h3 id="calculate-displacements">Calculate Displacements</h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-18-1" name="__codelineno-18-1" href="#__codelineno-18-1"></a>gpumdkit.sh<span class="w"> </span>-calc<span class="w"> </span>disp<span class="w"> </span>-i<span class="w"> </span>movie.xyz<span class="w"> </span>-n<span class="w"> </span>nl-Ti-O.dat<span class="w"> </span>-l<span class="w"> </span><span class="m">0</span>.2<span class="w"> </span>-o<span class="w"> </span>displacements.dat
-</code></pre></div>
-<p>Use <code>-l 0.2</code> to analyze the last 20% of frames. Use <code>-s</code>, <code>-t</code>, and <code>-p</code> if you want an explicit slice.</p>
-<h3 id="average-a-structure">Average a Structure</h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-19-1" name="__codelineno-19-1" href="#__codelineno-19-1"></a>gpumdkit.sh<span class="w"> </span>-calc<span class="w"> </span>avg-struct<span class="w"> </span>-i<span class="w"> </span>movie.xyz<span class="w"> </span>-l<span class="w"> </span><span class="m">0</span>.2<span class="w"> </span>-o<span class="w"> </span>averaged_structure.xyz
-</code></pre></div>
-<p>This is useful before displacement or polarization analysis when a representative averaged structure is needed.</p>
-<h3 id="octahedral-tilt">Octahedral Tilt</h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-20-1" name="__codelineno-20-1" href="#__codelineno-20-1"></a>gpumdkit.sh<span class="w"> </span>-calc<span class="w"> </span>oct-tilt<span class="w"> </span>-i<span class="w"> </span>movie.xyz<span class="w"> </span>-n<span class="w"> </span>nl-Ti-O.dat<span class="w"> </span>-l<span class="w"> </span><span class="m">0</span>.2<span class="w"> </span>-o<span class="w"> </span>octahedral_tilt.dat
-</code></pre></div>
-<p>The neighbor list should usually contain six B-O neighbors for each B-site center in an <code>ABO3</code>-like structure.</p>
-<h3 id="abo3-polarization">ABO3 Polarization</h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-21-1" name="__codelineno-21-1" href="#__codelineno-21-1"></a>gpumdkit.sh<span class="w"> </span>-calc<span class="w"> </span>pol-abo3<span class="w"> </span>-i<span class="w"> </span>movie.xyz<span class="w"> </span>--nl-ba<span class="w"> </span>nl-Ti-Pb.dat<span class="w"> </span>--nl-bo<span class="w"> </span>nl-Ti-O.dat<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-21-2" name="__codelineno-21-2" href="#__codelineno-21-2"></a><span class="w">  </span>--bec<span class="w"> </span><span class="nv">Pb</span><span class="o">=</span><span class="m">2</span><span class="w"> </span><span class="nv">Ti</span><span class="o">=</span><span class="m">4</span>.0<span class="w"> </span><span class="nv">O</span><span class="o">=</span>-2.0<span class="w"> </span>-o<span class="w"> </span>polarization.dat
-</code></pre></div>
-<p>The <code>--bec</code> values should be chosen according to your model or reference data. The tool is designed for <code>ABO3</code>-type local polarization analysis.</p>
+<p>For complete argument lists, real-world workflow examples (PbTiO3 phase transition, PTO/STO superlattice topology, etc.), see <strong><a href="polar_material_analysis.html">Polar Material Analysis</a></strong>.</p>
 
 
 

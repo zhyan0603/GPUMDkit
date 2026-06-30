@@ -444,9 +444,9 @@ gpumdkit.sh -plt plane-grid -i model-avg.xyz -d disp-last25.dat -e Ti --select-x
     <img src="../../Gallery/PTO-STO.png" alt="PTO_STO" width="65%" />
 </div>
 
-This gives a map similar to the one shown earlier. In the PTO region, a vortex-like polarization pattern is visible, while polarization in the STO region is close to zero. By analyzing how polarization varies around the vortex core, you can estimate the local dielectric response, but that is beyond the scope of this tutorial.
+This gives a map similar to the one shown earlier. In the PTO region, a vortex-like polarization pattern is visible, while polarization in the STO region is close to zero.
 
-Note: this figure uses a different colormap from the default GPUMDkit plotting style. The default output does not look exactly the same, but you can get this style with small plotting-script changes.
+Note: the example figure uses a custom colormap. The default GPUMDkit output uses a different style, which can be adjusted by editing the plotting script.
 
 ### Other Systems
 

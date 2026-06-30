@@ -10,6 +10,7 @@ Category:   Format Conversion Scripts
 Purpose:    Add group information to atoms in a structure file based on
             element types, outputting the result to model.xyz.
 Usage:      gpumdkit.sh -addgroup <input.xyz> <element1> <element2> ...
+            gpumdkit.sh -addlabel <input.xyz> <element1> <element2> ...
             python add_groups.py <input.xyz> <element1> <element2> ...
 Arguments:
   input.xyz   Input structure file
@@ -22,14 +23,26 @@ Last-modified: 2026-05-16
 """
 
 import sys
+
+args = sys.argv[1:]
+if len(args) < 2 or args[0] in ("-h", "--help"):
+    print(" Usage: gpumdkit.sh -addgroup <input.xyz> <element1> <element2> ...")
+    print("        gpumdkit.sh -addlabel <input.xyz> <element1> <element2> ...")
+    print("    or: python add_groups.py <input.xyz> <element1> <element2> ...")
+    print("")
+    print(" Arguments:")
+    print("   input.xyz   Input structure file")
+    print("   elementX    Element symbols to assign group indices (in order)")
+    print("")
+    print(" Output:")
+    print("   model.xyz   Structure with group information")
+    print("")
+    print(" Example: gpumdkit.sh -addgroup POSCAR Li Ti O")
+    print("")
+    sys.exit(0 if args and args[0] in ("-h", "--help") else 1)
+
 from ase.io import read, write
 import numpy as np
-
-# Check arguments
-if len(sys.argv) < 3:
-    print(" Usage: gpumdkit.sh -addgroup <input.xyz> <element1> <element2> ...")
-    print("    or: python add_groups.py <input.xyz> <element1> <element2> ...")
-    sys.exit(1)
 
 # Read the file name from command line arguments
 file_name = sys.argv[1]

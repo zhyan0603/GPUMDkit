@@ -24,6 +24,24 @@ Last-modified: 2026-05-16
 """
 
 import sys
+
+args = sys.argv[1:]
+if len(args) < 1 or args[0] in ("-h", "--help"):
+    print(" Usage: gpumdkit.sh -cbc <exyzfile>")
+    print("    or: python charge_balance_check.py <input.extxyz>")
+    print("")
+    print(" Arguments:")
+    print("   exyzfile    Input extxyz trajectory file")
+    print("")
+    print(" Output:")
+    print("   balanced.xyz     Structures with balanced oxidation states")
+    print("   unbalanced.xyz   Structures with unbalanced oxidation states")
+    print("   indices.txt      Summary of indices and output files")
+    print("")
+    print(" Example: gpumdkit.sh -cbc train.xyz")
+    print("")
+    sys.exit(0 if args and args[0] in ("-h", "--help") else 1)
+
 from ase.io import read, write
 from ase.data import atomic_numbers
 from collections import Counter
@@ -76,12 +94,6 @@ def process_structure(idx_atoms):
     return atoms
 
 def main():
-    # Check if input file is provided
-    if len(sys.argv) != 2:
-        print(" Usage: gpumdkit.sh -cbc <exyzfile>")
-        print("    or: python charge_balance_check.py <input.extxyz>")
-        sys.exit(1)
-    
     input_file = sys.argv[1]
     balanced_file = "balanced.xyz"
     unbalanced_file = "unbalanced.xyz"

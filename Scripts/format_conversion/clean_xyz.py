@@ -21,14 +21,26 @@ Last-modified: 2026-05-16
 =============================================================================
 """
 
-from ase.io import read, write
 import sys
 
-# Check arguments
-if len(sys.argv) < 3:
+args = sys.argv[1:]
+if len(args) < 2 or args[0] in ("-h", "--help"):
     print(" Usage: gpumdkit.sh -clean_xyz <input.xyz> <output.xyz>")
     print("    or: python clean_xyz.py <input.xyz> <output.xyz>")
-    sys.exit(1)
+    print("")
+    print(" Arguments:")
+    print("   input.xyz    Input extxyz training file")
+    print("   output.xyz   Output cleaned extxyz file")
+    print("")
+    print(" Output:")
+    print("   Cleaned extxyz file with only structural information")
+    print("   (stress, virial, and force data are removed)")
+    print("")
+    print(" Example: gpumdkit.sh -clean_xyz train.xyz cleaned.xyz")
+    print("")
+    sys.exit(0 if args and args[0] in ("-h", "--help") else 1)
+
+from ase.io import read, write
 
 # Read all frames from the input train.xyz file
 frames = read(sys.argv[1], index=':')
@@ -57,3 +69,4 @@ for frame in frames:
 
 # Export the cleaned frames to a new extxyz file, containing only lattice and atomic information
 write(sys.argv[2], frames, format='extxyz')
+print(f" Cleaned {len(frames)} frames, saved to {sys.argv[2]}")

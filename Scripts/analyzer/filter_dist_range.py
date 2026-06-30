@@ -25,6 +25,26 @@ Last-modified: 2026-05-16
 """
 
 import sys
+
+args = sys.argv[1:]
+if len(args) < 5 or args[0] in ("-h", "--help"):
+    print(" Usage: gpumdkit.sh -filter_range <exyzfile> <element1> <element2> <min_dist> <max_dist>")
+    print("    or: python filter_dist_range.py <input.xyz> <element1> <element2> <min_dist> <max_dist>")
+    print("")
+    print(" Arguments:")
+    print("   exyzfile    Input extxyz trajectory file")
+    print("   element1    First element symbol (e.g., Li)")
+    print("   element2    Second element symbol (e.g., Cl)")
+    print("   min_dist    Minimum distance (Angstrom)")
+    print("   max_dist    Maximum distance (Angstrom)")
+    print("")
+    print(" Output:")
+    print("   filtered_<element1>_<element2>_<min_dist>_<max_dist>.xyz")
+    print("")
+    print(" Example: gpumdkit.sh -filter_range train.xyz Li Cl 1.5 3.0")
+    print("")
+    sys.exit(0 if args and args[0] in ("-h", "--help") else 1)
+
 import numpy as np
 from ase.io import read, write
 
@@ -53,12 +73,6 @@ def get_min_distance(atoms, symbol1, symbol2):
     return np.min(distances)
 
 def main():
-    # Parse command line arguments
-    if len(sys.argv) != 6:
-        print(" Usage: gpumdkit.sh -filter_range <exyzfile> <element1> <element2> <min_dist> <max_dist>")
-        print("    or: python filter_dist_range.py <input.xyz> <element1> <element2> <min_dist> <max_dist>")
-        sys.exit(1)
-    
     input_file = sys.argv[1]
     atom1 = sys.argv[2]
     atom2 = sys.argv[3]

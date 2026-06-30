@@ -26,10 +26,23 @@ Last-modified: 2026-05-16
 import sys
 
 # Check if required arguments are provided before heavy imports
-if len(sys.argv) != 5:
+args = sys.argv[1:]
+if len(args) < 4 or args[0] in ("-h", "--help"):
     print(" Usage: gpumdkit.sh -pda <ref_struct> <trajectory_file> <species> <interval>")
     print("    or: python probability_density_analysis.py <ref_struct> <trajectory_file> <species> <interval>")
-    sys.exit(1)
+    print("")
+    print(" Arguments:")
+    print("   ref_struct       Reference structure file (e.g., POSCAR)")
+    print("   trajectory_file  AIMD trajectory in extxyz format")
+    print("   species          Mobile species symbol (e.g., Li)")
+    print("   interval         Grid interval for probability density (Angstrom)")
+    print("")
+    print(" Output:")
+    print("   probability_density_<interval>.vasp (CHGCAR-like file)")
+    print("")
+    print(" Example: gpumdkit.sh -pda POSCAR dump.xyz Li 0.1")
+    print("")
+    sys.exit(0 if args and args[0] in ("-h", "--help") else 1)
 
 import numpy as np
 from pymatgen.analysis.diffusion.aimd.pathway import ProbabilityDensityAnalysis

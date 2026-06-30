@@ -23,14 +23,25 @@ Last-modified: 2026-05-16
 """
 
 import sys
-from ase.io import read, write
 
-# Check command line arguments
-if len(sys.argv) != 4:
+args = sys.argv[1:]
+if len(args) < 3 or args[0] in ("-h", "--help"):
     print(" Usage: gpumdkit.sh -frame_range <exyzfile> <start_fraction> <end_fraction>")
-    print("    or: python frame_range.py input.xyz start_fraction end_fraction")
+    print("    or: python frame_range.py <input.xyz> <start_fraction> <end_fraction>")
+    print("")
+    print(" Arguments:")
+    print("   exyzfile         Input extxyz trajectory file")
+    print("   start_fraction   Start fraction (0.0 to 1.0, e.g., 0 for beginning)")
+    print("   end_fraction     End fraction (0.0 to 1.0, e.g., 0.8 for first 80%)")
+    print("")
+    print(" Output:")
+    print("   <input>_<start>_<end>.xyz  Extracted frame range")
+    print("")
     print(" Example: gpumdkit.sh -frame_range dump.xyz 0.2 0.5")
-    sys.exit(1)
+    print("")
+    sys.exit(0 if args and args[0] in ("-h", "--help") else 1)
+
+from ase.io import read, write
 
 input_file = sys.argv[1]
 start_fraction = float(sys.argv[2])

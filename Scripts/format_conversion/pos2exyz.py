@@ -21,6 +21,20 @@ Last-modified: 2026-05-16
 """
 
 import sys
+
+args = sys.argv[1:]
+if len(args) < 2 or args[0] in ("-h", "--help"):
+    print(" Usage: gpumdkit.sh -pos2exyz <POSCAR> <output.xyz>")
+    print("    or: python pos2exyz.py <POSCAR> <output.xyz>")
+    print("")
+    print(" Arguments:")
+    print("   POSCAR       One or more VASP POSCAR files (supports wildcards)")
+    print("   output.xyz   Output extxyz file")
+    print("")
+    print(" Example: gpumdkit.sh -pos2exyz POSCAR output.xyz")
+    print("")
+    sys.exit(0 if args and args[0] in ("-h", "--help") else 1)
+
 import glob
 from ase.io import read, write
 
@@ -43,12 +57,6 @@ def convert_poscar_to_extxyz(poscar_filenames, extxyz_filename):
     write(extxyz_filename, all_frames, format='extxyz', append=False)
 
 if __name__ == '__main__':
-    # Check if the number of arguments is correct
-    if len(sys.argv) < 3:
-        print(" Usage: gpumdkit.sh -pos2exyz <POSCAR> <output.xyz>")
-        print("    or: python pos2exyz.py <POSCAR> <output.xyz>")
-        sys.exit(1)
-
     poscar_filename_pattern = sys.argv[1]
     extxyz_filename = sys.argv[2]
 

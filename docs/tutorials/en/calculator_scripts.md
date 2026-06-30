@@ -16,11 +16,11 @@
 | DOAS | `gpumdkit.sh -calc doas <input.xyz> <nep.txt> <output.txt>` | extxyz + NEP model |
 | NEB | `gpumdkit.sh -calc neb <initial.xyz> <final.xyz> <n_images> <nep.txt>` | initial/final structures |
 | Minimization | `gpumdkit.sh -calc minimize <structure> <nep.txt> [fmax] [max_steps]` | structure + NEP model |
-| Neighbor list | `gpumdkit.sh -calc nlist [args...]` | structure |
-| Displacement | `gpumdkit.sh -calc disp [args...]` | trajectory + neighbor list |
-| Average structure | `gpumdkit.sh -calc avg-struct [args...]` | trajectory |
-| Octahedral tilt | `gpumdkit.sh -calc oct-tilt [args...]` | trajectory + B-O neighbor list |
-| ABO3 polarization | `gpumdkit.sh -calc pol-abo3 [args...]` | trajectory + neighbor lists |
+| Neighbor list | `gpumdkit.sh -calc nlist ...` | see [Polar Material Analysis](polar_material_analysis.md) |
+| Displacement | `gpumdkit.sh -calc disp ...` | see [Polar Material Analysis](polar_material_analysis.md) |
+| Average structure | `gpumdkit.sh -calc avg-struct ...` | see [Polar Material Analysis](polar_material_analysis.md) |
+| Octahedral tilt | `gpumdkit.sh -calc oct-tilt ...` | see [Polar Material Analysis](polar_material_analysis.md) |
+| ABO3 polarization | `gpumdkit.sh -calc pol-abo3 ...` | see [Polar Material Analysis](polar_material_analysis.md) |
 
 For a full command list:
 
@@ -194,7 +194,7 @@ pip install calorine
 gpumdkit.sh -calc nep structures.xyz predictions.xyz nep.txt
 ```
 
-This function is useful when you intentionally want to use a trained NEP model as a surrogate calculator. It should not be treated as a replacement for DFT unless the model quality has been carefully validated.
+Use this function to run predictions with a trained NEP model. For best results, validate model quality on your target structures before relying on the output.
 
 **Tip:** Before prediction, you may want to clean the extxyz metadata:
 
@@ -244,7 +244,7 @@ The script:
 4. groups atomic energies by element;
 5. writes the grouped values to the output file.
 
-For very large systems, doing minimization and atomistic-energy extraction directly in GPUMD may be more efficient.
+For very large systems, running minimization and atomistic-energy extraction directly in GPUMD can be more efficient.
 
 <div align="center">
   <img src="../../Gallery/doas.png" alt="Density of atomistic states" width="52%" />
@@ -327,51 +327,12 @@ gpumdkit.sh -plt rdf
 
 ## Ferroelectric and Polar Material Tools
 
-The following tools are useful for perovskite and polar-material analysis. They require `ferrodispcalc`:
+Options `406–410` cover perovskite and polar-material analysis: neighbor lists, local displacements, averaged structures, octahedral tilt, and ABO3 polarization. These tools are built on `ferrodispcalc`.
+
+**Dependency:**
 
 ```bash
 pip3 install git+https://github.com/MoseyQAQ/ferrodispcalc.git
 ```
 
-`ferrodispcalc` currently has no associated paper to cite.
-
-### Build Neighbor Lists
-
-```bash
-gpumdkit.sh -calc nlist -i model.xyz -c 4.0 -n 6 -C Ti -E O -o nl-Ti-O.dat
-```
-
-This creates a neighbor-list file where each row stores one center atom and its nearest neighbor atoms.
-
-### Calculate Displacements
-
-```bash
-gpumdkit.sh -calc disp -i movie.xyz -n nl-Ti-O.dat -l 0.2 -o displacements.dat
-```
-
-Use `-l 0.2` to analyze the last 20% of frames. Use `-s`, `-t`, and `-p` if you want an explicit slice.
-
-### Average a Structure
-
-```bash
-gpumdkit.sh -calc avg-struct -i movie.xyz -l 0.2 -o averaged_structure.xyz
-```
-
-This is useful before displacement or polarization analysis when a representative averaged structure is needed.
-
-### Octahedral Tilt
-
-```bash
-gpumdkit.sh -calc oct-tilt -i movie.xyz -n nl-Ti-O.dat -l 0.2 -o octahedral_tilt.dat
-```
-
-The neighbor list should usually contain six B-O neighbors for each B-site center in an `ABO3`-like structure.
-
-### ABO3 Polarization
-
-```bash
-gpumdkit.sh -calc pol-abo3 -i movie.xyz --nl-ba nl-Ti-Pb.dat --nl-bo nl-Ti-O.dat \
-  --bec Pb=2 Ti=4.0 O=-2.0 -o polarization.dat
-```
-
-The `--bec` values should be chosen according to your model or reference data. The tool is designed for `ABO3`-type local polarization analysis.
+For complete argument lists, real-world workflow examples (PbTiO3 phase transition, PTO/STO superlattice topology, etc.), see **[Polar Material Analysis](polar_material_analysis.md)**.
