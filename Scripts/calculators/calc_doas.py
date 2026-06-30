@@ -3,14 +3,15 @@
 GPUMDkit: A User-Friendly Toolkit for GPUMD and NEP
 Repository: https://github.com/zhyan0603/GPUMDkit
 Citation: Z. Yan et al., GPUMDkit: A User-Friendly Toolkit for GPUMD and NEP,
-          MGE Advances, 2026, e70074 (https://doi.org/10.1002/mgea.70074)
+          MGE Advances, 2026, 4, e70074 (https://doi.org/10.1002/mgea.70074)
 =============================================================================
 Script:     calc_doas.py
 Category:   Calculator Scripts
 Purpose:    Calculate the density of atomistic states (DOAS) proposed by
             Wang et al. by reading and optimizing structures with NEP_CPU
             and computing per-atom energies.
-Usage:      python calc_doas.py <input.xyz> <nep.txt> <output.txt>
+Usage:      gpumdkit.sh -calc doas <input.xyz> <nep.txt> <output.txt>
+            python calc_doas.py <input.xyz> <nep.txt> <output.txt>
 Arguments:
   input.xyz   Input extxyz file
   nep.txt     Path to the NEP model file
@@ -22,6 +23,21 @@ Last-modified: 2026-05-16
 =============================================================================
 """
 import sys
+
+# Check command-line arguments before importing optional heavy dependencies.
+if __name__ == "__main__" and (len(sys.argv) < 4 or sys.argv[1] in ("-h", "--help")):
+    print(" Usage: gpumdkit.sh -calc doas <input.xyz> <nep_model> <output_file>")
+    print("    or: python calc_doas.py <input.xyz> <nep.txt> <output.txt>")
+    print("")
+    print(" Arguments:")
+    print("   input.xyz    Input extxyz file")
+    print("   nep_model    Path to the NEP model file")
+    print("   output_file  Output text file for grouped atomic energies")
+    print("")
+    print(" Example: gpumdkit.sh -calc doas input.xyz nep.txt energies.txt")
+    print("")
+    sys.exit(0 if len(sys.argv) > 1 and sys.argv[1] in ("-h", "--help") else 1)
+
 from tqdm import tqdm
 import numpy as np
 from ase import Atoms

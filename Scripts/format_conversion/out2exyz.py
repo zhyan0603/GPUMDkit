@@ -3,15 +3,18 @@
 GPUMDkit: A User-Friendly Toolkit for GPUMD and NEP
 Repository: https://github.com/zhyan0603/GPUMDkit
 Citation: Z. Yan et al., GPUMDkit: A User-Friendly Toolkit for GPUMD and NEP,
-          MGE Advances, 2026, e70074 (https://doi.org/10.1002/mgea.70074)
+          MGE Advances, 2026, 4, e70074 (https://doi.org/10.1002/mgea.70074)
 =============================================================================
 Script:     out2exyz.py
 Category:   Format Conversion Scripts
 Purpose:    Convert VASP OUTCAR files to extended XYZ format with energy,
-            forces, stress, and virial information.
-Usage:      python out2exyz.py <directory>
+            forces, and virial information.
+Usage:      gpumdkit.sh -out2exyz <directory>
+            python out2exyz.py <directory>
+Arguments:
+  directory  Root directory to search for OUTCAR files
 Output:
-  Converted structures in extxyz format
+  train.xyz  Converted structures in extxyz format
 Author:     Zihan YAN (yanzihan@westlake.edu.cn)
 Last-modified: 2026-05-16
 =============================================================================
@@ -25,8 +28,8 @@ from tqdm import tqdm
 
 # Check arguments
 if len(sys.argv) < 2:
-    print("Usage: python out2exyz.py <directory>")
-    print("   or: gpumdkit.sh -out2exyz <directory>")
+    print(" Usage: gpumdkit.sh -out2exyz <directory>")
+    print("    or: python out2exyz.py <directory>")
     sys.exit(1)
 
 def Convert_atoms(atom):

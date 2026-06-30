@@ -3,7 +3,7 @@
 GPUMDkit: A User-Friendly Toolkit for GPUMD and NEP
 Repository: https://github.com/zhyan0603/GPUMDkit
 Citation: Z. Yan et al., GPUMDkit: A User-Friendly Toolkit for GPUMD and NEP,
-          MGE Advances, 2026, e70074 (https://doi.org/10.1002/mgea.70074)
+          MGE Advances, 2026, 4, e70074 (https://doi.org/10.1002/mgea.70074)
 =============================================================================
 Script:     exyz2lmp.py
 Category:   Format Conversion Scripts
@@ -70,7 +70,7 @@ def convert_extxyz_to_lammps_data(extxyz_file, lammps_data_file):
 
 if __name__ == '__main__':
     if len(sys.argv) != 3:
-        print("Usage: python exyz2lmp.py <extxyz_file> <lammps_data_file>")
+        print(" Usage: python exyz2lmp.py <extxyz_file> <lammps_data_file>")
         sys.exit(1)
     
     extxyz_file = sys.argv[1]

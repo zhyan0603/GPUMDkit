@@ -3,13 +3,14 @@
 GPUMDkit: A User-Friendly Toolkit for GPUMD and NEP
 Repository: https://github.com/zhyan0603/GPUMDkit
 Citation: Z. Yan et al., GPUMDkit: A User-Friendly Toolkit for GPUMD and NEP,
-          MGE Advances, 2026, e70074 (https://doi.org/10.1002/mgea.70074)
+          MGE Advances, 2026, 4, e70074 (https://doi.org/10.1002/mgea.70074)
 =============================================================================
 Script:     filter_exyz_by_box.py
 Category:   Analyzer Scripts
 Purpose:    Filter structures by a maximum box-edge length. Structures with
             any box edge exceeding the limit are discarded.
-Usage:      python filter_exyz_by_box.py <input_file> <edge_limit>
+Usage:      gpumdkit.sh -filter_box <input_file> <edge_limit>
+            python filter_exyz_by_box.py <input_file> <edge_limit>
 Arguments:
   input_file   Input extxyz file
   edge_limit   Maximum allowed box-edge length (Angstrom)
@@ -49,7 +50,8 @@ def filter_frames(input_file, output_file, edge_limit):
 
 if __name__ == "__main__":
     if len(sys.argv) != 3:
-        print("Usage: python filter_exyz_by_box.py <input_file> <edge_limit>")
+        print(" Usage: gpumdkit.sh -filter_box <exyzfile> <edge_limit>")
+        print("    or: python filter_exyz_by_box.py <input_file> <edge_limit>")
         sys.exit(1)
 
     input_file = sys.argv[1]

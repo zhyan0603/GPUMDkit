@@ -3,12 +3,13 @@
 GPUMDkit: A User-Friendly Toolkit for GPUMD and NEP
 Repository: https://github.com/zhyan0603/GPUMDkit
 Citation: Z. Yan et al., GPUMDkit: A User-Friendly Toolkit for GPUMD and NEP,
-          MGE Advances, 2026, e70074 (https://doi.org/10.1002/mgea.70074)
+          MGE Advances, 2026, 4, e70074 (https://doi.org/10.1002/mgea.70074)
 =============================================================================
 Script:     pos2exyz.py
 Category:   Format Conversion Scripts
 Purpose:    Convert one or more VASP POSCAR files to extended XYZ format.
-Usage:      python pos2exyz.py <POSCAR> <output.xyz>
+Usage:      gpumdkit.sh -pos2exyz <POSCAR> <output.xyz>
+            python pos2exyz.py <POSCAR> <output.xyz>
 Arguments:
   POSCAR       One or more VASP POSCAR files
   output.xyz   Output extxyz file
@@ -44,8 +45,8 @@ def convert_poscar_to_extxyz(poscar_filenames, extxyz_filename):
 if __name__ == '__main__':
     # Check if the number of arguments is correct
     if len(sys.argv) < 3:
-        print("Usage: python pos2exyz.py <POSCAR> <output.xyz>")
-        print("   or: gpumdkit.sh -pos2exyz <POSCAR> <output.xyz>")
+        print(" Usage: gpumdkit.sh -pos2exyz <POSCAR> <output.xyz>")
+        print("    or: python pos2exyz.py <POSCAR> <output.xyz>")
         sys.exit(1)
 
     poscar_filename_pattern = sys.argv[1]

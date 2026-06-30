@@ -184,11 +184,23 @@ gpumdkit.sh -plt sdc
 
 `calc_properties_with_nep.py` calculates energy, force, and stress for structures using a NEP model.
 
+**Dependency:** `calorine`
+
+```bash
+pip install calorine
+```
+
 ```bash
 gpumdkit.sh -calc nep structures.xyz predictions.xyz nep.txt
 ```
 
 This function is useful when you intentionally want to use a trained NEP model as a surrogate calculator. It should not be treated as a replacement for DFT unless the model quality has been carefully validated.
+
+**Tip:** Before prediction, you may want to clean the extxyz metadata:
+
+```bash
+gpumdkit.sh -clean_xyz train.xyz clean_train.xyz
+```
 
 ## NEP Descriptors
 
@@ -253,6 +265,14 @@ This runs a NEB calculation with `9` intermediate images. During execution, the 
 
 ## Structure Minimization
 
+`calc_minimize.py` minimizes a structure using a NEP model through `calorine`.
+
+**Dependency:** `calorine`
+
+```bash
+pip install calorine
+```
+
 ```bash
 gpumdkit.sh -calc minimize POSCAR nep.txt 0.01 1000
 ```
@@ -270,6 +290,40 @@ Output:
 
 - `minimize.xyz`
 - `minimize.log`
+
+## RDF Calculation with OVITO
+
+`rdf_calculator_ovito.py` calculates radial distribution function using OVITO's analysis tools.
+
+**Dependency:** OVITO
+
+```bash
+pip install ovito
+```
+
+**Input file:** Structure file (single frame or trajectory)
+
+```bash
+python Scripts/calculators/rdf_calculator_ovito.py trajectory.xyz 6.0 400
+```
+
+**Parameters:**
+
+| Argument | Meaning |
+|----------|---------|
+| `trajectory.xyz` | Input structure file |
+| `6.0` | Maximum distance for RDF calculation (Å) |
+| `400` | Number of histogram bins |
+
+**Visualization:**
+
+```bash
+gpumdkit.sh -plt rdf
+```
+
+**Note:** It is recommended to use the `compute_rdf` command directly in GPUMD when possible.
+
+---
 
 ## Ferroelectric and Polar Material Tools
 

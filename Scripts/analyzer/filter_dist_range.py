@@ -3,13 +3,14 @@
 GPUMDkit: A User-Friendly Toolkit for GPUMD and NEP
 Repository: https://github.com/zhyan0603/GPUMDkit
 Citation: Z. Yan et al., GPUMDkit: A User-Friendly Toolkit for GPUMD and NEP,
-          MGE Advances, 2026, e70074 (https://doi.org/10.1002/mgea.70074)
+          MGE Advances, 2026, 4, e70074 (https://doi.org/10.1002/mgea.70074)
 =============================================================================
 Script:     filter_dist_range.py
 Category:   Analyzer Scripts
 Purpose:    Filter structures by minimum interatomic distance between two
             elements falling within a specified range.
-Usage:      python filter_dist_range.py <input.xyz> <element1> <element2> <min_dist> <max_dist>
+Usage:      gpumdkit.sh -filter_range <input.xyz> <element1> <element2> <min_dist> <max_dist>
+            python filter_dist_range.py <input.xyz> <element1> <element2> <min_dist> <max_dist>
 Arguments:
   input.xyz  Input extxyz file
   element1   First element symbol (e.g., Li)
@@ -54,7 +55,8 @@ def get_min_distance(atoms, symbol1, symbol2):
 def main():
     # Parse command line arguments
     if len(sys.argv) != 6:
-        print(" Usage: python filter_dist_range.py <input.xyz> <element1> <element2> <min_dist> <max_dist>")
+        print(" Usage: gpumdkit.sh -filter_range <exyzfile> <element1> <element2> <min_dist> <max_dist>")
+        print("    or: python filter_dist_range.py <input.xyz> <element1> <element2> <min_dist> <max_dist>")
         sys.exit(1)
     
     input_file = sys.argv[1]

@@ -3,14 +3,16 @@
 GPUMDkit: A User-Friendly Toolkit for GPUMD and NEP
 Repository: https://github.com/zhyan0603/GPUMDkit
 Citation: Z. Yan et al., GPUMDkit: A User-Friendly Toolkit for GPUMD and NEP,
-          MGE Advances, 2026, e70074 (https://doi.org/10.1002/mgea.70074)
+          MGE Advances, 2026, 4, e70074 (https://doi.org/10.1002/mgea.70074)
 =============================================================================
 Script:     filter_structures_by_distance.py
 Category:   Analyzer Scripts
 Purpose:    Filter structures by minimum interatomic distance without
             periodic boundary conditions (no PBC). Faster than the PBC
             version for large systems.
-Usage:      python filter_structures_by_distance.py <file_name> [distance_threshold]
+Usage:      gpumdkit.sh -filter_dist <file_name> [distance_threshold]
+            python filter_structures_by_distance.py <file_name> [distance_threshold]
+Example:    gpumdkit.sh -filter_dist train.xyz 1.5
 Arguments:
   file_name          Input extxyz file
   distance_threshold (optional) Minimum allowed interatomic distance
@@ -35,6 +37,12 @@ def print_progress_bar(iteration, total, length=50):
     # Print New Line on Complete
     if iteration == total:
         print()
+
+# Check command-line arguments
+if len(sys.argv) < 2:
+    print(" Usage: gpumdkit.sh -filter_dist <file_name> [distance_threshold]")
+    print("    or: python filter_structures_by_distance.py <file_name> [distance_threshold]")
+    sys.exit(1)
 
 # Read the file name from command line arguments
 file_name = sys.argv[1]

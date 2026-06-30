@@ -35,7 +35,6 @@ Computational tools for property calculations:
 
 **Quick Start:**
 ```bash
-for example
 gpumdkit.sh -calc ionic-cond Li 1              # Calculate ionic conductivity
 gpumdkit.sh -calc nep input.xyz output.xyz nep.txt  # Calculate with NEP
 ```

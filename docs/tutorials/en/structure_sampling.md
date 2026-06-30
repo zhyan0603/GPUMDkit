@@ -133,7 +133,7 @@ This function requires the `NepTrain` package. If you use this function, we reco
 
 ## Deprecated PyNEP FPS
 
-PyNEP FPS is kept for compatibility, but it is only exposed through the direct `-pynep` entry:
+PyNEP FPS is kept for compatibility, but it is only exposed through the direct `-pynep` entry.
 
 If you choose `202` from the interactive menu, it prints:
 
@@ -146,6 +146,22 @@ If you choose `202` from the interactive menu, it prints:
 |                 gpumdkit.sh -pynep              |
 +-------------------------------------------------+
 ```
+
+### Serial PyNEP
+
+```bash
+python Scripts/sample_structures/pynep_select_structs.py dump.xyz train.xyz nep.txt
+```
+
+### Parallel PyNEP
+
+```bash
+python Scripts/sample_structures/parallel_pynep_select_structs.py dump.xyz train.xyz nep.txt 8
+```
+
+The last argument is the number of CPU threads.
+
+### GPUMDkit Entry
 
 ```bash
 gpumdkit.sh -pynep
@@ -190,7 +206,7 @@ Output:
 
 - `POSCAR_01.vasp`, `POSCAR_02.vasp`, ...
 
-This function requires `dpdata`.
+This function requires `dpdata`. If you use this function, we recommend citing the dpdata package.
 
 ## Force-Deviation Selection
 

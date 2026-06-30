@@ -3,7 +3,7 @@
 GPUMDkit: A User-Friendly Toolkit for GPUMD and NEP
 Repository: https://github.com/zhyan0603/GPUMDkit
 Citation: Z. Yan et al., GPUMDkit: A User-Friendly Toolkit for GPUMD and NEP,
-          MGE Advances, 2026, e70074 (https://doi.org/10.1002/mgea.70074)
+          MGE Advances, 2026, 4, e70074 (https://doi.org/10.1002/mgea.70074)
 =============================================================================
 Script:     replicate.py
 Category:   Format Conversion Scripts
@@ -106,10 +106,10 @@ def reorder_atoms_by_input_species_order(atoms, original_atoms):
 
 def main():
     if len(sys.argv) < 4:
-        print("Usage 1: python replicate.py input.vasp output.vasp a b c")
-        print("Usage 2: python replicate.py input.vasp output.vasp target_num")
-        print("   or: gpumdkit.sh -replicate input.vasp output.vasp a b c")
-        print("   or: gpumdkit.sh -replicate input.vasp output.vasp target_num")
+        print(" Usage 1: gpumdkit.sh -replicate input.vasp output.vasp a b c")
+        print(" Usage 2: gpumdkit.sh -replicate input.vasp output.vasp target_num")
+        print("    or: python replicate.py input.vasp output.vasp a b c")
+        print("    or: python replicate.py input.vasp output.vasp target_num")
         sys.exit(1)
 
     infile = sys.argv[1]

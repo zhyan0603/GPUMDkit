@@ -3,7 +3,7 @@
 GPUMDkit: A User-Friendly Toolkit for GPUMD and NEP
 Repository: https://github.com/zhyan0603/GPUMDkit
 Citation: Z. Yan et al., GPUMDkit: A User-Friendly Toolkit for GPUMD and NEP,
-          MGE Advances, 2026, e70074 (https://doi.org/10.1002/mgea.70074)
+          MGE Advances, 2026, 4, e70074 (https://doi.org/10.1002/mgea.70074)
 =============================================================================
 Script:     neb_calculation_neptrain.py
 Category:   Calculator Scripts
@@ -16,7 +16,14 @@ Arguments:
   n_image            Number of intermediate images
   nep_model          Path to the NEP model file
 Output:
-  NEB barrier profile plot
+  neb.traj               ASE Trajectory file with NEB optimization steps
+  neb.xyz                Final NEB path in extxyz format
+  images/                Directory containing individual image structures
+  images/transition_state.xyz  Transition state structure
+  images/image_*.xyz     All NEB image structures
+  images/fixed_atoms.txt Summary of fixed atom constraints
+  nep_barrier.png        Energy profile plot
+  (Note: interactive prompts for atom fixing method selection)
 Author:     Zhoulin LIU (1776627910@qq.com)
 Last-modified: 2026-05-16
 =============================================================================

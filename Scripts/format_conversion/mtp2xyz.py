@@ -3,18 +3,19 @@
 GPUMDkit: A User-Friendly Toolkit for GPUMD and NEP
 Repository: https://github.com/zhyan0603/GPUMDkit
 Citation: Z. Yan et al., GPUMDkit: A User-Friendly Toolkit for GPUMD and NEP,
-          MGE Advances, 2026, e70074 (https://doi.org/10.1002/mgea.70074)
+          MGE Advances, 2026, 4, e70074 (https://doi.org/10.1002/mgea.70074)
 =============================================================================
 Script:     mtp2xyz.py
 Category:   Format Conversion Scripts
 Purpose:    Convert MTP (Machine Learning Interatomic Potential) input file
-            format to extended XYZ using dpdata.
-Usage:      python mtp2xyz.py <train.cfg> <Symbol1> <Symbol2> ...
+            format to extended XYZ using a custom cfg parser and ASE.
+Usage:      Interactive: gpumdkit.sh -> 1 -> 102
+            python mtp2xyz.py <train.cfg> <Symbol1> <Symbol2> ...
 Arguments:
   train.cfg   MTP training data file
   SymbolX     Chemical element symbols in order
 Output:
-  Converted structure in extxyz format (printed to terminal or saved)
+  XYZ/mtp2xyz.xyz   Converted structures in extxyz format
 Author:     Ke XU (kickhsu@gmail.com)
 Last-modified: 2026-05-16
 =============================================================================
@@ -134,7 +135,7 @@ def dump_xyz(frames):
 if __name__ == "__main__":
     # Check arguments
     if len(sys.argv) < 3:
-        print("Usage: python mtp2xyz.py <train.cfg> <Symbol1> <Symbol2> ...")
+        print(" Usage: python mtp2xyz.py <train.cfg> <Symbol1> <Symbol2> ...")
         sys.exit(1)
     
     type_to_symbol = {i: s for i, s in enumerate(sys.argv[2:])}

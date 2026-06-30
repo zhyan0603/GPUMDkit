@@ -3,7 +3,7 @@
 GPUMDkit: A User-Friendly Toolkit for GPUMD and NEP
 Repository: https://github.com/zhyan0603/GPUMDkit
 Citation: Z. Yan et al., GPUMDkit: A User-Friendly Toolkit for GPUMD and NEP,
-          MGE Advances, 2026, e70074 (https://doi.org/10.1002/mgea.70074)
+          MGE Advances, 2026, 4, e70074 (https://doi.org/10.1002/mgea.70074)
 =============================================================================
 Script:     plt_pdos.py
 Category:   Plot Scripts
@@ -45,7 +45,8 @@ def set_fig_properties(ax_list, tl=4, tw=1.2, tlm=4):
 trap = np.trapezoid if hasattr(np, "trapezoid") else np.trapz
 
 def print_usage():
-    print("Usage: python plt_pdos.py [save]")
+    print("Usage: gpumdkit.sh -plt pdos [save]")
+    print("   or: python plt_pdos.py [save]")
     print("  save : Optional. If provided, saves figures (.png) and data (.xlsx).")
 
 class VAC_DOS_Processor:

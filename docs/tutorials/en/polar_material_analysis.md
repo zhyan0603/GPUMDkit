@@ -11,6 +11,17 @@ This tutorial includes both general and system-specific tools:
 - `oct-tilt` is for octahedral environments (requires 6 neighbors around each center).
 - `pol-abo3` is specific to `ABO3` polarization analysis.
 
+## Overview
+
+| Step | CLI Command | Main Input | Output |
+|------|-------------|------------|--------|
+| Build neighbor list | `gpumdkit.sh -calc nlist ...` | `model.xyz` | `nl-*.dat` |
+| Calculate displacement | `gpumdkit.sh -calc disp ...` | trajectory + `nl-*.dat` | `displacements.dat` |
+| Average trajectory | `gpumdkit.sh -calc avg-struct ...` | trajectory | averaged extxyz |
+| Octahedral tilt | `gpumdkit.sh -calc oct-tilt ...` | trajectory + B-O neighbor list | tilt-angle table |
+| ABO3 polarization | `gpumdkit.sh -calc pol-abo3 ...` | trajectory + neighbor lists | polarization table |
+| Plane-grid plot | `gpumdkit.sh -plt plane-grid ...` | structure + displacement data | plane profile plot |
+
 ## Dependency
 
 These scripts require `ferrodispcalc`:
@@ -22,6 +33,35 @@ pip3 install git+https://github.com/MoseyQAQ/ferrodispcalc.git
 ## Interactive mode entry
 
 Options `406-410` are the core functions for this tutorial. The sections below explain when to use each one and how to run it.
+
+```bash
+gpumdkit.sh
+# choose 4) Calculators
+```
+
+The calculator menu is:
+
+```text
++----------------------------------------------------------+
+|                     CALCULATOR TOOLS                     |
++----------------------------------------------------------+
+| 401) Calc ionic conductivity                             |
+| 402) Calc properties by nep                              |
+| 403) Calc descriptors of specific elements               |
+| 404) Calc density of atomistic states (DOAS)             |
+| 405) Calc nudged elastic band (NEB) by nep               |
+| 406) Build neighbor list                                 |
+| 407) Calc displacement from trajectory                   |
+| 408) Calc averaged structure                             |
+| 409) Calc octahedral tilt                                |
+| 410) Calc polarization for ABO3                          |
+| 411) Minimize structure by nep                           |
+| 412) Calc mean square displacement (MSD) from trajectory |
++----------------------------------------------------------+
+| 000) Return to the main menu                             |
++----------------------------------------------------------+
+Input the function number:
+```
 
 For full argument details, use:
 
@@ -107,7 +147,7 @@ gpumdkit.sh -calc disp -i movie.xyz -n nl-Ti-O.dat -l 0.2 -o displacements.dat
   Select trailing frames.
   Integer: last `N` frames.
   `0 < value < 1`: last ratio of frames.
-- `--last` is mutually exclusive with `-s/-t/-p`.
+- `-l/--last` is mutually exclusive with `-s/-t/-p`.
 
 ### Output file
 
@@ -143,7 +183,7 @@ gpumdkit.sh -calc avg-struct -i movie.xyz -s 100 -t 500 -p 2 -o avg_slice.xyz
   Slice step. Default: `1`.
 - `-l, --last`:
   Select trailing frames (`last N` or `last ratio`).
-- `--last` is mutually exclusive with `-s/-t/-p`.
+- `-l/--last` is mutually exclusive with `-s/-t/-p`.
 
 ### Output file
 
@@ -181,7 +221,7 @@ gpumdkit.sh -calc oct-tilt -i movie.xyz -n nl-Ti-O.dat -l 0.2 -o octahedral_tilt
   Slice step. Default: `1`.
 - `-l, --last`:
   Select trailing frames (`last N` or `last ratio`).
-- `--last` is mutually exclusive with `-s/-t/-p`.
+- `-l/--last` is mutually exclusive with `-s/-t/-p`.
 
 ### Output file
 
@@ -225,7 +265,7 @@ gpumdkit.sh -calc pol-abo3 -i movie.xyz --nl-ba nl-Ti-Pb.dat --nl-bo nl-Ti-O.dat
   Slice step. Default: `1`.
 - `-l, --last`:
   Select trailing frames (`last N` or `last ratio`).
-- `--last` is mutually exclusive with `-s/-t/-p`.
+- `-l/--last` is mutually exclusive with `-s/-t/-p`.
 
 Important checks:
 
@@ -278,7 +318,7 @@ Output:
 - Saves figures as `XY_*.png`, `XZ_*.png`, `YZ_*.png`.
 
 <div align="center">
-    <img src="../Gallery/PTO_STO_superlattice.png" alt="PTO_STO" width="65%" />
+    <img src="../../Gallery/PTO_STO_superlattice.png" alt="PTO_STO" width="65%" />
 </div>
 
 ## Output files at a glance
@@ -372,7 +412,7 @@ done
 By analyzing the lattice of each temperature-averaged structure together with its polarization (`XX-pol.dat`), we can obtain the following figure:
 
 <div align="center">
-    <img src="../Gallery/PTO-temp.png" alt="PTO-temp" width="65%" />
+    <img src="../../Gallery/PTO-temp.png" alt="PTO-temp" width="65%" />
 </div>
 
 The trend shows a clear phase transition around `600 K`, where the polarization vanishes.
@@ -401,7 +441,7 @@ gpumdkit.sh -plt plane-grid -i model-avg.xyz -d disp-last25.dat -e Ti --select-x
 ```
 
 <div align="center">
-    <img src="../Gallery/PTO-STO.png" alt="PTO_STO" width="65%" />
+    <img src="../../Gallery/PTO-STO.png" alt="PTO_STO" width="65%" />
 </div>
 
 This gives a map similar to the one shown earlier. In the PTO region, a vortex-like polarization pattern is visible, while polarization in the STO region is close to zero. By analyzing how polarization varies around the vortex core, you can estimate the local dielectric response, but that is beyond the scope of this tutorial.
@@ -429,4 +469,3 @@ gpumdkit.sh -calc disp -i movie.xyz -n nl-C-Cl.dat -o ccl_vectors.dat
 #### Other ferroelectric families
 
 Beyond `ABO3`, `ferrodispcalc` can be adapted to many ferroelectric systems, including nitrides, hafnia-based compounds, organic-inorganic hybrids, and some 2D ferroelectrics.
-

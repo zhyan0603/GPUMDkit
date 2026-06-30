@@ -3,12 +3,13 @@
 GPUMDkit: A User-Friendly Toolkit for GPUMD and NEP
 Repository: https://github.com/zhyan0603/GPUMDkit
 Citation: Z. Yan et al., GPUMDkit: A User-Friendly Toolkit for GPUMD and NEP,
-          MGE Advances, 2026, e70074 (https://doi.org/10.1002/mgea.70074)
+          MGE Advances, 2026, 4, e70074 (https://doi.org/10.1002/mgea.70074)
 =============================================================================
 Script:     cif2exyz.py
 Category:   Format Conversion Scripts
 Purpose:    Convert CIF file to extended XYZ format using ASE.
-Usage:      python cif2exyz.py <input.cif> <output.xyz>
+Usage:      gpumdkit.sh -cif2exyz <input.cif> <output.xyz>
+            python cif2exyz.py <input.cif> <output.xyz>
 Arguments:
   input.cif   Input CIF file
   output.xyz  Output extxyz file
@@ -24,8 +25,8 @@ from ase.io import read, write
 
 # Check command line arguments
 if len(sys.argv) != 3:
-    print("Usage: python cif2exyz.py <input.cif> <output.xyz>")
-    print("   or: gpumdkit.sh -cif2exyz <input.cif> <output.xyz>")
+    print(" Usage: gpumdkit.sh -cif2exyz <input.cif> <output.xyz>")
+    print("    or: python cif2exyz.py <input.cif> <output.xyz>")
     sys.exit(1)
 
 # Read input and output file paths

@@ -3,12 +3,13 @@
 GPUMDkit: A User-Friendly Toolkit for GPUMD and NEP
 Repository: https://github.com/zhyan0603/GPUMDkit
 Citation: Z. Yan et al., GPUMDkit: A User-Friendly Toolkit for GPUMD and NEP,
-          MGE Advances, 2026, e70074 (https://doi.org/10.1002/mgea.70074)
+          MGE Advances, 2026, 4, e70074 (https://doi.org/10.1002/mgea.70074)
 =============================================================================
 Script:     get_frame.py
 Category:   Format Conversion Scripts
 Purpose:    Extract a single frame from an extxyz trajectory by frame number.
-Usage:      python get_frame.py <input.xyz> <frame_number>
+Usage:      gpumdkit.sh -get_frame <input.xyz> <frame_number>
+            python get_frame.py <input.xyz> <frame_number>
 Arguments:
   input.xyz      Input extxyz trajectory file
   frame_number   Frame number to extract (1-indexed)
@@ -24,8 +25,8 @@ from ase.io import read, write
 
 # Check arguments
 if len(sys.argv) < 3:
-    print("Usage: python get_frame.py <input.xyz> <frame_number>")
-    print("   or: gpumdkit.sh -get_frame <input.xyz> <frame_number>")
+    print(" Usage: gpumdkit.sh -get_frame <input.xyz> <frame_number>")
+    print("    or: python get_frame.py <input.xyz> <frame_number>")
     sys.exit(1)
 
 def get_frame():

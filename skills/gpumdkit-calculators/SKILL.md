@@ -19,7 +19,7 @@ allowed-tools: Bash(gpumdkit *) Bash(python3 *)
 | NEP Properties | `-calc nep` | Compute energy/force/stress with NEP |
 | Descriptors | `-calc des` | Calculate NEP descriptors for analysis |
 | DOAS | `-calc doas` | Density of atomistic states |
-| NEB | Direct Python | Nudged elastic band calculation |
+| NEB | `-calc neb` | Nudged elastic band calculation |
 | Neighbor List | `-calc nlist` | Build neighbor lists for analysis |
 | Displacement | `-calc disp` | Calculate atomic displacements |
 | Averaged Structure | `-calc avg-struct` | Time-averaged structure from trajectory |
@@ -165,10 +165,13 @@ gpumdkit.sh -calc minimize POSCAR nep.txt 0.01 1000
 
 ### NEB Calculation
 ```bash
-# Direct Python execution (no CLI shortcut)
-python Scripts/calculators/neb_calculation.py <initial.xyz> <final.xyz> <n_images> <nep.txt>
+# CLI shortcut
+gpumdkit.sh -calc neb <initial.xyz> <final.xyz> <n_images> <nep.txt>
 
 # Example
+gpumdkit.sh -calc neb init.xyz fin.xyz 9 nep.txt
+
+# Direct Python execution (also works)
 python Scripts/calculators/neb_calculation.py init.xyz fin.xyz 9 nep.txt
 
 # Alternative with NepTrainKit:

@@ -3,13 +3,14 @@
 GPUMDkit: A User-Friendly Toolkit for GPUMD and NEP
 Repository: https://github.com/zhyan0603/GPUMDkit
 Citation: Z. Yan et al., GPUMDkit: A User-Friendly Toolkit for GPUMD and NEP,
-          MGE Advances, 2026, e70074 (https://doi.org/10.1002/mgea.70074)
+          MGE Advances, 2026, 4, e70074 (https://doi.org/10.1002/mgea.70074)
 =============================================================================
 Script:     calc_msd.py
 Category:   Calculator Scripts
 Purpose:    Compute directional MSD (x, y, z) from an extxyz trajectory via
             the Wiener-Khinchin FFT algorithm for a target element.
-Usage:      python calc_msd.py <extxyz_file> <element_symbol> <dt_fs> [max_corr_steps]
+Usage:      gpumdkit.sh -calc msd <extxyz_file> <element_symbol> <dt_fs> [max_corr_steps]
+            python calc_msd.py <extxyz_file> <element_symbol> <dt_fs> [max_corr_steps]
 Arguments:
   extxyz_file       Path to the input extxyz trajectory file
   element_symbol    Chemical symbol (e.g., Li, O, Na)
@@ -46,12 +47,23 @@ def parse_args():
     args = sys.argv[1:]
 
     if len(args) == 0 or args[0] in ("-h", "--help"):
-        print(__doc__)
-        sys.exit(0)
+        print(" Usage: gpumdkit.sh -calc msd <extxyz_file> <element_symbol> <dt_fs> [max_corr_steps]")
+        print("    or: python calc_msd.py <extxyz_file> <element_symbol> <dt_fs> [max_corr_steps]")
+        print("")
+        print(" Arguments:")
+        print("   extxyz_file       Path to the input extxyz trajectory file")
+        print("   element_symbol    Chemical symbol (e.g., Li, O, Na)")
+        print("   dt_fs             Time step between consecutive frames (fs)")
+        print("   max_corr_steps    Max correlation lag steps (optional)")
+        print("")
+        print(" Example: gpumdkit.sh -calc msd dump.xyz Li 1.0 500")
+        print("")
+        sys.exit(0 if args and args[0] in ("-h", "--help") else 1)
 
     if len(args) not in (3, 4):
         print(" Error: Expected 3 or 4 positional arguments, got %d." % len(args))
-        print("        Run with -h for usage information.")
+        print(" Usage: gpumdkit.sh -calc msd <extxyz_file> <element_symbol> <dt_fs> [max_corr_steps]")
+        print("    or: python calc_msd.py <extxyz_file> <element_symbol> <dt_fs> [max_corr_steps]")
         sys.exit(1)
 
     extxyz_file    = args[0]

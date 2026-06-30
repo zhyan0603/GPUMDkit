@@ -43,7 +43,7 @@ custom_greet() {
 }
 ```
 
-and you can add a argument, for example: `gpumdkit.sh -greet Zihan`, then you will see:
+and you can add an argument, for example: `gpumdkit.sh -greet Zihan`, then you will see:
 
 ```
 Hello, Zihan!

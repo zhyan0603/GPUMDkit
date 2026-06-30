@@ -3,18 +3,19 @@
 GPUMDkit: A User-Friendly Toolkit for GPUMD and NEP
 Repository: https://github.com/zhyan0603/GPUMDkit
 Citation: Z. Yan et al., GPUMDkit: A User-Friendly Toolkit for GPUMD and NEP,
-          MGE Advances, 2026, e70074 (https://doi.org/10.1002/mgea.70074)
+          MGE Advances, 2026, 4, e70074 (https://doi.org/10.1002/mgea.70074)
 =============================================================================
 Script:     lmp2exyz.py
 Category:   Format Conversion Scripts
 Purpose:    Convert LAMMPS dump file to extended XYZ format with proper
             element type mapping.
-Usage:      python lmp2exyz.py <dump_file> <element1> <element2> ...
+Usage:      gpumdkit.sh -lmp2exyz <dump_file> <element1> <element2> ...
+            python lmp2exyz.py <dump_file> <element1> <element2> ...
 Arguments:
   dump_file  Input LAMMPS dump file
   elementX   Chemical element symbols in order of atomic types
 Output:
-  Converted structures in extxyz format
+  dump.xyz   Converted structures in extxyz format
 Author:     Zihan YAN (yanzihan@westlake.edu.cn)
 Last-modified: 2026-05-16
 =============================================================================
@@ -48,8 +49,8 @@ def lmp2exyz(dump_file, elements):
 
 if __name__ == '__main__':
     if len(sys.argv) < 3:
-        print("Usage: python lmp2exyz.py <dump_file> <element1> <element2> ...")
-        print("   or: gpumdkit.sh -lmp2exyz <dump_file> <element1> <element2> ...")
+        print(" Usage: gpumdkit.sh -lmp2exyz <dump_file> <element1> <element2> ...")
+        print("    or: python lmp2exyz.py <dump_file> <element1> <element2> ...")
         sys.exit(1)
     
     dump_file = sys.argv[1]

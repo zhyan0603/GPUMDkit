@@ -15,8 +15,8 @@ allowed-tools: Bash(gpumdkit *) Bash(python3 *)
 
 | Workflow | Menu | Description |
 |----------|------|-------------|
-| SCF Batch (VASP) | 301.1 | VASP single-point batch setup |
-| SCF Batch (CP2K) | 301.2 | CP2K single-point batch setup |
+| SCF Batch (VASP) | 301 → 1 | VASP single-point batch setup |
+| SCF Batch (CP2K) | 301 → 2 | CP2K single-point batch setup |
 | MD Batch (GPUMD) | 302 | GPUMD MD sampling batch setup |
 | MD Batch (LAMMPS) | 303 | LAMMPS MD sampling batch setup |
 

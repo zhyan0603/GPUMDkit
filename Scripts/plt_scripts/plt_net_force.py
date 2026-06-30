@@ -3,13 +3,13 @@
 GPUMDkit: A User-Friendly Toolkit for GPUMD and NEP
 Repository: https://github.com/zhyan0603/GPUMDkit
 Citation: Z. Yan et al., GPUMDkit: A User-Friendly Toolkit for GPUMD and NEP,
-          MGE Advances, 2026, e70074 (https://doi.org/10.1002/mgea.70074)
+          MGE Advances, 2026, 4, e70074 (https://doi.org/10.1002/mgea.70074)
 =============================================================================
 Script:     plt_net_force.py
 Category:   Plot Scripts
 Purpose:    Plot distribution of net forces on structures to identify
             problematic configurations in training datasets.
-Usage:      gpumdkit.sh -plt net_force <extxyzfile>
+Usage:      gpumdkit.sh -plt net_force <extxyzfile> [save]
             python plt_net_force.py <extxyzfile> [save]
 Arguments:
   extxyzfile  Path to the extended XYZ file (e.g., train.xyz)
@@ -217,7 +217,8 @@ def check_convergence(xyz_file, threshold=0.001, save_flag=False):
 # Main function
 def main():
     if len(sys.argv) < 2:
-        print(" Usage: python plt_net_force.py train.xyz [save]")
+        print(" Usage: gpumdkit.sh -plt net_force <extxyzfile> [save]")
+        print("    or: python plt_net_force.py <extxyzfile> [save]")
         sys.exit(1)
     
     xyz_file = sys.argv[1]

@@ -296,4 +296,4 @@ gpumdkit.sh -plt thermo save
 
 **GPUMDkit** 是一款面向所有人的开源工具。如果在你的研究或工作中它有所帮助，欢迎 ⭐ [在 GitHub 上给我们点亮 Star](https://github.com/zhyan0603/GPUMDkit)。此外，如果 GPUMDkit 对你的发表工作有贡献，请引用我们的论文：
 
-> Z. Yan\*, D. Li, X. Wu, Z. Liu, C. Hua, B. Situ, H. Yang, S. Tang, B. Tang, Z. Wang, S. Yi, H. Wang, D. Huang, K. Li, Q. Guo, Z. Chen, K. Xu, Y. Wang, Z. Wang, G. Tang, S. Liu, Z. Fan, and Y. Zhu\*. **GPUMDkit: A User-Friendly Toolkit for GPUMD and NEP**. [MGE Advances, 2026, e70074](https://doi.org/10.1002/mgea.70074).
+> Z. Yan\*, D. Li, X. Wu, Z. Liu, C. Hua, B. Situ, H. Yang, S. Tang, B. Tang, Z. Wang, S. Yi, H. Wang, D. Huang, K. Li, Q. Guo, Z. Chen, K. Xu, Y. Wang, Z. Wang, G. Tang, S. Liu, Z. Fan, and Y. Zhu\*. **GPUMDkit: A User-Friendly Toolkit for GPUMD and NEP**. [MGE Advances, 2026, 4, e70074](https://doi.org/10.1002/mgea.70074).

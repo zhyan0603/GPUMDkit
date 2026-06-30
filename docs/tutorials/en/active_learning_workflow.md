@@ -3,11 +3,29 @@
   <p style="text-align: justify;">This tutorial explains the steps and considerations involved in the <code>workflow_active_learning_dev.sh</code> script. The workflow is used to generate, select, and analyze molecular structures, followed by simulations and data collection.</p>
 </div>
 
-### Overview
+**Script Location:** `Scripts/workflow/`
 
-This script is designed to handle molecular dynamics simulations, sampling, and SCF (self-consistent field) calculations for NEP. Below is a step-by-step guide explaining how the script works and what each part does.
+## Overview
 
-### 1. **SLURM Directives**
+This script automates one iteration of NEP active learning. The typical workflow includes:
+
+| Step | Action | Purpose |
+|------|--------|---------|
+| 1 | Run MD simulations | Generate candidate structures with current NEP model |
+| 2 | Filter structures | Remove unphysical configurations (short distances, large boxes) |
+| 3 | Sample structures | Select diverse or uncertain structures for DFT |
+| 4 | Run SCF calculations | Compute DFT reference energies/forces |
+| 5 | NEP prediction | Check model accuracy on new structures |
+
+Unlike menu-driven modules, this workflow is a shell script that you customize and run directly:
+
+```bash
+bash Scripts/workflow/workflow_active_learning_dev.sh
+```
+
+The sections below explain the main blocks in the script and what each part does.
+
+## 1. **SLURM Directives**
 
 ```
 #!/bin/bash -l
@@ -34,7 +52,7 @@ The SLURM directives are used to define how the job will be submitted to the clu
 nohup bash workflow_active_learning_dev.sh &>workflow.log &
 ```
 
-### 2. **Basic Setup**
+## 2. **Basic Setup**
 
 ```
 cd $SLURM_SUBMIT_DIR 
@@ -52,7 +70,7 @@ python_pynep=python  # Python executable for the deprecated pynep branch if need
 
 ------
 
-### 3. **Variable Definitions**
+## 3. **Variable Definitions**
 
 ```
 work_dir=${PWD}  # Set the working directory
@@ -73,7 +91,7 @@ You can customize:
 
 ------
 
-### 4. **Check Required Files**
+## 4. **Check Required Files**
 
 ```
 if [ -f nep.txt ] && [ -f nep.in ] && [ -f train.xyz ] && [ -f run.in ] && [ -f INCAR ] && [ -f POTCAR ] ; then
@@ -88,7 +106,7 @@ Make sure the necessary files (`nep.txt`, `nep.in`, `train.xyz`, `run.in`, `INCA
 
 ------
 
-### 5. **File Organization**
+## 5. **File Organization**
 
 ```
 mkdir 00.modev common
@@ -103,7 +121,7 @@ The script organizes the working files into two folders:
 
 ------
 
-### 6. **Molecular Dynamics Simulation Submission**
+## 6. **Molecular Dynamics Simulation Submission**
 
 ```
 submit_gpumd_array modev ${sample_struct_num}
@@ -114,7 +132,7 @@ After preparing the input files, the script submits an array of molecular dynami
 
 ------
 
-### 7. **Monitoring Task Completion**
+## 7. **Monitoring Task Completion**
 
 ```
 while true; do
@@ -137,7 +155,7 @@ The script continuously checks whether all MD tasks have finished by searching f
 
 ------
 
-### 8. **Analysis and Filtering**
+## 8. **Analysis and Filtering**
 
 ```
 mkdir ${work_dir}/01.select
@@ -148,7 +166,7 @@ In the `01.select` folder, all structures in the trajectory file `dump.xyz` duri
 
 ------
 
-### 9. **Sampling Methods**
+## 9. **Sampling Methods**
 
 ```
 case $sample_method in
@@ -161,7 +179,7 @@ The script supports three sampling methods: `uniform`, `random`, and `pynep`. It
 
 ------
 
-### 10. **SCF Calculations**
+## 10. **SCF Calculations**
 
 ```
 submit_vasp_array scf ${selected_struct_num} ${prefix_name}
@@ -171,13 +189,13 @@ After sampling, SCF calculations are submitted using `submit_vasp_array`. The pr
 
 ------
 
-### 11. **Prediction Step**
+## 11. **Prediction Step**
 
 ```
 submit_nep_prediction
 ```
 
-The final step involves submitting the NEP prediction task to check  the accuracy of the NEP model. 
+The final step involves submitting the NEP prediction task to check the accuracy of the NEP model. 
 
 
 

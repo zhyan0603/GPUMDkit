@@ -17,13 +17,28 @@ Choose:
 3) Workflow
 ```
 
-Typical workflow menu:
+The workflow menu looks like:
+
+```text
++---------------------------------------------------------+
+|                      WORKFLOW TOOLS                     |
++---------------------------------------------------------+
+| 301) SCF batch pretreatment                             |
+| 302) MD sample batch pretreatment (gpumd)               |
+| 303) MD sample batch pretreatment (lmp)                 |
++---------------------------------------------------------+
+| 000) Return to the main menu                            |
++---------------------------------------------------------+
+Input the function number:
+```
+
+Available entries:
 
 | Menu | Workflow | Purpose |
 |------|----------|---------|
-| 301 | SCF batch pretreatment | prepare single-point DFT calculations |
-| 302 | MD sample batch pretreatment (GPUMD) | prepare GPUMD sampling calculations |
-| 303 | MD sample batch pretreatment (LAMMPS) | prepare LAMMPS sampling calculations |
+| 301 | SCF batch pretreatment | Prepare single-point DFT calculations |
+| 302 | MD sample batch pretreatment (GPUMD) | Prepare GPUMD sampling calculations |
+| 303 | MD sample batch pretreatment (LAMMPS) | Prepare LAMMPS sampling calculations |
 
 ## SCF Batch Pretreatment
 

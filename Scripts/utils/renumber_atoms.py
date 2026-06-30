@@ -2,10 +2,11 @@
 Renumber atom IDs in a LAMMPS dump file.
 
 Usage:
+    gpumdkit.sh -re_atoms <input_file> <output_file>
     python renumber_atoms.py <input_file> <output_file>
 
 Author:
-    Dian HUANG <huangdian@stu.xjtu.edu.cn>
+    Dian HUANG (huangdian@stu.xjtu.edu.cn)
 """
 
 import sys
@@ -13,7 +14,8 @@ from tqdm import tqdm
 
 # Check command-line arguments
 if len(sys.argv) != 3:
-    print("Usage: python renumber_atoms.py <input_file> <output_file>")
+    print(" Usage: gpumdkit.sh -re_atoms <input_file> <output_file>")
+    print("    or: python renumber_atoms.py <input_file> <output_file>")
     sys.exit(1)
 
 input_file = sys.argv[1]

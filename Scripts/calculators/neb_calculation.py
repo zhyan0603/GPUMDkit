@@ -3,26 +3,52 @@
 GPUMDkit: A User-Friendly Toolkit for GPUMD and NEP
 Repository: https://github.com/zhyan0603/GPUMDkit
 Citation: Z. Yan et al., GPUMDkit: A User-Friendly Toolkit for GPUMD and NEP,
-          MGE Advances, 2026, e70074 (https://doi.org/10.1002/mgea.70074)
+          MGE Advances, 2026, 4, e70074 (https://doi.org/10.1002/mgea.70074)
 =============================================================================
 Script:     neb_calculation.py
 Category:   Calculator Scripts
 Purpose:    Perform NEB calculations with a NEP model using calorine.
-Usage:      python neb_calculation.py <initial_structure> <final_structure>
-            <n_image> <nep_model>
+Usage:      gpumdkit.sh -calc neb <initial_structure> <final_structure>
+            <n_images> <nep_model>
+            python neb_calculation.py <initial_structure> <final_structure>
+            <n_images> <nep_model>
+Example:    gpumdkit.sh -calc neb init.xyz final.xyz 9 nep.txt
 Arguments:
   initial_structure  Path to the initial structure XYZ file
   final_structure    Path to the final structure XYZ file
-  n_image            Number of intermediate images
+  n_images           Number of intermediate images
   nep_model          Path to the NEP model file
 Output:
-  NEB barrier profile (printed and plotted)
+  neb.traj               ASE Trajectory file with NEB optimization steps
+  neb.xyz                Final NEB path in extxyz format
+  images/                Directory containing individual image structures
+  images/transition_state.xyz  Transition state structure
+  images/image_*.xyz     All NEB image structures
+  images/fixed_atoms.txt Summary of fixed atom constraints
+  nep_barrier.png        Energy profile plot
+  (Note: interactive prompts for atom fixing method selection)
 Author:     Zhoulin LIU (1776627910@qq.com), Zihan YAN (yanzihan@westlake.edu.cn)
 Last-modified: 2026-05-16
 =============================================================================
 """
 import os
 import sys
+
+# Check command-line arguments before importing optional heavy dependencies.
+if __name__ == "__main__" and (len(sys.argv) != 5 or sys.argv[1] in ("-h", "--help")):
+    print(" Usage: gpumdkit.sh -calc neb <initial_structure> <final_structure> <n_images> <nep_model>")
+    print("    or: python neb_calculation.py <initial_structure> <final_structure> <n_images> <nep_model>")
+    print("")
+    print(" Arguments:")
+    print("   initial_structure  Path to the initial structure XYZ file")
+    print("   final_structure    Path to the final structure XYZ file")
+    print("   n_images           Number of intermediate images (e.g., 9)")
+    print("   nep_model          Path to the NEP model file")
+    print("")
+    print(" Example: gpumdkit.sh -calc neb init.xyz final.xyz 9 nep.txt")
+    print("")
+    sys.exit(0 if len(sys.argv) > 1 and sys.argv[1] in ("-h", "--help") else 1)
+
 import numpy as np
 from ase.io import read
 from ase.mep import NEB
@@ -39,11 +65,6 @@ def print_dependency_notice():
     print(" Lindgren et al., J. Open Source Softw. 9, 6264 (2024).")
     print(" https://doi.org/10.21105/joss.06264")
 
-
-# Check command-line arguments
-if len(sys.argv) != 5:
-    print("python neb_calculation.py <initial_structure> <final_structure> <n_image> <nep_model>")
-    sys.exit(1)
 
 print_dependency_notice()
 

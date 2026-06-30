@@ -3,13 +3,14 @@
 GPUMDkit: A User-Friendly Toolkit for GPUMD and NEP
 Repository: https://github.com/zhyan0603/GPUMDkit
 Citation: Z. Yan et al., GPUMDkit: A User-Friendly Toolkit for GPUMD and NEP,
-          MGE Advances, 2026, e70074 (https://doi.org/10.1002/mgea.70074)
+          MGE Advances, 2026, 4, e70074 (https://doi.org/10.1002/mgea.70074)
 =============================================================================
 Script:     analyze_composition.py
 Category:   Analyzer Scripts
 Purpose:    Analyze and group structures by chemical composition from an
             extxyz file, and selectively export structures by composition.
-Usage:      python analyze_composition.py <input.xyz>
+Usage:      gpumdkit.sh -analyze_comp <input.xyz>
+            python analyze_composition.py <input.xyz>
 Arguments:
   input.xyz  Input extxyz file
 Output:
@@ -113,7 +114,8 @@ def analyze_xyz_compositions(filename):
 # Run the analysis
 if __name__ == "__main__":
     if len(sys.argv) != 2:
-        print(" Usage: python analyze_composition.py <input.xyz>")
+        print(" Usage: gpumdkit.sh -analyze_comp <exyzfile>")
+        print("    or: python analyze_composition.py <input.xyz>")
         sys.exit(1)
     filename = sys.argv[1]  # your extxyz file
     analyze_xyz_compositions(filename)

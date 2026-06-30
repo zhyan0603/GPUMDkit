@@ -3,14 +3,15 @@
 GPUMDkit: A User-Friendly Toolkit for GPUMD and NEP
 Repository: https://github.com/zhyan0603/GPUMDkit
 Citation: Z. Yan et al., GPUMDkit: A User-Friendly Toolkit for GPUMD and NEP,
-          MGE Advances, 2026, e70074 (https://doi.org/10.1002/mgea.70074)
+          MGE Advances, 2026, 4, e70074 (https://doi.org/10.1002/mgea.70074)
 =============================================================================
 Script:     charge_balance_check.py
 Category:   Analyzer Scripts
 Purpose:    Check oxidation-state balance for all structures in an extxyz
             file. Outputs separate files for balanced and unbalanced
             structures.
-Usage:      python charge_balance_check.py <input.xyz>
+Usage:      gpumdkit.sh -cbc <exyzfile>
+            python charge_balance_check.py <input.extxyz>
 Arguments:
   input.xyz  Input extxyz file
 Output:
@@ -77,7 +78,8 @@ def process_structure(idx_atoms):
 def main():
     # Check if input file is provided
     if len(sys.argv) != 2:
-        print("Usage: python charge_balance_check.py <input.extxyz>", file=sys.stderr)
+        print(" Usage: gpumdkit.sh -cbc <exyzfile>")
+        print("    or: python charge_balance_check.py <input.extxyz>")
         sys.exit(1)
     
     input_file = sys.argv[1]

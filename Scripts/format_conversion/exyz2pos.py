@@ -3,16 +3,17 @@
 GPUMDkit: A User-Friendly Toolkit for GPUMD and NEP
 Repository: https://github.com/zhyan0603/GPUMDkit
 Citation: Z. Yan et al., GPUMDkit: A User-Friendly Toolkit for GPUMD and NEP,
-          MGE Advances, 2026, e70074 (https://doi.org/10.1002/mgea.70074)
+          MGE Advances, 2026, 4, e70074 (https://doi.org/10.1002/mgea.70074)
 =============================================================================
 Script:     exyz2pos.py
 Category:   Format Conversion Scripts
 Purpose:    Convert extended XYZ file(s) to VASP POSCAR format(s).
-Usage:      python exyz2pos.py <input.xyz>
+Usage:      gpumdkit.sh -exyz2pos <input.xyz>
+            python exyz2pos.py <input.xyz>
 Arguments:
-  extxyz_file Input extxyz file (default: train.xyz)
+  input.xyz  Input extxyz file
 Output:
-  POSCAR file(s) in VASP format
+  POSCAR_*.vasp   POSCAR file(s) in VASP format (one per frame)
 Author:     Zihan YAN (yanzihan@westlake.edu.cn)
 Last-modified: 2026-05-16
 =============================================================================
@@ -32,8 +33,8 @@ def print_progress_bar(iteration, total, length=50):
 
 # Check arguments
 if len(sys.argv) < 2:
-    print("Usage: python exyz2pos.py <input.xyz>")
-    print("   or: gpumdkit.sh -exyz2pos <input.xyz>")
+    print(" Usage: gpumdkit.sh -exyz2pos <input.xyz>")
+    print("    or: python exyz2pos.py <input.xyz>")
     sys.exit(1)
 
 input_file = sys.argv[1]

@@ -3,14 +3,14 @@
 GPUMDkit: A User-Friendly Toolkit for GPUMD and NEP
 Repository: https://github.com/zhyan0603/GPUMDkit
 Citation: Z. Yan et al., GPUMDkit: A User-Friendly Toolkit for GPUMD and NEP,
-          MGE Advances, 2026, e70074 (https://doi.org/10.1002/mgea.70074)
+          MGE Advances, 2026, 4, e70074 (https://doi.org/10.1002/mgea.70074)
 =============================================================================
 Script:     plt_descriptors.py
 Category:   Plot Scripts
 Purpose:    Visualize high-dimensional NEP descriptors using dimensionality
             reduction (PCA or UMAP) with configurable file paths and labels.
-Usage:      gpumdkit.sh -plt des <method>
-            python plt_descriptors.py <method> <file1> <file2> ...
+Usage:      gpumdkit.sh -plt des <method> <file1.npy> <file2.npy> ...
+            python plt_descriptors.py <method> <file1.npy> <file2.npy> ...
 Arguments:
   method    Dimensionality reduction method: 'pca' or 'umap'
   file1...  Paths to .npy files containing descriptors
@@ -110,7 +110,8 @@ def plot_reduced_data(reduced_splits, labels, method):
 def main():
     # Check command-line arguments
     if len(sys.argv) < 3:
-        print("Usage: python plt_descriptors.py <method> <file1.npy> <file2.npy> ...")
+        print("Usage: gpumdkit.sh -plt des <method> <file1.npy> <file2.npy> ...")
+        print("   or: python plt_descriptors.py <method> <file1.npy> <file2.npy> ...")
         print("Method: 'pca' or 'umap'")
         sys.exit(1)
     

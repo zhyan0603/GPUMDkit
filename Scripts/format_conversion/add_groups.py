@@ -3,13 +3,14 @@
 GPUMDkit: A User-Friendly Toolkit for GPUMD and NEP
 Repository: https://github.com/zhyan0603/GPUMDkit
 Citation: Z. Yan et al., GPUMDkit: A User-Friendly Toolkit for GPUMD and NEP,
-          MGE Advances, 2026, e70074 (https://doi.org/10.1002/mgea.70074)
+          MGE Advances, 2026, 4, e70074 (https://doi.org/10.1002/mgea.70074)
 =============================================================================
 Script:     add_groups.py
 Category:   Format Conversion Scripts
 Purpose:    Add group information to atoms in a structure file based on
             element types, outputting the result to model.xyz.
-Usage:      python add_groups.py <input.xyz> <element1> <element2> ...
+Usage:      gpumdkit.sh -addgroup <input.xyz> <element1> <element2> ...
+            python add_groups.py <input.xyz> <element1> <element2> ...
 Arguments:
   input.xyz   Input structure file
   elementX    Element symbols to assign group indices
@@ -26,8 +27,8 @@ import numpy as np
 
 # Check arguments
 if len(sys.argv) < 3:
-    print("Usage: python add_groups.py <input.xyz> <element1> <element2> ...")
-    print("   or: gpumdkit.sh -addgroup <input.xyz> <element1> <element2> ...")
+    print(" Usage: gpumdkit.sh -addgroup <input.xyz> <element1> <element2> ...")
+    print("    or: python add_groups.py <input.xyz> <element1> <element2> ...")
     sys.exit(1)
 
 # Read the file name from command line arguments

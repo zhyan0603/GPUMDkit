@@ -3,14 +3,14 @@
 GPUMDkit: A User-Friendly Toolkit for GPUMD and NEP
 Repository: https://github.com/zhyan0603/GPUMDkit
 Citation: Z. Yan et al., GPUMDkit: A User-Friendly Toolkit for GPUMD and NEP,
-          MGE Advances, 2026, e70074 (https://doi.org/10.1002/mgea.70074)
+          MGE Advances, 2026, 4, e70074 (https://doi.org/10.1002/mgea.70074)
 =============================================================================
 Script:     plt_dimer.py
 Category:   Plot Scripts
 Purpose:    Plot dimer interaction curves (energy and force vs distance)
             for a pair of atoms using a NEP model.
-Usage:      gpumdkit.sh -plt dimer <element1> <element2> <nep_dir>
-            python plt_dimer.py <element1> <element2> <nep_dir>
+Usage:      gpumdkit.sh -plt dimer <element1> <element2> <nep_dir> [save]
+            python plt_dimer.py <element1> <element2> <nep_dir> [save]
 Arguments:
   element1, element2  Atom symbols (e.g., Li Li)
   nep_dir             Path to the NEP potential file (e.g., ./nep.txt)
@@ -42,7 +42,8 @@ plt.rcParams.update({
 
 # Check the number of command-line arguments
 if len(sys.argv) < 4:
-    print("Usage: python plt_dimer.py <atom_symbol1> <atom_symbol2> <nep_dir>")
+    print("Usage: gpumdkit.sh -plt dimer <element1> <element2> <nep_dir> [save]")
+    print("   or: python plt_dimer.py <atom_symbol1> <atom_symbol2> <nep_dir>")
     print("Example: python plt_dimer.py Li Li ./nep.txt")
     sys.exit(1)
 

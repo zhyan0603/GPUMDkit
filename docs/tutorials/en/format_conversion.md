@@ -228,6 +228,45 @@ gpumdkit.sh -get_frame dump.xyz 1000
 
 This extracts frame index `1000` from an extxyz trajectory.
 
+### Split multi-frame extxyz
+
+`split_single_xyz.py` splits an extxyz file into individual frames, each written to a separate file.
+
+```bash
+python Scripts/format_conversion/split_single_xyz.py dump.xyz
+```
+
+This creates `model_0.xyz`, `model_1.xyz`, ... for each frame in the trajectory.
+
+### MTP conversion
+
+Convert MTP `.cfg` format to extxyz:
+
+```bash
+gpumdkit.sh    # Select: 1) Format Conversion → 102
+```
+
+Interactive prompt:
+
+```text
+Input <filename.cfg> <Symbol1 Symbol2 Symbol3 ...>
+Example: train.cfg Pd Ag
+------------>>
+```
+
+### ABACUS conversion
+
+Convert ABACUS output to extxyz:
+
+```bash
+gpumdkit.sh    # Select: 1) Format Conversion → 104
+```
+
+The menu offers two options:
+
+1. SCF output (`running_scf.log`)
+2. MD output (`running_md.log`)
+
 ## Common Mistakes
 
 | Problem | What to Check |

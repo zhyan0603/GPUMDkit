@@ -3,13 +3,14 @@
 GPUMDkit: A User-Friendly Toolkit for GPUMD and NEP
 Repository: https://github.com/zhyan0603/GPUMDkit
 Citation: Z. Yan et al., GPUMDkit: A User-Friendly Toolkit for GPUMD and NEP,
-          MGE Advances, 2026, e70074 (https://doi.org/10.1002/mgea.70074)
+          MGE Advances, 2026, 4, e70074 (https://doi.org/10.1002/mgea.70074)
 =============================================================================
 Script:     probability_density_analysis.py
 Category:   Analyzer Scripts
 Purpose:    Compute the 3D probability density of mobile ions from an AIMD
             trajectory using pymatgen, and save the result as a CHGCAR file.
-Usage:      python probability_density_analysis.py <ref_struct> <trajectory_file> <species> <interval>
+Usage:      gpumdkit.sh -pda <ref_struct> <trajectory_file> <species> <interval>
+            python probability_density_analysis.py <ref_struct> <trajectory_file> <species> <interval>
 Arguments:
   ref_struct       Reference structure file (e.g., POSCAR)
   trajectory_file  AIMD trajectory in extxyz format
@@ -23,15 +24,17 @@ Last-modified: 2026-05-16
 """
 
 import sys
+
+# Check if required arguments are provided before heavy imports
+if len(sys.argv) != 5:
+    print(" Usage: gpumdkit.sh -pda <ref_struct> <trajectory_file> <species> <interval>")
+    print("    or: python probability_density_analysis.py <ref_struct> <trajectory_file> <species> <interval>")
+    sys.exit(1)
+
 import numpy as np
 from pymatgen.analysis.diffusion.aimd.pathway import ProbabilityDensityAnalysis
 from pymatgen.core import Structure
 from ase.io import read
-
-# Check if required arguments are provided
-if len(sys.argv) != 5:
-    print("Usage: python probability_density_analysis.py <ref_struct> <trajectory_file> <species> <interval>")
-    sys.exit(1)
 
 # Parse command-line arguments
 structure_file = sys.argv[1]

@@ -3,13 +3,14 @@
 GPUMDkit: A User-Friendly Toolkit for GPUMD and NEP
 Repository: https://github.com/zhyan0603/GPUMDkit
 Citation: Z. Yan et al., GPUMDkit: A User-Friendly Toolkit for GPUMD and NEP,
-          MGE Advances, 2026, e70074 (https://doi.org/10.1002/mgea.70074)
+          MGE Advances, 2026, 4, e70074 (https://doi.org/10.1002/mgea.70074)
 =============================================================================
 Script:     calc_descriptors.py
 Category:   Calculator Scripts
 Purpose:    Compute and save NEP descriptors for a target element from a
             multi-frame extxyz file.
-Usage:      python calc_descriptors.py <input.xyz> <output.npy> <nep.txt> <element>
+Usage:      gpumdkit.sh -calc des <input.xyz> <output.npy> <nep_model> <element>
+            python calc_descriptors.py <input.xyz> <output.npy> <nep.txt> <element>
 Arguments:
   input.xyz   Input extxyz file
   output.npy  Output .npy file for descriptors
@@ -22,10 +23,26 @@ Last-modified: 2026-05-16
 =============================================================================
 """
 
+import sys
+
+# Check command-line arguments before importing optional heavy dependencies.
+if __name__ == "__main__" and (len(sys.argv) != 5 or sys.argv[1] in ("-h", "--help")):
+    print(" Usage: gpumdkit.sh -calc des <input.xyz> <output.npy> <nep_model> <element>")
+    print("    or: python calc_descriptors.py <input.xyz> <output.npy> <nep.txt> <element>")
+    print("")
+    print(" Arguments:")
+    print("   input.xyz   Input extxyz file")
+    print("   output.npy  Output .npy file for descriptors")
+    print("   nep.txt     Path to the NEP model file")
+    print("   element     Target element symbol (e.g., Li)")
+    print("")
+    print(" Example: gpumdkit.sh -calc des input.xyz descriptors.npy nep.txt Li")
+    print("")
+    sys.exit(0 if len(sys.argv) > 1 and sys.argv[1] in ("-h", "--help") else 1)
+
 import numpy as np
 from ase.io import read
 from calorine.nep import get_descriptors
-import sys
 import os
 
 
@@ -43,11 +60,6 @@ def print_progress_bar(iteration, total, prefix='', suffix='', decimals=1, lengt
     print(f'\r{prefix} |{bar}| {percent}% {suffix}', end='\r')
     if iteration == total:
         print()
-
-# Check command-line arguments
-if len(sys.argv) != 5:
-    print(" Usage: python calc_descriptors.py input.xyz output.npy nep.txt element")
-    sys.exit(1)
 
 input_file, output_file, model_file, target_element = sys.argv[1:5]
 

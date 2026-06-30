@@ -3,14 +3,16 @@
 GPUMDkit: A User-Friendly Toolkit for GPUMD and NEP
 Repository: https://github.com/zhyan0603/GPUMDkit
 Citation: Z. Yan et al., GPUMDkit: A User-Friendly Toolkit for GPUMD and NEP,
-          MGE Advances, 2026, e70074 (https://doi.org/10.1002/mgea.70074)
+          MGE Advances, 2026, 4, e70074 (https://doi.org/10.1002/mgea.70074)
 =============================================================================
 Script:     get_min_dist_pbc.py
 Category:   Analyzer Scripts
 Purpose:    Compute the minimum interatomic distance for each element pair
             across all frames in an extxyz file, accounting for periodic
             boundary conditions.
-Usage:      python get_min_dist_pbc.py <file_name>
+Usage:      gpumdkit.sh -min_dist_pbc <file_name>
+            python get_min_dist_pbc.py <file_name>
+Example:    gpumdkit.sh -min_dist_pbc train.xyz
 Arguments:
   file_name  Input extxyz file
 Output:
@@ -49,6 +51,12 @@ def calculate_pairwise_distances(lattice_params, atom_coords, fractional=True):
     distances = np.min(all_distances, axis=-1)
     np.fill_diagonal(distances, 0)
     return distances
+
+# Check command-line arguments
+if len(sys.argv) != 2:
+    print(" Usage: gpumdkit.sh -min_dist_pbc <file_name>")
+    print("    or: python get_min_dist_pbc.py <file_name>")
+    sys.exit(1)
 
 # Read the file name from command line arguments
 file_name = sys.argv[1]

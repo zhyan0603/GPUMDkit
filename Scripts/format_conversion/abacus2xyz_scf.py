@@ -3,12 +3,13 @@
 GPUMDkit: A User-Friendly Toolkit for GPUMD and NEP
 Repository: https://github.com/zhyan0603/GPUMDkit
 Citation: Z. Yan et al., GPUMDkit: A User-Friendly Toolkit for GPUMD and NEP,
-          MGE Advances, 2026, e70074 (https://doi.org/10.1002/mgea.70074)
+          MGE Advances, 2026, 4, e70074 (https://doi.org/10.1002/mgea.70074)
 =============================================================================
 Script:     abacus2xyz_scf.py
 Category:   Format Conversion Scripts
 Purpose:    Convert ABACUS SCF output files to extended XYZ format.
 Usage:      python abacus2xyz_scf.py <dir> <extxyz>
+            (invoked interactively via gpumdkit.sh menu 104)
 Arguments:
   dir      Directory containing ABACUS SCF outputs
   extxyz   Output extxyz file
@@ -25,8 +26,8 @@ from ase.io import read, write
 
 def main():
     if len(sys.argv) != 3:
-        print("Usage: python abacus2xyz_scf.py <dir> <extxyz>")
-        print("   or: gpumdkit.sh -abacus2xyz <dir> <extxyz>")
+        print(" Usage: python abacus2xyz_scf.py <dir> <extxyz>")
+        print("  (invoked interactively via gpumdkit.sh menu 104)")
         sys.exit(1)
 if __name__ == "__main__":
     main()
@@ -111,4 +112,3 @@ for root, dirs, files in os.walk(os.path.abspath(sys.argv[1])):
         for i in range(natoms):
             f.write(f"{symbols[i]:<20}{positions[i][0]:20.10f}{positions[i][1]:20.10f}{positions[i][2]:20.10f}{forces[i][0]:20.10f}{forces[i][1]:20.10f}{forces[i][2]:20.10f} \n")  
     print(f" Successfully converted structure in {root} to extxyz format")
-

@@ -3,13 +3,14 @@
 GPUMDkit: A User-Friendly Toolkit for GPUMD and NEP
 Repository: https://github.com/zhyan0603/GPUMDkit
 Citation: Z. Yan et al., GPUMDkit: A User-Friendly Toolkit for GPUMD and NEP,
-          MGE Advances, 2026, e70074 (https://doi.org/10.1002/mgea.70074)
+          MGE Advances, 2026, 4, e70074 (https://doi.org/10.1002/mgea.70074)
 =============================================================================
 Script:     clean_xyz.py
 Category:   Format Conversion Scripts
 Purpose:    Remove stress, virial, and force information from an extxyz
             training file, keeping only structural information.
-Usage:      python clean_xyz.py <input.xyz> <output.xyz>
+Usage:      gpumdkit.sh -clean_xyz <input.xyz> <output.xyz>
+            python clean_xyz.py <input.xyz> <output.xyz>
 Arguments:
   input.xyz    Input extxyz training file
   output.xyz   Output cleaned extxyz file
@@ -25,8 +26,8 @@ import sys
 
 # Check arguments
 if len(sys.argv) < 3:
-    print("Usage: python clean_xyz.py <input.xyz> <output.xyz>")
-    print("   or: gpumdkit.sh -clean_xyz <input.xyz> <output.xyz>")
+    print(" Usage: gpumdkit.sh -clean_xyz <input.xyz> <output.xyz>")
+    print("    or: python clean_xyz.py <input.xyz> <output.xyz>")
     sys.exit(1)
 
 # Read all frames from the input train.xyz file

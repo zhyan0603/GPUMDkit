@@ -97,7 +97,7 @@ Key conventions:
 
 ### Step 3: Register in `gpumdkit.sh`
 
-1. Add the choice number to `array_choice` (line ~57)
+1. Add the choice number to `array_choice` (line ~47)
 2. Add the case in the `main()` function's nested case statement:
    ```bash
    "413") f413_new_feature ;;
