@@ -544,6 +544,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#hello-world-example" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Hello World Example
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#common-examples" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -1487,6 +1498,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#hello-world-example" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Hello World Example
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#common-examples" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -1672,7 +1694,7 @@
 <a id="__codelineno-7-12" name="__codelineno-7-12" href="#__codelineno-7-12"></a> 1) Format Conversion          2) Sample Structures
 <a id="__codelineno-7-13" name="__codelineno-7-13" href="#__codelineno-7-13"></a> 3) Workflow                   4) Calculators
 <a id="__codelineno-7-14" name="__codelineno-7-14" href="#__codelineno-7-14"></a> 5) Analyzer                   6) Visualization
-<a id="__codelineno-7-15" name="__codelineno-7-15" href="#__codelineno-7-15"></a> 7) Utilities                  8) Developing...
+<a id="__codelineno-7-15" name="__codelineno-7-15" href="#__codelineno-7-15"></a> 7) Utilities                  8) Help                
 <a id="__codelineno-7-16" name="__codelineno-7-16" href="#__codelineno-7-16"></a> 0) Exit
 <a id="__codelineno-7-17" name="__codelineno-7-17" href="#__codelineno-7-17"></a> ------------&gt;&gt;
 <a id="__codelineno-7-18" name="__codelineno-7-18" href="#__codelineno-7-18"></a> Input the function number:
@@ -1688,38 +1710,58 @@
 <a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a>gpumdkit.sh<span class="w"> </span>-calc<span class="w"> </span>msd<span class="w"> </span>trajectory.xyz<span class="w"> </span>Li<span class="w"> </span><span class="m">10</span>
 </code></pre></div>
 <p>The first example reads <code>POSCAR</code> and writes <code>model.xyz</code>.</p>
+<h2 id="hello-world-example">Hello World Example</h2>
+<p>A minimal end-to-end check that your install works — create a tiny silicon POSCAR, convert it to extxyz, and inspect the output:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a>cat<span class="w"> </span>&gt;<span class="w"> </span>POSCAR<span class="w"> </span><span class="s">&lt;&lt; &#39;EOF&#39;</span>
+<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a><span class="s">Si</span>
+<a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a><span class="s">1.0</span>
+<a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a><span class="s">0 2.715 2.715</span>
+<a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a><span class="s">2.715 0 2.715</span>
+<a id="__codelineno-10-6" name="__codelineno-10-6" href="#__codelineno-10-6"></a><span class="s">2.715 2.715 0</span>
+<a id="__codelineno-10-7" name="__codelineno-10-7" href="#__codelineno-10-7"></a><span class="s">Si</span>
+<a id="__codelineno-10-8" name="__codelineno-10-8" href="#__codelineno-10-8"></a><span class="s">1</span>
+<a id="__codelineno-10-9" name="__codelineno-10-9" href="#__codelineno-10-9"></a><span class="s">direct</span>
+<a id="__codelineno-10-10" name="__codelineno-10-10" href="#__codelineno-10-10"></a><span class="s">0 0 0</span>
+<a id="__codelineno-10-11" name="__codelineno-10-11" href="#__codelineno-10-11"></a><span class="s">EOF</span>
+<a id="__codelineno-10-12" name="__codelineno-10-12" href="#__codelineno-10-12"></a>gpumdkit.sh<span class="w"> </span>-pos2exyz<span class="w"> </span>POSCAR<span class="w"> </span>model.xyz
+<a id="__codelineno-10-13" name="__codelineno-10-13" href="#__codelineno-10-13"></a>head<span class="w"> </span>model.xyz
+</code></pre></div>
+<p>If <code>model.xyz</code> shows a single Si atom with lattice info, your install works.</p>
+<blockquote>
+<p><strong>What is extxyz?</strong> extxyz is the extended XYZ format: line 1 is the atom count, line 2 contains the lattice and per-structure properties (energy/forces/virial as needed), and lines 3+ list each atom with its per-atom properties. It is the native training-data format for NEP.</p>
+</blockquote>
 <h2 id="common-examples">Common examples</h2>
 <h3 id="convert-a-poscar-to-extxyz">Convert a POSCAR to extxyz</h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a>gpumdkit.sh<span class="w"> </span>-pos2exyz<span class="w"> </span>POSCAR<span class="w"> </span>model.xyz
+<div class="highlight"><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a>gpumdkit.sh<span class="w"> </span>-pos2exyz<span class="w"> </span>POSCAR<span class="w"> </span>model.xyz
 </code></pre></div>
 <h3 id="add-gpumd-group-labels">Add GPUMD group labels</h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a>gpumdkit.sh<span class="w"> </span>-addgroup<span class="w"> </span>POSCAR<span class="w"> </span>Li<span class="w"> </span>Y<span class="w"> </span>Cl
+<div class="highlight"><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a>gpumdkit.sh<span class="w"> </span>-addgroup<span class="w"> </span>POSCAR<span class="w"> </span>Li<span class="w"> </span>Y<span class="w"> </span>Cl
 </code></pre></div>
 <p>Group labels are used by some GPUMD-related workflows that need atom grouping, such as species-specific MSD or diffusion calculations.</p>
 <h3 id="plot-nep-training-results">Plot NEP training results</h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a>gpumdkit.sh<span class="w"> </span>-plt<span class="w"> </span>train
+<div class="highlight"><pre><span></span><code><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a>gpumdkit.sh<span class="w"> </span>-plt<span class="w"> </span>train
 </code></pre></div>
 <div align="center">
   <img src="../../Gallery/train.png" alt="NEP training results" width="72%" />
 </div>
 
 <h3 id="plot-nep-test-results">Plot NEP test results</h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a>gpumdkit.sh<span class="w"> </span>-plt<span class="w"> </span><span class="nb">test</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a>gpumdkit.sh<span class="w"> </span>-plt<span class="w"> </span><span class="nb">test</span>
 </code></pre></div>
 <div align="center">
   <img src="../../Gallery/prediction.png" alt="NEP test results" width="72%" />
 </div>
 
 <h3 id="plot-thermodynamic-data">Plot thermodynamic data</h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a>gpumdkit.sh<span class="w"> </span>-plt<span class="w"> </span>thermo
+<div class="highlight"><pre><span></span><code><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a>gpumdkit.sh<span class="w"> </span>-plt<span class="w"> </span>thermo
 </code></pre></div>
 <div align="center">
   <img src="../../Gallery/thermo.png" alt="Thermo plot" width="72%" />
 </div>
 
 <h3 id="plot-msd-and-self-diffusion-coefficient">Plot MSD and self-diffusion coefficient</h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a>gpumdkit.sh<span class="w"> </span>-plt<span class="w"> </span>msd
-<a id="__codelineno-15-2" name="__codelineno-15-2" href="#__codelineno-15-2"></a>gpumdkit.sh<span class="w"> </span>-plt<span class="w"> </span>sdc
+<div class="highlight"><pre><span></span><code><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a>gpumdkit.sh<span class="w"> </span>-plt<span class="w"> </span>msd
+<a id="__codelineno-16-2" name="__codelineno-16-2" href="#__codelineno-16-2"></a>gpumdkit.sh<span class="w"> </span>-plt<span class="w"> </span>sdc
 </code></pre></div>
 <div align="center">
   <img src="../../Gallery/msd.png" alt="MSD plot" width="45%" />

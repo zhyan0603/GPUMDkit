@@ -962,6 +962,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#hello-world" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Hello World 示例
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#_5" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -1487,6 +1498,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#hello-world" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Hello World 示例
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#_5" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -1672,7 +1694,7 @@
 <a id="__codelineno-7-12" name="__codelineno-7-12" href="#__codelineno-7-12"></a> 1) Format Conversion          2) Sample Structures
 <a id="__codelineno-7-13" name="__codelineno-7-13" href="#__codelineno-7-13"></a> 3) Workflow                   4) Calculators
 <a id="__codelineno-7-14" name="__codelineno-7-14" href="#__codelineno-7-14"></a> 5) Analyzer                   6) Visualization
-<a id="__codelineno-7-15" name="__codelineno-7-15" href="#__codelineno-7-15"></a> 7) Utilities                  8) Developing...
+<a id="__codelineno-7-15" name="__codelineno-7-15" href="#__codelineno-7-15"></a> 7) Utilities                  8) Help                
 <a id="__codelineno-7-16" name="__codelineno-7-16" href="#__codelineno-7-16"></a> 0) Exit
 <a id="__codelineno-7-17" name="__codelineno-7-17" href="#__codelineno-7-17"></a> ------------&gt;&gt;
 <a id="__codelineno-7-18" name="__codelineno-7-18" href="#__codelineno-7-18"></a> Input the function number:
@@ -1688,38 +1710,58 @@
 <a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a>gpumdkit.sh<span class="w"> </span>-calc<span class="w"> </span>msd<span class="w"> </span>trajectory.xyz<span class="w"> </span>Li<span class="w"> </span><span class="m">10</span>
 </code></pre></div>
 <p>第一个示例读取 <code>POSCAR</code>，写出 <code>model.xyz</code>。</p>
+<h2 id="hello-world">Hello World 示例</h2>
+<p>一个最小化的端到端检查，确认安装是否正常——创建一个极小的硅 POSCAR，转换为 extxyz，并查看输出：</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a>cat<span class="w"> </span>&gt;<span class="w"> </span>POSCAR<span class="w"> </span><span class="s">&lt;&lt; &#39;EOF&#39;</span>
+<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a><span class="s">Si</span>
+<a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a><span class="s">1.0</span>
+<a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a><span class="s">0 2.715 2.715</span>
+<a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a><span class="s">2.715 0 2.715</span>
+<a id="__codelineno-10-6" name="__codelineno-10-6" href="#__codelineno-10-6"></a><span class="s">2.715 2.715 0</span>
+<a id="__codelineno-10-7" name="__codelineno-10-7" href="#__codelineno-10-7"></a><span class="s">Si</span>
+<a id="__codelineno-10-8" name="__codelineno-10-8" href="#__codelineno-10-8"></a><span class="s">1</span>
+<a id="__codelineno-10-9" name="__codelineno-10-9" href="#__codelineno-10-9"></a><span class="s">direct</span>
+<a id="__codelineno-10-10" name="__codelineno-10-10" href="#__codelineno-10-10"></a><span class="s">0 0 0</span>
+<a id="__codelineno-10-11" name="__codelineno-10-11" href="#__codelineno-10-11"></a><span class="s">EOF</span>
+<a id="__codelineno-10-12" name="__codelineno-10-12" href="#__codelineno-10-12"></a>gpumdkit.sh<span class="w"> </span>-pos2exyz<span class="w"> </span>POSCAR<span class="w"> </span>model.xyz
+<a id="__codelineno-10-13" name="__codelineno-10-13" href="#__codelineno-10-13"></a>head<span class="w"> </span>model.xyz
+</code></pre></div>
+<p>如果 <code>model.xyz</code> 显示一个 Si 原子及晶格信息，说明安装成功。</p>
+<blockquote>
+<p><strong>什么是 extxyz？</strong> extxyz 是扩展 XYZ 格式：第 1 行是原子数，第 2 行包含晶格及结构级属性（按需包含能量/力/维里），第 3 行及以后是每个原子及其原子级属性。它是 NEP 的原生训练数据格式。</p>
+</blockquote>
 <h2 id="_5">常见示例</h2>
 <h3 id="poscar-extxyz">POSCAR 转 extxyz</h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a>gpumdkit.sh<span class="w"> </span>-pos2exyz<span class="w"> </span>POSCAR<span class="w"> </span>model.xyz
+<div class="highlight"><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a>gpumdkit.sh<span class="w"> </span>-pos2exyz<span class="w"> </span>POSCAR<span class="w"> </span>model.xyz
 </code></pre></div>
 <h3 id="gpumd-group">添加 GPUMD group 标签</h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a>gpumdkit.sh<span class="w"> </span>-addgroup<span class="w"> </span>POSCAR<span class="w"> </span>Li<span class="w"> </span>Y<span class="w"> </span>Cl
+<div class="highlight"><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a>gpumdkit.sh<span class="w"> </span>-addgroup<span class="w"> </span>POSCAR<span class="w"> </span>Li<span class="w"> </span>Y<span class="w"> </span>Cl
 </code></pre></div>
 <p>group 标签用于一些需要原子分组的 GPUMD 相关流程和分析，例如特定元素的 MSD 或扩散性质计算。</p>
 <h3 id="nep">绘制 NEP 训练结果</h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a>gpumdkit.sh<span class="w"> </span>-plt<span class="w"> </span>train
+<div class="highlight"><pre><span></span><code><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a>gpumdkit.sh<span class="w"> </span>-plt<span class="w"> </span>train
 </code></pre></div>
 <div align="center">
   <img src="../../Gallery/train.png" alt="NEP training results" width="72%" />
 </div>
 
 <h3 id="nep_1">绘制 NEP 测试集结果</h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a>gpumdkit.sh<span class="w"> </span>-plt<span class="w"> </span><span class="nb">test</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a>gpumdkit.sh<span class="w"> </span>-plt<span class="w"> </span><span class="nb">test</span>
 </code></pre></div>
 <div align="center">
   <img src="../../Gallery/prediction.png" alt="NEP test results" width="72%" />
 </div>
 
 <h3 id="_6">绘制热力学量</h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a>gpumdkit.sh<span class="w"> </span>-plt<span class="w"> </span>thermo
+<div class="highlight"><pre><span></span><code><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a>gpumdkit.sh<span class="w"> </span>-plt<span class="w"> </span>thermo
 </code></pre></div>
 <div align="center">
   <img src="../../Gallery/thermo.png" alt="Thermo plot" width="72%" />
 </div>
 
 <h3 id="msd">绘制 MSD 和自扩散系数</h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a>gpumdkit.sh<span class="w"> </span>-plt<span class="w"> </span>msd
-<a id="__codelineno-15-2" name="__codelineno-15-2" href="#__codelineno-15-2"></a>gpumdkit.sh<span class="w"> </span>-plt<span class="w"> </span>sdc
+<div class="highlight"><pre><span></span><code><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a>gpumdkit.sh<span class="w"> </span>-plt<span class="w"> </span>msd
+<a id="__codelineno-16-2" name="__codelineno-16-2" href="#__codelineno-16-2"></a>gpumdkit.sh<span class="w"> </span>-plt<span class="w"> </span>sdc
 </code></pre></div>
 <div align="center">
   <img src="../../Gallery/msd.png" alt="MSD plot" width="45%" />

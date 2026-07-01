@@ -40,6 +40,7 @@ use_directory_urls: false
 
 markdown_extensions:
   - admonition
+  - attr_list
   - pymdownx.details
   - pymdownx.highlight:  # Code highlighting
       anchor_linenums: true

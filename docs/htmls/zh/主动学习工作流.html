@@ -1604,30 +1604,30 @@
 <li><code>nep.txt</code></li>
 <li><code>nep.in</code></li>
 <li><code>train.xyz</code></li>
-<li><code>run.in</code></li>
+<li><code>run_*.in</code>（如 <code>run_1.in</code>、<code>run_2.in</code> 等）</li>
 <li><code>INCAR</code></li>
 <li><code>POTCAR</code></li>
 <li><code>KPOINTS</code></li>
 <li>初始采样结构文件，例如 <code>sample_struct.xyz</code></li>
 </ul>
-<p>脚本会把公共输入移动到 <code>common/</code>，并创建 <code>00.modev/</code>、<code>01.select/</code> 等工作目录。</p>
+<p>脚本会把公共输入移动到 <code>common/</code>，并创建 <code>00.md/</code>、<code>01.select/</code> 等工作目录。</p>
 <h2 id="5">5. 文件组织</h2>
 <p>脚本会创建公共输入目录和 MD 目录：</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>mkdir<span class="w"> </span><span class="m">00</span>.modev<span class="w"> </span>common
-<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>mv<span class="w"> </span><span class="si">${</span><span class="nv">work_dir</span><span class="si">}</span>/<span class="o">{</span>nep.txt,nep.in,*.xyz,run.in,INCAR,KPOINTS,POTCAR<span class="o">}</span><span class="w"> </span>./common
-<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>cp<span class="w"> </span><span class="si">${</span><span class="nv">work_dir</span><span class="si">}</span>/common/<span class="nv">$sample_xyz_file</span><span class="w"> </span><span class="si">${</span><span class="nv">work_dir</span><span class="si">}</span>/00.modev
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>mkdir<span class="w"> </span><span class="m">00</span>.md<span class="w"> </span>common
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>mv<span class="w"> </span><span class="si">${</span><span class="nv">work_dir</span><span class="si">}</span>/<span class="o">{</span>nep.txt,nep.in,*.xyz,run_*.in,INCAR,KPOINTS,POTCAR<span class="o">}</span><span class="w"> </span>./common
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>cp<span class="w"> </span><span class="si">${</span><span class="nv">work_dir</span><span class="si">}</span>/common/<span class="nv">$sample_xyz_file</span><span class="w"> </span><span class="si">${</span><span class="nv">work_dir</span><span class="si">}</span>/00.md
 </code></pre></div>
 <ul>
-<li><code>00.modev</code>：用于运行 GPUMD MD 采样。</li>
-<li><code>common</code>：保存 <code>nep.txt</code>、<code>run.in</code>、结构文件和 DFT 输入文件等公共资源。</li>
+<li><code>00.md</code>：用于运行 GPUMD MD 采样。</li>
+<li><code>common</code>：保存 <code>nep.txt</code>、<code>run_*.in</code> 文件、结构文件和 DFT 输入文件等公共资源。</li>
 </ul>
 <h2 id="6-md">6. 提交 MD 任务</h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>submit_gpumd_array<span class="w"> </span>modev<span class="w"> </span><span class="si">${</span><span class="nv">sample_struct_num</span><span class="si">}</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>submit_gpumd_array<span class="w"> </span>md<span class="w"> </span><span class="si">${</span><span class="nv">sample_struct_num</span><span class="si">}</span>
 <a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>sbatch<span class="w"> </span>submit.slurm
 </code></pre></div>
 <p>脚本会通过提交模板创建数组任务。不同集群上的提交命令和模板可能需要自己修改。</p>
 <h2 id="7">7. 检查任务完成</h2>
-<p>脚本会持续检查 <code>00.modev/</code> 下各个 <code>sample_*/log</code> 文件，确认是否出现：</p>
+<p>脚本会持续检查 <code>00.md/</code> 下各个 <code>sample_*/log</code> 文件，确认是否出现：</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>Finished<span class="w"> </span>running<span class="w"> </span>GPUMD.
 </code></pre></div>
 <p>如果发现 <code>Error</code>，脚本会停止。</p>
