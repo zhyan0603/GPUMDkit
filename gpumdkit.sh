@@ -61,7 +61,7 @@ function read_menu_array(){
 function main(){
     echo " ------------>>"
     echo ' Input the function number:'
-    array_choice=(
+    valid_menu_choices=(
         "0" "1" "101" "102" "103" "104" "105" "106" "107" "108" "109" "110"
         "2" "201" "202" "203" "204" "205" 
         "3" "301" "302" "303" 
@@ -72,7 +72,7 @@ function main(){
         "8"
     ) 
     read_menu_choice choice || return 1
-    while ! echo "${array_choice[@]}" | grep -wq "$choice" 
+    while ! echo "${valid_menu_choices[@]}" | grep -wq "$choice" 
     do
       echo " ------------>>"
       echo " Please reinput function number:"
@@ -177,7 +177,6 @@ function main(){
             ;;
 
     esac
-    citation
 }
 
 #--------------------- help info ----------------------
@@ -531,3 +530,4 @@ echo -e "\
       "
 menu
 main
+citation

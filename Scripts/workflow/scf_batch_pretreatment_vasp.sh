@@ -65,7 +65,7 @@ function vasp_scf_batch_pretreatment(){
 	        # Perform additional operations if needed after moving .vasp files
 	    else
 	        echo " No .vasp files or .xyz files found."
-	        exit 1
+	        return 1
 	    fi
 	fi
 

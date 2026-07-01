@@ -73,7 +73,7 @@ function f302_md_sample_batch_pretreatment_gpumd(){
 	        # Perform additional operations if needed after moving .vasp files
 	    else
 	        echo " No .vasp files or .xyz files found."
-	        exit 1
+	        return 1
 	    fi
 	fi
 

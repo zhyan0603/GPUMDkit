@@ -471,6 +471,8 @@ These changes have been **explicitly rejected** by the project maintainer. Do no
 | Remove troubleshooting pages | Removed by maintainer's explicit request; do not re-add |
 | Add `des_compare` to CLI | Script exists but maintainer chose not to wire it |
 | Keep `__pycache__` after debugging | Must always `find . -type d -name __pycache__ -exec rm -rf {} +` |
+| Add `-get_volume` / `-re_atoms` to completion.sh | Intentionally excluded from completion and help table |
+| Modify logic in plt_scripts | Unless explicitly requested, only cosmetic/formatting changes to plotting scripts |
 
 ### macOS / Cross-Platform Notes
 
