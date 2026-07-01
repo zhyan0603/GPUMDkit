@@ -93,7 +93,7 @@ Calculates energies, forces, and stresses for structures using a NEP model. You 
 
 ***Note that you must know what you are doing and this is not a substitute for DFT calculations.***
 
-Unless you have a well-trained NEP model and you want to use it as a DFT surrogate, you probably shouldn't use this feature. See [this article]([ https://doi.org/10.48550/arXiv.2504.15925](https://doi.org/10.48550/arXiv.2504.15925)) if you are interesting in it.
+Unless you have a well-trained NEP model and you want to use it as a DFT surrogate, you probably shouldn't use this feature. See [this article](https://doi.org/10.48550/arXiv.2504.15925) if you are interested in it.
 
 #### Input Files
 - A clean structure file in `extxyz` format with energy, force, and virial/stress. 
@@ -168,7 +168,7 @@ gpumdkit.sh -calc des train.xyz descriptors.npy nep.txt Li
 - **Model comparison**: Compare descriptor distributions across different models
 
 #### Reference
-See [arXiv:2504.15925](https://doi.org/10.48550/arXiv.2504.15925) if you are interesting in it.
+See [arXiv:2504.15925](https://doi.org/10.48550/arXiv.2504.15925) if you are interested in it.
 
 ---
 
@@ -200,8 +200,8 @@ python calc_doas.py <input.xyz> <nep.txt> <doas.out>
 gpumdkit.sh -calc doas structures.xyz nep.txt doas.out
 
 # Visualize results
-gpumdkit.sh -plt doas doas.txt <species>
-gpumdkit.sh -plt doas doas.txt Li
+gpumdkit.sh -plt doas doas.out <species>
+gpumdkit.sh -plt doas doas.out Li
 ```
 
 #### Process
@@ -211,7 +211,7 @@ gpumdkit.sh -plt doas doas.txt Li
 4. Groups energies by element type
 5. Outputs distribution for each element
 
-You can also do the `minimize` and atomistic energy calculations in `gpumd`, which is prefered for large-scale structures.
+You can also do the `minimize` and atomistic energy calculations in `gpumd`, which is preferred for large-scale structures.
 
 ---
 
@@ -311,7 +311,12 @@ Performs nudged elastic band (NEB) calculations to find minimum energy pathways 
 
 #### Usage
 
-**Direct execution only:**
+**Command-line mode:**
+```bash
+gpumdkit.sh -calc neb <initial.xyz> <final.xyz> <n_images> <nep.txt>
+```
+
+**Direct execution:**
 ```bash
 python neb_calculation.py <initial.xyz> <final.xyz> <n_images> <nep.txt>
 ```
@@ -326,7 +331,7 @@ python neb_calculation.py <initial.xyz> <final.xyz> <n_images> <nep.txt>
 
 ```bash
 # Calculate Li migration pathway with 9 intermediate images
-python neb_calculation.py init.xyz fin.xyz 9 nep.txt
+gpumdkit.sh -calc neb init.xyz fin.xyz 9 nep.txt
 ```
 
 #### Interactive Options
@@ -341,10 +346,12 @@ python neb_calculation.py init.xyz fin.xyz 9 nep.txt
  405) Calc nudged elastic band (NEB) by nep
  406) Build neighbor list
  407) Calc displacement from trajectory
- 408) Calc averaged structure
- 409) Calc octahedral tilt
- 410) Calc polarization for ABO3
- 000) Return to the main menu
+408) Calc averaged structure
+409) Calc octahedral tilt
+410) Calc polarization for ABO3
+411) Minimize structure by nep
+412) Calc mean square displacement (MSD) from trajectory
+000) Return to the main menu
  ------------>>
  Input the function number:
  405
@@ -354,9 +361,61 @@ python neb_calculation.py init.xyz fin.xyz 9 nep.txt
  | Developer: Zhoulin LIU (1776627910@qq.com)      |
  >-------------------------------------------------<
  Input <initial_struct> <final_struct> <n_image> <nep_model>
- Examp: IS.xyz FS.xyz 5 nep.txt
+ Example: IS.xyz FS.xyz 5 nep.txt
  ------------>>
 ```
+
+---
+
+### calc_minimize.py
+
+Minimizes a structure using a NEP model through `calorine`.
+
+#### Usage
+
+**Command-line mode:**
+```bash
+gpumdkit.sh -calc minimize <structure_file> <nep.txt> [fmax] [max_steps]
+```
+
+**Direct execution:**
+```bash
+python calc_minimize.py <structure_file> <nep.txt> [fmax=0.01] [max_steps=1000]
+```
+
+#### Example
+
+```bash
+gpumdkit.sh -calc minimize POSCAR nep.txt 0.01 1000
+```
+
+The output file is `minimized.xyz`.
+
+---
+
+### calc_msd.py
+
+Calculates mean square displacement (MSD) from an extxyz trajectory for a selected element.
+
+#### Usage
+
+**Command-line mode:**
+```bash
+gpumdkit.sh -calc msd <extxyz_file> <element_symbol> <dt_fs> [max_corr_steps]
+```
+
+**Direct execution:**
+```bash
+python calc_msd.py <extxyz_file> <element_symbol> <dt_fs> [max_corr_steps]
+```
+
+#### Example
+
+```bash
+gpumdkit.sh -calc msd dump.xyz Li 10
+```
+
+The output file is `msd.out`.
 
 ---
 

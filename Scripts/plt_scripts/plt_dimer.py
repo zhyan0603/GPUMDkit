@@ -3,14 +3,14 @@
 GPUMDkit: A User-Friendly Toolkit for GPUMD and NEP
 Repository: https://github.com/zhyan0603/GPUMDkit
 Citation: Z. Yan et al., GPUMDkit: A User-Friendly Toolkit for GPUMD and NEP,
-          MGE Advances, 2026, e70074 (https://doi.org/10.1002/mgea.70074)
+          MGE Advances, 2026, 4, e70074 (https://doi.org/10.1002/mgea.70074)
 =============================================================================
 Script:     plt_dimer.py
 Category:   Plot Scripts
 Purpose:    Plot dimer interaction curves (energy and force vs distance)
             for a pair of atoms using a NEP model.
-Usage:      gpumdkit.sh -plt dimer <element1> <element2> <nep_dir>
-            python plt_dimer.py <element1> <element2> <nep_dir>
+Usage:      gpumdkit.sh -plt dimer <element1> <element2> <nep_dir> [save]
+            python plt_dimer.py <element1> <element2> <nep_dir> [save]
 Arguments:
   element1, element2  Atom symbols (e.g., Li Li)
   nep_dir             Path to the NEP potential file (e.g., ./nep.txt)
@@ -27,6 +27,14 @@ from ase import Atoms
 from calorine.calculators import CPUNEP
 import sys
 
+
+def print_dependency_notice():
+    print(" This function requires the calorine package.")
+    print(" If you use this function, we recommend citing:")
+    print(" Lindgren et al., J. Open Source Softw. 9, 6264 (2024).")
+    print(" https://doi.org/10.21105/joss.06264")
+
+
 plt.rcParams.update({
     "font.family": "sans-serif",
     "font.sans-serif": ["Arial", "DejaVu Sans", "Liberation Sans"],
@@ -34,7 +42,8 @@ plt.rcParams.update({
 
 # Check the number of command-line arguments
 if len(sys.argv) < 4:
-    print("Usage: python plt_dimer.py <atom_symbol1> <atom_symbol2> <nep_dir>")
+    print("Usage: gpumdkit.sh -plt dimer <element1> <element2> <nep_dir> [save]")
+    print("   or: python plt_dimer.py <atom_symbol1> <atom_symbol2> <nep_dir>")
     print("Example: python plt_dimer.py Li Li ./nep.txt")
     sys.exit(1)
 
@@ -42,6 +51,8 @@ if len(sys.argv) < 4:
 symbol1 = sys.argv[1]  # Type of the first atom
 symbol2 = sys.argv[2]  # Type of the second atom
 nep_path = sys.argv[3]  # Directory of the NEP potential file
+
+print_dependency_notice()
 
 # Set the range and step size for distances
 start_distance = 0.1  # Starting distance in Angstrom

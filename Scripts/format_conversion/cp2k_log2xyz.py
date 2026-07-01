@@ -3,7 +3,7 @@
 GPUMDkit: A User-Friendly Toolkit for GPUMD and NEP
 Repository: https://github.com/zhyan0603/GPUMDkit
 Citation: Z. Yan et al., GPUMDkit: A User-Friendly Toolkit for GPUMD and NEP,
-          MGE Advances, 2026, e70074 (https://doi.org/10.1002/mgea.70074)
+          MGE Advances, 2026, 4, e70074 (https://doi.org/10.1002/mgea.70074)
 =============================================================================
 Script:     cp2k_log2xyz.py
 Category:   Format Conversion Scripts
@@ -42,7 +42,7 @@ def extract_atoms_lattice_xyz(lines):
         if m := re.search(r'Lattice="([^"]+)"', '\n'.join(lines)):
             lat = [float(x) for x in m.group(1).split()]
         return atoms, lat
-    except: return [], []
+    except (ValueError, IndexError): return [], []
 
 def extract_atoms_lattice_inp(text):
     atoms, lat = [], [0.0]*9

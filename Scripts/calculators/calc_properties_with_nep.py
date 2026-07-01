@@ -3,13 +3,14 @@
 GPUMDkit: A User-Friendly Toolkit for GPUMD and NEP
 Repository: https://github.com/zhyan0603/GPUMDkit
 Citation: Z. Yan et al., GPUMDkit: A User-Friendly Toolkit for GPUMD and NEP,
-          MGE Advances, 2026, e70074 (https://doi.org/10.1002/mgea.70074)
+          MGE Advances, 2026, 4, e70074 (https://doi.org/10.1002/mgea.70074)
 =============================================================================
 Script:     calc_properties_with_nep.py
 Category:   Calculator Scripts
 Purpose:    Calculate energy, forces, and stress for structures using a NEP
             model via calorine, and write results to an output extxyz file.
-Usage:      python calc_properties_with_nep.py <input.xyz> <output.xyz> <nep.txt>
+Usage:      gpumdkit.sh -calc nep <input.xyz> <output.xyz> <nep_model>
+            python calc_properties_with_nep.py <input.xyz> <output.xyz> <nep.txt>
 Arguments:
   input.xyz   Input extxyz file
   output.xyz  Output extxyz file with computed properties
@@ -22,10 +23,33 @@ Last-modified: 2026-05-16
 """
 
 import sys
+
+# Check command-line arguments before importing optional heavy dependencies.
+if __name__ == "__main__" and (len(sys.argv) < 4 or sys.argv[1] in ("-h", "--help")):
+    print(" Usage: gpumdkit.sh -calc nep <input.xyz> <output.xyz> <nep_model>")
+    print("    or: python calc_properties_with_nep.py <input.xyz> <output.xyz> <nep.txt>")
+    print("")
+    print(" Arguments:")
+    print("   input.xyz   Input extxyz file")
+    print("   output.xyz  Output extxyz file with computed properties")
+    print("   nep.txt     Path to the NEP model file")
+    print("")
+    print(" Example: gpumdkit.sh -calc nep input.xyz output.xyz nep.txt")
+    print("")
+    sys.exit(0 if len(sys.argv) > 1 and sys.argv[1] in ("-h", "--help") else 1)
+
 import numpy as np
 from ase import Atoms
 from ase.io import read, write
 from calorine.calculators import CPUNEP
+
+
+def print_dependency_notice():
+    print(" This function requires the calorine package.")
+    print(" If you use this function, we recommend citing:")
+    print(" Lindgren et al., J. Open Source Softw. 9, 6264 (2024).")
+    print(" https://doi.org/10.21105/joss.06264")
+
 
 def print_progress_bar(iteration, total, prefix='', suffix='', decimals=1, length=50, fill='█'):
     percent = ("{0:." + str(decimals) + "f}").format(100 * (iteration / float(total)))
@@ -38,6 +62,8 @@ def print_progress_bar(iteration, total, prefix='', suffix='', decimals=1, lengt
 # Specify input and output files
 input_file = sys.argv[1]  # Input file
 output_file = sys.argv[2]  # Output file
+
+print_dependency_notice()
 
 # Read input file containing all structures
 structures = read(input_file, index=':')  # Read all frames

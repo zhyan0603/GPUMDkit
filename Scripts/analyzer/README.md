@@ -23,7 +23,7 @@ Access analyzers through `gpumdkit.sh` using various flags or run scripts direct
 
 ---
 
-This script analyze the composition of your `extxyz` file.
+This script analyzes the composition of your `extxyz` file.
 
 #### Usage
 
@@ -298,33 +298,7 @@ python find_outliers.py
  Enter stress RMSE threshold (GPa): 0.03
 ```
 
-After that, you will get `selected.xyz`, `remained.xyz`, and `slected_remained.png`
-
-
-
-### filter_exyz_by_value.py
-
----
-
-This script filter the structures by min_dist.
-
-#### Usage
-
-```sh
-python filter_exyz_by_value.py <extxyz_file> <min_dist>
-```
-
-#### Example
-
-```sh
-python filter_exyz_by_value.py dump.xyz 1.4
-```
-
-#### Command-Line Mode Example
-
-```
-gpumdkit.sh -filter_value dump.xyz 1.4
-```
+After that, you will get `selected.xyz`, `remained.xyz`, and `selected_remained.png`
 
 
 
@@ -332,12 +306,12 @@ gpumdkit.sh -filter_value dump.xyz 1.4
 
 ---
 
-This script filter the structures by box limit.
+This script filters the structures by box limit.
 
 #### Usage
 
 ```
-python filter_exyz_by_box.py <extxyz_file> <min_dist>
+python filter_exyz_by_box.py <extxyz_file> <edge_limit>
 ```
 
 #### Example
@@ -358,7 +332,7 @@ gpumdkit.sh -filter_box dump.xyz 20
 
 ---
 
-This script filter the structures by specified value.
+This script filters the structures by specified value.
 
 #### Usage
 

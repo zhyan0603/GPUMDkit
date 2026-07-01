@@ -3,16 +3,26 @@
 GPUMDkit: A User-Friendly Toolkit for GPUMD and NEP
 Repository: https://github.com/zhyan0603/GPUMDkit
 Citation: Z. Yan et al., GPUMDkit: A User-Friendly Toolkit for GPUMD and NEP,
-          MGE Advances, 2026, e70074 (https://doi.org/10.1002/mgea.70074)
+          MGE Advances, 2026, 4, e70074 (https://doi.org/10.1002/mgea.70074)
 =============================================================================
 Script:     calc_ion_conductivity.py
 Category:   Calculator Scripts
 Purpose:    Calculate diffusivity and ionic conductivity from MSD data
-            (msd.out) via the Nernst-Einstein equation.
-Usage:      python calc_ion_conductivity.py <element> <charge>
+            (msd.out) via the Nernst-Einstein equation. Automatically reads
+            temperature and volume from thermo.out, ion count from model.xyz,
+            and replication from run.in when available; falls back to
+            interactive prompts if files are missing.
+Usage:      gpumdkit.sh -calc ionic-cond <element> <charge>
+            python calc_ion_conductivity.py <element> <charge>
+Example:    gpumdkit.sh -calc ionic-cond Li 1
 Arguments:
   element  Chemical species (e.g., Li)
   charge   Ion charge (e.g., 1 for Li+)
+Input files (auto-detected):
+  thermo.out   Thermodynamic data (temperature, box dimensions)
+  model.xyz    Structure file (ion count)
+  run.in       GPUMD input (replication factor)
+  msd.out      Mean square displacement data
 Output:
   Calculated diffusivity and ionic conductivity (printed to terminal)
 Author:     Zihan YAN (yanzihan@westlake.edu.cn), Shengjie Tang (tangshengjie@westlake.edu.cn)
@@ -94,8 +104,8 @@ def calculate_diffusivity_and_conductivity(filepath, structure_volume, species_c
     dts, msd_x, msd_y, msd_z, msd_total = read_msd_file(filepath)
 
     # Use a portion of the MSD data for fitting
-    start = int(len(dts) * 0.1)  # Start at 10% of the data
-    end = int(len(dts) * 0.4)  # End at 40% of the data
+    start = int(len(dts) * 0.4)  # Start at 40% of the data
+    end = int(len(dts) * 0.8)  # End at 80% of the data
 
     # Linear fit to obtain slopes for x, y, z, and total MSD
     k_x, _ = np.polyfit(dts[start:end], msd_x[start:end], 1)
@@ -200,10 +210,22 @@ def count_ions(atom_type="Li"):
 
 # Main function to orchestrate the process
 def main():
+    if len(sys.argv) < 3 or (len(sys.argv) > 1 and sys.argv[1] in ("-h", "--help")):
+        print(" Usage: gpumdkit.sh -calc ionic-cond <element> <charge>")
+        print("    or: python calc_ion_conductivity.py <element> <charge>")
+        print("")
+        print(" Arguments:")
+        print("   element    Chemical species (e.g., Li, Na)")
+        print("   charge     Ion charge (e.g., 1 for Li+)")
+        print("")
+        print(" Example: gpumdkit.sh -calc ionic-cond Li 1")
+        print("")
+        sys.exit(0 if len(sys.argv) > 1 and sys.argv[1] in ("-h", "--help") else 1)
+
     # Check if thermo.out and model.xyz exist to extract or prompt for values
     if os.path.exists("./thermo.out") and os.path.exists("model.xyz"):
         avg_temperature, avg_volume = extract_thermo_data()
-        atom_type = sys.argv[1] if len(sys.argv) > 1 else "Li"  # Default to Li if not passed as argument
+        atom_type = sys.argv[1]
         num_ions = count_ions(atom_type)
     else:
         # If files don't exist, prompt the user to enter values manually
@@ -262,5 +284,3 @@ def main():
 # Run the main function
 if __name__ == "__main__":
     main()
-
-

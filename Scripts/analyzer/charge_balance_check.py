@@ -3,14 +3,15 @@
 GPUMDkit: A User-Friendly Toolkit for GPUMD and NEP
 Repository: https://github.com/zhyan0603/GPUMDkit
 Citation: Z. Yan et al., GPUMDkit: A User-Friendly Toolkit for GPUMD and NEP,
-          MGE Advances, 2026, e70074 (https://doi.org/10.1002/mgea.70074)
+          MGE Advances, 2026, 4, e70074 (https://doi.org/10.1002/mgea.70074)
 =============================================================================
 Script:     charge_balance_check.py
 Category:   Analyzer Scripts
 Purpose:    Check oxidation-state balance for all structures in an extxyz
             file. Outputs separate files for balanced and unbalanced
             structures.
-Usage:      python charge_balance_check.py <input.xyz>
+Usage:      gpumdkit.sh -cbc <exyzfile>
+            python charge_balance_check.py <input.extxyz>
 Arguments:
   input.xyz  Input extxyz file
 Output:
@@ -23,6 +24,24 @@ Last-modified: 2026-05-16
 """
 
 import sys
+
+args = sys.argv[1:]
+if len(args) < 1 or args[0] in ("-h", "--help"):
+    print(" Usage: gpumdkit.sh -cbc <exyzfile>")
+    print("    or: python charge_balance_check.py <input.extxyz>")
+    print("")
+    print(" Arguments:")
+    print("   exyzfile    Input extxyz trajectory file")
+    print("")
+    print(" Output:")
+    print("   balanced.xyz     Structures with balanced oxidation states")
+    print("   unbalanced.xyz   Structures with unbalanced oxidation states")
+    print("   indices.txt      Summary of indices and output files")
+    print("")
+    print(" Example: gpumdkit.sh -cbc train.xyz")
+    print("")
+    sys.exit(0 if args and args[0] in ("-h", "--help") else 1)
+
 from ase.io import read, write
 from ase.data import atomic_numbers
 from collections import Counter
@@ -75,11 +94,6 @@ def process_structure(idx_atoms):
     return atoms
 
 def main():
-    # Check if input file is provided
-    if len(sys.argv) != 2:
-        print("Usage: python process_structures.py <input.extxyz>", file=sys.stderr)
-        sys.exit(1)
-    
     input_file = sys.argv[1]
     balanced_file = "balanced.xyz"
     unbalanced_file = "unbalanced.xyz"
@@ -102,9 +116,18 @@ def main():
     
     # Check oxidation states for unique compositions
     with Pool() as pool:
-        oxi_results = dict(tqdm(pool.imap_unordered(check_oxidation_state, unique_compositions),
-                                total=len(unique_compositions),
-                                desc="Checking oxidation states"))
+        oxi_results = {}
+        oxi_errors = {}
+        for result in tqdm(pool.imap_unordered(check_oxidation_state, unique_compositions),
+                           total=len(unique_compositions),
+                           desc="Checking oxidation states"):
+            if len(result) == 3:
+                comp_str, _, error = result
+                oxi_results[comp_str] = False
+                oxi_errors[comp_str] = error
+            else:
+                comp_str, is_balanced = result
+                oxi_results[comp_str] = is_balanced
     
     # Assign oxidation state results to structures
     balanced_structures = []
@@ -125,11 +148,10 @@ def main():
             continue
         
         result = oxi_results[comp_str]
-        if isinstance(result, tuple):
-            # Error case
-            comp_str, is_balanced, error = result
+        if comp_str in oxi_errors:
+            # Error case, pymatgen couldn't determine oxidation states
             atoms.info["oxidation_state"] = "unbalanced"
-            atoms.info["error"] = error
+            atoms.info["error"] = oxi_errors[comp_str]
             unbalanced_structures.append(atoms)
             unbalanced_indices.append(idx)
         elif result:

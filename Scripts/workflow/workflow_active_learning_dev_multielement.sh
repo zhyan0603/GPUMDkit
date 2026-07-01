@@ -11,7 +11,7 @@ cd $SLURM_SUBMIT_DIR
 # It is recommended that you copy it to another path,
 # otherwise there will be code conflicts when use 'git pull' command to update GPUMDkit.
 source ${GPUMDkit_path}/Scripts/workflow/submit_template.sh  
-python_pynep=/storage/zhuyizhouLab/yanzhihan/soft/conda/envs/gpumd/bin/python  # python executable for pynep
+python_pynep=python  # python executable for deprecated pynep branch if needed
 
 work_dir=${PWD}  # work directory
 prefix_name=LiF_iter01  # prefix name for this workflow, used for the scf calculations
@@ -117,7 +117,7 @@ case $sample_method in
     "pynep")
         echo $(date -d "2 second" +"%Y-%m-%d %H:%M:%S") "Performing pynep sampling..." 
         # This function still needs to be improved in the future. 
-        (echo 202; echo "filtered_by_box.xyz train.xyz nep.txt"; echo 1; echo ${pynep_sample_dist}) | gpumdkit.sh >> /dev/null
+        (echo "filtered_by_box.xyz train.xyz nep.txt 1"; echo 1; echo ${pynep_sample_dist}) | gpumdkit.sh -pynep >> /dev/null
         #${python_pynep} ${GPUMDkit_path}/Scripts/sample_structures/pynep_select_structs.py filtered_by_box.xyz train.xyz nep.txt ${pynep_sample_dist}
         # Check the number of structures in selected.xyz
         selected_struct_num=$(grep -c Lat selected.xyz)
@@ -179,4 +179,3 @@ submit_nep_prediction
 sbatch submit.slurm
 gpumdkit.sh -plt prediction save
 echo $(date -d "2 second" +"%Y-%m-%d %H:%M:%S") "Prediction finished."
-

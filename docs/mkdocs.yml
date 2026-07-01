@@ -40,6 +40,7 @@ use_directory_urls: false
 
 markdown_extensions:
   - admonition
+  - attr_list
   - pymdownx.details
   - pymdownx.highlight:  # Code highlighting
       anchor_linenums: true
@@ -52,17 +53,35 @@ plugins:
       lang: en
 
 nav:
-  - Home: tutorials.md
-  - Plot Scripts: plot_scripts.md
-  - Format Conversion: format_conversion.md
-  - Sample Structures: sample_structures.md
-  - Workflow: workflow.md
-  - Calculators: calculators.md
-  - Analyzers: analyzer.md
-  - Custom Commands: custom_commands.md
-  - Active Learning Workflow: workflow_active_learning.md
-  - Polar Material Analysis: polar_material_analysis.md
-  - Contributing: contributing.md
+  - Home: index.md
+  - English:
+    - GPUMDkit Tutorials: en/index.md
+    - Quick Start: en/quick_start.md
+    - Command Reference: en/command_reference.md
+    - Format Conversion: en/format_conversion.md
+    - Structure Sampling: en/structure_sampling.md
+    - Workflow Scripts: en/workflow_scripts.md
+    - Calculator Scripts: en/calculator_scripts.md
+    - Analyzer Scripts: en/analyzer_scripts.md
+    - Plot Scripts: en/plot_scripts.md
+    - Custom Commands: en/custom_commands.md
+    - Active Learning Workflow: en/active_learning_workflow.md
+    - Polar Material Analysis: en/polar_material_analysis.md
+    - Contributing to GPUMDkit: en/contributing_to_gpumdkit.md
+  - 简体中文:
+    - GPUMDkit 教程: zh/index.md
+    - 快速入门: zh/快速入门.md
+    - 命令参考: zh/命令参考.md
+    - 格式转换: zh/格式转换.md
+    - 结构采样: zh/结构采样.md
+    - 工作流脚本: zh/工作流脚本.md
+    - 计算器脚本: zh/计算器脚本.md
+    - 分析工具: zh/分析工具.md
+    - 绘图脚本: zh/绘图脚本.md
+    - 自定义命令: zh/自定义命令.md
+    - 主动学习工作流: zh/主动学习工作流.md
+    - 极性材料分析: zh/极性材料分析.md
+    - 贡献指南: zh/贡献指南.md
 
 extra:
   social:

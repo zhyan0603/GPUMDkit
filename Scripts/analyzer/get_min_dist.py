@@ -3,14 +3,16 @@
 GPUMDkit: A User-Friendly Toolkit for GPUMD and NEP
 Repository: https://github.com/zhyan0603/GPUMDkit
 Citation: Z. Yan et al., GPUMDkit: A User-Friendly Toolkit for GPUMD and NEP,
-          MGE Advances, 2026, e70074 (https://doi.org/10.1002/mgea.70074)
+          MGE Advances, 2026, 4, e70074 (https://doi.org/10.1002/mgea.70074)
 =============================================================================
 Script:     get_min_dist.py
 Category:   Analyzer Scripts
 Purpose:    Compute the minimum interatomic distance for each element pair
             across all frames in an extxyz file (no PBC, faster for large
             systems).
-Usage:      python get_min_dist.py <file_name>
+Usage:      gpumdkit.sh -min_dist <file_name>
+            python get_min_dist.py <file_name>
+Example:    gpumdkit.sh -min_dist train.xyz
 Arguments:
   file_name  Input extxyz file
 Output:
@@ -21,6 +23,22 @@ Last-modified: 2026-05-16
 """
 
 import sys
+
+args = sys.argv[1:]
+if len(args) < 1 or args[0] in ("-h", "--help"):
+    print(" Usage: gpumdkit.sh -min_dist <file_name>")
+    print("    or: python get_min_dist.py <file_name>")
+    print("")
+    print(" Arguments:")
+    print("   file_name   Input extxyz trajectory file")
+    print("")
+    print(" Output:")
+    print("   Table of minimum distances for each element pair and overall minimum")
+    print("")
+    print(" Example: gpumdkit.sh -min_dist train.xyz")
+    print("")
+    sys.exit(0 if args and args[0] in ("-h", "--help") else 1)
+
 import numpy as np
 from ase.io import read
 from scipy.spatial.distance import pdist, squareform

@@ -3,21 +3,40 @@
 GPUMDkit: A User-Friendly Toolkit for GPUMD and NEP
 Repository: https://github.com/zhyan0603/GPUMDkit
 Citation: Z. Yan et al., GPUMDkit: A User-Friendly Toolkit for GPUMD and NEP,
-          MGE Advances, 2026, e70074 (https://doi.org/10.1002/mgea.70074)
+          MGE Advances, 2026, 4, e70074 (https://doi.org/10.1002/mgea.70074)
 =============================================================================
 Script:     out2exyz.py
 Category:   Format Conversion Scripts
 Purpose:    Convert VASP OUTCAR files to extended XYZ format with energy,
-            forces, stress, and virial information.
-Usage:      python out2exyz.py [directory with OUTCARs]
+            forces, and virial information.
+Usage:      gpumdkit.sh -out2exyz <directory>
+            python out2exyz.py <directory>
+Arguments:
+  directory  Root directory to search for OUTCAR files
 Output:
-  Converted structures in extxyz format
+  train.xyz  Converted structures in extxyz format
 Author:     Zihan YAN (yanzihan@westlake.edu.cn)
 Last-modified: 2026-05-16
 =============================================================================
 """
 
 import os, sys
+
+args = sys.argv[1:]
+if len(args) < 1 or args[0] in ("-h", "--help"):
+    print(" Usage: gpumdkit.sh -out2exyz <directory>")
+    print("    or: python out2exyz.py <directory>")
+    print("")
+    print(" Arguments:")
+    print("   directory   Root directory to search for OUTCAR files")
+    print("")
+    print(" Output:")
+    print("   train.xyz   Converted structures in extxyz format")
+    print("")
+    print(" Example: gpumdkit.sh -out2exyz .")
+    print("")
+    sys.exit(0 if args and args[0] in ("-h", "--help") else 1)
+
 import numpy as np
 from ase.io import read, write
 from ase import Atoms, Atom
@@ -101,7 +120,7 @@ for file_path in tqdm(file_list):
     
     try:
         atoms = read(file_path, format='vasp-out', index=":")
-    except:
+    except Exception:
         err_list.append(file_path)
         continue
     

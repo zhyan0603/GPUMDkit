@@ -3,7 +3,7 @@
 GPUMDkit: A User-Friendly Toolkit for GPUMD and NEP
 Repository: https://github.com/zhyan0603/GPUMDkit
 Citation: Z. Yan et al., GPUMDkit: A User-Friendly Toolkit for GPUMD and NEP,
-          MGE Advances, 2026, e70074 (https://doi.org/10.1002/mgea.70074)
+          MGE Advances, 2026, 4, e70074 (https://doi.org/10.1002/mgea.70074)
 =============================================================================
 Script:     plt_nemd.py
 Category:   Plot Scripts
@@ -47,7 +47,7 @@ trap = np.trapezoid if hasattr(np, "trapezoid") else getattr(np, "trapz")
 
 def print_usage():
     """Print usage instructions"""
-    print("Usage: gpumdkit -plt nemd [real_length] [scale_eff_size] [cutoff_freq] [save]")
+    print("Usage: gpumdkit.sh -plt nemd [real_length] [scale_eff_size] [cutoff_freq] [save]")
     print("Params:")
     print("  real_length   : Real length of heat tranfer zone in nm (set to 'Auto', with auto-calculation)")
     print("  scale_eff_size: Optional, Scale factor for effective cross-sectional area (default: 1)")
@@ -287,7 +287,6 @@ class NEMD_Processor:
         print("NEMD Thermal Conductivity Results")
         print("=" * 70)
         print(f"\nEffective length: {Length:.4f} nm")
-        # print(f"Scale_vacuum: {self.scale_vacuum}")
         print(f"Scale_eff_size: {self.scale_eff_size}\n")
         print(f"Thermal conductance G = {Reformed_NEMD_data['G'][0, -2]:.6f} ± {Reformed_NEMD_data['G'][0, -1]:.6f} MW/m²K")
         print(f"Thermal conductivity κ = {Reformed_NEMD_data['k'][0, -2]:.6f} ± {Reformed_NEMD_data['k'][0, -1]:.6f} W/mK")

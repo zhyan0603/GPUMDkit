@@ -418,7 +418,7 @@ gpumdkit.sh -plt nemd [real_length] [scale_eff_size] [cutoff_freq] [save]
 **Params:**
 
 ```
-real_length   : Real length of heat tranfer zone in nm (set to 'Auto', with auto-calculation)
+real_length   : Real length of heat transfer zone in nm (set to 'Auto', with auto-calculation)
 scale_eff_size: Optional, Scale factor for effective cross-sectional area (default: 1)
                • For 3D bulk systems: use 1
                • For low-dimensional systems with vacuum layer: S_box / S_eff
@@ -598,7 +598,7 @@ gpumdkit.sh -plt dimer Li Li nep.txt
     <img src="../../docs/Gallery/dimer.png" alt="Dimer comparison" width="45%" />
 </div>
 
-**Reference:** [arXiv:2504.15925](https://doi.org/10.48550/arXiv.2504.15925)
+**Reference:** [J. Chem. Inf. Model. 2026, 66, 3, 1406-1413](https://doi.org/10.1021/acs.jcim.5c02335)
 
 ---
 
@@ -683,7 +683,7 @@ For quick reference, here's the complete command list:
 
 ```
  +-----------------------------------------------------------------------------------------------+
- |                     GPUMDkit 1.5.5 (dev) (2026-05-10) PLOT & VISUALIZATION TOOLS              |
+ |                     GPUMDkit 1.5.6 (dev) (2026-06-17) PLOT & VISUALIZATION TOOLS              |
  +-----------------------------------------------------------------------------------------------+
  |  Usage: gpumdkit.sh -plt <type>                        Help: gpumdkit.sh -plt <type> -h       |
  +-----------------------------------------------------------------------------------------------+

@@ -3,19 +3,18 @@
 GPUMDkit: A User-Friendly Toolkit for GPUMD and NEP
 Repository: https://github.com/zhyan0603/GPUMDkit
 Citation: Z. Yan et al., GPUMDkit: A User-Friendly Toolkit for GPUMD and NEP,
-          MGE Advances, 2026, e70074 (https://doi.org/10.1002/mgea.70074)
+          MGE Advances, 2026, 4, e70074 (https://doi.org/10.1002/mgea.70074)
 =============================================================================
 Script:     plt_rdf.py
 Category:   Plot Scripts
 Purpose:    Plot radial distribution function (RDF) from rdf.out showing
             pair correlations for all atom pairs.
-Usage:      gpumdkit.sh -plt rdf [column] [save]
+Usage:      gpumdkit.sh -plt rdf [save]
             python plt_rdf.py [save]
 Arguments:
-  column   Optional column index to plot a specific RDF pair
-  save     Save the plot as PNG instead of displaying it
+  save     Save the plot as 'rdf.png' instead of displaying it
 Output:
-  RDF plot(s) displayed or saved
+  rdf.png  RDF plot (saved or displayed)
 Author:     Zihan YAN (yanzihan@westlake.edu.cn)
 Last-modified: 2026-05-16
 =============================================================================

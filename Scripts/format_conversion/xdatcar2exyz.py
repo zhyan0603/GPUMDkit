@@ -3,12 +3,13 @@
 GPUMDkit: A User-Friendly Toolkit for GPUMD and NEP
 Repository: https://github.com/zhyan0603/GPUMDkit
 Citation: Z. Yan et al., GPUMDkit: A User-Friendly Toolkit for GPUMD and NEP,
-          MGE Advances, 2026, e70074 (https://doi.org/10.1002/mgea.70074)
+          MGE Advances, 2026, 4, e70074 (https://doi.org/10.1002/mgea.70074)
 =============================================================================
 Script:     xdatcar2exyz.py
 Category:   Format Conversion Scripts
 Purpose:    Convert VASP XDATCAR file to extended XYZ format using ASE.
-Usage:      python xdatcar2exyz.py <XDATCAR> <output.xyz>
+Usage:      gpumdkit.sh -xdat2exyz <XDATCAR> <output.xyz>
+            python xdatcar2exyz.py <XDATCAR> <output.xyz>
 Arguments:
   input       Path to the input XDATCAR file
   output      Path to the output .xyz file
@@ -19,39 +20,46 @@ Last-modified: 2026-05-16
 =============================================================================
 """
 
-import argparse
 import sys
+
+args = sys.argv[1:]
+if len(args) < 2 or args[0] in ("-h", "--help"):
+    print(" Usage: gpumdkit.sh -xdat2exyz <XDATCAR> <output.xyz>")
+    print("    or: python xdatcar2exyz.py <XDATCAR> <output.xyz>")
+    print("")
+    print(" Arguments:")
+    print("   XDATCAR     Path to the input XDATCAR file")
+    print("   output.xyz  Path to the output extxyz file")
+    print("")
+    print(" Example: gpumdkit.sh -xdat2exyz XDATCAR output.xyz")
+    print("")
+    sys.exit(0 if args and args[0] in ("-h", "--help") else 1)
+
 from ase.io import read, write
 
-# 1. Setup Argument Parser for positional arguments
-parser = argparse.ArgumentParser(
-    description=" Convert VASP XDATCAR to extxyz format."
-)
-parser.add_argument("input", help=" Path to the input XDATCAR file")
-parser.add_argument("output", help=" Path to the output .xyz file")
+input_file = sys.argv[1]
+output_file = sys.argv[2]
 
-args = parser.parse_args()
-
-# 2. Execute conversion logic
+# Execute conversion logic
 try:
-    print(f" Reading XDATCAR: {args.input} ...")
+    print(f" Reading XDATCAR: {input_file} ...")
     
     # Read all frames from the trajectory (index=":")
     # ASE automatically parses scaling, lattice, and species
-    trajectory = read(args.input, index=":", format="vasp-xdatcar")
+    trajectory = read(input_file, index=":", format="vasp-xdatcar")
     
     num_frames = len(trajectory)
     print(f" Detected {num_frames} frames.")
     
-    print(f" Writing to extxyz: {args.output} ...")
+    print(f" Writing to extxyz: {output_file} ...")
     
     # Writing in extxyz format preserves the Lattice matrix in the header
-    write(args.output, trajectory, format="extxyz")
+    write(output_file, trajectory, format="extxyz")
     
     print(" Conversion complete.")
 
 except FileNotFoundError:
-    print(f" Error: Could not find '{args.input}'. Please check the path.")
+    print(f" Error: Could not find '{input_file}'. Please check the path.")
     sys.exit(1)
 except Exception as e:
     print(f" An unexpected error occurred: {e}")

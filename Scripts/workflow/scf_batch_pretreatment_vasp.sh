@@ -3,7 +3,7 @@
 # GPUMDkit: A User-Friendly Toolkit for GPUMD and NEP
 # Repository: https://github.com/zhyan0603/GPUMDkit
 # Citation: Z. Yan et al., GPUMDkit: A User-Friendly Toolkit for GPUMD and NEP,
-#           MGE Advances, 2026, e70074 (https://doi.org/10.1002/mgea.70074)
+#           MGE Advances, 2026, 4, e70074 (https://doi.org/10.1002/mgea.70074)
 # =============================================================================
 # Script:     scf_batch_pretreatment_vasp.sh
 # Category:   Workflow Scripts
@@ -26,6 +26,10 @@ function vasp_scf_batch_pretreatment(){
 
 	# Check if there are any .vasp files
 	if [ $num_vasp_files -gt 0 ]; then
+	    if [ $num_xyz_files -gt 0 ]; then
+	        echo " Notice: Found both .vasp and .xyz files in the current directory."
+	        echo " This workflow prioritizes .vasp files and will ignore .xyz files."
+	    fi
 	    # Create the struct directory and move .vasp files into it
 	    mkdir -p struct_fp
 	    rename_seq=1
@@ -36,11 +40,23 @@ function vasp_scf_batch_pretreatment(){
 		done
         num_vasp_files=$(find ./struct_fp -maxdepth 1 -name "*.vasp" | wc -l)
 	else
-	    # Check if there is exactly one XYZ file
-	    if [ $num_xyz_files -eq 1 ]; then
-	        echo " No .vasp files found, but found one XYZ file."
-	        echo " Converting it to POSCAR using GPUMDkit..."
-	        python ${GPUMDkit_path}/Scripts/format_conversion/exyz2pos.py *.xyz
+	    # Check available XYZ files
+	    if [ $num_xyz_files -ge 1 ]; then
+	        if [ $num_xyz_files -eq 1 ]; then
+	            xyz_file=$(find . -maxdepth 1 -name "*.xyz" | head -n 1)
+	            echo " No .vasp files found, but found one XYZ file: ${xyz_file#./}"
+	        else
+	            echo " No .vasp files found, but found multiple XYZ files:"
+	            select xyz_file in *.xyz; do
+	                if [ -n "$xyz_file" ]; then
+	                    break
+	                fi
+	                echo " Invalid selection. Please choose one XYZ file."
+	            done
+	            [ -n "$xyz_file" ] || { echo " Input closed. Exiting."; return 1; }
+	        fi
+	        echo " Converting ${xyz_file#./} to POSCAR files using GPUMDkit..."
+	        python ${GPUMDkit_path}/Scripts/format_conversion/exyz2pos.py "$xyz_file"
 	        
 	        mkdir -p struct_fp
 	        mv *.vasp ./struct_fp
@@ -48,8 +64,8 @@ function vasp_scf_batch_pretreatment(){
 	        
 	        # Perform additional operations if needed after moving .vasp files
 	    else
-	        echo " No .vasp files found and the XYZ file is not unique."
-	        exit 1
+	        echo " No .vasp files or .xyz files found."
+	        return 1
 	    fi
 	fi
 
@@ -58,7 +74,7 @@ function vasp_scf_batch_pretreatment(){
     # Ask user for directory name prefix
     echo " >-------------------------------------------------<"
     echo " | This function calls the script in Scripts       |"
-    echo " | Script: scf_batch_pretreatment.sh               |"
+    echo " | Script: scf_batch_pretreatment_vasp.sh          |"
     echo " | Developer: Zihan YAN (yanzihan@westlake.edu.cn) |"
     echo " >-------------------------------------------------<"
     echo " We recommend using the prefix to locate the structure."
@@ -66,7 +82,7 @@ function vasp_scf_batch_pretreatment(){
     echo " config_type=<prefix>_<ID>"
     echo " ------------>>"
     echo " Please enter the prefix of directory (e.g. FAPBI3_iter01)"
-    read -p " " prefix
+    read_menu_choice prefix || return 1
 
     # Create fp directory
     mkdir -p fp
@@ -98,9 +114,9 @@ function vasp_scf_batch_pretreatment(){
     # Make presub.sh executable
     chmod +x presub.sh
 
-    echo " >-----------------------------------------------------<"
-    echo " ATTENTION: Place POTCAR, KPOINTS and INCAR in 'fp' Dir."
-    echo " ATTENTION: Place POTCAR, KPOINTS and INCAR in 'fp' Dir."
-    echo " ATTENTION: Place POTCAR, KPOINTS and INCAR in 'fp' Dir."
-    echo " >-----------------------------------------------------<"
+    echo " >---------------------------------------------------------<"
+    echo " | ATTENTION: Place POTCAR, KPOINTS and INCAR in 'fp' Dir. |"
+    echo " | ATTENTION: Place POTCAR, KPOINTS and INCAR in 'fp' Dir. |"
+    echo " | ATTENTION: Place POTCAR, KPOINTS and INCAR in 'fp' Dir. |"
+    echo " >---------------------------------------------------------<"
 }

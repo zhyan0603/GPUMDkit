@@ -4,10 +4,10 @@
 <p align="center">
   <strong>English</strong>
   &nbsp;·&nbsp;
-  <a href="./README_zh-CN.md">简体中文</a>
+  <a href="./docs/README_zh-CN.md">简体中文</a>
   &nbsp;·&nbsp;
   <a href="https://zhyan0603.github.io/GPUMDkit/">Website</a> &nbsp;·&nbsp;
-  <a href="https://zhyan0603.github.io/GPUMDkit/htmls/tutorials.html">Documentation</a>
+  <a href="https://zhyan0603.github.io/GPUMDkit/htmls/index.html">Documentation</a>
   &nbsp;·&nbsp;
   <a href="https://zhyan0603.github.io/GPUMDkit/gallery.html">Gallery</a>
   &nbsp;
@@ -102,7 +102,7 @@ There are two options, <u>*interactive mode*</u> and <u>*command-line mode*</u>
              | |_| |  __/| |_| | |  | | |_| |   <| | |_
               \____|_|    \___/|_|  |_|____/|_|\_\_|\__|
     
-              GPUMDkit Version 1.5.5 (dev) (2026-05-10)
+              GPUMDkit Version 1.5.6 (dev) (2026-06-17)
         Core Developer: Zihan YAN (yanzihan@westlake.edu.cn)
      Main Contributors: Denan LI, Xin WU, Zhoulin LIU & Chen HUA
     
@@ -110,7 +110,7 @@ There are two options, <u>*interactive mode*</u> and <u>*command-line mode*</u>
      1) Format Conversion          2) Sample Structures
      3) Workflow                   4) Calculators
      5) Analyzer                   6) Visualization
-     7) Utilities                  8) Developing...
+     7) Utilities                  8) Help                
      0) Exit
      ------------>>
      Input the function number:
@@ -132,7 +132,7 @@ the help information:
 
 ```
 +-------------------------------------------------------------------------------------------------------+
-|                          GPUMDkit 1.5.5 (dev) (2026-05-10) Command Help                               |
+|                          GPUMDkit 1.5.6 (dev) (2026-06-17) Command Help                               |
 +-------------------------------------------------------------------------------------------------------+
 |                                          MAIN FUNCTIONS                                               |
 +-------------------------------------------------------------------------------------------------------+
@@ -158,8 +158,8 @@ the help information:
 | -chem_species Analyze chemical species        | -cbc               Charge balance check               |
 | -min_dist     Min distance (no PBC)           | -min_dist_pbc      Min distance with PBC              |
 | -filter_dist  Filter by min_dist (no PBC)     | -filter_dist_pbc   Filter by min_dist (PBC)           |
-| -pda          Probability density analysis    | -hbond             Hydrogen-bond analysis             |
-| -pynep        FPS sampling by PyNEP           |                                                       |
+| -pda          Probability density analysis    | -filter_box        Filter by box-edge length          |
+| -pynep        Deprecated PyNEP sampling       | -nep_modifier      Modify NEP model interactively     |
 +-------------------------------------------------------------------------------------------------------+
 | Detailed usage: gpumdkit.sh -<option> -h    Plot details: gpumdkit.sh -plt <type> -h                  |
 +-------------------------------------------------------------------------------------------------------+
@@ -175,7 +175,7 @@ the help information:
 
 ```
  +-----------------------------------------------------------------------------------------------+
- |                     GPUMDkit 1.5.5 (dev) (2026-05-10) PLOT & VISUALIZATION TOOLS              |
+ |                     GPUMDkit 1.5.6 (dev) (2026-06-17) PLOT & VISUALIZATION TOOLS              |
  +-----------------------------------------------------------------------------------------------+
  |  Usage: gpumdkit.sh -plt <type>                        Help: gpumdkit.sh -plt <type> -h       |
  +-----------------------------------------------------------------------------------------------+
@@ -265,13 +265,13 @@ You can also save images as PNG if your device doesn't support visualization:
 gpumdkit.sh -plt thermo save
 ```
 
-Refer to our [documentation](https://zhyan0603.github.io/GPUMDkit/htmls/tutorials.html) for more detailed examples and command options.
+Refer to our [documentation](https://zhyan0603.github.io/GPUMDkit/) for more detailed examples and command options.
 
 #### Custom Commands
 
 `GPUMDkit` now supports custom commands via `~/.gpumdkit.in`.
 
-You can add your own shortcuts (e.g., `gpumdkit.sh -yourcommand`) by defining some functions in this file. This allows you to extend `GPUMDkit` with personal scripts. See [here](https://zhyan0603.github.io/GPUMDkit/htmls/custom_commands.html) for the detail usage.
+You can add your own shortcuts (e.g., `gpumdkit.sh -yourcommand`) by defining functions in this file. This allows you to extend `GPUMDkit` with personal scripts. See [custom command documentation](https://zhyan0603.github.io/GPUMDkit/) for details.
 
 #### Tab Completion Support
 
@@ -297,4 +297,8 @@ Also, welcome to join our QQ group ([825696376](https://qun.qq.com/universal-sha
 
 **GPUMDkit** is an open-source tool freely available for everyone. If you find it helpful in your research or workflow, please ⭐ [star us on GitHub](https://github.com/zhyan0603/GPUMDkit). Additionally, if GPUMDkit contributes to your published work, please cite our paper:
 
-> Z. Yan\*, D. Li, X. Wu, Z. Liu, C. Hua, B. Situ, H. Yang, S. Tang, B. Tang, Z. Wang, S. Yi, H. Wang, D. Huang, K. Li, Q. Guo, Z. Chen, K. Xu, Y. Wang, Z. Wang, G. Tang, S. Liu, Z. Fan, and Y. Zhu\*. **GPUMDkit: A User-Friendly Toolkit for GPUMD and NEP**. [MGE Advances, 2026, e70074](https://doi.org/10.1002/mgea.70074). 
+> Z. Yan\*, D. Li, X. Wu, Z. Liu, C. Hua, B. Situ, H. Yang, S. Tang, B. Tang, Z. Wang, S. Yi, H. Wang, D. Huang, K. Li, Q. Guo, Z. Chen, K. Xu, Y. Wang, Z. Wang, G. Tang, S. Liu, Z. Fan, and Y. Zhu\*. **GPUMDkit: A User-Friendly Toolkit for GPUMD and NEP**. [MGE Advances, 2026, 4, e70074](https://doi.org/10.1002/mgea.70074).
+
+In your manuscript you may write something like:
+
+> Data processing and figure generation were performed using GPUMDkit [x].
