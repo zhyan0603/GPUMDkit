@@ -159,69 +159,134 @@ Edit `Scripts/utils/completion.sh`:
 
 ## Python Script Conventions
 
-### File header
+### File header (complete docstring)
+
+Every script over 50 lines must have a module-level docstring with all sections:
 
 ```python
 """
-Script:     new_script.py
-Category:   Calculator Scripts
-Purpose:    Brief description of what this script does.
-Usage:      python new_script.py <param1> <param2>
+=============================================================================
+GPUMDkit: A User-Friendly Toolkit for GPUMD and NEP
+Repository: https://github.com/zhyan0603/GPUMDkit
+Citation: Z. Yan et al., GPUMDkit: A User-Friendly Toolkit for GPUMD and NEP,
+          MGE Advances, 2026, 4, e70074 (https://doi.org/10.1002/mgea.70074)
+=============================================================================
+Script:     script_name.py
+Category:   Category Name
+Purpose:    One-line description of what this script does.
+            Multi-line elaboration if needed.
+Usage:      gpumdkit.sh -flag <param1> <param2> [optional]
+            python3 script_name.py <param1> <param2> [optional]
 Arguments:
   param1    Description of param1
   param2    Description of param2
-Author:     Your Name (your@email.com)
+  optional  Description of optional (default: value)
+Output:
+  <file>     (description of output)
+Author:     Name (email)
+Last-modified: YYYY-MM-DD
+=============================================================================
 """
 ```
 
-### Argument parsing
+### Argument parsing — the standard pattern
 
-Use `sys.argv` for simple scripts (most common pattern):
+Use `sys.argv` positional for simple scripts. Use this EXACT pattern (mirrors `traj2exyz.py`, `dp2xyz.py`, `pos2exyz.py`, etc.):
 
 ```python
 import sys
 
-if len(sys.argv) != 3:
-    print("Usage: python new_script.py <param1> <param2>")
-    print("Example: python new_script.py input.xyz nep.txt")
-    sys.exit(1)
-
-param1 = sys.argv[1]
-param2 = sys.argv[2]
+args = sys.argv[1:]
+if len(args) < N or args[0] in ("-h", "--help"):
+    print(" Usage: gpumdkit.sh -flag <param1> <param2>")
+    print("    or: python3 script_name.py <param1> <param2>")
+    print("")
+    print(" Arguments:")
+    print("   param1    Description")
+    print("   param2    Description")
+    print("")
+    print(" Example: gpumdkit.sh -flag input.xyz output.xyz")
+    print("")
+    sys.exit(0 if args and args[0] in ("-h", "--help") else 1)
 ```
 
-Use `argparse` only if the script has many optional flags with complex defaults.
+Key points about this pattern:
+- `sys.exit(0 ...)` for `-h`/`--help` (success exit), `sys.exit(1)` for missing args (error exit)
+- Uses `args = sys.argv[1:]` slice pattern, then `args[0]`, `args[1]` instead of `sys.argv[1]`, `sys.argv[2]`
+- The `Usage:` line shows BOTH gpumdkit.sh invocation AND direct python invocation
+- **Critically: put this block BEFORE any heavy/optional imports** (like `import dpdata`, `import calorine`, `import ovito`). Ordinary imports (`os`, `sys`, `numpy`) go first, then the help check, then optional imports. This ensures `-h` works even when optional packages are not installed.
+- After the check, read positional args: `input_file = args[0]`, `output_file = args[1] if len(args) >= 2 else "default"`
 
-### Main guard (optional)
+Use `argparse` only if the script has many optional flags with complex defaults (e.g., `calc_neighbor_list.py`, `calc_displacement.py`).
 
-GPUMDkit scripts run directly — a `main()` function with `if __name__ == "__main__":` guard is optional. Most existing scripts execute at module level. Use whichever style you prefer, but do not wrap the entire script in a `main()` function just for the sake of it.
+### Main guard
+
+`if __name__ == "__main__":` is optional for GPUMDkit scripts (they run standalone). However, **new scripts are encouraged to use it** for clean module-level readability. Existing scripts without it should not be retrofitted (explicitly rejected by maintainer).
+
+### Error handling
+
+Python scripts use `print()` with `sys.exit(1)`, never raw exceptions:
+
+```python
+# ✓ Correct — leading space, f-string for clarity, sys.exit after
+if not os.path.isfile(input_file):
+    print(f" Error: file '{input_file}' does not exist.")
+    sys.exit(1)
+
+# ✓ Correct — f-string with leading space
+print(f" Error: failed to load {dataset_dir}: {e}")
+
+# ✗ Wrong — missing leading space
+print(f"Error: file '{input_file}' does not exist.")
+
+# ✗ Wrong — raise Exception instead of print + exit
+raise FileNotFoundError(input_file)
+```
+
+For try/except blocks that catch expected failures:
+
+```python
+try:
+    result = do_something()
+except Exception as e:
+    print(f" Error: operation failed: {e}")
+    sys.exit(1)
+```
+
+### Input validation
+
+Always validate file/directory existence before reading:
+
+```python
+if not os.path.isdir(input_dir):
+    print(f" Error: input directory '{input_dir}' does not exist.")
+    sys.exit(1)
+
+if not os.path.isfile(input_file):
+    print(f" Error: file '{input_file}' does not exist.")
+    sys.exit(1)
+```
+
+### Output file naming
+
+- Output filenames should include enough context to avoid collisions (e.g., `filtered_Li_Li_1.8_2.0.xyz`, not just `filtered.xyz`)
+- Overwriting existing files without warning is accepted (project convention — this is a CLI toolkit, not interactive software)
 
 ### Dependency notices
 
-If your script requires a heavy/special package (`NepTrain`, `calorine`, `dpdata`), add a notice:
+If your script requires a heavy/special package (`NepTrain`, `calorine`, `dpdata`, `ovito`), add a notice:
 
 ```python
 def print_dependency_notice():
-    print("This function requires the 'calorine' package.")
-    print("If you use this function, please cite:")
-    print("  Bochkov et al., npj Comput Mater 6, 170 (2020)")
+    print(" This function requires the 'calorine' package.")
+    print(" If you use this function, please cite:")
+    print("   Bochkov et al., npj Comput Mater 6, 170 (2020)")
 
 # Call it early in the script
 print_dependency_notice()
 ```
 
 Do NOT add notices for common packages like `ase`, `numpy`, `pymatgen`.
-
-### Error messages
-
-```python
-# Good (leading space, clear message, sys.exit)
-print(" Error: File 'input.xyz' not found.")
-sys.exit(1)
-
-# Avoid
-raise FileNotFoundError("input.xyz")
-```
 
 ## Shell Script Conventions
 
@@ -387,6 +452,9 @@ find src Scripts -name '*.sh' -exec bash -n {} +
 
 # Python syntax
 python3 -m py_compile Scripts/path/to/your_script.py
+
+# Clean up __pycache__ after py_compile
+find . -type d -name "__pycache__" -exec rm -rf {} + 2>/dev/null
 
 # Clean up __pycache__ after py_compile
 find . -type d -name "__pycache__" -exec rm -rf {} + 2>/dev/null

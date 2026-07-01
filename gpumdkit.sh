@@ -204,7 +204,7 @@ function help_info_table(){
     echo " | -traj2exyz    ASE traj -> extxyz              | -replicate         Replicate structure                |"
     echo " | -addgroup     Add group labels                | -addweight         Add structure weight in extxyz     |"
     echo " | -clean_xyz    Clean extra info in extxyz      | -get_frame         Extract specific frame             |"
-    echo " | -frame_range  Extract frames by range         |                                                       |"
+    echo " | -frame_range  Extract frames by range         | -dp2xyz            DeepMD npy -> extxyz               |"
     echo " +-------------------------------------------------------------------------------------------------------+"
     echo " |                                            ANALYSIS                                                   |"
     echo " +-------------------------------------------------------------------------------------------------------+"
@@ -430,6 +430,9 @@ if [ ! -z "$1" ]; then
 
         -traj2exyz)
             run_python_script "Zihan YAN (yanzihan@westlake.edu.cn)" "${format_conv_path}/traj2exyz.py" "${@:2}" ;;
+
+        -dp2xyz)
+            run_python_script "Denan LI (lidenan@westlake.edu.cn)" "${format_conv_path}/dp2xyz.py" "${@:2}" ;;
 
         -addgroup|-addlabel)
             run_python_script "Zihan YAN (yanzihan@westlake.edu.cn)" "${format_conv_path}/add_groups.py" "${@:2}" ;;

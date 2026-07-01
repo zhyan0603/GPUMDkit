@@ -246,6 +246,9 @@ find src Scripts -name '*.sh' -exec bash -n {} +
 # Python syntax
 python3 -m py_compile <modified_file>
 
+# 🧹 CLEANUP — always run after debugging / py_compile
+find . -type d -name "__pycache__" -not -path './.git/*' -exec rm -rf {} +
+
 # Interactive menu paths
 echo "0" | bash gpumdkit.sh                         # Exit
 printf '8\n0\n' | bash gpumdkit.sh                   # About/Help → Exit
