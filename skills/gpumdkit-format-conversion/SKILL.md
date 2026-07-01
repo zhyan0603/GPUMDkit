@@ -72,6 +72,17 @@ gpumdkit.sh -cif2exyz input.cif model.xyz
 gpumdkit.sh -traj2exyz input.traj output.xyz
 ```
 
+### dp2xyz
+
+Converts DeepMD npy datasets to extxyz format. Recursively scans a directory for datasets containing `type.raw`, `type_map.raw`, and `set.000/`.
+
+**Usage:**
+```
+gpumdkit.sh -dp2xyz database train.xyz
+```
+Dependencies: `dpdata`, `ase`. Requires `conda activate gpumd` environment.
+Author: Denan LI (lidenan@westlake.edu.cn)
+
 ### Structure Manipulation
 
 ```bash
@@ -108,6 +119,7 @@ gpumdkit.sh -clean_xyz input.xyz clean.xyz
 | `-cif2exyz` | CIF -> extxyz | `gpumdkit.sh -cif2exyz <cif> <output>` |
 | `-xdat2exyz` | XDATCAR -> extxyz | `gpumdkit.sh -xdat2exyz XDATCAR dump.xyz` |
 | `-traj2exyz` | ASE traj -> extxyz | `gpumdkit.sh -traj2exyz <traj> <xyz>` |
+| `-dp2xyz` | DeepMD npy → extxyz (via dpdata) | `gpumdkit.sh -dp2xyz <input_dir/> [output.xyz]` |
 | `-addgroup` | Add group labels | `gpumdkit.sh -addgroup <poscar> <elem...>` |
 | `-addweight` | Add weight | `gpumdkit.sh -addweight <in> <out> <weight>` |
 | `-replicate` | Replicate structure | `gpumdkit.sh -replicate <in> <out> a b c` |

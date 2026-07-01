@@ -10,6 +10,8 @@ description: >
 allowed-tools: Bash(gpumdkit *) Bash(python3 *) Bash(python *) Bash(ls *) Bash(mkdir *)
 ---
 
+> **Covers**: coding conventions, file structure, shell/Python templates, adding new features, and what NOT to propose.
+
 # GPUMDkit Contributing Guide
 
 ## Project Structure
@@ -136,6 +138,8 @@ Key conventions:
 - No quotes around `$2`, `$3` in the python call (paths with spaces not supported)
 - No `exit 1` in the else branch (just print usage and fall through)
 - Place alphabetically among existing flags for readability
+
+> When the script needs an interactive menu entry as well, also add a keyword converter wrapper function in `src/f1_format_conversions.sh` following the same banner pattern. Reference the existing `dp2extxyz` function as a template.
 
 ### Step 3: Add to help table
 
@@ -334,6 +338,48 @@ echo " ---------------------------------------------------"
 }
 ```
 
+### File structure for a new Python script
+
+Use `dp2xyz.py` or `traj2exyz.py` as reference. The import order pattern is:
+
+```python
+import os
+import sys
+# heavy/optional imports come AFTER the help check
+
+args = sys.argv[1:]
+if len(args) < N or args[0] in ("-h", "--help"):
+    print(" Usage: gpumdkit.sh -flag <param1> <param2>")
+    print("    or: python3 script_name.py <param1> <param2>")
+    print("")
+    print(" Arguments:")
+    print("   param1    Description")
+    print("   param2    Description")
+    print("")
+    print(" Example: gpumdkit.sh -flag input.xyz output.xyz")
+    print("")
+    sys.exit(0 if args and args[0] in ("-h", "--help") else 1)
+
+import heavy_dependency  # only after help check
+from ase.io import write  # only after help check
+
+def helper_functions():
+    """Docstrings for all helper functions."""
+    ...
+
+if __name__ == "__main__":
+    input_file = args[0]
+    output_file = args[1] if len(args) == 2 else "default.xyz"
+    ...
+```
+
+Key rules:
+- Ordinary imports (`os`, `sys`, `numpy`) go before the help check
+- Heavy/optional imports (`dpdata`, `calorine`, `ovito`, `ase`) go **after** the help check so `-h` works even when optional packages are missing
+- All helper functions have docstrings
+- The `if __name__ == "__main__":` guard is encouraged for new scripts
+- Use `args = sys.argv[1:]` pattern, then access `args[0]`, `args[1]`, etc.
+
 ## Project Conventions & Personal Preferences
 
 These are the maintainer's conventions. Follow them strictly.
@@ -422,7 +468,9 @@ These changes have been **explicitly rejected** by the project maintainer. Do no
 | Add color/ANSI escape codes | User explicitly rejected; keep monochrome |
 | Add debug examples to every tutorial page | Unnecessary; keep tutorials lean |
 | Change MSD fitting range arbitrarily | Scientific choice; ask maintainer first |
-| Add `des_compare` to CLI | Script exists but user chose not to expose it |
+| Remove troubleshooting pages | Removed by maintainer's explicit request; do not re-add |
+| Add `des_compare` to CLI | Script exists but maintainer chose not to wire it |
+| Keep `__pycache__` after debugging | Must always `find . -type d -name __pycache__ -exec rm -rf {} +` |
 
 ### macOS / Cross-Platform Notes
 
@@ -430,6 +478,15 @@ These changes have been **explicitly rejected** by the project maintainer. Do no
 - macOS **sed is BSD**, not GNU. Cross-platform sed: use `perl -i -pe` instead.
 - **zsh does not support `read -a`** (bash-only). All scripts run under bash.
 - `timeout` command is not available on macOS. Use background jobs or rely on EOF-safe read.
+
+### Testing new scripts
+
+For ANY new script, run BOTH of these before committing:
+
+```bash
+python3 Scripts/path/to/script.py -h    # help must work without dependencies
+python3 Scripts/path/to/script.py        # missing args must print usage + exit 1
+```
 
 ### Specific Design Decisions
 
