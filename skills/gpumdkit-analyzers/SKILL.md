@@ -17,7 +17,7 @@ allowed-tools: Bash(gpumdkit *) Bash(python3 *)
 |------|---------|-------------|
 | Composition Analysis | `-analyze_comp` | Group structures by composition |
 | Outlier Detection | Menu 502 | Find high-error structures |
-| Chemical Species | Menu 503 | List unique elements |
+| Chemical Species | `-chem_species` or Menu 503 | List unique elements |
 | Charge Balance | `-cbc` | Check oxidation-state balance |
 | Property Range | `-range` | Energy/force/virial statistics |
 | Distance Filter | `-filter_dist` or Menu 506 | Filter by minimum distance (no PBC) |
@@ -76,8 +76,11 @@ gpumdkit.sh -cbc train.xyz
 
 ### Chemical Species Identification
 ```bash
-# List unique elements (interactive mode)
-gpumdkit.sh  # Select: 5) Analyzer -> 503
+# List unique elements
+gpumdkit.sh -chem_species train.xyz
+
+# Interactive mode also works:
+# gpumdkit.sh  # Select: 5) Analyzer -> 503
 
 # Output: Sorted list of all elements in the file
 ```
@@ -198,13 +201,6 @@ gpumdkit.sh -time gpumd
 gpumdkit.sh -time nep
 ```
 
-### Volume Analysis
-```bash
-# Get average volume per temperature
-python Scripts/analyzer/get_volume.py
-# Requires: */K/thermo.out directories
-```
-
 ## CLI Flag Reference
 
 | Flag | Description | Syntax |
@@ -213,6 +209,7 @@ python Scripts/analyzer/get_volume.py
 | `-range` | Property range | `gpumdkit.sh -range <file> <prop>` |
 | `-min_dist` | Min distance (no PBC) | `gpumdkit.sh -min_dist <file>` |
 | `-min_dist_pbc` | Min distance (PBC) | `gpumdkit.sh -min_dist_pbc <file>` |
+| `-chem_species` | Chemical species list | `gpumdkit.sh -chem_species <file>` |
 | `-cbc` | Charge balance | `gpumdkit.sh -cbc <file>` |
 | `-filter_dist` | Filter by minimum distance | `gpumdkit.sh -filter_dist <file> <min_dist>` |
 | `-filter_dist_pbc` | Filter by minimum distance with PBC | `gpumdkit.sh -filter_dist_pbc <file> <min_dist>` |

@@ -68,7 +68,7 @@ Use `gpumdkit.sh -h` to see all available options.
 | Module | Menu | CLI | Description |
 |--------|------|-----|-------------|
 | Format Conversion | 1 | `-out2xyz`, `-pos2exyz` | File conversion |
-| Sample Structures | 2 | `-neptrain`, interactive menu | Structure sampling |
+| Sample Structures | 2 | interactive menu, `-frame_range`, `-pynep` (deprecated) | Structure sampling |
 | Workflow | 3 | - | Batch processing |
 | Calculators | 4 | `-calc <type>` | Property calculations |
 | Analyzer | 5 | `-range`, `-min_dist` | Structure analysis |

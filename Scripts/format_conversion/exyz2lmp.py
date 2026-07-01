@@ -21,9 +21,25 @@ Last-modified: 2026-05-16
 """
 
 import sys
-from ase.io import read, write
+
+
+def print_usage():
+    print(" Usage: python exyz2lmp.py <extxyz_file> <lammps_data_file>")
+    print("")
+    print(" Arguments:")
+    print("   extxyz_file       Input extxyz file")
+    print("   lammps_data_file  Output LAMMPS data file")
+    print("")
+    print(" Output:")
+    print("   <lammps_data_file>")
+    print("")
+    print(" Example: python exyz2lmp.py model.xyz data.lammps")
+    print("")
+
 
 def convert_extxyz_to_lammps_data(extxyz_file, lammps_data_file):
+    from ase.io import read
+
     # Read the EXTXYZ file
     atoms = read(extxyz_file, format='extxyz')
     
@@ -69,11 +85,12 @@ def convert_extxyz_to_lammps_data(extxyz_file, lammps_data_file):
 #   print(f"Conversion complete! {extxyz_file} has been converted to {lammps_data_file}")
 
 if __name__ == '__main__':
-    if len(sys.argv) != 3:
-        print(" Usage: python exyz2lmp.py <extxyz_file> <lammps_data_file>")
-        sys.exit(1)
+    args = sys.argv[1:]
+    if len(args) != 2 or args[0] in ("-h", "--help"):
+        print_usage()
+        sys.exit(0 if args and args[0] in ("-h", "--help") else 1)
     
-    extxyz_file = sys.argv[1]
-    lammps_data_file = sys.argv[2]
+    extxyz_file = args[0]
+    lammps_data_file = args[1]
     
     convert_extxyz_to_lammps_data(extxyz_file, lammps_data_file)

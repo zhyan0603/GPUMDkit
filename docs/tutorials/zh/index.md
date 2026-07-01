@@ -68,7 +68,7 @@ gpumdkit.sh -calc msd trajectory.xyz Li 10
 | 模块 | 菜单 | CLI | 描述 |
 |------|------|-----|------|
 | 格式转换 | 1 | `-out2xyz`, `-pos2exyz` | 文件转换 |
-| 结构采样 | 2 | `-neptrain`、交互菜单 | 结构采样 |
+| 结构采样 | 2 | 交互菜单、`-frame_range`、`-pynep`（已弃用） | 结构采样 |
 | 工作流 | 3 | - | 批处理 |
 | 计算器 | 4 | `-calc <类型>` | 属性计算 |
 | 分析工具 | 5 | `-range`, `-min_dist` | 结构分析 |

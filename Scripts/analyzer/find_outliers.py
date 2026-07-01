@@ -10,7 +10,9 @@ Category:   Analyzer Scripts
 Purpose:    Find outlier structures in NEP training data based on RMSE
             thresholds for energy, force, and stress. Selected outliers
             are saved to selected.xyz, and the remaining to remained.xyz.
-Usage:      python find_outliers.py [energy_thresh_meV force_thresh_meV stress_thresh_GPa]
+Usage:      gpumdkit.sh
+            choose 502) Find outliers of extxyz
+            python find_outliers.py [energy_thresh_meV force_thresh_meV stress_thresh_GPa]
 Arguments:
   energy_thresh_meV  (optional) Energy RMSE threshold in meV/atom
   force_thresh_meV   (optional) Force RMSE threshold in meV/Angstrom
@@ -31,8 +33,53 @@ Last-modified: 2026-05-16
 
 import sys
 import os
-import matplotlib.pyplot as plt
-import numpy as np
+
+
+def print_usage():
+    print(" Usage: gpumdkit.sh")
+    print("        choose 502) Find outliers of extxyz")
+    print("    or: python find_outliers.py [energy_thresh_meV force_thresh_meV stress_thresh_GPa]")
+    print("")
+    print(" Arguments:")
+    print("   energy_thresh_meV  Optional energy RMSE threshold in meV/atom")
+    print("   force_thresh_meV   Optional force RMSE threshold in meV/Angstrom")
+    print("   stress_thresh_GPa  Optional stress RMSE threshold in GPa")
+    print("")
+    print(" Input files:")
+    print("   train.xyz")
+    print("   energy_train.out")
+    print("   force_train.out")
+    print("   stress_train.out")
+    print("")
+    print(" Output:")
+    print("   selected.xyz")
+    print("   remained.xyz")
+    print("   selected_remained.png")
+    print("")
+    print(" Example: in interactive mode, choose 502 and enter thresholds when prompted")
+    print("          python find_outliers.py 20 100 1.0")
+    print("")
+
+
+args = sys.argv[1:]
+if args and args[0] in ("-h", "--help"):
+    print_usage()
+    sys.exit(0)
+if args and len(args) < 3:
+    print_usage()
+    sys.exit(1)
+
+energy_thresh = force_thresh = stress_thresh = None
+if len(args) >= 3:
+    try:
+        energy_thresh = float(args[0]) / 1000  # Convert meV/atom to eV/atom
+        force_thresh = float(args[1]) / 1000   # Convert meV/Angstrom to eV/Angstrom
+        stress_thresh = float(args[2])         # GPa, no conversion needed
+    except ValueError:
+        print(" Error: thresholds must be numbers.")
+        print("")
+        print_usage()
+        sys.exit(1)
 
 # Function to parse xyz file and get natoms list and frames
 def parse_xyz(filename):
@@ -113,6 +160,9 @@ for f in required_files:
         print(f"  train.xyz, energy_train.out, force_train.out, stress_train.out")
         sys.exit(1)
 
+import matplotlib.pyplot as plt
+import numpy as np
+
 energy_train = np.loadtxt('energy_train.out')
 force_train = np.loadtxt('force_train.out')
 stress_train = np.loadtxt('stress_train.out')
@@ -143,13 +193,7 @@ frames = [frames[i] for i in range(len(valid_struct)) if valid_struct[i]]
 n_struct = len(natoms_list)
 cum = np.cumsum([0] + natoms_list)
 
-# Input RMSE thresholds (in meV for energy and force, GPa for stress)
-if len(sys.argv) >= 4:
-    # Use command-line arguments if provided (in order: energy, force, stress)
-    energy_thresh = float(sys.argv[1]) / 1000  # Convert meV/atom to eV/atom
-    force_thresh = float(sys.argv[2]) / 1000   # Convert meV/Å to eV/Å
-    stress_thresh = float(sys.argv[3])         # GPa, no conversion needed
-else:
+if energy_thresh is None:
     # Prompt for manual input if command-line arguments are not provided
     energy_thresh = float(input(" Enter energy RMSE threshold (meV/atom): ")) / 1000  # Convert to eV/atom
     force_thresh = float(input(" Enter force RMSE threshold (meV/Å): ")) / 1000      # Convert to eV/Å

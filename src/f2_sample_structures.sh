@@ -140,12 +140,12 @@ echo " +------------------------------------------------------+"
 echo " Input the function number:"
 
 valid_menu_choices=("000" "201" "202" "203" "204" "205")
-read -p " " num_choice
+read_menu_choice num_choice || return 1
 while ! echo "${valid_menu_choices[@]}" | grep -wq "$num_choice"
 do
   echo " ------------>>"
   echo " Please reinput function number..."
-  read -p " " num_choice
+  read_menu_choice num_choice || return 1
 done
 
 case $num_choice in

@@ -136,11 +136,14 @@ python Scripts/sample_structures/select_max_modev.py 200 0.15
 ### Frame Range Extraction
 
 ```bash
-# Direct Python execution
+# GPUMDkit CLI
+gpumdkit.sh -frame_range <input.xyz> <start_fraction> <end_fraction>
+
+# Direct Python execution also works
 python Scripts/sample_structures/frame_range.py <input.xyz> <start_fraction> <end_fraction>
 
 # Example: Extract first 80% of frames
-python Scripts/sample_structures/frame_range.py dump.xyz 0 0.8
+gpumdkit.sh -frame_range dump.xyz 0 0.8
 
 # Output: dump_0.00_0.80.xyz
 ```

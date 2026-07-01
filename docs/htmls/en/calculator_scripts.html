@@ -1551,6 +1551,13 @@
 
 <p><strong>Script Location:</strong> <code>Scripts/calculators/</code></p>
 <h2 id="overview">Overview</h2>
+<p>The calculator module can be read as three groups:</p>
+<ul>
+<li><strong>Trajectory properties:</strong> compute time-dependent quantities such as MSD and ionic conductivity from GPUMD or extxyz trajectories;</li>
+<li><strong>NEP-assisted calculations:</strong> use a NEP model to predict energies/forces/stresses, extract descriptors, calculate DOAS, run NEB, or minimize structures;</li>
+<li><strong>Polar-material analysis:</strong> build neighbor lists and calculate local displacement, averaged structures, octahedral tilt, and local polarization for perovskite or polar systems.</li>
+</ul>
+<p>If you are not sure about the required arguments, start from the interactive menu to see the prompt. If the arguments are already clear, use <code>gpumdkit.sh -calc ...</code> directly.</p>
 <table>
 <thead>
 <tr>
@@ -1914,11 +1921,54 @@
 <p><strong>Note:</strong> It is recommended to use the <code>compute_rdf</code> command directly in GPUMD when possible.</p>
 <hr />
 <h2 id="ferroelectric-and-polar-material-tools">Ferroelectric and Polar Material Tools</h2>
-<p>Options <code>406–410</code> cover perovskite and polar-material analysis: neighbor lists, local displacements, averaged structures, octahedral tilt, and ABO3 polarization. These tools are built on <code>ferrodispcalc</code>.</p>
-<p><strong>Dependency:</strong></p>
+<p>Options <code>406–410</code> are for perovskite and polar-material analysis. They are commonly used to extract local structural information from MD trajectories before analyzing phase transitions, domain patterns, or polarization textures.</p>
+<p>This page only gives a quick index for these scripts because they are usually used together. For full workflows and argument details, see <strong><a href="polar_material_analysis.html">Polar Material Analysis</a></strong>.</p>
+<table>
+<thead>
+<tr>
+<th>Menu</th>
+<th>CLI subcommand</th>
+<th>Purpose</th>
+<th>Details</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>406</code></td>
+<td><code>gpumdkit.sh -calc nlist ...</code></td>
+<td>Build neighbor lists between selected center and neighbor atoms</td>
+<td><a href="polar_material_analysis.html">Polar Material Analysis</a></td>
+</tr>
+<tr>
+<td><code>407</code></td>
+<td><code>gpumdkit.sh -calc disp ...</code></td>
+<td>Calculate local displacement from a trajectory and neighbor list</td>
+<td><a href="polar_material_analysis.html">Polar Material Analysis</a></td>
+</tr>
+<tr>
+<td><code>408</code></td>
+<td><code>gpumdkit.sh -calc avg-struct ...</code></td>
+<td>Calculate an averaged structure from a trajectory</td>
+<td><a href="polar_material_analysis.html">Polar Material Analysis</a></td>
+</tr>
+<tr>
+<td><code>409</code></td>
+<td><code>gpumdkit.sh -calc oct-tilt ...</code></td>
+<td>Calculate octahedral tilt angles</td>
+<td><a href="polar_material_analysis.html">Polar Material Analysis</a></td>
+</tr>
+<tr>
+<td><code>410</code></td>
+<td><code>gpumdkit.sh -calc pol-abo3 ...</code></td>
+<td>Estimate local ABO3 polarization from Born effective charges</td>
+<td><a href="polar_material_analysis.html">Polar Material Analysis</a></td>
+</tr>
+</tbody>
+</table>
+<p>Some scripts require <code>ferrodispcalc</code>:</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-22-1" name="__codelineno-22-1" href="#__codelineno-22-1"></a>pip3<span class="w"> </span>install<span class="w"> </span>git+https://github.com/MoseyQAQ/ferrodispcalc.git
 </code></pre></div>
-<p>For complete argument lists, real-world workflow examples (PbTiO3 phase transition, PTO/STO superlattice topology, etc.), see <strong><a href="polar_material_analysis.html">Polar Material Analysis</a></strong>.</p>
+<p>A typical sequence is to build neighbor lists with <code>nlist</code>, then reuse those lists for displacement, tilt, or polarization calculations. For averaged structures, you can start directly from the trajectory and use the length tolerance to control which frames are included.</p>
 
 
 

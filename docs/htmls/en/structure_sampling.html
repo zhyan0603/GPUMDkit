@@ -1632,7 +1632,7 @@
 <li><code>sampled_structures.xyz</code></li>
 </ul>
 <h2 id="farthest-point-sampling-with-neptrain">Farthest Point Sampling with NepTrain</h2>
-<p>This entry uses NepTrain descriptors for FPS.</p>
+<p>This entry uses NepTrain descriptors for FPS. Choose <code>203</code> in interactive mode, or run the script directly:</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>python<span class="w"> </span>Scripts/sample_structures/neptrain_select_structs.py<span class="w"> </span>dump.xyz<span class="w"> </span>train.xyz<span class="w"> </span>nep.txt
 </code></pre></div>
 <p>From interactive mode, choose <code>203</code>. You will see:</p>
@@ -1709,7 +1709,7 @@
 </code></pre></div>
 <p>This entry requires <code>pynep</code> and is kept for compatibility.</p>
 <h2 id="structure-perturbation">Structure Perturbation</h2>
-<p>Use perturbation when you want to generate initial structures around a known configuration.</p>
+<p>Use perturbation when you want to generate initial structures around a known configuration. Choose <code>204</code> in interactive mode, or run the script directly:</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a>python<span class="w"> </span>Scripts/sample_structures/perturb_structure.py<span class="w"> </span>POSCAR<span class="w"> </span><span class="m">20</span><span class="w"> </span><span class="m">0</span>.03<span class="w"> </span><span class="m">0</span>.2<span class="w"> </span>uniform
 </code></pre></div>
 <p>From interactive mode, choose <code>204</code>. You will see:</p>
@@ -1756,6 +1756,7 @@
 <p>This function requires <code>dpdata</code>. If you use this function, we recommend citing the dpdata package.</p>
 <h2 id="force-deviation-selection">Force-Deviation Selection</h2>
 <p>Use this together with the GPUMD <code>active</code> command. The <code>active</code> command uses a committee model approach: multiple potentials predict forces for the same structure, and GPUMD records the maximum force deviation. <code>select_max_modev.py</code> selects structures with large force deviations from <code>active.out</code> and <code>active.xyz</code>, then writes them to <code>selected.xyz</code>.</p>
+<p>Choose <code>205</code> in interactive mode, or run the script directly:</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a>python<span class="w"> </span>Scripts/sample_structures/select_max_modev.py<span class="w"> </span><span class="m">200</span><span class="w"> </span><span class="m">0</span>.15
 </code></pre></div>
 <p>From interactive mode, choose <code>205</code>. You will see:</p>
@@ -1795,16 +1796,18 @@
 <li><code>selected.xyz</code></li>
 </ul>
 <h2 id="frame-range-extraction">Frame Range Extraction</h2>
-<p>Use this to extract a fraction of a trajectory:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-18-1" name="__codelineno-18-1" href="#__codelineno-18-1"></a>python<span class="w"> </span>Scripts/sample_structures/frame_range.py<span class="w"> </span>dump.xyz<span class="w"> </span><span class="m">0</span><span class="w"> </span><span class="m">0</span>.8
+<p><code>frame_range.py</code> is an independent CLI tool and is not part of the interactive sampling menu <code>201–205</code>. Use it when you want to keep only a fraction of a trajectory before sampling, for example after equilibration.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-18-1" name="__codelineno-18-1" href="#__codelineno-18-1"></a>gpumdkit.sh<span class="w"> </span>-frame_range<span class="w"> </span>dump.xyz<span class="w"> </span><span class="m">0</span><span class="w"> </span><span class="m">0</span>.8
+<a id="__codelineno-18-2" name="__codelineno-18-2" href="#__codelineno-18-2"></a>python<span class="w"> </span>Scripts/sample_structures/frame_range.py<span class="w"> </span>dump.xyz<span class="w"> </span><span class="m">0</span><span class="w"> </span><span class="m">0</span>.8
 </code></pre></div>
-<p>This writes frames from 0% to 80% of the trajectory.</p>
+<p>This writes frames from 0% to 80% of the trajectory. The range arguments are trajectory fractions from <code>0</code> to <code>1</code>.</p>
 <h2 id="example-commands">Example Commands</h2>
-<p>An example sequence using several sampling-related tools:</p>
+<p>An example preprocessing-and-sampling sequence is shown below. The first two commands are analyzer tools; the final step is structure sampling.</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-19-1" name="__codelineno-19-1" href="#__codelineno-19-1"></a>gpumdkit.sh<span class="w"> </span>-min_dist_pbc<span class="w"> </span>dump.xyz
 <a id="__codelineno-19-2" name="__codelineno-19-2" href="#__codelineno-19-2"></a>gpumdkit.sh<span class="w"> </span>-filter_box<span class="w"> </span>dump.xyz<span class="w"> </span><span class="m">13</span>
 <a id="__codelineno-19-3" name="__codelineno-19-3" href="#__codelineno-19-3"></a>python<span class="w"> </span>Scripts/sample_structures/neptrain_select_structs.py<span class="w"> </span>dump.xyz<span class="w"> </span>train.xyz<span class="w"> </span>nep.txt
 </code></pre></div>
+<p>The final step can also be run from interactive mode by choosing <code>2) Sample Structures -&gt; 203</code>.</p>
 <h2 id="common-mistakes">Common Mistakes</h2>
 <table>
 <thead>

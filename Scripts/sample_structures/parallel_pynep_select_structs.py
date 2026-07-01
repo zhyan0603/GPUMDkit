@@ -10,7 +10,8 @@ Category:   Sample Structure Scripts
 Purpose:    Parallelized version of pynep_select_structs.py. Select diverse
             structures using farthest-point sampling on pynep descriptors
             with multi-processing for descriptor computation and I/O.
-Usage:      python parallel_pynep_select_structs.py <sampledata_file> <traindata_file> <nep_model_file> <threads>
+Usage:      gpumdkit.sh -pynep
+            python parallel_pynep_select_structs.py <sampledata_file> <traindata_file> <nep_model_file> <threads>
 Arguments:
   sampledata_file  Extxyz file with candidate structures
   traindata_file   Extxyz file with existing training structures
@@ -25,22 +26,34 @@ Last-modified: 2026-05-16
 """
 
 import sys
-import numpy as np
-from ase.io import read, write
-import matplotlib.pyplot as plt
-from sklearn.decomposition import PCA
-from pynep.calculate import NEP
-from pynep.select import FarthestPointSample
 from concurrent.futures import ProcessPoolExecutor, as_completed
 import multiprocessing
 import argparse
-import time
 import os
 
 
 def print_dependency_notice():
     print(" This function requires the pynep package.")
     print(" This PyNEP sampling entry is deprecated. We recommend using NepTrain sampling instead.")
+
+
+def print_usage():
+    print(" Usage: gpumdkit.sh -pynep")
+    print("    or: python parallel_pynep_select_structs.py <sampledata_file> <traindata_file> <nep_model_file> <threads>")
+    print("")
+    print(" Arguments:")
+    print("   sampledata_file  Extxyz file with candidate structures")
+    print("   traindata_file   Extxyz file with existing training structures")
+    print("   nep_model_file   NEP model file (e.g., nep.txt)")
+    print("   threads          Number of parallel workers")
+    print("")
+    print(" Output:")
+    print("   selected.xyz     Selected diverse structures")
+    print("   select.png       PCA visualization of descriptor space")
+    print("")
+    print(" Example: gpumdkit.sh -pynep")
+    print("          dump.xyz train.xyz nep.txt 8")
+    print("")
 
 
 def get_num_frames(file_path):
@@ -124,11 +137,10 @@ def calculate_descriptors(data, desc_type, max_workers=None):
     
     return np.array(results)
 
-# Check command line arguments
-if len(sys.argv) < 4:
-    print(" Usage: python parallel_pynep_select_structs.py <sampledata_file> <traindata_file> <nep_model_file> <threads>")
-    print(" Example: python parallel_pynep_select_structs.py dump.xyz train.xyz nep.txt 8")
-    sys.exit(1)
+args_in = sys.argv[1:]
+if len(args_in) != 4 or args_in[0] in ("-h", "--help"):
+    print_usage()
+    sys.exit(0 if args_in and args_in[0] in ("-h", "--help") else 1)
 
 # Parse command-line arguments
 parser = argparse.ArgumentParser(description='Select structures using NEP descriptors.')
@@ -139,6 +151,18 @@ parser.add_argument('threads', type=int, default=multiprocessing.cpu_count(), he
 args = parser.parse_args()
 
 print_dependency_notice()
+
+try:
+    import numpy as np
+    from ase.io import read, write
+    import matplotlib.pyplot as plt
+    from sklearn.decomposition import PCA
+    from pynep.calculate import NEP
+    from pynep.select import FarthestPointSample
+except ImportError:
+    print(" Error: required Python dependencies are not installed or cannot be imported.")
+    print(" Please install pynep and the scientific Python stack, or use function 203) NepTrain sampling instead.")
+    sys.exit(1)
 
 # Function to load data from file
 def load_data(file_path):

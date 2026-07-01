@@ -9,7 +9,9 @@ Script:     sample_structures.py
 Category:   Sample Structure Scripts
 Purpose:    Uniformly or randomly sample a specified number of frames from
             an extxyz trajectory, with an option to skip initial frames.
-Usage:      python sample_structures.py <extxyz_file> <method> <num_samples> [skip_initial]
+Usage:      gpumdkit.sh
+            choose 201) Sample structures from extxyz
+            python sample_structures.py <extxyz_file> <method> <num_samples> [skip_initial]
 Arguments:
   extxyz_file  Input extxyz trajectory file
   method       Sampling method: uniform or random
@@ -46,7 +48,13 @@ def parse_args():
     Modified by:
         Dr. Huan Wang <huan.wang@whut.edu.cn>
     Usage:
-        python sample_structures.py <extxyz_file> <sampling_method> <num_samples> [skip_initial])
+        gpumdkit.sh
+        choose 201) Sample structures from extxyz
+        python sample_structures.py <extxyz_file> <sampling_method> <num_samples> [skip_initial]
+
+    Example:
+        in interactive mode, enter: dump.xyz uniform 50
+        python sample_structures.py dump.xyz random 100 500
     """))
     parser.add_argument('extxyz_file', 
                         type=Path, 

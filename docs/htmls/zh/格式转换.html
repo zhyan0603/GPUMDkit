@@ -1817,6 +1817,7 @@
 <thead>
 <tr>
 <th>入口</th>
+<th>调用脚本</th>
 <th>功能</th>
 <th>适用场景</th>
 </tr>
@@ -1824,91 +1825,109 @@
 <tbody>
 <tr>
 <td><code>101</code></td>
+<td><code>out2xyz.sh</code></td>
 <td>VASP OUTCAR 转 extxyz，shell 版本</td>
 <td>批量转换 VASP 计算目录</td>
 </tr>
 <tr>
 <td><code>102</code></td>
+<td><code>mtp2xyz.py</code></td>
 <td>MTP cfg 转 extxyz</td>
 <td>转换 MTP 数据</td>
 </tr>
 <tr>
 <td><code>103</code></td>
+<td><code>cp2k_log2xyz.py</code> / <code>cp2k2xyz.py</code></td>
 <td>CP2K 转 extxyz</td>
 <td>可选择 log/inp 路线或 pos/frc/cell 路线</td>
 </tr>
 <tr>
 <td><code>104</code></td>
+<td><code>abacus2xyz_scf.sh</code> / <code>abacus2xyz_md.sh</code></td>
 <td>ABACUS 转 extxyz</td>
 <td>转换 ABACUS SCF 或 MD 输出</td>
 </tr>
 <tr>
 <td><code>105</code></td>
+<td><code>exyz2pos.py</code></td>
 <td>extxyz 转 POSCAR</td>
 <td>将 extxyz 每一帧写成 POSCAR</td>
 </tr>
 <tr>
 <td><code>106</code></td>
+<td><code>add_groups.py</code></td>
 <td>添加 group 标签</td>
 <td>为 GPUMD 相关流程添加原子分组标签</td>
 </tr>
 <tr>
 <td><code>107</code></td>
+<td><code>add_weight.py</code></td>
 <td>添加权重</td>
 <td>修改训练集结构权重</td>
 </tr>
 <tr>
 <td><code>108</code></td>
+<td><code>get_frame.py</code></td>
 <td>提取单帧</td>
 <td>从 extxyz 轨迹导出某一帧</td>
 </tr>
 <tr>
 <td><code>109</code></td>
+<td><code>clean_xyz.py</code></td>
 <td>清理 XYZ 信息</td>
 <td>删除多余 extxyz 属性</td>
 </tr>
 <tr>
 <td><code>110</code></td>
+<td><code>replicate.py</code></td>
 <td>扩胞</td>
 <td>按倍数或目标原子数扩胞</td>
 </tr>
 <tr>
 <td><code>out2exyz</code></td>
+<td><code>out2exyz.py</code></td>
 <td>OUTCAR 转 extxyz，Python 版本</td>
 <td>VASP OUTCAR 转换的另一个入口</td>
 </tr>
 <tr>
 <td><code>pos2exyz</code></td>
+<td><code>pos2exyz.py</code></td>
 <td>POSCAR 转 extxyz</td>
 <td>转换单个结构</td>
 </tr>
 <tr>
 <td><code>cif2pos</code></td>
+<td><code>cif2pos.py</code></td>
 <td>CIF 转 POSCAR</td>
 <td>从 CIF 准备 VASP 输入</td>
 </tr>
 <tr>
 <td><code>cif2exyz</code></td>
+<td><code>cif2exyz.py</code></td>
 <td>CIF 转 extxyz</td>
 <td>从 CIF 准备 GPUMDkit 输入</td>
 </tr>
 <tr>
 <td><code>xdat2exyz</code></td>
+<td><code>xdatcar2exyz.py</code></td>
 <td>XDATCAR 转 extxyz</td>
 <td>转换 VASP MD 轨迹</td>
 </tr>
 <tr>
 <td><code>pos2lmp</code></td>
+<td><code>pos2lmp.py</code></td>
 <td>POSCAR 转 LAMMPS data</td>
 <td>准备 LAMMPS 输入</td>
 </tr>
 <tr>
 <td><code>lmp2exyz</code></td>
+<td><code>lmp2exyz.py</code></td>
 <td>LAMMPS dump 转 extxyz</td>
 <td>转换 LAMMPS 轨迹</td>
 </tr>
 <tr>
 <td><code>traj2exyz</code></td>
+<td><code>traj2exyz.py</code></td>
 <td>ASE traj 转 extxyz</td>
 <td>转换 ASE 轨迹</td>
 </tr>

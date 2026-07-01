@@ -1631,7 +1631,7 @@
 <li><code>sampled_structures.xyz</code></li>
 </ul>
 <h2 id="neptrain-fps">NepTrain FPS</h2>
-<p>NepTrain 版本的 FPS：</p>
+<p>NepTrain 版本的 FPS。交互模式选择 <code>203</code>；也可以直接运行脚本：</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>python<span class="w"> </span>Scripts/sample_structures/neptrain_select_structs.py<span class="w"> </span>dump.xyz<span class="w"> </span>train.xyz<span class="w"> </span>nep.txt
 </code></pre></div>
 <p>交互模式选择 <code>203</code>，会看到：</p>
@@ -1703,6 +1703,7 @@
 </code></pre></div>
 <p>这个入口需要 <code>pynep</code>。</p>
 <h2 id="_3">结构扰动</h2>
+<p>交互模式选择 <code>204</code>；也可以直接运行脚本：</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a>python<span class="w"> </span>Scripts/sample_structures/perturb_structure.py<span class="w"> </span>POSCAR<span class="w"> </span><span class="m">20</span><span class="w"> </span><span class="m">0</span>.03<span class="w"> </span><span class="m">0</span>.2<span class="w"> </span>uniform
 </code></pre></div>
 <p>交互模式选择 <code>204</code>，会看到：</p>
@@ -1749,6 +1750,7 @@
 <p>该功能需要 <code>dpdata</code>。使用此功能时建议引用 dpdata 包。</p>
 <h2 id="_4">最大力偏差结构选择</h2>
 <p>该功能需要配合 GPUMD 的 <code>active</code> 命令使用。<code>active</code> 通过委员会评审机制，让多条势函数对同一结构进行预测，并记录每个结构的最大力偏差。<code>select_max_modev.py</code> 会从 <code>active.out</code> 和 <code>active.xyz</code> 中选择力偏差较大的结构，写入 <code>selected.xyz</code>。</p>
+<p>交互模式选择 <code>205</code>；也可以直接运行脚本：</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a>python<span class="w"> </span>Scripts/sample_structures/select_max_modev.py<span class="w"> </span><span class="m">200</span><span class="w"> </span><span class="m">0</span>.15
 </code></pre></div>
 <p>交互模式选择 <code>205</code>，会看到：</p>
@@ -1769,15 +1771,18 @@
 <li><code>selected.xyz</code></li>
 </ul>
 <h2 id="_5">帧范围提取</h2>
-<p>提取轨迹的一部分帧：</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-18-1" name="__codelineno-18-1" href="#__codelineno-18-1"></a>python<span class="w"> </span>Scripts/sample_structures/frame_range.py<span class="w"> </span>dump.xyz<span class="w"> </span><span class="m">0</span><span class="w"> </span><span class="m">0</span>.8
+<p><code>frame_range.py</code> 是一个独立的 CLI 工具，不在结构采样交互菜单 <code>201–205</code> 中。它适合在采样前先截取轨迹的一段，例如只保留平衡后的后半段轨迹。</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-18-1" name="__codelineno-18-1" href="#__codelineno-18-1"></a>gpumdkit.sh<span class="w"> </span>-frame_range<span class="w"> </span>dump.xyz<span class="w"> </span><span class="m">0</span><span class="w"> </span><span class="m">0</span>.8
+<a id="__codelineno-18-2" name="__codelineno-18-2" href="#__codelineno-18-2"></a>python<span class="w"> </span>Scripts/sample_structures/frame_range.py<span class="w"> </span>dump.xyz<span class="w"> </span><span class="m">0</span><span class="w"> </span><span class="m">0</span>.8
 </code></pre></div>
-<p>这会写入轨迹 0% 到 80% 的帧。</p>
+<p>这会写入轨迹 0% 到 80% 的帧。参数使用轨迹比例，范围为 <code>0</code> 到 <code>1</code>。</p>
 <h2 id="_6">示例命令</h2>
+<p>下面是一个常见的采样前处理顺序：先用分析工具检查和过滤候选轨迹，再进行 FPS 采样。前两个命令属于<a href="%E5%88%86%E6%9E%90%E5%B7%A5%E5%85%B7.html">分析工具</a>，最后一步属于本页的结构采样。</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-19-1" name="__codelineno-19-1" href="#__codelineno-19-1"></a>gpumdkit.sh<span class="w"> </span>-min_dist_pbc<span class="w"> </span>dump.xyz
 <a id="__codelineno-19-2" name="__codelineno-19-2" href="#__codelineno-19-2"></a>gpumdkit.sh<span class="w"> </span>-filter_box<span class="w"> </span>dump.xyz<span class="w"> </span><span class="m">13</span>
 <a id="__codelineno-19-3" name="__codelineno-19-3" href="#__codelineno-19-3"></a>python<span class="w"> </span>Scripts/sample_structures/neptrain_select_structs.py<span class="w"> </span>dump.xyz<span class="w"> </span>train.xyz<span class="w"> </span>nep.txt
 </code></pre></div>
+<p>最后一步也可以在交互模式中选择 <code>2) 结构采样 → 203</code>。</p>
 <h2 id="_7">常见问题</h2>
 <table>
 <thead>

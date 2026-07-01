@@ -15,7 +15,7 @@ echo " >-------------------------------------------------<"
 echo " Input mode: gpumd, nep or gnep"
 echo " Example: gpumd"
 echo " ------------>>"
-read -p " " time_mode
+read_menu_choice time_mode || return 1
 echo " ---------------------------------------------------"
 case $time_mode in
     gpumd) bash ${analyzer_path}/time_consuming_gpumd.sh ;;
@@ -38,12 +38,12 @@ echo " +------------------------------------------------------+"
 echo " Input the function number:"
 
 valid_menu_choices=("000" "701")
-read -p " " num_choice
+read_menu_choice num_choice || return 1
 while ! echo "${valid_menu_choices[@]}" | grep -wq "$num_choice"
 do
   echo " ------------>>"
   echo " Please reinput function number..."
-  read -p " " num_choice
+  read_menu_choice num_choice || return 1
 done
 
 case $num_choice in

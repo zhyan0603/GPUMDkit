@@ -83,7 +83,7 @@ echo " Choose the script to use:"
 echo " 1) cp2k_log2xyz.py (from log and inp/xyz files)"
 echo " 2) cp2k2xyz.py (from pos.xyz, frc.xyz, cell.cell files)"
 echo " ------------>>"
-read -p " " cp2k_script_choice
+read_menu_choice cp2k_script_choice || return 1
 if [ "$cp2k_script_choice" == "1" ]; then
     cp2k2xyz_chenhua
 elif [ "$cp2k_script_choice" == "2" ]; then
@@ -105,12 +105,12 @@ echo " Choose the type of ABACUS calculation:"
 echo " 1) SCF calculation"
 echo " 2) MD calculation"
 echo " ------------>>"
-read -p " " abacus_type
+read_menu_choice abacus_type || return 1
 if [ "$abacus_type" == "1" ]; then
     echo " Input the directory containing running_scf.log"
     echo " Example: ./ "
     echo " ------------>>"
-    read -p " " dir_abacus_scf
+    read_menu_choice dir_abacus_scf || return 1
     echo " ---------------------------------------------------"
     bash ${GPUMDkit_path}/Scripts/format_conversion/abacus2xyz_scf.sh ${dir_abacus_scf}
     echo " Code path: ${GPUMDkit_path}/Scripts/format_conversion/abacus2xyz_scf.sh"
@@ -118,7 +118,7 @@ if [ "$abacus_type" == "1" ]; then
 elif [ "$abacus_type" == "2" ]; then
     echo " Input the directory containing running_md.log and MD_dump file"
     echo " ------------>>"
-    read -p " " dir_abacus_md
+    read_menu_choice dir_abacus_md || return 1
     echo " ---------------------------------------------------"
     bash ${GPUMDkit_path}/Scripts/format_conversion/abacus2xyz_md.sh ${dir_abacus_md}
     echo " Code path: ${GPUMDkit_path}/Scripts/format_conversion/abacus2xyz_md.sh"
@@ -392,12 +392,12 @@ valid_menu_choices=(
     "000" "101" "102" "103" "104" "105" "106" "107" "108" "109" "110" \
     "out2exyz" "pos2exyz" "cif2pos" "cif2exyz" "xdat2exyz" "pos2lmp" "lmp2exyz" "traj2exyz"
 ) 
-read -p " " num_choice
+read_menu_choice num_choice || return 1
 while ! echo "${valid_menu_choices[@]}" | grep -wq "$num_choice" 
 do
   echo " ------------>>"
   echo " Please reinput function number or converter keyword..."
-  read -p " " num_choice
+  read_menu_choice num_choice || return 1
 done
 
 case $num_choice in

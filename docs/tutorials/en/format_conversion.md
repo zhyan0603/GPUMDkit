@@ -63,26 +63,26 @@ Input the function number or converter keyword:
 
 ### What Each Entry Does
 
-| Entry | Function | When to Use |
-|-------|----------|-------------|
-| `101` | VASP OUTCAR to extxyz, shell version | convert VASP calculation directories |
-| `102` | MTP cfg to extxyz | convert MTP training data |
-| `103` | CP2K to extxyz | choose CP2K log/inp route or pos/frc/cell route |
-| `104` | ABACUS to extxyz | convert ABACUS SCF or MD output |
-| `105` | extxyz to POSCAR | write each extxyz frame as a POSCAR-style file |
-| `106` | add group labels | add atom group labels for GPUMD-related workflows |
-| `107` | add weights | assign training weights in extxyz |
-| `108` | extract frame | export one frame from an extxyz trajectory |
-| `109` | clean XYZ info | remove extra extxyz properties |
-| `110` | replicate structure | build supercells by factors or target atom count |
-| `out2exyz` | OUTCAR to extxyz, Python version | alternative VASP OUTCAR converter |
-| `pos2exyz` | POSCAR to extxyz | convert a single structure |
-| `cif2pos` | CIF to POSCAR | prepare VASP input from CIF |
-| `cif2exyz` | CIF to extxyz | prepare GPUMDkit input from CIF |
-| `xdat2exyz` | XDATCAR to extxyz | convert VASP MD trajectory |
-| `pos2lmp` | POSCAR to LAMMPS data | prepare LAMMPS input |
-| `lmp2exyz` | LAMMPS dump to extxyz | convert LAMMPS trajectory |
-| `traj2exyz` | ASE traj to extxyz | convert ASE trajectory |
+| Entry | Called script | Function | When to Use |
+|-------|---------------|----------|-------------|
+| `101` | `out2xyz.sh` | VASP OUTCAR to extxyz, shell version | convert VASP calculation directories |
+| `102` | `mtp2xyz.py` | MTP cfg to extxyz | convert MTP training data |
+| `103` | `cp2k_log2xyz.py` / `cp2k2xyz.py` | CP2K to extxyz | choose CP2K log/inp route or pos/frc/cell route |
+| `104` | `abacus2xyz_scf.sh` / `abacus2xyz_md.sh` | ABACUS to extxyz | convert ABACUS SCF or MD output |
+| `105` | `exyz2pos.py` | extxyz to POSCAR | write each extxyz frame as a POSCAR-style file |
+| `106` | `add_groups.py` | add group labels | add atom group labels for GPUMD-related workflows |
+| `107` | `add_weight.py` | add weights | assign training weights in extxyz |
+| `108` | `get_frame.py` | extract frame | export one frame from an extxyz trajectory |
+| `109` | `clean_xyz.py` | clean XYZ info | remove extra extxyz properties |
+| `110` | `replicate.py` | replicate structure | build supercells by factors or target atom count |
+| `out2exyz` | `out2exyz.py` | OUTCAR to extxyz, Python version | alternative VASP OUTCAR converter |
+| `pos2exyz` | `pos2exyz.py` | POSCAR to extxyz | convert a single structure |
+| `cif2pos` | `cif2pos.py` | CIF to POSCAR | prepare VASP input from CIF |
+| `cif2exyz` | `cif2exyz.py` | CIF to extxyz | prepare GPUMDkit input from CIF |
+| `xdat2exyz` | `xdatcar2exyz.py` | XDATCAR to extxyz | convert VASP MD trajectory |
+| `pos2lmp` | `pos2lmp.py` | POSCAR to LAMMPS data | prepare LAMMPS input |
+| `lmp2exyz` | `lmp2exyz.py` | LAMMPS dump to extxyz | convert LAMMPS trajectory |
+| `traj2exyz` | `traj2exyz.py` | ASE traj to extxyz | convert ASE trajectory |
 
 ## Quick Command Reference
 

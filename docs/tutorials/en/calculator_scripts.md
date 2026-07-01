@@ -7,6 +7,14 @@
 
 ## Overview
 
+The calculator module can be read as three groups:
+
+- **Trajectory properties:** compute time-dependent quantities such as MSD and ionic conductivity from GPUMD or extxyz trajectories;
+- **NEP-assisted calculations:** use a NEP model to predict energies/forces/stresses, extract descriptors, calculate DOAS, run NEB, or minimize structures;
+- **Polar-material analysis:** build neighbor lists and calculate local displacement, averaged structures, octahedral tilt, and local polarization for perovskite or polar systems.
+
+If you are not sure about the required arguments, start from the interactive menu to see the prompt. If the arguments are already clear, use `gpumdkit.sh -calc ...` directly.
+
 | Task | Command | Main Input |
 |------|---------|------------|
 | Ionic conductivity | `gpumdkit.sh -calc ionic-cond <element> <charge>` | `msd.out`, `thermo.out`, `model.xyz` |
@@ -327,12 +335,22 @@ gpumdkit.sh -plt rdf
 
 ## Ferroelectric and Polar Material Tools
 
-Options `406–410` cover perovskite and polar-material analysis: neighbor lists, local displacements, averaged structures, octahedral tilt, and ABO3 polarization. These tools are built on `ferrodispcalc`.
+Options `406–410` are for perovskite and polar-material analysis. They are commonly used to extract local structural information from MD trajectories before analyzing phase transitions, domain patterns, or polarization textures.
 
-**Dependency:**
+This page only gives a quick index for these scripts because they are usually used together. For full workflows and argument details, see **[Polar Material Analysis](polar_material_analysis.md)**.
+
+| Menu | CLI subcommand | Purpose | Details |
+|------|----------------|---------|---------|
+| `406` | `gpumdkit.sh -calc nlist ...` | Build neighbor lists between selected center and neighbor atoms | [Polar Material Analysis](polar_material_analysis.md) |
+| `407` | `gpumdkit.sh -calc disp ...` | Calculate local displacement from a trajectory and neighbor list | [Polar Material Analysis](polar_material_analysis.md) |
+| `408` | `gpumdkit.sh -calc avg-struct ...` | Calculate an averaged structure from a trajectory | [Polar Material Analysis](polar_material_analysis.md) |
+| `409` | `gpumdkit.sh -calc oct-tilt ...` | Calculate octahedral tilt angles | [Polar Material Analysis](polar_material_analysis.md) |
+| `410` | `gpumdkit.sh -calc pol-abo3 ...` | Estimate local ABO3 polarization from Born effective charges | [Polar Material Analysis](polar_material_analysis.md) |
+
+Some scripts require `ferrodispcalc`:
 
 ```bash
 pip3 install git+https://github.com/MoseyQAQ/ferrodispcalc.git
 ```
 
-For complete argument lists, real-world workflow examples (PbTiO3 phase transition, PTO/STO superlattice topology, etc.), see **[Polar Material Analysis](polar_material_analysis.md)**.
+A typical sequence is to build neighbor lists with `nlist`, then reuse those lists for displacement, tilt, or polarization calculations. For averaged structures, you can start directly from the trajectory and use the length tolerance to control which frames are included.

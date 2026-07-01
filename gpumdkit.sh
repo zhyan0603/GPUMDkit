@@ -40,6 +40,16 @@ echo " 7) Utilities                  8) Developing...       "
 echo " 0) Exit                                              "
 }
 
+function read_menu_choice(){
+    local __target_var="$1"
+    local __input
+    if ! IFS= read -r -p " " __input; then
+        echo " Input closed. Exiting."
+        return 1
+    fi
+    printf -v "$__target_var" '%s' "$__input"
+}
+
 # Function main
 function main(){
     echo " ------------>>"
@@ -54,12 +64,12 @@ function main(){
         "7" "701"
         "8"
     ) 
-    read -p " " choice
+    read_menu_choice choice || return 1
     while ! echo "${array_choice[@]}" | grep -wq "$choice" 
     do
       echo " ------------>>"
       echo " Please reinput function number:"
-      read -p " " choice
+      read_menu_choice choice || return 1
     done
 
     case "${choice:0:1}" in

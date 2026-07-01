@@ -1818,6 +1818,7 @@
 <thead>
 <tr>
 <th>Entry</th>
+<th>Called script</th>
 <th>Function</th>
 <th>When to Use</th>
 </tr>
@@ -1825,91 +1826,109 @@
 <tbody>
 <tr>
 <td><code>101</code></td>
+<td><code>out2xyz.sh</code></td>
 <td>VASP OUTCAR to extxyz, shell version</td>
 <td>convert VASP calculation directories</td>
 </tr>
 <tr>
 <td><code>102</code></td>
+<td><code>mtp2xyz.py</code></td>
 <td>MTP cfg to extxyz</td>
 <td>convert MTP training data</td>
 </tr>
 <tr>
 <td><code>103</code></td>
+<td><code>cp2k_log2xyz.py</code> / <code>cp2k2xyz.py</code></td>
 <td>CP2K to extxyz</td>
 <td>choose CP2K log/inp route or pos/frc/cell route</td>
 </tr>
 <tr>
 <td><code>104</code></td>
+<td><code>abacus2xyz_scf.sh</code> / <code>abacus2xyz_md.sh</code></td>
 <td>ABACUS to extxyz</td>
 <td>convert ABACUS SCF or MD output</td>
 </tr>
 <tr>
 <td><code>105</code></td>
+<td><code>exyz2pos.py</code></td>
 <td>extxyz to POSCAR</td>
 <td>write each extxyz frame as a POSCAR-style file</td>
 </tr>
 <tr>
 <td><code>106</code></td>
+<td><code>add_groups.py</code></td>
 <td>add group labels</td>
 <td>add atom group labels for GPUMD-related workflows</td>
 </tr>
 <tr>
 <td><code>107</code></td>
+<td><code>add_weight.py</code></td>
 <td>add weights</td>
 <td>assign training weights in extxyz</td>
 </tr>
 <tr>
 <td><code>108</code></td>
+<td><code>get_frame.py</code></td>
 <td>extract frame</td>
 <td>export one frame from an extxyz trajectory</td>
 </tr>
 <tr>
 <td><code>109</code></td>
+<td><code>clean_xyz.py</code></td>
 <td>clean XYZ info</td>
 <td>remove extra extxyz properties</td>
 </tr>
 <tr>
 <td><code>110</code></td>
+<td><code>replicate.py</code></td>
 <td>replicate structure</td>
 <td>build supercells by factors or target atom count</td>
 </tr>
 <tr>
 <td><code>out2exyz</code></td>
+<td><code>out2exyz.py</code></td>
 <td>OUTCAR to extxyz, Python version</td>
 <td>alternative VASP OUTCAR converter</td>
 </tr>
 <tr>
 <td><code>pos2exyz</code></td>
+<td><code>pos2exyz.py</code></td>
 <td>POSCAR to extxyz</td>
 <td>convert a single structure</td>
 </tr>
 <tr>
 <td><code>cif2pos</code></td>
+<td><code>cif2pos.py</code></td>
 <td>CIF to POSCAR</td>
 <td>prepare VASP input from CIF</td>
 </tr>
 <tr>
 <td><code>cif2exyz</code></td>
+<td><code>cif2exyz.py</code></td>
 <td>CIF to extxyz</td>
 <td>prepare GPUMDkit input from CIF</td>
 </tr>
 <tr>
 <td><code>xdat2exyz</code></td>
+<td><code>xdatcar2exyz.py</code></td>
 <td>XDATCAR to extxyz</td>
 <td>convert VASP MD trajectory</td>
 </tr>
 <tr>
 <td><code>pos2lmp</code></td>
+<td><code>pos2lmp.py</code></td>
 <td>POSCAR to LAMMPS data</td>
 <td>prepare LAMMPS input</td>
 </tr>
 <tr>
 <td><code>lmp2exyz</code></td>
+<td><code>lmp2exyz.py</code></td>
 <td>LAMMPS dump to extxyz</td>
 <td>convert LAMMPS trajectory</td>
 </tr>
 <tr>
 <td><code>traj2exyz</code></td>
+<td><code>traj2exyz.py</code></td>
 <td>ASE traj to extxyz</td>
 <td>convert ASE trajectory</td>
 </tr>

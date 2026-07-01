@@ -85,7 +85,7 @@ Output:
 
 ## Farthest Point Sampling with NepTrain
 
-This entry uses NepTrain descriptors for FPS.
+This entry uses NepTrain descriptors for FPS. Choose `203` in interactive mode, or run the script directly:
 
 ```bash
 python Scripts/sample_structures/neptrain_select_structs.py dump.xyz train.xyz nep.txt
@@ -177,7 +177,7 @@ This entry requires `pynep` and is kept for compatibility.
 
 ## Structure Perturbation
 
-Use perturbation when you want to generate initial structures around a known configuration.
+Use perturbation when you want to generate initial structures around a known configuration. Choose `204` in interactive mode, or run the script directly:
 
 ```bash
 python Scripts/sample_structures/perturb_structure.py POSCAR 20 0.03 0.2 uniform
@@ -212,6 +212,8 @@ This function requires `dpdata`. If you use this function, we recommend citing t
 
 Use this together with the GPUMD `active` command. The `active` command uses a committee model approach: multiple potentials predict forces for the same structure, and GPUMD records the maximum force deviation. `select_max_modev.py` selects structures with large force deviations from `active.out` and `active.xyz`, then writes them to `selected.xyz`.
 
+Choose `205` in interactive mode, or run the script directly:
+
 ```bash
 python Scripts/sample_structures/select_max_modev.py 200 0.15
 ```
@@ -245,23 +247,26 @@ Output:
 
 ## Frame Range Extraction
 
-Use this to extract a fraction of a trajectory:
+`frame_range.py` is an independent CLI tool and is not part of the interactive sampling menu `201–205`. Use it when you want to keep only a fraction of a trajectory before sampling, for example after equilibration.
 
 ```bash
+gpumdkit.sh -frame_range dump.xyz 0 0.8
 python Scripts/sample_structures/frame_range.py dump.xyz 0 0.8
 ```
 
-This writes frames from 0% to 80% of the trajectory.
+This writes frames from 0% to 80% of the trajectory. The range arguments are trajectory fractions from `0` to `1`.
 
 ## Example Commands
 
-An example sequence using several sampling-related tools:
+An example preprocessing-and-sampling sequence is shown below. The first two commands are analyzer tools; the final step is structure sampling.
 
 ```bash
 gpumdkit.sh -min_dist_pbc dump.xyz
 gpumdkit.sh -filter_box dump.xyz 13
 python Scripts/sample_structures/neptrain_select_structs.py dump.xyz train.xyz nep.txt
 ```
+
+The final step can also be run from interactive mode by choosing `2) Sample Structures -> 203`.
 
 ## Common Mistakes
 
