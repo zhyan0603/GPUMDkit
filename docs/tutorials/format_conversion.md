@@ -30,6 +30,7 @@ You'll see the following menu:
  | pos2exyz) POSCAR to extxyz     pos2lmp)   POSCAR to LAMMPS  |
  | cif2pos)  CIF to POSCAR        lmp2exyz)  LAMMPS to extxyz  |
  | cif2exyz) CIF to extxyz        traj2exyz) ASE traj to extxyz|
+ | dp2xyz)   DeepMD to extxyz                                  |
  +-------------------------------------------------------------+
  | 000) Return to main menu                                    |
  +-------------------------------------------------------------+
@@ -116,6 +117,7 @@ Follow the prompts to complete the function.
 | extxyz | POSCAR | `gpumdkit.sh -exyz2pos <xyz>` |
 | POSCAR | LAMMPS | `gpumdkit.sh -pos2lmp <poscar> <lmp> <elem...>` |
 | LAMMPS dump | extxyz | `gpumdkit.sh -lmp2exyz <dump> <elem...>` |
+| DeepMD npy | extxyz | `gpumdkit.sh -dp2xyz <input/> [output.xyz]` |
 | CIF | extxyz | `gpumdkit.sh -cif2exyz <cif>` |
 | CIF | POSCAR | `gpumdkit.sh -cif2pos <cif>` |
 | Add groups | - | `gpumdkit.sh -addgroup <poscar> <elem...>` |
@@ -188,6 +190,45 @@ gpumdkit.sh -addweight train.xyz train_weighted.xyz 5
 ```
 
 This command will read the `train.xyz` file and add `Weight=5` labels for all structures. The output will be saved to a file named `train_weighted.xyz`.
+
+
+
+### dp2xyz.py
+
+---
+
+This script recursively scans an input directory for DeepMD npy datasets and converts all frames to `extxyz` format.
+
+A directory is recognized as a DeepMD npy dataset when it contains `type.raw`, `type_map.raw`, and `set.000/`.
+
+#### Usage
+
+```
+python3 dp2xyz.py <input/> [output.xyz]
+```
+
+- `<input/>`: The directory to scan recursively.
+- `[output.xyz]`: The output `extxyz` file. If omitted, the default output is `train.xyz`.
+
+#### Example
+
+```sh
+python3 dp2xyz.py database train.xyz
+```
+
+#### Command-Line Mode Example
+
+```sh
+gpumdkit.sh -dp2xyz database train.xyz
+```
+
+The output argument is optional here as well:
+
+```sh
+gpumdkit.sh -dp2xyz database
+```
+
+This command scans `database/`, loads each detected DeepMD npy dataset with `dpdata.LabeledSystem`, and writes all frames to `train.xyz` by default.
 
 
 

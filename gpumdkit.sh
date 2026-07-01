@@ -177,7 +177,8 @@ function help_info_table(){
     echo "| -cif2pos      cif -> POSCAR                   | -cif2exyz          cif -> extxyz                      |"
     echo "| -pos2exyz     POSCAR -> extxyz                | -exyz2pos          extxyz -> POSCAR                   |"
     echo "| -pos2lmp      POSCAR -> LAMMPS data           | -lmp2exyz          LAMMPS dump -> extxyz              |"
-    echo "| -traj2exyz    ASE traj -> extxyz              | -replicate         Replicate structure                |"
+    echo "| -traj2exyz    ASE traj -> extxyz              | -dp2xyz            DeepMD npy -> extxyz               |"
+    echo "| -replicate    Replicate structure             |                                                       |"
     echo "| -addgroup     Add group labels                | -addweight         Add structure weight in extxyz     |"
     echo "| -clean_xyz    Clean extra info in extxyz      | -get_frame         Extract specific frame             |"
     echo "| -frame_range  Extract frames by range         |                                                       |"
@@ -524,6 +525,19 @@ if [ ! -z "$1" ]; then
                 echo " Usage: -traj2exyz <input.traj> <output.xyz>"
                 echo " See the source code of traj2exyz.py for more details"
                 echo " Code path: ${format_conv_path}/traj2exyz.py"
+            fi ;;
+
+        -dp2xyz)
+            if [ ! -z "$2" ] && [ "$2" != "-h" ] ; then
+                echo " Calling script by GPUMDkit Contributors "
+                echo " Code path: ${format_conv_path}/dp2xyz.py"
+                python3 ${format_conv_path}/dp2xyz.py ${@:2}
+            else
+                echo " Usage: -dp2xyz <input/> [output.xyz]"
+                echo " Examp: gpumdkit.sh -dp2xyz database train.xyz"
+                echo " Default output: train.xyz"
+                echo " See the source code of dp2xyz.py for more details"
+                echo " Code path: ${format_conv_path}/dp2xyz.py"
             fi ;;
 
         -addgroup|-addlabel)

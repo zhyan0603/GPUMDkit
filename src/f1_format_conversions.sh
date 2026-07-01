@@ -387,6 +387,24 @@ echo " Code path: ${GPUMDkit_path}/Scripts/format_conversion/traj2exyz.py"
 echo " ---------------------------------------------------"
 }
 
+# Convert DeepMD npy dataset to extxyz
+function dp2extxyz(){
+echo " >-------------------------------------------------<"
+echo " | Calling the script in Scripts/format_conversion |"
+echo " | Script: dp2xyz.py                               |"
+echo " | Developer: GPUMDkit Contributors                |"
+echo " >-------------------------------------------------<"
+echo " Input <input/> [output.xyz]"
+echo " Example: database train.xyz"
+echo " Default output: train.xyz"
+echo " ------------>>"
+read -r -a dp2extxyz_args
+echo " ---------------------------------------------------"
+python3 ${GPUMDkit_path}/Scripts/format_conversion/dp2xyz.py "${dp2extxyz_args[@]}"
+echo " Code path: ${GPUMDkit_path}/Scripts/format_conversion/dp2xyz.py"
+echo " ---------------------------------------------------"
+}
+
 #--------------------- function 1 ----------------------
 function f1_format_conversion(){
     echo " +-------------------------------------------------------------+"
@@ -402,6 +420,7 @@ function f1_format_conversion(){
     echo " | pos2exyz) POSCAR to extxyz     pos2lmp)   POSCAR to LAMMPS  |"
     echo " | cif2pos)  CIF to POSCAR        lmp2exyz)  LAMMPS to extxyz  |"
     echo " | cif2exyz) CIF to extxyz        traj2exyz) ASE traj to extxyz|"
+    echo " | dp2xyz)   DeepMD to extxyz                                  |"
     echo " +-------------------------------------------------------------+"
     echo " | 000) Return to main menu                                    |"
     echo " +-------------------------------------------------------------+"
@@ -409,7 +428,7 @@ function f1_format_conversion(){
 
 valid_menu_choices=(
     "000" "101" "102" "103" "104" "105" "106" "107" "108" "109" "110" \
-    "out2exyz" "pos2exyz" "cif2pos" "cif2exyz" "xdat2exyz" "pos2lmp" "lmp2exyz" "traj2exyz"
+    "out2exyz" "pos2exyz" "cif2pos" "cif2exyz" "xdat2exyz" "pos2lmp" "lmp2exyz" "traj2exyz" "dp2xyz"
 ) 
 read -p " " num_choice
 while ! echo "${valid_menu_choices[@]}" | grep -wq "$num_choice" 
@@ -438,6 +457,7 @@ case $num_choice in
     "pos2lmp") poscar2lammps ;;
     "lmp2exyz") lammps2extxyz ;;
     "traj2exyz") traj2extxyz ;;
+    "dp2xyz") dp2extxyz ;;
     "000") menu; main ;;
 esac
 }
