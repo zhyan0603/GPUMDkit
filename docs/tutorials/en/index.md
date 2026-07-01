@@ -91,6 +91,7 @@ Use `gpumdkit.sh -h` to see all available options.
 | [Active Learning Workflow](active_learning_workflow.md) | Batch active-learning workflow notes |
 | [Polar Material Analysis](polar_material_analysis.md) | Ferroelectric and polarization tools |
 | [Contributing to GPUMDkit](contributing_to_gpumdkit.md) | Development notes |
+| [Troubleshooting](troubleshooting.md) | Common issues, diagnostics, and fixes |
 
 ## Links
 

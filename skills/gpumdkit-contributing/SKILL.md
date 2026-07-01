@@ -79,7 +79,7 @@ echo " >-------------------------------------------------<"
 echo " Input <param1> <param2> [optional_param3]"
 echo " Example: input.xyz nep.txt"
 echo " ------------>>"
-read -r -a feature_args
+read_menu_choice feature_args || return 1
 echo " ---------------------------------------------------"
 python ${GPUMDkit_path}/Scripts/calculators/calc_new_feature.py "${feature_args[@]}"
 echo " Code path: ${GPUMDkit_path}/Scripts/calculators/calc_new_feature.py"
@@ -88,16 +88,19 @@ echo " ---------------------------------------------------"
 ```
 
 Key conventions:
-- Banner uses `>-----<` and `| ... |` format
+- Banner uses `>-----<` and `| ... |` format (49 dashes inner, 53 chars total)
 - `echo " Input <...>"` describes parameters
-- `echo " Example: ..."` shows a concrete example (not "Examp:")
-- `read -r -a varname` reads into an array
+- `echo " Example: ..."` shows a concrete example
+- Use `read_menu_choice var || return 1` for single-value input, `read_menu_array arr || return 1` for array input
+- **Never use bare `read -p` or `read -r -a`** — these hang on closed stdin. The helpers are defined in `gpumdkit.sh`
 - `"${varname[@]}"` passes all arguments properly quoted
 - Function name format: `f<Category><Number>_<descriptive_name>`
+- **Script banner must name the EXACT filename** (not an abbreviation or wrong suffix)
+- All banners use uniform width: 49 dashes inner (lines 82-86 style). Inconsistent widths (51/52/53/56) should be normalized when touching a file.
 
 ### Step 3: Register in `gpumdkit.sh`
 
-1. Add the choice number to `array_choice` (line ~47)
+1. Add the choice number to `array_choice` (line ~64)
 2. Add the case in the `main()` function's nested case statement:
    ```bash
    "413") f413_new_feature ;;
@@ -147,7 +150,7 @@ echo "| -new_flag  Description of new flag           | -existing_flag    Descrip
 Edit `Scripts/utils/completion.sh`:
 
 1. Add `-new_flag` to the `opts` string (line 16)
-2. If it needs file completion, add it to the `|`-separated case (line 33):
+2. If it needs file completion, add it to the `|`-separated case (line 38):
    ```bash
    -out2xyz|-...|-new_flag)
        COMPREPLY=($(compgen -f -- "$cur")) ;;
@@ -212,8 +215,8 @@ Do NOT add notices for common packages like `ase`, `numpy`, `pymatgen`.
 ### Error messages
 
 ```python
-# Good
-print("Error: File 'input.xyz' not found.")
+# Good (leading space, clear message, sys.exit)
+print(" Error: File 'input.xyz' not found.")
 sys.exit(1)
 
 # Avoid
@@ -258,13 +261,120 @@ echo " >-------------------------------------------------<"
 echo " Input <param1> <param2>"
 echo " Example: input.xyz nep.txt"
 echo " ------------>>"
-read -r -a feature_args
+read_menu_choice feature_args || return 1   # EOF-safe; see project conventions
 echo " ---------------------------------------------------"
 python ${GPUMDkit_path}/Scripts/calculators/calc_new_feature.py "${feature_args[@]}"
 echo " Code path: ${GPUMDkit_path}/Scripts/calculators/calc_new_feature.py"
 echo " ---------------------------------------------------"
 }
 ```
+
+## Project Conventions & Personal Preferences
+
+These are the maintainer's conventions. Follow them strictly.
+
+### Echo / Print Leading Space
+
+**Every user-facing `echo`/`print` must start with a space.**
+
+```bash
+# ✓ Correct
+echo " Error: File not found."
+echo " Deleting the files..."
+echo " Operation canceled."
+
+# ✗ Wrong
+echo "Error: File not found."
+```
+
+```python
+# ✓ Correct
+print(" Error: 'input.xyz' not found.")
+print(" Deleting the files...")
+
+# ✗ Wrong
+print("Error: 'input.xyz' not found.")
+```
+
+This applies to ALL script types: interactive wrappers, workflow scripts, utility messages, tutorial transcripts, and Python print() output. The only exception is the `" ------------>>"` prompt marker which starts with a space by design.
+
+### ASCII Only Box Drawing
+
+All border characters must be pure ASCII: `|`, `+`, `-`, `/`, `\`, `>`, `<`. **Never use** Unicode box-drawing characters like `│` (U+2502) — they render as mojibake on non-UTF-8 terminals.
+
+### EOF-Safe Input
+
+All interactive input must go through the helpers defined in `gpumdkit.sh`:
+
+- `read_menu_choice var || return 1` — reads a single line into a variable
+- `read_menu_array arr || return 1` — reads whitespace-separated tokens into an array
+
+**Never use bare `read -p` or `read -r -a`.** When stdin is closed (pipe, redirect, /dev/null), bare read silently succeeds with empty/unset values or hangs forever. The helpers print `" Input closed. Exiting."` and return 1.
+
+### Menu Validation
+
+- Validation array: always named `valid_menu_choices`
+- Validation loop: `while ! echo "${valid_menu_choices[@]}" | grep -wq "$num_choice"; do ...; done`
+- Return-to-main-menu: `case ... "000") menu; main ;;`
+
+### Script Banners
+
+The info banner displayed before running a script follows this exact format:
+
+```bash
+echo " >-------------------------------------------------<"   # exactly 49 dashes
+echo " | Calling the script in Scripts/<category>       |"
+echo " | Script: <exact_filename>                         |"   # MUST match actual filename
+echo " | Developer: Name (email)                          |"
+echo " >-------------------------------------------------<"
+```
+
+- The script name in the banner **must be the exact filename** (e.g., `scf_batch_pretreatment_vasp.sh`, not `scf_batch_pretreatment.sh`)
+- Width: 49 dashes inner (53 chars total between `>` and `<`). Keep uniform across projects.
+
+### The Prompt Arrow
+
+User input follows the marker pattern: `echo " ------------>>"` before reading input. This is consistent across all interactive functions.
+
+### Error Message Format
+
+Shell: `echo " Error: <message>."` — leading space, capital E, colon, period at end.
+Python: `print(" Error: <message>."); sys.exit(1)` — same format, always call sys.exit after.
+
+### What NOT to Propose or Do
+
+These changes have been **explicitly rejected** by the project maintainer. Do not suggest them.
+
+| Rejected | Reason |
+|---|---|
+| Add `if __name__ == "__main__":` to Python scripts | Scripts run standalone; main guard is unnecessary |
+| Replace `from pylab import *` with explicit imports | Keep as-is |
+| Unify `-plt` "save" argument position | Different scripts have different arg counts; keep flexible |
+| Unify DPI (150 → 300) across plotting scripts | Keep per-script DPI settings |
+| Change `exit` → `return` in workflow sourced scripts | Keep as-is |
+| Add `-filter_value` / `-filter_range` / `-get_volume` / `-re_atoms` to the help table | Intentionally undocumented |
+| Make interactive mode loop back to menu after one function | Keeps shots single-shot; designed this way |
+| Add color/ANSI escape codes | User explicitly rejected; keep monochrome |
+| Add debug examples to every tutorial page | Unnecessary; keep tutorials lean |
+| Change MSD fitting range arbitrarily | Scientific choice; ask maintainer first |
+| Add `des_compare` to CLI | Script exists but user chose not to expose it |
+
+### macOS / Cross-Platform Notes
+
+- macOS ships **bash 3.2** (no `local -n` nameref). Use `read -a "$varname"` with eval or herestring instead of namerefs.
+- macOS **sed is BSD**, not GNU. Cross-platform sed: use `perl -i -pe` instead.
+- **zsh does not support `read -a`** (bash-only). All scripts run under bash.
+- `timeout` command is not available on macOS. Use background jobs or rely on EOF-safe read.
+
+### Specific Design Decisions
+
+- **calc_ion_conductivity.py**: MSD fitting range is 40%-80% of data (lines 107-108). The Arrhenius plotting scripts use the same range. Do not change without maintainer approval.
+- **clean_extra_files.sh**: Keep-substring deletion uses **whole-word matching**, NOT substring removal. Do not regress to `${var/pattern/}` substring removal (it corrupts filenames sharing substrings).
+- **troubleshooting.md**: Only 5 FAQ items. Do not expand without asking.
+- **select_max_modev.py line 111**: The index mapping `atoms_list[filtered_indices[i]]` was recently fixed from a bug (`atoms_list[i]`). Do not undo.
+- **charge_balance_check.py lines 118-131**: Now uses manual loop instead of `dict()` to handle 3-tuple error returns. Do not revert to `dict()`.
+
+---
 
 ## Validation Checklist
 

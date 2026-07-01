@@ -81,8 +81,6 @@ def convert_extxyz_to_lammps_data(extxyz_file, lammps_data_file):
             atom_type = symbol_to_type[atom.symbol]
             x, y, z = atom.position
             f.write(f"{atom_id} {atom_type} {x} {y} {z}\n")
-    
-#   print(f"Conversion complete! {extxyz_file} has been converted to {lammps_data_file}")
 
 if __name__ == '__main__':
     args = sys.argv[1:]

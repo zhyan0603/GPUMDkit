@@ -39,7 +39,7 @@ def parse_xyz_file(xyz_file):
             # Read number of atoms
             try:
                 num_atoms = int(lines[i].strip())
-            except:
+            except (ValueError, IndexError):
                 i += 1
                 continue
             

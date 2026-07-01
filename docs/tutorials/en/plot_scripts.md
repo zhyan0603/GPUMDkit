@@ -38,6 +38,7 @@ Running `gpumdkit.sh -plt` prints the plotting command menu:
 |  msd_sdc        - MSD and SDC together           sigma          - Arrhenius ionic conductivity|
 |  D              - Arrhenius diffusivity          sigma_xyz      - Directional Arrhenius sigma |
 |  D_xyz          - Directional Arrhenius D                                                     |
+|  doas           - Density of atomistic states                                                 |
 +-----------------------------------------------------------------------------------------------+
 |                                    MD & Structural Analysis                                   |
 +-----------------------------------------------------------------------------------------------+
@@ -45,12 +46,15 @@ Running `gpumdkit.sh -plt` prints the plotting command menu:
 |  rdf            - Radial distribution function   rdf_pmf        - Potential of mean force     |
 |  vac            - Velocity autocorrelation       cohesive       - Cohesive energy curve       |
 |  net_force      - Net force distribution         plane-grid     - Displacement plane grid     |
-|  doas           - Density of atomistic states                                                 |
 +-----------------------------------------------------------------------------------------------+
 |                                        Heat Transport                                         |
 +-----------------------------------------------------------------------------------------------+
 |  emd            - EMD results                    nemd           - NEMD results                |
 |  hnemd          - HNEMD results                  viscosity      - Viscosity                   |
++-----------------------------------------------------------------------------------------------+
+|                                          Phonons                                              |
++-----------------------------------------------------------------------------------------------+
+|  pdos           - VAC and PDOS                                                                |
 +-----------------------------------------------------------------------------------------------+
 ```
 
@@ -560,16 +564,6 @@ gpumdkit.sh -plt des umap
 <div align="center">
   <img src="../../Gallery/des_umap.png" alt="UMAP descriptor visualization" width="52%" />
 </div>
-
----
-
-### plt_descriptors_compare.py
-
-Compares descriptors from multiple training sets or models.
-
-```bash
-gpumdkit.sh -plt des_compare
-```
 
 ---
 

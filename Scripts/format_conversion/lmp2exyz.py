@@ -62,7 +62,6 @@ def lmp2exyz(dump_file, elements):
     # Write to extxyz file
     extxyz_file = 'dump.xyz'
     write(extxyz_file, frames, format='extxyz')
-#   print(f" Converted {dump_file} to {extxyz_file}")
 
 if __name__ == '__main__':
     dump_file = sys.argv[1]

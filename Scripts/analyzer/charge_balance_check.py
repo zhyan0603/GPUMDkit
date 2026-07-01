@@ -116,9 +116,18 @@ def main():
     
     # Check oxidation states for unique compositions
     with Pool() as pool:
-        oxi_results = dict(tqdm(pool.imap_unordered(check_oxidation_state, unique_compositions),
-                                total=len(unique_compositions),
-                                desc="Checking oxidation states"))
+        oxi_results = {}
+        oxi_errors = {}
+        for result in tqdm(pool.imap_unordered(check_oxidation_state, unique_compositions),
+                           total=len(unique_compositions),
+                           desc="Checking oxidation states"):
+            if len(result) == 3:
+                comp_str, _, error = result
+                oxi_results[comp_str] = False
+                oxi_errors[comp_str] = error
+            else:
+                comp_str, is_balanced = result
+                oxi_results[comp_str] = is_balanced
     
     # Assign oxidation state results to structures
     balanced_structures = []
@@ -139,11 +148,10 @@ def main():
             continue
         
         result = oxi_results[comp_str]
-        if isinstance(result, tuple):
-            # Error case
-            comp_str, is_balanced, error = result
+        if comp_str in oxi_errors:
+            # Error case, pymatgen couldn't determine oxidation states
             atoms.info["oxidation_state"] = "unbalanced"
-            atoms.info["error"] = error
+            atoms.info["error"] = oxi_errors[comp_str]
             unbalanced_structures.append(atoms)
             unbalanced_indices.append(idx)
         elif result:

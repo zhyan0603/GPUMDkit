@@ -287,7 +287,6 @@ class NEMD_Processor:
         print("NEMD Thermal Conductivity Results")
         print("=" * 70)
         print(f"\nEffective length: {Length:.4f} nm")
-        # print(f"Scale_vacuum: {self.scale_vacuum}")
         print(f"Scale_eff_size: {self.scale_eff_size}\n")
         print(f"Thermal conductance G = {Reformed_NEMD_data['G'][0, -2]:.6f} ± {Reformed_NEMD_data['G'][0, -1]:.6f} MW/m²K")
         print(f"Thermal conductivity κ = {Reformed_NEMD_data['k'][0, -2]:.6f} ± {Reformed_NEMD_data['k'][0, -1]:.6f} W/mK")

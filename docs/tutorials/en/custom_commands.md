@@ -16,7 +16,7 @@ Define custom functions with the `custom_` prefix.
 
 ### Simple Greeting
 
-Write the following codes in your `~/.gpumdkit.in` 
+Write the following code in your `~/.gpumdkit.in` 
 
 ```bash
 custom_hello() {

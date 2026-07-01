@@ -36,7 +36,7 @@ echo " ---------------------- GPUMD ------------------------"
 echo " 1) Format Conversion          2) Sample Structures   "
 echo " 3) Workflow                   4) Calculators         "
 echo " 5) Analyzer                   6) Visualization       "
-echo " 7) Utilities                  8) Developing...       "
+echo " 7) Utilities                  8) Help                "
 echo " 0) Exit                                              "
 }
 
@@ -48,6 +48,13 @@ function read_menu_choice(){
         return 1
     fi
     printf -v "$__target_var" '%s' "$__input"
+}
+
+function read_menu_array(){
+    if ! read -r -a "$1"; then
+        echo " Input closed. Exiting."
+        return 1
+    fi
 }
 
 # Function main
@@ -161,7 +168,9 @@ function main(){
             esac ;;
         "8")
             echo " ------------>>"
-            echo " This module is under development. Coming soon."
+            echo " GPUMDkit Version ${VERSION}"
+            echo " ------------------------------------------------------------"
+            help_info_table
             ;;
         *)
             echo " Incorrect Options"
@@ -176,76 +185,76 @@ function main(){
 # It will show the usage of each function
 
 function help_info_table(){
-    echo "+-------------------------------------------------------------------------------------------------------+"
-    echo "|                          GPUMDkit ${VERSION} Command Help                               |"
-    echo "+-------------------------------------------------------------------------------------------------------+"
-    echo "|                                          MAIN FUNCTIONS                                               |"
-    echo "+-------------------------------------------------------------------------------------------------------+"
-    echo "| -h            Show this help table            | -plt <type>        Plot and visualization tools       |"
-    echo "| -calc <type>  Calculator tools                | -time <gpumd|nep>  Time-consuming analyzer            |"
-    echo "| -update       Update GPUMDkit                 | -clean             Clean extra files in current dir   |"
-    echo "+-------------------------------------------------------------------------------------------------------+"
-    echo "|                                         FORMAT CONVERSION                                             |"
-    echo "+-------------------------------------------------------------------------------------------------------+"
-    echo "| -out2xyz      OUTCAR -> extxyz (shell)        | -out2exyz          OUTCAR -> extxyz (python)          |"
-    echo "| -cp2k2xyz     CP2K log -> xyz                 | -xdat2exyz         XDATCAR -> extxyz                  |"
-    echo "| -cif2pos      cif -> POSCAR                   | -cif2exyz          cif -> extxyz                      |"
-    echo "| -pos2exyz     POSCAR -> extxyz                | -exyz2pos          extxyz -> POSCAR                   |"
-    echo "| -pos2lmp      POSCAR -> LAMMPS data           | -lmp2exyz          LAMMPS dump -> extxyz              |"
-    echo "| -traj2exyz    ASE traj -> extxyz              | -replicate         Replicate structure                |"
-    echo "| -addgroup     Add group labels                | -addweight         Add structure weight in extxyz     |"
-    echo "| -clean_xyz    Clean extra info in extxyz      | -get_frame         Extract specific frame             |"
-    echo "| -frame_range  Extract frames by range         |                                                       |"
-    echo "+-------------------------------------------------------------------------------------------------------+"
-    echo "|                                            ANALYSIS                                                   |"
-    echo "+-------------------------------------------------------------------------------------------------------+"
-    echo "| -range        Energy/force/virial statistics  | -analyze_comp      Analyze composition                |"
-    echo "| -chem_species Analyze chemical species        | -cbc               Charge balance check               |"
-    echo "| -min_dist     Min distance (no PBC)           | -min_dist_pbc      Min distance with PBC              |"
-    echo "| -filter_dist  Filter by min_dist (no PBC)     | -filter_dist_pbc   Filter by min_dist (PBC)           |"
-    echo "| -pda          Probability density analysis    | -filter_box        Filter by box-edge length          |"
-    echo "| -pynep        Deprecated PyNEP sampling       | -nep_modifier      Modify NEP model interactively     |"
-    echo "+-------------------------------------------------------------------------------------------------------+"
-    echo "| Detailed usage: gpumdkit.sh -<option> -h    Plot details: gpumdkit.sh -plt <type> -h                  |"
-    echo "+-------------------------------------------------------------------------------------------------------+"
+    echo " +-------------------------------------------------------------------------------------------------------+"
+    echo " |                          GPUMDkit ${VERSION} Command Help                               |"
+    echo " +-------------------------------------------------------------------------------------------------------+"
+    echo " |                                          MAIN FUNCTIONS                                               |"
+    echo " +-------------------------------------------------------------------------------------------------------+"
+    echo " | -h            Show this help table            | -plt <type>        Plot and visualization tools       |"
+    echo " | -calc <type>  Calculator tools                | -time <gpumd|nep>  Time-consuming analyzer            |"
+    echo " | -update       Update GPUMDkit                 | -clean             Clean extra files in current dir   |"
+    echo " +-------------------------------------------------------------------------------------------------------+"
+    echo " |                                         FORMAT CONVERSION                                             |"
+    echo " +-------------------------------------------------------------------------------------------------------+"
+    echo " | -out2xyz      OUTCAR -> extxyz (shell)        | -out2exyz          OUTCAR -> extxyz (python)          |"
+    echo " | -cp2k2xyz     CP2K log -> xyz                 | -xdat2exyz         XDATCAR -> extxyz                  |"
+    echo " | -cif2pos      cif -> POSCAR                   | -cif2exyz          cif -> extxyz                      |"
+    echo " | -pos2exyz     POSCAR -> extxyz                | -exyz2pos          extxyz -> POSCAR                   |"
+    echo " | -pos2lmp      POSCAR -> LAMMPS data           | -lmp2exyz          LAMMPS dump -> extxyz              |"
+    echo " | -traj2exyz    ASE traj -> extxyz              | -replicate         Replicate structure                |"
+    echo " | -addgroup     Add group labels                | -addweight         Add structure weight in extxyz     |"
+    echo " | -clean_xyz    Clean extra info in extxyz      | -get_frame         Extract specific frame             |"
+    echo " | -frame_range  Extract frames by range         |                                                       |"
+    echo " +-------------------------------------------------------------------------------------------------------+"
+    echo " |                                            ANALYSIS                                                   |"
+    echo " +-------------------------------------------------------------------------------------------------------+"
+    echo " | -range        Energy/force/virial statistics  | -analyze_comp      Analyze composition                |"
+    echo " | -chem_species Analyze chemical species        | -cbc               Charge balance check               |"
+    echo " | -min_dist     Min distance (no PBC)           | -min_dist_pbc      Min distance with PBC              |"
+    echo " | -filter_dist  Filter by min_dist (no PBC)     | -filter_dist_pbc   Filter by min_dist (PBC)           |"
+    echo " | -pda          Probability density analysis    | -filter_box        Filter by box-edge length          |"
+    echo " | -pynep        Deprecated PyNEP sampling       | -nep_modifier      Modify NEP model interactively     |"
+    echo " +-------------------------------------------------------------------------------------------------------+"
+    echo " | Detailed usage: gpumdkit.sh -<option> -h    Plot details: gpumdkit.sh -plt <type> -h                  |"
+    echo " +-------------------------------------------------------------------------------------------------------+"
 }
 
 function calculator_help_table(){
-    echo "+-------------------------------------------------------------------------------------------------------+"
-    echo "|                                      CALCULATOR TOOLS                                                 |"
-    echo "+-------------------------------------------------------------------------------------------------------+"
-    echo "| Usage: gpumdkit.sh -calc <type> [args...]                                                             |"
-    echo "+-------------------------------------------------------------------------------------------------------+"
-    echo "| ionic-cond <element> <charge>                 Calculate ionic conductivity from MSD data              |"
-    echo "| nep <input.xyz> <output.xyz> <nep_model>      Calculate energy/force/virial with a NEP model          |"
-    echo "| des <input.xyz> <output.npy> <nep_model> <el> Calculate NEP descriptors for one element               |"
-    echo "| doas <input.xyz> <nep_model> <output.txt>     Calculate density of atomistic states                   |"
-    echo "| neb <initial.xyz> <final.xyz> <n_images> <nep> Run NEB calculation with a NEP model                   |"
-    echo "| minimize <structure> <nep_model> [fmax] [n]   Minimize a structure with a NEP model                   |"
-    echo "| msd <trajectory.xyz> <element> <dt_fs> [n]    Calculate MSD from an extxyz trajectory                 |"
-    echo "| nlist [script args...]                        Build neighbor lists                                    |"
-    echo "| disp [script args...]                         Calculate displacement from trajectory                  |"
-    echo "| avg-struct [script args...]                   Calculate averaged structure                            |"
-    echo "| oct-tilt [script args...]                     Calculate octahedral tilt                               |"
-    echo "| pol-abo3 [script args...]                     Calculate local polarization for ABO3                   |"
-    echo "+-------------------------------------------------------------------------------------------------------+"
-    echo "| Examples: gpumdkit.sh -calc ionic-cond Li 1                                                           |"
-    echo "|           gpumdkit.sh -calc msd dump.xyz Li 10                                                        |"
-    echo "|           gpumdkit.sh -calc nlist -i model.xyz -c 4 -n 12 -C Ti -E O                                  |"
-    echo "+-------------------------------------------------------------------------------------------------------+"
+    echo " +-------------------------------------------------------------------------------------------------------+"
+    echo " |                                      CALCULATOR TOOLS                                                 |"
+    echo " +-------------------------------------------------------------------------------------------------------+"
+    echo " | Usage: gpumdkit.sh -calc <type> [args...]                                                             |"
+    echo " +-------------------------------------------------------------------------------------------------------+"
+    echo " | ionic-cond <element> <charge>                 Calculate ionic conductivity from MSD data              |"
+    echo " | nep <input.xyz> <output.xyz> <nep_model>      Calculate energy/force/virial with a NEP model          |"
+    echo " | des <input.xyz> <output.npy> <nep_model> <el> Calculate NEP descriptors for one element               |"
+    echo " | doas <input.xyz> <nep_model> <output.txt>     Calculate density of atomistic states                   |"
+    echo " | neb <initial.xyz> <final.xyz> <n_images> <nep> Run NEB calculation with a NEP model                   |"
+    echo " | minimize <structure> <nep_model> [fmax] [n]   Minimize a structure with a NEP model                   |"
+    echo " | msd <trajectory.xyz> <element> <dt_fs> [n]    Calculate MSD from an extxyz trajectory                 |"
+    echo " | nlist [script args...]                        Build neighbor lists                                    |"
+    echo " | disp [script args...]                         Calculate displacement from trajectory                  |"
+    echo " | avg-struct [script args...]                   Calculate averaged structure                            |"
+    echo " | oct-tilt [script args...]                     Calculate octahedral tilt                               |"
+    echo " | pol-abo3 [script args...]                     Calculate local polarization for ABO3                   |"
+    echo " +-------------------------------------------------------------------------------------------------------+"
+    echo " | Examples: gpumdkit.sh -calc ionic-cond Li 1                                                           |"
+    echo " |           gpumdkit.sh -calc msd dump.xyz Li 10                                                        |"
+    echo " |           gpumdkit.sh -calc nlist -i model.xyz -c 4 -n 12 -C Ti -E O                                  |"
+    echo " +-------------------------------------------------------------------------------------------------------+"
 }
 
 function citation(){
 echo " +------------------------------------------------------+"
 echo " |           THANK YOU FOR USING GPUMDKIT               |"
 echo " +------------------------------------------------------+"
-echo " │ If you find it useful, please cite our paper:        │"
-echo " │                                                      │"
-echo " │ GPUMDkit: A User-Friendly Toolkit for GPUMD and NEP  │"
+echo " | If you find it useful, please cite our paper:        |"
+echo " |                                                      |"
+echo " | GPUMDkit: A User-Friendly Toolkit for GPUMD and NEP  |"
 echo " |           MGE Advances, 2026, 4, e70074              |"
-echo " |       (https://doi.org/10.1002/mgea.70074)           │"
-echo " │                                                      │"
-echo " |     Welcome to join our QQ group (825696376) !       │"
+echo " |       (https://doi.org/10.1002/mgea.70074)           |"
+echo " |                                                      |"
+echo " |     Welcome to join our QQ group (825696376) !       |"
 echo " +------------------------------------------------------+"
 }
 
@@ -326,7 +335,10 @@ if [ ! -z "$1" ]; then
                         echo " | set and charge_train.out.                                |"
                         echo " +----------------------------------------------------------+"
                         python ${plt_path}/plt_charge.py $3 ;;
-                    *) source ${GPUMDkit_path}/src/f6_plots.sh; f6_plots_two_column; exit 1 ;;
+                    *)
+                        echo " Unknown plot type: $2"
+                        echo " Available types are listed below."
+                        source ${GPUMDkit_path}/src/f6_plots.sh; f6_plots_two_column; exit 1 ;;
                 esac
             else
                 source ${GPUMDkit_path}/src/f6_plots.sh

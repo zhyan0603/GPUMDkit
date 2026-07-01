@@ -1,5 +1,5 @@
 ---
-name: gpumdkit
+name: gpumdkit-main
 description: >
   Use when working with GPUMD molecular dynamics or NEP potentials for computational materials science.
   Provides format conversion, structure analysis, visualization, calculation tools, and workflow automation.

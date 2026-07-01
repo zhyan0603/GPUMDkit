@@ -63,6 +63,7 @@ function f303_md_sample_batch_pretreatment_lmp(){
 	                fi
 	                echo " Invalid selection. Please choose one XYZ file."
 	            done
+	            [ -n "$xyz_file" ] || { echo " Input closed. Exiting."; return 1; }
 	        fi
 	        echo " Splitting ${xyz_file#./} to model_*.xyz using GPUMDkit..."
 	        python ${GPUMDkit_path}/Scripts/format_conversion/split_single_xyz.py "$xyz_file"
@@ -111,7 +112,7 @@ function f303_md_sample_batch_pretreatment_lmp(){
         cd ..
     done
 
-    # Create the presub.sh file for VASP self-consistency calculations
+    # Create the presub.sh file for LAMMPS MD sampling
     cat > presub.sh <<-EOF
 	#!/bin/bash
 
@@ -128,9 +129,9 @@ function f303_md_sample_batch_pretreatment_lmp(){
     # Make presub.sh executable
     chmod +x presub.sh
 
-    echo " >--------------------------------------------------<"
-    echo " ATTENTION: Place lmprun.in and nep.txt in 'md' Dir. "
-    echo " ATTENTION: Place lmprun.in and nep.txt in 'md' Dir. "
-    echo " ATTENTION: Place lmprun.in and nep.txt in 'md' Dir. "
-    echo " >--------------------------------------------------<"
+    echo " >---------------------------------------------------------<"
+    echo " | ATTENTION: Place lmprun.in and nep.txt in 'md' Dir.     |"
+    echo " | ATTENTION: Place lmprun.in and nep.txt in 'md' Dir.     |"
+    echo " | ATTENTION: Place lmprun.in and nep.txt in 'md' Dir.     |"
+    echo " >---------------------------------------------------------<"
 }

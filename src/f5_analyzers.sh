@@ -177,9 +177,9 @@ echo " | 000) Return to the main menu                         |"
 echo " +------------------------------------------------------+"
 echo " Input the function number:"
 
-arry_num_choice=("000" "501" "502" "503" "504" "505" "506" "507" "508") 
+valid_menu_choices=("000" "501" "502" "503" "504" "505" "506" "507" "508") 
 read_menu_choice num_choice || return 1
-while ! echo "${arry_num_choice[@]}" | grep -wq "$num_choice" 
+while ! echo "${valid_menu_choices[@]}" | grep -wq "$num_choice" 
 do
   echo " ------------>>"
   echo " Please reinput function number..."

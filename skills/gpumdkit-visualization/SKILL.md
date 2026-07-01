@@ -21,7 +21,7 @@ gpumdkit.sh -plt <type> -h           # Get help for specific plot
 
 ## Plot Categories
 
-### NEP Training & Evaluation (12 plot types)
+### NEP Training & Evaluation (13 plot types)
 
 | Command | Input Files | Description |
 |---------|-------------|-------------|
@@ -53,7 +53,7 @@ gpumdkit.sh -plt des umap
 gpumdkit.sh -plt dimer Li Li nep.txt
 ```
 
-### Transport Properties (9 plot types)
+### Transport Properties (10 plot types)
 
 | Command | Input Files | Description |
 |---------|-------------|-------------|
@@ -66,6 +66,7 @@ gpumdkit.sh -plt dimer Li Li nep.txt
 | `D` / `arrhenius_d` | `*K/` directories | Arrhenius diffusivity |
 | `sigma_xyz` | `*K/` directories | Directional Arrhenius conductivity |
 | `D_xyz` | `*K/` directories | Directional Arrhenius diffusivity |
+| `doas` | `doas.out` | Density of atomistic states |
 
 ```bash
 # MSD and diffusion
@@ -80,9 +81,12 @@ gpumdkit.sh -plt msd_all Li P S
 # Directory structure: 300K/, 350K/, 400K/, ... each containing msd.out
 gpumdkit.sh -plt arrhenius_sigma
 gpumdkit.sh -plt arrhenius_d
+
+# DOAS visualization (requires prior calculation)
+gpumdkit.sh -plt doas doas.out Li
 ```
 
-### Structural Analysis (10 plot types)
+### Structural Analysis (9 plot types)
 
 | Command | Input Files | Description |
 |---------|-------------|-------------|
@@ -94,7 +98,6 @@ gpumdkit.sh -plt arrhenius_d
 | `vac` | `sdc.out` | Velocity autocorrelation |
 | `cohesive` | `cohesive.out` | Cohesive energy curve |
 | `net_force` | extxyz file | Net force distribution |
-| `doas` | `doas.out` | Density of atomistic states |
 | `plane-grid` | `model.xyz`, `displacements.dat` | Displacement grid visualization |
 
 ```bash
@@ -105,9 +108,6 @@ gpumdkit.sh -plt thermo
 gpumdkit.sh -plt rdf
 gpumdkit.sh -plt rdf 2              # Specific column
 gpumdkit.sh -plt rdf_pmf 300        # With PMF at 300K
-
-# DOAS visualization (requires prior calculation)
-gpumdkit.sh -plt doas doas.out Li
 
 # Plane-grid displacement
 gpumdkit.sh -plt plane-grid -i model.xyz -d displacements.dat -e Pb Sr

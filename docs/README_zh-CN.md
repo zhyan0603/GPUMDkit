@@ -111,7 +111,7 @@ wget https://github.com/zhyan0603/GPUMDkit/archive/refs/heads/main.zip
       1) Format Conversion          2) Sample Structures
       3) Workflow                   4) Calculators
       5) Analyzer                   6) Visualization
-      7) Utilities                  8) Developing...
+      7) Utilities                  8) Help                
       0) Exit
       ------------>>
       Input the function number:

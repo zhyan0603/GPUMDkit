@@ -100,7 +100,7 @@ This opens the main menu:
  1) Format Conversion          2) Sample Structures
  3) Workflow                   4) Calculators
  5) Analyzer                   6) Visualization
- 7) Utilities                  8) Developing...
+ 7) Utilities                  8) Help                
  0) Exit
  ------------>>
  Input the function number:
@@ -125,6 +125,30 @@ gpumdkit.sh -calc msd trajectory.xyz Li 10
 ```
 
 The first example reads `POSCAR` and writes `model.xyz`.
+
+## Hello World Example
+
+A minimal end-to-end check that your install works — create a tiny silicon POSCAR, convert it to extxyz, and inspect the output:
+
+```bash
+cat > POSCAR << 'EOF'
+Si
+1.0
+0 2.715 2.715
+2.715 0 2.715
+2.715 2.715 0
+Si
+1
+direct
+0 0 0
+EOF
+gpumdkit.sh -pos2exyz POSCAR model.xyz
+head model.xyz
+```
+
+If `model.xyz` shows a single Si atom with lattice info, your install works.
+
+> **What is extxyz?** extxyz is the extended XYZ format: line 1 is the atom count, line 2 contains the lattice and per-structure properties (energy/forces/virial as needed), and lines 3+ list each atom with its per-atom properties. It is the native training-data format for NEP.
 
 ## Common examples
 

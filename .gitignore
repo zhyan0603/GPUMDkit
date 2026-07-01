@@ -22,3 +22,16 @@ Thumbs.db
 # Temporary / generated files
 *.log
 temp_*.xyz
+
+# additional hygiene patterns
+*.tmp
+*.bak
+*~
+*.egg
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.coverage
+htmlcov/
+.omo/
+.claude/

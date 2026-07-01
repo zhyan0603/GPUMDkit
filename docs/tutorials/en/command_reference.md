@@ -116,7 +116,7 @@ gpumdkit.sh -plt <type> [options]
 gpumdkit.sh -plt -h
 ```
 
-Common types include `train`, `prediction`, `thermo`, `msd`, `sdc`, `rdf`, `emd`, `nemd`, `hnemd`, `pdos`, and `plane-grid`.
+Common types include `train`, `prediction` (alias: `test`), `thermo`, `msd`, `sdc`, `rdf`, `emd`, `nemd`, `hnemd`, `pdos`, and `plane-grid`.
 
 ## Utilities
 

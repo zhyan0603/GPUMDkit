@@ -20,17 +20,7 @@ to effectively use GPUMDkit functionality.
 
 ### opencode (Recommended)
 
-Configure in `opencode.json` to load skills directly from the skills directory:
-
-```json
-{
-  "skills": {
-    "paths": ["./skills"]
-  }
-}
-```
-
-Or create symlinks manually:
+Create symlinks manually:
 
 ```bash
 # Run from GPUMDkit root directory

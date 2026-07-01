@@ -94,37 +94,37 @@ You can customize:
 ## 4. **Check Required Files**
 
 ```
-if [ -f nep.txt ] && [ -f nep.in ] && [ -f train.xyz ] && [ -f run.in ] && [ -f INCAR ] && [ -f POTCAR ] ; then
+if [ -f nep.txt ] && [ -f nep.in ] && [ -f train.xyz ] && [ "$(find . -maxdepth 1 -name 'run_*.in' | wc -l)" -ge 1 ] && [ -f INCAR ] && [ -f POTCAR ] ; then
     # Check for the required files before proceeding.
 else
-    echo "Please put nep.in nep.txt train.xyz run.in INCAR POTCAR [KPOINTS] and the sample_struct.xyz in the current directory."
+    echo "Please put nep.in nep.txt train.xyz run_*.in (eg. run_1.in, run_2.in, ...) INCAR POTCAR [KPOINTS] and the sample_struct.xyz in the current directory."
     exit 1
 fi
 ```
 
-Make sure the necessary files (`nep.txt`, `nep.in`, `train.xyz`, `run.in`, `INCAR`, `POTCAR`, `KPOINTS`) are available in the working directory. If any of these are missing, the script will terminate. `train.xyz` and `nep.txt` are used for `pynep` sampling, and `run.in` is the simulation parameters of MD in the current iteration.
+Make sure the necessary files (`nep.txt`, `nep.in`, `train.xyz`, `run_*.in` (e.g., `run_1.in`, `run_2.in`, ...), `INCAR`, `POTCAR`, `KPOINTS`) are available in the working directory. If any of these are missing, the script will terminate. `train.xyz` and `nep.txt` are always required as prerequisites for NEP model operation, and `run_*.in` files define the simulation parameters of MD in the current iteration.
 
 ------
 
 ## 5. **File Organization**
 
 ```
-mkdir 00.modev common
-mv ${work_dir}/{nep.txt,nep.in,*.xyz,run.in,INCAR,KPOINTS,POTCAR} ./common
-cp ${work_dir}/common/$sample_xyz_file ${work_dir}/00.modev
+mkdir 00.md common
+mv ${work_dir}/{nep.txt,nep.in,*.xyz,run_*.in,INCAR,KPOINTS,POTCAR} ./common
+cp ${work_dir}/common/$sample_xyz_file ${work_dir}/00.md
 ```
 
 The script organizes the working files into two folders:
 
-- `00.modev`: For molecular dynamics simulation.
-- `common`: For shared resources such as `nep.txt`, `run.in`, and the structure files, etc.
+- `00.md`: For molecular dynamics simulation.
+- `common`: For shared resources such as `nep.txt`, `run_*.in` files, and the structure files, etc.
 
 ------
 
 ## 6. **Molecular Dynamics Simulation Submission**
 
 ```
-submit_gpumd_array modev ${sample_struct_num}
+submit_gpumd_array md ${sample_struct_num}
 sbatch submit.slurm
 ```
 
@@ -136,7 +136,7 @@ After preparing the input files, the script submits an array of molecular dynami
 
 ```
 while true; do
-    logs=$(find "${work_dir}/00.modev/" -type f -name log -path "*/sample_*/log")
+    logs=$(find "${work_dir}/00.md/" -type f -name log -path "*/sample_*/log")
     finished_tasks_md=$(grep "Finished running GPUMD." $logs | wc -l)
     error_tasks_md=$(grep "Error" $logs | wc -l)
 

@@ -332,7 +332,6 @@ def calculate_msd_from_extxyz(extxyz_file, element_symbol, dt_fs, max_corr_steps
     # Coordinate wrapping check
     # ------------------------------------------------------------------
     print(" ")
-    # print(" "+ "-" * 60)
     if cell is not None:
         is_wrapped = check_wrapped_coordinates(all_positions, cell)
         if is_wrapped:
@@ -349,7 +348,6 @@ def calculate_msd_from_extxyz(extxyz_file, element_symbol, dt_fs, max_corr_steps
     # MSD calculation
     # ------------------------------------------------------------------
     print(" ")
-    # print(" "+ "-" * 60)
     if n_frames < 3:
         print(" Error: At least 3 frames are required for MSD, "
               " but only %d found." % n_frames)
@@ -379,7 +377,6 @@ def calculate_msd_from_extxyz(extxyz_file, element_symbol, dt_fs, max_corr_steps
     # Write output
     # ------------------------------------------------------------------
     print(" ")
-    # print(" "+ "-" * 60)
     output_file = "msd.out"
     header = ("msd.out by GPUMDkit\n"
                "Element: %s  |  dt: %.4f fs  |  Frames: %d  |  Atoms: %d\n"

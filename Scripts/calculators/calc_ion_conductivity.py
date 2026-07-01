@@ -104,8 +104,8 @@ def calculate_diffusivity_and_conductivity(filepath, structure_volume, species_c
     dts, msd_x, msd_y, msd_z, msd_total = read_msd_file(filepath)
 
     # Use a portion of the MSD data for fitting
-    start = int(len(dts) * 0.1)  # Start at 10% of the data
-    end = int(len(dts) * 0.4)  # End at 40% of the data
+    start = int(len(dts) * 0.4)  # Start at 40% of the data
+    end = int(len(dts) * 0.8)  # End at 80% of the data
 
     # Linear fit to obtain slopes for x, y, z, and total MSD
     k_x, _ = np.polyfit(dts[start:end], msd_x[start:end], 1)

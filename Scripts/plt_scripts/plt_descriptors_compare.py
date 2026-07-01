@@ -130,7 +130,6 @@ for xyz_file in xyz_files:
     # Save descriptors
     # output_file = f"{os.path.splitext(xyz_file)[0]}_descriptors.npy"
     # np.save(output_file, file_descriptors)
-    # print(f"Saved descriptors to '{output_file}' (shape: {file_descriptors.shape})")
 
 # Check if any descriptors were collected
 if not all_descriptors:

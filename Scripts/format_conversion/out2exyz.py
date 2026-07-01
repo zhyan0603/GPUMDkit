@@ -120,7 +120,7 @@ for file_path in tqdm(file_list):
     
     try:
         atoms = read(file_path, format='vasp-out', index=":")
-    except:
+    except Exception:
         err_list.append(file_path)
         continue
     

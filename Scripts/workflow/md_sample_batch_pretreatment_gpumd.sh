@@ -61,6 +61,7 @@ function f302_md_sample_batch_pretreatment_gpumd(){
 	                fi
 	                echo " Invalid selection. Please choose one XYZ file."
 	            done
+	            [ -n "$xyz_file" ] || { echo " Input closed. Exiting."; return 1; }
 	        fi
 	        echo " Splitting ${xyz_file#./} to model_*.xyz using GPUMDkit..."
 	        python ${GPUMDkit_path}/Scripts/format_conversion/split_single_xyz.py "$xyz_file"
@@ -81,7 +82,7 @@ function f302_md_sample_batch_pretreatment_gpumd(){
     # Ask user for directory name prefix
     echo " >-------------------------------------------------<"
     echo " | This function calls the script in Scripts       |"
-    echo " | Script: md_sample_batch_pretreatment.sh         |"
+    echo " | Script: md_sample_batch_pretreatment_gpumd.sh   |"
     echo " | Developer: Zihan YAN (yanzihan@westlake.edu.cn) |"
     echo " >-------------------------------------------------<"
 
@@ -99,7 +100,7 @@ function f302_md_sample_batch_pretreatment_gpumd(){
         cd ..
     done
 
-    # Create the presub.sh file for VASP self-consistency calculations
+    # Create the presub.sh file for GPUMD MD sampling
     cat > presub.sh <<-EOF
 	#!/bin/bash
 
@@ -116,13 +117,13 @@ function f302_md_sample_batch_pretreatment_gpumd(){
     # Make presub.sh executable
     chmod +x presub.sh
 
-	echo " >----------------------------------------------------<"
-	echo " | ATTENTION: Place run_*.in and nep.txt in 'md' Dir. |"
-	echo " >----------------------------------------------------<"
-	echo " | You need to provide MD control parameter files in  |"
-	echo " | the format run_*.in (e.g., run_1.in, run_2.in),    |"
-	echo " | each corresponding to a sample (e.g., sample_1,    |"
-	echo " | sample_2) for molecular dynamics simulations.      |"
-	echo " >----------------------------------------------------<"
+    echo " >---------------------------------------------------------<"
+    echo " |    ATTENTION: Place run_*.in and nep.txt in 'md' Dir.   |"
+    echo " >---------------------------------------------------------<"
+    echo " |    You need to provide MD control parameter files in    |"
+    echo " |    the format run_*.in (e.g., run_1.in, run_2.in),      |"
+    echo " |    each corresponding to a sample (e.g., sample_1,      |"
+    echo " |    sample_2) for molecular dynamics simulations.        |"
+    echo " >---------------------------------------------------------<"
 
 }

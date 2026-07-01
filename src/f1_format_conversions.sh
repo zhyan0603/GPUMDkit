@@ -16,7 +16,7 @@ echo " >-------------------------------------------------<"
 echo " Input the directory containing OUTCARs"
 echo " Example: ./ "
 echo " ------------>>"
-read -p " " dir_outcars
+read_menu_choice dir_outcars || return 1
 echo " ---------------------------------------------------"
 bash ${GPUMDkit_path}/Scripts/format_conversion/out2xyz.sh ${dir_outcars}
 echo " Code path: ${GPUMDkit_path}/Scripts/format_conversion/out2xyz.sh"
@@ -33,7 +33,7 @@ echo " >-------------------------------------------------<"
 echo " Input <filename.cfg> <Symbol1 Symbol2 Symbol3 ...>"
 echo " Example: train.cfg Pd Ag"
 echo " ------------>>"
-read -p " " mtp_variables
+read_menu_choice mtp_variables || return 1
 echo " ---------------------------------------------------"
 python ${GPUMDkit_path}/Scripts/format_conversion/mtp2xyz.py ${mtp_variables}
 echo " Code path: ${GPUMDkit_path}/Scripts/format_conversion/mtp2xyz.py"
@@ -64,7 +64,7 @@ echo " | Developer: Ke XU (kickhsu@gmail.com)            |"
 echo " >-------------------------------------------------<"
 echo " Input [pos.xyz] [frc.xyz] [cell.cell] [-shifted yes/no] "
 echo " ------------>>"
-read -p " " cp2k_choice
+read_menu_choice cp2k_choice || return 1
 echo " ---------------------------------------------------"
 python ${GPUMDkit_path}/Scripts/format_conversion/cp2k2xyz.py ${cp2k_choice}
 echo " Code path: ${GPUMDkit_path}/Scripts/format_conversion/cp2k2xyz.py"
@@ -139,7 +139,7 @@ echo " >-------------------------------------------------<"
 echo " Input the name of extxyz"
 echo " Example: ./train.xyz "
 echo " ------------>>"
-read -p " " filename
+read_menu_choice filename || return 1
 echo " ---------------------------------------------------"
 python ${GPUMDkit_path}/Scripts/format_conversion/exyz2pos.py ${filename}
 echo " Code path: ${GPUMDkit_path}/Scripts/format_conversion/exyz2pos.py"
@@ -156,7 +156,7 @@ echo " >-------------------------------------------------<"
 echo " Input <POSCAR> <element1> <element2> ..."
 echo " Example: POSCAR Li Y Cl"
 echo " ------------>>"
-read -r -a addgroup_args
+read_menu_array addgroup_args || return 1
 echo " ---------------------------------------------------"
 python ${GPUMDkit_path}/Scripts/format_conversion/add_groups.py "${addgroup_args[@]}"
 echo " Code path: ${GPUMDkit_path}/Scripts/format_conversion/add_groups.py"
@@ -173,7 +173,7 @@ echo " >-------------------------------------------------<"
 echo " Input <input.xyz> <output.xyz> <weight>"
 echo " Example: train.xyz train_weighted.xyz 5"
 echo " ------------>>"
-read -r -a addweight_args
+read_menu_array addweight_args || return 1
 echo " ---------------------------------------------------"
 python ${GPUMDkit_path}/Scripts/format_conversion/add_weight.py "${addweight_args[@]}"
 echo " Code path: ${GPUMDkit_path}/Scripts/format_conversion/add_weight.py"
@@ -190,7 +190,7 @@ echo " >-------------------------------------------------<"
 echo " Input <input.xyz> <frame_number>"
 echo " Example: train.xyz 1"
 echo " ------------>>"
-read -r -a getframe_args
+read_menu_array getframe_args || return 1
 echo " ---------------------------------------------------"
 python ${GPUMDkit_path}/Scripts/format_conversion/get_frame.py "${getframe_args[@]}"
 echo " Code path: ${GPUMDkit_path}/Scripts/format_conversion/get_frame.py"
@@ -207,7 +207,7 @@ echo " >-------------------------------------------------<"
 echo " Input <input.xyz> <output.xyz>"
 echo " Example: train.xyz train_clean.xyz"
 echo " ------------>>"
-read -r -a cleanxyz_args
+read_menu_array cleanxyz_args || return 1
 echo " ---------------------------------------------------"
 python ${GPUMDkit_path}/Scripts/format_conversion/clean_xyz.py "${cleanxyz_args[@]}"
 echo " Code path: ${GPUMDkit_path}/Scripts/format_conversion/clean_xyz.py"
@@ -225,7 +225,7 @@ echo " Input <inputfile> <outputfile> <a b c / target_num>"
 echo " Example 1: POSCAR POSCAR_222.vasp 2 2 2"
 echo " Example 2: POSCAR POSCAR_256.vasp 256"
 echo " ------------>>"
-read -r -a replicate_args
+read_menu_array replicate_args || return 1
 echo " ---------------------------------------------------"
 python ${GPUMDkit_path}/Scripts/format_conversion/replicate.py "${replicate_args[@]}"
 echo " Code path: ${GPUMDkit_path}/Scripts/format_conversion/replicate.py"
@@ -242,7 +242,7 @@ echo " >-------------------------------------------------<"
 echo " Input the directory containing OUTCARs"
 echo " Example: ./ "
 echo " ------------>>"
-read -r -p " " dir_outcars
+read_menu_choice dir_outcars || return 1
 echo " ---------------------------------------------------"
 python ${GPUMDkit_path}/Scripts/format_conversion/out2exyz.py "${dir_outcars}"
 echo " Code path: ${GPUMDkit_path}/Scripts/format_conversion/out2exyz.py"
@@ -259,7 +259,7 @@ echo " >-------------------------------------------------<"
 echo " Input <POSCAR> <output.xyz>"
 echo " Example: POSCAR model.xyz"
 echo " ------------>>"
-read -r -a pos2extxyz_args
+read_menu_array pos2extxyz_args || return 1
 echo " ---------------------------------------------------"
 python ${GPUMDkit_path}/Scripts/format_conversion/pos2exyz.py "${pos2extxyz_args[@]}"
 echo " Code path: ${GPUMDkit_path}/Scripts/format_conversion/pos2exyz.py"
@@ -276,7 +276,7 @@ echo " >-------------------------------------------------<"
 echo " Input <input.cif> <output.vasp>"
 echo " Example: input.cif POSCAR.vasp"
 echo " ------------>>"
-read -r -a cif2pos_args
+read_menu_array cif2pos_args || return 1
 echo " ---------------------------------------------------"
 python ${GPUMDkit_path}/Scripts/format_conversion/cif2pos.py "${cif2pos_args[@]}"
 echo " Code path: ${GPUMDkit_path}/Scripts/format_conversion/cif2pos.py"
@@ -293,7 +293,7 @@ echo " >-------------------------------------------------<"
 echo " Input <input.cif> <output.xyz>"
 echo " Example: input.cif model.xyz"
 echo " ------------>>"
-read -r -a cif2extxyz_args
+read_menu_array cif2extxyz_args || return 1
 echo " ---------------------------------------------------"
 python ${GPUMDkit_path}/Scripts/format_conversion/cif2exyz.py "${cif2extxyz_args[@]}"
 echo " Code path: ${GPUMDkit_path}/Scripts/format_conversion/cif2exyz.py"
@@ -310,7 +310,7 @@ echo " >-------------------------------------------------<"
 echo " Input <XDATCAR> <output.xyz>"
 echo " Example: XDATCAR dump.xyz"
 echo " ------------>>"
-read -r -a xdatcar_args
+read_menu_array xdatcar_args || return 1
 echo " ---------------------------------------------------"
 python ${GPUMDkit_path}/Scripts/format_conversion/xdatcar2exyz.py "${xdatcar_args[@]}"
 echo " Code path: ${GPUMDkit_path}/Scripts/format_conversion/xdatcar2exyz.py"
@@ -327,7 +327,7 @@ echo " >-------------------------------------------------<"
 echo " Input <POSCAR> <lammps.data>"
 echo " Example: POSCAR lammps.data"
 echo " ------------>>"
-read -r -a pos2lmp_args
+read_menu_array pos2lmp_args || return 1
 echo " ---------------------------------------------------"
 python ${GPUMDkit_path}/Scripts/format_conversion/pos2lmp.py "${pos2lmp_args[@]}"
 echo " Code path: ${GPUMDkit_path}/Scripts/format_conversion/pos2lmp.py"
@@ -344,7 +344,7 @@ echo " >-------------------------------------------------<"
 echo " Input <dump_file> <element1> <element2> ..."
 echo " Example: dump.lammpstrj Li O"
 echo " ------------>>"
-read -r -a lmp2extxyz_args
+read_menu_array lmp2extxyz_args || return 1
 echo " ---------------------------------------------------"
 python ${GPUMDkit_path}/Scripts/format_conversion/lmp2exyz.py "${lmp2extxyz_args[@]}"
 echo " Code path: ${GPUMDkit_path}/Scripts/format_conversion/lmp2exyz.py"
@@ -361,7 +361,7 @@ echo " >-------------------------------------------------<"
 echo " Input <input.traj> <output.xyz>"
 echo " Example: input.traj output.xyz"
 echo " ------------>>"
-read -r -a traj2extxyz_args
+read_menu_array traj2extxyz_args || return 1
 echo " ---------------------------------------------------"
 python ${GPUMDkit_path}/Scripts/format_conversion/traj2exyz.py "${traj2extxyz_args[@]}"
 echo " Code path: ${GPUMDkit_path}/Scripts/format_conversion/traj2exyz.py"

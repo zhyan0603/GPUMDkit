@@ -53,6 +53,7 @@ function vasp_scf_batch_pretreatment(){
 	                fi
 	                echo " Invalid selection. Please choose one XYZ file."
 	            done
+	            [ -n "$xyz_file" ] || { echo " Input closed. Exiting."; return 1; }
 	        fi
 	        echo " Converting ${xyz_file#./} to POSCAR files using GPUMDkit..."
 	        python ${GPUMDkit_path}/Scripts/format_conversion/exyz2pos.py "$xyz_file"
@@ -73,7 +74,7 @@ function vasp_scf_batch_pretreatment(){
     # Ask user for directory name prefix
     echo " >-------------------------------------------------<"
     echo " | This function calls the script in Scripts       |"
-    echo " | Script: scf_batch_pretreatment.sh               |"
+    echo " | Script: scf_batch_pretreatment_vasp.sh          |"
     echo " | Developer: Zihan YAN (yanzihan@westlake.edu.cn) |"
     echo " >-------------------------------------------------<"
     echo " We recommend using the prefix to locate the structure."
@@ -81,7 +82,7 @@ function vasp_scf_batch_pretreatment(){
     echo " config_type=<prefix>_<ID>"
     echo " ------------>>"
     echo " Please enter the prefix of directory (e.g. FAPBI3_iter01)"
-    read -p " " prefix
+    read_menu_choice prefix || return 1
 
     # Create fp directory
     mkdir -p fp
@@ -113,9 +114,9 @@ function vasp_scf_batch_pretreatment(){
     # Make presub.sh executable
     chmod +x presub.sh
 
-    echo " >-----------------------------------------------------<"
-    echo " ATTENTION: Place POTCAR, KPOINTS and INCAR in 'fp' Dir."
-    echo " ATTENTION: Place POTCAR, KPOINTS and INCAR in 'fp' Dir."
-    echo " ATTENTION: Place POTCAR, KPOINTS and INCAR in 'fp' Dir."
-    echo " >-----------------------------------------------------<"
+    echo " >---------------------------------------------------------<"
+    echo " | ATTENTION: Place POTCAR, KPOINTS and INCAR in 'fp' Dir. |"
+    echo " | ATTENTION: Place POTCAR, KPOINTS and INCAR in 'fp' Dir. |"
+    echo " | ATTENTION: Place POTCAR, KPOINTS and INCAR in 'fp' Dir. |"
+    echo " >---------------------------------------------------------<"
 }

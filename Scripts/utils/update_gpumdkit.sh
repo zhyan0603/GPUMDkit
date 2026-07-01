@@ -1,21 +1,24 @@
 # check for updates
 function update_gpumdkit(){
+# Save the caller's working directory so it can be restored on success.
+__update_orig_pwd="$PWD"
+
 # Check if in a Git repository; if not, try to switch to GPUMDkit_path
 if ! git rev-parse --is-inside-work-tree > /dev/null 2>&1; then
     if [ -z "$GPUMDkit_path" ]; then
-        echo "Error: Not in a Git repository and GPUMDkit_path environment variable is not set."
+        echo " Error: Not in a Git repository and GPUMDkit_path environment variable is not set."
         exit 1
     fi
     if [ ! -d "$GPUMDkit_path" ]; then
-        echo "Error: Directory $GPUMDkit_path does not exist."
+        echo " Error: Directory $GPUMDkit_path does not exist."
         exit 1
     fi
     cd "$GPUMDkit_path" || {
-        echo "Error: Failed to change directory to $GPUMDkit_path."
+        echo " Error: Failed to change directory to $GPUMDkit_path."
         exit 1
     }
     if ! git rev-parse --is-inside-work-tree > /dev/null 2>&1; then
-        echo "Error: $GPUMDkit_path is not a Git repository."
+        echo " Error: $GPUMDkit_path is not a Git repository."
         exit 1
     fi
 fi
@@ -23,7 +26,7 @@ fi
 # Get current branch name
 current_branch=$(git rev-parse --abbrev-ref HEAD)
 if [ -z "$current_branch" ]; then
-    echo "Error: Unable to determine current branch."
+    echo " Error: Unable to determine current branch."
     exit 1
 fi
 
@@ -35,23 +38,27 @@ remote_commit=$(git ls-remote https://github.com/zhyan0603/GPUMDkit.git "$curren
 
 # Check if remote commit was retrieved successfully
 if [ -z "$remote_commit" ]; then
-    echo "Error: Unable to fetch remote repository information."
-    echo "Check network or branch name ($current_branch)."
+    echo " Error: Unable to fetch remote repository information."
+    echo " Check network or branch name ($current_branch)."
     exit 1
 fi
 
 # Compare local and remote commits
 if [ "$local_commit" = "$remote_commit" ]; then
-    echo "No updates available: Local $current_branch branch is up to date."
+    echo " No updates available: Local $current_branch branch is up to date."
 else
-    echo "Updates detected, pulling latest code for branch $current_branch..."
+    echo " Updates detected, pulling latest code for branch $current_branch..."
 
     # Pull latest code
     if git pull origin "$current_branch"; then
-        echo "Code successfully updated."
+        echo " Code successfully updated."
     else
-        echo "Error: Failed to pull code. Check Git configuration or network connection."
+        echo " Error: Failed to pull code. Check Git configuration or network connection."
+        cd "$__update_orig_pwd" 2>/dev/null
         exit 1
     fi
 fi
+
+# Restore the caller's working directory on success.
+cd "$__update_orig_pwd" 2>/dev/null
 }

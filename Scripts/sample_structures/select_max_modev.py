@@ -108,7 +108,7 @@ def extract_xyz_structures(xyz_file, indices, output_xyz_file):
     atoms_list = read(xyz_file, index=':')  # Read all structures as a list of ASE atoms objects
 
     # Extract the corresponding structures based on the indices from the filtered list
-    selected_atoms = [atoms_list[i] for i in indices]
+    selected_atoms = [atoms_list[filtered_indices[i]] for i in indices]
     
     # Write the selected structures to the output .xyz file
     write(output_xyz_file, selected_atoms)

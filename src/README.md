@@ -117,12 +117,13 @@ then you will see:
 
         GPUMDkit Version 1.5.6 (dev) (2026-06-17)
   Core Developer: Zihan YAN (yanzihan@westlake.edu.cn)
+ Main Contributors: Denan LI, Xin WU, Zhoulin LIU & Chen HUA
 
  ----------------------- GPUMD -----------------------
   1) Format Conversion          2) Sample Structures
   3) Workflow                   4) Calculators
   5) Analyzer                   6) Visualization
-  7) Utilities                  8) Developing...
+  7) Utilities                  8) Help                
   0) Exit
  ------------>>
  Input the function number:

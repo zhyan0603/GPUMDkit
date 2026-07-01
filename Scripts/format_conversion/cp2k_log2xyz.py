@@ -42,7 +42,7 @@ def extract_atoms_lattice_xyz(lines):
         if m := re.search(r'Lattice="([^"]+)"', '\n'.join(lines)):
             lat = [float(x) for x in m.group(1).split()]
         return atoms, lat
-    except: return [], []
+    except (ValueError, IndexError): return [], []
 
 def extract_atoms_lattice_inp(text):
     atoms, lat = [], [0.0]*9
