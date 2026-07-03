@@ -1,26 +1,26 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="msvalidate.01" content="C54B40775F728A768032AB60C92F3A42" />
     <meta name="google-site-verification" content="sDBlfmdKvrOL-RYHTskPd2kfi_VtOqHSp9Joa9ZRPj4" />
-    <title>GPUMDkit - A User-friendly Toolkit for GPUMD and NEP</title>
-    <meta name="description" content="GPUMDkit is a user-friendly toolkit for GPUMD and NEP, providing format conversion, structure sampling, workflow automation, calculators, analyzers, and visualization tools for molecular dynamics and neuroevolution potential simulations.">
-    <meta property="og:title" content="GPUMDkit - A User-friendly Toolkit for GPUMD and NEP">
-    <meta property="og:description" content="GPUMDkit is a user-friendly toolkit for GPUMD and NEP, providing format conversion, structure sampling, workflow automation, calculators, analyzers, and visualization tools.">
+    <title>GPUMDkit - GPUMD 与 NEP 用户友好工具包</title>
+    <meta name="description" content="GPUMDkit 是一款面向 GPUMD 和 NEP 的用户友好工具包，提供格式转换、结构采样、工作流自动化、计算器、分析与可视化等功能，支持交互模式和命令行模式。">
+    <meta property="og:title" content="GPUMDkit - GPUMD 与 NEP 用户友好工具包">
+    <meta property="og:description" content="GPUMDkit 是一款面向 GPUMD 和 NEP 的用户友好工具包，提供格式转换、结构采样、工作流自动化、计算器、分析与可视化等功能。">
     <meta property="og:image" content="https://zhyan0603.github.io/GPUMDkit/Gallery/gpumdkit_logo_lateral.png">
-    <meta property="og:url" content="https://zhyan0603.github.io/GPUMDkit/">
+    <meta property="og:url" content="https://zhyan0603.github.io/GPUMDkit/index_zh.html">
     <meta property="og:type" content="website">
     <meta name="twitter:card" content="summary_large_image">
-    <link rel="canonical" href="https://zhyan0603.github.io/GPUMDkit/">
+    <link rel="canonical" href="https://zhyan0603.github.io/GPUMDkit/index_zh.html">
     <script>
         (function() {
             var lang = (navigator.language || navigator.userLanguage || '').toLowerCase();
             var saved = localStorage.getItem('gpumdkit-lang');
-            if (saved === 'en') return;
-            if (saved === 'zh' || lang.startsWith('zh')) {
-                window.location.href = 'index_zh.html';
+            if (saved === 'zh') return;
+            if (saved === 'en' || !lang.startsWith('zh')) {
+                window.location.href = 'index.html';
             }
         })();
     </script>
@@ -45,13 +45,12 @@
         </div>
         <button class="mobile-menu-btn" style="display: none;">☰</button>
         <nav class="nav-links">
-            <a href="index.html" class="nav-item">Home</a>
-            <a href="htmls/index.html" class="nav-item">Documentation</a>
-            <a href="gallery.html" class="nav-item">Gallery</a>
-            <a href="publications.html" class="nav-item">Publications</a>            
-            <!-- <a href="https://github.com/zhyan0603/GPUMDkit" class="nav-item">Join Us</a> -->
-            <a href="https://github.com/zhyan0603/GPUMDkit/archive/refs/heads/main.zip" class="nav-item">Download</a>
-            <a href="index_zh.html" class="nav-item lang-switch" onclick="localStorage.setItem('gpumdkit-lang','zh')">中文</a>
+            <a href="index_zh.html" class="nav-item">首页</a>
+            <a href="htmls/zh/index.html" class="nav-item">文档</a>
+            <a href="gallery.html" class="nav-item">图库</a>
+            <a href="publications.html" class="nav-item">出版物</a>
+            <a href="https://github.com/zhyan0603/GPUMDkit/archive/refs/heads/main.zip" class="nav-item">下载</a>
+            <a href="index.html" class="nav-item lang-switch" onclick="localStorage.setItem('gpumdkit-lang','en')">English</a>
         </nav>
     </header>
 
@@ -59,59 +58,57 @@
         <!-- Hero Section -->
         <section class="hero-section animate-on-scroll">
             <h1 class="hero-title"><span class="gpumd">GPUMD</span><span class="kit">kit</span></h1>
-            <h2 class="hero-subtitle">A Toolkit for GPUMD and NEP</h2>
-            <p class="hero-desc" style="text-align: justify;">
-                GPUMDkit is a user-friendly toolkit for the GPUMD (Graphics Processing Units Molecular Dynamics) and NEP (Neuroevolution Potential) program. It provides a set of tools to streamline the use of common scripts in GPUMD and NEP, simplifying workflows and enhancing efficiency.
+            <h2 class="hero-subtitle">GPUMD 与 NEP 工具包</h2>
+            <p class="hero-desc" style="text-align: left;">
+                GPUMDkit 是一款面向 GPUMD（Graphics Processing Units Molecular Dynamics）和 NEP（Neuroevolution Potential）程序的用户友好工具包。它提供用户友好的命令行界面，涵盖脚本调用、格式转换、结构采样、NEP 构建流程以及各类分析与可视化功能，并提供交互模式和命令行模式两种使用方式，极大简化了工作流程，旨在提升用户工作效率。
             </p>
             <div class="cta-group">
-                <a href="#quick-start" class="cta-btn cta-primary">Get Started</a>
+                <a href="#quick-start" class="cta-btn cta-primary">快速开始</a>
             </div>
         </section>
 
-
-
         <!-- Features Section -->
         <section id="features" class="animate-on-scroll">
-            <h2 class="section-header">Key Features</h2>
+            <h2 class="section-header">核心功能</h2>
             <div class="features-grid">
                 <div class="feature-item">
                     <div class="feature-icon">🔄</div>
-                    <div class="feature-title">Format Conversion</div>
-                    <p class="feature-desc">Seamlessly convert between POSCAR, XYZ, CIF, and other atomic structure formats.</p>
+                    <div class="feature-title">格式转换</div>
+                    <p class="feature-desc">在 POSCAR、XYZ、CIF 等多种原子结构格式之间无缝转换。</p>
                 </div>
                 <div class="feature-item">
                     <div class="feature-icon">📦</div>
-                    <div class="feature-title">Sample Structures</div>
-                    <p class="feature-desc">Generate and sample structures for NEP training.</p>
+                    <div class="feature-title">结构采样</div>
+                    <p class="feature-desc">为 NEP 训练生成和采样结构。</p>
                 </div>
                 <div class="feature-item">
                     <div class="feature-icon">📊</div>
-                    <div class="feature-title">Data Analysis</div>
-                    <p class="feature-desc">Built-in tools for analyzing trajectories, calculating properties, and visualizing simulation outcomes.</p>
+                    <div class="feature-title">数据分析</div>
+                    <p class="feature-desc">内置轨迹分析、性质计算和模拟结果可视化工具。</p>
                 </div>
             </div>
         </section>
 
         <!-- Quick Start Section -->
         <section id="quick-start" class="animate-on-scroll">
-            <h2 class="section-header">Quick Start</h2>
+            <h2 class="section-header">快速开始</h2>
             <div class="quick-start-container">
                 <div class="qs-header">
-                    <div class="qs-title">Installation</div>
+                    <div class="qs-title">安装</div>
                     <div class="qs-actions">
-                        <a href="https://github.com/zhyan0603/GPUMDkit" target="_blank">View on GitHub &rarr;</a>
+                        <a href="https://github.com/zhyan0603/GPUMDkit" target="_blank">在 GitHub 上查看 &rarr;</a>
                     </div>
                 </div>
                 <div class="qs-body">
                     <div class="code-block">
-                        <span class="code-line"><span class="comment"># 1. Clone the repository</span></span>
+                        <span class="code-line"><span class="comment"># 1. 克隆仓库</span></span>
                         <span class="code-line"><span class="cmd">git clone</span> <span class="arg">https://github.com/zhyan0603/GPUMDkit.git</span></span>
                         <br>
-                        <span class="code-line"><span class="comment"># 2. Enter directory and run installer</span></span>
+                        <span class="code-line"><span class="comment"># 2. 进入目录并运行安装脚本</span></span>
                         <span class="code-line"><span class="cmd">cd</span> <span class="arg">GPUMDkit</span></span>
                         <span class="code-line"><span class="cmd">source</span> <span class="arg"> ./install.sh</span></span>
                         <br>
-                        <span class="code-line"><span class="comment"># 3. Ready to go!</span></span>
+                        <span class="code-line"><span class="comment"># 3. 开始使用！</span></span>
                         <span class="code-line"><span class="cmd">gpumdkit.sh</span></span>
                     </div>
                 </div>
@@ -120,13 +117,13 @@
 
         <!-- Terminal Showcase Section -->
         <section id="terminal-showcase" class="animate-on-scroll">
-            <h2 class="section-header">Preview</h2>
+            <h2 class="section-header">预览</h2>
             <div class="showcase-container">
                 <div class="showcase-tabs">
-                    <div class="showcase-tab active" data-target="panel-main">Main Menu</div>
-                    <div class="showcase-tab" data-target="panel-logs">CLI Demo</div>
-                    <div class="showcase-tab" data-target="panel-plot">Plots</div>
-                    <div class="showcase-tab" data-target="panel-help">Help</div>
+                    <div class="showcase-tab active" data-target="panel-main">主菜单</div>
+                    <div class="showcase-tab" data-target="panel-logs">命令行演示</div>
+                    <div class="showcase-tab" data-target="panel-plot">绘图</div>
+                    <div class="showcase-tab" data-target="panel-help">帮助</div>
                 </div>
                 <div class="showcase-window">
                     <div class="showcase-header">
@@ -135,7 +132,7 @@
                             <span class="btn btn-minimize"></span>
                             <span class="btn btn-maximize"></span>
                         </div>
-                        <div class="showcase-title">Terminal</div>
+                        <div class="showcase-title">终端</div>
                     </div>
                     <div class="showcase-body">
                         <div class="showcase-panel active" id="panel-main">
@@ -157,62 +154,62 @@
 
         <!-- Documentation Section -->
         <section id="documentation" class="animate-on-scroll">
-            <h2 class="section-header">Documentation</h2>
+            <h2 class="section-header">文档</h2>
             <div class="doc-grid">
-                <a href="htmls/en/format_conversion.html" class="doc-card">
+                <a href="htmls/zh/格式转换.html" class="doc-card">
                     <div class="doc-icon">🔄</div>
-                    <h3>Format Conversion</h3>
-                    <p>Convert seamlessly between POSCAR, XYZ, CIF, and other formats.</p>
-                    <div class="doc-arrow">Read more</div>
+                    <h3>格式转换</h3>
+                    <p>在 POSCAR、XYZ、CIF 等多种格式间无缝转换。</p>
+                    <div class="doc-arrow">了解更多</div>
                 </a>
-                <a href="htmls/en/structure_sampling.html" class="doc-card">
+                <a href="htmls/zh/结构采样.html" class="doc-card">
                     <div class="doc-icon">🧪</div>
-                    <h3>Sample Structures</h3>
-                    <p>Generate and sample structures for NEP training.</p>
-                    <div class="doc-arrow">Read more</div>
+                    <h3>结构采样</h3>
+                    <p>为 NEP 训练生成和采样结构。</p>
+                    <div class="doc-arrow">了解更多</div>
                 </a>
-                <a href="htmls/en/workflow_scripts.html" class="doc-card">
+                <a href="htmls/zh/工作流脚本.html" class="doc-card">
                     <div class="doc-icon">🚀</div>
-                    <h3>Workflow</h3>
-                    <p>Guides on setting up efficient active learning loops.</p>
-                    <div class="doc-arrow">Read more</div>
+                    <h3>工作流</h3>
+                    <p>高效主动学习循环的搭建指南。</p>
+                    <div class="doc-arrow">了解更多</div>
                 </a>
-                <a href="htmls/en/calculator_scripts.html" class="doc-card">
+                <a href="htmls/zh/计算器脚本.html" class="doc-card">
                     <div class="doc-icon">🧮</div>
-                    <h3>Calculators</h3>
-                    <p>Compute various properties and metrics directly.</p>
-                    <div class="doc-arrow">Read more</div>
+                    <h3>计算器</h3>
+                    <p>直接计算各种性质和指标。</p>
+                    <div class="doc-arrow">了解更多</div>
                 </a>
-                <a href="htmls/en/analyzer_scripts.html" class="doc-card">
+                <a href="htmls/zh/分析工具.html" class="doc-card">
                     <div class="doc-icon">📊</div>
-                    <h3>Analyzer</h3>
-                    <p>Trajectory analysis and property extraction.</p>
-                    <div class="doc-arrow">Read more</div>
+                    <h3>分析器</h3>
+                    <p>轨迹分析与性质提取。</p>
+                    <div class="doc-arrow">了解更多</div>
                 </a>
-                <a href="htmls/en/plot_scripts.html" class="doc-card">
+                <a href="htmls/zh/绘图脚本.html" class="doc-card">
                     <div class="doc-icon">📈</div>
-                    <h3>Visualization</h3>
-                    <p>Plotting tools for MSD, RDF, PDOS, and other data.</p>
-                    <div class="doc-arrow">Read more</div>
+                    <h3>可视化</h3>
+                    <p>用于 MSD、RDF、PDOS 等数据的绘图工具。</p>
+                    <div class="doc-arrow">了解更多</div>
                 </a>
             </div>
         </section>
 
         <!-- Gallery Section -->
         <section id="gallery" class="animate-on-scroll">
-            <h2 class="section-header">Gallery</h2>
+            <h2 class="section-header">图库</h2>
             <div class="gallery-grid">
                 <div class="gallery-card">
-                    <img src="Gallery/train.png" alt="Training Plot" class="gallery-img">
-                    <div class="gallery-caption">Training Plot</div>
+                    <img src="Gallery/train.png" alt="训练图" class="gallery-img">
+                    <div class="gallery-caption">训练图</div>
                 </div>
                 <div class="gallery-card">
-                    <img src="Gallery/thermo.png" alt="Thermo Analysis" class="gallery-img">
-                    <div class="gallery-caption">Thermo Analysis</div>
+                    <img src="Gallery/thermo.png" alt="热力学分析" class="gallery-img">
+                    <div class="gallery-caption">热力学分析</div>
                 </div>
                 <div class="gallery-card">
-                    <img src="Gallery/prediction.png" alt="Parity Plot" class="gallery-img">
-                    <div class="gallery-caption">Parity Plot</div>
+                    <img src="Gallery/prediction.png" alt="Parity 图" class="gallery-img">
+                    <div class="gallery-caption">Parity 图</div>
                 </div>
                 <div class="gallery-card">
                     <img src="Gallery/emd.png" alt="EMD" class="gallery-img">
@@ -228,27 +225,27 @@
                 </div>
             </div>
             <div class="view-all-container">
-                <a href="gallery.html" class="view-all-btn">View All Gallery</a>
+                <a href="gallery.html" class="view-all-btn">查看全部图库</a>
             </div>
         </section>
 
         <!-- Publications Section -->
         <section id="publications" class="animate-on-scroll">
-            <h2 class="section-header">Publications using GPUMDkit</h2>
+            <h2 class="section-header">使用 GPUMDkit 的出版物</h2>
             <div id="pub-count-container" style="text-align: center; margin-bottom: 30px; font-weight: 500; color: var(--text-secondary);">
-                Total Publications: <span id="pub-count">...</span>
+                总出版物数：<span id="pub-count">...</span>
             </div>
             <div class="pub-list" id="recent-publications">
                 <!-- Dynamic Content -->
             </div>
             <div class="view-all-container">
-                <a href="publications.html" class="view-all-btn">View All Publications</a>
+                <a href="publications.html" class="view-all-btn">查看全部出版物</a>
             </div>
         </section>
 
         <!-- Community & Citation Section -->
         <section id="community" class="animate-on-scroll">
-            <h2 class="section-header">Join Us & Cite</h2>
+            <h2 class="section-header">加入我们 &amp; 引用</h2>
             <div class="community-citation-wrapper">
                 
                 <!-- Community Column 1: Contribute & Star -->
@@ -263,11 +260,11 @@
                                         <path d="M9 18c-4.51 2-5-2-7-2"/>
                                     </svg>
                                 </div>
-                                <h3>Contribute</h3>
+                                <h3>贡献</h3>
                             </div>
-                            <p class="card-desc">Help us improve GPUMDkit by contributing code.</p>
+                            <p class="card-desc">通过贡献代码帮助改进 GPUMDkit。</p>
                             <a href="https://github.com/zhyan0603/GPUMDkit" target="_blank" class="modern-btn outline">
-                                Fork & PR
+                                Fork 并提交 PR
                             </a>
                         </div>
                     </div>
@@ -281,9 +278,9 @@
                                         <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
                                     </svg>
                                 </div>
-                                <h3>Star Us</h3>
+                                <h3>点亮 Star</h3>
                             </div>
-                            <p class="card-desc">Support our project by starring on GitHub.</p>
+                            <p class="card-desc">在 GitHub 上为我们点亮 Star，支持项目发展。</p>
                             <a href="https://github.com/zhyan0603/GPUMDkit" target="_blank" class="modern-btn outline">
                                 <svg height="16" width="16" viewBox="0 0 16 16" fill="currentColor" style="margin-right: 6px;">
                                     <path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"></path>
@@ -305,11 +302,11 @@
                                         <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
                                     </svg>
                                 </div>
-                                <h3>Join QQ Group</h3>
+                                <h3>加入 QQ 群</h3>
                             </div>
                             <div class="qr-container-modern">
-                                <img src="Gallery/gpumdkit_qqgroup.jpg" alt="QQ Group QR" class="qr-img-modern">
-                                <span class="qr-caption-modern">Scan to Join</span>
+                                <img src="Gallery/gpumdkit_qqgroup.jpg" alt="QQ 群二维码" class="qr-img-modern">
+                                <span class="qr-caption-modern">扫码加入</span>
                             </div>
                         </div>
                     </div>
@@ -328,10 +325,10 @@
                                             <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/>
                                         </svg>
                                     </div>
-                                    <h3>Citation</h3>
+                                    <h3>引用</h3>
                                 </div>
                                 <a href="https://doi.org/10.1002/mgea.70074" class="modern-btn outline" target="_blank">
-                                    View on Wiley
+                                    在 Wiley 上查看
                                 </a>
                             </div>
                             <div class="citation-body-modern">
@@ -354,25 +351,25 @@
     <footer class="footer">
             <div class="footer-content">
                 <div class="footer-column">
-                    <h4>Quick Links</h4>
+                    <h4>快速链接</h4>
                     <ul>
-                        <li><a href="htmls/index.html">Documentation</a></li>
-                        <li><a href="gallery.html">Gallery</a></li>
-                        <li><a href="publications.html">Publications</a></li>
-                        <li><a href="https://github.com/zhyan0603/GPUMDkit/archive/refs/heads/main.zip">Download</a></li>
+                        <li><a href="htmls/zh/index.html">文档</a></li>
+                        <li><a href="gallery.html">图库</a></li>
+                        <li><a href="publications.html">出版物</a></li>
+                        <li><a href="https://github.com/zhyan0603/GPUMDkit/archive/refs/heads/main.zip">下载</a></li>
                     </ul>
                 </div>
                 <div class="footer-column">
-                    <h4>GPUMD Project</h4>
+                    <h4>GPUMD 项目</h4>
                     <ul>
-                        <li><a href="https://github.com/brucefan1983/GPUMD" target="_blank">GPUMD Repository</a></li>
-                        <li><a href="https://gpumd.org/" target="_blank">GPUMD Documentation</a></li>
+                        <li><a href="https://github.com/brucefan1983/GPUMD" target="_blank">GPUMD 仓库</a></li>
+                        <li><a href="https://gpumd.org/" target="_blank">GPUMD 文档</a></li>
                         <li><a href="https://github.com/brucefan1983/GPUMD-Tutorials" target="_blank">GPUMD-Tutorials</a></li>
                         <li><a href="https://github.com/brucefan1983/GPUMD/tree/master/tools" target="_blank">GPUMD-Tools</a></li>
                     </ul>
                 </div>
                 <div class="footer-column">
-                    <h4>GPUMD ecosystem</h4>
+                    <h4>GPUMD 生态</h4>
                     <ul class="ecosystem-list">
                         <li><a href="https://gitlab.com/brucefan1983/nep-data" target="_blank">nep-data</a></li>
                         <li><a href="https://gitlab.com/materials-modeling/calorine" target="_blank">calorine</a></li>
@@ -383,16 +380,16 @@
             </div>
             <div class="footer-bottom">
                 <div class="footer-info-row">
-                    <span class="copyright">&copy; 2026 GPUMDkit Teams. All rights reserved.</span>
+                    <span class="copyright">&copy; 2026 GPUMDkit 团队，保留所有权利。</span>
                     <span class="beian-info">
                         <a href="https://beian.miit.gov.cn/" target="_blank">苏ICP备2026013707-1号</a>
                         <span class="separator">|</span>
                         <span>苏公网安备32132202001502号</span>
                     </span>
                     <span class="site-stats">
-                        <span id="busuanzi_container_site_pv">Views: <span id="busuanzi_value_site_pv"></span></span>
+                        <span id="busuanzi_container_site_pv">浏览量：<span id="busuanzi_value_site_pv"></span></span>
                         <span class="separator">|</span>
-                        <span id="busuanzi_container_site_uv">Visitors: <span id="busuanzi_value_site_uv"></span></span>
+                        <span id="busuanzi_container_site_uv">访客数：<span id="busuanzi_value_site_uv"></span></span>
                     </span>
                 </div>
             </div>
