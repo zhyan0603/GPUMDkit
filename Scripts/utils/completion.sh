@@ -13,7 +13,16 @@ _gpumdkit_completions() {
     prev="${COMP_WORDS[COMP_CWORD-1]}" # Previous word
 
     # List of primary options (extracted from gpumdkit.sh)
-    local opts="-h -update -help -clean -time -plt -calc -cbc -range -out2xyz -xml2xyz -pos2exyz -cif2pos -cif2exyz -exyz2pos -pos2lmp -lmp2exyz -traj2exyz -cp2k2xyz -addgroup -addlabel -addweight -min_dist -min_dist_pbc -filter_dist -filter_dist_pbc -filter_box -filter_value -get_frame -clean_xyz -get_volume -analyze_comp -replicate -hbond -pda -pynep -frame_range -chem_species -xdat2exyz"
+    local opts="-h -help -update -U -clean -time -plt -calc -cbc -range -out2xyz -out2exyz -cp2k2xyz -pos2exyz -cif2pos -cif2exyz -exyz2pos -xdat2exyz -pos2lmp -lmp2exyz -traj2exyz -dp2xyz -addgroup -addlabel -addweight -min_dist -min_dist_pbc -filter_dist -filter_dist_pbc -filter_box -filter_value -filter_range -get_frame -clean_xyz -analyze_comp -chem_species -replicate -pda -pynep -frame_range -nep_modifier"
+
+    # Calculator subcommands
+    local calc_subcmds="ionic-cond nep des doas neb minimize msd nlist disp avg-struct oct-tilt pol-abo3"
+
+    # If we are completing a subcommand right after -calc
+    if [[ "$prev" == "-calc" ]]; then
+        COMPREPLY=($(compgen -W "$calc_subcmds" -- "$cur"))
+        return
+    fi
 
     # Provide secondary completion based on the previous word
     case "$prev" in
@@ -23,14 +32,10 @@ _gpumdkit_completions() {
 
         # Secondary options for -plt
         -plt)
-            COMPREPLY=($(compgen -W "thermo thermo2 thermo3 train train_density prediction test train_test msd msd_all msd_conv sdc rdf vac restart dimer force_error des doas charge lr parity_density arrhenius_d arrhenius_sigma sigma D sigma_xyz D_xyz net_force emd nemd hnemd pdos plane-grid cohesive viscosity rdf_pmf bec born_charge" -- "$cur")) ;;
+            COMPREPLY=($(compgen -W "thermo thermo2 thermo3 train train_density prediction test train_test parity_density born_charge bec msd msd_all msd_conv msd_sdc sdc rdf rdf_pmf vac restart dimer force_errors des doas charge lr arrhenius_d arrhenius_sigma sigma D sigma_xyz D_xyz net_force emd nemd hnemd pdos plane-grid cohesive viscosity" -- "$cur")) ;;
 
-        # Secondary options for -calc
-        -calc)
-            COMPREPLY=($(compgen -W "ionic-cond nep des doas neb nlist disp avg-struct oct-tilt pol-abo3" -- "$cur")) ;;
-            
         # Options requiring files or directories, complete with filenames
-        -out2xyz|-cp2k2xyz|-exyz2pos|-min_dist|-min_dist_pbc|-filter_dist|-filter_dist_pbc|-filter_box|-get_frame|-clean_xyz|-mtp2xyz|-pos2exyz|-cif2exyz|-cif2pos|-pos2lmp|-lmp2exyz|-traj2exyz|-addgroup|-addlabel|-addweight|-analyze_comp|-replicate|-pda|-cbc|-frame_range|-xml2xyz|-chem_species|-xdat2exyz)
+        -out2xyz|-out2exyz|-cp2k2xyz|-exyz2pos|-min_dist|-min_dist_pbc|-filter_dist|-filter_dist_pbc|-filter_box|-filter_value|-filter_range|-get_frame|-clean_xyz|-pos2exyz|-cif2exyz|-cif2pos|-pos2lmp|-lmp2exyz|-traj2exyz|-dp2xyz|-addgroup|-addlabel|-addweight|-analyze_comp|-replicate|-pda|-cbc|-frame_range|-chem_species|-xdat2exyz)
             COMPREPLY=($(compgen -f -- "$cur")) ;;
 
         # Default case: complete primary options
@@ -39,5 +44,7 @@ _gpumdkit_completions() {
     esac
 }
 
-# Register the completion function
+# Register the completion function for gpumdkit.sh and common invocations
 complete -F _gpumdkit_completions gpumdkit.sh
+complete -F _gpumdkit_completions ./gpumdkit.sh
+complete -F _gpumdkit_completions gpumdkit

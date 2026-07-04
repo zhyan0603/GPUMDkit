@@ -3,7 +3,7 @@
 GPUMDkit: A User-Friendly Toolkit for GPUMD and NEP
 Repository: https://github.com/zhyan0603/GPUMDkit
 Citation: Z. Yan et al., GPUMDkit: A User-Friendly Toolkit for GPUMD and NEP,
-          MGE Advances, 2026, e70074 (https://doi.org/10.1002/mgea.70074)
+          MGE Advances, 2026, 4, e70074 (https://doi.org/10.1002/mgea.70074)
 =============================================================================
 Script:     plt_descriptors_compare.py
 Category:   Plot Scripts
@@ -30,6 +30,14 @@ import sys
 import os
 import matplotlib.pyplot as plt
 
+
+def print_dependency_notice():
+    print(" This function requires the calorine package.")
+    print(" If you use this function, we recommend citing:")
+    print(" Lindgren et al., J. Open Source Softw. 9, 6264 (2024).")
+    print(" https://doi.org/10.21105/joss.06264")
+
+
 plt.rcParams.update({
     "font.family": "sans-serif",
     "font.sans-serif": ["Arial", "DejaVu Sans", "Liberation Sans"],
@@ -46,13 +54,15 @@ def print_progress_bar(iteration, total, prefix='', suffix='', decimals=1, lengt
 
 # Check command-line arguments
 if len(sys.argv) < 5:
-    print(" Usage: python calc_descriptors.py method nep.txt element train1.xyz [train2.xyz ...]")
+    print(" Usage: python plt_descriptors_compare.py method nep.txt element train1.xyz [train2.xyz ...]")
     print(" method: 'pca' or 'umap'")
     print(" element: chemical symbol (e.g., Li) or 'total'")
     sys.exit(1)
 
 method, model_file, target_element = sys.argv[1:4]
 xyz_files = sys.argv[4:]
+
+print_dependency_notice()
 
 # Validate method
 if method.lower() not in ['pca', 'umap']:
@@ -120,7 +130,6 @@ for xyz_file in xyz_files:
     # Save descriptors
     # output_file = f"{os.path.splitext(xyz_file)[0]}_descriptors.npy"
     # np.save(output_file, file_descriptors)
-    # print(f"Saved descriptors to '{output_file}' (shape: {file_descriptors.shape})")
 
 # Check if any descriptors were collected
 if not all_descriptors:

@@ -3,7 +3,7 @@
 GPUMDkit: A User-Friendly Toolkit for GPUMD and NEP
 Repository: https://github.com/zhyan0603/GPUMDkit
 Citation: Z. Yan et al., GPUMDkit: A User-Friendly Toolkit for GPUMD and NEP,
-          MGE Advances, 2026, e70074 (https://doi.org/10.1002/mgea.70074)
+          MGE Advances, 2026, 4, e70074 (https://doi.org/10.1002/mgea.70074)
 =============================================================================
 Script:     plt_train.py
 Category:   Plot Scripts
@@ -34,7 +34,7 @@ plt.rcParams.update({
 # plt.rcParams['axes.prop_cycle'] = cycler(color=custom_colors)
 
 # Load data
-loss = np.loadtxt('loss.out')
+loss = np.loadtxt('loss.out', comments='#')
 energy_data = np.loadtxt('energy_train.out')
 force_data = np.loadtxt('force_train.out')
 stress_data = np.loadtxt('stress_train.out')
@@ -67,16 +67,24 @@ def calculate_limits(train_data, padding=0.08):
 # Create a subplot with 2 rows and 2 columns
 fig, axs = plt.subplots(2, 2, figsize=(9, 7), dpi=100)
 
-if loss[0, 0] == 100:
-    xlabel = 'Generation/100'
-    plot_cols = slice(1, 7) # loss[:, 1:7]
-    legend_labels = ['Total', 'L1-Reg', 'L2-Reg', 'Energy-train', 'Force-train', 'Virial-train']
-elif loss[0, 0] == 1:
+if loss.shape[1] == 6:  # torchnep
     xlabel = 'Epoch'
-    plot_cols = slice(1, 5) # loss[:, 1:5]
-    legend_labels = ['Total', 'Energy-train', 'Force-train', 'Virial-train']
+    plot_cols = slice(1, 5)
+    legend_labels = ['Loss', 'Energy-train', 'Force-train', 'Virial-train']
+elif loss.shape[1] >= 9:  # nep/gnep
+    step = loss[1, 0] - loss[0, 0]  
+    if step == 100: 
+        xlabel = 'Generation/100'
+        plot_cols = slice(1, 7)
+        legend_labels = ['Total', 'L1-Reg', 'L2-Reg', 'Energy-train', 'Force-train', 'Virial-train']
+    elif step == 1: 
+        xlabel = 'Epoch'
+        plot_cols = slice(1, 5)
+        legend_labels = ['Total', 'Energy-train', 'Force-train', 'Virial-train']
+    else:
+        raise ValueError(f"Unsupported step size: {step}")
 else:
-    raise ValueError("Unexpected loss data format.")
+    raise ValueError(f"Unsupported loss format with {loss.shape[1]} columns")
 
 # Plotting the loss figure
 axs[0, 0].loglog(loss[:, plot_cols], '-', linewidth=2)

@@ -3,7 +3,7 @@
 GPUMDkit: A User-Friendly Toolkit for GPUMD and NEP
 Repository: https://github.com/zhyan0603/GPUMDkit
 Citation: Z. Yan et al., GPUMDkit: A User-Friendly Toolkit for GPUMD and NEP,
-          MGE Advances, 2026, e70074 (https://doi.org/10.1002/mgea.70074)
+          MGE Advances, 2026, 4, e70074 (https://doi.org/10.1002/mgea.70074)
 =============================================================================
 Script:     plt_nemd.py
 Category:   Plot Scripts
@@ -47,7 +47,7 @@ trap = np.trapezoid if hasattr(np, "trapezoid") else getattr(np, "trapz")
 
 def print_usage():
     """Print usage instructions"""
-    print("Usage: gpumdkit -plt nemd [real_length] [scale_eff_size] [cutoff_freq] [save]")
+    print("Usage: gpumdkit.sh -plt nemd [real_length] [scale_eff_size] [cutoff_freq] [save]")
     print("Params:")
     print("  real_length   : Real length of heat tranfer zone in nm (set to 'Auto', with auto-calculation)")
     print("  scale_eff_size: Optional, Scale factor for effective cross-sectional area (default: 1)")
@@ -57,7 +57,7 @@ def print_usage():
     print("                     - S_eff: real or effective area of the system")
     print("  cutoff_freq   : Optional, Cutoff frequency for SHC calculation in THz (default: 60)")
     print("  save          : Optional, save the plot as 'nemd.png'")
-    print("  !!! Note !!!  : If no SHC data, set [scale_eff_size] and [cutoff_freq] to any number as placeholders when using 'save'.")
+    print("  !!! Note !!!  : If no SHC data, set [scale_eff_size] and [cutoff_freq] to any non-zero number as placeholders when using 'save'.")
 
 class NEMD_Processor:
     def __init__(self, _directory, _real_length=None, _scale_eff_size=1, _cutoff_freq=60, _scale_vacuum=1):
@@ -186,6 +186,7 @@ class NEMD_Processor:
         Reformed_NEMD_data = {}
 
         # Get parameters from run.in
+        direction = None  # heat transfer axis; set by compute_shc, else auto-detected below
         with open(self.path['run'], 'r') as file:
             found_nemd = False
             for line in file:
@@ -232,6 +233,14 @@ class NEMD_Processor:
             group = group_arr
         else:
             group = group_arr[:, 0]
+
+        if direction is None:
+            # No compute_shc in run.in: infer the heat transfer axis as the
+            # Cartesian direction where the source/sink groups are most separated
+            heat_pos = model.positions[(group == 1)].mean(axis=0)
+            cold_pos = model.positions[(group == N_temp_group - 1)].mean(axis=0)
+            direction = int(np.argmax(np.abs(heat_pos - cold_pos)))
+
         coords_heat = model.positions[(group == 1), direction].mean()
         coords_cold = model.positions[(group == N_temp_group - 1), direction].mean()
         xticks_length = np.linspace(coords_heat, coords_cold, N_temp_group - 1) * 0.1
@@ -278,7 +287,6 @@ class NEMD_Processor:
         print("NEMD Thermal Conductivity Results")
         print("=" * 70)
         print(f"\nEffective length: {Length:.4f} nm")
-        # print(f"Scale_vacuum: {self.scale_vacuum}")
         print(f"Scale_eff_size: {self.scale_eff_size}\n")
         print(f"Thermal conductance G = {Reformed_NEMD_data['G'][0, -2]:.6f} ± {Reformed_NEMD_data['G'][0, -1]:.6f} MW/m²K")
         print(f"Thermal conductivity κ = {Reformed_NEMD_data['k'][0, -2]:.6f} ± {Reformed_NEMD_data['k'][0, -1]:.6f} W/mK")

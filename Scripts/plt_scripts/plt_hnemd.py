@@ -3,7 +3,7 @@
 GPUMDkit: A User-Friendly Toolkit for GPUMD and NEP
 Repository: https://github.com/zhyan0603/GPUMDkit
 Citation: Z. Yan et al., GPUMDkit: A User-Friendly Toolkit for GPUMD and NEP,
-          MGE Advances, 2026, e70074 (https://doi.org/10.1002/mgea.70074)
+          MGE Advances, 2026, 4, e70074 (https://doi.org/10.1002/mgea.70074)
 =============================================================================
 Script:     plt_hnemd.py
 Category:   Plot Scripts
@@ -47,7 +47,7 @@ trap = np.trapezoid if hasattr(np, "trapezoid") else getattr(np, "trapz")
 
 def print_usage():
     """Print usage instructions"""
-    print("Usage: gpumdkit -plt hnemd [scale_eff_size] [cutoff_freq] [save]")
+    print("Usage: gpumdkit.sh -plt hnemd [scale_eff_size] [cutoff_freq] [save]")
     print("Params:")
     print("  scale_eff_size: Optional, Scale factor for effective cross-sectional area (default: 1)")
     print("                   • For 3D bulk systems: use 1")

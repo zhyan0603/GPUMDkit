@@ -3,13 +3,14 @@
 GPUMDkit: A User-Friendly Toolkit for GPUMD and NEP
 Repository: https://github.com/zhyan0603/GPUMDkit
 Citation: Z. Yan et al., GPUMDkit: A User-Friendly Toolkit for GPUMD and NEP,
-          MGE Advances, 2026, e70074 (https://doi.org/10.1002/mgea.70074)
+          MGE Advances, 2026, 4, e70074 (https://doi.org/10.1002/mgea.70074)
 =============================================================================
 Script:     energy_force_virial_analyzer.py
 Category:   Analyzer Scripts
 Purpose:    Compute the range (min, max) of energy, force, or virial in an
             extxyz file. Optionally plot a histogram.
-Usage:      python energy_force_virial_analyzer.py <filename> <property> [hist]
+Usage:      gpumdkit.sh -range <filename> <property> [hist]
+            python energy_force_virial_analyzer.py <filename> <property> [hist]
 Arguments:
   filename   Input extxyz file
   property   Property to analyze: energy, force, or virial
@@ -22,6 +23,21 @@ Last-modified: 2026-05-16
 """
 
 import sys
+
+args = sys.argv[1:]
+if len(args) < 2 or args[0] in ("-h", "--help"):
+    print(" Usage: gpumdkit.sh -range <exyzfile> <property> [hist]")
+    print("    or: python energy_force_virial_analyzer.py <filename> <property> [hist]")
+    print("")
+    print(" Arguments:")
+    print("   exyzfile    Input extxyz trajectory file")
+    print("   property    Property to analyze: energy, force, or virial")
+    print("   hist        (optional) If 'hist', plot a histogram")
+    print("")
+    print(" Example: gpumdkit.sh -range train.xyz force hist")
+    print("")
+    sys.exit(0 if args and args[0] in ("-h", "--help") else 1)
+
 import numpy as np
 from ase.io import read
 import matplotlib.pyplot as plt
@@ -63,11 +79,6 @@ def plot_histogram(values, property_name):
     #plt.savefig(f'range_{property_name.capitalize()}.png')
 
 if __name__ == "__main__":
-    # Check if the required arguments are provided
-    if len(sys.argv) < 3:
-        print("Usage: python script.py <filename> <property> [hist]")
-        sys.exit(1)
-    
     filename = sys.argv[1]
     property_name = sys.argv[2]
     plot_hist = len(sys.argv) > 3 and sys.argv[3] == 'hist'
@@ -84,4 +95,3 @@ if __name__ == "__main__":
     # Plot histogram if requested
     if plot_hist:
         plot_histogram(values, property_name)
-

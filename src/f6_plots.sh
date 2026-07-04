@@ -2,7 +2,7 @@
 # GPUMDkit plots module
 # Repository: https://github.com/zhyan0603/GPUMDkit
 # Citation: Z. Yan et al., GPUMDkit: A User-Friendly Toolkit
-#           for GPUMD and NEP, MGE Advances, 2026, e70074
+#           for GPUMD and NEP, MGE Advances, 2026, 4, e70074
 # Author: Zihan YAN (yanzihan@westlake.edu.cn)
 # ============================================================
 
@@ -90,6 +90,7 @@ function f6_plots_two_column(){
     echo " |  msd_sdc        - MSD and SDC together           sigma          - Arrhenius ionic conductivity|"
     echo " |  D              - Arrhenius diffusivity          sigma_xyz      - Directional Arrhenius sigma |"
     echo " |  D_xyz          - Directional Arrhenius D                                                     |"
+    echo " |  doas           - Density of atomistic states                                                 |"
     echo " +-----------------------------------------------------------------------------------------------+"
     echo " |                                    MD & Structural Analysis                                   |"
     echo " +-----------------------------------------------------------------------------------------------+"
@@ -97,7 +98,6 @@ function f6_plots_two_column(){
     echo " |  rdf            - Radial distribution function   rdf_pmf        - Potential of mean force     |"
     echo " |  vac            - Velocity autocorrelation       cohesive       - Cohesive energy curve       |"
     echo " |  net_force      - Net force distribution         plane-grid     - Displacement plane grid     |"
-    echo " |  doas           - Density of atomistic states                                                 |"
     echo " +-----------------------------------------------------------------------------------------------+"
     echo " |                                        Heat Transport                                         |"
     echo " +-----------------------------------------------------------------------------------------------+"

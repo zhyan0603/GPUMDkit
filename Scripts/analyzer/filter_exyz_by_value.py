@@ -3,24 +3,43 @@
 GPUMDkit: A User-Friendly Toolkit for GPUMD and NEP
 Repository: https://github.com/zhyan0603/GPUMDkit
 Citation: Z. Yan et al., GPUMDkit: A User-Friendly Toolkit for GPUMD and NEP,
-          MGE Advances, 2026, e70074 (https://doi.org/10.1002/mgea.70074)
+          MGE Advances, 2026, 4, e70074 (https://doi.org/10.1002/mgea.70074)
 =============================================================================
 Script:     filter_exyz_by_value.py
 Category:   Analyzer Scripts
 Purpose:    Filter structures based on energy, force, or virial thresholds.
-Usage:      python filter_exyz_by_value.py <input_file> <property> <threshold>
+Usage:      gpumdkit.sh -filter_value <input_file> <property> <threshold>
+            python filter_exyz_by_value.py <input_file> <property> <threshold>
 Arguments:
   input_file  Input extxyz file
   property    Filtering property: energy, force, or virial
   threshold   Maximum allowed value for the specified property
 Output:
   filtered.xyz
-Author:     Zihan YAN (yanzihan@westlake.edu.cn)X
+Author:     Zihan YAN (yanzihan@westlake.edu.cn)
 Last-modified: 2026-05-16
 =============================================================================
 """
 
 import sys
+
+args = sys.argv[1:]
+if len(args) < 3 or args[0] in ("-h", "--help"):
+    print(" Usage: gpumdkit.sh -filter_value <input_file> <property> <threshold>")
+    print("    or: python filter_exyz_by_value.py <input_file> <property> <threshold>")
+    print("")
+    print(" Arguments:")
+    print("   input_file   Input extxyz trajectory file")
+    print("   property     Filtering property: energy, force, or virial")
+    print("   threshold    Maximum allowed value for the specified property")
+    print("")
+    print(" Output:")
+    print("   filtered.xyz  Structures that pass the filter")
+    print("")
+    print(" Example: gpumdkit.sh -filter_value train.xyz energy -3.5")
+    print("")
+    sys.exit(0 if args and args[0] in ("-h", "--help") else 1)
+
 from ase.io import read, write
 
 def main():
@@ -56,7 +75,4 @@ def main():
     write(output_filename, filtered_images)
 
 if __name__ == "__main__":
-    if len(sys.argv) != 4:
-        print("Usage: python script.py <input_file> <property> <threshold>")
-        sys.exit(1)
     main()

@@ -3,7 +3,7 @@
 GPUMDkit: A User-Friendly Toolkit for GPUMD and NEP
 Repository: https://github.com/zhyan0603/GPUMDkit
 Citation: Z. Yan et al., GPUMDkit: A User-Friendly Toolkit for GPUMD and NEP,
-          MGE Advances, 2026, e70074 (https://doi.org/10.1002/mgea.70074)
+          MGE Advances, 2026, 4, e70074 (https://doi.org/10.1002/mgea.70074)
 =============================================================================
 Script:     rdf_calculator_ovito.py
 Category:   Calculator Scripts
@@ -32,11 +32,11 @@ if len(sys.argv) != 4:
     sys.exit(1)
 
 exyzfile = sys.argv[1]
-cutoff = sys.argv[2]
-bins = sys.argv[3]
+cutoff = float(sys.argv[2])
+bins = int(sys.argv[3])
 
 pipeline = import_file(exyzfile)
-modifier = CoordinationAnalysisModifier(cutoff=cutoff,number_of_bins=bins,partial=True)
+modifier = CoordinationAnalysisModifier(cutoff=cutoff, number_of_bins=bins, partial=True)
 pipeline.modifiers.append(modifier)
 pipeline.modifiers.append(TimeAveragingModifier(operate_on='table:coordination-rdf'))
 export_file(pipeline,"rdf.txt","txt/table",key="coordination-rdf[average]")

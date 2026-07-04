@@ -3,7 +3,7 @@
 GPUMDkit: A User-Friendly Toolkit for GPUMD and NEP
 Repository: https://github.com/zhyan0603/GPUMDkit
 Citation: Z. Yan et al., GPUMDkit: A User-Friendly Toolkit for GPUMD and NEP,
-          MGE Advances, 2026, e70074 (https://doi.org/10.1002/mgea.70074)
+          MGE Advances, 2026, 4, e70074 (https://doi.org/10.1002/mgea.70074)
 =============================================================================
 Script:     pynep_select_structs.py
 Category:   Sample Structure Scripts
@@ -30,6 +30,12 @@ import matplotlib.pyplot as plt
 from sklearn.decomposition import PCA
 from pynep.calculate import NEP
 from pynep.select import FarthestPointSample
+
+
+def print_dependency_notice():
+    print(" This function requires the pynep package.")
+    print(" This PyNEP sampling entry is deprecated. We recommend using NepTrain sampling instead.")
+
 
 def print_progress_bar(iteration, total, prefix='', suffix='', decimals=1, length=50, fill='█'):
     percent = ("{0:." + str(decimals) + "f}").format(100 * (iteration / float(total)))
@@ -66,8 +72,10 @@ def calculate_descriptors():
 # Check command line arguments
 if len(sys.argv) < 4:
     print(" Usage: python pynep_select_structs.py <sampledata_file> <traindata_file> <nep_model_file>")
-    print(" Examp: python pynep_select_structs.py dump.xyz train.xyz nep.txt")
+    print(" Example: python pynep_select_structs.py dump.xyz train.xyz nep.txt")
     sys.exit(1)
+
+print_dependency_notice()
 
 # Load data
 sampledata = read(sys.argv[1], ':')
