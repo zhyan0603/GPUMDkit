@@ -7,12 +7,19 @@ description: >
   format converters, plotting scripts, and workflow tools.
   Use when user asks about: adding a new command, creating a new script,
   contributing to GPUMDkit, code conventions, or how to extend the toolkit.
-allowed-tools: Bash(gpumdkit *) Bash(python3 *) Bash(python *) Bash(ls *) Bash(mkdir *)
+allowed-tools: Bash(gpumdkit.sh *) Bash(gpumdkit *) Bash(python3 *) Bash(python *) Bash(ls *) Bash(mkdir *)
 ---
 
 > **Covers**: coding conventions, file structure, shell/Python templates, adding new features, and what NOT to propose.
 
 # GPUMDkit Contributing Guide
+
+## Agent Routing
+
+- Use this skill before changing GPUMDkit code, scripts, CLI routing, docs, or skill files.
+- Keep edits minimal and aligned with existing shell/Python patterns.
+- For user-facing GPUMDkit command discovery, use `gpumdkit.sh -skill` and `gpumdkit.sh -h`.
+- After Python edits, run `python3 -m py_compile <file>` and remove `__pycache__`.
 
 ## Project Structure
 

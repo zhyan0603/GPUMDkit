@@ -6,10 +6,10 @@
   &nbsp;·&nbsp;
   <a href="./docs/README_zh-CN.md">简体中文</a>
   &nbsp;·&nbsp;
-  <a href="https://zhyan0603.github.io/GPUMDkit/">Website</a> &nbsp;·&nbsp;
-  <a href="https://zhyan0603.github.io/GPUMDkit/htmls/index.html">Documentation</a>
+  <a href="https://gpumdkit.cn/">Website</a> &nbsp;·&nbsp;
+  <a href="https://gpumdkit.cn/htmls/index.html">Documentation</a>
   &nbsp;·&nbsp;
-  <a href="https://zhyan0603.github.io/GPUMDkit/gallery.html">Gallery</a>
+  <a href="https://gpumdkit.cn/gallery.html">Gallery</a>
   &nbsp;
 </p>
 <p align="center">
@@ -265,13 +265,13 @@ You can also save images as PNG if your device doesn't support visualization:
 gpumdkit.sh -plt thermo save
 ```
 
-Refer to our [documentation](https://zhyan0603.github.io/GPUMDkit/) for more detailed examples and command options.
+Refer to our [documentation](https://gpumdkit.cn/) for more detailed examples and command options.
 
 #### Custom Commands
 
 `GPUMDkit` now supports custom commands via `~/.gpumdkit.in`.
 
-You can add your own shortcuts (e.g., `gpumdkit.sh -yourcommand`) by defining functions in this file. This allows you to extend `GPUMDkit` with personal scripts. See [custom command documentation](https://zhyan0603.github.io/GPUMDkit/) for details.
+You can add your own shortcuts (e.g., `gpumdkit.sh -yourcommand`) by defining functions in this file. This allows you to extend `GPUMDkit` with personal scripts. See [custom command documentation](https://gpumdkit.cn/) for details.
 
 #### Tab Completion Support
 

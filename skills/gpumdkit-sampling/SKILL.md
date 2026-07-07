@@ -6,10 +6,18 @@ description: >
   and force deviation selection.
   Use when user asks about: structure sampling, FPS, farthest point sampling, structure selection,
   perturbation, or training data preparation.
-allowed-tools: Bash(gpumdkit *) Bash(python3 *)
+allowed-tools: Bash(gpumdkit.sh *) Bash(gpumdkit *) Bash(python3 *)
 ---
 
 # GPUMDkit Structure Sampling
+
+## Agent Routing
+
+- Use this skill for sampling, perturbing, selecting, and slicing structures for training datasets.
+- Prefer `gpumdkit.sh -frame_range ...` when extracting frame ranges.
+- Uniform/random sampling, perturbation, force-deviation selection, and NepTrain FPS are primarily menu or direct-script workflows.
+- `neptrain_select_structs.py` accepts three positional files but still prompts for the selection method; treat it as semi-interactive.
+- Use direct scripts under `${GPUMDkit_path}/Scripts/sample_structures/` when no CLI flag exists.
 
 ## Available Methods
 
@@ -28,11 +36,11 @@ allowed-tools: Bash(gpumdkit *) Bash(python3 *)
 
 ```bash
 # Direct Python execution
-python Scripts/sample_structures/sample_structures.py <input.xyz> <method> <num_samples> [skip_initial]
+python3 ${GPUMDkit_path}/Scripts/sample_structures/sample_structures.py <input.xyz> <method> <num_samples> [skip_initial]
 
 # Examples
-python Scripts/sample_structures/sample_structures.py dump.xyz uniform 50
-python Scripts/sample_structures/sample_structures.py dump.xyz random 100 500
+python3 ${GPUMDkit_path}/Scripts/sample_structures/sample_structures.py dump.xyz uniform 50
+python3 ${GPUMDkit_path}/Scripts/sample_structures/sample_structures.py dump.xyz random 100 500
 
 # Parameters:
 # - input.xyz: Input trajectory file
@@ -55,11 +63,11 @@ python Scripts/sample_structures/sample_structures.py dump.xyz random 100 500
 # Interactive mode
 gpumdkit.sh  # Select: 2) Sample Structures -> 203
 
-# Direct Python execution
-python Scripts/sample_structures/neptrain_select_structs.py <sample.xyz> <train.xyz> <nep.txt>
+# Semi-interactive direct Python execution
+python3 ${GPUMDkit_path}/Scripts/sample_structures/neptrain_select_structs.py <sample.xyz> <train.xyz> <nep.txt>
 
 # Example
-python Scripts/sample_structures/neptrain_select_structs.py dump.xyz train.xyz nep.txt
+python3 ${GPUMDkit_path}/Scripts/sample_structures/neptrain_select_structs.py dump.xyz train.xyz nep.txt
 
 # Selection methods (interactive):
 # 1. Minimum distance: Select until max distance < threshold
@@ -92,10 +100,10 @@ gpumdkit.sh -pynep
 gpumdkit.sh  # Select: 2) Sample Structures -> 204
 
 # Direct Python execution
-python Scripts/sample_structures/perturb_structure.py <input.vasp> <pert_num> <cell_pert> <atom_pert> <style>
+python3 ${GPUMDkit_path}/Scripts/sample_structures/perturb_structure.py <input.vasp> <pert_num> <cell_pert> <atom_pert> <style>
 
 # Example
-python Scripts/sample_structures/perturb_structure.py POSCAR 20 0.03 0.2 uniform
+python3 ${GPUMDkit_path}/Scripts/sample_structures/perturb_structure.py POSCAR 20 0.03 0.2 uniform
 
 # Parameters:
 # - input.vasp: POSCAR/CONTCAR file
@@ -116,10 +124,10 @@ python Scripts/sample_structures/perturb_structure.py POSCAR 20 0.03 0.2 uniform
 gpumdkit.sh  # Select: 2) Sample Structures -> 205
 
 # Direct Python execution
-python Scripts/sample_structures/select_max_modev.py <top_n> <min_deviation>
+python3 ${GPUMDkit_path}/Scripts/sample_structures/select_max_modev.py <top_n> <min_deviation>
 
 # Example
-python Scripts/sample_structures/select_max_modev.py 200 0.15
+python3 ${GPUMDkit_path}/Scripts/sample_structures/select_max_modev.py 200 0.15
 
 # Required files in current directory:
 # - active.out (from GPUMD active command)
@@ -140,7 +148,7 @@ python Scripts/sample_structures/select_max_modev.py 200 0.15
 gpumdkit.sh -frame_range <input.xyz> <start_fraction> <end_fraction>
 
 # Direct Python execution also works
-python Scripts/sample_structures/frame_range.py <input.xyz> <start_fraction> <end_fraction>
+python3 ${GPUMDkit_path}/Scripts/sample_structures/frame_range.py <input.xyz> <start_fraction> <end_fraction>
 
 # Example: Extract first 80% of frames
 gpumdkit.sh -frame_range dump.xyz 0 0.8
@@ -174,10 +182,10 @@ cat selected.xyz >> train.xyz
 # ... generate active.out and active.xyz ...
 
 # 2. Select high-deviation structures
-python Scripts/sample_structures/select_max_modev.py 100 0.1
+python3 ${GPUMDkit_path}/Scripts/sample_structures/select_max_modev.py 100 0.1
 
 # 3. Or use FPS for diversity
-python Scripts/sample_structures/neptrain_select_structs.py active.xyz train.xyz nep.txt
+python3 ${GPUMDkit_path}/Scripts/sample_structures/neptrain_select_structs.py active.xyz train.xyz nep.txt
 ```
 
 ### Structure Perturbation for Initial Data
@@ -185,7 +193,7 @@ python Scripts/sample_structures/neptrain_select_structs.py active.xyz train.xyz
 ```bash
 # 1. Start from equilibrium structure
 # 2. Generate perturbations
-python Scripts/sample_structures/perturb_structure.py POSCAR 50 0.05 0.3 uniform
+python3 ${GPUMDkit_path}/Scripts/sample_structures/perturb_structure.py POSCAR 50 0.05 0.3 uniform
 
 # 3. Run DFT on perturbed structures
 # ... DFT calculations ...
@@ -224,7 +232,7 @@ pip install neptrain  # For FPS by NepTrain
 1. **FPS is preferred**: Farthest Point Sampling provides better diversity than uniform/random
 2. **NepTrain over PyNEP**: NepTrain is actively maintained; PyNEP is deprecated
 3. **Filter before sampling**: Remove unphysical structures (too close, too large) first
-4. **Frame indexing is 0-based**: First frame is index 0
+4. **Frame ranges use fractions**: `-frame_range` uses start/end fractions between 0.0 and 1.0
 5. **Output is extxyz**: All sampling methods output extxyz format
 
 ## Detailed Documentation

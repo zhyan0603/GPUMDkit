@@ -6,10 +6,17 @@ description: >
   Arrhenius plots, phonon DOS, thermal conductivity, and descriptor visualization.
   Use when user asks about: plotting, visualization, training results, MSD plot, RDF plot,
   thermal conductivity, Arrhenius plot, or NEP training visualization.
-allowed-tools: Bash(gpumdkit *)
+allowed-tools: Bash(gpumdkit.sh *) Bash(gpumdkit *) Bash(python3 *)
 ---
 
 # GPUMDkit Visualization
+
+## Agent Routing
+
+- Use this skill for plotting NEP training outputs, GPUMD MD outputs, transport properties, RDF/PMF, heat transport, phonons, and descriptors.
+- Prefer `gpumdkit.sh -plt <type> ...` for plots.
+- Many plot scripts read fixed filenames from the current directory, such as `msd.out`, `thermo.out`, or `rdf.out`; check required input files before running.
+- If syntax is uncertain, run `gpumdkit.sh -plt -h` or inspect the target script help/header.
 
 ## Quick Reference
 
@@ -75,7 +82,7 @@ gpumdkit.sh -plt sdc
 gpumdkit.sh -plt msd_sdc
 
 # MSD for all species (requires all_groups in run.in)
-gpumdkit.sh -plt msd_all Li P S
+gpumdkit.sh -plt msd_all msd.out Li P S
 
 # Arrhenius plots (requires temperature-organized directories)
 # Directory structure: 300K/, 350K/, 400K/, ... each containing msd.out
@@ -194,7 +201,7 @@ gpumdkit.sh -plt nemd 10 1 60 save
 | `des` | `descriptors.png` |
 | `msd` | `msd.png` |
 | `sdc` | `sdc.png` |
-| `msd_sdc` | `MSD_SDC.png` |
+| `msd_sdc` | `msd_sdc.png` |
 | `thermo` | `thermo.png` |
 | `rdf` | `rdf.png` |
 | `arrhenius_sigma` | `Arrhenius_sigma.png` |

@@ -6,10 +6,17 @@ description: >
   and active learning workflow automation.
   Use when user asks about: batch calculation, workflow automation, SCF batch, MD sampling,
   high-throughput simulation, or active learning.
-allowed-tools: Bash(gpumdkit *) Bash(python3 *)
+allowed-tools: Bash(gpumdkit.sh *) Bash(gpumdkit *) Bash(python3 *)
 ---
 
 # GPUMDkit Workflows
+
+## Agent Routing
+
+- Use this skill for batch SCF/MD setup, high-throughput pretreatment, and active-learning workflow planning.
+- Most workflow tools are interactive menu workflows. Use them for guidance unless the user explicitly wants to run them.
+- Use direct scripts under `${GPUMDkit_path}/Scripts/workflow/` only for documented direct Python or shell workflow scripts.
+- Do not run development active-learning scripts unless the user explicitly asks for experimental active-learning automation.
 
 ## Available Workflows
 
@@ -155,6 +162,8 @@ gpumdkit.sh -range new_data.xyz force
 # Scripts/workflow/workflow_active_learning_dev.sh
 # Scripts/workflow/workflow_active_learning_dev_multielement.sh
 ```
+
+Do not run these development scripts unless the user explicitly asks for experimental active-learning automation.
 
 **Configurable parameters:**
 

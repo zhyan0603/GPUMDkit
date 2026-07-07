@@ -6,10 +6,17 @@ description: >
   charge balance check, distance calculations, property filtering, and probability density analysis.
   Use when user asks about: structure analysis, data quality, minimum distance, composition,
   charge balance, outlier detection, or structure filtering.
-allowed-tools: Bash(gpumdkit *) Bash(python3 *)
+allowed-tools: Bash(gpumdkit.sh *) Bash(gpumdkit *) Bash(python3 *)
 ---
 
 # GPUMDkit Analyzers
+
+## Agent Routing
+
+- Use this skill for data-quality checks, composition/species checks, distance analysis, filtering, outlier detection, and probability-density analysis.
+- Prefer `gpumdkit.sh <flag> ...` for CLI-supported tools.
+- Use direct scripts under `${GPUMDkit_path}/Scripts/analyzer/` for menu-only tools such as non-interactive outlier thresholds.
+- If syntax is uncertain, run `gpumdkit.sh -h` or the target analyzer script with `-h`.
 
 ## Available Tools
 
@@ -127,6 +134,9 @@ gpumdkit.sh -filter_value train.xyz force 20
 ```bash
 # Find outlier structures based on RMSE
 gpumdkit.sh  # Select: 5) Analyzer -> 502
+
+# Non-interactive threshold mode also works
+python3 ${GPUMDkit_path}/Scripts/analyzer/find_outliers.py 20 100 1.0
 
 # Required files in current directory:
 # - train.xyz

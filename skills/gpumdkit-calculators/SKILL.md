@@ -6,10 +6,17 @@ description: >
   neighbor lists, displacements, octahedral tilt, polarization, and structure minimization.
   Use when user asks about: ionic conductivity, diffusion coefficient, descriptors, NEB,
   mean square displacement, density of atomistic states, or structure relaxation.
-allowed-tools: Bash(gpumdkit *) Bash(python3 *)
+allowed-tools: Bash(gpumdkit.sh *) Bash(gpumdkit *) Bash(python3 *)
 ---
 
 # GPUMDkit Calculators
+
+## Agent Routing
+
+- Use this skill for material-property calculations from structures, trajectories, GPUMD outputs, or NEP models.
+- Prefer `gpumdkit.sh -calc <type> ...` for all listed calculators.
+- Use direct scripts under `${GPUMDkit_path}/Scripts/calculators/` only when debugging a script or when a CLI shortcut is unavailable.
+- If syntax is uncertain, run `gpumdkit.sh -calc -h` or the target calculator script with `-h`.
 
 ## Available Calculators
 

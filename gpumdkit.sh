@@ -192,6 +192,7 @@ function help_info_table(){
     echo " | -h            Show this help table            | -plt <type>        Plot and visualization tools       |"
     echo " | -calc <type>  Calculator tools                | -time <gpumd|nep>  Time-consuming analyzer            |"
     echo " | -update       Update GPUMDkit                 | -clean             Clean extra files in current dir   |"
+    echo " | -skill        Show GPUMDkit agent skills info |                                                     |"
     echo " +-------------------------------------------------------------------------------------------------------+"
     echo " |                                         FORMAT CONVERSION                                             |"
     echo " +-------------------------------------------------------------------------------------------------------+"
@@ -272,6 +273,9 @@ run_python_script() {
 if [ ! -z "$1" ]; then
     case $1 in
         -h|-help) help_info_table ;;
+        -skill)
+            source ${utils_path}/skill_info.sh
+            skill_info_table ;;
         -clean) 
             source ${utils_path}/clean_extra_files.sh
             clean_extra_files ;;

@@ -6,10 +6,10 @@
   &nbsp;·&nbsp;
   <strong>简体中文</strong>
   &nbsp;·&nbsp;
-  <a href="https://zhyan0603.github.io/GPUMDkit/">Website</a> &nbsp;·&nbsp;
-  <a href="https://zhyan0603.github.io/GPUMDkit/htmls/index.html">Documentation</a>
+  <a href="https://gpumdkit.cn/">Website</a> &nbsp;·&nbsp;
+  <a href="https://gpumdkit.cn/htmls/index.html">Documentation</a>
   &nbsp;·&nbsp;
-  <a href="https://zhyan0603.github.io/GPUMDkit/gallery.html">Gallery</a>
+  <a href="https://gpumdkit.cn/gallery.html">Gallery</a>
   &nbsp;
 </p>
 <p align="center">
@@ -264,13 +264,13 @@ gpumdkit.sh -plt thermo
 gpumdkit.sh -plt thermo save
 ```
 
-更多详细示例和命令选项请参考我们的[文档](https://zhyan0603.github.io/GPUMDkit/)。
+更多详细示例和命令选项请参考我们的[文档](https://gpumdkit.cn/)。
 
 #### 自定义命令
 
 `GPUMDkit` 支持通过 `~/.gpumdkit.in` 文件自定义命令。
 
-你可以在该文件中定义函数来添加自己的快捷命令（例如 `gpumdkit.sh -yourcommand`），从而扩展 `GPUMDkit` 的功能。详细用法请参见[自定义命令文档](https://zhyan0603.github.io/GPUMDkit/)。
+你可以在该文件中定义函数来添加自己的快捷命令（例如 `gpumdkit.sh -yourcommand`），从而扩展 `GPUMDkit` 的功能。详细用法请参见[自定义命令文档](https://gpumdkit.cn/)。
 
 #### Tab 补全支持
 

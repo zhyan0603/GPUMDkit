@@ -1,0 +1,58 @@
+#!/bin/bash
+
+# ============================================================
+# GPUMDkit agent skill information helper
+# Repository: https://github.com/zhyan0603/GPUMDkit
+# Author: Zihan YAN (yanzihan@westlake.edu.cn)
+# ============================================================
+
+function skill_info_table(){
+    echo " +-------------------------------------------------------------------------------------------------------+"
+    echo " |                                      GPUMDkit Agent Skills                                            |"
+    echo " +-------------------------------------------------------------------------------------------------------+"
+    echo " Skill source path:"
+    echo "   ${GPUMDkit_path}/skills"
+    echo ""
+    echo " Available skills:"
+    echo "   gpumdkit-main                  General usage, navigation, and entry point"
+    echo "   gpumdkit-format-conversion     Structure file format conversion"
+    echo "   gpumdkit-calculators           Material property calculations"
+    echo "   gpumdkit-analyzers             Structure analysis and validation"
+    echo "   gpumdkit-visualization         Plotting and visualization"
+    echo "   gpumdkit-workflows             Batch processing and automation"
+    echo "   gpumdkit-sampling              Structure sampling and selection"
+    echo "   gpumdkit-contributing          Code conventions and adding new features"
+    echo ""
+    echo " Recommended agent behavior:"
+    echo "   Ask the user whether to install skills globally or only for the current project."
+    echo "   Global install is usually better when GPUMDkit is used across multiple projects."
+    echo "   Project install is better when the user wants repository-local configuration."
+    echo ""
+    echo " Global install targets:"
+    echo "   OpenCode:       ~/.config/opencode/skills"
+    echo "   Claude compat:  ~/.claude/skills"
+    echo "   Agents compat:  ~/.agents/skills"
+    echo ""
+    echo " Project install targets:"
+    echo "   OpenCode:       .opencode/skills"
+    echo "   Claude compat:  .claude/skills"
+    echo "   Agents compat:  .agents/skills"
+    echo ""
+    echo " Example: install globally for OpenCode:"
+    echo "   target_dir=\"\${HOME}/.config/opencode/skills\""
+    echo "   mkdir -p \"\${target_dir}\""
+    echo "   for skill_dir in \${GPUMDkit_path}/skills/gpumdkit-*; do"
+    echo "       ln -s \"\${skill_dir}\" \"\${target_dir}/\$(basename \"\${skill_dir}\")\""
+    echo "   done"
+    echo ""
+    echo " Example: install for the current project only:"
+    echo "   target_dir=\".opencode/skills\""
+    echo "   mkdir -p \"\${target_dir}\""
+    echo "   for skill_dir in \${GPUMDkit_path}/skills/gpumdkit-*; do"
+    echo "       ln -s \"\${skill_dir}\" \"\${target_dir}/\$(basename \"\${skill_dir}\")\""
+    echo "   done"
+    echo ""
+    echo " Replace target_dir with another install target listed above if needed."
+    echo " Read ${GPUMDkit_path}/skills/README.md for details."
+    echo " +-------------------------------------------------------------------------------------------------------+"
+}

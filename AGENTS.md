@@ -10,13 +10,14 @@ gpumdkit.sh -h                             # Show all CLI flags
 gpumdkit.sh -plt train                     # Plot NEP training
 gpumdkit.sh -calc msd dump.xyz Li 10       # Calculate MSD
 gpumdkit.sh -dp2xyz database train.xyz     # DeepMD npy → extxyz
+gpumdkit.sh -skill                         # Show agent skill paths and install hints
 ```
 
-**Documentation**: https://zhyan0603.github.io/GPUMDkit/
+**Documentation**: https://gpumdkit.cn/
 
 ## Agent Skills
 
-When the user asks about GPUMDkit features, use the skills in `.opencode/skills/`:
+When the user asks about GPUMDkit features, use the GPUMDkit skills. The canonical skill source is `${GPUMDkit_path}/skills`; agent tools may use global or project-local symlinks to those skills. Run `gpumdkit.sh -skill` to print the local skill path, available skills, supported install targets, and install hints.
 
 | Skill | Use When |
 |-------|----------|

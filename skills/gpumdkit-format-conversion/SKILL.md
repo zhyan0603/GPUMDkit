@@ -5,10 +5,17 @@ description: >
   Supports VASP (POSCAR/OUTCAR/XDATCAR), LAMMPS, CP2K, ABACUS, CIF, MTP, ASE trajectory, and extxyz.
   Use when user asks about: format conversion, file conversion, structure conversion,
   POSCAR to xyz, OUTCAR to extxyz, LAMMPS dump conversion, or adding group labels.
-allowed-tools: Bash(gpumdkit *) Bash(python3 *)
+allowed-tools: Bash(gpumdkit.sh *) Bash(gpumdkit *) Bash(python3 *)
 ---
 
 # GPUMDkit Format Conversion
+
+## Agent Routing
+
+- Use this skill for structure/file conversion, metadata cleanup, group labels, weights, replication, and frame extraction.
+- Prefer `gpumdkit.sh <flag> ...` when a CLI flag exists.
+- Use direct scripts under `${GPUMDkit_path}/Scripts/format_conversion/` only for menu-only or legacy converters.
+- If syntax is uncertain, run `gpumdkit.sh -h` or the target script with `-h`.
 
 ## Supported Formats
 
@@ -72,6 +79,19 @@ gpumdkit.sh -cif2exyz input.cif model.xyz
 gpumdkit.sh -traj2exyz input.traj output.xyz
 ```
 
+### Menu-Only or Legacy Conversions
+
+```bash
+# MTP cfg to extxyz
+python3 ${GPUMDkit_path}/Scripts/format_conversion/mtp2xyz.py train.cfg Pd Ag
+
+# CP2K conversion through CLI menu helper
+gpumdkit.sh -cp2k2xyz
+
+# ABACUS conversion is available through the interactive menu:
+# gpumdkit.sh  # Select: 1) Format Conversion -> 104
+```
+
 ### dp2xyz
 
 Converts DeepMD npy datasets to extxyz format. Recursively scans a directory for datasets containing `type.raw`, `type_map.raw`, and `set.000/`.
@@ -80,7 +100,7 @@ Converts DeepMD npy datasets to extxyz format. Recursively scans a directory for
 ```
 gpumdkit.sh -dp2xyz database train.xyz
 ```
-Dependencies: `dpdata`, `ase`. Requires `conda activate gpumd` environment.
+Dependencies: `dpdata`, `ase`.
 Author: Denan LI (lidenan@westlake.edu.cn)
 
 ### Structure Manipulation
@@ -98,7 +118,7 @@ gpumdkit.sh -replicate POSCAR supercell.vasp 2 2 2
 # Replicate structure (by target atom count)
 gpumdkit.sh -replicate POSCAR supercell.vasp 256
 
-# Extract specific frame (0-based index)
+# Extract specific frame (1-based index)
 gpumdkit.sh -get_frame trajectory.xyz 1000
 
 # Clean extxyz metadata
@@ -123,7 +143,7 @@ gpumdkit.sh -clean_xyz input.xyz clean.xyz
 | `-addgroup` | Add group labels | `gpumdkit.sh -addgroup <poscar> <elem...>` |
 | `-addweight` | Add weight | `gpumdkit.sh -addweight <in> <out> <weight>` |
 | `-replicate` | Replicate structure | `gpumdkit.sh -replicate <in> <out> a b c` |
-| `-get_frame` | Extract frame | `gpumdkit.sh -get_frame <xyz> <index>` |
+| `-get_frame` | Extract frame (1-based index) | `gpumdkit.sh -get_frame <xyz> <index>` |
 | `-clean_xyz` | Clean extxyz info | `gpumdkit.sh -clean_xyz <in> <out>` |
 
 ## Examples
@@ -170,7 +190,7 @@ gpumdkit.sh -replicate POSCAR supercell_256.vasp 256
 
 1. **extxyz is the primary format**: Most GPUMDkit tools work with extxyz files
 2. **Group labels are essential**: Required for GPUMD/NEP to identify atom types
-3. **Frame indexing is 0-based**: First frame is index 0
+3. **Frame indexing for `-get_frame` is 1-based**: First frame is index 1
 4. **Element ordering matters for LAMMPS**: Must match atom type IDs in dump file
 5. **exyz2pos exports all frames**: Creates separate POSCAR for each frame
 

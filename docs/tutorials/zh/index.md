@@ -95,4 +95,4 @@ gpumdkit.sh -calc msd trajectory.xyz Li 10
 ## 链接
 
 - GitHub: https://github.com/zhyan0603/GPUMDkit
-- 文档: https://zhyan0603.github.io/GPUMDkit/
+- 文档: https://gpumdkit.cn/

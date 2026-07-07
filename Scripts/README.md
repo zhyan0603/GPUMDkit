@@ -194,7 +194,7 @@ Check individual subdirectory READMEs for specific requirements.
 
 ## Support
 
-- **Documentation**: [https://zhyan0603.github.io/GPUMDkit/home.html](https://zhyan0603.github.io/GPUMDkit/home.html)
+- **Documentation**: [https://gpumdkit.cn/home.html](https://gpumdkit.cn/home.html)
 - **Issues**: [GitHub Issues](https://github.com/zhyan0603/GPUMDkit/issues)
 - **Contact**: Zihan YAN (yanzihan@westlake.edu.cn)
 

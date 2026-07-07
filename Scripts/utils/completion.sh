@@ -13,7 +13,7 @@ _gpumdkit_completions() {
     prev="${COMP_WORDS[COMP_CWORD-1]}" # Previous word
 
     # List of primary options (extracted from gpumdkit.sh)
-    local opts="-h -help -update -U -clean -time -plt -calc -cbc -range -out2xyz -out2exyz -cp2k2xyz -pos2exyz -cif2pos -cif2exyz -exyz2pos -xdat2exyz -pos2lmp -lmp2exyz -traj2exyz -dp2xyz -addgroup -addlabel -addweight -min_dist -min_dist_pbc -filter_dist -filter_dist_pbc -filter_box -filter_value -filter_range -get_frame -clean_xyz -analyze_comp -chem_species -replicate -pda -pynep -frame_range -nep_modifier"
+    local opts="-h -help -skill -update -U -clean -time -plt -calc -cbc -range -out2xyz -out2exyz -cp2k2xyz -pos2exyz -cif2pos -cif2exyz -exyz2pos -xdat2exyz -pos2lmp -lmp2exyz -traj2exyz -dp2xyz -addgroup -addlabel -addweight -min_dist -min_dist_pbc -filter_dist -filter_dist_pbc -filter_box -filter_value -filter_range -get_frame -clean_xyz -analyze_comp -chem_species -replicate -pda -pynep -frame_range -nep_modifier"
 
     # Calculator subcommands
     local calc_subcmds="ionic-cond nep des doas neb minimize msd nlist disp avg-struct oct-tilt pol-abo3"

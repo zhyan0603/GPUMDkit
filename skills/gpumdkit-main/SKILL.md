@@ -1,16 +1,21 @@
 ---
 name: gpumdkit-main
 description: >
-  Use when working with GPUMD molecular dynamics or NEP potentials for computational materials science.
-  Provides format conversion, structure analysis, visualization, calculation tools, and workflow automation.
-  Supports VASP, LAMMPS, CP2K, ABACUS, CIF, and extxyz formats.
-  Use when user asks about: molecular dynamics, NEP training, structure conversion, ionic conductivity,
-  radial distribution function, mean square displacement, thermal conductivity, phonon DOS,
-  structure sampling, farthest point sampling, or computational materials analysis.
-allowed-tools: Bash(gpumdkit *) Bash(python3 *) Bash(python *)
+  Use for GPUMDkit installation, entry point help, module navigation, general overview,
+  and deciding which specialized GPUMDkit skill should handle a task. Prefer a specialized
+  skill for concrete conversion, calculation, analysis, plotting, workflow, or sampling requests.
+allowed-tools: Bash(gpumdkit.sh *) Bash(gpumdkit *) Bash(python3 *) Bash(python *)
 ---
 
 # GPUMDkit - Molecular Dynamics Toolkit
+
+## Agent Routing
+
+- Use this skill for installation, general usage, command discovery, module selection, and overview questions.
+- Do not use this skill for specific tasks when a specialized GPUMDkit skill applies.
+- Assume GPUMDkit is installed and `GPUMDkit_path` is set. Prefer `gpumdkit.sh ...` for CLI usage.
+- Run `gpumdkit.sh -skill` to discover the local GPUMDkit skill source path and installation hints for agent tools.
+- If command syntax is uncertain, run `gpumdkit.sh -h`, `gpumdkit.sh -calc -h`, or the target command with `-h`.
 
 ## Overview
 

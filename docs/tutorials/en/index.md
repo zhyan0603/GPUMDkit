@@ -95,4 +95,4 @@ Use `gpumdkit.sh -h` to see all available options.
 ## Links
 
 - GitHub: https://github.com/zhyan0603/GPUMDkit
-- Documentation: https://zhyan0603.github.io/GPUMDkit/
+- Documentation: https://gpumdkit.cn/
