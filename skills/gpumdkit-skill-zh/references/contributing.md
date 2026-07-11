@@ -495,22 +495,45 @@ python3 Scripts/path/to/script.py        # 缺少参数必须打印用法 + exit
 
 ## 验证清单
 
-提交前，运行以下检查：
+只运行与已修改文件相关的检查；不要无条件运行全部项目检查。始终运行空白检查。
 
 ```bash
-# Shell 语法
+# Shell 语法（仅当 .sh 文件有更改时）
 bash -n gpumdkit.sh
 find src Scripts -name '*.sh' -exec bash -n {} +
 
-# Python 语法
+# Python 语法（仅检查已修改的 Python 文件）
 python3 -m py_compile Scripts/path/to/your_script.py
 
 # py_compile 后清理 __pycache__
 find . -type d -name "__pycache__" -exec rm -rf {} + 2>/dev/null
 
-# MkDocs 构建（如果文档有更改）
+# MkDocs 构建（仅当 MkDocs 输入有更改时；见下文）
 mkdocs build -f docs/mkdocs.yml
 
-# 空白检查
+# 空白检查（始终运行）
 git diff --check
 ```
+
+### 何时构建 MkDocs
+
+仅当更改影响 MkDocs 消费的输入时，才运行
+`mkdocs build -f docs/mkdocs.yml`，包括：
+
+- `docs/tutorials/**`
+- `docs/mkdocs.yml`
+- 由该配置引用的 MkDocs 主题覆盖、插件、模板或资源
+
+不要仅因为 `docs/` 下的其他文件发生变化就运行 MkDocs。以下独立网站文件
+不是 MkDocs 输入，应直接进行相应验证：
+
+- `docs/index.html`、`docs/index_zh.html`、`docs/gallery.html` 和
+  `docs/publications.html`
+- `docs/css/**`、`docs/js/**`、`docs/Gallery/**`
+- `docs/gallery.json`、`docs/publications.json` 等独立 JSON/数据文件
+- `docs/htmls/**` 下的生成输出
+
+对于独立网站更改，根据所编辑文件运行 HTML 解析、JavaScript 语法检查、
+`git diff --check`，以及在布局或交互发生变化时进行有针对性的本地浏览器
+冒烟测试。不要手动编辑生成的 `docs/htmls/**` 文件；应修改对应的 MkDocs
+源文件并重新构建。

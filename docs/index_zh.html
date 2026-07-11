@@ -14,16 +14,6 @@
     <meta property="og:type" content="website">
     <meta name="twitter:card" content="summary_large_image">
     <link rel="canonical" href="https://gpumdkit.cn/index_zh.html">
-    <script>
-        (function() {
-            var lang = (navigator.language || navigator.userLanguage || '').toLowerCase();
-            var saved = localStorage.getItem('gpumdkit-lang');
-            if (saved === 'zh') return;
-            if (saved === 'en' || !lang.startsWith('zh')) {
-                window.location.href = 'index.html';
-            }
-        })();
-    </script>
     <link rel="stylesheet" href="css/home.css">
     <link rel="stylesheet" href="css/mobile.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -40,17 +30,17 @@
 
     <!-- Main Header -->
     <header class="main-header animate-on-scroll">
-        <div class="logo-container">
+        <a href="index_zh.html" class="logo-container" aria-label="GPUMDkit 首页">
             <img src="Gallery/gpumdkit_logo_lateral.png" alt="GPUMDkit Logo" class="logo">
-        </div>
+        </a>
         <button class="mobile-menu-btn" style="display: none;">☰</button>
         <nav class="nav-links">
-            <a href="index_zh.html" class="nav-item">首页</a>
+            <a href="index_zh.html" class="nav-item active" aria-current="page">首页</a>
             <a href="htmls/zh/index.html" class="nav-item">文档</a>
             <a href="gallery.html" class="nav-item">图库</a>
             <a href="publications.html" class="nav-item">出版物</a>
             <a href="https://github.com/zhyan0603/GPUMDkit/archive/refs/heads/main.zip" class="nav-item">下载</a>
-            <a href="index.html" class="nav-item lang-switch" onclick="localStorage.setItem('gpumdkit-lang','en')">English</a>
+            <a href="index.html" class="nav-item lang-switch">English</a>
         </nav>
     </header>
 
@@ -199,30 +189,30 @@
         <section id="gallery" class="animate-on-scroll">
             <h2 class="section-header">图库</h2>
             <div class="gallery-grid">
-                <div class="gallery-card">
-                    <img src="Gallery/train.png" alt="训练图" class="gallery-img">
+                <a href="gallery.html" class="gallery-card">
+                    <img src="Gallery/train.png" alt="训练图" class="gallery-img" loading="lazy">
                     <div class="gallery-caption">训练图</div>
-                </div>
-                <div class="gallery-card">
-                    <img src="Gallery/thermo.png" alt="热力学分析" class="gallery-img">
+                </a>
+                <a href="gallery.html" class="gallery-card">
+                    <img src="Gallery/thermo.png" alt="热力学分析" class="gallery-img" loading="lazy">
                     <div class="gallery-caption">热力学分析</div>
-                </div>
-                <div class="gallery-card">
-                    <img src="Gallery/prediction.png" alt="Parity 图" class="gallery-img">
+                </a>
+                <a href="gallery.html" class="gallery-card">
+                    <img src="Gallery/prediction.png" alt="Parity 图" class="gallery-img" loading="lazy">
                     <div class="gallery-caption">Parity 图</div>
-                </div>
-                <div class="gallery-card">
-                    <img src="Gallery/emd.png" alt="EMD" class="gallery-img">
+                </a>
+                <a href="gallery.html" class="gallery-card">
+                    <img src="Gallery/emd.png" alt="EMD" class="gallery-img" loading="lazy">
                     <div class="gallery-caption">EMD</div>
-                </div>
-                <div class="gallery-card">
-                    <img src="Gallery/nemd.png" alt="NEMD" class="gallery-img">
+                </a>
+                <a href="gallery.html" class="gallery-card">
+                    <img src="Gallery/nemd.png" alt="NEMD" class="gallery-img" loading="lazy">
                     <div class="gallery-caption">NEMD</div>
-                </div>
-                <div class="gallery-card">
-                    <img src="Gallery/hnemd.png" alt="HNEMD" class="gallery-img">
+                </a>
+                <a href="gallery.html" class="gallery-card">
+                    <img src="Gallery/hnemd.png" alt="HNEMD" class="gallery-img" loading="lazy">
                     <div class="gallery-caption">HNEMD</div>
-                </div>
+                </a>
             </div>
             <div class="view-all-container">
                 <a href="gallery.html" class="view-all-btn">查看全部图库</a>
@@ -305,7 +295,7 @@
                                 <h3>加入 QQ 群</h3>
                             </div>
                             <div class="qr-container-modern">
-                                <img src="Gallery/gpumdkit_qqgroup.jpg" alt="QQ 群二维码" class="qr-img-modern">
+                                <img src="Gallery/gpumdkit_qqgroup.jpg" alt="QQ 群二维码" class="qr-img-modern" loading="lazy">
                                 <span class="qr-caption-modern">扫码加入</span>
                             </div>
                         </div>

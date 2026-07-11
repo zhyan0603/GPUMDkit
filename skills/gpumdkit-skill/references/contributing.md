@@ -500,22 +500,48 @@ python3 Scripts/path/to/script.py        # missing args must print usage + exit 
 
 ## Validation Checklist
 
-Before committing, run these checks:
+Run only the checks relevant to the files changed; do not run every project check
+unconditionally. Always run the whitespace check.
 
 ```bash
-# Shell syntax
+# Shell syntax (only when .sh files changed)
 bash -n gpumdkit.sh
 find src Scripts -name '*.sh' -exec bash -n {} +
 
-# Python syntax
+# Python syntax (only for changed Python files)
 python3 -m py_compile Scripts/path/to/your_script.py
 
 # Clean up __pycache__ after py_compile
 find . -type d -name "__pycache__" -exec rm -rf {} + 2>/dev/null
 
-# MkDocs build (if docs changed)
+# MkDocs build (only when MkDocs inputs changed; see below)
 mkdocs build -f docs/mkdocs.yml
 
-# Whitespace check
+# Whitespace check (always)
 git diff --check
 ```
+
+### When to Build MkDocs
+
+Run `mkdocs build -f docs/mkdocs.yml` only when a change affects input consumed by
+MkDocs, including:
+
+- `docs/tutorials/**`
+- `docs/mkdocs.yml`
+- MkDocs theme overrides, plugins, templates, or assets referenced by that config
+
+Do **not** run MkDocs merely because another file under `docs/` changed. The
+standalone website files below are not MkDocs inputs and should be validated
+directly instead:
+
+- `docs/index.html`, `docs/index_zh.html`, `docs/gallery.html`, and
+  `docs/publications.html`
+- `docs/css/**`, `docs/js/**`, `docs/Gallery/**`
+- standalone JSON/data files such as `docs/gallery.json` and
+  `docs/publications.json`
+- generated output under `docs/htmls/**`
+
+For standalone-site changes, use checks appropriate to the edited file, such as
+HTML parsing, JavaScript syntax checks, `git diff --check`, and a focused local
+browser smoke test when layout or interaction changed. Do not edit generated
+`docs/htmls/**` files manually; update the corresponding MkDocs source and rebuild.

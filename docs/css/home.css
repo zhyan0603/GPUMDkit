@@ -53,6 +53,7 @@ body {
     height: 32px;
     display: flex;
     align-items: center;
+    text-decoration: none;
 }
 
 .logo {
@@ -75,6 +76,11 @@ body {
 
 .nav-item:hover {
     color: var(--text-gpumd);
+}
+
+.nav-item.active {
+    color: var(--text-gpumd);
+    font-weight: 600;
 }
 
 /* Main Container */
@@ -672,6 +678,14 @@ body {
     transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.3s ease, border-color 0.3s ease;
     will-change: transform;
     isolation: isolate;
+    color: var(--text-color);
+    text-decoration: none;
+}
+
+.pub-load-error {
+    grid-column: 1 / -1;
+    text-align: center;
+    color: var(--text-secondary);
 }
 
 /* Gallery doesn't need gradient background as it contains images */
