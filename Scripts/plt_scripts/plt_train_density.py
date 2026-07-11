@@ -16,7 +16,7 @@ Arguments:
 Output:
   train_density.png  (if save is used, or if backend is non-interactive)
 Author:     Zihan YAN (yanzihan@westlake.edu.cn)
-Last-modified: 2026-05-16
+Last-modified: 2026-07-11
 =============================================================================
 """
 
@@ -53,6 +53,23 @@ def calculate_r2(pred, actual):
     ss_tot = np.sum((actual - np.mean(actual)) ** 2)
     ss_res = np.sum((pred - actual) ** 2)
     return 1 - ss_res / ss_tot if ss_tot != 0 else 1.0
+
+def print_parity_metrics(energy, force, stress):
+    """Print energy, force, and stress parity metrics as a three-line table."""
+    stress_r2, stress_mae, stress_rmse = stress if stress is not None else (None, None, None)
+    stress_r2_text = f"{stress_r2:.4f}" if stress_r2 is not None else "N/A"
+    stress_mae_text = f"{stress_mae:.4f}" if stress_mae is not None else "N/A"
+    stress_rmse_text = f"{stress_rmse:.4f}" if stress_rmse is not None else "N/A"
+    line = " " + "-" * 48
+    print(" Parity metrics (training set)")
+    print(" Energy: meV/atom, Force: meV/Ang, Stress: GPa")
+    print(line)
+    print(f" {'Metric':<8}{'Energy':>12}{'Force':>12}{'Stress':>12}")
+    print(line)
+    print(f" {'R^2':<8}{energy[0]:>12.4f}{force[0]:>12.4f}{stress_r2_text:>12}")
+    print(f" {'MAE':<8}{energy[1]:>12.2f}{force[1]:>12.2f}{stress_mae_text:>12}")
+    print(f" {'RMSE':<8}{energy[2]:>12.2f}{force[2]:>12.2f}{stress_rmse_text:>12}")
+    print(line)
 
 # Function to calculate dynamic axis limits
 def calculate_limits(train_data, padding=0.08):
@@ -131,6 +148,7 @@ axs[1, 0].text(0.7, 0.12,
 
 if stress_data.shape[0] == 0:
     axs[1, 1].axis('off')
+    stress_metrics = None
 else:
     s_pred = stress_data[:, 0:6].flatten()
     s_target = stress_data[:, 6:12].flatten()
@@ -151,9 +169,16 @@ else:
     stress_rmse = calculate_rmse(s_pred, s_target)
     stress_mae = calculate_mae(s_pred, s_target)
     stress_r2 = calculate_r2(s_pred, s_target)
+    stress_metrics = (stress_r2, stress_mae, stress_rmse)
     
     axs[1, 1].text(0.7, 0.12, r'R$^2$'+f': {stress_r2:.4f}\nMAE: {stress_mae:.4f} GPa\nRMSE: {stress_rmse:.4f} GPa', 
                 transform=axs[1, 1].transAxes, fontsize=10, verticalalignment='center', horizontalalignment='center')
+
+print_parity_metrics(
+    (energy_r2, energy_mae, energy_rmse),
+    (force_r2, force_mae, force_rmse),
+    stress_metrics,
+)
 
 # plt.tight_layout()
 fig.subplots_adjust(top=0.968,bottom=0.088,left=0.086,right=0.983,hspace=0.22,wspace=0.24)

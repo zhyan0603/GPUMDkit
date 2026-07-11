@@ -17,7 +17,7 @@ Arguments:
 Output:
   prediction.png  (if save is used, or if backend is non-interactive)
 Author:     Zihan YAN (yanzihan@westlake.edu.cn)
-Last-modified: 2026-05-16
+Last-modified: 2026-07-11
 =============================================================================
 """
 
@@ -77,6 +77,23 @@ def r2_score_np(true, pred):
     if ss_tot == 0:
         return np.nan
     return 1.0 - ss_res / ss_tot
+
+def print_parity_metrics(energy, force, stress):
+    """Print energy, force, and stress parity metrics as a three-line table."""
+    stress_r2, stress_mae, stress_rmse = stress if stress is not None else (None, None, None)
+    stress_r2_text = f"{stress_r2:.4f}" if stress_r2 is not None else "N/A"
+    stress_mae_text = f"{stress_mae:.4f}" if stress_mae is not None else "N/A"
+    stress_rmse_text = f"{stress_rmse:.4f}" if stress_rmse is not None else "N/A"
+    line = " " + "-" * 48
+    print(" Parity metrics (training set)")
+    print(" Energy: meV/atom, Force: meV/Ang, Stress: GPa")
+    print(line)
+    print(f" {'Metric':<8}{'Energy':>12}{'Force':>12}{'Stress':>12}")
+    print(line)
+    print(f" {'R^2':<8}{energy[0]:>12.4f}{force[0]:>12.4f}{stress_r2_text:>12}")
+    print(f" {'MAE':<8}{energy[1]:>12.2f}{force[1]:>12.2f}{stress_mae_text:>12}")
+    print(f" {'RMSE':<8}{energy[2]:>12.2f}{force[2]:>12.2f}{stress_rmse_text:>12}")
+    print(line)
 
 def get_limits(true, pred, padding=0.05):
     true = np.asarray(true).reshape(-1)
@@ -176,6 +193,7 @@ def plot_parity_with_marginals(ax, true, pred, xlabel, ylabel, color, mae_text, 
 
     residuals = pred - true
     add_residual_inset(ax, residuals, color)
+    return r2_val
 
 # =========================
 # Figure and colors - Changed to 1x3 layout
@@ -196,7 +214,7 @@ energy_pred = energy_data[:, 0]
 energy_rmse = rmse(energy_pred, energy_true) * 1000.0
 energy_mae = mae(energy_pred, energy_true) * 1000.0
 
-plot_parity_with_marginals(
+energy_r2 = plot_parity_with_marginals(
     axs[0],
     energy_true,
     energy_pred,
@@ -221,7 +239,7 @@ force_pred_flat = force_pred.reshape(-1)
 force_rmse = rmse(force_pred_flat, force_true_flat) * 1000.0
 force_mae = mae(force_pred_flat, force_true_flat) * 1000.0
 
-plot_parity_with_marginals(
+force_r2 = plot_parity_with_marginals(
     axs[1],
     force_true_flat,
     force_pred_flat,
@@ -237,24 +255,32 @@ plot_parity_with_marginals(
 # stress_data[:, 0:6] -> NEP
 # stress_data[:, 6:12] -> DFT
 # =========================
-stress_true = stress_data[:, 6:12]
-stress_pred = stress_data[:, 0:6]
+if stress_data.shape[0] == 0:
+    axs[2].axis('off')
+    stress_metrics = None
+else:
+    stress_true = stress_data[:, 6:12]
+    stress_pred = stress_data[:, 0:6]
+    stress_true_flat = stress_true.reshape(-1)
+    stress_pred_flat = stress_pred.reshape(-1)
+    stress_rmse = rmse(stress_pred_flat, stress_true_flat)
+    stress_mae = mae(stress_pred_flat, stress_true_flat)
+    stress_r2 = plot_parity_with_marginals(
+        axs[2],
+        stress_true_flat,
+        stress_pred_flat,
+        'DFT stress (GPa)',
+        'NEP stress (GPa)',
+        stress_color,
+        f'MAE = {stress_mae:.4f} GPa',
+        f'RMSE = {stress_rmse:.4f} GPa'
+    )
+    stress_metrics = (stress_r2, stress_mae, stress_rmse)
 
-stress_true_flat = stress_true.reshape(-1)
-stress_pred_flat = stress_pred.reshape(-1)
-
-stress_rmse = rmse(stress_pred_flat, stress_true_flat)
-stress_mae = mae(stress_pred_flat, stress_true_flat)
-
-plot_parity_with_marginals(
-    axs[2],
-    stress_true_flat,
-    stress_pred_flat,
-    'DFT stress (GPa)',
-    'NEP stress (GPa)',
-    stress_color,
-    f'MAE = {stress_mae:.4f} GPa',
-    f'RMSE = {stress_rmse:.4f} GPa'
+print_parity_metrics(
+    (energy_r2, energy_mae, energy_rmse),
+    (force_r2, force_mae, force_rmse),
+    stress_metrics,
 )
 
 # =========================

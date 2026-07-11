@@ -62,6 +62,10 @@ Running `gpumdkit.sh -plt` prints the plotting command menu:
 
 ## NEP Training and Prediction
 
+The `train`, `prediction`, `train_density`, and `parity_density` plots also
+print a terminal table containing R^2, MAE, and RMSE for energy, force, and
+stress. If no valid stress rows are available, the stress entries are `N/A`.
+
 ### plt_train.py
 
 Visualizes NEP training progress including loss curves, RMSE evolution, and parity plots comparing DFT vs NEP predictions for energy, forces, and stresses.

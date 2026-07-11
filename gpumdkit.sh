@@ -192,7 +192,7 @@ function help_info_table(){
     echo " | -h            Show this help table            | -plt <type>        Plot and visualization tools       |"
     echo " | -calc <type>  Calculator tools                | -time <gpumd|nep>  Time-consuming analyzer            |"
     echo " | -update       Update GPUMDkit                 | -clean             Clean extra files in current dir   |"
-    echo " | -skill        Show GPUMDkit agent skill info  |                                                     |"
+    echo " | -skill        Show GPUMDkit agent skill info  | -doctor            Check Python environment           |"
     echo " +-------------------------------------------------------------------------------------------------------+"
     echo " |                                         FORMAT CONVERSION                                             |"
     echo " +-------------------------------------------------------------------------------------------------------+"
@@ -215,7 +215,7 @@ function help_info_table(){
     echo " | -pda          Probability density analysis    | -filter_box        Filter by box-edge length          |"
     echo " | -pynep        Deprecated PyNEP sampling       | -nep_modifier      Modify NEP model interactively     |"
     echo " +-------------------------------------------------------------------------------------------------------+"
-    echo " | Python option help: gpumdkit.sh -<option> -h    Plot list: gpumdkit.sh -plt -h                     |"
+    echo " | Python option help: gpumdkit.sh -<option> -h    Plot list: gpumdkit.sh -plt -h                        |"
     echo " +-------------------------------------------------------------------------------------------------------+"
 }
 
@@ -276,6 +276,8 @@ if [ ! -z "$1" ]; then
         -skill)
             source ${utils_path}/skill_info.sh
             skill_info_table ;;
+        -doctor)
+            GPUMDKIT_BASH_VERSION="${BASH_VERSION}" python "${utils_path}/doctor.py" "${@:2}" ;;
         -clean) 
             source ${utils_path}/clean_extra_files.sh
             clean_extra_files ;;

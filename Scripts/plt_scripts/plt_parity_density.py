@@ -14,7 +14,7 @@ Usage:      gpumdkit.sh -plt parity_density
 Output:
   parity_density_plot.png  (if save is used, or if backend is non-interactive)
 Author:     Zihan YAN (yanzihan@westlake.edu.cn)
-Last-modified: 2026-05-16
+Last-modified: 2026-07-11
 =============================================================================
 """
 
@@ -36,6 +36,23 @@ FONT_SIZE = 10
 BINS = 200
 COLORMAP = 'viridis' 
 # preferred colormaps: 'rainbow', 'plasma', 'inferno', 'magma', 'cividis', 'viridis'
+
+def print_parity_metrics(energy, force, stress):
+    """Print energy, force, and stress parity metrics as a three-line table."""
+    stress_r2, stress_mae, stress_rmse = stress if stress is not None else (None, None, None)
+    stress_r2_text = f"{stress_r2:.4f}" if stress_r2 is not None else "N/A"
+    stress_mae_text = f"{stress_mae:.4f}" if stress_mae is not None else "N/A"
+    stress_rmse_text = f"{stress_rmse:.4f}" if stress_rmse is not None else "N/A"
+    line = " " + "-" * 48
+    print(" Parity metrics (training set)")
+    print(" Energy: meV/atom, Force: meV/Ang, Stress: GPa")
+    print(line)
+    print(f" {'Metric':<8}{'Energy':>12}{'Force':>12}{'Stress':>12}")
+    print(line)
+    print(f" {'R^2':<8}{energy[0]:>12.4f}{force[0]:>12.4f}{stress_r2_text:>12}")
+    print(f" {'MAE':<8}{energy[1]:>12.2f}{force[1]:>12.2f}{stress_mae_text:>12}")
+    print(f" {'RMSE':<8}{energy[2]:>12.2f}{force[2]:>12.2f}{stress_rmse_text:>12}")
+    print(line)
 
 # Load data
 energy_data = np.loadtxt('energy_train.out')
@@ -63,13 +80,13 @@ ax1.plot([xmin, xmax], [xmin, xmax], color='gray', linestyle='-', linewidth=1)
 ax1.set_xlabel("DFT energy (eV/atom)", fontsize=FONT_SIZE)
 ax1.set_ylabel("NEP energy (eV/atom)", fontsize=FONT_SIZE)
 ax1.tick_params(labelsize=FONT_SIZE)
-rmse = np.sqrt(mean_squared_error(energy_data[:, 0], energy_data[:, 1])) * 1000
-mae = mean_absolute_error(energy_data[:, 0], energy_data[:, 1]) * 1000
-r2 = r2_score(energy_data[:, 0], energy_data[:, 1])
+energy_rmse = np.sqrt(mean_squared_error(energy_data[:, 0], energy_data[:, 1])) * 1000
+energy_mae = mean_absolute_error(energy_data[:, 0], energy_data[:, 1]) * 1000
+energy_r2 = r2_score(energy_data[:, 0], energy_data[:, 1])
 ax1.text(0.05, 0.95,
-         f"RMSE = {rmse:.2f} meV/atom\n"
-         f"MAE = {mae:.2f} meV/atom\n"
-         r"$\mathrm{{R^2}}$" + f" = {r2:.5f}",
+         f"RMSE = {energy_rmse:.2f} meV/atom\n"
+         f"MAE = {energy_mae:.2f} meV/atom\n"
+         r"$\mathrm{{R^2}}$" + f" = {energy_r2:.5f}",
          transform=ax1.transAxes,
          fontsize=FONT_SIZE,
          va='top', ha='left')
@@ -94,13 +111,13 @@ ax2.plot([xmin, xmax], [xmin, xmax], color='gray', linestyle='-', linewidth=1)
 ax2.set_xlabel(r"DFT force (eV/$\mathrm{{\AA}}$)", fontsize=FONT_SIZE)
 ax2.set_ylabel(r"NEP force (eV/$\mathrm{{\AA}}$)", fontsize=FONT_SIZE)
 ax2.tick_params(labelsize=FONT_SIZE)
-rmse = np.sqrt(mean_squared_error(y_force, x_force)) * 1000
-mae = mean_absolute_error(y_force, x_force) * 1000
-r2 = r2_score(y_force, x_force)
+force_rmse = np.sqrt(mean_squared_error(y_force, x_force)) * 1000
+force_mae = mean_absolute_error(y_force, x_force) * 1000
+force_r2 = r2_score(y_force, x_force)
 ax2.text(0.05, 0.95,
-         f'RMSE = {rmse:.2f} meV/'+r'$\mathrm{{\AA}}$'+f'\n'
-         f'MAE = {mae:.2f} meV/'+r'$\mathrm{{\AA}}$'+f'\n'
-         r"$\mathrm{{R^2}}$" + f' = {r2:.5f}',
+         f'RMSE = {force_rmse:.2f} meV/'+r'$\mathrm{{\AA}}$'+f'\n'
+         f'MAE = {force_mae:.2f} meV/'+r'$\mathrm{{\AA}}$'+f'\n'
+         r"$\mathrm{{R^2}}$" + f' = {force_r2:.5f}',
          transform=ax2.transAxes,
          fontsize=FONT_SIZE,
          va='top', ha='left')
@@ -114,33 +131,45 @@ cb2.update_ticks()
 # === Stress ===
 ax3 = fig.add_subplot(gs[0, 2])
 cb3_ax = fig.add_subplot(gs[1, 2])
-x_stress = stress_data[:, 6:12].reshape(-1)
-y_stress = stress_data[:, 0:6].reshape(-1)
-xmin, xmax = np.min([x_stress, y_stress]), np.max([x_stress, y_stress])
-ax3.set_xlim(xmin, xmax)
-ax3.set_ylim(xmin, xmax)
-hb3 = ax3.hexbin(x_stress, y_stress, gridsize=BINS, cmap=cmap,
-                 norm=LogNorm(), mincnt=1, linewidths=0)
-ax3.plot([xmin, xmax], [xmin, xmax], color='gray', linestyle='-', linewidth=1)
-ax3.set_xlabel("DFT stress (GPa)", fontsize=FONT_SIZE)
-ax3.set_ylabel("NEP stress (GPa)", fontsize=FONT_SIZE)
-ax3.tick_params(labelsize=FONT_SIZE)
-rmse = np.sqrt(mean_squared_error(y_stress, x_stress))
-mae = mean_absolute_error(y_stress, x_stress)
-r2 = r2_score(y_stress, x_stress)
-ax3.text(0.05, 0.95,
-         f"RMSE = {rmse:.4f} GPa\n"
-         f"MAE = {mae:.4f} GPa\n"
-         r"$\mathrm{{R^2}}$" + f" = {r2:.5f}",
-         transform=ax3.transAxes,
-         fontsize=FONT_SIZE,
-         va='top', ha='left')
-cb3 = fig.colorbar(hb3, cax=cb3_ax, orientation='horizontal')
-cb3.set_label("Data density", fontsize=FONT_SIZE)
-cb3.ax.tick_params(labelsize=FONT_SIZE)
-cb3.locator = LogLocator(base=10.0)
-cb3.formatter = LogFormatterMathtext(base=10, labelOnlyBase=True)
-cb3.update_ticks()
+if stress_data.shape[0] == 0:
+    ax3.axis('off')
+    cb3_ax.axis('off')
+    stress_metrics = None
+else:
+    x_stress = stress_data[:, 6:12].reshape(-1)
+    y_stress = stress_data[:, 0:6].reshape(-1)
+    xmin, xmax = np.min([x_stress, y_stress]), np.max([x_stress, y_stress])
+    ax3.set_xlim(xmin, xmax)
+    ax3.set_ylim(xmin, xmax)
+    hb3 = ax3.hexbin(x_stress, y_stress, gridsize=BINS, cmap=cmap,
+                     norm=LogNorm(), mincnt=1, linewidths=0)
+    ax3.plot([xmin, xmax], [xmin, xmax], color='gray', linestyle='-', linewidth=1)
+    ax3.set_xlabel("DFT stress (GPa)", fontsize=FONT_SIZE)
+    ax3.set_ylabel("NEP stress (GPa)", fontsize=FONT_SIZE)
+    ax3.tick_params(labelsize=FONT_SIZE)
+    stress_rmse = np.sqrt(mean_squared_error(y_stress, x_stress))
+    stress_mae = mean_absolute_error(y_stress, x_stress)
+    stress_r2 = r2_score(y_stress, x_stress)
+    stress_metrics = (stress_r2, stress_mae, stress_rmse)
+    ax3.text(0.05, 0.95,
+             f"RMSE = {stress_rmse:.4f} GPa\n"
+             f"MAE = {stress_mae:.4f} GPa\n"
+             r"$\mathrm{{R^2}}$" + f" = {stress_r2:.5f}",
+             transform=ax3.transAxes,
+             fontsize=FONT_SIZE,
+             va='top', ha='left')
+    cb3 = fig.colorbar(hb3, cax=cb3_ax, orientation='horizontal')
+    cb3.set_label("Data density", fontsize=FONT_SIZE)
+    cb3.ax.tick_params(labelsize=FONT_SIZE)
+    cb3.locator = LogLocator(base=10.0)
+    cb3.formatter = LogFormatterMathtext(base=10, labelOnlyBase=True)
+    cb3.update_ticks()
+
+print_parity_metrics(
+    (energy_r2, energy_mae, energy_rmse),
+    (force_r2, force_mae, force_rmse),
+    stress_metrics,
+)
 
 plt.subplots_adjust(top=0.968, bottom=0.122, left=0.073, right=0.983, hspace=0.2, wspace=0.286)
 

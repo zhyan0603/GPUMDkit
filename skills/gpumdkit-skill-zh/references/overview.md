@@ -60,6 +60,7 @@ gpumdkit.sh -calc -h              # 计算器帮助
 
 | 命令 | 行为与安全边界 |
 |---|---|
+| `gpumdkit.sh -doctor` | 检查配置路径、Python/Bash 版本以及常用或特定功能所需的 Python 软件包；缺少可选包不影响无关功能 |
 | `gpumdkit.sh -skill` | 打印规范统一的 Skill 路径和跨客户端安装提示 |
 | `gpumdkit.sh -time <gpumd\|nep>` | 旧版耗时分析器；仅使用支持的 `gpumd` 或 `nep` 选择器 |
 | `gpumdkit.sh -nep_modifier` | 启动交互式 NEP 模型修改器；先检查源模型并获取覆写授权 |

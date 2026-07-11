@@ -1,5 +1,6 @@
 category	command	syntax	description_en	description_zh	status
 main	-h	gpumdkit.sh -h	Show general command help	显示通用命令帮助	stable
+main	-doctor	gpumdkit.sh -doctor	Check the GPUMDkit Python environment	检查 GPUMDkit Python 环境	stable
 main	-update	gpumdkit.sh -update	Update GPUMDkit from GitHub	从 GitHub 更新 GPUMDkit	stable
 main	-clean	gpumdkit.sh -clean	Clean extra files in current directory	清理当前目录中的冗余文件	stable
 format	-out2xyz	gpumdkit.sh -out2xyz <dir>	Convert VASP OUTCAR files to extxyz (shell version)	将 VASP OUTCAR 转换为 extxyz（shell 版本）	stable

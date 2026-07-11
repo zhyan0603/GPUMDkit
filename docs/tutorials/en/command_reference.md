@@ -16,6 +16,7 @@ The source table is maintained in `docs/command_reference.tsv`.
 | -h            Show this help table            | -plt <type>        Plot and visualization tools       |
 | -calc <type>  Calculator tools                | -time <gpumd|nep>  Time-consuming analyzer            |
 | -update       Update GPUMDkit                 | -clean             Clean extra files in current dir   |
+| -skill        Show GPUMDkit agent skill info  | -doctor           Check Python environment          |
 +-------------------------------------------------------------------------------------------------------+
 |                                         FORMAT CONVERSION                                             |
 +-------------------------------------------------------------------------------------------------------+
@@ -47,6 +48,7 @@ The source table is maintained in `docs/command_reference.tsv`.
 | Command | Syntax | Description |
 |---|---|---|
 | `-h` | `gpumdkit.sh -h` | Show general help |
+| `-doctor` | `gpumdkit.sh -doctor` | Check Python and GPUMDkit package availability |
 | `-update` | `gpumdkit.sh -update` | Update GPUMDkit |
 | `-clean` | `gpumdkit.sh -clean` | Clean extra files in the current directory |
 

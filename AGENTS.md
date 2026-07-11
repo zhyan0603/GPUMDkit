@@ -1,35 +1,38 @@
 # GPUMDkit
 
-GPUMDkit is a Bash + Python command-line toolkit for [GPUMD](https://gpumd.org/) and [NEP](https://gitlab.com/brucefan1983/nep) — molecular dynamics and neuroevolution potential programs. It provides format conversion, structure sampling, workflows, property calculation, plotting, and analysis utilities.
+GPUMDkit is a Bash + Python CLI toolkit for GPUMD molecular dynamics and NEP potentials: data conversion/sampling, workflows, calculations, analysis, plotting, simulation, training, and post-processing. Docs: <https://gpumdkit.cn/>.
 
-**Entry point**: `gpumdkit.sh` — dual-mode (interactive menu + CLI flags):
+## Architecture
 
-```bash
-gpumdkit.sh                                # Interactive mode
-gpumdkit.sh -h                             # Show all CLI flags
-gpumdkit.sh -plt train                     # Plot NEP training
-gpumdkit.sh -calc msd dump.xyz Li 10       # Calculate MSD
-gpumdkit.sh -dp2xyz database train.xyz     # DeepMD npy → extxyz
-gpumdkit.sh -skill                         # Show agent skill paths and install hints
+```text
+gpumdkit.sh -> src/fN_*.sh menu wrappers -> Scripts/<module>/ implementations
 ```
 
-**Documentation**: https://gpumdkit.cn/
+- `gpumdkit.sh`: interactive and CLI entry point (`-h` lists commands; `-skill` locates skills).
+- `Scripts/`: conversion, sampling, workflow, calculator, analyzer, plot, and utility implementations.
+- `docs/tutorials/{en,zh}/`: bilingual sources; `docs/mkdocs.yml`: site config.
+- `skills/gpumdkit-skill/`: canonical agent skill; `gpumdkit-skill-zh/`: Chinese version.
 
-## Agent Skill
+## Agent Routing
 
-Use `gpumdkit-skill` whenever the user asks about GPUMDkit, GPUMD simulation, NEP training, atomistic-data conversion/sampling/analysis, plotting, workflows, or post-processing. Its `SKILL.md` routes each task to focused reference files and combines references for cross-module workflows.
+For any GPUMDkit, GPUMD, NEP, atomistic-data, workflow, plotting, or post-processing task:
 
-The canonical source is `${GPUMDkit_path}/skills/gpumdkit-skill`. Run `gpumdkit.sh -skill` for the local path and cross-client installation hints.
+1. Read `skills/gpumdkit-skill/SKILL.md`.
+2. Classify the request and load only its routed references; combine them for cross-module work.
+3. Inspect local help/files, then prefer documented `gpumdkit.sh` commands over direct scripts.
 
-A Chinese version is available at `${GPUMDkit_path}/skills/gpumdkit-skill-zh`.
+Key references under `skills/gpumdkit-skill/references/`:
 
-The skill requires agents to ask the user about unresolved scientific or execution choices rather than inventing values. Running simulations, training, DFT, or scheduler jobs requires an explicit user request.
+- Navigation: `overview.md`.
+- Data/tools: `format-conversion.md`, `sampling.md`, `workflows.md`, `calculators.md`, `analyzers.md`.
+- Plots: `visualization.md`, `plotting-style.md`.
+- GPUMD: start with `gpumd.md`; it routes to `gpumd-{inputs,setup,ensembles,computes,outputs}.md`.
+- NEP: start with `nep.md`; it routes to `nep-{data,parameters,outputs}.md`.
+- Diffusion/conductivity fits: `arrhenius.md` plus relevant simulation, calculator, and plot references.
+- Code, docs, CLI, scripts, or skills: `contributing.md` plus the affected module reference.
 
-## If You Need to Modify Code
+## Rules
 
-**Read [skills/gpumdkit-skill/SKILL.md](skills/gpumdkit-skill/SKILL.md), then [references/contributing.md](skills/gpumdkit-skill/references/contributing.md), before changing code.** They contain routing rules, coding conventions, shell/Python patterns, and explicit rejections. The project follows a strict minimum-invasion principle — do not touch working code unless fixing a confirmed bug.
-
-Key facts:
-- Tutorials are bilingual (`docs/tutorials/en/` + `zh/`). Feature changes must update both languages.
-- After Python edits: `python3 -m py_compile <file>` then clean `__pycache__`.
-- After doc edits: `mkdocs build -f docs/mkdocs.yml`.
+- Never invent consequential scientific or execution choices; ask the user.
+- Simulations, training, DFT, scheduler jobs, destructive operations, and expensive runs require explicit authorization.
+- Preserve unrelated changes. Before repository edits, read `contributing.md`; keep changes minimal, update both documentation languages for user-visible features, and run its validation checklist.

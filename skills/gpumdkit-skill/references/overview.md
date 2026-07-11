@@ -60,6 +60,7 @@ For current Python-backed commands, detailed usage, type conversion, file checks
 
 | Command | Behavior and safety boundary |
 |---|---|
+| `gpumdkit.sh -doctor` | Check the configured path, Python/Bash versions, and common or feature-specific Python packages; missing optional packages do not affect unrelated functions |
 | `gpumdkit.sh -skill` | Print the canonical unified Skill path and cross-client installation hints |
 | `gpumdkit.sh -time <gpumd|nep>` | Legacy time-consumption analyzer; use only the supported `gpumd` or `nep` selector |
 | `gpumdkit.sh -nep_modifier` | Launch the interactive NEP model modifier; inspect the source model and obtain overwrite authorization first |

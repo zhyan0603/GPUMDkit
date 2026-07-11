@@ -2299,6 +2299,9 @@
 </code></pre></div>
 <hr />
 <h2 id="nep-training-and-prediction">NEP Training and Prediction</h2>
+<p>The <code>train</code>, <code>prediction</code>, <code>train_density</code>, and <code>parity_density</code> plots also
+print a terminal table containing R^2, MAE, and RMSE for energy, force, and
+stress. If no valid stress rows are available, the stress entries are <code>N/A</code>.</p>
 <h3 id="plt_trainpy">plt_train.py</h3>
 <p>Visualizes NEP training progress including loss curves, RMSE evolution, and parity plots comparing DFT vs NEP predictions for energy, forces, and stresses.</p>
 <p><strong>Input Files:</strong> <code>loss.out</code>, <code>energy_train.out</code>, <code>force_train.out</code>, <code>virial_train.out</code></p>
