@@ -1,23 +1,11 @@
----
-name: gpumdkit-sampling
-description: >
-  Use when selecting or sampling structures from molecular dynamics trajectories.
-  Provides uniform sampling, random sampling, farthest point sampling (FPS), structure perturbation,
-  and force deviation selection.
-  Use when user asks about: structure sampling, FPS, farthest point sampling, structure selection,
-  perturbation, or training data preparation.
-allowed-tools: Bash(gpumdkit.sh *) Bash(gpumdkit *) Bash(python3 *)
----
+# Structure Sampling
 
-# GPUMDkit Structure Sampling
+## Contents
 
-## Agent Routing
-
-- Use this skill for sampling, perturbing, selecting, and slicing structures for training datasets.
-- Prefer `gpumdkit.sh -frame_range ...` when extracting frame ranges.
-- Uniform/random sampling, perturbation, force-deviation selection, and NepTrain FPS are primarily menu or direct-script workflows.
-- `neptrain_select_structs.py` accepts three positional files but still prompts for the selection method; treat it as semi-interactive.
-- Use direct scripts under `${GPUMDkit_path}/Scripts/sample_structures/` when no CLI flag exists.
+- Available methods
+- Command reference
+- Common workflows
+- Dependencies and notes
 
 ## Available Methods
 
@@ -237,4 +225,4 @@ pip install neptrain  # For FPS by NepTrain
 
 ## Detailed Documentation
 
-See [structure_sampling.md](../../docs/tutorials/en/structure_sampling.md) for comprehensive guide.
+See `${GPUMDkit_path}/docs/tutorials/en/structure_sampling.md` or the Chinese counterpart for the user-facing guide.

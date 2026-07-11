@@ -15,23 +15,19 @@ gpumdkit.sh -skill                         # Show agent skill paths and install 
 
 **Documentation**: https://gpumdkit.cn/
 
-## Agent Skills
+## Agent Skill
 
-When the user asks about GPUMDkit features, use the GPUMDkit skills. The canonical skill source is `${GPUMDkit_path}/skills`; agent tools may use global or project-local symlinks to those skills. Run `gpumdkit.sh -skill` to print the local skill path, available skills, supported install targets, and install hints.
+Use `gpumdkit-skill` whenever the user asks about GPUMDkit, GPUMD simulation, NEP training, atomistic-data conversion/sampling/analysis, plotting, workflows, or post-processing. Its `SKILL.md` routes each task to focused reference files and combines references for cross-module workflows.
 
-| Skill | Use When |
-|-------|----------|
-| `gpumdkit-main` | General usage, navigation, entry point |
-| `gpumdkit-format-conversion` | Converting structure files between formats |
-| `gpumdkit-calculators` | Computing material properties |
-| `gpumdkit-analyzers` | Analyzing structures and datasets |
-| `gpumdkit-visualization` | Plotting simulation data |
-| `gpumdkit-workflows` | Batch processing and automation |
-| `gpumdkit-sampling` | Sampling and selecting structures |
+The canonical source is `${GPUMDkit_path}/skills/gpumdkit-skill`. Run `gpumdkit.sh -skill` for the local path and cross-client installation hints.
+
+A Chinese version is available at `${GPUMDkit_path}/skills/gpumdkit-skill-zh`.
+
+The skill requires agents to ask the user about unresolved scientific or execution choices rather than inventing values. Running simulations, training, DFT, or scheduler jobs requires an explicit user request.
 
 ## If You Need to Modify Code
 
-**Read [skills/gpumdkit-contributing/SKILL.md](skills/gpumdkit-contributing/SKILL.md) first.** It contains all coding conventions, function templates, shell/Python patterns, and explicit rejections (things NOT to propose). The project follows a strict minimum-invasion principle — do not touch working code unless fixing a confirmed bug.
+**Read [skills/gpumdkit-skill/SKILL.md](skills/gpumdkit-skill/SKILL.md), then [references/contributing.md](skills/gpumdkit-skill/references/contributing.md), before changing code.** They contain routing rules, coding conventions, shell/Python patterns, and explicit rejections. The project follows a strict minimum-invasion principle — do not touch working code unless fixing a confirmed bug.
 
 Key facts:
 - Tutorials are bilingual (`docs/tutorials/en/` + `zh/`). Feature changes must update both languages.

@@ -1,0 +1,4 @@
+interface:
+  display_name: "GPUMDkit"
+  short_description: "Use GPUMDkit, GPUMD, and NEP end to end"
+  default_prompt: "Use $gpumdkit-skill to complete this GPUMDkit task from setup through validation and post-processing."

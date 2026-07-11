@@ -211,5 +211,5 @@ gpumdkit.sh -plt sdc
 ## Notes
 
 - Use `gpumdkit.sh -h` to see all available options.
-- Use `gpumdkit.sh -<option> -h` to get help for a specific option (e.g., `gpumdkit.sh -plt train -h`).
+- Use `gpumdkit.sh -<option> -h` for Python-backed command help. Use `gpumdkit.sh -plt -h` to list plot types; plot-specific argument positions vary by script.
 - For detailed usage of each module, see the corresponding tutorial pages linked in the [index](index.md).

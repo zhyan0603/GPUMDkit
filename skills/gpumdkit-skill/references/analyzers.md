@@ -1,22 +1,11 @@
----
-name: gpumdkit-analyzers
-description: >
-  Use when analyzing, validating, or filtering molecular dynamics structures.
-  Provides composition analysis, outlier detection, chemical species identification,
-  charge balance check, distance calculations, property filtering, and probability density analysis.
-  Use when user asks about: structure analysis, data quality, minimum distance, composition,
-  charge balance, outlier detection, or structure filtering.
-allowed-tools: Bash(gpumdkit.sh *) Bash(gpumdkit *) Bash(python3 *)
----
+# Analyzers
 
-# GPUMDkit Analyzers
+## Contents
 
-## Agent Routing
-
-- Use this skill for data-quality checks, composition/species checks, distance analysis, filtering, outlier detection, and probability-density analysis.
-- Prefer `gpumdkit.sh <flag> ...` for CLI-supported tools.
-- Use direct scripts under `${GPUMDkit_path}/Scripts/analyzer/` for menu-only tools such as non-interactive outlier thresholds.
-- If syntax is uncertain, run `gpumdkit.sh -h` or the target analyzer script with `-h`.
+- Available tools
+- Command reference
+- Common workflows
+- CLI flags and dependencies
 
 ## Available Tools
 
@@ -240,4 +229,4 @@ gpumdkit.sh -time nep
 
 ## Detailed Documentation
 
-See [analyzer_scripts.md](../../docs/tutorials/en/analyzer_scripts.md) for comprehensive guide.
+See `${GPUMDkit_path}/docs/tutorials/en/analyzer_scripts.md` or the Chinese counterpart for the user-facing guide.

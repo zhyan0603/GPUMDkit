@@ -1,21 +1,12 @@
----
-name: gpumdkit-format-conversion
-description: >
-  Use when converting structure files between computational materials science formats.
-  Supports VASP (POSCAR/OUTCAR/XDATCAR), LAMMPS, CP2K, ABACUS, CIF, MTP, ASE trajectory, and extxyz.
-  Use when user asks about: format conversion, file conversion, structure conversion,
-  POSCAR to xyz, OUTCAR to extxyz, LAMMPS dump conversion, or adding group labels.
-allowed-tools: Bash(gpumdkit.sh *) Bash(gpumdkit *) Bash(python3 *)
----
+# Format Conversion
 
-# GPUMDkit Format Conversion
+## Contents
 
-## Agent Routing
-
-- Use this skill for structure/file conversion, metadata cleanup, group labels, weights, replication, and frame extraction.
-- Prefer `gpumdkit.sh <flag> ...` when a CLI flag exists.
-- Use direct scripts under `${GPUMDkit_path}/Scripts/format_conversion/` only for menu-only or legacy converters.
-- If syntax is uncertain, run `gpumdkit.sh -h` or the target script with `-h`.
+- Supported formats
+- Command reference
+- Detailed CLI flags
+- Examples
+- Notes and dependencies
 
 ## Supported Formats
 
@@ -106,7 +97,7 @@ Author: Denan LI (lidenan@westlake.edu.cn)
 ### Structure Manipulation
 
 ```bash
-# Add group labels (required for GPUMD/NEP)
+# Add group labels when a downstream GPUMD workflow uses group-aware commands
 gpumdkit.sh -addgroup POSCAR Li Y Cl
 
 # Add weights to structures
@@ -153,7 +144,7 @@ gpumdkit.sh -clean_xyz input.xyz clean.xyz
 # Convert all OUTCAR files in current directory
 gpumdkit.sh -out2xyz .
 
-# Add group labels for NEP training
+# Add group labels only if a later workflow needs them
 gpumdkit.sh -addgroup POSCAR Pb Ti O
 
 # Result: model.xyz ready for NEP training
@@ -189,7 +180,7 @@ gpumdkit.sh -replicate POSCAR supercell_256.vasp 256
 ## Notes
 
 1. **extxyz is the primary format**: Most GPUMDkit tools work with extxyz files
-2. **Group labels are essential**: Required for GPUMD/NEP to identify atom types
+2. **Group labels are optional metadata**: Add them only for group-aware GPUMD calculations or downstream tools; chemical species determine atom types
 3. **Frame indexing for `-get_frame` is 1-based**: First frame is index 1
 4. **Element ordering matters for LAMMPS**: Must match atom type IDs in dump file
 5. **exyz2pos exports all frames**: Creates separate POSCAR for each frame
@@ -202,4 +193,4 @@ Most Python scripts require:
 
 ## Detailed Documentation
 
-See [format_conversion.md](../../docs/tutorials/en/format_conversion.md) for comprehensive guide.
+See `${GPUMDkit_path}/docs/tutorials/en/format_conversion.md` or the Chinese counterpart for the user-facing guide.

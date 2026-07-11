@@ -1,25 +1,14 @@
----
-name: gpumdkit-contributing
-description: >
-  Use when adding new features, commands, or scripts to GPUMDkit.
-  Provides coding conventions, file structure patterns, and step-by-step guides
-  for implementing new interactive menu items, CLI flags, calculators, analyzers,
-  format converters, plotting scripts, and workflow tools.
-  Use when user asks about: adding a new command, creating a new script,
-  contributing to GPUMDkit, code conventions, or how to extend the toolkit.
-allowed-tools: Bash(gpumdkit.sh *) Bash(gpumdkit *) Bash(python3 *) Bash(python *) Bash(ls *) Bash(mkdir *)
----
+# Contributing to GPUMDkit
 
-> **Covers**: coding conventions, file structure, shell/Python templates, adding new features, and what NOT to propose.
+Read this reference before changing GPUMDkit code, scripts, CLI routing, documentation, or skill files. Keep edits minimal, preserve unrelated changes, and ask the maintainer before changing scientific defaults or user-visible behavior.
 
-# GPUMDkit Contributing Guide
+## Contents
 
-## Agent Routing
-
-- Use this skill before changing GPUMDkit code, scripts, CLI routing, docs, or skill files.
-- Keep edits minimal and aligned with existing shell/Python patterns.
-- For user-facing GPUMDkit command discovery, use `gpumdkit.sh -skill` and `gpumdkit.sh -h`.
-- After Python edits, run `python3 -m py_compile <file>` and remove `__pycache__`.
+- Project structure and routing
+- Adding interactive and CLI features
+- Python and shell conventions
+- Maintainer decisions and rejected changes
+- Validation checklist
 
 ## Project Structure
 
@@ -127,23 +116,21 @@ Same as above — place in `Scripts/`.
 
 ### Step 2: Add the CLI handler in `gpumdkit.sh`
 
-Add a new case in the main `case $1 in` block:
+Add a new case in the main `case $1 in` block. Keep this handler lightweight:
+`gpumdkit.sh` should route to the implementation script and print broad module help
+only for large dispatchers such as `-plt` and `-calc`. Detailed argument checks,
+usage text, type conversion, file existence checks, and user-facing error messages
+belong in the Python implementation script.
 
 ```bash
 -new_flag)
-    if [ ! -z "$2" ] && [ "$2" != "-h" ] && [ ! -z "$3" ]; then
-        python ${analyzer_path}/new_script.py $2 $3
-    else
-        echo " Usage: -new_flag <param1> <param2>"
-        echo " Example: gpumdkit.sh -new_flag input.xyz 3.0"
-        echo " Code path: ${analyzer_path}/new_script.py"
-    fi ;;
+    run_python_script "Your Name (your@email.com)" "${analyzer_path}/new_script.py" "${@:2}" ;;
 ```
 
 Key conventions:
-- Check `$2 != "-h"` to handle help requests
-- No quotes around `$2`, `$3` in the python call (paths with spaces not supported)
-- No `exit 1` in the else branch (just print usage and fall through)
+- Prefer `run_python_script "Author" "${path}/script.py" "${@:2}"` for Python CLI entries so arguments are forwarded consistently.
+- Do not duplicate detailed parameter validation in `gpumdkit.sh`; implement `-h`/`--help`, missing-argument handling, and validation in the Python script.
+- Keep shell-side checks only for top-level dispatch decisions (`-plt <type>`, `-calc <type>`) or legacy shell scripts that cannot validate themselves.
 - Place alphabetically among existing flags for readability
 
 > When the script needs an interactive menu entry as well, also add a keyword converter wrapper function in `src/f1_format_conversions.sh` following the same banner pattern. Reference the existing `dp2extxyz` function as a template.
@@ -313,6 +300,10 @@ Do NOT add notices for common packages like `ase`, `numpy`, `pymatgen`.
 
 ### Variable checks
 
+Use shell variable checks only for shell control flow and broad dispatch decisions.
+New Python-backed CLI commands should forward arguments to Python and let the Python
+script handle detailed validation and error messages.
+
 ```bash
 # Non-empty check (project convention)
 if [ ! -z "$var" ]; then
@@ -465,7 +456,7 @@ These changes have been **explicitly rejected** by the project maintainer. Do no
 
 | Rejected | Reason |
 |---|---|
-| Add `if __name__ == "__main__":` to Python scripts | Scripts run standalone; main guard is unnecessary |
+| Retrofit `if __name__ == "__main__":` into existing Python scripts | Scripts run standalone; do not churn working scripts just to add a guard |
 | Replace `from pylab import *` with explicit imports | Keep as-is |
 | Unify `-plt` "save" argument position | Different scripts have different arg counts; keep flexible |
 | Unify DPI (150 → 300) across plotting scripts | Keep per-script DPI settings |
@@ -518,9 +509,6 @@ find src Scripts -name '*.sh' -exec bash -n {} +
 
 # Python syntax
 python3 -m py_compile Scripts/path/to/your_script.py
-
-# Clean up __pycache__ after py_compile
-find . -type d -name "__pycache__" -exec rm -rf {} + 2>/dev/null
 
 # Clean up __pycache__ after py_compile
 find . -type d -name "__pycache__" -exec rm -rf {} + 2>/dev/null

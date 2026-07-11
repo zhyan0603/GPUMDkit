@@ -1,30 +1,21 @@
----
-name: gpumdkit-visualization
-description: >
-  Use when plotting molecular dynamics simulation results, NEP training data, or transport properties.
-  Supports 31+ plot types including training loss, parity plots, MSD, SDC, RDF, thermodynamic properties,
-  Arrhenius plots, phonon DOS, thermal conductivity, and descriptor visualization.
-  Use when user asks about: plotting, visualization, training results, MSD plot, RDF plot,
-  thermal conductivity, Arrhenius plot, or NEP training visualization.
-allowed-tools: Bash(gpumdkit.sh *) Bash(gpumdkit *) Bash(python3 *)
----
+# Visualization
 
-# GPUMDkit Visualization
+## Contents
 
-## Agent Routing
-
-- Use this skill for plotting NEP training outputs, GPUMD MD outputs, transport properties, RDF/PMF, heat transport, phonons, and descriptors.
-- Prefer `gpumdkit.sh -plt <type> ...` for plots.
-- Many plot scripts read fixed filenames from the current directory, such as `msd.out`, `thermo.out`, or `rdf.out`; check required input files before running.
-- If syntax is uncertain, run `gpumdkit.sh -plt -h` or inspect the target script help/header.
+- Quick reference
+- Plot categories
+- Common workflows
+- Output files and dependencies
 
 ## Quick Reference
 
 ```bash
 gpumdkit.sh -plt <type>              # Display plot interactively
-gpumdkit.sh -plt <type> save         # Save plot as PNG
-gpumdkit.sh -plt <type> -h           # Get help for specific plot
+gpumdkit.sh -plt <type> save         # Common save form; verify the plot entry below
+gpumdkit.sh -plt -h                  # List plot types
 ```
+
+The dispatcher does not provide a uniform `-plt <type> -h` contract, and argument positions differ between plot scripts. Use the signatures in this reference and inspect the target script before passing extra arguments. Do not assume that `save` is accepted in the same position for every plot.
 
 ## Plot Categories
 
@@ -214,10 +205,12 @@ gpumdkit.sh -plt nemd 10 1 60 save
 
 ## Dependencies
 
-All plotting scripts require:
-- `matplotlib`
-- `numpy`
+There is no single dependency set for every plot. Most scripts use `matplotlib`
+and `numpy`; individual plots may additionally require `pandas`, `scipy`,
+`seaborn`, `ase`, `scikit-learn`, `umap-learn`, `calorine`, or
+`ferrodispcalc`. Inspect the imports and help for the selected plot before
+execution. See `plotting-style.md` when creating or restyling a plot.
 
 ## Detailed Documentation
 
-See [plot_scripts.md](../../docs/tutorials/en/plot_scripts.md) for comprehensive guide.
+See `${GPUMDkit_path}/docs/tutorials/en/plot_scripts.md` or the Chinese counterpart for the user-facing guide.

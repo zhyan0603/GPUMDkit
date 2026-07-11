@@ -1,22 +1,11 @@
----
-name: gpumdkit-calculators
-description: >
-  Use when calculating material properties from molecular dynamics data.
-  Provides ionic conductivity, NEP property prediction, descriptors, DOAS, NEB, MSD,
-  neighbor lists, displacements, octahedral tilt, polarization, and structure minimization.
-  Use when user asks about: ionic conductivity, diffusion coefficient, descriptors, NEB,
-  mean square displacement, density of atomistic states, or structure relaxation.
-allowed-tools: Bash(gpumdkit.sh *) Bash(gpumdkit *) Bash(python3 *)
----
+# Calculators
 
-# GPUMDkit Calculators
+## Contents
 
-## Agent Routing
-
-- Use this skill for material-property calculations from structures, trajectories, GPUMD outputs, or NEP models.
-- Prefer `gpumdkit.sh -calc <type> ...` for all listed calculators.
-- Use direct scripts under `${GPUMDkit_path}/Scripts/calculators/` only when debugging a script or when a CLI shortcut is unavailable.
-- If syntax is uncertain, run `gpumdkit.sh -calc -h` or the target calculator script with `-h`.
+- Available calculators
+- Command reference
+- Common workflows
+- Dependencies
 
 ## Available Calculators
 
@@ -48,11 +37,11 @@ gpumdkit.sh -calc ionic-cond Li 1
 # Example: Oxygen ion (O2-)
 gpumdkit.sh -calc ionic-cond O -2
 
-# Required files in current directory:
+# Preferred non-interactive inputs in current directory:
 # - msd.out (from GPUMD compute_msd)
 # - thermo.out (for temperature)
 # - model.xyz (for volume)
-# - run.in (for simulation parameters)
+# - run.in (optional; used to detect replicate factors)
 ```
 
 ### NEP Property Prediction
@@ -189,12 +178,16 @@ python Scripts/calculators/neb_calculation_neptrain.py init.xyz fin.xyz 9 nep.tx
 
 ### Ionic Transport Analysis
 ```bash
-# 1. Run MD with compute_msd in run.in
-# 2. Calculate MSD
+# Path A: derive msd.out from an extxyz trajectory
 gpumdkit.sh -calc msd dump.xyz Li 10
-# 3. Calculate conductivity
+
+# Path B: generate msd.out directly with GPUMD compute_msd.
+# Do not run both paths unless comparing implementations.
+
+# Conductivity requires validated msd.out, thermo.out, model.xyz, and run.in
 gpumdkit.sh -calc ionic-cond Li 1
-# 4. Visualize
+
+# Visualize
 gpumdkit.sh -plt msd
 gpumdkit.sh -plt sdc
 ```
@@ -248,4 +241,4 @@ pip3 install git+https://github.com/MoseyQAQ/ferrodispcalc.git
 
 ## Detailed Documentation
 
-See [calculator_scripts.md](../../docs/tutorials/en/calculator_scripts.md) for comprehensive guide.
+See `${GPUMDkit_path}/docs/tutorials/en/calculator_scripts.md` or the Chinese counterpart for the user-facing guide.

@@ -19,7 +19,7 @@ if [ -z "$GPUMDkit_path" ]; then
     exit 1
 fi
 
-VERSION="1.5.6 (dev) (2026-06-17)"
+VERSION="1.5.6 (dev) (2026-07-10)"
 
 plt_path="${GPUMDkit_path}/Scripts/plt_scripts"
 analyzer_path="${GPUMDkit_path}/Scripts/analyzer"
@@ -192,7 +192,7 @@ function help_info_table(){
     echo " | -h            Show this help table            | -plt <type>        Plot and visualization tools       |"
     echo " | -calc <type>  Calculator tools                | -time <gpumd|nep>  Time-consuming analyzer            |"
     echo " | -update       Update GPUMDkit                 | -clean             Clean extra files in current dir   |"
-    echo " | -skill        Show GPUMDkit agent skills info |                                                     |"
+    echo " | -skill        Show GPUMDkit agent skill info  |                                                     |"
     echo " +-------------------------------------------------------------------------------------------------------+"
     echo " |                                         FORMAT CONVERSION                                             |"
     echo " +-------------------------------------------------------------------------------------------------------+"
@@ -215,7 +215,7 @@ function help_info_table(){
     echo " | -pda          Probability density analysis    | -filter_box        Filter by box-edge length          |"
     echo " | -pynep        Deprecated PyNEP sampling       | -nep_modifier      Modify NEP model interactively     |"
     echo " +-------------------------------------------------------------------------------------------------------+"
-    echo " | Detailed usage: gpumdkit.sh -<option> -h    Plot details: gpumdkit.sh -plt <type> -h                  |"
+    echo " | Python option help: gpumdkit.sh -<option> -h    Plot list: gpumdkit.sh -plt -h                     |"
     echo " +-------------------------------------------------------------------------------------------------------+"
 }
 

@@ -57,6 +57,7 @@ nav:
   - English:
     - GPUMDkit Tutorials: en/index.md
     - Quick Start: en/quick_start.md
+    - Simulation and Post-processing: en/simulation_and_postprocessing.md
     - Command Reference: en/command_reference.md
     - Format Conversion: en/format_conversion.md
     - Structure Sampling: en/structure_sampling.md
@@ -71,6 +72,7 @@ nav:
   - 简体中文:
     - GPUMDkit 教程: zh/index.md
     - 快速入门: zh/快速入门.md
+    - 模拟与后处理: zh/模拟与后处理.md
     - 命令参考: zh/命令参考.md
     - 格式转换: zh/格式转换.md
     - 结构采样: zh/结构采样.md

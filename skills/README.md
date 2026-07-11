@@ -1,90 +1,81 @@
-# GPUMDkit Skills
+# GPUMDkit Agent Skill
 
-This directory contains GPUMDkit skill definitions for AI agent tools such as opencode and Claude Code.
+GPUMDkit provides two portable Agent Skills-compatible entry points (English and Chinese):
 
-After installing GPUMDkit, make sure `GPUMDkit_path` is set, then run:
+```text
+skills/gpumdkit-skill/     (English)
+  SKILL.md
+  references/
+  agents/openai.yaml
+
+skills/gpumdkit-skill-zh/  (Chinese)
+  SKILL.md
+  references/
+  agents/openai.yaml
+```
+
+The single `gpumdkit-skill` (and its Chinese counterpart `gpumdkit-skill-zh`) handles GPUMDkit commands, GPUMD simulation, NEP training, validation, post-processing, and GPUMDkit development. Its `SKILL.md` routes agents to focused files under `references/`, so detailed module content is loaded only when required.
+
+GPUMD and NEP references are self-contained summaries organized by inputs, setup/actions, ensembles, computations, outputs, training data, and model parameters. They do not point to or require a local GPUMD documentation source tree. When an executable differs from the bundled snapshot, agents record the version and parser evidence and ask for version-specific information.
+
+## Discover the skill
+
+After installing GPUMDkit and setting `GPUMDkit_path`, run:
 
 ```bash
 gpumdkit.sh -skill
 ```
 
-The command prints the skill source path, available GPUMDkit skills, global and project install targets, and copyable install examples for common agent tools.
-
-## Skill Source
-
-The canonical skill source is:
+Canonical skill directory:
 
 ```bash
-${GPUMDkit_path}/skills
+${GPUMDkit_path}/skills/gpumdkit-skill
+${GPUMDkit_path}/skills/gpumdkit-skill-zh
 ```
 
-Use this absolute environment-variable path when linking skills into an agent tool. This is more robust than relative paths such as `../../skills/...` because it does not depend on the current working directory.
+## Install for Agent Skills-compatible clients
 
-## Available Skills
+The cross-client convention is `.agents/skills/`. Ask the user whether installation should be global or project-local before creating a link.
 
-| Skill | Use When |
-|-------|----------|
-| [gpumdkit-main](gpumdkit-main/SKILL.md) | Installation, entry point, overview, and module navigation |
-| [gpumdkit-format-conversion](gpumdkit-format-conversion/SKILL.md) | Converting structure files between VASP, LAMMPS, CP2K, ABACUS, CIF, DeepMD, MTP, ASE, and extxyz formats |
-| [gpumdkit-calculators](gpumdkit-calculators/SKILL.md) | Computing material properties such as MSD, ionic conductivity, NEP predictions, descriptors, DOAS, NEB, and polarization |
-| [gpumdkit-analyzers](gpumdkit-analyzers/SKILL.md) | Analyzing, validating, filtering, and checking structures or datasets |
-| [gpumdkit-visualization](gpumdkit-visualization/SKILL.md) | Plotting NEP training, MD outputs, transport properties, RDF, thermal conductivity, and descriptors |
-| [gpumdkit-workflows](gpumdkit-workflows/SKILL.md) | Preparing batch SCF/MD calculations and active-learning workflows |
-| [gpumdkit-sampling](gpumdkit-sampling/SKILL.md) | Sampling, perturbing, and selecting structures for training data |
-| [gpumdkit-contributing](gpumdkit-contributing/SKILL.md) | Adding features, commands, scripts, or documentation to GPUMDkit |
-
-## Install Examples
-
-Agents should ask the user whether to install GPUMDkit skills globally or only for the current project.
-
-Global install targets:
-
-| Tool mode | Target directory |
-|-----------|------------------|
-| OpenCode | `~/.config/opencode/skills` |
-| Claude-compatible | `~/.claude/skills` |
-| Agents-compatible | `~/.agents/skills` |
-
-Project install targets:
-
-| Tool mode | Target directory |
-|-----------|------------------|
-| OpenCode | `.opencode/skills` |
-| Claude-compatible | `.claude/skills` |
-| Agents-compatible | `.agents/skills` |
-
-Install globally for OpenCode:
+Global:
 
 ```bash
-target_dir="${HOME}/.config/opencode/skills"
+target_dir="${HOME}/.agents/skills"
 mkdir -p "${target_dir}"
-for skill_dir in ${GPUMDkit_path}/skills/gpumdkit-*; do
-    ln -s "${skill_dir}" "${target_dir}/$(basename "${skill_dir}")"
-done
+ln -s "${GPUMDkit_path}/skills/gpumdkit-skill" "${target_dir}/gpumdkit-skill"
+ln -s "${GPUMDkit_path}/skills/gpumdkit-skill-zh" "${target_dir}/gpumdkit-skill-zh"
 ```
 
-Install for the current project only:
+Current project only:
 
 ```bash
-target_dir=".opencode/skills"
+target_dir=".agents/skills"
 mkdir -p "${target_dir}"
-for skill_dir in ${GPUMDkit_path}/skills/gpumdkit-*; do
-    ln -s "${skill_dir}" "${target_dir}/$(basename "${skill_dir}")"
-done
+ln -s "${GPUMDkit_path}/skills/gpumdkit-skill" "${target_dir}/gpumdkit-skill"
+ln -s "${GPUMDkit_path}/skills/gpumdkit-skill-zh" "${target_dir}/gpumdkit-skill-zh"
 ```
 
-Use one of the other target directories above for Claude-compatible or agents-compatible installs.
+Common client-specific alternatives:
 
-## Agent Usage Notes
+| Client mode | Global directory | Project directory |
+|---|---|---|
+| Agent Skills standard | `~/.agents/skills` | `.agents/skills` |
+| OpenCode | `~/.config/opencode/skills` | `.opencode/skills` |
+| Claude-compatible | `~/.claude/skills` | `.claude/skills` |
 
-- Prefer `gpumdkit.sh -skill` as the discovery command.
-- Prefer specialized GPUMDkit skills for specific tasks instead of `gpumdkit-main`.
-- When modifying code, read [gpumdkit-contributing](gpumdkit-contributing/SKILL.md) first.
-- For direct script calls, use `${GPUMDkit_path}/Scripts/...` so the command does not depend on the current directory.
+Use the same `ln -s` command with the appropriate target directory. Clients that support a custom skill path can point directly to `${GPUMDkit_path}/skills/gpumdkit-skill`.
+
+## Portability notes
+
+- `SKILL.md` uses standard YAML frontmatter with a directory-matching `name` and a trigger-focused `description`.
+- Core instructions remain concise; module details use one-level `references/` for progressive disclosure.
+- The skill does not rely on experimental `allowed-tools` metadata or a product-specific activation function.
+- `agents/openai.yaml` is optional UI metadata. Clients that do not recognize it can ignore it.
+- Commands and resources use repository-relative paths or `${GPUMDkit_path}`.
+- Any unresolved scientific or execution choice must be asked of the user rather than guessed.
 
 ## References
 
-- [Agent Skills Standard](https://agentskills.io)
-- [opencode Documentation](https://opencode.ai)
-- [Claude Code Skills](https://docs.anthropic.com/en/docs/claude-code/skills)
-- [GPUMDkit Documentation](https://gpumdkit.cn/)
+- [Agent Skills specification](https://agentskills.io/specification)
+- [Agent Skills client implementation guide](https://agentskills.io/client-implementation/adding-skills-support)
+- [GPUMDkit documentation](https://gpumdkit.cn/)

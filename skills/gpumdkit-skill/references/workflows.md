@@ -1,22 +1,12 @@
----
-name: gpumdkit-workflows
-description: >
-  Use when setting up batch calculations or high-throughput simulations.
-  Provides SCF batch pretreatment for VASP and CP2K, MD sample batch pretreatment for GPUMD and LAMMPS,
-  and active learning workflow automation.
-  Use when user asks about: batch calculation, workflow automation, SCF batch, MD sampling,
-  high-throughput simulation, or active learning.
-allowed-tools: Bash(gpumdkit.sh *) Bash(gpumdkit *) Bash(python3 *)
----
+# Batch and Active-Learning Workflows
 
-# GPUMDkit Workflows
+## Contents
 
-## Agent Routing
-
-- Use this skill for batch SCF/MD setup, high-throughput pretreatment, and active-learning workflow planning.
-- Most workflow tools are interactive menu workflows. Use them for guidance unless the user explicitly wants to run them.
-- Use direct scripts under `${GPUMDkit_path}/Scripts/workflow/` only for documented direct Python or shell workflow scripts.
-- Do not run development active-learning scripts unless the user explicitly asks for experimental active-learning automation.
+- Available workflows
+- SCF batch preparation
+- MD sample batch preparation
+- Active learning
+- Examples and notes
 
 ## Available Workflows
 
@@ -229,5 +219,5 @@ gpumdkit.sh  # Select: 3) Workflow -> 301
 
 ## Detailed Documentation
 
-- [Workflow Guide](../../docs/tutorials/en/workflow_scripts.md)
-- [Active Learning Guide](../../docs/tutorials/en/active_learning_workflow.md)
+- `${GPUMDkit_path}/docs/tutorials/en/workflow_scripts.md`
+- `${GPUMDkit_path}/docs/tutorials/en/active_learning_workflow.md`

@@ -11,7 +11,7 @@
 gpumdkit.sh -plt              # Show all plotting options
 gpumdkit.sh -plt <type>       # Generate a plot
 gpumdkit.sh -plt <type> save  # Save plot as PNG
-gpumdkit.sh -plt <type> -h    # Show help for a specific plot type
+gpumdkit.sh -plt -h           # List available plot types
 ```
 
 Running `gpumdkit.sh -plt` prints the plotting command menu:
@@ -20,7 +20,7 @@ Running `gpumdkit.sh -plt` prints the plotting command menu:
 +-----------------------------------------------------------------------------------------------+
 |                     GPUMDkit <version> PLOT & VISUALIZATION TOOLS              |
 +-----------------------------------------------------------------------------------------------+
-|  Usage: gpumdkit.sh -plt <type>                        Help: gpumdkit.sh -plt <type> -h       |
+|  Usage: gpumdkit.sh -plt <type>                        Plot list: gpumdkit.sh -plt -h         |
 +-----------------------------------------------------------------------------------------------+
 |                                    NEP Training & Evaluation                                  |
 +-----------------------------------------------------------------------------------------------+
