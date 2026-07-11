@@ -63,7 +63,7 @@ function main(){
     echo ' Input the function number:'
     valid_menu_choices=(
         "0" "1" "101" "102" "103" "104" "105" "106" "107" "108" "109" "110"
-        "2" "201" "202" "203" "204" "205" 
+        "2" "201" "202" "203" "204" "205" "206"
         "3" "301" "302" "303" 
         "4" "401" "402" "403" "404" "405" "406" "407" "408" "409" "410" "411" "412"
         "5" "501" "502" "503" "504" "505" "506" "507" "508"
@@ -108,6 +108,7 @@ function main(){
                 "203") f203_neptrain_sample_structures ;;
                 "204") f204_perturb_structure ;;
                 "205") f205_select_max_force_deviation_structs ;;
+                "206") f206_split_train_test ;;
             esac ;;
         "3")
             source ${GPUMDkit_path}/src/f3_workflows.sh

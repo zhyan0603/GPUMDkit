@@ -17,6 +17,7 @@
 | FPS by NepTrain | 203 | Farthest point sampling (preferred) |
 | Perturbation | 204 | Generate perturbed structures |
 | Force Deviation | 205 | Select high-force-deviation structures |
+| Train/Test Split | 206 | Split extxyz data using uniform, random, or NepTrain FPS selection |
 
 ## Command Reference
 
@@ -129,6 +130,40 @@ python3 ${GPUMDkit_path}/Scripts/sample_structures/select_max_modev.py 200 0.15
 2. Sorts by deviation (descending) and extracts the top N structures
 3. Reads corresponding frames from `active.xyz` and writes them to output
 
+### Training and Test Set Split
+
+```bash
+# Interactive mode
+gpumdkit.sh  # Select: 2) Sample Structures -> 206
+
+# Direct script entry; the split settings are prompted interactively
+python3 ${GPUMDkit_path}/Scripts/sample_structures/split_train_test.py <input.xyz>
+
+# Example
+python3 ${GPUMDkit_path}/Scripts/sample_structures/split_train_test.py data.xyz
+```
+
+The script reports the dataset elements, frame count, and atom-count range before
+asking for the test-set size:
+
+- A value strictly between `0` and `1` is a fraction, e.g. `0.1` means 10%.
+- A positive integer is an exact frame count, e.g. `100` means 100 frames.
+- Fractional counts are rounded to the nearest integer with halves rounded up,
+  with a minimum of one test frame.
+- The test set must contain fewer frames than the complete dataset.
+
+Selection methods:
+
+- **Uniform**: evenly spaced indices over the full dataset.
+- **Random**: sampling without replacement; an optional integer seed makes the
+  result reproducible.
+- **FPS**: mean atomic NEP descriptors calculated by NepTrain, starting from the
+  first frame and repeatedly adding the farthest remaining frame. This requires
+  a compatible NEP model such as `nep.txt`.
+
+For `data.xyz`, the outputs are `data_train.xyz` and `data_test.xyz`. Structures
+in each output retain their original input order.
+
 ### Frame Range Extraction
 
 ```bash
@@ -208,6 +243,8 @@ dump.xyz train.xyz nep.txt 8
 | FPS (PyNEP) | `numpy`, `ase`, `matplotlib`, `scikit-learn`, `pynep` |
 | Perturbation | `dpdata` |
 | Force Deviation | `numpy`, `ase` |
+| Train/Test Split (Uniform/Random) | `numpy`, `ase` |
+| Train/Test Split (FPS) | `numpy`, `ase`, `scipy`, `NepTrain` |
 
 Install dependencies:
 ```bash
@@ -222,6 +259,8 @@ pip install neptrain  # For FPS by NepTrain
 3. **Filter before sampling**: Remove unphysical structures (too close, too large) first
 4. **Frame ranges use fractions**: `-frame_range` uses start/end fractions between 0.0 and 1.0
 5. **Output is extxyz**: All sampling methods output extxyz format
+6. **Split selection targets the test set**: Function 206 selects test frames;
+   every unselected frame is written to the training set
 
 ## Detailed Documentation
 

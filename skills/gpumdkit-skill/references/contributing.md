@@ -108,6 +108,15 @@ Key conventions:
 
 If it's a calculator, update the calculator menu display in `f4_calculators.sh`.
 
+After adding a menu row, **run `gpumdkit.sh`, enter the affected module, and
+inspect the rendered submenu in the terminal**. Every row must end at the same
+right-hand `|` as the surrounding rows. Do not validate alignment only by
+counting border dashes: one extra or missing padding space in a content row is
+enough to shift its border even when the top and bottom borders are correct.
+Compare the new row's character count with adjacent rows and test the complete
+interactive path through the new function, including the transition from the
+shell wrapper to the implementation script.
+
 ## Adding a New CLI Flag
 
 ### Step 1: Create the implementation script
@@ -425,6 +434,12 @@ All interactive input must go through the helpers defined in `gpumdkit.sh`:
 - Validation array: always named `valid_menu_choices`
 - Validation loop: `while ! echo "${valid_menu_choices[@]}" | grep -wq "$num_choice"; do ...; done`
 - Return-to-main-menu: `case ... "000") menu; main ;;`
+- Every menu content row must have the same rendered width as its border and
+  neighboring rows; pay special attention to trailing padding spaces before `|`
+- For every added menu entry, run `gpumdkit.sh`, select the parent module, and
+  visually verify the actual terminal output before considering the change done
+- Continue through the new entry once to review the combined shell and Python
+  prompts as one interaction, not as two independently formatted components
 
 ### Script Banners
 
@@ -520,6 +535,10 @@ mkdocs build -f docs/mkdocs.yml
 # Whitespace check (always)
 git diff --check
 ```
+
+For interactive-menu changes, the validation is not complete until the affected
+submenu has also been opened through `gpumdkit.sh` and all right borders have
+been checked for alignment in the rendered terminal output.
 
 ### When to Build MkDocs
 

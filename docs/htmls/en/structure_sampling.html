@@ -678,6 +678,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#training-and-test-set-split" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Training and Test Set Split
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#frame-range-extraction" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -1526,6 +1537,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#training-and-test-set-split" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Training and Test Set Split
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#frame-range-extraction" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -1596,14 +1618,15 @@
 <a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>|                 SAMPLE STRUCTURE TOOLS               |
 <a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>+------------------------------------------------------+
 <a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>| 201) Sample structures from extxyz                   |
-<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>| 202) PyNEP sampling [deprecated]                    |
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>| 202) PyNEP sampling [deprecated]                     |
 <a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>| 203) FPS sampling by NepTrain [preferred]            |
 <a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a>| 204) Perturb structure                               |
 <a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>| 205) Select max force deviation structs              |
-<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a>+------------------------------------------------------+
-<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a>| 000) Return to the main menu                         |
-<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a>+------------------------------------------------------+
-<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a>Input the function number:
+<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a>| 206) Split training and test sets                    |
+<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a>+------------------------------------------------------+
+<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a>| 000) Return to the main menu                         |
+<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a>+------------------------------------------------------+
+<a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a>Input the function number:
 </code></pre></div>
 <p>Available entries:</p>
 <table>
@@ -1639,6 +1662,11 @@
 <td>205</td>
 <td>Force-deviation selection</td>
 <td>select structures with high model deviation</td>
+</tr>
+<tr>
+<td>206</td>
+<td>Train/test split</td>
+<td>inspect and split an extxyz dataset using uniform, random, or FPS selection</td>
 </tr>
 </tbody>
 </table>
@@ -1851,17 +1879,96 @@
 <ul>
 <li><code>selected.xyz</code></li>
 </ul>
+<h2 id="training-and-test-set-split">Training and Test Set Split</h2>
+<p>Choose <code>206</code> to inspect an extxyz dataset and split it into training and test
+sets. The script first reports the element list, total number of frames, and the
+range of atom counts per frame. It then asks for the test-set size and selection
+method.</p>
+<p>From interactive mode:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-18-1" name="__codelineno-18-1" href="#__codelineno-18-1"></a>gpumdkit.sh -&gt; 2) Sample Structures -&gt; 206
+</code></pre></div>
+<p>Enter the input filename when prompted:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-19-1" name="__codelineno-19-1" href="#__codelineno-19-1"></a>Input &lt;extxyz_file&gt;
+<a id="__codelineno-19-2" name="__codelineno-19-2" href="#__codelineno-19-2"></a>Example: data.xyz
+<a id="__codelineno-19-3" name="__codelineno-19-3" href="#__codelineno-19-3"></a>------------&gt;&gt;
+</code></pre></div>
+<p>The test-set size accepts two forms:</p>
+<table>
+<thead>
+<tr>
+<th>Input</th>
+<th>Meaning</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>0.1</code></td>
+<td>select approximately 10% of all frames for testing</td>
+</tr>
+<tr>
+<td><code>100</code></td>
+<td>select exactly 100 frames for testing</td>
+</tr>
+</tbody>
+</table>
+<p>For a fractional input, the number of test frames is rounded to the nearest
+integer with halves rounded up, with a minimum of one test frame. The test set
+must remain smaller than the complete dataset so that the training set is not
+empty.</p>
+<p>Three selection methods are available:</p>
+<table>
+<thead>
+<tr>
+<th>Method</th>
+<th>Behavior</th>
+<th>Additional input</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Uniform</td>
+<td>selects evenly spaced frame indices across the dataset</td>
+<td>none</td>
+</tr>
+<tr>
+<td>Random</td>
+<td>selects without replacement</td>
+<td>optional integer random seed</td>
+</tr>
+<tr>
+<td>FPS</td>
+<td>selects diverse structures using mean atomic NEP descriptors</td>
+<td>a compatible <code>nep.txt</code> model</td>
+</tr>
+</tbody>
+</table>
+<p>A fixed random seed makes a random split reproducible. Leaving the seed empty
+uses a non-fixed seed. FPS follows the NepTrain descriptor approach used by
+function <code>203</code>: it starts from the first frame and repeatedly selects the frame
+farthest from the structures already selected.</p>
+<p>For an input named <code>data.xyz</code>, the outputs are:</p>
+<ul>
+<li><code>data_train.xyz</code>: all frames not selected for testing;</li>
+<li><code>data_test.xyz</code>: the selected test frames.</li>
+</ul>
+<p>Both output files preserve the input order of their retained frames. The script
+can also be launched directly, but the remaining choices are still interactive:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-20-1" name="__codelineno-20-1" href="#__codelineno-20-1"></a>python<span class="w"> </span>Scripts/sample_structures/split_train_test.py<span class="w"> </span>data.xyz
+</code></pre></div>
+<p>Uniform and random splitting require <code>numpy</code> and <code>ase</code>. FPS additionally
+requires <code>NepTrain</code>, <code>scipy</code>, and a NEP model compatible with the elements in the
+dataset.</p>
 <h2 id="frame-range-extraction">Frame Range Extraction</h2>
-<p><code>frame_range.py</code> is an independent CLI tool and is not part of the interactive sampling menu <code>201–205</code>. Use it when you want to keep only a fraction of a trajectory before sampling, for example after equilibration.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-18-1" name="__codelineno-18-1" href="#__codelineno-18-1"></a>gpumdkit.sh<span class="w"> </span>-frame_range<span class="w"> </span>dump.xyz<span class="w"> </span><span class="m">0</span><span class="w"> </span><span class="m">0</span>.8
-<a id="__codelineno-18-2" name="__codelineno-18-2" href="#__codelineno-18-2"></a>python<span class="w"> </span>Scripts/sample_structures/frame_range.py<span class="w"> </span>dump.xyz<span class="w"> </span><span class="m">0</span><span class="w"> </span><span class="m">0</span>.8
+<p><code>frame_range.py</code> is an independent CLI tool and is not part of the interactive sampling menu <code>201–206</code>. Use it when you want to keep only a fraction of a trajectory before sampling, for example after equilibration.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-21-1" name="__codelineno-21-1" href="#__codelineno-21-1"></a>gpumdkit.sh<span class="w"> </span>-frame_range<span class="w"> </span>dump.xyz<span class="w"> </span><span class="m">0</span><span class="w"> </span><span class="m">0</span>.8
+<a id="__codelineno-21-2" name="__codelineno-21-2" href="#__codelineno-21-2"></a>python<span class="w"> </span>Scripts/sample_structures/frame_range.py<span class="w"> </span>dump.xyz<span class="w"> </span><span class="m">0</span><span class="w"> </span><span class="m">0</span>.8
 </code></pre></div>
 <p>This writes frames from 0% to 80% of the trajectory. The range arguments are trajectory fractions from <code>0</code> to <code>1</code>.</p>
 <h2 id="example-commands">Example Commands</h2>
 <p>An example preprocessing-and-sampling sequence is shown below. The first two commands are analyzer tools; the final step is structure sampling.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-19-1" name="__codelineno-19-1" href="#__codelineno-19-1"></a>gpumdkit.sh<span class="w"> </span>-min_dist_pbc<span class="w"> </span>dump.xyz
-<a id="__codelineno-19-2" name="__codelineno-19-2" href="#__codelineno-19-2"></a>gpumdkit.sh<span class="w"> </span>-filter_box<span class="w"> </span>dump.xyz<span class="w"> </span><span class="m">13</span>
-<a id="__codelineno-19-3" name="__codelineno-19-3" href="#__codelineno-19-3"></a>python<span class="w"> </span>Scripts/sample_structures/neptrain_select_structs.py<span class="w"> </span>dump.xyz<span class="w"> </span>train.xyz<span class="w"> </span>nep.txt
+<div class="highlight"><pre><span></span><code><a id="__codelineno-22-1" name="__codelineno-22-1" href="#__codelineno-22-1"></a>gpumdkit.sh<span class="w"> </span>-min_dist_pbc<span class="w"> </span>dump.xyz
+<a id="__codelineno-22-2" name="__codelineno-22-2" href="#__codelineno-22-2"></a>gpumdkit.sh<span class="w"> </span>-filter_box<span class="w"> </span>dump.xyz<span class="w"> </span><span class="m">13</span>
+<a id="__codelineno-22-3" name="__codelineno-22-3" href="#__codelineno-22-3"></a>python<span class="w"> </span>Scripts/sample_structures/neptrain_select_structs.py<span class="w"> </span>dump.xyz<span class="w"> </span>train.xyz<span class="w"> </span>nep.txt
 </code></pre></div>
 <p>The final step can also be run from interactive mode by choosing <code>2) Sample Structures -&gt; 203</code>.</p>
 <h2 id="common-mistakes">Common Mistakes</h2>
@@ -1888,6 +1995,14 @@
 <tr>
 <td>PCA plot looks strange</td>
 <td>check whether <code>nep.txt</code> matches the chemical species in both datasets</td>
+</tr>
+<tr>
+<td>FPS split cannot load the model</td>
+<td>check that NepTrain is installed and that <code>nep.txt</code> supports every dataset element</td>
+</tr>
+<tr>
+<td>Random split changes between runs</td>
+<td>enter a fixed integer random seed</td>
 </tr>
 </tbody>
 </table>
