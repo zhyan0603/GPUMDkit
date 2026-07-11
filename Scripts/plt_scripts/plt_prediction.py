@@ -8,8 +8,8 @@ Citation: Z. Yan et al., GPUMDkit: A User-Friendly Toolkit for GPUMD and NEP,
 Script:     plt_prediction.py
 Category:   Plot Scripts
 Purpose:    Visualize NEP prediction results with parity plots for energy,
-            forces, and stresses, including marginal distributions and
-            residual histograms.
+            forces, and stress or virial data, including marginal
+            distributions and residual histograms. Stress is preferred.
 Usage:      gpumdkit.sh -plt prediction [save]
             python plt_prediction.py [save]
 Arguments:
@@ -21,6 +21,7 @@ Last-modified: 2026-07-11
 =============================================================================
 """
 
+import os
 import sys
 import numpy as np
 import matplotlib
@@ -54,11 +55,24 @@ plt.rcParams['text.color'] = 'black'
 # =========================
 energy_data = np.loadtxt('energy_train.out')
 force_data = np.loadtxt('force_train.out')
-stress_data = np.loadtxt('stress_train.out')
+tensor_name = "Stress"
+tensor_axis_unit = "GPa"
+tensor_metric_unit = "GPa"
+tensor_metric_scale = 1.0
+tensor_data = None
+if os.path.isfile('stress_train.out'):
+    tensor_data = np.atleast_2d(np.loadtxt('stress_train.out'))
+elif os.path.isfile('virial_train.out'):
+    tensor_name = "Virial"
+    tensor_axis_unit = "eV/atom"
+    tensor_metric_unit = "meV/atom"
+    tensor_metric_scale = 1000.0
+    tensor_data = np.atleast_2d(np.loadtxt('virial_train.out'))
 
-# Filter invalid stress rows
-valid_rows = ~np.any(np.abs(stress_data[:, :12]) >= 1e6, axis=1)
-stress_data = stress_data[valid_rows]
+# Filter invalid stress/virial rows
+if tensor_data is not None:
+    valid_rows = ~np.any(np.abs(tensor_data[:, :12]) >= 1e6, axis=1)
+    tensor_data = tensor_data[valid_rows]
 
 # =========================
 # Utility functions
@@ -78,21 +92,21 @@ def r2_score_np(true, pred):
         return np.nan
     return 1.0 - ss_res / ss_tot
 
-def print_parity_metrics(energy, force, stress):
-    """Print energy, force, and stress parity metrics as a three-line table."""
-    stress_r2, stress_mae, stress_rmse = stress if stress is not None else (None, None, None)
-    stress_r2_text = f"{stress_r2:.4f}" if stress_r2 is not None else "N/A"
-    stress_mae_text = f"{stress_mae:.4f}" if stress_mae is not None else "N/A"
-    stress_rmse_text = f"{stress_rmse:.4f}" if stress_rmse is not None else "N/A"
+def print_parity_metrics(energy, force, tensor, tensor_label, tensor_unit_label):
+    """Print energy, force, and tensor parity metrics as a three-line table."""
+    tensor_r2, tensor_mae, tensor_rmse = tensor if tensor is not None else (None, None, None)
+    tensor_r2_text = f"{tensor_r2:.4f}" if tensor_r2 is not None else "N/A"
+    tensor_mae_text = f"{tensor_mae:.4f}" if tensor_mae is not None else "N/A"
+    tensor_rmse_text = f"{tensor_rmse:.4f}" if tensor_rmse is not None else "N/A"
     line = " " + "-" * 48
     print(" Parity metrics (training set)")
-    print(" Energy: meV/atom, Force: meV/Ang, Stress: GPa")
+    print(f" Energy: meV/atom, Force: meV/Ang, {tensor_label}: {tensor_unit_label}")
     print(line)
-    print(f" {'Metric':<8}{'Energy':>12}{'Force':>12}{'Stress':>12}")
+    print(f" {'Metric':<8}{'Energy':>12}{'Force':>12}{tensor_label:>12}")
     print(line)
-    print(f" {'R^2':<8}{energy[0]:>12.4f}{force[0]:>12.4f}{stress_r2_text:>12}")
-    print(f" {'MAE':<8}{energy[1]:>12.2f}{force[1]:>12.2f}{stress_mae_text:>12}")
-    print(f" {'RMSE':<8}{energy[2]:>12.2f}{force[2]:>12.2f}{stress_rmse_text:>12}")
+    print(f" {'R^2':<8}{energy[0]:>12.4f}{force[0]:>12.4f}{tensor_r2_text:>12}")
+    print(f" {'MAE':<8}{energy[1]:>12.2f}{force[1]:>12.2f}{tensor_mae_text:>12}")
+    print(f" {'RMSE':<8}{energy[2]:>12.2f}{force[2]:>12.2f}{tensor_rmse_text:>12}")
     print(line)
 
 def get_limits(true, pred, padding=0.05):
@@ -251,36 +265,38 @@ force_r2 = plot_parity_with_marginals(
 )
 
 # =========================
-# Stress panel
-# stress_data[:, 0:6] -> NEP
-# stress_data[:, 6:12] -> DFT
+# Stress/virial panel
+# tensor_data[:, 0:6] -> NEP
+# tensor_data[:, 6:12] -> DFT
 # =========================
-if stress_data.shape[0] == 0:
+if tensor_data is None or tensor_data.shape[0] == 0:
     axs[2].axis('off')
-    stress_metrics = None
+    tensor_metrics = None
 else:
-    stress_true = stress_data[:, 6:12]
-    stress_pred = stress_data[:, 0:6]
-    stress_true_flat = stress_true.reshape(-1)
-    stress_pred_flat = stress_pred.reshape(-1)
-    stress_rmse = rmse(stress_pred_flat, stress_true_flat)
-    stress_mae = mae(stress_pred_flat, stress_true_flat)
-    stress_r2 = plot_parity_with_marginals(
+    tensor_true = tensor_data[:, 6:12]
+    tensor_pred = tensor_data[:, 0:6]
+    tensor_true_flat = tensor_true.reshape(-1)
+    tensor_pred_flat = tensor_pred.reshape(-1)
+    tensor_rmse = rmse(tensor_pred_flat, tensor_true_flat) * tensor_metric_scale
+    tensor_mae = mae(tensor_pred_flat, tensor_true_flat) * tensor_metric_scale
+    tensor_r2 = plot_parity_with_marginals(
         axs[2],
-        stress_true_flat,
-        stress_pred_flat,
-        'DFT stress (GPa)',
-        'NEP stress (GPa)',
+        tensor_true_flat,
+        tensor_pred_flat,
+        f'DFT {tensor_name.lower()} ({tensor_axis_unit})',
+        f'NEP {tensor_name.lower()} ({tensor_axis_unit})',
         stress_color,
-        f'MAE = {stress_mae:.4f} GPa',
-        f'RMSE = {stress_rmse:.4f} GPa'
+        f'MAE = {tensor_mae:.4f} {tensor_metric_unit}',
+        f'RMSE = {tensor_rmse:.4f} {tensor_metric_unit}'
     )
-    stress_metrics = (stress_r2, stress_mae, stress_rmse)
+    tensor_metrics = (tensor_r2, tensor_mae, tensor_rmse)
 
 print_parity_metrics(
     (energy_r2, energy_mae, energy_rmse),
     (force_r2, force_mae, force_rmse),
-    stress_metrics,
+    tensor_metrics,
+    tensor_name,
+    tensor_metric_unit,
 )
 
 # =========================
