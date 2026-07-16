@@ -12,10 +12,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        include:
-          - os: ubuntu-latest
-          - os: macos-13        # Intel Mac (osx-64)
-          - os: macos-latest    # Apple Silicon Mac (osx-arm64)
+        os: [ubuntu-latest, macos-latest]
 
     runs-on: ${{ matrix.os }}
 
