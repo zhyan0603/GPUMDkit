@@ -17,7 +17,8 @@ requirements:
     - bash
     - coreutils
   host:
-    - python >=3.10,<3.13
+    - python >=3.10,<=3.12
+    - pip
   run:
     - bash
     - coreutils
@@ -25,7 +26,7 @@ requirements:
     - gawk
     - grep
     - sed
-    - python >=3.10,<3.13
+    - python >=3.10,<=3.12
     - numpy
     - scipy
     - matplotlib-base
