@@ -1,6 +1,6 @@
 # GPUMDkit
 
-GPUMDkit is a Bash + Python CLI toolkit for GPUMD molecular dynamics and NEP potentials: data conversion/sampling, workflows, calculations, analysis, plotting, simulation, training, and post-processing. Docs: <https://gpumdkit.cn/>.
+GPUMDkit is a Bash + Python CLI toolkit for GPUMD and NEP package: data conversion/sampling, workflows, calculations, analysis, plotting, simulation, training, and post-processing. Docs: <https://gpumdkit.cn/html/index.html>.
 
 ## Architecture
 

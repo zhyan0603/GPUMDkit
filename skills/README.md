@@ -14,7 +14,7 @@ skills/gpumdkit-skill-zh/  (Chinese)
   agents/openai.yaml
 ```
 
-The single `gpumdkit-skill` (and its Chinese counterpart `gpumdkit-skill-zh`) handles GPUMDkit commands, GPUMD simulation, NEP training, validation, post-processing, and GPUMDkit development. Its `SKILL.md` routes agents to focused files under `references/`, so detailed module content is loaded only when required.
+`gpumdkit-skill` is the canonical English technical source, while `gpumdkit-skill-zh` is its file-aligned, polished Chinese counterpart. Both handle GPUMDkit commands, GPUMD simulations, NEP training and evaluation, validation, post-processing, and GPUMDkit development. Each `SKILL.md` routes agents to focused files under `references/`, so detailed module content is loaded only when required.
 
 GPUMD and NEP references are self-contained summaries organized by inputs, setup/actions, ensembles, computations, outputs, training data, and model parameters. They do not point to or require a local GPUMD documentation source tree. When an executable differs from the bundled snapshot, agents record the version and parser evidence and ask for version-specific information.
 
@@ -63,11 +63,11 @@ Common client-specific alternatives:
 | OpenCode | `~/.config/opencode/skills` | `.opencode/skills` |
 | Claude-compatible | `~/.claude/skills` | `.claude/skills` |
 
-Use the same `ln -s` command with the appropriate target directory. Clients that support a custom skill path can point directly to `${GPUMDkit_path}/skills/gpumdkit-skill`.
+Use the same `ln -s` command with the appropriate target directory. Clients that support a custom skill path can point directly to either language directory.
 
 ## Portability notes
 
-- `SKILL.md` uses standard YAML frontmatter with a directory-matching `name` and a trigger-focused `description`.
+- Each `SKILL.md` uses standard YAML frontmatter with a directory-matching, language-specific `name` and a trigger-focused `description`.
 - Core instructions remain concise; module details use one-level `references/` for progressive disclosure.
 - The skill does not rely on experimental `allowed-tools` metadata or a product-specific activation function.
 - `agents/openai.yaml` is optional UI metadata. Clients that do not recognize it can ignore it.

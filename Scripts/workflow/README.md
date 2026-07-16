@@ -90,6 +90,17 @@ Implements automated active learning cycles for iterative NEP model improvement.
 
 **Documentation:** See detailed tutorial in [docs/tutorials/](../../docs/tutorials/)
 
+### Development active-learning templates: read before running
+
+`workflow_active_learning_dev.sh` and
+`workflow_active_learning_dev_multielement.sh` are scheduler-oriented development
+templates, not one-command examples. They can create directories, move inputs,
+submit jobs, and wait for those jobs to finish. Before using either file, make a
+copy outside the repository and review the scheduler directives, executable
+paths, input-file requirements, selection method, and all scientific thresholds
+for your own system. Do not run the bundled values unchanged as a production
+workflow.
+
 ---
 
 ## Contributing

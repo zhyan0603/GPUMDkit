@@ -1,4 +1,4 @@
 interface:
-  display_name: "GPUMDkit"
-  short_description: "Use GPUMDkit, GPUMD, and NEP end to end"
-  default_prompt: "Use $gpumdkit-skill to complete this GPUMDkit task from setup through validation and post-processing."
+  display_name: "GPUMDkit 中文"
+  short_description: "端到端使用 GPUMDkit、GPUMD 与 NEP"
+  default_prompt: "使用 $gpumdkit-skill-zh 完成此 GPUMDkit 任务，包括准备、验证与后处理。"

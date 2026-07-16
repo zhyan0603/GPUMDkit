@@ -279,6 +279,8 @@ if [ ! -z "$1" ]; then
             skill_info_table ;;
         -doctor)
             GPUMDKIT_BASH_VERSION="${BASH_VERSION}" python "${utils_path}/doctor.py" "${@:2}" ;;
+        -input)
+            bash "${GPUMDkit_path}/Scripts/input_generator/input_generator.sh" "${@:2}" ;;
         -clean) 
             source ${utils_path}/clean_extra_files.sh
             clean_extra_files ;;
@@ -487,7 +489,7 @@ if [ ! -z "$1" ]; then
             parallel_pynep_sample_structures ;;
 
         -nep_modifier)
-            python ${GPUMDkit_path}/Scripts/utils/nep_modifier/nep_modifier.py ;;
+            python ${GPUMDkit_path}/Scripts/utils/nep_modifier/nep_modifier.py "${@:2}" ;;
 
         -frame_range)
             run_python_script "Zihan YAN (yanzihan@westlake.edu.cn)" "${sample_path}/frame_range.py" "${@:2}" ;;

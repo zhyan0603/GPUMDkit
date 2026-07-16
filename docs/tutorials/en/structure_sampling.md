@@ -90,14 +90,20 @@ Output:
 This entry uses NepTrain descriptors for FPS. Choose `203` in interactive mode, or run the script directly:
 
 ```bash
-python Scripts/sample_structures/neptrain_select_structs.py dump.xyz train.xyz nep.txt
+python Scripts/sample_structures/parallel_neptrain_select_structs.py dump.xyz train.xyz nep.txt [threads]
 ```
+
+Descriptor calculation uses one CPU worker by default. Set the optional fourth
+argument to a positive integer to enable parallel calculation, for example
+`4`. Each worker loads its own copy of the NEP model and uses one native OpenMP
+thread, so the requested worker count is the total descriptor parallelism.
 
 From interactive mode, choose `203`. You will see:
 
 ```text
-Input <sample.xyz> <train.xyz> <nep_model>
-Example: dump.xyz train.xyz nep.txt
+Input <sample.xyz> <train.xyz> <nep_model> [threads]
+[threads]: descriptor threads, default value is 1
+Example: dump.xyz train.xyz nep.txt 4
 ------------>>
 ```
 
@@ -108,6 +114,7 @@ Inputs:
 | `dump.xyz` | candidate structures |
 | `train.xyz` | existing training set |
 | `nep.txt` | current NEP model used to compute descriptors |
+| `threads` | optional number of descriptor workers; default: `1` |
 
 Outputs:
 
@@ -327,7 +334,7 @@ An example preprocessing-and-sampling sequence is shown below. The first two com
 ```bash
 gpumdkit.sh -min_dist_pbc dump.xyz
 gpumdkit.sh -filter_box dump.xyz 13
-python Scripts/sample_structures/neptrain_select_structs.py dump.xyz train.xyz nep.txt
+python Scripts/sample_structures/parallel_neptrain_select_structs.py dump.xyz train.xyz nep.txt 4
 ```
 
 The final step can also be run from interactive mode by choosing `2) Sample Structures -> 203`.

@@ -102,7 +102,7 @@ There are two options, <u>*interactive mode*</u> and <u>*command-line mode*</u>
              | |_| |  __/| |_| | |  | | |_| |   <| | |_
               \____|_|    \___/|_|  |_|____/|_|\_\_|\__|
     
-              GPUMDkit Version 1.5.6 (dev) (2026-06-17)
+              GPUMDkit Version 1.5.6 (dev) (2026-07-10)
         Core Developer: Zihan YAN (yanzihan@westlake.edu.cn)
      Main Contributors: Denan LI, Xin WU, Zhoulin LIU & Chen HUA
     
@@ -132,14 +132,14 @@ the help information:
 
 ```
 +-------------------------------------------------------------------------------------------------------+
-|                          GPUMDkit 1.5.6 (dev) (2026-06-17) Command Help                               |
+|                          GPUMDkit 1.5.6 (dev) (2026-07-10) Command Help                               |
 +-------------------------------------------------------------------------------------------------------+
 |                                          MAIN FUNCTIONS                                               |
 +-------------------------------------------------------------------------------------------------------+
 | -h            Show this help table            | -plt <type>        Plot and visualization tools       |
 | -calc <type>  Calculator tools                | -time <gpumd|nep>  Time-consuming analyzer            |
 | -update       Update GPUMDkit                 | -clean             Clean extra files in current dir   |
-| -skill        Show GPUMDkit agent skill info  |                                                     |
+| -skill        Show GPUMDkit agent skill info  | -doctor            Check Python environment           |
 +-------------------------------------------------------------------------------------------------------+
 |                                         FORMAT CONVERSION                                             |
 +-------------------------------------------------------------------------------------------------------+
@@ -176,9 +176,9 @@ the help information:
 
 ```
  +-----------------------------------------------------------------------------------------------+
- |                     GPUMDkit 1.5.6 (dev) (2026-06-17) PLOT & VISUALIZATION TOOLS              |
+ |                     GPUMDkit 1.5.6 (dev) (2026-07-10) PLOT & VISUALIZATION TOOLS              |
  +-----------------------------------------------------------------------------------------------+
- |  Usage: gpumdkit.sh -plt <type>                        Help: gpumdkit.sh -plt <type> -h       |
+ |  Usage: gpumdkit.sh -plt <type>                        List: gpumdkit.sh -plt -h              |
  +-----------------------------------------------------------------------------------------------+
  |                                    NEP Training & Evaluation                                  |
  +-----------------------------------------------------------------------------------------------+

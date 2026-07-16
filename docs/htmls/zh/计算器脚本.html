@@ -1633,6 +1633,28 @@
 <p><code>calc_ion_conductivity.py</code> 从 <code>msd.out</code> 计算离子扩散系数和离子电导率。</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>gpumdkit.sh<span class="w"> </span>-calc<span class="w"> </span>ionic-cond<span class="w"> </span>Li<span class="w"> </span><span class="m">1</span>
 </code></pre></div>
+<table>
+<thead>
+<tr>
+<th>参数</th>
+<th>表示什么</th>
+<th>运行前检查</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>element</code></td>
+<td>要分析 MSD 的移动物种</td>
+<td>元素符号应与 <code>msd.out</code> 和 <code>model.xyz</code> 中代表的物种一致。</td>
+</tr>
+<tr>
+<td><code>charge</code></td>
+<td>Nernst–Einstein 换算所用的电荷大小</td>
+<td>应按自己的体系给出电荷定义。实现中使用其平方，因此只改变正负号不会改变报告的电导率。</td>
+</tr>
+</tbody>
+</table>
+<p>示例 <code>Li 1</code> 仅用于说明参数格式，并不是所有体系的默认选择。当前实现使用 MSD 数据中间的 40–80% 区间拟合。解读扩散系数或电导率前，应先检查 MSD 曲线及其收敛情况。</p>
 <p>交互模式选择 <code>401</code>，会看到：</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>&gt;-------------------------------------------------&lt;
 <a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>| This function calls the script in calculators   |
@@ -1729,6 +1751,7 @@
 </tr>
 </tbody>
 </table>
+<p><code>max_corr_steps</code> 限制参与相关计算的最大时间滞后。省略时，脚本使用已有帧数。它会改变计算窗口，应根据自己轨迹的长度和采样间隔选择，而不是照搬其他体系的数值。</p>
 <p>输出：</p>
 <ul>
 <li><code>msd.out</code></li>

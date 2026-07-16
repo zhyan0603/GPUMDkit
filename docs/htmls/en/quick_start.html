@@ -522,6 +522,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#read-a-command-before-running-it" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Read a command before running it
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#interactive-mode" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -1532,6 +1543,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#read-a-command-before-running-it" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Read a command before running it
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#interactive-mode" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -1732,55 +1754,111 @@
 <div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>gpumdkit.sh<span class="w"> </span>-h
 </code></pre></div>
 <p>This prints a help table listing all available options.</p>
+<p>For a more useful first check, run:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>gpumdkit.sh<span class="w"> </span>-doctor
+</code></pre></div>
+<p>The terminal groups the result into an <strong>Environment</strong> section and <strong>Common</strong> and
+<strong>Optional packages</strong> sections. <code>MISS</code> for an optional package is not an
+installation failure: install it only when you need the feature named beside it.
+For example, <code>dpdata</code> is needed for DeepMD conversion, while <code>calorine</code> is used
+by NEP-assisted calculations. This makes it easier to diagnose a missing module
+before starting a workflow.</p>
+<h2 id="read-a-command-before-running-it">Read a command before running it</h2>
+<p>CLI examples use this notation:</p>
+<table>
+<thead>
+<tr>
+<th>Notation</th>
+<th>Meaning</th>
+<th>Example</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>&lt;required&gt;</code></td>
+<td>Replace with a value you must provide. Do not type the angle brackets.</td>
+<td><code>&lt;output.xyz&gt;</code> → <code>model.xyz</code></td>
+</tr>
+<tr>
+<td><code>[optional]</code></td>
+<td>May be omitted; the script then uses its documented behavior.</td>
+<td><code>[max_corr_steps]</code></td>
+</tr>
+<tr>
+<td><code>...</code></td>
+<td>One or more values may follow.</td>
+<td><code>&lt;element...&gt;</code></td>
+</tr>
+</tbody>
+</table>
+<p>Before using an unfamiliar Python-backed command, ask the command itself for
+its argument description. For example:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>$ gpumdkit.sh -calc msd -h
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a> Usage: gpumdkit.sh -calc msd &lt;extxyz_file&gt; &lt;element_symbol&gt; &lt;dt_fs&gt; [max_corr_steps]
+<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>
+<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a> Arguments:
+<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a>   extxyz_file       Path to the input extxyz trajectory file
+<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a>   element_symbol    Chemical symbol (e.g., Li, O, Na)
+<a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a>   dt_fs             Time step between consecutive frames (fs)
+<a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a>   max_corr_steps    Max correlation lag steps (optional)
+</code></pre></div>
+<p>Here <code>dt_fs</code> is the interval <strong>between stored trajectory frames</strong>, in fs; it is
+not automatically inferred from an MD input file. Choose it from your own
+trajectory-writing settings. For the plot dispatcher, use <code>gpumdkit.sh -plt -h</code>
+to list plot types; plot-specific argument positions are documented on the
+<a href="plot_scripts.html">Plot Scripts</a> page.</p>
+<p>Interactive menus use <code>------------&gt;&gt;</code> to mark where input is expected. After
+many CLI commands, the terminal also prints <code>Code path:</code>; that path identifies
+the implementation responsible for the result or error.</p>
 <h2 id="interactive-mode">Interactive mode</h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>gpumdkit.sh
+<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>gpumdkit.sh
 </code></pre></div>
 <p>This opens the main menu:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>           ____ ____  _   _ __  __ ____  _    _ _
-<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>          / ___|  _ \| | | |  \/  |  _ \| | _(_) |_
-<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>         | |  _| |_) | | | | |\/| | | | | |/ / | __|
-<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a>         | |_| |  __/| |_| | |  | | |_| |   &lt;| | |_
-<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a>          \____|_|    \___/|_|  |_|____/|_|\_\_|\__|
-<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a>
-<a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a>          GPUMDkit Version 1.5.6 (dev) (2026-06-17)
-<a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a>    Core Developer: Zihan YAN (yanzihan@westlake.edu.cn)
-<a id="__codelineno-7-9" name="__codelineno-7-9" href="#__codelineno-7-9"></a> Main Contributors: Denan LI, Xin WU, Zhoulin LIU &amp; Chen HUA
-<a id="__codelineno-7-10" name="__codelineno-7-10" href="#__codelineno-7-10"></a>
-<a id="__codelineno-7-11" name="__codelineno-7-11" href="#__codelineno-7-11"></a> ---------------------- GPUMD ------------------------
-<a id="__codelineno-7-12" name="__codelineno-7-12" href="#__codelineno-7-12"></a> 1) Format Conversion          2) Sample Structures
-<a id="__codelineno-7-13" name="__codelineno-7-13" href="#__codelineno-7-13"></a> 3) Workflow                   4) Calculators
-<a id="__codelineno-7-14" name="__codelineno-7-14" href="#__codelineno-7-14"></a> 5) Analyzer                   6) Visualization
-<a id="__codelineno-7-15" name="__codelineno-7-15" href="#__codelineno-7-15"></a> 7) Utilities                  8) Help                
-<a id="__codelineno-7-16" name="__codelineno-7-16" href="#__codelineno-7-16"></a> 0) Exit
-<a id="__codelineno-7-17" name="__codelineno-7-17" href="#__codelineno-7-17"></a> ------------&gt;&gt;
-<a id="__codelineno-7-18" name="__codelineno-7-18" href="#__codelineno-7-18"></a> Input the function number:
+<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>           ____ ____  _   _ __  __ ____  _    _ _
+<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>          / ___|  _ \| | | |  \/  |  _ \| | _(_) |_
+<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a>         | |  _| |_) | | | | |\/| | | | | |/ / | __|
+<a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a>         | |_| |  __/| |_| | |  | | |_| |   &lt;| | |_
+<a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a>          \____|_|    \___/|_|  |_|____/|_|\_\_|\__|
+<a id="__codelineno-9-6" name="__codelineno-9-6" href="#__codelineno-9-6"></a>
+<a id="__codelineno-9-7" name="__codelineno-9-7" href="#__codelineno-9-7"></a>          GPUMDkit Version 1.5.6 (dev) (2026-07-10)
+<a id="__codelineno-9-8" name="__codelineno-9-8" href="#__codelineno-9-8"></a>    Core Developer: Zihan YAN (yanzihan@westlake.edu.cn)
+<a id="__codelineno-9-9" name="__codelineno-9-9" href="#__codelineno-9-9"></a> Main Contributors: Denan LI, Xin WU, Zhoulin LIU &amp; Chen HUA
+<a id="__codelineno-9-10" name="__codelineno-9-10" href="#__codelineno-9-10"></a>
+<a id="__codelineno-9-11" name="__codelineno-9-11" href="#__codelineno-9-11"></a> ---------------------- GPUMD ------------------------
+<a id="__codelineno-9-12" name="__codelineno-9-12" href="#__codelineno-9-12"></a> 1) Format Conversion          2) Sample Structures
+<a id="__codelineno-9-13" name="__codelineno-9-13" href="#__codelineno-9-13"></a> 3) Workflow                   4) Calculators
+<a id="__codelineno-9-14" name="__codelineno-9-14" href="#__codelineno-9-14"></a> 5) Analyzer                   6) Visualization
+<a id="__codelineno-9-15" name="__codelineno-9-15" href="#__codelineno-9-15"></a> 7) Utilities                  8) Help                
+<a id="__codelineno-9-16" name="__codelineno-9-16" href="#__codelineno-9-16"></a> 0) Exit
+<a id="__codelineno-9-17" name="__codelineno-9-17" href="#__codelineno-9-17"></a> ------------&gt;&gt;
+<a id="__codelineno-9-18" name="__codelineno-9-18" href="#__codelineno-9-18"></a> Input the function number:
 </code></pre></div>
 <p>Select a module by number. Each module provides sub-menus with specific functions.</p>
 <h2 id="cli-mode">CLI mode</h2>
 <p>Direct commands use fixed positional arguments:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>gpumdkit.sh<span class="w"> </span>-&lt;option&gt;<span class="w"> </span><span class="o">[</span>args...<span class="o">]</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a>gpumdkit.sh<span class="w"> </span>-&lt;option&gt;<span class="w"> </span><span class="o">[</span>args...<span class="o">]</span>
 </code></pre></div>
 <p>Examples:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>gpumdkit.sh<span class="w"> </span>-pos2exyz<span class="w"> </span>POSCAR<span class="w"> </span>model.xyz
-<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>gpumdkit.sh<span class="w"> </span>-plt<span class="w"> </span>train
-<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a>gpumdkit.sh<span class="w"> </span>-calc<span class="w"> </span>msd<span class="w"> </span>trajectory.xyz<span class="w"> </span>Li<span class="w"> </span><span class="m">10</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a>gpumdkit.sh<span class="w"> </span>-pos2exyz<span class="w"> </span>POSCAR<span class="w"> </span>model.xyz
+<a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a>gpumdkit.sh<span class="w"> </span>-plt<span class="w"> </span>train
+<a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a>gpumdkit.sh<span class="w"> </span>-calc<span class="w"> </span>msd<span class="w"> </span>trajectory.xyz<span class="w"> </span>Li<span class="w"> </span><span class="m">10</span>
 </code></pre></div>
 <p>The first example reads <code>POSCAR</code> and writes <code>model.xyz</code>.</p>
 <h2 id="hello-world-example">Hello World Example</h2>
 <p>A minimal end-to-end check that your install works — create a tiny silicon POSCAR, convert it to extxyz, and inspect the output:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a>cat<span class="w"> </span>&gt;<span class="w"> </span>POSCAR<span class="w"> </span><span class="s">&lt;&lt; &#39;EOF&#39;</span>
-<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a><span class="s">Si</span>
-<a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a><span class="s">1.0</span>
-<a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a><span class="s">0 2.715 2.715</span>
-<a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a><span class="s">2.715 0 2.715</span>
-<a id="__codelineno-10-6" name="__codelineno-10-6" href="#__codelineno-10-6"></a><span class="s">2.715 2.715 0</span>
-<a id="__codelineno-10-7" name="__codelineno-10-7" href="#__codelineno-10-7"></a><span class="s">Si</span>
-<a id="__codelineno-10-8" name="__codelineno-10-8" href="#__codelineno-10-8"></a><span class="s">1</span>
-<a id="__codelineno-10-9" name="__codelineno-10-9" href="#__codelineno-10-9"></a><span class="s">direct</span>
-<a id="__codelineno-10-10" name="__codelineno-10-10" href="#__codelineno-10-10"></a><span class="s">0 0 0</span>
-<a id="__codelineno-10-11" name="__codelineno-10-11" href="#__codelineno-10-11"></a><span class="s">EOF</span>
-<a id="__codelineno-10-12" name="__codelineno-10-12" href="#__codelineno-10-12"></a>gpumdkit.sh<span class="w"> </span>-pos2exyz<span class="w"> </span>POSCAR<span class="w"> </span>model.xyz
-<a id="__codelineno-10-13" name="__codelineno-10-13" href="#__codelineno-10-13"></a>head<span class="w"> </span>model.xyz
+<div class="highlight"><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a>cat<span class="w"> </span>&gt;<span class="w"> </span>POSCAR<span class="w"> </span><span class="s">&lt;&lt; &#39;EOF&#39;</span>
+<a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a><span class="s">Si</span>
+<a id="__codelineno-12-3" name="__codelineno-12-3" href="#__codelineno-12-3"></a><span class="s">1.0</span>
+<a id="__codelineno-12-4" name="__codelineno-12-4" href="#__codelineno-12-4"></a><span class="s">0 2.715 2.715</span>
+<a id="__codelineno-12-5" name="__codelineno-12-5" href="#__codelineno-12-5"></a><span class="s">2.715 0 2.715</span>
+<a id="__codelineno-12-6" name="__codelineno-12-6" href="#__codelineno-12-6"></a><span class="s">2.715 2.715 0</span>
+<a id="__codelineno-12-7" name="__codelineno-12-7" href="#__codelineno-12-7"></a><span class="s">Si</span>
+<a id="__codelineno-12-8" name="__codelineno-12-8" href="#__codelineno-12-8"></a><span class="s">1</span>
+<a id="__codelineno-12-9" name="__codelineno-12-9" href="#__codelineno-12-9"></a><span class="s">direct</span>
+<a id="__codelineno-12-10" name="__codelineno-12-10" href="#__codelineno-12-10"></a><span class="s">0 0 0</span>
+<a id="__codelineno-12-11" name="__codelineno-12-11" href="#__codelineno-12-11"></a><span class="s">EOF</span>
+<a id="__codelineno-12-12" name="__codelineno-12-12" href="#__codelineno-12-12"></a>gpumdkit.sh<span class="w"> </span>-pos2exyz<span class="w"> </span>POSCAR<span class="w"> </span>model.xyz
+<a id="__codelineno-12-13" name="__codelineno-12-13" href="#__codelineno-12-13"></a>head<span class="w"> </span>model.xyz
 </code></pre></div>
 <p>If <code>model.xyz</code> shows a single Si atom with lattice info, your install works.</p>
 <blockquote>
@@ -1788,36 +1866,36 @@
 </blockquote>
 <h2 id="common-examples">Common examples</h2>
 <h3 id="convert-a-poscar-to-extxyz">Convert a POSCAR to extxyz</h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a>gpumdkit.sh<span class="w"> </span>-pos2exyz<span class="w"> </span>POSCAR<span class="w"> </span>model.xyz
+<div class="highlight"><pre><span></span><code><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a>gpumdkit.sh<span class="w"> </span>-pos2exyz<span class="w"> </span>POSCAR<span class="w"> </span>model.xyz
 </code></pre></div>
 <h3 id="add-gpumd-group-labels">Add GPUMD group labels</h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a>gpumdkit.sh<span class="w"> </span>-addgroup<span class="w"> </span>POSCAR<span class="w"> </span>Li<span class="w"> </span>Y<span class="w"> </span>Cl
+<div class="highlight"><pre><span></span><code><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a>gpumdkit.sh<span class="w"> </span>-addgroup<span class="w"> </span>POSCAR<span class="w"> </span>Li<span class="w"> </span>Y<span class="w"> </span>Cl
 </code></pre></div>
 <p>Group labels are used by some GPUMD-related workflows that need atom grouping, such as species-specific MSD or diffusion calculations.</p>
 <h3 id="plot-nep-training-results">Plot NEP training results</h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a>gpumdkit.sh<span class="w"> </span>-plt<span class="w"> </span>train
+<div class="highlight"><pre><span></span><code><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a>gpumdkit.sh<span class="w"> </span>-plt<span class="w"> </span>train
 </code></pre></div>
 <div align="center">
   <img src="../../Gallery/train.png" alt="NEP training results" width="72%" />
 </div>
 
 <h3 id="plot-nep-test-results">Plot NEP test results</h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a>gpumdkit.sh<span class="w"> </span>-plt<span class="w"> </span><span class="nb">test</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a>gpumdkit.sh<span class="w"> </span>-plt<span class="w"> </span><span class="nb">test</span>
 </code></pre></div>
 <div align="center">
   <img src="../../Gallery/prediction.png" alt="NEP test results" width="72%" />
 </div>
 
 <h3 id="plot-thermodynamic-data">Plot thermodynamic data</h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a>gpumdkit.sh<span class="w"> </span>-plt<span class="w"> </span>thermo
+<div class="highlight"><pre><span></span><code><a id="__codelineno-17-1" name="__codelineno-17-1" href="#__codelineno-17-1"></a>gpumdkit.sh<span class="w"> </span>-plt<span class="w"> </span>thermo
 </code></pre></div>
 <div align="center">
   <img src="../../Gallery/thermo.png" alt="Thermo plot" width="72%" />
 </div>
 
 <h3 id="plot-msd-and-self-diffusion-coefficient">Plot MSD and self-diffusion coefficient</h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a>gpumdkit.sh<span class="w"> </span>-plt<span class="w"> </span>msd
-<a id="__codelineno-16-2" name="__codelineno-16-2" href="#__codelineno-16-2"></a>gpumdkit.sh<span class="w"> </span>-plt<span class="w"> </span>sdc
+<div class="highlight"><pre><span></span><code><a id="__codelineno-18-1" name="__codelineno-18-1" href="#__codelineno-18-1"></a>gpumdkit.sh<span class="w"> </span>-plt<span class="w"> </span>msd
+<a id="__codelineno-18-2" name="__codelineno-18-2" href="#__codelineno-18-2"></a>gpumdkit.sh<span class="w"> </span>-plt<span class="w"> </span>sdc
 </code></pre></div>
 <div align="center">
   <img src="../../Gallery/msd.png" alt="MSD plot" width="45%" />

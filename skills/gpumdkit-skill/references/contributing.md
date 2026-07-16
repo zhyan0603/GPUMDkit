@@ -540,6 +540,26 @@ For interactive-menu changes, the validation is not complete until the affected
 submenu has also been opened through `gpumdkit.sh` and all right borders have
 been checked for alignment in the rendered terminal output.
 
+### Maintaining the English and Chinese Skills
+
+The English directory `skills/gpumdkit-skill/` is the canonical technical
+source. When its behavior, routing, commands, defaults, constraints, or file
+coverage changes, update the matching file under
+`skills/gpumdkit-skill-zh/` in the same change.
+
+- Preserve commands, filenames, keywords, units, equations, code blocks, links,
+  tables, warnings, and numerical values exactly unless the underlying feature
+  also changed.
+- Translate meaning, not English word order. Use established Chinese technical
+  terms and keep program keywords such as `dump_xyz`, `ensemble`, `type`, and
+  `compute_msd` unchanged in code formatting.
+- Keep the two reference trees file-for-file aligned. A Chinese reference may
+  add a short clarification for readability, but it must not omit a safety rule,
+  dependency, supported option, or newly added feature from the English source.
+- After translation, compare headings, tables, fenced code blocks, and relative
+  links between both trees. Search for untranslated prose and awkward literal
+  translations before considering the update complete.
+
 ### When to Build MkDocs
 
 Run `mkdocs build -f docs/mkdocs.yml` only when a change affects input consumed by

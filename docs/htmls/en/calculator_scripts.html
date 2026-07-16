@@ -1761,6 +1761,31 @@
 <h3 id="usage">Usage</h3>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>gpumdkit.sh<span class="w"> </span>-calc<span class="w"> </span>ionic-cond<span class="w"> </span>Li<span class="w"> </span><span class="m">1</span>
 </code></pre></div>
+<table>
+<thead>
+<tr>
+<th>Argument</th>
+<th>What it identifies</th>
+<th>Check before running</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>element</code></td>
+<td>the mobile species whose MSD is analysed</td>
+<td>The symbol must match the species represented in <code>msd.out</code> and <code>model.xyz</code>.</td>
+</tr>
+<tr>
+<td><code>charge</code></td>
+<td>the charge magnitude used in the Nernst–Einstein conversion</td>
+<td>Supply the charge definition appropriate to your system. The implementation uses its square, so changing only the sign does not change the reported conductivity.</td>
+</tr>
+</tbody>
+</table>
+<p>The example <code>Li 1</code> is only an argument-format example; it is not a default
+choice for every system. The current implementation fits the middle 40–80% of
+the available MSD points. Inspect the MSD curve and its convergence before
+using the resulting diffusion coefficient or conductivity in an interpretation.</p>
 <p>From interactive mode, choose <code>401</code>. You will see:</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>&gt;-------------------------------------------------&lt;
 <a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>| This function calls the script in calculators   |
@@ -1830,6 +1855,10 @@
 </tr>
 </tbody>
 </table>
+<p><code>max_corr_steps</code> limits the largest time lag included in the correlation. If it
+is omitted, the script uses the number of available frames. It changes the
+calculation window, so select it from the length and sampling of your own
+trajectory rather than copying a value from another system.</p>
 <p>Output:</p>
 <ul>
 <li><code>msd.out</code></li>

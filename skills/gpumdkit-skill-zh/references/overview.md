@@ -1,4 +1,4 @@
-# GPUMDkit 概览与命令发现
+# GPUMDkit 概览与命令查询
 
 ## 目录
 
@@ -9,8 +9,8 @@
 - 实用命令
 - 故障排除与文档
 
-GPUMDkit 是一个面向 GPUMD（Graphics Processing Units Molecular Dynamics）和
-NEP（Neuroevolution Potential）程序的命令行工具包，简化了计算材料科学中的常见任务。
+GPUMDkit 是面向 GPUMD（Graphics Processing Units Molecular Dynamics）和
+NEP（Neuroevolution Potential）的命令行工具包，用于简化计算材料科学中的常见数据处理、模拟和分析任务。
 
 ## 快速开始
 
@@ -42,7 +42,7 @@ gpumdkit.sh -plt -h               # 绘图帮助
 gpumdkit.sh -calc -h              # 计算器帮助
 ```
 
-对于当前由 Python 支持的命令，详细用法、类型转换、文件检查和错误信息位于目标 Python 脚本中，可通过 `-h` 访问。`gpumdkit.sh` 主要负责路由参数；大型分发器提供广泛帮助。旧版 Shell/菜单路由（如 `-pynep` 和 `-time`）未实现相同的逐命令帮助约定，因此请查阅其模块参考或交互提示，而非假设支持 `-h`。
+对于由 Python 脚本实现的命令，详细用法、类型转换、文件检查和错误信息通常由目标脚本负责，可通过 `-h` 查看。`gpumdkit.sh` 主要转发参数；`-plt`、`-calc` 等大型分发入口提供模块级帮助。`-pynep`、`-time` 等旧式 Shell/菜单入口不一定支持同样的逐命令帮助方式，应查阅模块参考或实际交互提示，不要默认它们支持 `-h`。
 
 ## 模块概览
 
@@ -53,7 +53,7 @@ gpumdkit.sh -calc -h              # 计算器帮助
 | 分析器 | 结构验证、过滤、成分分析 | `references/analyzers.md` |
 | 可视化 | 绘制训练结果、输运性质、结构数据 | `references/visualization.md` |
 | 工作流 | DFT 和 MD 模拟的批处理 | `references/workflows.md` |
-| 采样 | 使用均匀、随机或 FPS 方法进行结构选取 | `references/sampling.md` |
+| 采样 | 使用均匀、随机或 FPS 方法选取结构并划分训练集/测试集 | `references/sampling.md` |
 | GPUMD/NEP | 规划模拟、训练、验证和后处理 | `references/gpumd.md`、`references/nep.md` |
 
 ## 实用命令
@@ -61,11 +61,11 @@ gpumdkit.sh -calc -h              # 计算器帮助
 | 命令 | 行为与安全边界 |
 |---|---|
 | `gpumdkit.sh -doctor` | 检查配置路径、Python/Bash 版本以及常用或特定功能所需的 Python 软件包；缺少可选包不影响无关功能 |
-| `gpumdkit.sh -skill` | 打印规范统一的 Skill 路径和跨客户端安装提示 |
+| `gpumdkit.sh -skill` | 打印规范的 Skill 路径和跨客户端安装提示 |
 | `gpumdkit.sh -time <gpumd\|nep>` | 旧版耗时分析器；仅使用支持的 `gpumd` 或 `nep` 选择器 |
-| `gpumdkit.sh -nep_modifier` | 启动交互式 NEP 模型修改器；先检查源模型并获取覆写授权 |
+| `gpumdkit.sh -nep_modifier [nep.txt] [nep.restart|-] [nep.in|-]` | 通过 calorine 检查和修改 NEP4 模型；保留源文件，扩展、缩减和添加元素需要匹配的 restart 数据及用户明确的科学选择 |
 | `gpumdkit.sh -clean` | 从当前目录中删除生成的/多余的文件；运行前预览清理实现并获得明确删除批准 |
-| `gpumdkit.sh -update` | 运行 GPUMDkit 的网络自更新；先检查工作树变更并获得明确更新授权 |
+| `gpumdkit.sh -update` | 运行 GPUMDkit 的网络自更新；先检查工作区变更并获得明确更新授权 |
 
 自定义命令教程中显示的命令（如 `-greet`、`-batch_plot` 或 `-prep_training`）是扩展 GPUMDkit 的示例，除非用户已安装这些自定义项，否则不是内置命令。
 
@@ -110,8 +110,8 @@ gpumdkit.sh -plt msd
 gpumdkit.sh -plt sdc
 
 # Arrhenius 分析（多温度）
-gpumdkit.sh -plt arrhenius_sigma
-gpumdkit.sh -plt arrhenius_d
+gpumdkit.sh -plt sigma
+gpumdkit.sh -plt D
 ```
 
 ### 工作流 3：结构分析流程

@@ -32,6 +32,22 @@ Make sure GPUMDkit is installed. See [Quick Start](quick_start.md) for installat
 | GPUMD time | `gpumdkit.sh -time gpumd` | Estimate remaining GPUMD run time |
 | NEP time | `gpumdkit.sh -time nep` | Estimate remaining NEP training time |
 
+## Choose checks before filters
+
+Run a non-destructive check before a filtering command whenever possible. This
+keeps the reason for excluding structures visible in the terminal output.
+
+| Question | First command | What remains your decision |
+|---|---|---|
+| Are periodic images relevant? | `gpumdkit.sh -min_dist_pbc <input.xyz>` | Use the PBC-aware route for periodic cells; the non-PBC route is only a fast comparison. |
+| Is a value unusually large or small? | `gpumdkit.sh -range <input.xyz> energy\|force\|virial` | The acceptable range depends on the target system and reference data. |
+| Are contacts too short? | `gpumdkit.sh -min_dist_pbc <input.xyz>` | Choose a distance threshold from the chemistry and purpose of the dataset. |
+| Which structures should be removed? | inspect the check result first, then `-filter_*` | Filtering thresholds are not universal defaults. |
+
+Numbers in the examples below demonstrate command syntax only. Do not treat a
+distance, box-edge, or force cutoff shown in an example as a recommended value
+for another material or workflow.
+
 ---
 
 ## Interactive Mode

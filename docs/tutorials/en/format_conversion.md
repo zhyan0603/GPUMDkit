@@ -23,6 +23,7 @@ The format conversion module covers:
 - **ABACUS**: SCF/MD logs
 - **CIF**: crystallographic structure files
 - **ASE trajectory**: `.traj`
+- **DeepMD**: `npy` datasets
 - **extxyz**: a common structure format for GPUMD and NEP
 
 ## Interactive Mode
@@ -55,6 +56,7 @@ The format conversion menu is:
 | pos2exyz) POSCAR to extxyz     pos2lmp)   POSCAR to LAMMPS  |
 | cif2pos)  CIF to POSCAR        lmp2exyz)  LAMMPS to extxyz  |
 | cif2exyz) CIF to extxyz        traj2exyz) ASE traj to extxyz|
+| dp2xyz)   DeepMD to extxyz                                  |
 +-------------------------------------------------------------+
 | 000) Return to main menu                                    |
 +-------------------------------------------------------------+
@@ -83,6 +85,7 @@ Input the function number or converter keyword:
 | `pos2lmp` | `pos2lmp.py` | POSCAR to LAMMPS data | prepare LAMMPS input |
 | `lmp2exyz` | `lmp2exyz.py` | LAMMPS dump to extxyz | convert LAMMPS trajectory |
 | `traj2exyz` | `traj2exyz.py` | ASE traj to extxyz | convert ASE trajectory |
+| `dp2xyz` | `dp2xyz.py` | DeepMD npy to extxyz | convert DeepMD datasets for GPUMD/NEP workflows |
 
 ## Quick Command Reference
 
@@ -98,9 +101,48 @@ Input the function number or converter keyword:
 | CIF | POSCAR | `gpumdkit.sh -cif2pos input.cif POSCAR.vasp` |
 | CIF | extxyz | `gpumdkit.sh -cif2exyz input.cif model.xyz` |
 | ASE traj | extxyz | `gpumdkit.sh -traj2exyz input.traj output.xyz` |
+| DeepMD npy directory | extxyz | `gpumdkit.sh -dp2xyz database train.xyz` |
 | extxyz | clean extxyz | `gpumdkit.sh -clean_xyz input.xyz clean.xyz` |
 
+## Understand input and output names
+
+For a first conversion, use the POSCAR route because its two arguments make the
+data flow explicit:
+
+```text
+$ gpumdkit.sh -pos2exyz -h
+ Usage: gpumdkit.sh -pos2exyz <POSCAR> <output.xyz>
+
+ Arguments:
+   POSCAR       One or more VASP POSCAR files (supports wildcards)
+   output.xyz   Output extxyz file
+```
+
+`POSCAR` is the input structure name; `output.xyz` is the extxyz file created by
+the command. Shell wildcards are expanded by your shell, so check the matched
+filenames before converting a group of files. After conversion, a lightweight
+format check is:
+
+```bash
+head -n 2 model.xyz
+```
+
+The first line is the atom count. The second line contains extxyz metadata such
+as the cell and available properties. It does not by itself validate that the
+underlying calculation is physically appropriate; use the analyzer tutorials to
+check a dataset before training or simulation.
+
 ## Common Examples
+
+### Convert a DeepMD dataset to extxyz
+
+Use `-dp2xyz` to recursively scan a DeepMD dataset directory and write an extxyz file:
+
+```bash
+gpumdkit.sh -dp2xyz database train.xyz
+```
+
+The input directory must contain DeepMD dataset files such as `type.raw`, `type_map.raw`, and `set.000/`. This command requires `dpdata` and `ase`.
 
 ### Convert VASP calculations to extxyz
 

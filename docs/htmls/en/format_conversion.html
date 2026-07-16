@@ -617,6 +617,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#understand-input-and-output-names" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Understand input and output names
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#common-examples" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -627,6 +638,17 @@
   
     <nav class="md-nav" aria-label="Common Examples">
       <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#convert-a-deepmd-dataset-to-extxyz" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Convert a DeepMD dataset to extxyz
+      
+    </span>
+  </a>
+  
+</li>
         
           <li class="md-nav__item">
   <a href="#convert-vasp-calculations-to-extxyz" class="md-nav__link">
@@ -1615,6 +1637,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#understand-input-and-output-names" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Understand input and output names
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#common-examples" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -1625,6 +1658,17 @@
   
     <nav class="md-nav" aria-label="Common Examples">
       <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#convert-a-deepmd-dataset-to-extxyz" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Convert a DeepMD dataset to extxyz
+      
+    </span>
+  </a>
+  
+</li>
         
           <li class="md-nav__item">
   <a href="#convert-vasp-calculations-to-extxyz" class="md-nav__link">
@@ -1841,6 +1885,7 @@
 <li><strong>ABACUS</strong>: SCF/MD logs</li>
 <li><strong>CIF</strong>: crystallographic structure files</li>
 <li><strong>ASE trajectory</strong>: <code>.traj</code></li>
+<li><strong>DeepMD</strong>: <code>npy</code> datasets</li>
 <li><strong>extxyz</strong>: a common structure format for GPUMD and NEP</li>
 </ul>
 <h2 id="interactive-mode">Interactive Mode</h2>
@@ -1864,10 +1909,11 @@
 <a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a>| pos2exyz) POSCAR to extxyz     pos2lmp)   POSCAR to LAMMPS  |
 <a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a>| cif2pos)  CIF to POSCAR        lmp2exyz)  LAMMPS to extxyz  |
 <a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a>| cif2exyz) CIF to extxyz        traj2exyz) ASE traj to extxyz|
-<a id="__codelineno-2-14" name="__codelineno-2-14" href="#__codelineno-2-14"></a>+-------------------------------------------------------------+
-<a id="__codelineno-2-15" name="__codelineno-2-15" href="#__codelineno-2-15"></a>| 000) Return to main menu                                    |
-<a id="__codelineno-2-16" name="__codelineno-2-16" href="#__codelineno-2-16"></a>+-------------------------------------------------------------+
-<a id="__codelineno-2-17" name="__codelineno-2-17" href="#__codelineno-2-17"></a>Input the function number or converter keyword:
+<a id="__codelineno-2-14" name="__codelineno-2-14" href="#__codelineno-2-14"></a>| dp2xyz)   DeepMD to extxyz                                  |
+<a id="__codelineno-2-15" name="__codelineno-2-15" href="#__codelineno-2-15"></a>+-------------------------------------------------------------+
+<a id="__codelineno-2-16" name="__codelineno-2-16" href="#__codelineno-2-16"></a>| 000) Return to main menu                                    |
+<a id="__codelineno-2-17" name="__codelineno-2-17" href="#__codelineno-2-17"></a>+-------------------------------------------------------------+
+<a id="__codelineno-2-18" name="__codelineno-2-18" href="#__codelineno-2-18"></a>Input the function number or converter keyword:
 </code></pre></div>
 <h3 id="what-each-entry-does">What Each Entry Does</h3>
 <table>
@@ -1988,6 +2034,12 @@
 <td>ASE traj to extxyz</td>
 <td>convert ASE trajectory</td>
 </tr>
+<tr>
+<td><code>dp2xyz</code></td>
+<td><code>dp2xyz.py</code></td>
+<td>DeepMD npy to extxyz</td>
+<td>convert DeepMD datasets for GPUMD/NEP workflows</td>
+</tr>
 </tbody>
 </table>
 <h2 id="quick-command-reference">Quick Command Reference</h2>
@@ -2051,112 +2103,142 @@
 <td><code>gpumdkit.sh -traj2exyz input.traj output.xyz</code></td>
 </tr>
 <tr>
+<td>DeepMD npy directory</td>
+<td>extxyz</td>
+<td><code>gpumdkit.sh -dp2xyz database train.xyz</code></td>
+</tr>
+<tr>
 <td>extxyz</td>
 <td>clean extxyz</td>
 <td><code>gpumdkit.sh -clean_xyz input.xyz clean.xyz</code></td>
 </tr>
 </tbody>
 </table>
+<h2 id="understand-input-and-output-names">Understand input and output names</h2>
+<p>For a first conversion, use the POSCAR route because its two arguments make the
+data flow explicit:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>$ gpumdkit.sh -pos2exyz -h
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a> Usage: gpumdkit.sh -pos2exyz &lt;POSCAR&gt; &lt;output.xyz&gt;
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a> Arguments:
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>   POSCAR       One or more VASP POSCAR files (supports wildcards)
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>   output.xyz   Output extxyz file
+</code></pre></div>
+<p><code>POSCAR</code> is the input structure name; <code>output.xyz</code> is the extxyz file created by
+the command. Shell wildcards are expanded by your shell, so check the matched
+filenames before converting a group of files. After conversion, a lightweight
+format check is:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>head<span class="w"> </span>-n<span class="w"> </span><span class="m">2</span><span class="w"> </span>model.xyz
+</code></pre></div>
+<p>The first line is the atom count. The second line contains extxyz metadata such
+as the cell and available properties. It does not by itself validate that the
+underlying calculation is physically appropriate; use the analyzer tutorials to
+check a dataset before training or simulation.</p>
 <h2 id="common-examples">Common Examples</h2>
+<h3 id="convert-a-deepmd-dataset-to-extxyz">Convert a DeepMD dataset to extxyz</h3>
+<p>Use <code>-dp2xyz</code> to recursively scan a DeepMD dataset directory and write an extxyz file:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>gpumdkit.sh<span class="w"> </span>-dp2xyz<span class="w"> </span>database<span class="w"> </span>train.xyz
+</code></pre></div>
+<p>The input directory must contain DeepMD dataset files such as <code>type.raw</code>, <code>type_map.raw</code>, and <code>set.000/</code>. This command requires <code>dpdata</code> and <code>ase</code>.</p>
 <h3 id="convert-vasp-calculations-to-extxyz">Convert VASP calculations to extxyz</h3>
 <p><strong>What it does:</strong> Searches a directory for VASP OUTCAR files and converts them into a single extxyz file for NEP training or analysis.</p>
 <p><strong>CLI mode:</strong></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>gpumdkit.sh<span class="w"> </span>-out2xyz<span class="w"> </span>./vasp_results/
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>gpumdkit.sh<span class="w"> </span>-out2xyz<span class="w"> </span>./vasp_results/
 </code></pre></div>
 <p>The shell version searches the target directory and converts VASP results into an extxyz file. If you prefer the Python implementation:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>gpumdkit.sh<span class="w"> </span>-out2exyz<span class="w"> </span>./vasp_results/
+<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>gpumdkit.sh<span class="w"> </span>-out2exyz<span class="w"> </span>./vasp_results/
 </code></pre></div>
 <p><strong>Interactive mode:</strong> Choose <code>101</code> from the format conversion menu. You will see:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>&gt;-------------------------------------------------&lt;
-<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>| Calling the script in Scripts/format_conversion |
-<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>| Script: out2xyz.sh                              |
-<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>| Developer: Yanzhou WANG (yanzhowang@gmail.com)  |
-<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>&gt;-------------------------------------------------&lt;
-<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>Input the directory containing OUTCARs
-<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a>Example: ./
-<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a>------------&gt;&gt;
+<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>&gt;-------------------------------------------------&lt;
+<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>| Calling the script in Scripts/format_conversion |
+<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a>| Script: out2xyz.sh                              |
+<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a>| Developer: Yanzhou WANG (yanzhowang@gmail.com)  |
+<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a>&gt;-------------------------------------------------&lt;
+<a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a>Input the directory containing OUTCARs
+<a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a>Example: ./
+<a id="__codelineno-8-8" name="__codelineno-8-8" href="#__codelineno-8-8"></a>------------&gt;&gt;
 </code></pre></div>
 <p><strong>Output:</strong> An extxyz file containing the converted structures, suitable for NEP training or further analysis.</p>
 <h3 id="add-group-labels">Add group labels</h3>
 <p><strong>What it does:</strong> Adds atom group labels to a structure file. Group labels are required by some GPUMD-related workflows, such as species-specific MSD or diffusion calculations.</p>
 <p><strong>CLI mode:</strong></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>gpumdkit.sh<span class="w"> </span>-addgroup<span class="w"> </span>POSCAR<span class="w"> </span>Li<span class="w"> </span>Y<span class="w"> </span>Cl
+<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>gpumdkit.sh<span class="w"> </span>-addgroup<span class="w"> </span>POSCAR<span class="w"> </span>Li<span class="w"> </span>Y<span class="w"> </span>Cl
 </code></pre></div>
 <p>This command reads the input structure and writes an extxyz file with group information.</p>
 <p><strong>Interactive mode:</strong> Choose <code>106</code> from the format conversion menu. You will see:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>&gt;-------------------------------------------------&lt;
-<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>| Calling the script in Scripts/format_conversion |
-<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>| Script: add_groups.py                           |
-<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a>| Developer: Zihan YAN (yanzihan@westlake.edu.cn) |
-<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a>&gt;-------------------------------------------------&lt;
-<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a>Input &lt;POSCAR&gt; &lt;element1&gt; &lt;element2&gt; ...
-<a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a>Example: POSCAR Li Y Cl
-<a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a>------------&gt;&gt;
+<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a>&gt;-------------------------------------------------&lt;
+<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a>| Calling the script in Scripts/format_conversion |
+<a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a>| Script: add_groups.py                           |
+<a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a>| Developer: Zihan YAN (yanzihan@westlake.edu.cn) |
+<a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a>&gt;-------------------------------------------------&lt;
+<a id="__codelineno-10-6" name="__codelineno-10-6" href="#__codelineno-10-6"></a>Input &lt;POSCAR&gt; &lt;element1&gt; &lt;element2&gt; ...
+<a id="__codelineno-10-7" name="__codelineno-10-7" href="#__codelineno-10-7"></a>Example: POSCAR Li Y Cl
+<a id="__codelineno-10-8" name="__codelineno-10-8" href="#__codelineno-10-8"></a>------------&gt;&gt;
 </code></pre></div>
 <p><strong>Output:</strong> An extxyz file with group labels added.</p>
 <h2 id="script-details">Script Details</h2>
 <h3 id="poscar-to-extxyz">POSCAR to extxyz</h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>gpumdkit.sh<span class="w"> </span>-pos2exyz<span class="w"> </span>POSCAR<span class="w"> </span>model.xyz
+<div class="highlight"><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a>gpumdkit.sh<span class="w"> </span>-pos2exyz<span class="w"> </span>POSCAR<span class="w"> </span>model.xyz
 </code></pre></div>
 <p>Use this when you have a single VASP structure and want an extxyz output.</p>
 <p>Interactive keyword: <code>pos2exyz</code></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>Input &lt;POSCAR&gt; &lt;output.xyz&gt;
-<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>Example: POSCAR model.xyz
-<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a>------------&gt;&gt;
+<div class="highlight"><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a>Input &lt;POSCAR&gt; &lt;output.xyz&gt;
+<a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a>Example: POSCAR model.xyz
+<a id="__codelineno-12-3" name="__codelineno-12-3" href="#__codelineno-12-3"></a>------------&gt;&gt;
 </code></pre></div>
 <h3 id="extxyz-to-poscar">extxyz to POSCAR</h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a>gpumdkit.sh<span class="w"> </span>-exyz2pos<span class="w"> </span>structures.xyz
+<div class="highlight"><pre><span></span><code><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a>gpumdkit.sh<span class="w"> </span>-exyz2pos<span class="w"> </span>structures.xyz
 </code></pre></div>
 <p>This converts all frames in an extxyz file into <code>POSCAR_*.vasp</code> files. Frame indices are 0-based in most GPUMDkit scripts, but output filenames are meant for direct inspection and batch calculations.</p>
 <p>Interactive entry: <code>105</code></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a>Input the name of extxyz
-<a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a>Example: ./train.xyz
-<a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a>------------&gt;&gt;
+<div class="highlight"><pre><span></span><code><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a>Input the name of extxyz
+<a id="__codelineno-14-2" name="__codelineno-14-2" href="#__codelineno-14-2"></a>Example: ./train.xyz
+<a id="__codelineno-14-3" name="__codelineno-14-3" href="#__codelineno-14-3"></a>------------&gt;&gt;
 </code></pre></div>
 <h3 id="lammps-dump-to-extxyz">LAMMPS dump to extxyz</h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a>gpumdkit.sh<span class="w"> </span>-lmp2exyz<span class="w"> </span>dump.lammpstrj<span class="w"> </span>Li<span class="w"> </span>Y<span class="w"> </span>Cl
+<div class="highlight"><pre><span></span><code><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a>gpumdkit.sh<span class="w"> </span>-lmp2exyz<span class="w"> </span>dump.lammpstrj<span class="w"> </span>Li<span class="w"> </span>Y<span class="w"> </span>Cl
 </code></pre></div>
 <p>The element symbols must match the LAMMPS atom type IDs. For example, if type <code>1</code> is Li, type <code>2</code> is Y, and type <code>3</code> is Cl, the order should be <code>Li Y Cl</code>.</p>
 <p>Interactive keyword: <code>lmp2exyz</code></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a>Input &lt;dump_file&gt; &lt;element1&gt; &lt;element2&gt; ...
-<a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a>Example: dump.lammpstrj Li O
-<a id="__codelineno-13-3" name="__codelineno-13-3" href="#__codelineno-13-3"></a>------------&gt;&gt;
+<div class="highlight"><pre><span></span><code><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a>Input &lt;dump_file&gt; &lt;element1&gt; &lt;element2&gt; ...
+<a id="__codelineno-16-2" name="__codelineno-16-2" href="#__codelineno-16-2"></a>Example: dump.lammpstrj Li O
+<a id="__codelineno-16-3" name="__codelineno-16-3" href="#__codelineno-16-3"></a>------------&gt;&gt;
 </code></pre></div>
 <h3 id="cif-conversion">CIF conversion</h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a>gpumdkit.sh<span class="w"> </span>-cif2pos<span class="w"> </span>input.cif<span class="w"> </span>POSCAR.vasp
-<a id="__codelineno-14-2" name="__codelineno-14-2" href="#__codelineno-14-2"></a>gpumdkit.sh<span class="w"> </span>-cif2exyz<span class="w"> </span>input.cif<span class="w"> </span>model.xyz
+<div class="highlight"><pre><span></span><code><a id="__codelineno-17-1" name="__codelineno-17-1" href="#__codelineno-17-1"></a>gpumdkit.sh<span class="w"> </span>-cif2pos<span class="w"> </span>input.cif<span class="w"> </span>POSCAR.vasp
+<a id="__codelineno-17-2" name="__codelineno-17-2" href="#__codelineno-17-2"></a>gpumdkit.sh<span class="w"> </span>-cif2exyz<span class="w"> </span>input.cif<span class="w"> </span>model.xyz
 </code></pre></div>
 <p>Use <code>-cif2pos</code> if you want a VASP-style structure, and <code>-cif2exyz</code> if the next step is GPUMDkit analysis.</p>
 <h3 id="add-weights">Add weights</h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a>gpumdkit.sh<span class="w"> </span>-addweight<span class="w"> </span>train.xyz<span class="w"> </span>train_weighted.xyz<span class="w"> </span><span class="m">5</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-18-1" name="__codelineno-18-1" href="#__codelineno-18-1"></a>gpumdkit.sh<span class="w"> </span>-addweight<span class="w"> </span>train.xyz<span class="w"> </span>train_weighted.xyz<span class="w"> </span><span class="m">5</span>
 </code></pre></div>
 <p>This is useful when you want some structures to have a different training weight in a NEP dataset.</p>
 <h3 id="replicate-structures">Replicate structures</h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a>gpumdkit.sh<span class="w"> </span>-replicate<span class="w"> </span>POSCAR<span class="w"> </span>supercell.vasp<span class="w"> </span><span class="m">2</span><span class="w"> </span><span class="m">2</span><span class="w"> </span><span class="m">2</span>
-<a id="__codelineno-16-2" name="__codelineno-16-2" href="#__codelineno-16-2"></a>gpumdkit.sh<span class="w"> </span>-replicate<span class="w"> </span>POSCAR<span class="w"> </span>supercell.vasp<span class="w"> </span><span class="m">256</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-19-1" name="__codelineno-19-1" href="#__codelineno-19-1"></a>gpumdkit.sh<span class="w"> </span>-replicate<span class="w"> </span>POSCAR<span class="w"> </span>supercell.vasp<span class="w"> </span><span class="m">2</span><span class="w"> </span><span class="m">2</span><span class="w"> </span><span class="m">2</span>
+<a id="__codelineno-19-2" name="__codelineno-19-2" href="#__codelineno-19-2"></a>gpumdkit.sh<span class="w"> </span>-replicate<span class="w"> </span>POSCAR<span class="w"> </span>supercell.vasp<span class="w"> </span><span class="m">256</span>
 </code></pre></div>
 <p>The first form uses explicit replication factors. The second form tries to build a supercell close to a target atom count.</p>
 <h3 id="extract-one-frame">Extract one frame</h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-17-1" name="__codelineno-17-1" href="#__codelineno-17-1"></a>gpumdkit.sh<span class="w"> </span>-get_frame<span class="w"> </span>dump.xyz<span class="w"> </span><span class="m">1000</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-20-1" name="__codelineno-20-1" href="#__codelineno-20-1"></a>gpumdkit.sh<span class="w"> </span>-get_frame<span class="w"> </span>dump.xyz<span class="w"> </span><span class="m">1000</span>
 </code></pre></div>
 <p>This extracts frame index <code>1000</code> from an extxyz trajectory.</p>
 <h3 id="split-multi-frame-extxyz">Split multi-frame extxyz</h3>
 <p><code>split_single_xyz.py</code> splits an extxyz file into individual frames, each written to a separate file.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-18-1" name="__codelineno-18-1" href="#__codelineno-18-1"></a>python<span class="w"> </span>Scripts/format_conversion/split_single_xyz.py<span class="w"> </span>dump.xyz
+<div class="highlight"><pre><span></span><code><a id="__codelineno-21-1" name="__codelineno-21-1" href="#__codelineno-21-1"></a>python<span class="w"> </span>Scripts/format_conversion/split_single_xyz.py<span class="w"> </span>dump.xyz
 </code></pre></div>
 <p>This creates <code>model_0.xyz</code>, <code>model_1.xyz</code>, ... for each frame in the trajectory.</p>
 <h3 id="mtp-conversion">MTP conversion</h3>
 <p>Convert MTP <code>.cfg</code> format to extxyz:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-19-1" name="__codelineno-19-1" href="#__codelineno-19-1"></a>gpumdkit.sh<span class="w">    </span><span class="c1"># Select: 1) Format Conversion → 102</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-22-1" name="__codelineno-22-1" href="#__codelineno-22-1"></a>gpumdkit.sh<span class="w">    </span><span class="c1"># Select: 1) Format Conversion → 102</span>
 </code></pre></div>
 <p>Interactive prompt:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-20-1" name="__codelineno-20-1" href="#__codelineno-20-1"></a>Input &lt;filename.cfg&gt; &lt;Symbol1 Symbol2 Symbol3 ...&gt;
-<a id="__codelineno-20-2" name="__codelineno-20-2" href="#__codelineno-20-2"></a>Example: train.cfg Pd Ag
-<a id="__codelineno-20-3" name="__codelineno-20-3" href="#__codelineno-20-3"></a>------------&gt;&gt;
+<div class="highlight"><pre><span></span><code><a id="__codelineno-23-1" name="__codelineno-23-1" href="#__codelineno-23-1"></a>Input &lt;filename.cfg&gt; &lt;Symbol1 Symbol2 Symbol3 ...&gt;
+<a id="__codelineno-23-2" name="__codelineno-23-2" href="#__codelineno-23-2"></a>Example: train.cfg Pd Ag
+<a id="__codelineno-23-3" name="__codelineno-23-3" href="#__codelineno-23-3"></a>------------&gt;&gt;
 </code></pre></div>
 <h3 id="abacus-conversion">ABACUS conversion</h3>
 <p>Convert ABACUS output to extxyz:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-21-1" name="__codelineno-21-1" href="#__codelineno-21-1"></a>gpumdkit.sh<span class="w">    </span><span class="c1"># Select: 1) Format Conversion → 104</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-24-1" name="__codelineno-24-1" href="#__codelineno-24-1"></a>gpumdkit.sh<span class="w">    </span><span class="c1"># Select: 1) Format Conversion → 104</span>
 </code></pre></div>
 <p>The menu offers two options:</p>
 <ol>

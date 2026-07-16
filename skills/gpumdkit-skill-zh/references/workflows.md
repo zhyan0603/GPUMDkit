@@ -161,7 +161,7 @@ gpumdkit.sh -range new_data.xyz force
 |-----------|-------------|---------|
 | `prefix_name` | 目录前缀 | `LiF_iter01` |
 | `min_dist` | 最小距离过滤 | `1.4` |
-| `box_limit` | 最大盒子尺寸过滤 | `13` |
+| `box_limit` | 最大模拟盒尺寸过滤 | `13` |
 | `max_fp_num` | 最大 DFT 计算数 | `50` |
 | `sample_method` | 采样方法 | `uniform`、`random` 或 `pynep` |
 | `pynep_sample_dist` | FPS 距离阈值 | `0.01` |
@@ -197,7 +197,7 @@ done
 # 1. 从初始结构开始
 gpumdkit.sh -replicate POSCAR supercell.vasp 3 3 3
 
-# 2. 微扰结构
+# 2. 扰动结构
 python Scripts/sample_structures/perturb_structure.py supercell.vasp 20 0.03 0.2 uniform
 
 # 3. 运行 MD 采样

@@ -53,10 +53,10 @@ python3 ${GPUMDkit_path}/Scripts/sample_structures/sample_structures.py dump.xyz
 gpumdkit.sh  # Select: 2) Sample Structures -> 203
 
 # Semi-interactive direct Python execution
-python3 ${GPUMDkit_path}/Scripts/sample_structures/neptrain_select_structs.py <sample.xyz> <train.xyz> <nep.txt>
+python3 ${GPUMDkit_path}/Scripts/sample_structures/parallel_neptrain_select_structs.py <sample.xyz> <train.xyz> <nep.txt> [threads]
 
 # Example
-python3 ${GPUMDkit_path}/Scripts/sample_structures/neptrain_select_structs.py dump.xyz train.xyz nep.txt
+python3 ${GPUMDkit_path}/Scripts/sample_structures/parallel_neptrain_select_structs.py dump.xyz train.xyz nep.txt 4
 
 # Selection methods (interactive):
 # 1. Minimum distance: Select until max distance < threshold
@@ -67,6 +67,10 @@ python3 ${GPUMDkit_path}/Scripts/sample_structures/neptrain_select_structs.py du
 # - select.png (PCA visualization)
 # - pca_sample.txt, pca_train.txt, pca_selected.txt
 ```
+
+`threads` is optional and defaults to `1`. Set a positive integer to enable
+parallel descriptor calculation. Each worker loads an independent NEP model,
+uses one native OpenMP thread, and returns results in input frame order.
 
 **Algorithm**: Farthest Point Sampling using NEP descriptors (mean descriptor per structure)
 
@@ -208,7 +212,7 @@ cat selected.xyz >> train.xyz
 python3 ${GPUMDkit_path}/Scripts/sample_structures/select_max_modev.py 100 0.1
 
 # 3. Or use FPS for diversity
-python3 ${GPUMDkit_path}/Scripts/sample_structures/neptrain_select_structs.py active.xyz train.xyz nep.txt
+python3 ${GPUMDkit_path}/Scripts/sample_structures/parallel_neptrain_select_structs.py active.xyz train.xyz nep.txt 4
 ```
 
 ### Structure Perturbation for Initial Data

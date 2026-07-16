@@ -971,7 +971,7 @@
   <a href="#_3" class="md-nav__link">
     <span class="md-ellipsis">
       
-        交互模式
+        运行前先读懂命令
       
     </span>
   </a>
@@ -980,6 +980,17 @@
       
         <li class="md-nav__item">
   <a href="#_4" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        交互模式
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_5" class="md-nav__link">
     <span class="md-ellipsis">
       
         命令行模式
@@ -1001,7 +1012,7 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#_5" class="md-nav__link">
+  <a href="#_6" class="md-nav__link">
     <span class="md-ellipsis">
       
         常见示例
@@ -1057,7 +1068,7 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#_6" class="md-nav__link">
+  <a href="#_7" class="md-nav__link">
     <span class="md-ellipsis">
       
         绘制热力学量
@@ -1084,7 +1095,7 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#_7" class="md-nav__link">
+  <a href="#_8" class="md-nav__link">
     <span class="md-ellipsis">
       
         说明
@@ -1535,7 +1546,7 @@
   <a href="#_3" class="md-nav__link">
     <span class="md-ellipsis">
       
-        交互模式
+        运行前先读懂命令
       
     </span>
   </a>
@@ -1544,6 +1555,17 @@
       
         <li class="md-nav__item">
   <a href="#_4" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        交互模式
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_5" class="md-nav__link">
     <span class="md-ellipsis">
       
         命令行模式
@@ -1565,7 +1587,7 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#_5" class="md-nav__link">
+  <a href="#_6" class="md-nav__link">
     <span class="md-ellipsis">
       
         常见示例
@@ -1621,7 +1643,7 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#_6" class="md-nav__link">
+  <a href="#_7" class="md-nav__link">
     <span class="md-ellipsis">
       
         绘制热力学量
@@ -1648,7 +1670,7 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#_7" class="md-nav__link">
+  <a href="#_8" class="md-nav__link">
     <span class="md-ellipsis">
       
         说明
@@ -1732,99 +1754,145 @@
 <div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>gpumdkit.sh<span class="w"> </span>-h
 </code></pre></div>
 <p>此命令会打印帮助表，列出所有可用选项。</p>
-<h2 id="_3">交互模式</h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>gpumdkit.sh
+<p>更实用的首次检查是运行：</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>gpumdkit.sh<span class="w"> </span>-doctor
+</code></pre></div>
+<p>终端会分别显示 <strong>Environment</strong>、<strong>Common packages</strong> 和 <strong>Optional packages</strong>。
+可选包显示 <code>MISS</code> 并不表示安装失败：只有需要对应功能时才安装。例如，DeepMD
+转换需要 <code>dpdata</code>，NEP 辅助计算会使用 <code>calorine</code>。这样可以在开始流程前先定位缺少的模块。</p>
+<h2 id="_3">运行前先读懂命令</h2>
+<p>CLI 示例中使用以下记号：</p>
+<table>
+<thead>
+<tr>
+<th>记号</th>
+<th>含义</th>
+<th>示例</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>&lt;必填项&gt;</code></td>
+<td>替换为必须提供的实际值；不要输入尖括号。</td>
+<td><code>&lt;output.xyz&gt;</code> → <code>model.xyz</code></td>
+</tr>
+<tr>
+<td><code>[可选项]</code></td>
+<td>可以省略；脚本将采用文档说明的行为。</td>
+<td><code>[max_corr_steps]</code></td>
+</tr>
+<tr>
+<td><code>...</code></td>
+<td>后面可以跟随一个或多个值。</td>
+<td><code>&lt;element...&gt;</code></td>
+</tr>
+</tbody>
+</table>
+<p>对于不熟悉的 Python 命令，先让命令本身解释参数。例如：</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>$ gpumdkit.sh -calc msd -h
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a> Usage: gpumdkit.sh -calc msd &lt;extxyz_file&gt; &lt;element_symbol&gt; &lt;dt_fs&gt; [max_corr_steps]
+<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>
+<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a> Arguments:
+<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a>   extxyz_file       Path to the input extxyz trajectory file
+<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a>   element_symbol    Chemical symbol (e.g., Li, O, Na)
+<a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a>   dt_fs             Time step between consecutive frames (fs)
+<a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a>   max_corr_steps    Max correlation lag steps (optional)
+</code></pre></div>
+<p>这里的 <code>dt_fs</code> 是<strong>相邻已写出轨迹帧</strong>之间的时间间隔（fs），不会从 MD 输入文件中自动推断；应以自己的轨迹写出设置为准。绘图模块请用 <code>gpumdkit.sh -plt -h</code> 查看图类型；各图参数的位置见<a href="%E7%BB%98%E5%9B%BE%E8%84%9A%E6%9C%AC.html">绘图脚本</a>。</p>
+<p>交互菜单中的 <code>------------&gt;&gt;</code> 表示等待输入。许多 CLI 命令结束后还会打印 <code>Code path:</code>，可据此定位产生结果或报错的实现脚本。</p>
+<h2 id="_4">交互模式</h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>gpumdkit.sh
 </code></pre></div>
 <p>打开主菜单：</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>           ____ ____  _   _ __  __ ____  _    _ _
-<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>          / ___|  _ \| | | |  \/  |  _ \| | _(_) |_
-<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>         | |  _| |_) | | | | |\/| | | | | |/ / | __|
-<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a>         | |_| |  __/| |_| | |  | | |_| |   &lt;| | |_
-<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a>          \____|_|    \___/|_|  |_|____/|_|\_\_|\__|
-<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a>
-<a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a>          GPUMDkit Version 1.5.6 (dev) (2026-06-17)
-<a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a>    Core Developer: Zihan YAN (yanzihan@westlake.edu.cn)
-<a id="__codelineno-7-9" name="__codelineno-7-9" href="#__codelineno-7-9"></a> Main Contributors: Denan LI, Xin WU, Zhoulin LIU &amp; Chen HUA
-<a id="__codelineno-7-10" name="__codelineno-7-10" href="#__codelineno-7-10"></a>
-<a id="__codelineno-7-11" name="__codelineno-7-11" href="#__codelineno-7-11"></a> ---------------------- GPUMD ------------------------
-<a id="__codelineno-7-12" name="__codelineno-7-12" href="#__codelineno-7-12"></a> 1) Format Conversion          2) Sample Structures
-<a id="__codelineno-7-13" name="__codelineno-7-13" href="#__codelineno-7-13"></a> 3) Workflow                   4) Calculators
-<a id="__codelineno-7-14" name="__codelineno-7-14" href="#__codelineno-7-14"></a> 5) Analyzer                   6) Visualization
-<a id="__codelineno-7-15" name="__codelineno-7-15" href="#__codelineno-7-15"></a> 7) Utilities                  8) Help                
-<a id="__codelineno-7-16" name="__codelineno-7-16" href="#__codelineno-7-16"></a> 0) Exit
-<a id="__codelineno-7-17" name="__codelineno-7-17" href="#__codelineno-7-17"></a> ------------&gt;&gt;
-<a id="__codelineno-7-18" name="__codelineno-7-18" href="#__codelineno-7-18"></a> Input the function number:
+<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>           ____ ____  _   _ __  __ ____  _    _ _
+<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>          / ___|  _ \| | | |  \/  |  _ \| | _(_) |_
+<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a>         | |  _| |_) | | | | |\/| | | | | |/ / | __|
+<a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a>         | |_| |  __/| |_| | |  | | |_| |   &lt;| | |_
+<a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a>          \____|_|    \___/|_|  |_|____/|_|\_\_|\__|
+<a id="__codelineno-9-6" name="__codelineno-9-6" href="#__codelineno-9-6"></a>
+<a id="__codelineno-9-7" name="__codelineno-9-7" href="#__codelineno-9-7"></a>          GPUMDkit Version 1.5.6 (dev) (2026-07-10)
+<a id="__codelineno-9-8" name="__codelineno-9-8" href="#__codelineno-9-8"></a>    Core Developer: Zihan YAN (yanzihan@westlake.edu.cn)
+<a id="__codelineno-9-9" name="__codelineno-9-9" href="#__codelineno-9-9"></a> Main Contributors: Denan LI, Xin WU, Zhoulin LIU &amp; Chen HUA
+<a id="__codelineno-9-10" name="__codelineno-9-10" href="#__codelineno-9-10"></a>
+<a id="__codelineno-9-11" name="__codelineno-9-11" href="#__codelineno-9-11"></a> ---------------------- GPUMD ------------------------
+<a id="__codelineno-9-12" name="__codelineno-9-12" href="#__codelineno-9-12"></a> 1) Format Conversion          2) Sample Structures
+<a id="__codelineno-9-13" name="__codelineno-9-13" href="#__codelineno-9-13"></a> 3) Workflow                   4) Calculators
+<a id="__codelineno-9-14" name="__codelineno-9-14" href="#__codelineno-9-14"></a> 5) Analyzer                   6) Visualization
+<a id="__codelineno-9-15" name="__codelineno-9-15" href="#__codelineno-9-15"></a> 7) Utilities                  8) Help                
+<a id="__codelineno-9-16" name="__codelineno-9-16" href="#__codelineno-9-16"></a> 0) Exit
+<a id="__codelineno-9-17" name="__codelineno-9-17" href="#__codelineno-9-17"></a> ------------&gt;&gt;
+<a id="__codelineno-9-18" name="__codelineno-9-18" href="#__codelineno-9-18"></a> Input the function number:
 </code></pre></div>
 <p>按数字选择模块。每个模块提供包含具体功能的子菜单。</p>
-<h2 id="_4">命令行模式</h2>
+<h2 id="_5">命令行模式</h2>
 <p>直接命令使用固定的位置参数：</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>gpumdkit.sh<span class="w"> </span>-&lt;选项&gt;<span class="w"> </span><span class="o">[</span>参数...<span class="o">]</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a>gpumdkit.sh<span class="w"> </span>-&lt;选项&gt;<span class="w"> </span><span class="o">[</span>参数...<span class="o">]</span>
 </code></pre></div>
 <p>示例：</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>gpumdkit.sh<span class="w"> </span>-pos2exyz<span class="w"> </span>POSCAR<span class="w"> </span>model.xyz
-<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>gpumdkit.sh<span class="w"> </span>-plt<span class="w"> </span>train
-<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a>gpumdkit.sh<span class="w"> </span>-calc<span class="w"> </span>msd<span class="w"> </span>trajectory.xyz<span class="w"> </span>Li<span class="w"> </span><span class="m">10</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a>gpumdkit.sh<span class="w"> </span>-pos2exyz<span class="w"> </span>POSCAR<span class="w"> </span>model.xyz
+<a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a>gpumdkit.sh<span class="w"> </span>-plt<span class="w"> </span>train
+<a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a>gpumdkit.sh<span class="w"> </span>-calc<span class="w"> </span>msd<span class="w"> </span>trajectory.xyz<span class="w"> </span>Li<span class="w"> </span><span class="m">10</span>
 </code></pre></div>
 <p>第一个示例读取 <code>POSCAR</code>，写出 <code>model.xyz</code>。</p>
 <h2 id="hello-world">Hello World 示例</h2>
 <p>一个最小化的端到端检查，确认安装是否正常——创建一个极小的硅 POSCAR，转换为 extxyz，并查看输出：</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a>cat<span class="w"> </span>&gt;<span class="w"> </span>POSCAR<span class="w"> </span><span class="s">&lt;&lt; &#39;EOF&#39;</span>
-<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a><span class="s">Si</span>
-<a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a><span class="s">1.0</span>
-<a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a><span class="s">0 2.715 2.715</span>
-<a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a><span class="s">2.715 0 2.715</span>
-<a id="__codelineno-10-6" name="__codelineno-10-6" href="#__codelineno-10-6"></a><span class="s">2.715 2.715 0</span>
-<a id="__codelineno-10-7" name="__codelineno-10-7" href="#__codelineno-10-7"></a><span class="s">Si</span>
-<a id="__codelineno-10-8" name="__codelineno-10-8" href="#__codelineno-10-8"></a><span class="s">1</span>
-<a id="__codelineno-10-9" name="__codelineno-10-9" href="#__codelineno-10-9"></a><span class="s">direct</span>
-<a id="__codelineno-10-10" name="__codelineno-10-10" href="#__codelineno-10-10"></a><span class="s">0 0 0</span>
-<a id="__codelineno-10-11" name="__codelineno-10-11" href="#__codelineno-10-11"></a><span class="s">EOF</span>
-<a id="__codelineno-10-12" name="__codelineno-10-12" href="#__codelineno-10-12"></a>gpumdkit.sh<span class="w"> </span>-pos2exyz<span class="w"> </span>POSCAR<span class="w"> </span>model.xyz
-<a id="__codelineno-10-13" name="__codelineno-10-13" href="#__codelineno-10-13"></a>head<span class="w"> </span>model.xyz
+<div class="highlight"><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a>cat<span class="w"> </span>&gt;<span class="w"> </span>POSCAR<span class="w"> </span><span class="s">&lt;&lt; &#39;EOF&#39;</span>
+<a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a><span class="s">Si</span>
+<a id="__codelineno-12-3" name="__codelineno-12-3" href="#__codelineno-12-3"></a><span class="s">1.0</span>
+<a id="__codelineno-12-4" name="__codelineno-12-4" href="#__codelineno-12-4"></a><span class="s">0 2.715 2.715</span>
+<a id="__codelineno-12-5" name="__codelineno-12-5" href="#__codelineno-12-5"></a><span class="s">2.715 0 2.715</span>
+<a id="__codelineno-12-6" name="__codelineno-12-6" href="#__codelineno-12-6"></a><span class="s">2.715 2.715 0</span>
+<a id="__codelineno-12-7" name="__codelineno-12-7" href="#__codelineno-12-7"></a><span class="s">Si</span>
+<a id="__codelineno-12-8" name="__codelineno-12-8" href="#__codelineno-12-8"></a><span class="s">1</span>
+<a id="__codelineno-12-9" name="__codelineno-12-9" href="#__codelineno-12-9"></a><span class="s">direct</span>
+<a id="__codelineno-12-10" name="__codelineno-12-10" href="#__codelineno-12-10"></a><span class="s">0 0 0</span>
+<a id="__codelineno-12-11" name="__codelineno-12-11" href="#__codelineno-12-11"></a><span class="s">EOF</span>
+<a id="__codelineno-12-12" name="__codelineno-12-12" href="#__codelineno-12-12"></a>gpumdkit.sh<span class="w"> </span>-pos2exyz<span class="w"> </span>POSCAR<span class="w"> </span>model.xyz
+<a id="__codelineno-12-13" name="__codelineno-12-13" href="#__codelineno-12-13"></a>head<span class="w"> </span>model.xyz
 </code></pre></div>
 <p>如果 <code>model.xyz</code> 显示一个 Si 原子及晶格信息，说明安装成功。</p>
 <blockquote>
 <p><strong>什么是 extxyz？</strong> extxyz 是扩展 XYZ 格式：第 1 行是原子数，第 2 行包含晶格及结构级属性（按需包含能量/力/维里），第 3 行及以后是每个原子及其原子级属性。它是 NEP 的原生训练数据格式。</p>
 </blockquote>
-<h2 id="_5">常见示例</h2>
+<h2 id="_6">常见示例</h2>
 <h3 id="poscar-extxyz">POSCAR 转 extxyz</h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a>gpumdkit.sh<span class="w"> </span>-pos2exyz<span class="w"> </span>POSCAR<span class="w"> </span>model.xyz
+<div class="highlight"><pre><span></span><code><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a>gpumdkit.sh<span class="w"> </span>-pos2exyz<span class="w"> </span>POSCAR<span class="w"> </span>model.xyz
 </code></pre></div>
 <h3 id="gpumd-group">添加 GPUMD group 标签</h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a>gpumdkit.sh<span class="w"> </span>-addgroup<span class="w"> </span>POSCAR<span class="w"> </span>Li<span class="w"> </span>Y<span class="w"> </span>Cl
+<div class="highlight"><pre><span></span><code><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a>gpumdkit.sh<span class="w"> </span>-addgroup<span class="w"> </span>POSCAR<span class="w"> </span>Li<span class="w"> </span>Y<span class="w"> </span>Cl
 </code></pre></div>
 <p>group 标签用于一些需要原子分组的 GPUMD 相关流程和分析，例如特定元素的 MSD 或扩散性质计算。</p>
 <h3 id="nep">绘制 NEP 训练结果</h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a>gpumdkit.sh<span class="w"> </span>-plt<span class="w"> </span>train
+<div class="highlight"><pre><span></span><code><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a>gpumdkit.sh<span class="w"> </span>-plt<span class="w"> </span>train
 </code></pre></div>
 <div align="center">
   <img src="../../Gallery/train.png" alt="NEP training results" width="72%" />
 </div>
 
 <h3 id="nep_1">绘制 NEP 测试集结果</h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a>gpumdkit.sh<span class="w"> </span>-plt<span class="w"> </span><span class="nb">test</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a>gpumdkit.sh<span class="w"> </span>-plt<span class="w"> </span><span class="nb">test</span>
 </code></pre></div>
 <div align="center">
   <img src="../../Gallery/prediction.png" alt="NEP test results" width="72%" />
 </div>
 
-<h3 id="_6">绘制热力学量</h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a>gpumdkit.sh<span class="w"> </span>-plt<span class="w"> </span>thermo
+<h3 id="_7">绘制热力学量</h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-17-1" name="__codelineno-17-1" href="#__codelineno-17-1"></a>gpumdkit.sh<span class="w"> </span>-plt<span class="w"> </span>thermo
 </code></pre></div>
 <div align="center">
   <img src="../../Gallery/thermo.png" alt="Thermo plot" width="72%" />
 </div>
 
 <h3 id="msd">绘制 MSD 和自扩散系数</h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a>gpumdkit.sh<span class="w"> </span>-plt<span class="w"> </span>msd
-<a id="__codelineno-16-2" name="__codelineno-16-2" href="#__codelineno-16-2"></a>gpumdkit.sh<span class="w"> </span>-plt<span class="w"> </span>sdc
+<div class="highlight"><pre><span></span><code><a id="__codelineno-18-1" name="__codelineno-18-1" href="#__codelineno-18-1"></a>gpumdkit.sh<span class="w"> </span>-plt<span class="w"> </span>msd
+<a id="__codelineno-18-2" name="__codelineno-18-2" href="#__codelineno-18-2"></a>gpumdkit.sh<span class="w"> </span>-plt<span class="w"> </span>sdc
 </code></pre></div>
 <div align="center">
   <img src="../../Gallery/msd.png" alt="MSD plot" width="45%" />
   <img src="../../Gallery/sdc.png" alt="SDC plot" width="45%" />
 </div>
 
-<h2 id="_7">说明</h2>
+<h2 id="_8">说明</h2>
 <ul>
 <li>使用 <code>gpumdkit.sh -h</code> 查看所有可用选项。</li>
 <li>Python 后端命令可使用 <code>gpumdkit.sh -&lt;选项&gt; -h</code> 查看帮助；使用 <code>gpumdkit.sh -plt -h</code> 列出绘图类型，各绘图脚本的参数位置并不统一。</li>

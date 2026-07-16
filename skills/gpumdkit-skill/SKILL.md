@@ -1,11 +1,11 @@
 ---
 name: gpumdkit-skill
-description: Use GPUMDkit, GPUMD, and NEP end to end. Use when installing or navigating GPUMDkit; converting, sampling, filtering, analyzing, calculating, or plotting atomistic data; preparing batch or active-learning workflows; creating model.xyz, run.in, or nep.in; setting up, running, validating, or post-processing GPUMD simulations; training, fine-tuning, or predicting with NEP; performing diffusion, ionic-conductivity, Arrhenius, thermal-transport, or related workflows; or modifying GPUMDkit code and documentation.
+description: Use GPUMDkit, GPUMD, and NEP end to end. Use when installing or exploring GPUMDkit; converting, sampling, splitting, filtering, analyzing, calculating, or plotting atomistic datasets; preparing batch or active-learning workflows; creating model.xyz, run.in, or nep.in; setting up, running, validating, or post-processing GPUMD simulations; training, fine-tuning, or evaluating NEP models; performing diffusion, ionic-conductivity, Arrhenius, thermal-transport, or related workflows; or maintaining GPUMDkit code, documentation, and skills.
 ---
 
 # GPUMDkit
 
-Use one entry point for GPUMDkit utilities, GPUMD simulation, NEP training, validation, and post-processing. Load only the references required by the current task.
+Use this skill as the single entry point for GPUMDkit utilities, GPUMD simulations, NEP training and evaluation, validation, and post-processing. Load only the references required by the current task.
 
 ## Mandatory rules
 

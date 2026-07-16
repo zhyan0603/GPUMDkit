@@ -15,6 +15,22 @@ The analyzer scripts provide functionality for:
 
 Access analyzers through `gpumdkit.sh` using various flags or run scripts directly.
 
+### Direct CLI helpers
+
+These helpers are useful before selecting a filtering threshold or a downstream
+analysis path:
+
+| Command | Script | Purpose |
+|---|---|---|
+| `gpumdkit.sh -chem_species <input.xyz>` | `analyze_chem_species.py` | List the element symbols present in an extxyz file. |
+| `gpumdkit.sh -min_dist <input.xyz>` | `get_min_dist.py` | Fast minimum-distance check without PBC. |
+| `gpumdkit.sh -min_dist_pbc <input.xyz>` | `get_min_dist_pbc.py` | Minimum-distance check including periodic images. |
+| `gpumdkit.sh -pda <ref> <traj> <species> <interval>` | `probability_density_analysis.py` | Write a CHGCAR-like probability-density file. |
+
+Use the PBC-aware command for periodic cells. Distance, property, and box
+thresholds are system-dependent choices; inspect the corresponding check output
+before applying a `-filter_*` command.
+
 ---
 
 ## Scripts

@@ -696,6 +696,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#a-reliable-plotting-workflow" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        A reliable plotting workflow
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#nep-training-and-prediction" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -1765,6 +1776,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#a-reliable-plotting-workflow" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        A reliable plotting workflow
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#nep-training-and-prediction" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -2298,6 +2320,63 @@
 <a id="__codelineno-1-39" name="__codelineno-1-39" href="#__codelineno-1-39"></a>+-----------------------------------------------------------------------------------------------+
 </code></pre></div>
 <hr />
+<h2 id="a-reliable-plotting-workflow">A reliable plotting workflow</h2>
+<p>Use the following sequence instead of trying plot names at random:</p>
+<ol>
+<li>List the available types with <code>gpumdkit.sh -plt -h</code>.</li>
+<li>Identify the file already present in your working directory.</li>
+<li>Find the matching entry below, then run its exact command signature.</li>
+<li>Add <code>save</code> only where that entry shows it; the argument position is not identical for every plot.</li>
+</ol>
+<table>
+<thead>
+<tr>
+<th>If you have...</th>
+<th>Start with...</th>
+<th>What to inspect first</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>loss.out</code>, <code>energy_train.out</code>, and <code>force_train.out</code></td>
+<td><code>gpumdkit.sh -plt train</code></td>
+<td>loss trend and energy/force parity</td>
+</tr>
+<tr>
+<td><code>energy_test.out</code> and <code>force_test.out</code></td>
+<td><code>gpumdkit.sh -plt prediction</code></td>
+<td>generalization on the test set</td>
+</tr>
+<tr>
+<td><code>thermo.out</code></td>
+<td><code>gpumdkit.sh -plt thermo</code></td>
+<td>equilibration and thermodynamic evolution</td>
+</tr>
+<tr>
+<td><code>msd.out</code></td>
+<td><code>gpumdkit.sh -plt msd</code> or <code>gpumdkit.sh -plt sdc</code></td>
+<td>diffusion regime before interpreting a fit</td>
+</tr>
+<tr>
+<td><code>rdf.out</code></td>
+<td><code>gpumdkit.sh -plt rdf</code></td>
+<td>selected pair column and peak positions</td>
+</tr>
+</tbody>
+</table>
+<p>For example, a saved training plot is requested as:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>gpumdkit.sh<span class="w"> </span>-plt<span class="w"> </span>train<span class="w"> </span>save
+</code></pre></div>
+<p>The Gallery image below is an example of the figure layout, not a universal
+quality threshold. Whether a loss curve, parity scatter, or transport fit is
+acceptable depends on the model, data, and simulation protocol; do not infer a
+scientific conclusion from the image alone.</p>
+<blockquote>
+<p><strong>Why not use <code>gpumdkit.sh -plt train -h</code>?</strong> Plot scripts do not share a
+uniform per-plot <code>-h</code> interface. Use <code>gpumdkit.sh -plt -h</code> for the list, then
+use the exact signature and input-file notes in the matching section below.</p>
+</blockquote>
+<hr />
 <h2 id="nep-training-and-prediction">NEP Training and Prediction</h2>
 <p>The <code>train</code>, <code>prediction</code>, <code>train_density</code>, and <code>parity_density</code> plots also
 print a terminal table containing R^2, MAE, and RMSE for energy, force, and
@@ -2305,7 +2384,7 @@ stress. If no valid stress rows are available, the stress entries are <code>N/A<
 <h3 id="plt_trainpy">plt_train.py</h3>
 <p>Visualizes NEP training progress including loss curves, RMSE evolution, and parity plots comparing DFT vs NEP predictions for energy, forces, and stresses.</p>
 <p><strong>Input Files:</strong> <code>loss.out</code>, <code>energy_train.out</code>, <code>force_train.out</code>, <code>virial_train.out</code></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>gpumdkit.sh<span class="w"> </span>-plt<span class="w"> </span>train
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>gpumdkit.sh<span class="w"> </span>-plt<span class="w"> </span>train
 </code></pre></div>
 <div align="center">
   <img src="../../Gallery/train.png" alt="NEP training results" width="75%" />
@@ -2315,8 +2394,8 @@ stress. If no valid stress rows are available, the stress entries are <code>N/A<
 <h3 id="plt_predictionpy">plt_prediction.py</h3>
 <p>Visualizes NEP prediction results on the test set.</p>
 <p><strong>Input Files:</strong> <code>energy_test.out</code>, <code>force_test.out</code>, <code>virial_test.out</code></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>gpumdkit.sh<span class="w"> </span>-plt<span class="w"> </span>prediction
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>gpumdkit.sh<span class="w"> </span>-plt<span class="w"> </span><span class="nb">test</span><span class="w">         </span><span class="c1"># Alternative command</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>gpumdkit.sh<span class="w"> </span>-plt<span class="w"> </span>prediction
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>gpumdkit.sh<span class="w"> </span>-plt<span class="w"> </span><span class="nb">test</span><span class="w">         </span><span class="c1"># Alternative command</span>
 </code></pre></div>
 <div align="center">
   <img src="../../Gallery/prediction.png" alt="NEP prediction results" width="75%" />
@@ -2326,7 +2405,7 @@ stress. If no valid stress rows are available, the stress entries are <code>N/A<
 <h3 id="plt_train_testpy">plt_train_test.py</h3>
 <p>Creates combined parity plots for both training and testing datasets.</p>
 <p><strong>Input Files:</strong> <code>energy_train.out</code>, <code>force_train.out</code>, <code>virial_train.out</code>, <code>energy_test.out</code>, <code>force_test.out</code>, <code>virial_test.out</code></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>gpumdkit.sh<span class="w"> </span>-plt<span class="w"> </span>train_test
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>gpumdkit.sh<span class="w"> </span>-plt<span class="w"> </span>train_test
 </code></pre></div>
 <div align="center">
   <img src="../../Gallery/train_test.png" alt="NEP train and test comparison" width="75%" />
@@ -2336,7 +2415,7 @@ stress. If no valid stress rows are available, the stress entries are <code>N/A<
 <h3 id="plt_parity_densitypy">plt_parity_density.py</h3>
 <p>Generates density-based parity plots for energies, forces, and stresses. Useful for large datasets where scatter plots become unreadable.</p>
 <p><strong>Input Files:</strong> <code>energy_train.out</code>, <code>force_train.out</code>, <code>virial_train.out</code></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>gpumdkit.sh<span class="w"> </span>-plt<span class="w"> </span>parity_density
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>gpumdkit.sh<span class="w"> </span>-plt<span class="w"> </span>parity_density
 </code></pre></div>
 <div align="center">
   <img src="../../Gallery/parity_plot_density.png" alt="Parity density plot" width="70%" />
@@ -2350,7 +2429,7 @@ stress. If no valid stress rows are available, the stress entries are <code>N/A<
 - Force magnitude errors (delta_F)
 - Force angle errors (delta_theta)
 - Distribution of errors</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>gpumdkit.sh<span class="w"> </span>-plt<span class="w"> </span>force_errors
+<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>gpumdkit.sh<span class="w"> </span>-plt<span class="w"> </span>force_errors
 </code></pre></div>
 <div align="center">
   <img src="../../Gallery/force_errors.png" alt="Force error analysis" width="70%" />
@@ -2361,13 +2440,13 @@ stress. If no valid stress rows are available, the stress entries are <code>N/A<
 <p>Visualizes learning rate during <code>gnep</code> training.</p>
 <p><strong>Input File:</strong> <code>loss.out</code></p>
 <p><strong>Note:</strong> Only for the <code>gnep</code> training process.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>gpumdkit.sh<span class="w"> </span>-plt<span class="w"> </span>lr
+<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>gpumdkit.sh<span class="w"> </span>-plt<span class="w"> </span>lr
 </code></pre></div>
 <hr />
 <h3 id="plt_nep_restartpy">plt_nep_restart.py</h3>
 <p>Visualizes parameters stored in the <code>nep.restart</code> file.</p>
 <p><strong>Input File:</strong> <code>nep.restart</code></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>gpumdkit.sh<span class="w"> </span>-plt<span class="w"> </span>restart
+<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>gpumdkit.sh<span class="w"> </span>-plt<span class="w"> </span>restart
 </code></pre></div>
 <div align="center">
   <img src="../../Gallery/nep_restart.png" alt="NEP restart parameters" width="60%" />
@@ -2378,7 +2457,7 @@ stress. If no valid stress rows are available, the stress entries are <code>N/A<
 <p>Plots charge distribution from <code>qNEP</code> model.</p>
 <p><strong>Input File:</strong> <code>charge_train.out</code></p>
 <p><strong>Important:</strong> Ensure consistency between training set and charge output atom ordering. Use full batch training or run prediction step first.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>gpumdkit.sh<span class="w"> </span>-plt<span class="w"> </span>charge
+<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a>gpumdkit.sh<span class="w"> </span>-plt<span class="w"> </span>charge
 </code></pre></div>
 <div align="center">
   <img src="../../Gallery/charge.png" alt="Charge distribution" width="45%" />
@@ -2388,8 +2467,8 @@ stress. If no valid stress rows are available, the stress entries are <code>N/A<
 <h3 id="plt_born_chargepy">plt_born_charge.py</h3>
 <p>Creates parity plots for Born effective charges (BEC) on training and testing datasets. Structures with all-zero reference BEC are filtered out.</p>
 <p><strong>Input Files:</strong> <code>bec_train.out</code>, <code>bec_test.out</code></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a>gpumdkit.sh<span class="w"> </span>-plt<span class="w"> </span>born_charge
-<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a>gpumdkit.sh<span class="w"> </span>-plt<span class="w"> </span>bec<span class="w">          </span><span class="c1"># Alternative command</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a>gpumdkit.sh<span class="w"> </span>-plt<span class="w"> </span>born_charge
+<a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a>gpumdkit.sh<span class="w"> </span>-plt<span class="w"> </span>bec<span class="w">          </span><span class="c1"># Alternative command</span>
 </code></pre></div>
 <div align="center">
   <img src="../../Gallery/born_charge.png" alt="Born effective charge parity plot" width="45%" />
@@ -2400,7 +2479,7 @@ stress. If no valid stress rows are available, the stress entries are <code>N/A<
 <h3 id="plt_thermopy">plt_thermo.py</h3>
 <p>Primary script for comprehensive thermodynamic property visualization.</p>
 <p><strong>Input File:</strong> <code>thermo.out</code></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a>gpumdkit.sh<span class="w"> </span>-plt<span class="w"> </span>thermo
+<div class="highlight"><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a>gpumdkit.sh<span class="w"> </span>-plt<span class="w"> </span>thermo
 </code></pre></div>
 <div align="center">
   <img src="../../Gallery/thermo.png" alt="Thermo plot" width="75%" />
@@ -2410,15 +2489,15 @@ stress. If no valid stress rows are available, the stress entries are <code>N/A<
 <h3 id="plt_thermo2py-plt_thermo3py">plt_thermo2.py &amp; plt_thermo3.py</h3>
 <p>Alternative thermodynamic visualization with different styles.</p>
 <p><strong>Input File:</strong> <code>thermo.out</code></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a>gpumdkit.sh<span class="w"> </span>-plt<span class="w"> </span>thermo2
-<a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a>gpumdkit.sh<span class="w"> </span>-plt<span class="w"> </span>thermo3
+<div class="highlight"><pre><span></span><code><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a>gpumdkit.sh<span class="w"> </span>-plt<span class="w"> </span>thermo2
+<a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a>gpumdkit.sh<span class="w"> </span>-plt<span class="w"> </span>thermo3
 </code></pre></div>
 <hr />
 <h2 id="diffusion-and-ionic-transport">Diffusion and Ionic Transport</h2>
 <h3 id="plt_msdpy">plt_msd.py</h3>
 <p>Plots mean square displacement (MSD) for all directions.</p>
 <p><strong>Input File:</strong> <code>msd.out</code></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a>gpumdkit.sh<span class="w"> </span>-plt<span class="w"> </span>msd
+<div class="highlight"><pre><span></span><code><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a>gpumdkit.sh<span class="w"> </span>-plt<span class="w"> </span>msd
 </code></pre></div>
 <div align="center">
   <img src="../../Gallery/msd.png" alt="Mean square displacement" width="48%" />
@@ -2429,7 +2508,7 @@ stress. If no valid stress rows are available, the stress entries are <code>N/A<
 <p>Plots MSD for all atomic species separately when using <code>all_groups</code> in GPUMD.</p>
 <p><strong>Input File:</strong> <code>msd.out</code> (computed with <code>all_groups</code> option)</p>
 <p><strong>Requirements:</strong> Must use <code>all_groups</code> in the <code>compute_msd</code> command in <code>run.in</code>.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a>gpumdkit.sh<span class="w"> </span>-plt<span class="w"> </span>msd_all<span class="w"> </span>msd.out<span class="w"> </span>Li<span class="w"> </span>P<span class="w"> </span>S
+<div class="highlight"><pre><span></span><code><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a>gpumdkit.sh<span class="w"> </span>-plt<span class="w"> </span>msd_all<span class="w"> </span>msd.out<span class="w"> </span>Li<span class="w"> </span>P<span class="w"> </span>S
 </code></pre></div>
 <div align="center">
   <img src="../../Gallery/msd_all.png" alt="MSD for all species" width="48%" />
@@ -2441,7 +2520,7 @@ stress. If no valid stress rows are available, the stress entries are <code>N/A<
 <p><strong>Input File:</strong> <code>msd_step*.out</code> (computed with <code>save_every</code> option)</p>
 <p><strong>Requirements:</strong> Use <code>save_every</code> in the <code>compute_msd</code> command.</p>
 <p><strong>Purpose:</strong> Verify MSD has converged sufficiently for accurate diffusion coefficient calculation.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a>gpumdkit.sh<span class="w"> </span>-plt<span class="w"> </span>msd_conv
+<div class="highlight"><pre><span></span><code><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a>gpumdkit.sh<span class="w"> </span>-plt<span class="w"> </span>msd_conv
 </code></pre></div>
 <div align="center">
   <img src="../../Gallery/msd_convergence.png" alt="MSD convergence" width="48%" />
@@ -2451,7 +2530,7 @@ stress. If no valid stress rows are available, the stress entries are <code>N/A<
 <h3 id="plt_sdcpy">plt_sdc.py</h3>
 <p>Plots self-diffusion coefficient (SDC) vs time.</p>
 <p><strong>Input File:</strong> <code>msd.out</code></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a>gpumdkit.sh<span class="w"> </span>-plt<span class="w"> </span>sdc
+<div class="highlight"><pre><span></span><code><a id="__codelineno-17-1" name="__codelineno-17-1" href="#__codelineno-17-1"></a>gpumdkit.sh<span class="w"> </span>-plt<span class="w"> </span>sdc
 </code></pre></div>
 <div align="center">
   <img src="../../Gallery/sdc.png" alt="Self-diffusion coefficient" width="48%" />
@@ -2461,14 +2540,14 @@ stress. If no valid stress rows are available, the stress entries are <code>N/A<
 <h3 id="plt_arrhenius_dpy">plt_arrhenius_d.py</h3>
 <p>Creates Arrhenius plot for diffusivity (log10 D vs 1000/T).</p>
 <p><strong>Input Files:</strong> <code>*K/msd.out</code> files (each temperature subdirectory should contain an <code>msd.out</code>)</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-17-1" name="__codelineno-17-1" href="#__codelineno-17-1"></a>gpumdkit.sh<span class="w"> </span>-plt<span class="w"> </span>arrhenius_d
-<a id="__codelineno-17-2" name="__codelineno-17-2" href="#__codelineno-17-2"></a>gpumdkit.sh<span class="w"> </span>-plt<span class="w"> </span>D<span class="w">             </span><span class="c1"># Alternative command</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-18-1" name="__codelineno-18-1" href="#__codelineno-18-1"></a>gpumdkit.sh<span class="w"> </span>-plt<span class="w"> </span>arrhenius_d
+<a id="__codelineno-18-2" name="__codelineno-18-2" href="#__codelineno-18-2"></a>gpumdkit.sh<span class="w"> </span>-plt<span class="w"> </span>D<span class="w">             </span><span class="c1"># Alternative command</span>
 </code></pre></div>
 <p><strong>Output example:</strong></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-18-1" name="__codelineno-18-1" href="#__codelineno-18-1"></a>T: 300K, D_total: 1.001e-07 cm2/s
-<a id="__codelineno-18-2" name="__codelineno-18-2" href="#__codelineno-18-2"></a>T: 350K, D_total: 4.184e-07 cm2/s
-<a id="__codelineno-18-3" name="__codelineno-18-3" href="#__codelineno-18-3"></a>T: 400K, D_total: 1.027e-06 cm2/s
-<a id="__codelineno-18-4" name="__codelineno-18-4" href="#__codelineno-18-4"></a>Ea: 0.230 eV
+<div class="highlight"><pre><span></span><code><a id="__codelineno-19-1" name="__codelineno-19-1" href="#__codelineno-19-1"></a>T: 300K, D_total: 1.001e-07 cm2/s
+<a id="__codelineno-19-2" name="__codelineno-19-2" href="#__codelineno-19-2"></a>T: 350K, D_total: 4.184e-07 cm2/s
+<a id="__codelineno-19-3" name="__codelineno-19-3" href="#__codelineno-19-3"></a>T: 400K, D_total: 1.027e-06 cm2/s
+<a id="__codelineno-19-4" name="__codelineno-19-4" href="#__codelineno-19-4"></a>Ea: 0.230 eV
 </code></pre></div>
 <div align="center">
   <img src="../../Gallery/Arrhenius_D.png" alt="Arrhenius diffusivity" width="58%" />
@@ -2478,8 +2557,8 @@ stress. If no valid stress rows are available, the stress entries are <code>N/A<
 <h3 id="plt_arrhenius_sigmapy">plt_arrhenius_sigma.py</h3>
 <p>Creates Arrhenius plot for ionic conductivity (ln(σ·T) vs 1000/T).</p>
 <p><strong>Input Files:</strong> <code>*K/{model.xyz, run.in, thermo.out, msd.out}</code> (each temperature subdirectory)</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-19-1" name="__codelineno-19-1" href="#__codelineno-19-1"></a>gpumdkit.sh<span class="w"> </span>-plt<span class="w"> </span>arrhenius_sigma
-<a id="__codelineno-19-2" name="__codelineno-19-2" href="#__codelineno-19-2"></a>gpumdkit.sh<span class="w"> </span>-plt<span class="w"> </span>sigma<span class="w">         </span><span class="c1"># Alternative command</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-20-1" name="__codelineno-20-1" href="#__codelineno-20-1"></a>gpumdkit.sh<span class="w"> </span>-plt<span class="w"> </span>arrhenius_sigma
+<a id="__codelineno-20-2" name="__codelineno-20-2" href="#__codelineno-20-2"></a>gpumdkit.sh<span class="w"> </span>-plt<span class="w"> </span>sigma<span class="w">         </span><span class="c1"># Alternative command</span>
 </code></pre></div>
 <div align="center">
   <img src="../../Gallery/Arrhenius_sigma.png" alt="Arrhenius ionic conductivity" width="58%" />
@@ -2490,7 +2569,7 @@ stress. If no valid stress rows are available, the stress entries are <code>N/A<
 <h3 id="plt_emdpy">plt_emd.py</h3>
 <p>Analyzes and plots thermal conductivity from equilibrium molecular dynamics (EMD).</p>
 <p><strong>Input Files:</strong> EMD output files from GPUMD</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-20-1" name="__codelineno-20-1" href="#__codelineno-20-1"></a>gpumdkit.sh<span class="w"> </span>-plt<span class="w"> </span>emd<span class="w"> </span>x<span class="w">        </span><span class="c1"># for x direction</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-21-1" name="__codelineno-21-1" href="#__codelineno-21-1"></a>gpumdkit.sh<span class="w"> </span>-plt<span class="w"> </span>emd<span class="w"> </span>x<span class="w">        </span><span class="c1"># for x direction</span>
 </code></pre></div>
 <div align="center">
   <img src="../../Gallery/emd.png" alt="EMD thermal conductivity" width="70%" />
@@ -2528,7 +2607,7 @@ stress. If no valid stress rows are available, the stress entries are <code>N/A<
 </tbody>
 </table>
 <p><strong>Note:</strong> If no SHC data, set <code>scale_eff_size</code> and <code>cutoff_freq</code> to any number as placeholders when using <code>save</code>.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-21-1" name="__codelineno-21-1" href="#__codelineno-21-1"></a>gpumdkit.sh<span class="w"> </span>-plt<span class="w"> </span>nemd<span class="w"> </span><span class="o">[</span>real_length<span class="o">]</span><span class="w"> </span><span class="o">[</span>scale_eff_size<span class="o">]</span><span class="w"> </span><span class="o">[</span>cutoff_freq<span class="o">]</span><span class="w"> </span><span class="o">[</span>save<span class="o">]</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-22-1" name="__codelineno-22-1" href="#__codelineno-22-1"></a>gpumdkit.sh<span class="w"> </span>-plt<span class="w"> </span>nemd<span class="w"> </span><span class="o">[</span>real_length<span class="o">]</span><span class="w"> </span><span class="o">[</span>scale_eff_size<span class="o">]</span><span class="w"> </span><span class="o">[</span>cutoff_freq<span class="o">]</span><span class="w"> </span><span class="o">[</span>save<span class="o">]</span>
 </code></pre></div>
 <div align="center">
   <img src="../../Gallery/nemd.png" alt="NEMD results" width="70%" />
@@ -2562,7 +2641,7 @@ stress. If no valid stress rows are available, the stress entries are <code>N/A<
 </tbody>
 </table>
 <p><strong>Note:</strong> If no SHC data, set <code>scale_eff_size</code> and <code>cutoff_freq</code> to any number as placeholders when using <code>save</code>.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-22-1" name="__codelineno-22-1" href="#__codelineno-22-1"></a>gpumdkit.sh<span class="w"> </span>-plt<span class="w"> </span>hnemd<span class="w"> </span><span class="o">[</span>scale_eff_size<span class="o">]</span><span class="w"> </span><span class="o">[</span>cutoff_freq<span class="o">]</span><span class="w"> </span><span class="o">[</span>save<span class="o">]</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-23-1" name="__codelineno-23-1" href="#__codelineno-23-1"></a>gpumdkit.sh<span class="w"> </span>-plt<span class="w"> </span>hnemd<span class="w"> </span><span class="o">[</span>scale_eff_size<span class="o">]</span><span class="w"> </span><span class="o">[</span>cutoff_freq<span class="o">]</span><span class="w"> </span><span class="o">[</span>save<span class="o">]</span>
 </code></pre></div>
 <div align="center">
   <img src="../../Gallery/hnemd.png" alt="HNEMD results" width="70%" />
@@ -2573,8 +2652,8 @@ stress. If no valid stress rows are available, the stress entries are <code>N/A<
 <h3 id="plt_rdfpy">plt_rdf.py</h3>
 <p>Plots radial distribution function (RDF) showing pair correlations.</p>
 <p><strong>Input File:</strong> <code>rdf.out</code></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-23-1" name="__codelineno-23-1" href="#__codelineno-23-1"></a>gpumdkit.sh<span class="w"> </span>-plt<span class="w"> </span>rdf<span class="w">               </span><span class="c1"># Plot all RDF pairs</span>
-<a id="__codelineno-23-2" name="__codelineno-23-2" href="#__codelineno-23-2"></a>gpumdkit.sh<span class="w"> </span>-plt<span class="w"> </span>rdf<span class="w"> </span>&lt;column&gt;<span class="w">      </span><span class="c1"># Plot specific pair</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-24-1" name="__codelineno-24-1" href="#__codelineno-24-1"></a>gpumdkit.sh<span class="w"> </span>-plt<span class="w"> </span>rdf<span class="w">               </span><span class="c1"># Plot all RDF pairs</span>
+<a id="__codelineno-24-2" name="__codelineno-24-2" href="#__codelineno-24-2"></a>gpumdkit.sh<span class="w"> </span>-plt<span class="w"> </span>rdf<span class="w"> </span>&lt;column&gt;<span class="w">      </span><span class="c1"># Plot specific pair</span>
 </code></pre></div>
 <p><strong>Full RDF output:</strong></p>
 <div align="center">
@@ -2590,27 +2669,27 @@ stress. If no valid stress rows are available, the stress entries are <code>N/A<
 <h3 id="plt_rdf_pmfpy">plt_rdf_pmf.py</h3>
 <p>Plots RDF combined with potential of mean force (PMF).</p>
 <p><strong>Input File:</strong> <code>rdf.out</code></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-24-1" name="__codelineno-24-1" href="#__codelineno-24-1"></a>gpumdkit.sh<span class="w"> </span>-plt<span class="w"> </span>rdf_pmf
+<div class="highlight"><pre><span></span><code><a id="__codelineno-25-1" name="__codelineno-25-1" href="#__codelineno-25-1"></a>gpumdkit.sh<span class="w"> </span>-plt<span class="w"> </span>rdf_pmf
 </code></pre></div>
 <hr />
 <h3 id="plt_vacpy">plt_vac.py</h3>
 <p>Plots velocity autocorrelation function (VAC). Useful for analyzing phonon properties and atomic dynamics.</p>
 <p><strong>Input File:</strong> <code>sdc.out</code> (the VAC columns are read from this file by the plotting script)</p>
 <p><strong>Output:</strong> Interactive plot or <code>vac.png</code> (with <code>save</code> option)</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-25-1" name="__codelineno-25-1" href="#__codelineno-25-1"></a>gpumdkit.sh<span class="w"> </span>-plt<span class="w"> </span>vac
+<div class="highlight"><pre><span></span><code><a id="__codelineno-26-1" name="__codelineno-26-1" href="#__codelineno-26-1"></a>gpumdkit.sh<span class="w"> </span>-plt<span class="w"> </span>vac
 </code></pre></div>
 <hr />
 <h3 id="plt_cohesivepy">plt_cohesive.py</h3>
 <p>Plots cohesive energy curve from <code>cohesive.out</code>. Useful for analyzing lattice stability and equilibrium lattice constants.</p>
 <p><strong>Input File:</strong> <code>cohesive.out</code> (isotropic scaling factor vs cohesive energy)</p>
 <p><strong>Output:</strong> Interactive plot or <code>cohesive.png</code> (with <code>save</code> option)</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-26-1" name="__codelineno-26-1" href="#__codelineno-26-1"></a>gpumdkit.sh<span class="w"> </span>-plt<span class="w"> </span>cohesive
+<div class="highlight"><pre><span></span><code><a id="__codelineno-27-1" name="__codelineno-27-1" href="#__codelineno-27-1"></a>gpumdkit.sh<span class="w"> </span>-plt<span class="w"> </span>cohesive
 </code></pre></div>
 <hr />
 <h3 id="plt_net_forcepy">plt_net_force.py</h3>
 <p>Plots distribution of net forces on structures, useful for identifying problematic configurations.</p>
 <p><strong>Input File:</strong> <code>train.xyz</code> (extxyz format)</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-27-1" name="__codelineno-27-1" href="#__codelineno-27-1"></a>gpumdkit.sh<span class="w"> </span>-plt<span class="w"> </span>net_force<span class="w"> </span>train.xyz
+<div class="highlight"><pre><span></span><code><a id="__codelineno-28-1" name="__codelineno-28-1" href="#__codelineno-28-1"></a>gpumdkit.sh<span class="w"> </span>-plt<span class="w"> </span>net_force<span class="w"> </span>train.xyz
 </code></pre></div>
 <p><strong>Reference:</strong> <a href="https://arxiv.org/abs/2510.19774">arXiv:2510.19774</a></p>
 <div align="center">
@@ -2622,8 +2701,8 @@ stress. If no valid stress rows are available, the stress entries are <code>N/A<
 <h3 id="plt_pdospy">plt_pdos.py</h3>
 <p>Calculates and plots normalized VAC, PDOS, and Heat Capacity (Cv).</p>
 <p><strong>Input Files:</strong> <code>model.xyz</code>, <code>run.in</code>, <code>dos.out</code>, <code>mvac.out</code></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-28-1" name="__codelineno-28-1" href="#__codelineno-28-1"></a>gpumdkit.sh<span class="w"> </span>-plt<span class="w"> </span>pdos
-<a id="__codelineno-28-2" name="__codelineno-28-2" href="#__codelineno-28-2"></a>gpumdkit.sh<span class="w"> </span>-plt<span class="w"> </span>pdos<span class="w"> </span>save
+<div class="highlight"><pre><span></span><code><a id="__codelineno-29-1" name="__codelineno-29-1" href="#__codelineno-29-1"></a>gpumdkit.sh<span class="w"> </span>-plt<span class="w"> </span>pdos
+<a id="__codelineno-29-2" name="__codelineno-29-2" href="#__codelineno-29-2"></a>gpumdkit.sh<span class="w"> </span>-plt<span class="w"> </span>pdos<span class="w"> </span>save
 </code></pre></div>
 <div align="center">
   <img src="../../Gallery/vac_pdos.png" alt="VAC and PDOS" width="70%" />
@@ -2642,12 +2721,12 @@ stress. If no valid stress rows are available, the stress entries are <code>N/A<
 <p><strong>Methods:</strong>
 - <code>pca</code> — Principal Component Analysis
 - <code>umap</code> — Uniform Manifold Approximation and Projection</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-29-1" name="__codelineno-29-1" href="#__codelineno-29-1"></a><span class="c1"># First generate descriptors</span>
-<a id="__codelineno-29-2" name="__codelineno-29-2" href="#__codelineno-29-2"></a>gpumdkit.sh<span class="w"> </span>-calc<span class="w"> </span>des<span class="w"> </span>train.xyz<span class="w"> </span>descriptors.npy<span class="w"> </span>nep.txt<span class="w"> </span>Li
-<a id="__codelineno-29-3" name="__codelineno-29-3" href="#__codelineno-29-3"></a>
-<a id="__codelineno-29-4" name="__codelineno-29-4" href="#__codelineno-29-4"></a><span class="c1"># Then visualize</span>
-<a id="__codelineno-29-5" name="__codelineno-29-5" href="#__codelineno-29-5"></a>gpumdkit.sh<span class="w"> </span>-plt<span class="w"> </span>des<span class="w"> </span>pca
-<a id="__codelineno-29-6" name="__codelineno-29-6" href="#__codelineno-29-6"></a>gpumdkit.sh<span class="w"> </span>-plt<span class="w"> </span>des<span class="w"> </span>umap
+<div class="highlight"><pre><span></span><code><a id="__codelineno-30-1" name="__codelineno-30-1" href="#__codelineno-30-1"></a><span class="c1"># First generate descriptors</span>
+<a id="__codelineno-30-2" name="__codelineno-30-2" href="#__codelineno-30-2"></a>gpumdkit.sh<span class="w"> </span>-calc<span class="w"> </span>des<span class="w"> </span>train.xyz<span class="w"> </span>descriptors.npy<span class="w"> </span>nep.txt<span class="w"> </span>Li
+<a id="__codelineno-30-3" name="__codelineno-30-3" href="#__codelineno-30-3"></a>
+<a id="__codelineno-30-4" name="__codelineno-30-4" href="#__codelineno-30-4"></a><span class="c1"># Then visualize</span>
+<a id="__codelineno-30-5" name="__codelineno-30-5" href="#__codelineno-30-5"></a>gpumdkit.sh<span class="w"> </span>-plt<span class="w"> </span>des<span class="w"> </span>pca
+<a id="__codelineno-30-6" name="__codelineno-30-6" href="#__codelineno-30-6"></a>gpumdkit.sh<span class="w"> </span>-plt<span class="w"> </span>des<span class="w"> </span>umap
 </code></pre></div>
 <div align="center">
   <img src="../../Gallery/des_umap.png" alt="UMAP descriptor visualization" width="52%" />
@@ -2657,8 +2736,8 @@ stress. If no valid stress rows are available, the stress entries are <code>N/A<
 <h3 id="plt_dimerpy">plt_dimer.py</h3>
 <p>Plots dimer interaction curves. Two atoms are placed in a cubic box (30 Å) and the potential energy and force are calculated as a function of dimer distance using a NEP model.</p>
 <p><strong>Input File:</strong> <code>nep.txt</code></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-30-1" name="__codelineno-30-1" href="#__codelineno-30-1"></a>gpumdkit.sh<span class="w"> </span>-plt<span class="w"> </span>dimer<span class="w"> </span>&lt;element1&gt;<span class="w"> </span>&lt;element2&gt;<span class="w"> </span>&lt;nep_model&gt;
-<a id="__codelineno-30-2" name="__codelineno-30-2" href="#__codelineno-30-2"></a>gpumdkit.sh<span class="w"> </span>-plt<span class="w"> </span>dimer<span class="w"> </span>Li<span class="w"> </span>Li<span class="w"> </span>nep.txt
+<div class="highlight"><pre><span></span><code><a id="__codelineno-31-1" name="__codelineno-31-1" href="#__codelineno-31-1"></a>gpumdkit.sh<span class="w"> </span>-plt<span class="w"> </span>dimer<span class="w"> </span>&lt;element1&gt;<span class="w"> </span>&lt;element2&gt;<span class="w"> </span>&lt;nep_model&gt;
+<a id="__codelineno-31-2" name="__codelineno-31-2" href="#__codelineno-31-2"></a>gpumdkit.sh<span class="w"> </span>-plt<span class="w"> </span>dimer<span class="w"> </span>Li<span class="w"> </span>Li<span class="w"> </span>nep.txt
 </code></pre></div>
 <div align="center">
   <img src="../../Gallery/dimer_nep.png" alt="Dimer NEP curve" width="45%" />
@@ -2670,8 +2749,8 @@ stress. If no valid stress rows are available, the stress entries are <code>N/A<
 <h3 id="plt_doaspy">plt_doas.py</h3>
 <p>Plots density of atomistic states (DOAS) proposed by <a href="https://doi.org/10.1002/anie.202215544">Wang et al.</a>.</p>
 <p><strong>Input File:</strong> <code>doas.out</code> (calculated by <code>gpumdkit.sh -calc doas</code>)</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-31-1" name="__codelineno-31-1" href="#__codelineno-31-1"></a>gpumdkit.sh<span class="w"> </span>-plt<span class="w"> </span>doas<span class="w"> </span>&lt;doas.out&gt;<span class="w"> </span>&lt;species&gt;
-<a id="__codelineno-31-2" name="__codelineno-31-2" href="#__codelineno-31-2"></a>gpumdkit.sh<span class="w"> </span>-plt<span class="w"> </span>doas<span class="w"> </span>doas.out<span class="w"> </span>Li
+<div class="highlight"><pre><span></span><code><a id="__codelineno-32-1" name="__codelineno-32-1" href="#__codelineno-32-1"></a>gpumdkit.sh<span class="w"> </span>-plt<span class="w"> </span>doas<span class="w"> </span>&lt;doas.out&gt;<span class="w"> </span>&lt;species&gt;
+<a id="__codelineno-32-2" name="__codelineno-32-2" href="#__codelineno-32-2"></a>gpumdkit.sh<span class="w"> </span>-plt<span class="w"> </span>doas<span class="w"> </span>doas.out<span class="w"> </span>Li
 </code></pre></div>
 <div align="center">
   <img src="../../Gallery/doas.png" alt="Density of atomistic states" width="52%" />
@@ -2681,16 +2760,16 @@ stress. If no valid stress rows are available, the stress entries are <code>N/A<
 <h2 id="plane-grid-plot-for-polar-materials">Plane-Grid Plot for Polar Materials</h2>
 <p>This workflow maps displacement or polarization data onto a grid and plots selected plane profiles. For detailed usage and real-world examples, see <strong><a href="polar_material_analysis.html">Polar Material Analysis</a></strong>.</p>
 <p><strong>Dependency:</strong></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-32-1" name="__codelineno-32-1" href="#__codelineno-32-1"></a>pip3<span class="w"> </span>install<span class="w"> </span>git+https://github.com/MoseyQAQ/ferrodispcalc.git
+<div class="highlight"><pre><span></span><code><a id="__codelineno-33-1" name="__codelineno-33-1" href="#__codelineno-33-1"></a>pip3<span class="w"> </span>install<span class="w"> </span>git+https://github.com/MoseyQAQ/ferrodispcalc.git
 </code></pre></div>
 <p><strong>Typical upstream steps:</strong></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-33-1" name="__codelineno-33-1" href="#__codelineno-33-1"></a>gpumdkit.sh<span class="w"> </span>-calc<span class="w"> </span>nlist<span class="w"> </span>-i<span class="w"> </span>model.xyz<span class="w"> </span>-c<span class="w"> </span><span class="m">4</span><span class="w"> </span>-n<span class="w"> </span><span class="m">12</span><span class="w"> </span>-C<span class="w"> </span>Pb<span class="w"> </span>Sr<span class="w"> </span>-E<span class="w"> </span>O
-<a id="__codelineno-33-2" name="__codelineno-33-2" href="#__codelineno-33-2"></a>gpumdkit.sh<span class="w"> </span>-calc<span class="w"> </span>disp<span class="w"> </span>-i<span class="w"> </span>movie.xyz<span class="w"> </span>-n<span class="w"> </span>nl-Pb_Sr-O.dat<span class="w"> </span>-o<span class="w"> </span>displacements.dat
-<a id="__codelineno-33-3" name="__codelineno-33-3" href="#__codelineno-33-3"></a>gpumdkit.sh<span class="w"> </span>-calc<span class="w"> </span>avg-struct<span class="w"> </span>-i<span class="w"> </span>movie.xyz<span class="w"> </span>-l<span class="w"> </span><span class="m">0</span>.2<span class="w"> </span>-o<span class="w"> </span>averaged_structure.xyz
+<div class="highlight"><pre><span></span><code><a id="__codelineno-34-1" name="__codelineno-34-1" href="#__codelineno-34-1"></a>gpumdkit.sh<span class="w"> </span>-calc<span class="w"> </span>nlist<span class="w"> </span>-i<span class="w"> </span>model.xyz<span class="w"> </span>-c<span class="w"> </span><span class="m">4</span><span class="w"> </span>-n<span class="w"> </span><span class="m">12</span><span class="w"> </span>-C<span class="w"> </span>Pb<span class="w"> </span>Sr<span class="w"> </span>-E<span class="w"> </span>O
+<a id="__codelineno-34-2" name="__codelineno-34-2" href="#__codelineno-34-2"></a>gpumdkit.sh<span class="w"> </span>-calc<span class="w"> </span>disp<span class="w"> </span>-i<span class="w"> </span>movie.xyz<span class="w"> </span>-n<span class="w"> </span>nl-Pb_Sr-O.dat<span class="w"> </span>-o<span class="w"> </span>displacements.dat
+<a id="__codelineno-34-3" name="__codelineno-34-3" href="#__codelineno-34-3"></a>gpumdkit.sh<span class="w"> </span>-calc<span class="w"> </span>avg-struct<span class="w"> </span>-i<span class="w"> </span>movie.xyz<span class="w"> </span>-l<span class="w"> </span><span class="m">0</span>.2<span class="w"> </span>-o<span class="w"> </span>averaged_structure.xyz
 </code></pre></div>
 <p><strong>Usage:</strong></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-34-1" name="__codelineno-34-1" href="#__codelineno-34-1"></a>gpumdkit.sh<span class="w"> </span>-plt<span class="w"> </span>plane-grid<span class="w"> </span>-i<span class="w"> </span>averaged_structure.xyz<span class="w"> </span>-d<span class="w"> </span>displacements.dat<span class="w"> </span>-e<span class="w"> </span>Pb<span class="w"> </span>Sr
-<a id="__codelineno-34-2" name="__codelineno-34-2" href="#__codelineno-34-2"></a>gpumdkit.sh<span class="w"> </span>-plt<span class="w"> </span>plane-grid<span class="w"> </span>-i<span class="w"> </span>averaged_structure.xyz<span class="w"> </span>-d<span class="w"> </span>displacements.dat<span class="w"> </span>-e<span class="w"> </span>Pb<span class="w"> </span>Sr<span class="w"> </span>--select-xy<span class="w"> </span><span class="m">0</span><span class="w"> </span><span class="m">1</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-35-1" name="__codelineno-35-1" href="#__codelineno-35-1"></a>gpumdkit.sh<span class="w"> </span>-plt<span class="w"> </span>plane-grid<span class="w"> </span>-i<span class="w"> </span>averaged_structure.xyz<span class="w"> </span>-d<span class="w"> </span>displacements.dat<span class="w"> </span>-e<span class="w"> </span>Pb<span class="w"> </span>Sr
+<a id="__codelineno-35-2" name="__codelineno-35-2" href="#__codelineno-35-2"></a>gpumdkit.sh<span class="w"> </span>-plt<span class="w"> </span>plane-grid<span class="w"> </span>-i<span class="w"> </span>averaged_structure.xyz<span class="w"> </span>-d<span class="w"> </span>displacements.dat<span class="w"> </span>-e<span class="w"> </span>Pb<span class="w"> </span>Sr<span class="w"> </span>--select-xy<span class="w"> </span><span class="m">0</span><span class="w"> </span><span class="m">1</span>
 </code></pre></div>
 <hr />
 <h2 id="quick-reference-table">Quick Reference Table</h2>

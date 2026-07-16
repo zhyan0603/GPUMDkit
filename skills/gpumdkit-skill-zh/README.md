@@ -1,6 +1,6 @@
-# GPUMDkit 智能体技能
+# GPUMDkit Agent Skill
 
-GPUMDkit 提供两个便携式的 Agent Skills 兼容入口点（英文和中文）：
+GPUMDkit 提供英文和中文两个可移植、兼容 Agent Skills 规范的入口：
 
 ```text
 skills/gpumdkit-skill/     (English)
@@ -14,9 +14,9 @@ skills/gpumdkit-skill-zh/  (中文)
   agents/openai.yaml
 ```
 
-单一的 `gpumdkit-skill`（及其对应的中文版本 `gpumdkit-skill-zh`）处理 GPUMDkit 命令、GPUMD 模拟、NEP 训练、验证、后处理和 GPUMDkit 开发。其 `SKILL.md` 将智能体路由到 `references/` 下的专注文件，因此详细的模块内容仅在需要时加载。
+`gpumdkit-skill` 是英文技术基准，`gpumdkit-skill-zh` 是逐文件对应并经过中文润色的版本。两者都覆盖 GPUMDkit 命令、GPUMD 模拟、NEP 训练与验证、结果后处理和 GPUMDkit 开发。`SKILL.md` 根据任务把 Agent 路由到 `references/` 中的专题文件，避免一次加载全部细节。
 
-GPUMD 和 NEP 参考文档是自包含的摘要，按输入、设置/动作、系综、计算、输出、训练数据和模型参数组织。它们不指向或需要本地 GPUMD 文档源码树。当可执行文件与捆绑快照不同时，智能体记录版本和解析器证据，并询问版本特定信息。
+GPUMD 和 NEP 参考内容自成体系，分别按输入、初始化与操作、系综、计算、输出、训练数据和模型参数组织，不依赖本地 GPUMD 文档源码。当本地可执行文件与技能内置的版本快照不一致时，Agent 应记录版本和解析器证据，并向用户确认应采用的版本规则。
 
 ## 发现技能
 
@@ -63,11 +63,11 @@ ln -s "${GPUMDkit_path}/skills/gpumdkit-skill-zh" "${target_dir}/gpumdkit-skill-
 | OpenCode | `~/.config/opencode/skills` | `.opencode/skills` |
 | Claude 兼容 | `~/.claude/skills` | `.claude/skills` |
 
-使用相同的 `ln -s` 命令和适当的目标目录。支持自定义技能路径的客户端可以直接指向 `${GPUMDkit_path}/skills/gpumdkit-skill`。
+使用相同的 `ln -s` 命令和适当的目标目录。支持自定义技能路径的客户端可以直接指向任一语言目录。
 
 ## 便携性说明
 
-- `SKILL.md` 使用标准 YAML frontmatter，包含目录匹配的 `name` 和触发器聚焦的 `description`。
+- `SKILL.md` 使用标准 YAML frontmatter；英文名称为 `gpumdkit-skill`，中文名称为 `gpumdkit-skill-zh`，避免安装时发生名称冲突。
 - 核心指令保持简洁；模块详情使用一级 `references/` 进行渐进式披露。
 - 该技能不依赖实验性的 `allowed-tools` 元数据或产品特定的激活函数。
 - `agents/openai.yaml` 是可选的 UI 元数据。不识别它的客户端可以忽略它。

@@ -103,9 +103,9 @@ gpumdkit.sh -filter_range dump.xyz Li Li 1.9 2.0
 # 输出：filtered_<elem1>_<elem2>_<min>_<max>.xyz
 ```
 
-#### 按盒子尺寸
+#### 按模拟盒尺寸
 ```bash
-# 过滤盒子边长 > 20 埃的结构
+# 过滤模拟盒边长 > 20 埃的结构
 gpumdkit.sh -filter_box dump.xyz 20
 
 # 输出：filtered_by_box.xyz
@@ -173,7 +173,7 @@ gpumdkit.sh  # 选择：5) Analyzer -> 502
 # 1. 按距离过滤
 gpumdkit.sh -filter_dist_pbc dump.xyz 1.5
 
-# 2. 按盒子尺寸过滤
+# 2. 按模拟盒尺寸过滤
 gpumdkit.sh -filter_box filtered.xyz 20
 
 # 3. 按力值过滤
@@ -213,7 +213,7 @@ gpumdkit.sh -time nep
 | `-filter_dist` | 按最小距离过滤 | `gpumdkit.sh -filter_dist <file> <min_dist>` |
 | `-filter_dist_pbc` | 按最小距离过滤（PBC） | `gpumdkit.sh -filter_dist_pbc <file> <min_dist>` |
 | `-filter_range` | 按距离范围过滤 | `gpumdkit.sh -filter_range <file> <e1> <e2> <min> <max>` |
-| `-filter_box` | 按盒子尺寸过滤 | `gpumdkit.sh -filter_box <file> <limit>` |
+| `-filter_box` | 按模拟盒尺寸过滤 | `gpumdkit.sh -filter_box <file> <limit>` |
 | `-filter_value` | 按性质过滤 | `gpumdkit.sh -filter_value <file> <prop> <thresh>` |
 | `-time` | 时间监控 | `gpumdkit.sh -time <gpumd\|nep>` |
 

@@ -39,6 +39,21 @@ Run `gpumdkit.sh` and choose `2) Sample Structures`. The current submenu is:
 
 ## Scripts
 
+### frame_range.py
+
+Extracts a fractional frame range from an extxyz trajectory through the direct
+CLI entry:
+
+```bash
+gpumdkit.sh -frame_range dump.xyz 0.2 0.5
+```
+
+`start_fraction` and `end_fraction` are fractions from 0.0 to 1.0. The command
+writes `<input>_<start>_<end>.xyz`; choose the range from your equilibration and
+production plan rather than treating the example fractions as universal.
+
+---
+
 ### sample_structures.py
 
 This script samples frames from an extxyz trajectory using either uniform or random sampling.
@@ -97,28 +112,35 @@ dump.xyz train.xyz nep.txt 8
 
 
 
-### neptrain_select_structs.py
+### parallel_neptrain_select_structs.py
 
-This script selects diverse structures from candidate structures using NepTrain descriptors and farthest-point sampling.
+Function 203 calls `parallel_neptrain_select_structs.py` to select diverse
+structures using NepTrain descriptors and farthest-point sampling. Descriptor
+calculation can use multiple CPU workers while preserving input frame order.
 
 #### Usage
 
 ```sh
-python neptrain_select_structs.py <sampledata_file> <traindata_file> <nep_model_file>
+python parallel_neptrain_select_structs.py <sampledata_file> <traindata_file> <nep_model_file> [threads]
 ```
+
+`threads` defaults to `1`. Set it to a positive integer such as `4` to enable
+parallel descriptor calculation. Each worker loads an independent NEP model
+and uses one native OpenMP thread to avoid nested parallelism.
 
 #### Example
 
 ```sh
-python neptrain_select_structs.py dump.xyz train.xyz nep.txt
+python parallel_neptrain_select_structs.py dump.xyz train.xyz nep.txt 4
 ```
 
 #### Interactive Mode Example
 
 ```
 203) FPS sampling by NepTrain [preferred]
-Input <sample.xyz> <train.xyz> <nep_model>
-Example: dump.xyz train.xyz nep.txt
+Input <sample.xyz> <train.xyz> <nep_model> [threads]
+[threads]: descriptor threads, default value is 1
+Example: dump.xyz train.xyz nep.txt 4
 ```
 
 This function requires the `NepTrain` package. If you use this function, we recommend citing the NepTrain paper.

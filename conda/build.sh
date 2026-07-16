@@ -19,7 +19,7 @@ chmod 755 "${runtime}/gpumdkit.sh"
 find "${runtime}/src" "${runtime}/Scripts" -type f -name "*.sh" -exec chmod 755 {} +
 find "${runtime}/Scripts" -type f -name "*.py" -exec chmod 644 {} +
 
-install -m 755 conda.recipe/gpumdkit-conda-wrapper.sh "${PREFIX}/bin/gpumdkit"
-install -m 755 conda.recipe/gpumdkit-conda-wrapper.sh "${PREFIX}/bin/gpumdkit.sh"
+install -m 755 conda/gpumdkit-conda-wrapper.sh "${PREFIX}/bin/gpumdkit"
+install -m 755 conda/gpumdkit-conda-wrapper.sh "${PREFIX}/bin/gpumdkit.sh"
 install -m 644 Scripts/utils/completion.sh "${PREFIX}/share/bash-completion/completions/gpumdkit"
 

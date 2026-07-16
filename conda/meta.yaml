@@ -10,13 +10,15 @@ source:
 
 build:
   number: 0
-  skip: true  # [not linux]
-  script: bash conda.recipe/build.sh
+  skip: true  # [win]
+  script: bash conda/build.sh
 
 requirements:
   build:
     - bash
     - coreutils
+  host:
+    - python >=3.10
   run:
     - bash
     - coreutils
@@ -35,12 +37,15 @@ requirements:
     - scikit-learn
     - seaborn
     - tqdm
+    - neptrain
+    - dpdata
 
 test:
   commands:
     - gpumdkit -h
     - gpumdkit.sh -h
     - gpumdkit -update
+    - gpumdkit -doctor
 
 about:
   home: https://github.com/zhyan0603/GPUMDkit

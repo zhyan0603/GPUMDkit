@@ -66,24 +66,19 @@ echo " ---------------------------------------------------"
 function f203_neptrain_sample_structures(){
 echo " >-------------------------------------------------<"
 echo " | Calling the script in Scripts/sample_structures |"
-echo " | Script: neptrain_select_structs.py              |"
+echo " | Script: parallel_neptrain_select_structs.py     |"
 echo " | Developer: Benrui TANG (tang070205@proton.me)   |"
 echo " >-------------------------------------------------<"
-echo " Input <sample.xyz> <train.xyz> <nep_model>"
-echo " Example: dump.xyz train.xyz nep.txt "
+echo " Input <sample.xyz> <train.xyz> <nep_model> [threads]"
+echo " [threads]: descriptor threads, default value is 1"
+echo " Example: dump.xyz train.xyz nep.txt 4"
 echo " ------------>>"
 read_menu_choice sample_choice || return 1
 echo " ---------------------------------------------------"
-python ${GPUMDkit_path}/Scripts/sample_structures/neptrain_select_structs.py ${sample_choice}
+python ${GPUMDkit_path}/Scripts/sample_structures/parallel_neptrain_select_structs.py ${sample_choice}
 rm -f dpdispatcher.log
-echo " Code path: ${GPUMDkit_path}/Scripts/sample_structures/neptrain_select_structs.py"
+echo " Code path: ${GPUMDkit_path}/Scripts/sample_structures/parallel_neptrain_select_structs.py"
 echo " ---------------------------------------------------"
-echo " "
-echo " +--------------------------------------------------------+"
-echo " | For this function, please cite the NepTrain paper:     |"
-echo " | Chen et al. Comput. Phys. Commun., 2025, 317, 109859.  |"
-echo " | URL: https://doi.org/10.1016/j.cpc.2025.109859         |"
-echo " +--------------------------------------------------------+"
 }
 
 # Perturb structure

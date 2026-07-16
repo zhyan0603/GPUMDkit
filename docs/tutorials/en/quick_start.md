@@ -77,6 +77,53 @@ gpumdkit.sh -h
 
 This prints a help table listing all available options.
 
+For a more useful first check, run:
+
+```bash
+gpumdkit.sh -doctor
+```
+
+The terminal groups the result into an **Environment** section and **Common** and
+**Optional packages** sections. `MISS` for an optional package is not an
+installation failure: install it only when you need the feature named beside it.
+For example, `dpdata` is needed for DeepMD conversion, while `calorine` is used
+by NEP-assisted calculations. This makes it easier to diagnose a missing module
+before starting a workflow.
+
+## Read a command before running it
+
+CLI examples use this notation:
+
+| Notation | Meaning | Example |
+|---|---|---|
+| `<required>` | Replace with a value you must provide. Do not type the angle brackets. | `<output.xyz>` → `model.xyz` |
+| `[optional]` | May be omitted; the script then uses its documented behavior. | `[max_corr_steps]` |
+| `...` | One or more values may follow. | `<element...>` |
+
+Before using an unfamiliar Python-backed command, ask the command itself for
+its argument description. For example:
+
+```text
+$ gpumdkit.sh -calc msd -h
+ Usage: gpumdkit.sh -calc msd <extxyz_file> <element_symbol> <dt_fs> [max_corr_steps]
+
+ Arguments:
+   extxyz_file       Path to the input extxyz trajectory file
+   element_symbol    Chemical symbol (e.g., Li, O, Na)
+   dt_fs             Time step between consecutive frames (fs)
+   max_corr_steps    Max correlation lag steps (optional)
+```
+
+Here `dt_fs` is the interval **between stored trajectory frames**, in fs; it is
+not automatically inferred from an MD input file. Choose it from your own
+trajectory-writing settings. For the plot dispatcher, use `gpumdkit.sh -plt -h`
+to list plot types; plot-specific argument positions are documented on the
+[Plot Scripts](plot_scripts.md) page.
+
+Interactive menus use `------------>>` to mark where input is expected. After
+many CLI commands, the terminal also prints `Code path:`; that path identifies
+the implementation responsible for the result or error.
+
 ## Interactive mode
 
 ```bash
@@ -92,7 +139,7 @@ This opens the main menu:
          | |_| |  __/| |_| | |  | | |_| |   <| | |_
           \____|_|    \___/|_|  |_|____/|_|\_\_|\__|
 
-          GPUMDkit Version 1.5.6 (dev) (2026-06-17)
+          GPUMDkit Version 1.5.6 (dev) (2026-07-10)
     Core Developer: Zihan YAN (yanzihan@westlake.edu.cn)
  Main Contributors: Denan LI, Xin WU, Zhoulin LIU & Chen HUA
 

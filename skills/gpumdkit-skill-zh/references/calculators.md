@@ -15,7 +15,7 @@
 | NEP 性质 | `-calc nep` | 使用 NEP 计算能量/力/应力 |
 | 描述符 | `-calc des` | 计算 NEP 描述符用于分析 |
 | DOAS | `-calc doas` | 原子态密度 |
-| NEB | `-calc neb` | 微动弹性带计算 |
+| NEB | `-calc neb` | 弹性带路径计算 |
 | 邻居列表 | `-calc nlist` | 构建邻居列表用于分析 |
 | 位移 | `-calc disp` | 计算原子位移 |
 | 平均结构 | `-calc avg-struct` | 轨迹的时间平均结构 |

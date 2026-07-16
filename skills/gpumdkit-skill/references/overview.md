@@ -53,7 +53,7 @@ For current Python-backed commands, detailed usage, type conversion, file checks
 | Analyzers | Structure validation, filtering, composition analysis | `references/analyzers.md` |
 | Visualization | Plot training results, transport properties, structural data | `references/visualization.md` |
 | Workflows | Batch processing for DFT and MD simulations | `references/workflows.md` |
-| Sampling | Structure selection using uniform, random, or FPS methods | `references/sampling.md` |
+| Sampling | Structure selection and train/test splitting using uniform, random, or FPS methods | `references/sampling.md` |
 | GPUMD/NEP | Plan simulation, training, validation, and post-processing | `references/gpumd.md`, `references/nep.md` |
 
 ## Utility Commands
@@ -63,7 +63,7 @@ For current Python-backed commands, detailed usage, type conversion, file checks
 | `gpumdkit.sh -doctor` | Check the configured path, Python/Bash versions, and common or feature-specific Python packages; missing optional packages do not affect unrelated functions |
 | `gpumdkit.sh -skill` | Print the canonical unified Skill path and cross-client installation hints |
 | `gpumdkit.sh -time <gpumd|nep>` | Legacy time-consumption analyzer; use only the supported `gpumd` or `nep` selector |
-| `gpumdkit.sh -nep_modifier` | Launch the interactive NEP model modifier; inspect the source model and obtain overwrite authorization first |
+| `gpumdkit.sh -nep_modifier [nep.txt] [nep.restart|-] [nep.in|-]` | Inspect and modify a NEP4 model through calorine; source files are preserved, while expansion, reduction, and adding species require matching restart data and explicit scientific choices |
 | `gpumdkit.sh -clean` | Remove generated/extra files from the current directory; preview the cleanup implementation and get explicit deletion approval before running |
 | `gpumdkit.sh -update` | Run GPUMDkit's networked self-update; inspect worktree changes and get explicit update authorization first |
 
@@ -110,8 +110,8 @@ gpumdkit.sh -plt msd
 gpumdkit.sh -plt sdc
 
 # Arrhenius analysis (multiple temperatures)
-gpumdkit.sh -plt arrhenius_sigma
-gpumdkit.sh -plt arrhenius_d
+gpumdkit.sh -plt sigma
+gpumdkit.sh -plt D
 ```
 
 ### Workflow 3: Structure Analysis Pipeline

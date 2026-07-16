@@ -98,7 +98,7 @@ Unless you have a well-trained NEP model and you want to use it as a DFT surroga
 #### Input Files
 - A clean structure file in `extxyz` format with energy, force, and virial/stress. 
 
-  (use `gpumdkit.sh -clean_xyz train.xyz` to remove the original values)
+  (use `gpumdkit.sh -clean_xyz train.xyz clean_train.xyz` to remove the original values)
 
 - NEP model file (nep.txt)
 
