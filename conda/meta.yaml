@@ -1,5 +1,5 @@
 {% set name = "gpumdkit" %}
-{% set version = "1.5.6.dev0" %}
+{% set version = environ.get("VERSION", "0.0.0.dev0") %}
 
 package:
   name: {{ name }}
@@ -11,7 +11,6 @@ source:
 build:
   number: 0
   skip: true  # [win]
-  script: bash conda/build.sh
 
 requirements:
   build:
@@ -37,7 +36,6 @@ requirements:
     - scikit-learn
     - seaborn
     - tqdm
-    - neptrain
     - dpdata
 
 test:
