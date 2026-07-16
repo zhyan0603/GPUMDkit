@@ -37,6 +37,7 @@ requirements:
     - seaborn
     - tqdm
     - dpdata
+    - umap-learn
 
 test:
   commands:
