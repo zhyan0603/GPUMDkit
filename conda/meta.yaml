@@ -16,6 +16,7 @@ requirements:
   build:
     - bash
     - coreutils
+    - pip
   host:
     - python >=3.10
   run:
