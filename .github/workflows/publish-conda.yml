@@ -37,8 +37,7 @@ jobs:
         run: |
           eval "$(conda shell.bash hook)"
           conda install conda-build anaconda-client -y
-          mkdir -p dist
-          conda build conda/ -c conda-forge --output-folder ./dist
+          conda build conda/ -c conda-forge --output-folder ${{ github.workspace }}/dist
 
       - name: Upload to Anaconda.org
         if: startsWith(github.ref, 'refs/tags/v')
@@ -46,4 +45,6 @@ jobs:
           ANACONDA_API_TOKEN: ${{ secrets.ANACONDA_TOKEN }}
         run: |
           eval "$(conda shell.bash hook)"
-          anaconda upload --user ${{ vars.ANACONDA_USER }} ./dist/*/gpumdkit-*.conda
+          pkg=$(find ${{ github.workspace }}/dist -name "gpumdkit-*.conda" | head -1)
+          echo "Uploading: $pkg"
+          anaconda upload --user ${{ vars.ANACONDA_USER }} "$pkg"
