@@ -1,13 +1,9 @@
 #!/usr/bin/env bash
-cat <<EOF
-
-  ╔══════════════════════════════════════════════════════════╗
-  ║  GPUMDkit installed!                                     ║
-  ║                                                          ║
-  ║  For NEP training features, install optional packages:    ║
-  ║    pip install neptrain calorine                          ║
-  ║                                                          ║
-  ║  For more help: gpumdkit -h                              ║
-  ╚══════════════════════════════════════════════════════════╝
-
-EOF
+echo ""
+echo "  GPUMDkit installed!"
+echo ""
+echo "  neptrain and calorine are not available via conda."
+echo "  Install them manually if needed:"
+echo ""
+echo "      pip install neptrain calorine"
+echo ""
