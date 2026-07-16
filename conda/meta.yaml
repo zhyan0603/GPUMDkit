@@ -18,7 +18,6 @@ requirements:
     - coreutils
   host:
     - python >=3.10,<=3.12
-    - pip
   run:
     - bash
     - coreutils

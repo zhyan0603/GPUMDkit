@@ -23,5 +23,3 @@ install -m 755 conda/gpumdkit-conda-wrapper.sh "${PREFIX}/bin/gpumdkit"
 install -m 755 conda/gpumdkit-conda-wrapper.sh "${PREFIX}/bin/gpumdkit.sh"
 install -m 644 Scripts/utils/completion.sh "${PREFIX}/share/bash-completion/completions/gpumdkit"
 
-"${PREFIX}/bin/python" -m pip install --no-cache-dir neptrain calorine
-
