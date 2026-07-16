@@ -1,0 +1,62 @@
+{% set name = "gpumdkit" %}
+{% set version = environ.get("VERSION", "0.0.0.dev0") %}
+
+package:
+  name: {{ name }}
+  version: {{ version }}
+
+source:
+  path: ..
+
+build:
+  number: 0
+  skip: true  # [win]
+
+requirements:
+  build:
+    - bash
+    - coreutils
+  host:
+    - python >=3.10
+  run:
+    - bash
+    - coreutils
+    - findutils
+    - gawk
+    - grep
+    - sed
+    - python >=3.10
+    - numpy
+    - scipy
+    - matplotlib-base
+    - ase
+    - pandas
+    - pymatgen
+    - pymatgen-analysis-diffusion
+    - scikit-learn
+    - seaborn
+    - tqdm
+    - dpdata
+
+test:
+  commands:
+    - gpumdkit -h
+    - gpumdkit.sh -h
+    - gpumdkit -update
+    - gpumdkit -doctor
+
+about:
+  home: https://github.com/zhyan0603/GPUMDkit
+  summary: A Bash and Python toolkit for GPUMD and NEP workflows.
+  description: |
+    GPUMDkit provides command-line tools for GPUMD and NEP workflows, including
+    format conversion, structure sampling, workflows, property calculation,
+    plotting, and analysis utilities.
+  license: GPL-3.0-only
+  license_file: LICENCE
+  doc_url: https://zhyan0603.github.io/GPUMDkit/
+  dev_url: https://github.com/zhyan0603/GPUMDkit
+
+extra:
+  recipe-maintainers:
+    - zhyan0603

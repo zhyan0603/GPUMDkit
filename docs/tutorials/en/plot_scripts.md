@@ -11,7 +11,7 @@
 gpumdkit.sh -plt              # Show all plotting options
 gpumdkit.sh -plt <type>       # Generate a plot
 gpumdkit.sh -plt <type> save  # Save plot as PNG
-gpumdkit.sh -plt <type> -h    # Show help for a specific plot type
+gpumdkit.sh -plt -h           # List available plot types
 ```
 
 Running `gpumdkit.sh -plt` prints the plotting command menu:
@@ -20,7 +20,7 @@ Running `gpumdkit.sh -plt` prints the plotting command menu:
 +-----------------------------------------------------------------------------------------------+
 |                     GPUMDkit <version> PLOT & VISUALIZATION TOOLS              |
 +-----------------------------------------------------------------------------------------------+
-|  Usage: gpumdkit.sh -plt <type>                        Help: gpumdkit.sh -plt <type> -h       |
+|  Usage: gpumdkit.sh -plt <type>                        Plot list: gpumdkit.sh -plt -h         |
 +-----------------------------------------------------------------------------------------------+
 |                                    NEP Training & Evaluation                                  |
 +-----------------------------------------------------------------------------------------------+
@@ -60,7 +60,45 @@ Running `gpumdkit.sh -plt` prints the plotting command menu:
 
 ---
 
+## A reliable plotting workflow
+
+Use the following sequence instead of trying plot names at random:
+
+1. List the available types with `gpumdkit.sh -plt -h`.
+2. Identify the file already present in your working directory.
+3. Find the matching entry below, then run its exact command signature.
+4. Add `save` only where that entry shows it; the argument position is not identical for every plot.
+
+| If you have... | Start with... | What to inspect first |
+|---|---|---|
+| `loss.out`, `energy_train.out`, and `force_train.out` | `gpumdkit.sh -plt train` | loss trend and energy/force parity |
+| `energy_test.out` and `force_test.out` | `gpumdkit.sh -plt prediction` | generalization on the test set |
+| `thermo.out` | `gpumdkit.sh -plt thermo` | equilibration and thermodynamic evolution |
+| `msd.out` | `gpumdkit.sh -plt msd` or `gpumdkit.sh -plt sdc` | diffusion regime before interpreting a fit |
+| `rdf.out` | `gpumdkit.sh -plt rdf` | selected pair column and peak positions |
+
+For example, a saved training plot is requested as:
+
+```bash
+gpumdkit.sh -plt train save
+```
+
+The Gallery image below is an example of the figure layout, not a universal
+quality threshold. Whether a loss curve, parity scatter, or transport fit is
+acceptable depends on the model, data, and simulation protocol; do not infer a
+scientific conclusion from the image alone.
+
+> **Why not use `gpumdkit.sh -plt train -h`?** Plot scripts do not share a
+> uniform per-plot `-h` interface. Use `gpumdkit.sh -plt -h` for the list, then
+> use the exact signature and input-file notes in the matching section below.
+
+---
+
 ## NEP Training and Prediction
+
+The `train`, `prediction`, `train_density`, and `parity_density` plots also
+print a terminal table containing R^2, MAE, and RMSE for energy, force, and
+stress. If no valid stress rows are available, the stress entries are `N/A`.
 
 ### plt_train.py
 

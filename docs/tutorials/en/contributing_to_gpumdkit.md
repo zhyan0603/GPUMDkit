@@ -153,7 +153,7 @@ The structure of `GPUMDkit` consists of:
   - `f5_analyzers.sh`
   - `f6_plots.sh`
   - `f7_utilities.sh`
-- **`skills/`**: AI agent skill definitions (SKILL.md files for opencode/Claude Code integration)
+- **`skills/`**: Portable Agent Skills definition (`gpumdkit-skill/SKILL.md`) and on-demand references
 - **`docs/`**: Documentation files
   - `tutorials/en/` and `tutorials/zh/`: Bilingual tutorial pages
   - `mkdocs.yml`: MkDocs configuration for building tutorial HTML
@@ -190,7 +190,7 @@ To add a new feature accessible through the interactive menu:
    echo " Input <required_param1> <required_param2>"
    echo " Example: input.xyz output.lmp"
    echo " ------------>>"
-   read -r -a converter_args
+   read_menu_array converter_args || return 1
    echo " ---------------------------------------------------"
    python ${GPUMDkit_path}/Scripts/format_conversion/new_converter.py "${converter_args[@]}"
    echo " Code path: ${GPUMDkit_path}/Scripts/format_conversion/new_converter.py"
@@ -235,18 +235,28 @@ To add a new command-line flag or subcommand:
    touch Scripts/analyzer/analyze_bonds.py
    ```
 
-2. **Implement your functionality** with clear parameter requirements:
+2. **Implement your functionality** with clear parameter requirements. Python scripts
+   should own detailed argument parsing, help text, type conversion, file checks, and
+   user-facing error messages:
    ```python
    # Example: Scripts/analyzer/analyze_bonds.py
    import sys
    
-   if len(sys.argv) != 3:
-       print("Usage: gpumdkit.sh -analyze_bonds <input.xyz> <cutoff_distance>")
-       print("Example: gpumdkit.sh -analyze_bonds structure.xyz 3.0")
-       sys.exit(1)
+   args = sys.argv[1:]
+   if len(args) < 2 or args[0] in ("-h", "--help"):
+       print(" Usage: gpumdkit.sh -analyze_bonds <input.xyz> <cutoff_distance>")
+       print("    or: python3 analyze_bonds.py <input.xyz> <cutoff_distance>")
+       print("")
+       print(" Arguments:")
+       print("   input.xyz        Input extxyz file")
+       print("   cutoff_distance  Bond cutoff distance")
+       print("")
+       print(" Example: gpumdkit.sh -analyze_bonds structure.xyz 3.0")
+       print("")
+       sys.exit(0 if args and args[0] in ("-h", "--help") else 1)
    
-   input_file = sys.argv[1]
-   cutoff = float(sys.argv[2])
+   input_file = args[0]
+   cutoff = float(args[1])
    
    # Your implementation here
    ```
@@ -255,7 +265,9 @@ To add a new command-line flag or subcommand:
    > You may use a `main()` function with `if __name__ == "__main__":` guard if you prefer,
    > but it is not required. Most existing scripts execute at module level.
 
-3. **Add the command-line flag handler** in `gpumdkit.sh`:
+3. **Add the command-line flag handler** in `gpumdkit.sh`. Keep this layer as a
+   lightweight router. Detailed parameter validation should stay in the Python script,
+   not in the main shell entry point.
    ```bash
    # Find the command-line parsing section (the large "case $1 in" block)
    # Add your new flag in the appropriate location
@@ -263,13 +275,7 @@ To add a new command-line flag or subcommand:
    case $1 in
        # ... existing cases ...
        -analyze_bonds)
-           if [ ! -z "$2" ] && [ "$2" != "-h" ] && [ ! -z "$3" ]; then
-               python ${analyzer_path}/analyze_bonds.py $2 $3
-           else
-               echo " Usage: gpumdkit.sh -analyze_bonds <input.xyz> <cutoff_distance>"
-               echo " Example: gpumdkit.sh -analyze_bonds structure.xyz 3.0"
-               echo " Code path: ${analyzer_path}/analyze_bonds.py"
-           fi ;;
+           run_python_script "Your Name (your@email.com)" "${analyzer_path}/analyze_bonds.py" "${@:2}" ;;
        # ... rest of cases ...
    esac
    ```
@@ -321,7 +327,7 @@ esac
 
 - **Shell Scripts**:
   - Use `${variable}` for variable expansion
-  - Use `[ ! -z "$var" ]` for non-empty checks (project convention)
+  - Use `[ ! -z "$var" ]` for shell control flow and broad dispatch checks (project convention)
   - Interactive functions should follow the banner format:
     ```bash
     echo " >-------------------------------------------------<"
@@ -330,7 +336,7 @@ esac
     echo " | Developer: <Name> (<email>)                     |"
     echo " >-------------------------------------------------<"
     ```
-  - Use `read -r -a varname` for multi-word input, then pass with `"${varname[@]}"`
+  - Use `read_menu_choice varname || return 1` or `read_menu_array varname || return 1` for interactive input, then pass arrays with `"${varname[@]}"`
   - Shell scripts in `src/` should start with a file header block:
     ```bash
     # ============================================================
@@ -343,8 +349,9 @@ esac
 - **Python Scripts**:
   - Write clear, maintainable code
   - Use meaningful variable names
-  - Use `sys.argv` for argument parsing (consistent with most existing scripts)
-  - Provide clear usage messages with `print("Usage: ...")` and `print("Example: ...")`
+  - Use `args = sys.argv[1:]` for simple positional argument parsing, or `argparse` for complex option sets
+  - Provide clear usage messages with leading-space prints such as `print(" Usage: ...")` and `print(" Example: ...")`
+  - Put help and missing-argument checks before heavy optional imports so `-h` works without optional packages installed
   - If your script uses heavy/special packages (`NepTrain`, `calorine`, `dpdata`), add a
     `print_dependency_notice()` function to inform users about citation recommendations
 

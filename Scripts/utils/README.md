@@ -11,6 +11,8 @@
 | `update_gpumdkit.sh` | `gpumdkit.sh -update` or `gpumdkit.sh -U` | Pull the latest GPUMDkit code from the current Git branch |
 | `completion.sh` | sourced by the installer | Bash completion for `gpumdkit.sh` commands |
 | `renumber_atoms.py` | `gpumdkit.sh -re_atoms <input> <output>` | Renumber atom IDs in LAMMPS dump files |
+| `doctor.py` | `gpumdkit.sh -doctor` | Report the configured path, runtime versions, and available Python packages |
+| `skill_info.sh` | `gpumdkit.sh -skill` | Show the English and Chinese Agent Skill directories and installation hints |
 | `nep_modifier/` | `gpumdkit.sh -nep_modifier` | Interactive NEP model editing utilities |
 
 ---
@@ -51,6 +53,33 @@ The updater checks the current Git branch against the remote GPUMDkit repository
 
 ---
 
+## Check the environment
+
+```bash
+gpumdkit.sh -doctor
+```
+
+This read-only check reports the configured `GPUMDkit_path`, Python and Bash
+versions, and common or feature-specific Python packages. A package marked
+`[MISS]` is only needed for the feature named beside it; it does not prevent
+unrelated commands from running. Use this before installing an optional
+dependency or reporting an environment issue.
+
+---
+
+## Discover the Agent Skill
+
+```bash
+gpumdkit.sh -skill
+```
+
+This command only prints the available English and Chinese skill locations and
+cross-client installation examples. It does not create links or change an agent
+configuration. See [`skills/README.md`](../../skills/README.md) before choosing
+whether a skill should be installed globally or for one project.
+
+---
+
 ## Renumber LAMMPS Atom IDs
 
 ```bash
@@ -65,9 +94,22 @@ This command rewrites atom IDs in each `ITEM: ATOMS` section of a LAMMPS dump fi
 
 ```bash
 gpumdkit.sh -nep_modifier
+gpumdkit.sh -nep_modifier path/nep.txt path/nep.restart path/nep.in
 ```
 
-The NEP modifier is an interactive utility for editing NEP model files. See:
+The NEP modifier provides a guided interface to calorine's `augment()`,
+`prune()`, `add_species()`, `remove_species()`, and `keep_species()` methods. It
+can change neuron or descriptor capacity, add a charge head, extend the chemical
+space, or extract a species subset. It also inspects the current architecture,
+records accepted operations and seeds, updates a matching `nep.in`, and exports
+a collision-free model package. Expansion, reduction, and adding species require
+a matching restart file; modified models must be retrained and validated before
+production use.
+
+This implementation depends directly on calorine. Research use should cite
+E. Lindgren et al., *Journal of Open Source Software* **9**(95), 6264 (2024),
+<https://doi.org/10.21105/joss.06264>. Detailed usage, interaction examples, and
+the complete citation are provided in:
 
 - `Scripts/utils/nep_modifier/README.md`
 - `Scripts/utils/nep_modifier/README_zh-CN.md`

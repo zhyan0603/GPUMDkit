@@ -662,8 +662,8 @@ gpumdkit.sh -plt net_force train.xyz
 | `emd` | EMD outputs | EMD thermal conductivity |
 | `nemd` | NEMD outputs | NEMD thermal transport |
 | `hnemd` | HNEMD outputs | HNEMD thermal transport |
-| `arrhenius_d` | Multiple MSD | Arrhenius diffusivity |
-| `arrhenius_sigma` | Multiple MSD | Arrhenius conductivity |
+| `D` | Multiple MSD | Arrhenius diffusivity |
+| `sigma` | Multiple MSD | Arrhenius conductivity |
 
 ## Contributing
 
@@ -683,9 +683,9 @@ For quick reference, here's the complete command list:
 
 ```
  +-----------------------------------------------------------------------------------------------+
- |                     GPUMDkit 1.5.6 (dev) (2026-06-17) PLOT & VISUALIZATION TOOLS              |
+ |                     GPUMDkit 1.5.6 (dev) (2026-07-10) PLOT & VISUALIZATION TOOLS              |
  +-----------------------------------------------------------------------------------------------+
- |  Usage: gpumdkit.sh -plt <type>                        Help: gpumdkit.sh -plt <type> -h       |
+ |  Usage: gpumdkit.sh -plt <type>                        List: gpumdkit.sh -plt -h              |
  +-----------------------------------------------------------------------------------------------+
  |                                    NEP Training & Evaluation                                  |
  +-----------------------------------------------------------------------------------------------+
@@ -703,6 +703,7 @@ For quick reference, here's the complete command list:
  |  msd_sdc        - MSD and SDC together           sigma          - Arrhenius ionic conductivity|
  |  D              - Arrhenius diffusivity          sigma_xyz      - Directional Arrhenius sigma |
  |  D_xyz          - Directional Arrhenius D                                                     |
+ |  doas           - Density of atomistic states                                                 |
  +-----------------------------------------------------------------------------------------------+
  |                                    MD & Structural Analysis                                   |
  +-----------------------------------------------------------------------------------------------+
@@ -710,7 +711,6 @@ For quick reference, here's the complete command list:
  |  rdf            - Radial distribution function   rdf_pmf        - Potential of mean force     |
  |  vac            - Velocity autocorrelation       cohesive       - Cohesive energy curve       |
  |  net_force      - Net force distribution         plane-grid     - Displacement plane grid     |
- |  doas           - Density of atomistic states                                                 |
  +-----------------------------------------------------------------------------------------------+
  |                                        Heat Transport                                         |
  +-----------------------------------------------------------------------------------------------+

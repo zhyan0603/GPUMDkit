@@ -6,10 +6,10 @@
   &nbsp;·&nbsp;
   <a href="./docs/README_zh-CN.md">简体中文</a>
   &nbsp;·&nbsp;
-  <a href="https://zhyan0603.github.io/GPUMDkit/">Website</a> &nbsp;·&nbsp;
-  <a href="https://zhyan0603.github.io/GPUMDkit/htmls/index.html">Documentation</a>
+  <a href="https://gpumdkit.cn/">Website</a> &nbsp;·&nbsp;
+  <a href="https://gpumdkit.cn/htmls/index.html">Documentation</a>
   &nbsp;·&nbsp;
-  <a href="https://zhyan0603.github.io/GPUMDkit/gallery.html">Gallery</a>
+  <a href="https://gpumdkit.cn/gallery.html">Gallery</a>
   &nbsp;
 </p>
 <p align="center">
@@ -102,7 +102,7 @@ There are two options, <u>*interactive mode*</u> and <u>*command-line mode*</u>
              | |_| |  __/| |_| | |  | | |_| |   <| | |_
               \____|_|    \___/|_|  |_|____/|_|\_\_|\__|
     
-              GPUMDkit Version 1.5.6 (dev) (2026-06-17)
+              GPUMDkit Version 1.5.6 (dev) (2026-07-10)
         Core Developer: Zihan YAN (yanzihan@westlake.edu.cn)
      Main Contributors: Denan LI, Xin WU, Zhoulin LIU & Chen HUA
     
@@ -132,13 +132,14 @@ the help information:
 
 ```
 +-------------------------------------------------------------------------------------------------------+
-|                          GPUMDkit 1.5.6 (dev) (2026-06-17) Command Help                               |
+|                          GPUMDkit 1.5.6 (dev) (2026-07-10) Command Help                               |
 +-------------------------------------------------------------------------------------------------------+
 |                                          MAIN FUNCTIONS                                               |
 +-------------------------------------------------------------------------------------------------------+
 | -h            Show this help table            | -plt <type>        Plot and visualization tools       |
 | -calc <type>  Calculator tools                | -time <gpumd|nep>  Time-consuming analyzer            |
 | -update       Update GPUMDkit                 | -clean             Clean extra files in current dir   |
+| -skill        Show GPUMDkit agent skill info  | -doctor            Check Python environment           |
 +-------------------------------------------------------------------------------------------------------+
 |                                         FORMAT CONVERSION                                             |
 +-------------------------------------------------------------------------------------------------------+
@@ -150,7 +151,7 @@ the help information:
 | -traj2exyz    ASE traj -> extxyz              | -replicate         Replicate structure                |
 | -addgroup     Add group labels                | -addweight         Add structure weight in extxyz     |
 | -clean_xyz    Clean extra info in extxyz      | -get_frame         Extract specific frame             |
-| -frame_range  Extract frames by range         |                                                       |
+| -frame_range  Extract frames by range         | -dp2xyz            DeepMD npy -> extxyz               |
 +-------------------------------------------------------------------------------------------------------+
 |                                            ANALYSIS                                                   |
 +-------------------------------------------------------------------------------------------------------+
@@ -161,7 +162,7 @@ the help information:
 | -pda          Probability density analysis    | -filter_box        Filter by box-edge length          |
 | -pynep        Deprecated PyNEP sampling       | -nep_modifier      Modify NEP model interactively     |
 +-------------------------------------------------------------------------------------------------------+
-| Detailed usage: gpumdkit.sh -<option> -h    Plot details: gpumdkit.sh -plt <type> -h                  |
+| Python option help: gpumdkit.sh -<option> -h    Plot list: gpumdkit.sh -plt -h                     |
 +-------------------------------------------------------------------------------------------------------+
 ```
 
@@ -175,9 +176,9 @@ the help information:
 
 ```
  +-----------------------------------------------------------------------------------------------+
- |                     GPUMDkit 1.5.6 (dev) (2026-06-17) PLOT & VISUALIZATION TOOLS              |
+ |                     GPUMDkit 1.5.6 (dev) (2026-07-10) PLOT & VISUALIZATION TOOLS              |
  +-----------------------------------------------------------------------------------------------+
- |  Usage: gpumdkit.sh -plt <type>                        Help: gpumdkit.sh -plt <type> -h       |
+ |  Usage: gpumdkit.sh -plt <type>                        List: gpumdkit.sh -plt -h              |
  +-----------------------------------------------------------------------------------------------+
  |                                    NEP Training & Evaluation                                  |
  +-----------------------------------------------------------------------------------------------+
@@ -265,13 +266,13 @@ You can also save images as PNG if your device doesn't support visualization:
 gpumdkit.sh -plt thermo save
 ```
 
-Refer to our [documentation](https://zhyan0603.github.io/GPUMDkit/) for more detailed examples and command options.
+Refer to our [documentation](https://gpumdkit.cn/) for more detailed examples and command options.
 
 #### Custom Commands
 
 `GPUMDkit` now supports custom commands via `~/.gpumdkit.in`.
 
-You can add your own shortcuts (e.g., `gpumdkit.sh -yourcommand`) by defining functions in this file. This allows you to extend `GPUMDkit` with personal scripts. See [custom command documentation](https://zhyan0603.github.io/GPUMDkit/) for details.
+You can add your own shortcuts (e.g., `gpumdkit.sh -yourcommand`) by defining functions in this file. This allows you to extend `GPUMDkit` with personal scripts. See [custom command documentation](https://gpumdkit.cn/) for details.
 
 #### Tab Completion Support
 

@@ -26,10 +26,11 @@ The menu is:
 |                 SAMPLE STRUCTURE TOOLS               |
 +------------------------------------------------------+
 | 201) Sample structures from extxyz                   |
-| 202) PyNEP sampling [deprecated]                    |
+| 202) PyNEP sampling [deprecated]                     |
 | 203) FPS sampling by NepTrain [preferred]            |
 | 204) Perturb structure                               |
 | 205) Select max force deviation structs              |
+| 206) Split training and test sets                    |
 +------------------------------------------------------+
 | 000) Return to the main menu                         |
 +------------------------------------------------------+
@@ -45,6 +46,7 @@ Available entries:
 | 203 | NepTrain FPS | descriptor-based FPS with NepTrain |
 | 204 | Perturb structure | generate perturbed structures from POSCAR/CONTCAR |
 | 205 | Force-deviation selection | select structures with high model deviation |
+| 206 | Train/test split | inspect and split an extxyz dataset using uniform, random, or FPS selection |
 
 ## Uniform and Random Sampling
 
@@ -88,14 +90,20 @@ Output:
 This entry uses NepTrain descriptors for FPS. Choose `203` in interactive mode, or run the script directly:
 
 ```bash
-python Scripts/sample_structures/neptrain_select_structs.py dump.xyz train.xyz nep.txt
+python Scripts/sample_structures/parallel_neptrain_select_structs.py dump.xyz train.xyz nep.txt [threads]
 ```
+
+Descriptor calculation uses one CPU worker by default. Set the optional fourth
+argument to a positive integer to enable parallel calculation, for example
+`4`. Each worker loads its own copy of the NEP model and uses one native OpenMP
+thread, so the requested worker count is the total descriptor parallelism.
 
 From interactive mode, choose `203`. You will see:
 
 ```text
-Input <sample.xyz> <train.xyz> <nep_model>
-Example: dump.xyz train.xyz nep.txt
+Input <sample.xyz> <train.xyz> <nep_model> [threads]
+[threads]: descriptor threads, default value is 1
+Example: dump.xyz train.xyz nep.txt 4
 ------------>>
 ```
 
@@ -106,6 +114,7 @@ Inputs:
 | `dump.xyz` | candidate structures |
 | `train.xyz` | existing training set |
 | `nep.txt` | current NEP model used to compute descriptors |
+| `threads` | optional number of descriptor workers; default: `1` |
 
 Outputs:
 
@@ -245,9 +254,71 @@ Output:
 
 - `selected.xyz`
 
+## Training and Test Set Split
+
+Choose `206` to inspect an extxyz dataset and split it into training and test
+sets. The script first reports the element list, total number of frames, and the
+range of atom counts per frame. It then asks for the test-set size and selection
+method.
+
+From interactive mode:
+
+```text
+gpumdkit.sh -> 2) Sample Structures -> 206
+```
+
+Enter the input filename when prompted:
+
+```text
+Input <extxyz_file>
+Example: data.xyz
+------------>>
+```
+
+The test-set size accepts two forms:
+
+| Input | Meaning |
+|-------|---------|
+| `0.1` | select approximately 10% of all frames for testing |
+| `100` | select exactly 100 frames for testing |
+
+For a fractional input, the number of test frames is rounded to the nearest
+integer with halves rounded up, with a minimum of one test frame. The test set
+must remain smaller than the complete dataset so that the training set is not
+empty.
+
+Three selection methods are available:
+
+| Method | Behavior | Additional input |
+|--------|----------|------------------|
+| Uniform | selects evenly spaced frame indices across the dataset | none |
+| Random | selects without replacement | optional integer random seed |
+| FPS | selects diverse structures using mean atomic NEP descriptors | a compatible `nep.txt` model |
+
+A fixed random seed makes a random split reproducible. Leaving the seed empty
+uses a non-fixed seed. FPS follows the NepTrain descriptor approach used by
+function `203`: it starts from the first frame and repeatedly selects the frame
+farthest from the structures already selected.
+
+For an input named `data.xyz`, the outputs are:
+
+- `data_train.xyz`: all frames not selected for testing;
+- `data_test.xyz`: the selected test frames.
+
+Both output files preserve the input order of their retained frames. The script
+can also be launched directly, but the remaining choices are still interactive:
+
+```bash
+python Scripts/sample_structures/split_train_test.py data.xyz
+```
+
+Uniform and random splitting require `numpy` and `ase`. FPS additionally
+requires `NepTrain`, `scipy`, and a NEP model compatible with the elements in the
+dataset.
+
 ## Frame Range Extraction
 
-`frame_range.py` is an independent CLI tool and is not part of the interactive sampling menu `201–205`. Use it when you want to keep only a fraction of a trajectory before sampling, for example after equilibration.
+`frame_range.py` is an independent CLI tool and is not part of the interactive sampling menu `201–206`. Use it when you want to keep only a fraction of a trajectory before sampling, for example after equilibration.
 
 ```bash
 gpumdkit.sh -frame_range dump.xyz 0 0.8
@@ -263,7 +334,7 @@ An example preprocessing-and-sampling sequence is shown below. The first two com
 ```bash
 gpumdkit.sh -min_dist_pbc dump.xyz
 gpumdkit.sh -filter_box dump.xyz 13
-python Scripts/sample_structures/neptrain_select_structs.py dump.xyz train.xyz nep.txt
+python Scripts/sample_structures/parallel_neptrain_select_structs.py dump.xyz train.xyz nep.txt 4
 ```
 
 The final step can also be run from interactive mode by choosing `2) Sample Structures -> 203`.
@@ -276,3 +347,5 @@ The final step can also be run from interactive mode by choosing `2) Sample Stru
 | Perturbed structures are unphysical | reduce `cell_pert` and `atom_pert`, then check minimum distances |
 | `active.out` and `active.xyz` do not match | regenerate both from the same GPUMD active run |
 | PCA plot looks strange | check whether `nep.txt` matches the chemical species in both datasets |
+| FPS split cannot load the model | check that NepTrain is installed and that `nep.txt` supports every dataset element |
+| Random split changes between runs | enter a fixed integer random seed |

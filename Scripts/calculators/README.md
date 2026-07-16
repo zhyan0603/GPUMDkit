@@ -98,7 +98,7 @@ Unless you have a well-trained NEP model and you want to use it as a DFT surroga
 #### Input Files
 - A clean structure file in `extxyz` format with energy, force, and virial/stress. 
 
-  (use `gpumdkit.sh -clean_xyz train.xyz` to remove the original values)
+  (use `gpumdkit.sh -clean_xyz train.xyz clean_train.xyz` to remove the original values)
 
 - NEP model file (nep.txt)
 
@@ -335,24 +335,27 @@ gpumdkit.sh -calc neb init.xyz fin.xyz 9 nep.txt
 ```
 
 #### Interactive Options
-```
+```text
  Input the function number:
  4
- ------------>>
- 401) Calc ionic conductivity
- 402) Calc properties by nep
- 403) Calc descriptors of specific elements
- 404) Calc density of atomistic states (DOAS)
- 405) Calc nudged elastic band (NEB) by nep
- 406) Build neighbor list
- 407) Calc displacement from trajectory
-408) Calc averaged structure
-409) Calc octahedral tilt
-410) Calc polarization for ABO3
-411) Minimize structure by nep
-412) Calc mean square displacement (MSD) from trajectory
-000) Return to the main menu
- ------------>>
+ +----------------------------------------------------------+
+ |                     CALCULATOR TOOLS                     |
+ +----------------------------------------------------------+
+ | 401) Calc ionic conductivity                             |
+ | 402) Calc properties by nep                              |
+ | 403) Calc descriptors of specific elements               |
+ | 404) Calc density of atomistic states (DOAS)             |
+ | 405) Calc nudged elastic band (NEB) by nep               |
+ | 406) Build neighbor list                                 |
+ | 407) Calc displacement from trajectory                   |
+ | 408) Calc averaged structure                             |
+ | 409) Calc octahedral tilt                                |
+ | 410) Calc polarization for ABO3                          |
+ | 411) Minimize structure by nep                           |
+ | 412) Calc mean square displacement (MSD) from trajectory |
+ +----------------------------------------------------------+
+ | 000) Return to the main menu                             |
+ +----------------------------------------------------------+
  Input the function number:
  405
  >-------------------------------------------------<

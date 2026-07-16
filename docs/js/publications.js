@@ -1,6 +1,9 @@
 document.addEventListener('DOMContentLoaded', () => {
     fetch('publications.json')
-        .then(response => response.json())
+        .then(response => {
+            if (!response.ok) throw new Error(`HTTP ${response.status}`);
+            return response.json();
+        })
         .then(data => {
             // Update Total Count
             const totalCount = data.length;
@@ -38,5 +41,19 @@ document.addEventListener('DOMContentLoaded', () => {
                 });
             }
         })
-        .catch(error => console.error('Error loading publications:', error));
+        .catch(error => {
+            console.error('Error loading publications:', error);
+            const countElement = document.getElementById('pub-count');
+            const container = document.getElementById('recent-publications');
+            const isChinese = document.documentElement.lang.startsWith('zh');
+
+            if (countElement) countElement.textContent = '—';
+            if (container) {
+                container.innerHTML = `<p class="pub-load-error">${
+                    isChinese
+                        ? '出版物暂时无法加载，请稍后重试。'
+                        : 'Publications could not be loaded. Please try again later.'
+                }</p>`;
+            }
+        });
 });

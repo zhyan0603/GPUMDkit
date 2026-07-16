@@ -12,7 +12,7 @@
         <meta name="author" content="Zihan YAN">
       
       
-        <link rel="canonical" href="https://zhyan0603.github.io/GPUMDkit/en/analyzer_scripts.html">
+        <link rel="canonical" href="https://gpumdkit.cn/en/analyzer_scripts.html">
       
       
         <link rel="prev" href="calculator_scripts.html">
@@ -433,6 +433,34 @@
   
   
     <li class="md-nav__item">
+      <a href="simulation_and_postprocessing.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Simulation and Post-processing
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
       <a href="command_reference.html" class="md-nav__link">
         
   
@@ -655,6 +683,17 @@
     <span class="md-ellipsis">
       
         Overview
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#choose-checks-before-filters" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Choose checks before filters
       
     </span>
   </a>
@@ -1193,6 +1232,34 @@
   
   
     <li class="md-nav__item">
+      <a href="../zh/%E6%A8%A1%E6%8B%9F%E4%B8%8E%E5%90%8E%E5%A4%84%E7%90%86.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    模拟与后处理
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
       <a href="../zh/%E5%91%BD%E4%BB%A4%E5%8F%82%E8%80%83.html" class="md-nav__link">
         
   
@@ -1552,6 +1619,17 @@
     <span class="md-ellipsis">
       
         Overview
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#choose-checks-before-filters" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Choose checks before filters
       
     </span>
   </a>
@@ -1936,6 +2014,43 @@
 </tr>
 </tbody>
 </table>
+<h2 id="choose-checks-before-filters">Choose checks before filters</h2>
+<p>Run a non-destructive check before a filtering command whenever possible. This
+keeps the reason for excluding structures visible in the terminal output.</p>
+<table>
+<thead>
+<tr>
+<th>Question</th>
+<th>First command</th>
+<th>What remains your decision</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Are periodic images relevant?</td>
+<td><code>gpumdkit.sh -min_dist_pbc &lt;input.xyz&gt;</code></td>
+<td>Use the PBC-aware route for periodic cells; the non-PBC route is only a fast comparison.</td>
+</tr>
+<tr>
+<td>Is a value unusually large or small?</td>
+<td><code>gpumdkit.sh -range &lt;input.xyz&gt; energy\|force\|virial</code></td>
+<td>The acceptable range depends on the target system and reference data.</td>
+</tr>
+<tr>
+<td>Are contacts too short?</td>
+<td><code>gpumdkit.sh -min_dist_pbc &lt;input.xyz&gt;</code></td>
+<td>Choose a distance threshold from the chemistry and purpose of the dataset.</td>
+</tr>
+<tr>
+<td>Which structures should be removed?</td>
+<td>inspect the check result first, then <code>-filter_*</code></td>
+<td>Filtering thresholds are not universal defaults.</td>
+</tr>
+</tbody>
+</table>
+<p>Numbers in the examples below demonstrate command syntax only. Do not treat a
+distance, box-edge, or force cutoff shown in an example as a recommended value
+for another material or workflow.</p>
 <hr />
 <h2 id="interactive-mode">Interactive Mode</h2>
 <p>Open GPUMDkit and choose <code>5) Analyzer</code>:</p>

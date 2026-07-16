@@ -15,6 +15,22 @@ The analyzer scripts provide functionality for:
 
 Access analyzers through `gpumdkit.sh` using various flags or run scripts directly.
 
+### Direct CLI helpers
+
+These helpers are useful before selecting a filtering threshold or a downstream
+analysis path:
+
+| Command | Script | Purpose |
+|---|---|---|
+| `gpumdkit.sh -chem_species <input.xyz>` | `analyze_chem_species.py` | List the element symbols present in an extxyz file. |
+| `gpumdkit.sh -min_dist <input.xyz>` | `get_min_dist.py` | Fast minimum-distance check without PBC. |
+| `gpumdkit.sh -min_dist_pbc <input.xyz>` | `get_min_dist_pbc.py` | Minimum-distance check including periodic images. |
+| `gpumdkit.sh -pda <ref> <traj> <species> <interval>` | `probability_density_analysis.py` | Write a CHGCAR-like probability-density file. |
+
+Use the PBC-aware command for periodic cells. Distance, property, and box
+thresholds are system-dependent choices; inspect the corresponding check output
+before applying a `-filter_*` command.
+
 ---
 
 ## Scripts
@@ -279,11 +295,20 @@ python find_outliers.py
 ```
  Input the function number:
  5
- ------------>>
- 501) Analyze composition of extxyz
- 502) Find outliers of extxyz
- 000) Return to the main menu
- ------------>>
+ +------------------------------------------------------+
+ |                    ANALYZER TOOLS                    |
+ +------------------------------------------------------+
+ | 501) Analyze composition of extxyz                   |
+ | 502) Find outliers of extxyz                         |
+ | 503) Analyze chemical species of extxyz              |
+ | 504) Check charge balance of extxyz                  |
+ | 505) Analyze energy/force/virial range               |
+ | 506) Filter structures by minimum distance           |
+ | 507) Get minimum interatomic distance                |
+ | 508) Probability density analysis                    |
+ +------------------------------------------------------+
+ | 000) Return to the main menu                         |
+ +------------------------------------------------------+
  Input the function number:
  502
  >-------------------------------------------------<
