@@ -19,10 +19,6 @@ jobs:
 
     runs-on: ${{ matrix.os }}
 
-    defaults:
-      run:
-        shell: bash -el {0}
-
     steps:
       - uses: actions/checkout@v4
 
@@ -33,9 +29,6 @@ jobs:
           channels: conda-forge
           python-version: '3.11'
 
-      - name: Install conda-build
-        run: conda install conda-build anaconda-client -c conda-forge -y
-
       - name: Set package version from tag
         run: |
           TAG="${{ github.ref_name }}"
@@ -44,12 +37,16 @@ jobs:
           echo "Building gpumdkit ${VERSION}"
 
       - name: Build conda package
-        run: conda build conda/ -c conda-forge
+        run: |
+          eval "$(conda shell.bash hook)"
+          conda install conda-build anaconda-client -y
+          conda build conda/ -c conda-forge
 
       - name: Upload to Anaconda.org
         if: startsWith(github.ref, 'refs/tags/v')
         env:
           ANACONDA_API_TOKEN: ${{ secrets.ANACONDA_TOKEN }}
         run: |
+          eval "$(conda shell.bash hook)"
           anaconda upload --user ${{ vars.ANACONDA_USER }} \
             $CONDA_PREFIX/conda-bld/*/gpumdkit-*.conda
