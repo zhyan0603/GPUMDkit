@@ -19,7 +19,7 @@ if [ -z "$GPUMDkit_path" ]; then
     exit 1
 fi
 
-VERSION="1.5.6 (dev) (2026-06-17)"
+VERSION="1.5.6 (dev) (2026-07-10)"
 
 plt_path="${GPUMDkit_path}/Scripts/plt_scripts"
 analyzer_path="${GPUMDkit_path}/Scripts/analyzer"
@@ -63,7 +63,7 @@ function main(){
     echo ' Input the function number:'
     valid_menu_choices=(
         "0" "1" "101" "102" "103" "104" "105" "106" "107" "108" "109" "110"
-        "2" "201" "202" "203" "204" "205" 
+        "2" "201" "202" "203" "204" "205" "206"
         "3" "301" "302" "303" 
         "4" "401" "402" "403" "404" "405" "406" "407" "408" "409" "410" "411" "412"
         "5" "501" "502" "503" "504" "505" "506" "507" "508"
@@ -108,6 +108,7 @@ function main(){
                 "203") f203_neptrain_sample_structures ;;
                 "204") f204_perturb_structure ;;
                 "205") f205_select_max_force_deviation_structs ;;
+                "206") f206_split_train_test ;;
             esac ;;
         "3")
             source ${GPUMDkit_path}/src/f3_workflows.sh
@@ -192,6 +193,7 @@ function help_info_table(){
     echo " | -h            Show this help table            | -plt <type>        Plot and visualization tools       |"
     echo " | -calc <type>  Calculator tools                | -time <gpumd|nep>  Time-consuming analyzer            |"
     echo " | -update       Update GPUMDkit                 | -clean             Clean extra files in current dir   |"
+    echo " | -skill        Show GPUMDkit agent skill info  | -doctor            Check Python environment           |"
     echo " +-------------------------------------------------------------------------------------------------------+"
     echo " |                                         FORMAT CONVERSION                                             |"
     echo " +-------------------------------------------------------------------------------------------------------+"
@@ -214,7 +216,7 @@ function help_info_table(){
     echo " | -pda          Probability density analysis    | -filter_box        Filter by box-edge length          |"
     echo " | -pynep        Deprecated PyNEP sampling       | -nep_modifier      Modify NEP model interactively     |"
     echo " +-------------------------------------------------------------------------------------------------------+"
-    echo " | Detailed usage: gpumdkit.sh -<option> -h    Plot details: gpumdkit.sh -plt <type> -h                  |"
+    echo " | Python option help: gpumdkit.sh -<option> -h    Plot list: gpumdkit.sh -plt -h                        |"
     echo " +-------------------------------------------------------------------------------------------------------+"
 }
 
@@ -272,6 +274,13 @@ run_python_script() {
 if [ ! -z "$1" ]; then
     case $1 in
         -h|-help) help_info_table ;;
+        -skill)
+            source ${utils_path}/skill_info.sh
+            skill_info_table ;;
+        -doctor)
+            GPUMDKIT_BASH_VERSION="${BASH_VERSION}" python "${utils_path}/doctor.py" "${@:2}" ;;
+        -input)
+            bash "${GPUMDkit_path}/Scripts/input_generator/input_generator.sh" "${@:2}" ;;
         -clean) 
             source ${utils_path}/clean_extra_files.sh
             clean_extra_files ;;
@@ -480,7 +489,7 @@ if [ ! -z "$1" ]; then
             parallel_pynep_sample_structures ;;
 
         -nep_modifier)
-            python ${GPUMDkit_path}/Scripts/utils/nep_modifier/nep_modifier.py ;;
+            python ${GPUMDkit_path}/Scripts/utils/nep_modifier/nep_modifier.py "${@:2}" ;;
 
         -frame_range)
             run_python_script "Zihan YAN (yanzihan@westlake.edu.cn)" "${sample_path}/frame_range.py" "${@:2}" ;;

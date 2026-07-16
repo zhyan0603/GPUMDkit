@@ -12,10 +12,10 @@
         <meta name="author" content="Zihan YAN">
       
       
-        <link rel="canonical" href="https://zhyan0603.github.io/GPUMDkit/en/command_reference.html">
+        <link rel="canonical" href="https://gpumdkit.cn/en/command_reference.html">
       
       
-        <link rel="prev" href="quick_start.html">
+        <link rel="prev" href="simulation_and_postprocessing.html">
       
       
         <link rel="next" href="format_conversion.html">
@@ -430,6 +430,34 @@
                 
   
   
+  
+  
+    <li class="md-nav__item">
+      <a href="simulation_and_postprocessing.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Simulation and Post-processing
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
     
   
   
@@ -562,6 +590,84 @@
       
     </span>
   </a>
+  
+    <nav class="md-nav" aria-label="Utilities">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#nep-model-modifier" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        NEP model modifier
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="NEP model modifier">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#requirements-and-startup" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Requirements and startup
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#what-each-operation-does" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What each operation does
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#example-expand-one-model-in-a-reproducible-workflow" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Example: expand one model in a reproducible workflow
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#example-extract-or-extend-a-chemical-model" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Example: extract or extend a chemical model
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#required-calorine-citation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Required calorine citation
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
   
 </li>
       
@@ -951,6 +1057,34 @@
     
   
     快速入门
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../zh/%E6%A8%A1%E6%8B%9F%E4%B8%8E%E5%90%8E%E5%A4%84%E7%90%86.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    模拟与后处理
   
 
     
@@ -1378,6 +1512,84 @@
     </span>
   </a>
   
+    <nav class="md-nav" aria-label="Utilities">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#nep-model-modifier" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        NEP model modifier
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="NEP model modifier">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#requirements-and-startup" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Requirements and startup
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#what-each-operation-does" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What each operation does
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#example-expand-one-model-in-a-reproducible-workflow" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Example: expand one model in a reproducible workflow
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#example-extract-or-extend-a-chemical-model" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Example: extract or extend a chemical model
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#required-calorine-citation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Required calorine citation
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
 </li>
       
     </ul>
@@ -1408,37 +1620,38 @@
 <p>The source table is maintained in <code>docs/command_reference.tsv</code>.</p>
 <h2 id="gpumdkitsh-h-output"><code>gpumdkit.sh -h</code> Output</h2>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>+-------------------------------------------------------------------------------------------------------+
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>|                          GPUMDkit 1.5.6 (dev) (2026-06-17) Command Help                               |
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>|                          GPUMDkit 1.5.6 (dev) (2026-07-10) Command Help                               |
 <a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>+-------------------------------------------------------------------------------------------------------+
 <a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>|                                          MAIN FUNCTIONS                                               |
 <a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>+-------------------------------------------------------------------------------------------------------+
 <a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>| -h            Show this help table            | -plt &lt;type&gt;        Plot and visualization tools       |
 <a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>| -calc &lt;type&gt;  Calculator tools                | -time &lt;gpumd|nep&gt;  Time-consuming analyzer            |
 <a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>| -update       Update GPUMDkit                 | -clean             Clean extra files in current dir   |
-<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>+-------------------------------------------------------------------------------------------------------+
-<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>|                                         FORMAT CONVERSION                                             |
-<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>+-------------------------------------------------------------------------------------------------------+
-<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>| -out2xyz      OUTCAR -&gt; extxyz (shell)        | -out2exyz          OUTCAR -&gt; extxyz (python)          |
-<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>| -cp2k2xyz     CP2K log -&gt; xyz                 | -xdat2exyz         XDATCAR -&gt; extxyz                  |
-<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>| -cif2pos      cif -&gt; POSCAR                   | -cif2exyz          cif -&gt; extxyz                      |
-<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>| -pos2exyz     POSCAR -&gt; extxyz                | -exyz2pos          extxyz -&gt; POSCAR                   |
-<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>| -pos2lmp      POSCAR -&gt; LAMMPS data           | -lmp2exyz          LAMMPS dump -&gt; extxyz              |
-<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>| -traj2exyz    ASE traj -&gt; extxyz              | -replicate         Replicate structure                |
-<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>| -addgroup     Add group labels                | -addweight         Add structure weight in extxyz     |
-<a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a>| -clean_xyz    Clean extra info in extxyz      | -get_frame         Extract specific frame             |
-<a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a>| -frame_range  Extract frames by range         |                                                       |
-<a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a>+-------------------------------------------------------------------------------------------------------+
-<a id="__codelineno-0-22" name="__codelineno-0-22" href="#__codelineno-0-22"></a>|                                            ANALYSIS                                                   |
-<a id="__codelineno-0-23" name="__codelineno-0-23" href="#__codelineno-0-23"></a>+-------------------------------------------------------------------------------------------------------+
-<a id="__codelineno-0-24" name="__codelineno-0-24" href="#__codelineno-0-24"></a>| -range        Energy/force/virial statistics  | -analyze_comp      Analyze composition                |
-<a id="__codelineno-0-25" name="__codelineno-0-25" href="#__codelineno-0-25"></a>| -chem_species Analyze chemical species        | -cbc               Charge balance check               |
-<a id="__codelineno-0-26" name="__codelineno-0-26" href="#__codelineno-0-26"></a>| -min_dist     Min distance (no PBC)           | -min_dist_pbc      Min distance with PBC              |
-<a id="__codelineno-0-27" name="__codelineno-0-27" href="#__codelineno-0-27"></a>| -filter_dist  Filter by min_dist (no PBC)     | -filter_dist_pbc   Filter by min_dist (PBC)           |
-<a id="__codelineno-0-28" name="__codelineno-0-28" href="#__codelineno-0-28"></a>| -pda          Probability density analysis    | -filter_box        Filter by box-edge length          |
-<a id="__codelineno-0-29" name="__codelineno-0-29" href="#__codelineno-0-29"></a>| -pynep        Deprecated PyNEP sampling       | -nep_modifier      Modify NEP model interactively     |
-<a id="__codelineno-0-30" name="__codelineno-0-30" href="#__codelineno-0-30"></a>+-------------------------------------------------------------------------------------------------------+
-<a id="__codelineno-0-31" name="__codelineno-0-31" href="#__codelineno-0-31"></a>| Detailed usage: gpumdkit.sh -&lt;option&gt; -h    Plot details: gpumdkit.sh -plt &lt;type&gt; -h                  |
-<a id="__codelineno-0-32" name="__codelineno-0-32" href="#__codelineno-0-32"></a>+-------------------------------------------------------------------------------------------------------+
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>| -skill        Show GPUMDkit agent skill info  | -doctor           Check Python environment          |
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>+-------------------------------------------------------------------------------------------------------+
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>|                                         FORMAT CONVERSION                                             |
+<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>+-------------------------------------------------------------------------------------------------------+
+<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>| -out2xyz      OUTCAR -&gt; extxyz (shell)        | -out2exyz          OUTCAR -&gt; extxyz (python)          |
+<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>| -cp2k2xyz     CP2K log -&gt; xyz                 | -xdat2exyz         XDATCAR -&gt; extxyz                  |
+<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>| -cif2pos      cif -&gt; POSCAR                   | -cif2exyz          cif -&gt; extxyz                      |
+<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>| -pos2exyz     POSCAR -&gt; extxyz                | -exyz2pos          extxyz -&gt; POSCAR                   |
+<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>| -pos2lmp      POSCAR -&gt; LAMMPS data           | -lmp2exyz          LAMMPS dump -&gt; extxyz              |
+<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>| -traj2exyz    ASE traj -&gt; extxyz              | -replicate         Replicate structure                |
+<a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a>| -addgroup     Add group labels                | -addweight         Add structure weight in extxyz     |
+<a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a>| -clean_xyz    Clean extra info in extxyz      | -get_frame         Extract specific frame             |
+<a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a>| -frame_range  Extract frames by range         | -dp2xyz            DeepMD npy -&gt; extxyz               |
+<a id="__codelineno-0-22" name="__codelineno-0-22" href="#__codelineno-0-22"></a>+-------------------------------------------------------------------------------------------------------+
+<a id="__codelineno-0-23" name="__codelineno-0-23" href="#__codelineno-0-23"></a>|                                            ANALYSIS                                                   |
+<a id="__codelineno-0-24" name="__codelineno-0-24" href="#__codelineno-0-24"></a>+-------------------------------------------------------------------------------------------------------+
+<a id="__codelineno-0-25" name="__codelineno-0-25" href="#__codelineno-0-25"></a>| -range        Energy/force/virial statistics  | -analyze_comp      Analyze composition                |
+<a id="__codelineno-0-26" name="__codelineno-0-26" href="#__codelineno-0-26"></a>| -chem_species Analyze chemical species        | -cbc               Charge balance check               |
+<a id="__codelineno-0-27" name="__codelineno-0-27" href="#__codelineno-0-27"></a>| -min_dist     Min distance (no PBC)           | -min_dist_pbc      Min distance with PBC              |
+<a id="__codelineno-0-28" name="__codelineno-0-28" href="#__codelineno-0-28"></a>| -filter_dist  Filter by min_dist (no PBC)     | -filter_dist_pbc   Filter by min_dist (PBC)           |
+<a id="__codelineno-0-29" name="__codelineno-0-29" href="#__codelineno-0-29"></a>| -pda          Probability density analysis    | -filter_box        Filter by box-edge length          |
+<a id="__codelineno-0-30" name="__codelineno-0-30" href="#__codelineno-0-30"></a>| -pynep        Deprecated PyNEP sampling       | -nep_modifier      Modify NEP model interactively     |
+<a id="__codelineno-0-31" name="__codelineno-0-31" href="#__codelineno-0-31"></a>+-------------------------------------------------------------------------------------------------------+
+<a id="__codelineno-0-32" name="__codelineno-0-32" href="#__codelineno-0-32"></a>| Python option help: gpumdkit.sh -&lt;option&gt; -h    Plot list: gpumdkit.sh -plt -h                     |
+<a id="__codelineno-0-33" name="__codelineno-0-33" href="#__codelineno-0-33"></a>+-------------------------------------------------------------------------------------------------------+
 </code></pre></div>
 <h2 id="main">Main</h2>
 <table>
@@ -1454,6 +1667,11 @@
 <td><code>-h</code></td>
 <td><code>gpumdkit.sh -h</code></td>
 <td>Show general help</td>
+</tr>
+<tr>
+<td><code>-doctor</code></td>
+<td><code>gpumdkit.sh -doctor</code></td>
+<td>Check Python and GPUMDkit package availability</td>
 </tr>
 <tr>
 <td><code>-update</code></td>
@@ -1566,6 +1784,11 @@
 <td><code>-frame_range</code></td>
 <td><code>gpumdkit.sh -frame_range &lt;input.xyz&gt; &lt;start_frac&gt; &lt;end_frac&gt;</code></td>
 <td>Extract frames by fractional range</td>
+</tr>
+<tr>
+<td><code>-dp2xyz</code></td>
+<td><code>gpumdkit.sh -dp2xyz &lt;input_dir/&gt; [output.xyz]</code></td>
+<td>DeepMD npy datasets to extxyz</td>
 </tr>
 </tbody>
 </table>
@@ -1736,8 +1959,8 @@
 </tr>
 <tr>
 <td><code>-nep_modifier</code></td>
-<td><code>gpumdkit.sh -nep_modifier</code></td>
-<td>Modify NEP models interactively</td>
+<td><code>gpumdkit.sh -nep_modifier [nep.txt] [nep.restart\|-] [nep.in\|-]</code></td>
+<td>Safely modify and export a NEP4 model package</td>
 </tr>
 <tr>
 <td><code>-pynep</code></td>
@@ -1746,6 +1969,119 @@
 </tr>
 </tbody>
 </table>
+<h3 id="nep-model-modifier">NEP model modifier</h3>
+<p><code>-nep_modifier</code> starts a guided two-column editor built on calorine's NEP model
+modification API. It is intended for developing an existing NEP4 model further:
+for example, increasing capacity, extracting a chemical subset from a foundation
+model, or adding a new species without discarding the learned parameters for the
+original species.</p>
+<h4 id="requirements-and-startup">Requirements and startup</h4>
+<p>The command requires <code>calorine &gt;= 3.4</code>. Expansion, reduction, and adding species
+also require the <code>nep.restart</code> that matches the model because it contains the
+SNES parameter means and exploration widths. A source <code>nep.in</code> is recommended so
+that non-architecture training settings can be retained.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Prompt for files; defaults are resolved beside the selected nep.txt</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>gpumdkit.sh<span class="w"> </span>-nep_modifier
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="c1"># Load a complete model package directly</span>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>gpumdkit.sh<span class="w"> </span>-nep_modifier<span class="w"> </span>models/nep.txt<span class="w"> </span>models/nep.restart<span class="w"> </span>models/nep.in
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="c1"># Load without restart; species removal/retention remains available</span>
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>gpumdkit.sh<span class="w"> </span>-nep_modifier<span class="w"> </span>models/nep.txt<span class="w"> </span>-<span class="w"> </span>models/nep.in
+<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a>
+<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a><span class="c1"># Display command help without importing calorine</span>
+<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a>gpumdkit.sh<span class="w"> </span>-nep_modifier<span class="w"> </span>-h
+</code></pre></div>
+<h4 id="what-each-operation-does">What each operation does</h4>
+<table>
+<thead>
+<tr>
+<th>Menu operation</th>
+<th>Purpose and model effect</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Expand model capacity</strong></td>
+<td>Increases neurons, enables 4-/5-body or <code>q_*</code> descriptor terms, or adds a charge head. Existing trained parameter means are retained and new parameters are initialized for continued optimization.</td>
+</tr>
+<tr>
+<td><strong>Reduce model capacity</strong></td>
+<td>Keeps the highest-ranked neurons while discarding lower-ranked ones, disables descriptor terms, or removes the charge head. This can provide a smaller starting model, but accuracy and speed must be measured after retraining.</td>
+</tr>
+<tr>
+<td><strong>Add chemical species</strong></td>
+<td>Adds a species-specific ANN subnetwork and every descriptor-weight pair involving the new species. The new parameters are untrained; an explicit seed makes their initialization reproducible.</td>
+</tr>
+<tr>
+<td><strong>Remove chemical species</strong></td>
+<td>Removes selected species together with their ANN subnetworks and descriptor-weight pairs. This is convenient when only a few species should be discarded.</td>
+</tr>
+<tr>
+<td><strong>Keep selected species</strong></td>
+<td>Retains the listed species and removes all others. This is the more convenient inverse operation when extracting a small subset from a large model.</td>
+</tr>
+<tr>
+<td><strong>Inspect current model</strong></td>
+<td>Shows species order, cutoffs, descriptor switches and dimensions, neuron and parameter counts, restart state, ZBL, and charge mode.</td>
+</tr>
+<tr>
+<td><strong>Review pending changes</strong></td>
+<td>Lists accepted operations, their arguments, changed architecture fields, and export state before files are written.</td>
+</tr>
+<tr>
+<td><strong>Export model package</strong></td>
+<td>Writes a common, collision-free package suffix for the model, optional restart, updated input, and provenance summary.</td>
+</tr>
+</tbody>
+</table>
+<h4 id="example-expand-one-model-in-a-reproducible-workflow">Example: expand one model in a reproducible workflow</h4>
+<p>After loading the package, enter <code>1</code>, select the desired expansion fields, and
+enter their target values. Multiple fields may be selected together; calorine
+applies them in one <code>augment()</code> call. For example:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>Input the function number:
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>------------&gt;&gt;
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>1
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>Input one or more choices, separated by spaces:
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>------------&gt;&gt;
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>1 4
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>Input target neuron count (current: 50):
+<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>------------&gt;&gt;
+<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>60
+<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a>Use these SNES initialization defaults? (Y/n)
+<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a>------------&gt;&gt;
+<a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a>y
+<a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a>Apply these changes? (y/N)
+<a id="__codelineno-3-14" name="__codelineno-3-14" href="#__codelineno-3-14"></a>------------&gt;&gt;
+<a id="__codelineno-3-15" name="__codelineno-3-15" href="#__codelineno-3-15"></a>y
+</code></pre></div>
+<p>This example changes the neuron count from 50 to 60 and enables <code>q_112</code>. Choose
+<code>7</code> to review the recorded arguments and architecture changes, then choose <code>8</code>
+to export. Continued training must use the generated <code>.in</code>, <code>.txt</code>, and
+<code>.restart</code> from the same package; using a stale <code>nep.in</code> can make the restart
+layout inconsistent with the modified parameter count.</p>
+<h4 id="example-extract-or-extend-a-chemical-model">Example: extract or extend a chemical model</h4>
+<p>To extract a Li-O submodel, choose <code>5</code>, enter <code>Li O</code>, review the reported species
+order, and export. To add carbon, choose <code>3</code>, enter <code>C</code>, then provide a deliberate
+random seed. A typewise-cutoff model additionally asks for carbon's radial and
+angular cutoffs. These cutoffs are scientific choices that must be taken from
+the intended training design; the tool does not choose them.</p>
+<p>The export contains <code>*_modified.txt</code>, <code>*_modified.restart</code> when restart data are
+loaded, <code>*_modified.in</code>, and <code>*_modified.changes.txt</code>. Check the generated input
+with the exact NEP executable version intended for continued training, then
+retrain and validate the modified model on representative reference data before
+using it in production simulations.</p>
+<h4 id="required-calorine-citation">Required calorine citation</h4>
+<p>This GPUMDkit feature directly uses calorine's model modification
+implementation. Research that uses this feature should cite calorine as
+requested by its developers:</p>
+<p>E. Lindgren, J. M. Rahm, E. Fransson, F. Eriksson, N. Österbacka, Z. Fan, and
+P. Erhart, “calorine: A Python package for constructing and sampling
+neuroevolution potential models,” <em>Journal of Open Source Software</em> <strong>9</strong>(95),
+6264 (2024), <a href="https://doi.org/10.21105/joss.06264">https://doi.org/10.21105/joss.06264</a>.</p>
+<p>The detailed operation guide is available in the
+<a href="https://github.com/zhyan0603/GPUMDkit/tree/main/Scripts/utils/nep_modifier">NEP modifier README</a>
+and the <a href="https://calorine.materialsmodeling.org/dev/get_started/modifying_models.html">official calorine model-modification tutorial</a>.</p>
 
 
 

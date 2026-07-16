@@ -11,6 +11,7 @@ The format conversion scripts provide seamless interconversion between:
 - **ABACUS** output → extxyz  
 - **LAMMPS** dump → extxyz
 - **CIF** → POSCAR/extxyz
+- **DeepMD** `npy` datasets → extxyz
 - Adding metadata (group labels, weights)
 - Frame extraction and manipulation
 
@@ -36,10 +37,26 @@ The format conversion scripts provide seamless interconversion between:
 | Get frame | - | `gpumdkit.sh -get_frame <extxyz> <index>` |
 | Clean extxyz | - | `gpumdkit.sh -clean_xyz <input.xyz> <output.xyz>` |
 | ASE traj | extxyz | `gpumdkit.sh -traj2exyz <input.traj> <output.xyz>` |
+| DeepMD `npy` directory | extxyz | `gpumdkit.sh -dp2xyz <input_dir/> [output.xyz]` |
 
 ---
 
 ## Scripts
+
+### dp2xyz.py
+
+Recursively converts DeepMD `npy` datasets to extxyz. The directory must
+contain DeepMD dataset files such as `type.raw`, `type_map.raw`, and `set.000/`.
+
+```bash
+gpumdkit.sh -dp2xyz database train.xyz
+```
+
+The output argument is optional and defaults to `train.xyz`. This conversion
+requires `dpdata` and `ase`; use `gpumdkit.sh -doctor` to check whether the
+optional package is available before running it.
+
+---
 
 ### add_groups.py
 

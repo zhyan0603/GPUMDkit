@@ -10,48 +10,49 @@ Structure sampling is crucial for creating diverse configurations. These scripts
 - **FPS (Farthest Point Sampling)**: Maximizing structural diversity using PyNEP or NEPtrain
 - **Structure perturbation**: Generating variations for training set augmentation
 - **maximum force deviations selection**: Identifying structures with maximum force deviations
+- **Training/test splitting**: Creating train and test extxyz files using uniform, random, or FPS selection
 - **Frame extraction**: Selecting specific range from trajectories
 
 ---
 
 ## Via interactive mode
 
----
+Run `gpumdkit.sh` and choose `2) Sample Structures`. The current submenu is:
 
-```
-          ____ ____  _   _ __  __ ____  _    _ _
-        / ___|  _ \| | | |  \/  |  _ \| | _(_) |_
-       | |  _| |_) | | | | |\/| | | | | |/ / | __|
-       | |_| |  __/| |_| | |  | | |_| |   <| | |_
-        \____|_|    \___/|_|  |_|____/|_|\_\_|\__|
-
-        GPUMDkit Version 1.5.6 (dev) (2026-06-17)
-  Core Developer: Zihan YAN (yanzihan@westlake.edu.cn)
- Main Contributors: Denan LI, Xin WU, Zhoulin LIU & Chen HUA
-
- ----------------------- GPUMD -----------------------
-  1) Format Conversion          2) Sample Structures
-  3) Workflow                   4) Calculators
-  5) Analyzer                   6) Visualization
-  7) Utilities                  8) Help                
-  0) Exit
- ------------>>
- Input the function number:
- 2
- ------------>>
- 201) Sample structures from extxyz
- 202) PyNEP sampling [deprecated]
- 203) FPS sampling by NepTrain [preferred]
- 204) Perturb structure
- 205) Select max force deviation structs
- 000) Return to the main menu
- ------------>>
+```text
+ +------------------------------------------------------+
+ |                 SAMPLE STRUCTURE TOOLS               |
+ +------------------------------------------------------+
+ | 201) Sample structures from extxyz                   |
+ | 202) PyNEP sampling [deprecated]                     |
+ | 203) FPS sampling by NepTrain [preferred]            |
+ | 204) Perturb structure                               |
+ | 205) Select max force deviation structs              |
+ | 206) Split training and test sets                    |
+ +------------------------------------------------------+
+ | 000) Return to the main menu                         |
+ +------------------------------------------------------+
  Input the function number:
 ```
 
 ---
 
 ## Scripts
+
+### frame_range.py
+
+Extracts a fractional frame range from an extxyz trajectory through the direct
+CLI entry:
+
+```bash
+gpumdkit.sh -frame_range dump.xyz 0.2 0.5
+```
+
+`start_fraction` and `end_fraction` are fractions from 0.0 to 1.0. The command
+writes `<input>_<start>_<end>.xyz`; choose the range from your equilibration and
+production plan rather than treating the example fractions as universal.
+
+---
 
 ### sample_structures.py
 
@@ -111,28 +112,35 @@ dump.xyz train.xyz nep.txt 8
 
 
 
-### neptrain_select_structs.py
+### parallel_neptrain_select_structs.py
 
-This script selects diverse structures from candidate structures using NepTrain descriptors and farthest-point sampling.
+Function 203 calls `parallel_neptrain_select_structs.py` to select diverse
+structures using NepTrain descriptors and farthest-point sampling. Descriptor
+calculation can use multiple CPU workers while preserving input frame order.
 
 #### Usage
 
 ```sh
-python neptrain_select_structs.py <sampledata_file> <traindata_file> <nep_model_file>
+python parallel_neptrain_select_structs.py <sampledata_file> <traindata_file> <nep_model_file> [threads]
 ```
+
+`threads` defaults to `1`. Set it to a positive integer such as `4` to enable
+parallel descriptor calculation. Each worker loads an independent NEP model
+and uses one native OpenMP thread to avoid nested parallelism.
 
 #### Example
 
 ```sh
-python neptrain_select_structs.py dump.xyz train.xyz nep.txt
+python parallel_neptrain_select_structs.py dump.xyz train.xyz nep.txt 4
 ```
 
 #### Interactive Mode Example
 
 ```
 203) FPS sampling by NepTrain [preferred]
-Input <sample.xyz> <train.xyz> <nep_model>
-Example: dump.xyz train.xyz nep.txt
+Input <sample.xyz> <train.xyz> <nep_model> [threads]
+[threads]: descriptor threads, default value is 1
+Example: dump.xyz train.xyz nep.txt 4
 ```
 
 This function requires the `NepTrain` package. If you use this function, we recommend citing the NepTrain paper.
@@ -197,6 +205,71 @@ Input <structs_num> <threshold> (eg. 200 0.15)
 ```
 
 The output file is `selected.xyz`.
+
+
+
+### split_train_test.py
+
+This script inspects an extxyz dataset and creates complementary training and
+test files. Before asking for any split settings, it reports:
+
+- the input filename;
+- all chemical elements found across the dataset;
+- the total number of frames;
+- the minimum and maximum number of atoms per frame.
+
+#### Usage
+
+```sh
+python split_train_test.py <input.xyz>
+```
+
+#### Interactive Mode Example
+
+```text
+ >-------------------------------------------------<
+ | Calling the script in Scripts/sample_structures |
+ | Script: split_train_test.py                     |
+ | Developer: Zihan YAN (yanzihan@westlake.edu.cn) |
+ >-------------------------------------------------<
+ Input <extxyz_file>
+ Example: data.xyz
+ The dataset summary and split options will be shown next.
+ ------------>>
+```
+
+After the dataset summary, enter the test-set size in one of two forms:
+
+| Input | Interpretation |
+|-------|----------------|
+| decimal strictly between `0` and `1` | fraction of all frames; `0.1` means 10% |
+| positive integer | exact number of test frames; `100` means 100 frames |
+
+Fractional frame counts are rounded to the nearest integer with halves rounded
+up, and at least one frame is selected. The requested test set must be smaller
+than the complete dataset so that the training set is not empty.
+
+The selected method determines which frames form the test set:
+
+| Method | Selection behavior | Extra input |
+|--------|--------------------|-------------|
+| Uniform | evenly spaced frame indices across the complete dataset | none |
+| Random | random selection without replacement | optional integer seed |
+| FPS | NepTrain mean atomic descriptors; start from frame 0 and repeatedly add the farthest remaining frame | compatible NEP model, e.g. `nep.txt` |
+
+A fixed random seed makes the split reproducible; pressing Enter uses no fixed
+seed. FPS uses the same NepTrain descriptor approach as function `203` and also
+requires `scipy`.
+
+For `data.xyz`, the outputs are `data_train.xyz` and `data_test.xyz`. Frames in
+both outputs retain their original input order. The frames selected by the
+chosen method go to the test file, and every other frame goes to the training
+file.
+
+Dependencies:
+
+- Uniform/Random: `numpy`, `ase`;
+- FPS: `numpy`, `ase`, `scipy`, `NepTrain`, and a compatible NEP model.
 
 ## Contributing
 

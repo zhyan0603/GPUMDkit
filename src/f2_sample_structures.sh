@@ -66,24 +66,19 @@ echo " ---------------------------------------------------"
 function f203_neptrain_sample_structures(){
 echo " >-------------------------------------------------<"
 echo " | Calling the script in Scripts/sample_structures |"
-echo " | Script: neptrain_select_structs.py              |"
+echo " | Script: parallel_neptrain_select_structs.py     |"
 echo " | Developer: Benrui TANG (tang070205@proton.me)   |"
 echo " >-------------------------------------------------<"
-echo " Input <sample.xyz> <train.xyz> <nep_model>"
-echo " Example: dump.xyz train.xyz nep.txt "
+echo " Input <sample.xyz> <train.xyz> <nep_model> [threads]"
+echo " [threads]: descriptor threads, default value is 1"
+echo " Example: dump.xyz train.xyz nep.txt 4"
 echo " ------------>>"
 read_menu_choice sample_choice || return 1
 echo " ---------------------------------------------------"
-python ${GPUMDkit_path}/Scripts/sample_structures/neptrain_select_structs.py ${sample_choice}
+python ${GPUMDkit_path}/Scripts/sample_structures/parallel_neptrain_select_structs.py ${sample_choice}
 rm -f dpdispatcher.log
-echo " Code path: ${GPUMDkit_path}/Scripts/sample_structures/neptrain_select_structs.py"
+echo " Code path: ${GPUMDkit_path}/Scripts/sample_structures/parallel_neptrain_select_structs.py"
 echo " ---------------------------------------------------"
-echo " "
-echo " +--------------------------------------------------------+"
-echo " | For this function, please cite the NepTrain paper:     |"
-echo " | Chen et al. Comput. Phys. Commun., 2025, 317, 109859.  |"
-echo " | URL: https://doi.org/10.1016/j.cpc.2025.109859         |"
-echo " +--------------------------------------------------------+"
 }
 
 # Perturb structure
@@ -124,6 +119,24 @@ echo " Code path: ${GPUMDkit_path}/Scripts/sample_structures/select_max_modev.py
 echo " ---------------------------------------------------"
 }
 
+# Split an extxyz data set into training and test sets
+function f206_split_train_test(){
+echo " >-------------------------------------------------<"
+echo " | Calling the script in Scripts/sample_structures |"
+echo " | Script: split_train_test.py                     |"
+echo " | Developer: Zihan YAN (yanzihan@westlake.edu.cn) |"
+echo " >-------------------------------------------------<"
+echo " Input <extxyz_file>"
+echo " Example: data.xyz"
+echo " The dataset summary and split options will be shown next."
+echo " ------------>>"
+read_menu_choice split_file || return 1
+echo " ---------------------------------------------------"
+python "${GPUMDkit_path}/Scripts/sample_structures/split_train_test.py" "${split_file}" || return 1
+echo " Code path: ${GPUMDkit_path}/Scripts/sample_structures/split_train_test.py"
+echo " ---------------------------------------------------"
+}
+
 #--------------------- function 2 ----------------------
 function f2_sample_structures(){
 echo " +------------------------------------------------------+"
@@ -134,12 +147,13 @@ echo " | 202) PyNEP sampling [deprecated]                     |"
 echo " | 203) FPS sampling by NepTrain [preferred]            |"
 echo " | 204) Perturb structure                               |"
 echo " | 205) Select max force deviation structs              |"
+echo " | 206) Split training and test sets                    |"
 echo " +------------------------------------------------------+"
 echo " | 000) Return to the main menu                         |"
 echo " +------------------------------------------------------+"
 echo " Input the function number:"
 
-valid_menu_choices=("000" "201" "202" "203" "204" "205")
+valid_menu_choices=("000" "201" "202" "203" "204" "205" "206")
 read_menu_choice num_choice || return 1
 while ! echo "${valid_menu_choices[@]}" | grep -wq "$num_choice"
 do
@@ -154,6 +168,7 @@ case $num_choice in
     "203") f203_neptrain_sample_structures ;;
     "204") f204_perturb_structure ;;
     "205") f205_select_max_force_deviation_structs ;;
+    "206") f206_split_train_test ;;
     "000") menu; main ;;
 esac
 }

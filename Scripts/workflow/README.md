@@ -17,32 +17,16 @@ Workflow scripts automate repetitive tasks in computational materials research:
 
 Access workflow tools through `gpumdkit.sh` interactive mode:
 
-```bash
-         ____ ____  _   _ __  __ ____  _    _ _
-        / ___|  _ \| | | |  \/  |  _ \| | _(_) |_
-       | |  _| |_) | | | | |\/| | | | | |/ / | __|
-       | |_| |  __/| |_| | |  | | |_| |   <| | |_
-        \____|_|    \___/|_|  |_|____/|_|\_\_|\__|
-
-        GPUMDkit Version 1.5.6 (dev) (2026-06-17)
-  Core Developer: Zihan YAN (yanzihan@westlake.edu.cn)
- Main Contributors: Denan LI, Xin WU, Zhoulin LIU & Chen HUA
-
- ----------------------- GPUMD -----------------------
-  1) Format Conversion          2) Sample Structures
-  3) Workflow                   4) Calculators
-  5) Analyzer                   6) Visualization
-  7) Utilities                  8) Help                
-  0) Exit
- ------------>>
- Input the function number:
- 3
- ------------>>
- 301) SCF batch pretreatment
- 302) MD sample batch pretreatment (gpumd)
- 303) MD sample batch pretreatment (lmp)
- 000) Return to the main menu
- ------------>>
+```text
+ +---------------------------------------------------------+
+ |                      WORKFLOW TOOLS                     |
+ +---------------------------------------------------------+
+ | 301) SCF batch pretreatment                             |
+ | 302) MD sample batch pretreatment (gpumd)               |
+ | 303) MD sample batch pretreatment (lmp)                 |
+ +---------------------------------------------------------+
+ | 000) Return to the main menu                            |
+ +---------------------------------------------------------+
  Input the function number:
 ```
 
@@ -105,6 +89,17 @@ Implements automated active learning cycles for iterative NEP model improvement.
 **Status:** Development version - **under active development**
 
 **Documentation:** See detailed tutorial in [docs/tutorials/](../../docs/tutorials/)
+
+### Development active-learning templates: read before running
+
+`workflow_active_learning_dev.sh` and
+`workflow_active_learning_dev_multielement.sh` are scheduler-oriented development
+templates, not one-command examples. They can create directories, move inputs,
+submit jobs, and wait for those jobs to finish. Before using either file, make a
+copy outside the repository and review the scheduler directives, executable
+paths, input-file requirements, selection method, and all scientific thresholds
+for your own system. Do not run the bundled values unchanged as a production
+workflow.
 
 ---
 

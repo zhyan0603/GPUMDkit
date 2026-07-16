@@ -102,6 +102,16 @@ Input the function number:
 gpumdkit.sh -calc ionic-cond Li 1
 ```
 
+| Argument | What it identifies | Check before running |
+|---|---|---|
+| `element` | the mobile species whose MSD is analysed | The symbol must match the species represented in `msd.out` and `model.xyz`. |
+| `charge` | the charge magnitude used in the Nernst–Einstein conversion | Supply the charge definition appropriate to your system. The implementation uses its square, so changing only the sign does not change the reported conductivity. |
+
+The example `Li 1` is only an argument-format example; it is not a default
+choice for every system. The current implementation fits the middle 40–80% of
+the available MSD points. Inspect the MSD curve and its convergence before
+using the resulting diffusion coefficient or conductivity in an interpretation.
+
 From interactive mode, choose `401`. You will see:
 
 ```text
@@ -169,6 +179,11 @@ Arguments:
 | `Li` | target mobile species |
 | `10` | time interval between frames, in fs |
 | `5000` | optional maximum correlation steps |
+
+`max_corr_steps` limits the largest time lag included in the correlation. If it
+is omitted, the script uses the number of available frames. It changes the
+calculation window, so select it from the length and sampling of your own
+trajectory rather than copying a value from another system.
 
 Output:
 
