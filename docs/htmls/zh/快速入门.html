@@ -930,10 +930,10 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#1-python" class="md-nav__link">
+  <a href="#1-conda" class="md-nav__link">
     <span class="md-ellipsis">
       
-        1. 准备 Python 环境
+        1. 使用 Conda 安装（推荐）
       
     </span>
   </a>
@@ -941,10 +941,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#2-gpumdkit" class="md-nav__link">
+  <a href="#2" class="md-nav__link">
     <span class="md-ellipsis">
       
-        2. 安装 GPUMDkit
+        2. 从源码安装（可选）
       
     </span>
   </a>
@@ -1505,10 +1505,10 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#1-python" class="md-nav__link">
+  <a href="#1-conda" class="md-nav__link">
     <span class="md-ellipsis">
       
-        1. 准备 Python 环境
+        1. 使用 Conda 安装（推荐）
       
     </span>
   </a>
@@ -1516,10 +1516,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#2-gpumdkit" class="md-nav__link">
+  <a href="#2" class="md-nav__link">
     <span class="md-ellipsis">
       
-        2. 安装 GPUMDkit
+        2. 从源码安装（可选）
       
     </span>
   </a>
@@ -1708,16 +1708,16 @@
 <h2 id="_1">功能简介</h2>
 <p>GPUMDkit 为计算材料科学中的常见任务提供统一入口——格式转换、结构分析、性质计算和可视化——无需编写自定义脚本。</p>
 <h2 id="_2">准备工作</h2>
-<h3 id="1-python">1. 准备 Python 环境</h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>conda<span class="w"> </span>create<span class="w"> </span>-n<span class="w"> </span>gpumdkit<span class="w"> </span><span class="nv">python</span><span class="o">=</span><span class="m">3</span>.12
+<h3 id="1-conda">1. 使用 Conda 安装（推荐）</h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>conda<span class="w"> </span>create<span class="w"> </span>-n<span class="w"> </span>gpumdkit<span class="w"> </span>-c<span class="w"> </span>gpumdkit<span class="w"> </span>-c<span class="w"> </span>conda-forge<span class="w"> </span>gpumdkit
 <a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>conda<span class="w"> </span>activate<span class="w"> </span>gpumdkit
 </code></pre></div>
-<p>部分可选功能需要额外依赖：</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>pip<span class="w"> </span>install<span class="w"> </span>neptrain<span class="w"> </span>dpdata<span class="w"> </span>calorine
+<p>该方式会安装 GPUMDkit 及其标准依赖，无需克隆仓库或配置环境变量。</p>
+<p>部分功能需要额外安装可选依赖：</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>pip<span class="w"> </span>install<span class="w"> </span>neptrain<span class="w"> </span>calorine
 </code></pre></div>
-<p>其他 Python 依赖由对应脚本在运行时导入。如果缺少某个包，使用对应功能时 Python 会给出提示。</p>
-<h3 id="2-gpumdkit">2. 安装 GPUMDkit</h3>
-<p>克隆仓库并运行安装脚本：</p>
+<h3 id="2">2. 从源码安装（可选）</h3>
+<p>如需使用源码，请克隆仓库并运行安装脚本：</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>git<span class="w"> </span>clone<span class="w"> </span>https://github.com/zhyan0603/GPUMDkit.git
 <a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="nb">cd</span><span class="w"> </span>GPUMDkit
 <a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="nb">source</span><span class="w"> </span>./install.sh

@@ -9,24 +9,24 @@ GPUMDkit provides a single entry point for common tasks in computational materia
 
 ## Before you start
 
-### 1. Prepare a Python environment
+### 1. Install with Conda (Recommended)
 
 ```bash
-conda create -n gpumdkit python=3.12
+conda create -n gpumdkit -c gpumdkit -c conda-forge gpumdkit
 conda activate gpumdkit
 ```
 
-Some optional functions require additional packages:
+This installs GPUMDkit and its standard dependencies. You do not need to clone the repository or configure environment variables.
+
+Some features require optional packages:
 
 ```bash
-pip install neptrain dpdata calorine
+pip install neptrain calorine
 ```
 
-Other Python dependencies are loaded by the corresponding scripts. If a package is missing, Python will report it when that function is used.
+### 2. Install from Source (Optional)
 
-### 2. Install GPUMDkit
-
-Clone the repository and run the installer:
+To work with the source code, clone the repository and run the installer:
 
 ```bash
 git clone https://github.com/zhyan0603/GPUMDkit.git

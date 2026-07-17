@@ -16,15 +16,21 @@ NEP (Neuroevolution Potential) programs. It streamlines common tasks in computat
 
 ### Installation
 ```bash
-git clone https://github.com/zhyan0603/GPUMDkit.git
-cd GPUMDkit && source ./install.sh
+conda create -n gpumdkit -c gpumdkit -c conda-forge gpumdkit
+conda activate gpumdkit
 ```
 
-### Dependencies
+Some features require optional packages:
+
 ```bash
-conda create -n gpumdkit python=3.12
-conda activate gpumdkit
-pip install neptrain ase pymatgen dpdata numpy scipy matplotlib
+pip install neptrain calorine
+```
+
+For a source installation:
+
+```bash
+git clone https://github.com/zhyan0603/GPUMDkit.git
+cd GPUMDkit && source ./install.sh
 ```
 
 ### Basic Usage

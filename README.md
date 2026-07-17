@@ -22,58 +22,65 @@
 <p style="text-align: justify;"><strong>GPUMDkit</strong> is a toolkit for the GPUMD (<em>Graphics Processing Units Molecular Dynamics</em>) and NEP (<em>neuroevolution potential</em>) program. It offers a user-friendly command-line interface to streamline common scripts and workflows, simplifying tasks such as script invocation, format conversion, structure sampling, NEP construction workflow, and various analysis, aiming to improve user productivity.</p>
 
 ## Features
-- **Simplified Script Invocation**: Easily run scripts for GPUMD and NEP.
-- **Workflow Automation**: Automate common tasks to save time and reduce manual intervention.
-- **User-Friendly Interface**: Intuitive shell commands designed to enhance user experience.
+- **Data Preparation**: Convert, label, sample, split, filter, and inspect atomistic datasets.
+- **Workflow Automation**: Prepare batch DFT/MD calculations and active-learning workflows.
+- **Calculation and Analysis**: Calculate and analyze structural, transport, and NEP-related properties.
+- **Visualization and Post-processing**: Visualize NEP training, molecular dynamics, diffusion, and thermal-transport results.
+- **Flexible Interface**: Use an interactive menu or direct command-line options.
 
 ## Installation
-To install `GPUMDkit`, follow these steps:
 
-1. Clone the repository or download the whole project.
-
-    ```
-    git clone https://github.com/zhyan0603/GPUMDkit.git
-    ```
-
-    use `-b` options if you want to download the specified branch, for example:
-
-    ```
-    git clone -b dev https://github.com/zhyan0603/GPUMDkit.git
-    ```
-
-2. Run the following command:
-   
-    ```
-    cd GPUMDkit; source ./install.sh
-    ```
-    
-
-## Dependencies
-
-Some advanced features of `GPUMDkit` require some Python packages:
+### Conda (Recommended)
 
 ```bash
-# Create a clean conda environment
-conda create -n gpumdkit python=3.12
+conda create -n gpumdkit -c gpumdkit -c conda-forge gpumdkit
 conda activate gpumdkit
-
-# Install the required packages
-pip install neptrain ase pymatgen dpdata
 ```
 
-Tip: Make sure the `gpumdkit` environment is activated before using `GPUMDkit` features.
+Some features require optional packages:
+
+```bash
+pip install neptrain calorine
+```
+
+### From Source
+
+```bash
+git clone https://github.com/zhyan0603/GPUMDkit.git
+cd GPUMDkit
+source ./install.sh
+```
 
 ## Update
 
-If your device has access to `github`, simply run this command:
+### Conda Installation
 
+If `GPUMDkit` was installed with Conda, update it using:
+
+```bash
+conda activate gpumdkit
+conda update -c gpumdkit -c conda-forge gpumdkit
 ```
+
+Optional dependencies installed with pip can be updated separately if needed:
+
+```bash
+pip install --upgrade neptrain calorine
+```
+
+### Source Installation
+
+If `GPUMDkit` was installed from the source repository, run:
+
+```bash
 gpumdkit.sh -update
 ```
 
-Otherwise you will need to download the new package manually.
+This command checks the currently installed Git branch and pulls the latest updates from the same branch.
 
-```
+Alternatively, download the latest source archive manually:
+
+```bash
 wget https://github.com/zhyan0603/GPUMDkit/archive/refs/heads/main.zip
 ```
 
