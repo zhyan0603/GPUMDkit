@@ -1716,12 +1716,16 @@
 </ul>
 <h2 id="neptrain-fps">NepTrain FPS</h2>
 <p>NepTrain 版本的 FPS。交互模式选择 <code>203</code>；也可以直接运行脚本：</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>python<span class="w"> </span>Scripts/sample_structures/neptrain_select_structs.py<span class="w"> </span>dump.xyz<span class="w"> </span>train.xyz<span class="w"> </span>nep.txt
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>python<span class="w"> </span>Scripts/sample_structures/parallel_neptrain_select_structs.py<span class="w"> </span>dump.xyz<span class="w"> </span>train.xyz<span class="w"> </span>nep.txt<span class="w"> </span><span class="o">[</span>threads<span class="o">]</span>
 </code></pre></div>
+<p>描述符计算默认使用 1 个 CPU 工作进程。可将第 4 个可选参数设为正整数以启用并行计算，
+例如 <code>4</code>。每个工作进程会各自加载一份 NEP 模型，并使用 1 个原生 OpenMP 线程，
+因此用户指定的工作进程数就是描述符计算的总并行度。</p>
 <p>交互模式选择 <code>203</code>，会看到：</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>Input &lt;sample.xyz&gt; &lt;train.xyz&gt; &lt;nep_model&gt;
-<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>Example: dump.xyz train.xyz nep.txt
-<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>------------&gt;&gt;
+<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>Input &lt;sample.xyz&gt; &lt;train.xyz&gt; &lt;nep_model&gt; [threads]
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>[threads]: descriptor threads, default value is 1
+<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>Example: dump.xyz train.xyz nep.txt 4
+<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a>------------&gt;&gt;
 </code></pre></div>
 <p>输入：</p>
 <table>
@@ -1743,6 +1747,10 @@
 <tr>
 <td><code>nep.txt</code></td>
 <td>用于计算描述符的 NEP 模型</td>
+</tr>
+<tr>
+<td><code>threads</code></td>
+<td>可选的描述符工作进程数；默认值为 <code>1</code></td>
 </tr>
 </tbody>
 </table>
@@ -1931,7 +1939,7 @@
 <p>下面是一个常见的采样前处理顺序：先用分析工具检查和过滤候选轨迹，再进行 FPS 采样。前两个命令属于<a href="%E5%88%86%E6%9E%90%E5%B7%A5%E5%85%B7.html">分析工具</a>，最后一步属于本页的结构采样。</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-22-1" name="__codelineno-22-1" href="#__codelineno-22-1"></a>gpumdkit.sh<span class="w"> </span>-min_dist_pbc<span class="w"> </span>dump.xyz
 <a id="__codelineno-22-2" name="__codelineno-22-2" href="#__codelineno-22-2"></a>gpumdkit.sh<span class="w"> </span>-filter_box<span class="w"> </span>dump.xyz<span class="w"> </span><span class="m">13</span>
-<a id="__codelineno-22-3" name="__codelineno-22-3" href="#__codelineno-22-3"></a>python<span class="w"> </span>Scripts/sample_structures/neptrain_select_structs.py<span class="w"> </span>dump.xyz<span class="w"> </span>train.xyz<span class="w"> </span>nep.txt
+<a id="__codelineno-22-3" name="__codelineno-22-3" href="#__codelineno-22-3"></a>python<span class="w"> </span>Scripts/sample_structures/parallel_neptrain_select_structs.py<span class="w"> </span>dump.xyz<span class="w"> </span>train.xyz<span class="w"> </span>nep.txt<span class="w"> </span><span class="m">4</span>
 </code></pre></div>
 <p>最后一步也可以在交互模式中选择 <code>2) 结构采样 → 203</code>。</p>
 <h2 id="_8">常见问题</h2>

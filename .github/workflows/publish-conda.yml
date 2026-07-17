@@ -47,4 +47,4 @@ jobs:
           eval "$(conda shell.bash hook)"
           pkg=$(find ${{ github.workspace }}/dist -name "gpumdkit-*.conda" | head -1)
           echo "Uploading: $pkg"
-          anaconda upload --user ${{ vars.ANACONDA_USER }} "$pkg"
+          anaconda upload --user gpumdkit "$pkg"

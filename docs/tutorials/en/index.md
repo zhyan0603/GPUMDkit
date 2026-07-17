@@ -26,18 +26,25 @@ GPUMDkit helps you perform common tasks in computational materials science witho
 
 ### Installation
 
+#### Conda (Recommended)
+
+```bash
+conda create -n gpumdkit -c gpumdkit -c conda-forge gpumdkit
+conda activate gpumdkit
+```
+
+Some features require optional packages:
+
+```bash
+pip install neptrain calorine
+```
+
+#### From Source
+
 ```bash
 git clone https://github.com/zhyan0603/GPUMDkit.git
 cd GPUMDkit
 source ./install.sh
-```
-
-### Dependencies
-
-```bash
-conda create -n gpumdkit python=3.12
-conda activate gpumdkit
-pip install neptrain dpdata calorine
 ```
 
 ## Interactive mode

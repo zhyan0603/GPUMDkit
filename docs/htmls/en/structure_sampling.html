@@ -1717,12 +1717,17 @@
 </ul>
 <h2 id="farthest-point-sampling-with-neptrain">Farthest Point Sampling with NepTrain</h2>
 <p>This entry uses NepTrain descriptors for FPS. Choose <code>203</code> in interactive mode, or run the script directly:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>python<span class="w"> </span>Scripts/sample_structures/neptrain_select_structs.py<span class="w"> </span>dump.xyz<span class="w"> </span>train.xyz<span class="w"> </span>nep.txt
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>python<span class="w"> </span>Scripts/sample_structures/parallel_neptrain_select_structs.py<span class="w"> </span>dump.xyz<span class="w"> </span>train.xyz<span class="w"> </span>nep.txt<span class="w"> </span><span class="o">[</span>threads<span class="o">]</span>
 </code></pre></div>
+<p>Descriptor calculation uses one CPU worker by default. Set the optional fourth
+argument to a positive integer to enable parallel calculation, for example
+<code>4</code>. Each worker loads its own copy of the NEP model and uses one native OpenMP
+thread, so the requested worker count is the total descriptor parallelism.</p>
 <p>From interactive mode, choose <code>203</code>. You will see:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>Input &lt;sample.xyz&gt; &lt;train.xyz&gt; &lt;nep_model&gt;
-<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>Example: dump.xyz train.xyz nep.txt
-<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>------------&gt;&gt;
+<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>Input &lt;sample.xyz&gt; &lt;train.xyz&gt; &lt;nep_model&gt; [threads]
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>[threads]: descriptor threads, default value is 1
+<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>Example: dump.xyz train.xyz nep.txt 4
+<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a>------------&gt;&gt;
 </code></pre></div>
 <p>Inputs:</p>
 <table>
@@ -1744,6 +1749,10 @@
 <tr>
 <td><code>nep.txt</code></td>
 <td>current NEP model used to compute descriptors</td>
+</tr>
+<tr>
+<td><code>threads</code></td>
+<td>optional number of descriptor workers; default: <code>1</code></td>
 </tr>
 </tbody>
 </table>
@@ -1968,7 +1977,7 @@ dataset.</p>
 <p>An example preprocessing-and-sampling sequence is shown below. The first two commands are analyzer tools; the final step is structure sampling.</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-22-1" name="__codelineno-22-1" href="#__codelineno-22-1"></a>gpumdkit.sh<span class="w"> </span>-min_dist_pbc<span class="w"> </span>dump.xyz
 <a id="__codelineno-22-2" name="__codelineno-22-2" href="#__codelineno-22-2"></a>gpumdkit.sh<span class="w"> </span>-filter_box<span class="w"> </span>dump.xyz<span class="w"> </span><span class="m">13</span>
-<a id="__codelineno-22-3" name="__codelineno-22-3" href="#__codelineno-22-3"></a>python<span class="w"> </span>Scripts/sample_structures/neptrain_select_structs.py<span class="w"> </span>dump.xyz<span class="w"> </span>train.xyz<span class="w"> </span>nep.txt
+<a id="__codelineno-22-3" name="__codelineno-22-3" href="#__codelineno-22-3"></a>python<span class="w"> </span>Scripts/sample_structures/parallel_neptrain_select_structs.py<span class="w"> </span>dump.xyz<span class="w"> </span>train.xyz<span class="w"> </span>nep.txt<span class="w"> </span><span class="m">4</span>
 </code></pre></div>
 <p>The final step can also be run from interactive mode by choosing <code>2) Sample Structures -&gt; 203</code>.</p>
 <h2 id="common-mistakes">Common Mistakes</h2>

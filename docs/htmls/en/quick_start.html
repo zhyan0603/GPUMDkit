@@ -484,10 +484,10 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#1-prepare-a-python-environment" class="md-nav__link">
+  <a href="#1-install-with-conda-recommended" class="md-nav__link">
     <span class="md-ellipsis">
       
-        1. Prepare a Python environment
+        1. Install with Conda (Recommended)
       
     </span>
   </a>
@@ -495,10 +495,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#2-install-gpumdkit" class="md-nav__link">
+  <a href="#2-install-from-source-optional" class="md-nav__link">
     <span class="md-ellipsis">
       
-        2. Install GPUMDkit
+        2. Install from Source (Optional)
       
     </span>
   </a>
@@ -1505,10 +1505,10 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#1-prepare-a-python-environment" class="md-nav__link">
+  <a href="#1-install-with-conda-recommended" class="md-nav__link">
     <span class="md-ellipsis">
       
-        1. Prepare a Python environment
+        1. Install with Conda (Recommended)
       
     </span>
   </a>
@@ -1516,10 +1516,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#2-install-gpumdkit" class="md-nav__link">
+  <a href="#2-install-from-source-optional" class="md-nav__link">
     <span class="md-ellipsis">
       
-        2. Install GPUMDkit
+        2. Install from Source (Optional)
       
     </span>
   </a>
@@ -1708,16 +1708,16 @@
 <h2 id="what-it-does">What it does</h2>
 <p>GPUMDkit provides a single entry point for common tasks in computational materials science — format conversion, structure analysis, property calculation, and visualization — without writing custom scripts.</p>
 <h2 id="before-you-start">Before you start</h2>
-<h3 id="1-prepare-a-python-environment">1. Prepare a Python environment</h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>conda<span class="w"> </span>create<span class="w"> </span>-n<span class="w"> </span>gpumdkit<span class="w"> </span><span class="nv">python</span><span class="o">=</span><span class="m">3</span>.12
+<h3 id="1-install-with-conda-recommended">1. Install with Conda (Recommended)</h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>conda<span class="w"> </span>create<span class="w"> </span>-n<span class="w"> </span>gpumdkit<span class="w"> </span>-c<span class="w"> </span>gpumdkit<span class="w"> </span>-c<span class="w"> </span>conda-forge<span class="w"> </span>gpumdkit
 <a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>conda<span class="w"> </span>activate<span class="w"> </span>gpumdkit
 </code></pre></div>
-<p>Some optional functions require additional packages:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>pip<span class="w"> </span>install<span class="w"> </span>neptrain<span class="w"> </span>dpdata<span class="w"> </span>calorine
+<p>This installs GPUMDkit and its standard dependencies. You do not need to clone the repository or configure environment variables.</p>
+<p>Some features require optional packages:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>pip<span class="w"> </span>install<span class="w"> </span>neptrain<span class="w"> </span>calorine
 </code></pre></div>
-<p>Other Python dependencies are loaded by the corresponding scripts. If a package is missing, Python will report it when that function is used.</p>
-<h3 id="2-install-gpumdkit">2. Install GPUMDkit</h3>
-<p>Clone the repository and run the installer:</p>
+<h3 id="2-install-from-source-optional">2. Install from Source (Optional)</h3>
+<p>To work with the source code, clone the repository and run the installer:</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>git<span class="w"> </span>clone<span class="w"> </span>https://github.com/zhyan0603/GPUMDkit.git
 <a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="nb">cd</span><span class="w"> </span>GPUMDkit
 <a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="nb">source</span><span class="w"> </span>./install.sh
