@@ -1,5 +1,18 @@
 #!/usr/bin/env bash
 
+# Enable bash-style completion under zsh; bash is unaffected (block guarded by $ZSH_VERSION).
+if [ -n "$ZSH_VERSION" ]; then
+    case $- in
+        *i*) ;;
+        *) return 0 2>/dev/null || exit 0 ;;
+    esac
+    # Initialize zsh completion only if not already done (e.g. by oh-my-zsh)
+    if ! typeset -p _comps >/dev/null 2>&1; then
+        autoload -Uz +X compinit 2>/dev/null && compinit -i 2>/dev/null
+    fi
+    autoload -Uz +X bashcompinit 2>/dev/null && bashcompinit 2>/dev/null
+fi
+
 # Check if 'complete' and 'compgen' commands are available
 if ! command -v complete >/dev/null 2>&1 || ! command -v compgen >/dev/null 2>&1; then
     # If either command is not found, exit silently

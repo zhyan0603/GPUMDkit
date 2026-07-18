@@ -1,5 +1,33 @@
 [
     {
+        "title": "The FAST Framework: Developing a Data-Efficient Machine Learning Potential to Decode Superionic Transition-Induced Thermophysical and Kinetic Anomalies in UO2 under Extreme Conditions",
+        "authors": "Fengnian Zhuang, Gaosheng Yan, Hong Chen, Yi Zhang, Wenshan Yu, Minglong Xu, Shengping Shen",
+        "journal": "arXiv:2606.21796",
+        "year": "2026",
+        "link": "https://doi.org/10.48550/arXiv.2606.21796"
+    },
+    {
+        "title": "Unraveling the early-stage hydration mechanism of tricalcium silicate via machine learning potentials",
+        "authors": "Pingyang Zhang, Zhoulin Liu, Xujiang Wang, Renjie Mi, Yingping Pang, Fengzijun Pan, Jingwei Li, Ziliang Wang, Wenlong Wang, Kai Hong Luo",
+        "journal": "Chem. Eng. J. 2026, 538, 176856",
+        "year": "2026",
+        "link": "https://doi.org/10.1016/j.cej.2026.176856"
+    },
+    {
+        "title": "Understanding the pressure-induced structural evolution and thermophysical response of Mg–Zn intermetallics via a neuroevolution potential",
+        "authors": "Zhiyong You, Shuaishuai Jin, Peide Han, Xiaofeng Niu, Hang Li",
+        "journal": "J. Mater. Res. Technol. 2026, 43, 1002-1012",
+        "year": "2026",
+        "link": "https://doi.org/10.1016/j.jmrt.2026.06.105"
+    },
+    {
+        "title": "Unraveling thermal transport mechanisms in monolayer CrSi2N4 using machine-learned potentials",
+        "authors": "Duohao Zhang, Xinlu Cheng, Hong Zhang",
+        "journal": "Phys. Chem. Chem. Phys. 2026, 28, 15284–15293",
+        "year": "2026",
+        "link": "https://doi.org/10.1039/d6cp01105e"
+    },
+    {
         "title": "Bridging accuracy and efficiency in solid-liquid interface simulations: An accelerated fine-tuning strategy for MgO hydration",
         "authors": "Yuanrui Wang, Sijin Zhou, Ziliang Wang",
         "journal": "Comput. Mater. Sci. 2026, 269, 114726",
