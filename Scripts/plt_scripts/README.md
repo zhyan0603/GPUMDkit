@@ -8,39 +8,14 @@
 The plotting scripts are designed to work seamlessly with GPUMD output files and can be accessed through the `gpumdkit.sh` interface. All plots can be displayed interactively or saved as high-resolution PNG files.
 
 **Quick Access:**
+
 ```bash
 gpumdkit.sh -plt          # Show all plotting options
 gpumdkit.sh -plt <type>   # Generate specific plot
 gpumdkit.sh -plt <type> save  # Save plot as PNG
 ```
 
----
-
-## New Plane-Grid Plot Workflow
-
-### plt_plane_grid.py
-
-Maps displacement data onto a 3D grid and plots selected XY/XZ/YZ plane profiles.
-
-**Usage:**
-```bash
-gpumdkit.sh -plt plane-grid -i model.xyz -d displacements.dat -e Pb Sr
-gpumdkit.sh -plt plane-grid -i model.xyz -d displacements.dat -e Pb Sr --select-xy 0 1
-```
-
-**Typical upstream steps:**
-```bash
-gpumdkit.sh -calc nlist -i model.xyz -c 4 -n 12 -C Pb Sr -E O
-gpumdkit.sh -calc disp -i movie.xyz -n nl-Pb_Sr-O.dat -o displacements.dat
-gpumdkit.sh -calc avg-struct -i movie.xyz -l 0.2 -o averaged_structure.xyz
-```
-
-**Dependency:**
-```bash
-pip3 install git+https://github.com/MoseyQAQ/ferrodispcalc.git
-```
-
----
+--- 
 
 ## Script Categories
 
@@ -55,6 +30,7 @@ Visualizes NEP training progress including loss curves, RMSE evolution, and pari
 **Input File:** `loss.out`, `energy_train.out`, `force_train.out`, `virial_train.out`
 
 **Usage:**
+
 ```bash
 gpumdkit.sh -plt train          # Display plot
 ```
@@ -140,11 +116,13 @@ Plots force error evaluation metrics as proposed in [Liu et al.](https://doi.org
 **Input File:** `force_train.out`
 
 **Usage:**
+
 ```bash
 gpumdkit.sh -plt force_errors
 ```
 
 **Metrics Displayed:**
+
 - Force magnitude errors (delta_F)
 - Force angle errors  (delta_theta)
 - Distribution of errors
@@ -251,6 +229,7 @@ Plots MSD for all atomic species separately when using `all_groups` in GPUMD.
 **Input File:** `msd.out` (computed with `all_groups` option)
 
 **Usage:**
+
 ```bash
 gpumdkit.sh -plt msd_all msd.out <species1> <species2> ...
 gpumdkit.sh -plt msd_all msd.out Li P S
@@ -271,6 +250,7 @@ Checks convergence of MSD calculations across different time windows.
 **Input File:** `msd_step*.out` (computed with `save_every` option)
 
 **Usage:**
+
 ```bash
 gpumdkit.sh -plt msd_conv
 ```
@@ -402,7 +382,6 @@ gpumdkit.sh -plt emd x # for x direction
     <img src="../../docs/Gallery/emd.png" alt="EMD thermal conductivity" width="70%" />
 </div>
 
-
 ---
 
 #### plt_nemd.py
@@ -433,7 +412,6 @@ save          : Optional, save the plot as 'nemd.png'
     <img src="../../docs/Gallery/nemd.png" alt="NEMD results" width="70%" />
 </div>
 
-
 ---
 
 #### plt_hnemd.py
@@ -463,7 +441,6 @@ save          : Optional, save the plot as 'hnemd.png'
     <img src="../../docs/Gallery/hnemd.png" alt="HNEMD results" width="70%" />
 </div>
 
-
 ---
 
 #### plt_pdos.py
@@ -487,7 +464,6 @@ and heat capacity:
 <div align="center">
     <img src="../../docs/Gallery/heat_capacity.png" alt="Heat Capacity" width="50%" />
 </div>
-
 
 ---
 
@@ -515,6 +491,7 @@ gpumdkit.sh -plt rdf <column>      # Display specific pair
 <img src="../../docs/Gallery/rdf1.png" alt="Complete RDF" width="100%" />
 
 **Single pair RDF:**
+
 <div align="center">
     <img src="../../docs/Gallery/rdf2.png" alt="Single RDF" width="50%" />
 </div>
@@ -562,10 +539,11 @@ gpumdkit.sh -plt des <method>
 ```
 
 **Methods:**
+
 - `pca` - Principal Component Analysis
 - `umap` - Uniform Manifold Approximation and Projection
 
-You need some additional modifications to get the following plot, see the [code]([SourceFiles/NEP-ZBL/PCA_UMAP at main · zhyan0603/SourceFiles](https://github.com/zhyan0603/SourceFiles/tree/main/NEP-ZBL/PCA_UMAP)) here.
+You need some additional modifications to get the following plot, see the [code](https://github.com/zhyan0603/SourceFiles/tree/main/NEP-ZBL/PCA_UMAP) here.
 
 <div align="center">
     <img src="../../docs/Gallery/des_umap.png" alt="UMAP descriptor visualization" width="50%" />
@@ -584,11 +562,13 @@ Compares descriptors from multiple training sets or models.
 Plots dimer interaction curves. Two atoms are placed in a cubic box with the length of 30 angstrom. And then, the potential energy and the force will be calculated as a function of dimer distance.
 
 **Usage:**
+
 ```bash
 gpumdkit.sh -plt dimer <element1> <element2> <nepmodel>
 ```
 
 **Example:**
+
 ```bash
 gpumdkit.sh -plt dimer Li Li nep.txt
 ```
@@ -626,6 +606,7 @@ gpumdkit.sh -plt doas doas.out Li
 Plots distribution of net forces on structures, useful for identifying problematic configurations.
 
 **Usage:**
+
 ```bash
 gpumdkit.sh -plt net_force <extxyzfile>
 gpumdkit.sh -plt net_force train.xyz
@@ -641,29 +622,29 @@ gpumdkit.sh -plt net_force train.xyz
 
 ### Quick Reference Table
 
-| Command | Input File(s) | Description |
-|---------|---------------|-------------|
-| `thermo` | `thermo.out` | Thermodynamic properties evolution |
-| `train` | `loss.out`, `*_train.out` | NEP training plot |
-| `prediction` | `*_test.out` | NEP prediction plot |
-| `train_test` | `*_train.out`, `*_test.out` | parity plots of train&test |
-| `msd` | `msd.out` | Mean square displacement |
-| `sdc` | `msd.out` | Self-diffusion coefficient |
-| `rdf` | `rdf.out` | Radial distribution function |
-| `vac` | `vac.out` | Velocity autocorrelation |
-| `charge` | `charge_train.out` | Charge distribution |
-| `doas` | DOAS files | Density of atomistic states |
-| `des` | `descriptors.npy` | Descriptor visualization |
-| `dimer` | Needs nep model | Dimer interaction curve |
-| `force_errors` | `force_train.out` | Force error metrics |
-| `lr` | `loss.out` from `gnep` | Learning rate |
-| `restart` | `nep.restart` from `nep` | Restart file parameters |
-| `net_force` | train.xyz | Net force distribution |
-| `emd` | EMD outputs | EMD thermal conductivity |
-| `nemd` | NEMD outputs | NEMD thermal transport |
-| `hnemd` | HNEMD outputs | HNEMD thermal transport |
-| `D` | Multiple MSD | Arrhenius diffusivity |
-| `sigma` | Multiple MSD | Arrhenius conductivity |
+| Command        | Input File(s)               | Description                        |
+| -------------- | --------------------------- | ---------------------------------- |
+| `thermo`       | `thermo.out`                | Thermodynamic properties evolution |
+| `train`        | `loss.out`, `*_train.out`   | NEP training plot                  |
+| `prediction`   | `*_test.out`                | NEP prediction plot                |
+| `train_test`   | `*_train.out`, `*_test.out` | parity plots of train&test         |
+| `msd`          | `msd.out`                   | Mean square displacement           |
+| `sdc`          | `msd.out`                   | Self-diffusion coefficient         |
+| `rdf`          | `rdf.out`                   | Radial distribution function       |
+| `vac`          | `vac.out`                   | Velocity autocorrelation           |
+| `charge`       | `charge_train.out`          | Charge distribution                |
+| `doas`         | DOAS files                  | Density of atomistic states        |
+| `des`          | `descriptors.npy`           | Descriptor visualization           |
+| `dimer`        | Needs nep model             | Dimer interaction curve            |
+| `force_errors` | `force_train.out`           | Force error metrics                |
+| `lr`           | `loss.out` from `gnep`      | Learning rate                      |
+| `restart`      | `nep.restart` from `nep`    | Restart file parameters            |
+| `net_force`    | train.xyz                   | Net force distribution             |
+| `emd`          | EMD outputs                 | EMD thermal conductivity           |
+| `nemd`         | NEMD outputs                | NEMD thermal transport             |
+| `hnemd`        | HNEMD outputs               | HNEMD thermal transport            |
+| `D`            | Multiple MSD                | Arrhenius diffusivity              |
+| `sigma`        | Multiple MSD                | Arrhenius conductivity             |
 
 ## Contributing
 
@@ -671,7 +652,7 @@ To add new plotting scripts:
 
 1. **Create script** following naming conventions
 2. **Add documentation** to this README
-5. **Update gpumdkit.sh** to integrate new plot type
+3. **Update gpumdkit.sh** to integrate new plot type
 
 See [CONTRIBUTING.md](../../CONTRIBUTING.md) for detailed guidelines.
 
