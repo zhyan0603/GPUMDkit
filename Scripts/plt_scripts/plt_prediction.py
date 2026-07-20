@@ -121,32 +121,30 @@ def get_limits(true, pred, padding=0.05):
     return data_min - pad, data_max + pad
 
 def beautify_axes(ax):
-    # ax.grid(True, linestyle='-', linewidth=0.8, alpha=0.5, color='lightgray')
     ax.spines['top'].set_visible(False)
     ax.spines['right'].set_visible(False)
+    ax.tick_params(top=False, right=False)
     ax.tick_params(axis='both', colors='black')
 
 def add_marginal_distributions(ax, true, pred, color, bins=35):
     divider = make_axes_locatable(ax)
 
-    ax_top = divider.append_axes("top", size="18%", pad=0.06, sharex=ax)
-    ax_right = divider.append_axes("right", size="18%", pad=0.06, sharey=ax)
+    ax_top = divider.append_axes("top", size="18%", pad=0, sharex=ax)
+    ax_right = divider.append_axes("right", size="18%", pad=0, sharey=ax)
 
     ax_top.hist(true, bins=bins, color=color, alpha=0.55, edgecolor='gray', linewidth=0.6)
     ax_right.hist(pred, bins=bins, orientation='horizontal',
                   color=color, alpha=0.55, edgecolor='gray', linewidth=0.6)
 
     # Top marginal
-    ax_top.tick_params(axis='x', labelbottom=False, bottom=False)
-    ax_top.tick_params(axis='y', left=False, labelleft=False)
+    ax_top.tick_params(axis='both', which='both', length=0, labelbottom=False, labelleft=False)
     ax_top.spines['top'].set_visible(False)
     ax_top.spines['right'].set_visible(False)
     ax_top.spines['left'].set_visible(False)
     ax_top.grid(False)
 
     # Right marginal
-    ax_right.tick_params(axis='y', labelleft=False, left=False)
-    ax_right.tick_params(axis='x', bottom=False, labelbottom=False)
+    ax_right.tick_params(axis='both', which='both', length=0, labelbottom=False, labelleft=False)
     ax_right.spines['top'].set_visible(False)
     ax_right.spines['right'].set_visible(False)
     ax_right.spines['bottom'].set_visible(False)
