@@ -35,7 +35,6 @@ Computational tools for property calculations:
 
 **Quick Start:**
 ```bash
-for example
 gpumdkit.sh -calc ionic-cond Li 1              # Calculate ionic conductivity
 gpumdkit.sh -calc nep input.xyz output.xyz nep.txt  # Calculate with NEP
 ```
@@ -85,11 +84,12 @@ Structure sampling and selection tools:
 - Farthest point sampling (FPS)
 - Structure perturbation for training sets
 - Maximum force deviation selection
+- Training/test splitting with uniform, random, or FPS selection
 
 **Quick Start:**
 ```bash
-gpumdkit.sh -pynep   # PyNEP sampling
-python sample_structures.py train.xyz uniform 100  # Uniform sampling
+gpumdkit.sh          # Select 2) Sample Structures, then 203) NepTrain sampling
+python Scripts/sample_structures/sample_structures.py train.xyz uniform 100
 ```
 
 ### 🛠️ [utils/](utils/README.md)
@@ -119,11 +119,15 @@ Workflow automation scripts for high-throughput calculations:
 # Via interactive mode:
 gpumdkit.sh
 # Select: 3) Workflow
- ------------>>
- 301) SCF batch pretreatment
- 302) MD sample batch pretreatment (gpumd)
- 303) MD sample batch pretreatment (lmp)
- 000) Return to the main menu
+ +---------------------------------------------------------+
+ |                      WORKFLOW TOOLS                     |
+ +---------------------------------------------------------+
+ | 301) SCF batch pretreatment                             |
+ | 302) MD sample batch pretreatment (gpumd)               |
+ | 303) MD sample batch pretreatment (lmp)                 |
+ +---------------------------------------------------------+
+ | 000) Return to the main menu                            |
+ +---------------------------------------------------------+
 ```
 
 ## Usage Modes
@@ -135,21 +139,13 @@ gpumdkit.sh
 ```
 Navigate through numbered menus to access different functionalities.
 
-```
-         ____ ____  _   _ __  __ ____  _    _ _
-        / ___|  _ \| | | |  \/  |  _ \| | _(_) |_
-       | |  _| |_) | | | | |\/| | | | | |/ / | __|
-       | |_| |  __/| |_| | |  | | |_| |   <| | |_
-        \____|_|    \___/|_|  |_|____/|_|\_\_|\__|
-
-        GPUMDkit Version 1.4.2 (dev) (2025-12-17)
-  Core Developer: Zihan YAN (yanzihan@westlake.edu.cn)
-
- ----------------------- GPUMD -----------------------
+```text
+ ---------------------- GPUMD ------------------------
  1) Format Conversion          2) Sample Structures
  3) Workflow                   4) Calculators
- 5) Analyzer                   6) Developing ...
- 0) Quit!
+ 5) Analyzer                   6) Visualization
+ 7) Utilities                  8) Help
+ 0) Exit
  ------------>>
  Input the function number:
 ```
@@ -186,13 +182,14 @@ See [CONTRIBUTING.md](../CONTRIBUTING.md) for detailed contribution guidelines.
 
 Different scripts have varying dependencies. Common requirements include:
 - **Python 3.x** with packages: `numpy`, `matplotlib`, `ase`
-- **Optional**: `calorine`, `pynep`, `neptrain`,`ovito` (for specific calculators)
+- **Optional for specific tools**: `NepTrain`, `calorine`, `dpdata`
+- **Deprecated compatibility**: PyNEP-based sampling is still kept, but only through `gpumdkit.sh -pynep`; function 203 with NepTrain is preferred in the interactive menu.
 
 Check individual subdirectory READMEs for specific requirements.
 
 ## Support
 
-- **Documentation**: [https://zhyan0603.github.io/GPUMDkit/home.html](https://zhyan0603.github.io/GPUMDkit/home.html)
+- **Documentation**: [https://gpumdkit.cn/home.html](https://gpumdkit.cn/home.html)
 - **Issues**: [GitHub Issues](https://github.com/zhyan0603/GPUMDkit/issues)
 - **Contact**: Zihan YAN (yanzihan@westlake.edu.cn)
 

@@ -149,7 +149,7 @@
     }
 
     .footer-content {
-        display: none !important; /* Hide complex footer content on mobile */
+        display: none !important;
     }
     
     .footer-bottom {
@@ -157,17 +157,10 @@
         border-top: none !important;
     }
 
-    .footer-bottom p {
-        font-size: 0.75rem !important; /* Smaller text for ICP to prevent wrapping */
-        line-height: 1.4 !important;
-        padding: 0 10px !important;
-    }
-
-    .site-stats {
+    .footer-info-row {
         flex-direction: column !important;
-        gap: 5px !important;
+        gap: 10px !important;
         font-size: 0.75rem !important;
-        margin-top: 10px !important;
     }
 
     /* Header and Navigation */

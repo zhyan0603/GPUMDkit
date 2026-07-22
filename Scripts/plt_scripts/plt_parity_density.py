@@ -1,3 +1,25 @@
+"""
+=============================================================================
+GPUMDkit: A User-Friendly Toolkit for GPUMD and NEP
+Repository: https://github.com/zhyan0603/GPUMDkit
+Citation: Z. Yan et al., GPUMDkit: A User-Friendly Toolkit for GPUMD and NEP,
+          MGE Advances, 2026, 4, e70074 (https://doi.org/10.1002/mgea.70074)
+=============================================================================
+Script:     plt_parity_density.py
+Category:   Plot Scripts
+Purpose:    Generate density-based parity plots for energies, forces, and
+            stress or virial data, especially useful for large NEP training
+            datasets. Stress is preferred when both tensor files exist.
+Usage:      gpumdkit.sh -plt parity_density
+            python plt_parity_density.py
+Output:
+  parity_density_plot.png  (if save is used, or if backend is non-interactive)
+Author:     Zihan YAN (yanzihan@westlake.edu.cn)
+Last-modified: 2026-07-11
+=============================================================================
+"""
+
+import os
 import sys
 import matplotlib.pyplot as plt
 import numpy as np
@@ -6,20 +28,55 @@ from matplotlib.ticker import LogFormatterMathtext, LogLocator
 from matplotlib.gridspec import GridSpec
 from sklearn.metrics import mean_squared_error, mean_absolute_error, r2_score
 
+plt.rcParams.update({
+    "font.family": "sans-serif",
+    "font.sans-serif": ["Arial", "DejaVu Sans", "Liberation Sans"],
+})
+
 # Configuration
 FONT_SIZE = 10
 BINS = 200
 COLORMAP = 'viridis' 
 # preferred colormaps: 'rainbow', 'plasma', 'inferno', 'magma', 'cividis', 'viridis'
 
+def print_parity_metrics(energy, force, tensor, tensor_label, tensor_unit_label):
+    """Print energy, force, and tensor parity metrics as a three-line table."""
+    tensor_r2, tensor_mae, tensor_rmse = tensor if tensor is not None else (None, None, None)
+    tensor_r2_text = f"{tensor_r2:.4f}" if tensor_r2 is not None else "N/A"
+    tensor_mae_text = f"{tensor_mae:.4f}" if tensor_mae is not None else "N/A"
+    tensor_rmse_text = f"{tensor_rmse:.4f}" if tensor_rmse is not None else "N/A"
+    line = " " + "-" * 48
+    print(" Parity metrics (training set)")
+    print(f" Energy: meV/atom, Force: meV/Ang, {tensor_label}: {tensor_unit_label}")
+    print(line)
+    print(f" {'Metric':<8}{'Energy':>12}{'Force':>12}{tensor_label:>12}")
+    print(line)
+    print(f" {'R^2':<8}{energy[0]:>12.4f}{force[0]:>12.4f}{tensor_r2_text:>12}")
+    print(f" {'MAE':<8}{energy[1]:>12.2f}{force[1]:>12.2f}{tensor_mae_text:>12}")
+    print(f" {'RMSE':<8}{energy[2]:>12.2f}{force[2]:>12.2f}{tensor_rmse_text:>12}")
+    print(line)
+
 # Load data
 energy_data = np.loadtxt('energy_train.out')
 force_data = np.loadtxt('force_train.out')
-stress_data = np.loadtxt('stress_train.out')
+tensor_name = "Stress"
+tensor_axis_unit = "GPa"
+tensor_metric_unit = "GPa"
+tensor_metric_scale = 1.0
+tensor_data = None
+if os.path.isfile('stress_train.out'):
+    tensor_data = np.atleast_2d(np.loadtxt('stress_train.out'))
+elif os.path.isfile('virial_train.out'):
+    tensor_name = "Virial"
+    tensor_axis_unit = "eV/atom"
+    tensor_metric_unit = "meV/atom"
+    tensor_metric_scale = 1000.0
+    tensor_data = np.atleast_2d(np.loadtxt('virial_train.out'))
 
-# Filter out rows with invalid stress data
-valid_rows = ~np.any(np.abs(stress_data[:, :12]) > 1e6, axis=1)
-stress_data = stress_data[valid_rows]
+# Filter out rows with invalid stress/virial target data
+if tensor_data is not None:
+    valid_rows = ~np.any(np.abs(tensor_data[:, :12]) >= 1e6, axis=1)
+    tensor_data = tensor_data[valid_rows]
 
 # === Layout Setup ===
 fig = plt.figure(figsize=(12, 4.2), dpi=100)
@@ -38,13 +95,13 @@ ax1.plot([xmin, xmax], [xmin, xmax], color='gray', linestyle='-', linewidth=1)
 ax1.set_xlabel("DFT energy (eV/atom)", fontsize=FONT_SIZE)
 ax1.set_ylabel("NEP energy (eV/atom)", fontsize=FONT_SIZE)
 ax1.tick_params(labelsize=FONT_SIZE)
-rmse = np.sqrt(mean_squared_error(energy_data[:, 0], energy_data[:, 1])) * 1000
-mae = mean_absolute_error(energy_data[:, 0], energy_data[:, 1]) * 1000
-r2 = r2_score(energy_data[:, 0], energy_data[:, 1])
+energy_rmse = np.sqrt(mean_squared_error(energy_data[:, 0], energy_data[:, 1])) * 1000
+energy_mae = mean_absolute_error(energy_data[:, 0], energy_data[:, 1]) * 1000
+energy_r2 = r2_score(energy_data[:, 0], energy_data[:, 1])
 ax1.text(0.05, 0.95,
-         f"RMSE = {rmse:.2f} meV/atom\n"
-         f"MAE = {mae:.2f} meV/atom\n"
-         r"$\mathrm{{R^2}}$" + f" = {r2:.5f}",
+         f"RMSE = {energy_rmse:.2f} meV/atom\n"
+         f"MAE = {energy_mae:.2f} meV/atom\n"
+         r"$\mathrm{{R^2}}$" + f" = {energy_r2:.5f}",
          transform=ax1.transAxes,
          fontsize=FONT_SIZE,
          va='top', ha='left')
@@ -69,13 +126,13 @@ ax2.plot([xmin, xmax], [xmin, xmax], color='gray', linestyle='-', linewidth=1)
 ax2.set_xlabel(r"DFT force (eV/$\mathrm{{\AA}}$)", fontsize=FONT_SIZE)
 ax2.set_ylabel(r"NEP force (eV/$\mathrm{{\AA}}$)", fontsize=FONT_SIZE)
 ax2.tick_params(labelsize=FONT_SIZE)
-rmse = np.sqrt(mean_squared_error(y_force, x_force)) * 1000
-mae = mean_absolute_error(y_force, x_force) * 1000
-r2 = r2_score(y_force, x_force)
+force_rmse = np.sqrt(mean_squared_error(y_force, x_force)) * 1000
+force_mae = mean_absolute_error(y_force, x_force) * 1000
+force_r2 = r2_score(y_force, x_force)
 ax2.text(0.05, 0.95,
-         f'RMSE = {rmse:.2f} meV/'+r'$\mathrm{{\AA}}$'+f'\n'
-         f'MAE = {mae:.2f} meV/'+r'$\mathrm{{\AA}}$'+f'\n'
-         r"$\mathrm{{R^2}}$" + f' = {r2:.5f}',
+         f'RMSE = {force_rmse:.2f} meV/'+r'$\mathrm{{\AA}}$'+f'\n'
+         f'MAE = {force_mae:.2f} meV/'+r'$\mathrm{{\AA}}$'+f'\n'
+         r"$\mathrm{{R^2}}$" + f' = {force_r2:.5f}',
          transform=ax2.transAxes,
          fontsize=FONT_SIZE,
          va='top', ha='left')
@@ -86,47 +143,61 @@ cb2.locator = LogLocator(base=10.0)
 cb2.formatter = LogFormatterMathtext(base=10, labelOnlyBase=True)
 cb2.update_ticks()
 
-# === Stress ===
+# === Stress/Virial ===
 ax3 = fig.add_subplot(gs[0, 2])
 cb3_ax = fig.add_subplot(gs[1, 2])
-x_stress = stress_data[:, 6:12].reshape(-1)
-y_stress = stress_data[:, 0:6].reshape(-1)
-xmin, xmax = np.min([x_stress, y_stress]), np.max([x_stress, y_stress])
-ax3.set_xlim(xmin, xmax)
-ax3.set_ylim(xmin, xmax)
-hb3 = ax3.hexbin(x_stress, y_stress, gridsize=BINS, cmap=cmap,
-                 norm=LogNorm(), mincnt=1, linewidths=0)
-ax3.plot([xmin, xmax], [xmin, xmax], color='gray', linestyle='-', linewidth=1)
-ax3.set_xlabel("DFT stress (GPa)", fontsize=FONT_SIZE)
-ax3.set_ylabel("NEP stress (GPa)", fontsize=FONT_SIZE)
-ax3.tick_params(labelsize=FONT_SIZE)
-rmse = np.sqrt(mean_squared_error(y_stress, x_stress))
-mae = mean_absolute_error(y_stress, x_stress)
-r2 = r2_score(y_stress, x_stress)
-ax3.text(0.05, 0.95,
-         f"RMSE = {rmse:.4f} GPa\n"
-         f"MAE = {mae:.4f} GPa\n"
-         r"$\mathrm{{R^2}}$" + f" = {r2:.5f}",
-         transform=ax3.transAxes,
-         fontsize=FONT_SIZE,
-         va='top', ha='left')
-cb3 = fig.colorbar(hb3, cax=cb3_ax, orientation='horizontal')
-cb3.set_label("Data density", fontsize=FONT_SIZE)
-cb3.ax.tick_params(labelsize=FONT_SIZE)
-cb3.locator = LogLocator(base=10.0)
-cb3.formatter = LogFormatterMathtext(base=10, labelOnlyBase=True)
-cb3.update_ticks()
+if tensor_data is None or tensor_data.shape[0] == 0:
+    ax3.axis('off')
+    cb3_ax.axis('off')
+    tensor_metrics = None
+else:
+    x_tensor = tensor_data[:, 6:12].reshape(-1)
+    y_tensor = tensor_data[:, 0:6].reshape(-1)
+    xmin, xmax = np.min([x_tensor, y_tensor]), np.max([x_tensor, y_tensor])
+    ax3.set_xlim(xmin, xmax)
+    ax3.set_ylim(xmin, xmax)
+    hb3 = ax3.hexbin(x_tensor, y_tensor, gridsize=BINS, cmap=cmap,
+                     norm=LogNorm(), mincnt=1, linewidths=0)
+    ax3.plot([xmin, xmax], [xmin, xmax], color='gray', linestyle='-', linewidth=1)
+    ax3.set_xlabel(f"DFT {tensor_name.lower()} ({tensor_axis_unit})", fontsize=FONT_SIZE)
+    ax3.set_ylabel(f"NEP {tensor_name.lower()} ({tensor_axis_unit})", fontsize=FONT_SIZE)
+    ax3.tick_params(labelsize=FONT_SIZE)
+    tensor_rmse = np.sqrt(mean_squared_error(y_tensor, x_tensor)) * tensor_metric_scale
+    tensor_mae = mean_absolute_error(y_tensor, x_tensor) * tensor_metric_scale
+    tensor_r2 = r2_score(y_tensor, x_tensor)
+    tensor_metrics = (tensor_r2, tensor_mae, tensor_rmse)
+    ax3.text(0.05, 0.95,
+             f"RMSE = {tensor_rmse:.4f} {tensor_metric_unit}\n"
+             f"MAE = {tensor_mae:.4f} {tensor_metric_unit}\n"
+             r"$\mathrm{{R^2}}$" + f" = {tensor_r2:.5f}",
+             transform=ax3.transAxes,
+             fontsize=FONT_SIZE,
+             va='top', ha='left')
+    cb3 = fig.colorbar(hb3, cax=cb3_ax, orientation='horizontal')
+    cb3.set_label("Data density", fontsize=FONT_SIZE)
+    cb3.ax.tick_params(labelsize=FONT_SIZE)
+    cb3.locator = LogLocator(base=10.0)
+    cb3.formatter = LogFormatterMathtext(base=10, labelOnlyBase=True)
+    cb3.update_ticks()
+
+print_parity_metrics(
+    (energy_r2, energy_mae, energy_rmse),
+    (force_r2, force_mae, force_rmse),
+    tensor_metrics,
+    tensor_name,
+    tensor_metric_unit,
+)
 
 plt.subplots_adjust(top=0.968, bottom=0.122, left=0.073, right=0.983, hspace=0.2, wspace=0.286)
 
 if len(sys.argv) > 1 and sys.argv[1] == 'save':
-    plt.savefig('parity_plot_density.png', dpi=300)
+    plt.savefig('parity_density_plot.png', dpi=300)
 else:
     # Check if the current backend is non-interactive
     from matplotlib import get_backend
     if get_backend().lower() in ['agg', 'cairo', 'pdf', 'ps', 'svg']:
         print("Unable to display the plot due to the non-interactive backend.")
-        print("The plot has been automatically saved as 'parity_plot_density.png'.")
-        plt.savefig('parity_plot_density.png', dpi=300)
+        print("The plot has been automatically saved as 'parity_density_plot.png'.")
+        plt.savefig('parity_density_plot.png', dpi=300)
     else:
         plt.show()

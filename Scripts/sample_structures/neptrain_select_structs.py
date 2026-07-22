@@ -1,10 +1,59 @@
+"""
+=============================================================================
+GPUMDkit: A User-Friendly Toolkit for GPUMD and NEP
+Repository: https://github.com/zhyan0603/GPUMDkit
+Citation: Z. Yan et al., GPUMDkit: A User-Friendly Toolkit for GPUMD and NEP,
+          MGE Advances, 2026, 4, e70074 (https://doi.org/10.1002/mgea.70074)
+=============================================================================
+Script:     neptrain_select_structs.py
+Category:   Sample Structure Scripts
+Purpose:    Select diverse structures from a sampledata set using
+            farthest-point sampling on NepTrain descriptors, relative to
+            an existing training set.
+Usage:      gpumdkit.sh
+            choose 203) FPS sampling by NepTrain
+            python neptrain_select_structs.py <sampledata_file> <traindata_file> <nep_model_file>
+Arguments:
+  sampledata_file  Extxyz file with candidate structures
+  traindata_file   Extxyz file with existing training structures
+  nep_model_file   NEP model file (e.g., nep.txt)
+Output:
+  selected.xyz     Selected diverse structures
+  select.png       PCA visualization of descriptor space
+  pca_sample.txt / pca_train.txt / pca_selected.txt  PCA projections
+Author:     Benrui TANG (tang070205@proton.me)
+Last-modified: 2026-05-16
+=============================================================================
+"""
+
 import sys
-import numpy as np
-from ase.io import read, write
-import matplotlib.pyplot as plt
-from sklearn.decomposition import PCA
-from NepTrain.core.nep import *
-from scipy.spatial.distance import cdist
+
+
+def print_dependency_notice():
+    print(" This function requires the NepTrain package.")
+    print(" If you use this function, we recommend citing:")
+    print(" Chen et al., Comput. Phys. Commun. 317, 109859 (2025).")
+    print(" https://doi.org/10.1016/j.cpc.2025.109859")
+
+
+def print_usage():
+    print(" Usage: gpumdkit.sh")
+    print("        choose 203) FPS sampling by NepTrain")
+    print("    or: python neptrain_select_structs.py <sampledata_file> <traindata_file> <nep_model_file>")
+    print("")
+    print(" Arguments:")
+    print("   sampledata_file  Extxyz file with candidate structures")
+    print("   traindata_file   Extxyz file with existing training structures")
+    print("   nep_model_file   NEP model file (e.g., nep.txt)")
+    print("")
+    print(" Output:")
+    print("   selected.xyz")
+    print("   select.png")
+    print("   pca_sample.txt, pca_train.txt, pca_selected.txt")
+    print("")
+    print(" Example: in interactive mode, enter: dump.xyz train.xyz nep.txt")
+    print("          python neptrain_select_structs.py dump.xyz train.xyz nep.txt")
+    print("")
 
 
 def print_progress_bar(iteration, total, prefix='', suffix='', decimals=1, length=50, fill='█'):
@@ -61,10 +110,23 @@ def FarthestPointSample(new_data, now_data=[], min_distance=None, min_select=1, 
     return to_add
 
 
-# Check command line arguments
-if len(sys.argv) < 4:
-    print(" Usage: python pynep_select_structs.py <sampledata_file> <traindata_file> <nep_model_file>")
-    print(" Examp: python pynep_select_structs.py dump.xyz train.xyz nep.txt")
+args = sys.argv[1:]
+if len(args) != 3 or args[0] in ("-h", "--help"):
+    print_usage()
+    sys.exit(0 if args and args[0] in ("-h", "--help") else 1)
+
+print_dependency_notice()
+
+try:
+    import numpy as np
+    from ase.io import read, write
+    import matplotlib.pyplot as plt
+    from sklearn.decomposition import PCA
+    from NepTrain.core.nep import Nep3Calculator
+    from scipy.spatial.distance import cdist
+except ImportError:
+    print(" Error: required Python dependencies are not installed or cannot be imported.")
+    print(" Please install NepTrain and the scientific Python stack before using this function.")
     sys.exit(1)
 
 # Load data
@@ -147,6 +209,10 @@ if sns_installed:
     sns.kdeplot(y=proj_selected[:, 1], color='C2', ax=side_kde, fill=True, alpha=0.4)
     side_kde.set_xticks([])
     side_kde.set_yticks([])
+
+np.savetxt('pca_sample.txt', proj_sample, fmt='%.8f', header='sample_x sample_y', comments='')
+np.savetxt('pca_train.txt', proj_train, fmt='%.8f', header='train_x train_y', comments='')
+np.savetxt('pca_selected.txt', proj_selected, fmt='%.8f', header='selected_x selected_y', comments='')
 
 plt.tight_layout()
 #plt.show()

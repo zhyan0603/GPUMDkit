@@ -1,3 +1,24 @@
+"""
+=============================================================================
+GPUMDkit: A User-Friendly Toolkit for GPUMD and NEP
+Repository: https://github.com/zhyan0603/GPUMDkit
+Citation: Z. Yan et al., GPUMDkit: A User-Friendly Toolkit for GPUMD and NEP,
+          MGE Advances, 2026, 4, e70074 (https://doi.org/10.1002/mgea.70074)
+=============================================================================
+Script:     split_single_xyz.py
+Category:   Format Conversion Scripts
+Purpose:    Split a multi-frame XYZ file into individual model_${i}.xyz files
+            (one frame per file).
+Usage:      python split_single_xyz.py <input.xyz>
+Arguments:
+  input.xyz   Input multi-frame XYZ file
+Output:
+  model_1.xyz, model_2.xyz, ...  (individual frame files)
+Author:     Zihan YAN (yanzihan@westlake.edu.cn)
+Last-modified: 2026-05-16
+=============================================================================
+"""
+
 import sys
 from ase.io import read, write
 
@@ -24,7 +45,7 @@ def split_xyz_to_individual_models(input_xyz_filename):
 if __name__ == '__main__':
     # Check if the number of arguments is correct
     if len(sys.argv) < 2:
-        print(" Usage: python script_name.py <input_xyz_filename>")
+        print(" Usage: python split_single_xyz.py <input.xyz>")
         sys.exit(1)
 
     # Get input XYZ filename from command line argument

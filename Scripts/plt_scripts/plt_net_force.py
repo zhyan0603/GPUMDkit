@@ -1,3 +1,26 @@
+"""
+=============================================================================
+GPUMDkit: A User-Friendly Toolkit for GPUMD and NEP
+Repository: https://github.com/zhyan0603/GPUMDkit
+Citation: Z. Yan et al., GPUMDkit: A User-Friendly Toolkit for GPUMD and NEP,
+          MGE Advances, 2026, 4, e70074 (https://doi.org/10.1002/mgea.70074)
+=============================================================================
+Script:     plt_net_force.py
+Category:   Plot Scripts
+Purpose:    Plot distribution of net forces on structures to identify
+            problematic configurations in training datasets.
+Usage:      gpumdkit.sh -plt net_force <extxyzfile> [save]
+            python plt_net_force.py <extxyzfile> [save]
+Arguments:
+  extxyzfile  Path to the extended XYZ file (e.g., train.xyz)
+  save        Save the plot as 'net_force_distribution.png' instead of displaying it
+Output:
+  net_force_distribution.png  (if save is used, or if backend is non-interactive)
+Author:     Zihan YAN (yanzihan@westlake.edu.cn)
+Last-modified: 2026-05-16
+=============================================================================
+"""
+
 import numpy as np
 import matplotlib.pyplot as plt
 import os
@@ -16,7 +39,7 @@ def parse_xyz_file(xyz_file):
             # Read number of atoms
             try:
                 num_atoms = int(lines[i].strip())
-            except:
+            except (ValueError, IndexError):
                 i += 1
                 continue
             
@@ -86,7 +109,8 @@ def plot_net_force_distribution(net_forces, output_base, save_flag):
     """
     # Simple style settings
     plt.rcParams.update({
-        'font.family': 'Arial',
+        'font.family': 'sans-serif',
+        'font.sans-serif': ['Arial', 'DejaVu Sans', 'Liberation Sans'],
         'font.size': 10,
         'axes.labelsize': 11,
         'axes.titlesize': 11,
@@ -193,7 +217,8 @@ def check_convergence(xyz_file, threshold=0.001, save_flag=False):
 # Main function
 def main():
     if len(sys.argv) < 2:
-        print(" Usage: python plt_net_force.py train.xyz [save]")
+        print(" Usage: gpumdkit.sh -plt net_force <extxyzfile> [save]")
+        print("    or: python plt_net_force.py <extxyzfile> [save]")
         sys.exit(1)
     
     xyz_file = sys.argv[1]

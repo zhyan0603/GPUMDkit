@@ -1,0 +1,50 @@
+name: Publish Conda Package
+
+on:
+  push:
+    tags:
+      - 'v*'
+  workflow_dispatch:
+
+jobs:
+  build:
+    name: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, macos-latest]
+
+    runs-on: ${{ matrix.os }}
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Miniconda
+        uses: conda-incubator/setup-miniconda@v3
+        with:
+          auto-update-conda: true
+          channels: conda-forge
+          python-version: '3.11'
+
+      - name: Set package version from tag
+        run: |
+          TAG="${{ github.ref_name }}"
+          VERSION="${TAG#v}"
+          echo "VERSION=${VERSION}" >> $GITHUB_ENV
+          echo "Building gpumdkit ${VERSION}"
+
+      - name: Build conda package
+        run: |
+          eval "$(conda shell.bash hook)"
+          conda install conda-build anaconda-client -y
+          conda build conda/ -c conda-forge --output-folder ${{ github.workspace }}/dist
+
+      - name: Upload to Anaconda.org
+        if: startsWith(github.ref, 'refs/tags/v')
+        env:
+          ANACONDA_API_TOKEN: ${{ secrets.ANACONDA_TOKEN }}
+        run: |
+          eval "$(conda shell.bash hook)"
+          pkg=$(find ${{ github.workspace }}/dist -name "gpumdkit-*.conda" | head -1)
+          echo "Uploading: $pkg"
+          anaconda upload --user gpumdkit "$pkg"

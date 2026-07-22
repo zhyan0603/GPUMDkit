@@ -6,6 +6,14 @@
     <meta name="msvalidate.01" content="C54B40775F728A768032AB60C92F3A42" />
     <meta name="google-site-verification" content="sDBlfmdKvrOL-RYHTskPd2kfi_VtOqHSp9Joa9ZRPj4" />
     <title>GPUMDkit - A User-friendly Toolkit for GPUMD and NEP</title>
+    <meta name="description" content="GPUMDkit is a user-friendly toolkit for GPUMD and NEP, providing format conversion, structure sampling, workflow automation, calculators, analyzers, and visualization tools for molecular dynamics and neuroevolution potential simulations.">
+    <meta property="og:title" content="GPUMDkit - A User-friendly Toolkit for GPUMD and NEP">
+    <meta property="og:description" content="GPUMDkit is a user-friendly toolkit for GPUMD and NEP, providing format conversion, structure sampling, workflow automation, calculators, analyzers, and visualization tools.">
+    <meta property="og:image" content="https://gpumdkit.cn/Gallery/gpumdkit_logo_lateral.png">
+    <meta property="og:url" content="https://gpumdkit.cn/">
+    <meta property="og:type" content="website">
+    <meta name="twitter:card" content="summary_large_image">
+    <link rel="canonical" href="https://gpumdkit.cn/">
     <link rel="stylesheet" href="css/home.css">
     <link rel="stylesheet" href="css/mobile.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -22,17 +30,18 @@
 
     <!-- Main Header -->
     <header class="main-header animate-on-scroll">
-        <div class="logo-container">
+        <a href="index.html" class="logo-container" aria-label="GPUMDkit home">
             <img src="Gallery/gpumdkit_logo_lateral.png" alt="GPUMDkit Logo" class="logo">
-        </div>
+        </a>
         <button class="mobile-menu-btn" style="display: none;">☰</button>
         <nav class="nav-links">
-            <a href="index.html" class="nav-item">Home</a>
-            <a href="htmls/tutorials.html" class="nav-item">Documentation</a>
+            <a href="index.html" class="nav-item active" aria-current="page">Home</a>
+            <a href="htmls/index.html" class="nav-item">Documentation</a>
             <a href="gallery.html" class="nav-item">Gallery</a>
             <a href="publications.html" class="nav-item">Publications</a>            
             <!-- <a href="https://github.com/zhyan0603/GPUMDkit" class="nav-item">Join Us</a> -->
             <a href="https://github.com/zhyan0603/GPUMDkit/archive/refs/heads/main.zip" class="nav-item">Download</a>
+            <a href="index_zh.html" class="nav-item lang-switch">中文</a>
         </nav>
     </header>
 
@@ -41,7 +50,7 @@
         <section class="hero-section animate-on-scroll">
             <h1 class="hero-title"><span class="gpumd">GPUMD</span><span class="kit">kit</span></h1>
             <h2 class="hero-subtitle">A Toolkit for GPUMD and NEP</h2>
-            <p class="hero-desc">
+            <p class="hero-desc" style="text-align: justify;">
                 GPUMDkit is a user-friendly toolkit for the GPUMD (Graphics Processing Units Molecular Dynamics) and NEP (Neuroevolution Potential) program. It provides a set of tools to streamline the use of common scripts in GPUMD and NEP, simplifying workflows and enhancing efficiency.
             </p>
             <div class="cta-group">
@@ -90,12 +99,9 @@
                         <br>
                         <span class="code-line"><span class="comment"># 2. Enter directory and run installer</span></span>
                         <span class="code-line"><span class="cmd">cd</span> <span class="arg">GPUMDkit</span></span>
-                        <span class="code-line"><span class="cmd">bash</span> <span class="arg">source ./install.sh</span></span>
+                        <span class="code-line"><span class="cmd">source</span> <span class="arg"> ./install.sh</span></span>
                         <br>
-                        <span class="code-line"><span class="comment"># 3. Reload shell configuration</span></span>
-                        <span class="code-line"><span class="cmd">source</span> <span class="path">~/.bashrc</span></span>
-                        <br>
-                        <span class="code-line"><span class="comment"># 4. Ready to go!</span></span>
+                        <span class="code-line"><span class="comment"># 3. Ready to go!</span></span>
                         <span class="code-line"><span class="cmd">gpumdkit.sh</span></span>
                     </div>
                 </div>
@@ -143,37 +149,37 @@
         <section id="documentation" class="animate-on-scroll">
             <h2 class="section-header">Documentation</h2>
             <div class="doc-grid">
-                <a href="htmls/format_conversion.html" class="doc-card">
+                <a href="htmls/en/format_conversion.html" class="doc-card">
                     <div class="doc-icon">🔄</div>
                     <h3>Format Conversion</h3>
                     <p>Convert seamlessly between POSCAR, XYZ, CIF, and other formats.</p>
                     <div class="doc-arrow">Read more</div>
                 </a>
-                <a href="htmls/sample_structures.html" class="doc-card">
+                <a href="htmls/en/structure_sampling.html" class="doc-card">
                     <div class="doc-icon">🧪</div>
                     <h3>Sample Structures</h3>
                     <p>Generate and sample structures for NEP training.</p>
                     <div class="doc-arrow">Read more</div>
                 </a>
-                <a href="htmls/workflow.html" class="doc-card">
+                <a href="htmls/en/workflow_scripts.html" class="doc-card">
                     <div class="doc-icon">🚀</div>
                     <h3>Workflow</h3>
                     <p>Guides on setting up efficient active learning loops.</p>
                     <div class="doc-arrow">Read more</div>
                 </a>
-                <a href="htmls/calculators.html" class="doc-card">
+                <a href="htmls/en/calculator_scripts.html" class="doc-card">
                     <div class="doc-icon">🧮</div>
                     <h3>Calculators</h3>
                     <p>Compute various properties and metrics directly.</p>
                     <div class="doc-arrow">Read more</div>
                 </a>
-                <a href="htmls/analyzer.html" class="doc-card">
+                <a href="htmls/en/analyzer_scripts.html" class="doc-card">
                     <div class="doc-icon">📊</div>
                     <h3>Analyzer</h3>
                     <p>Trajectory analysis and property extraction.</p>
                     <div class="doc-arrow">Read more</div>
                 </a>
-                <a href="htmls/plot_scripts.html" class="doc-card">
+                <a href="htmls/en/plot_scripts.html" class="doc-card">
                     <div class="doc-icon">📈</div>
                     <h3>Visualization</h3>
                     <p>Plotting tools for MSD, RDF, PDOS, and other data.</p>
@@ -186,30 +192,30 @@
         <section id="gallery" class="animate-on-scroll">
             <h2 class="section-header">Gallery</h2>
             <div class="gallery-grid">
-                <div class="gallery-card">
-                    <img src="Gallery/train.png" alt="Training Plot" class="gallery-img">
+                <a href="gallery.html" class="gallery-card">
+                    <img src="Gallery/train.png" alt="Training Plot" class="gallery-img" loading="lazy">
                     <div class="gallery-caption">Training Plot</div>
-                </div>
-                <div class="gallery-card">
-                    <img src="Gallery/thermo.png" alt="Thermo Analysis" class="gallery-img">
+                </a>
+                <a href="gallery.html" class="gallery-card">
+                    <img src="Gallery/thermo.png" alt="Thermo Analysis" class="gallery-img" loading="lazy">
                     <div class="gallery-caption">Thermo Analysis</div>
-                </div>
-                <div class="gallery-card">
-                    <img src="Gallery/prediction.png" alt="Parity Plot" class="gallery-img">
+                </a>
+                <a href="gallery.html" class="gallery-card">
+                    <img src="Gallery/prediction.png" alt="Parity Plot" class="gallery-img" loading="lazy">
                     <div class="gallery-caption">Parity Plot</div>
-                </div>
-                <div class="gallery-card">
-                    <img src="Gallery/emd.png" alt="EMD" class="gallery-img">
+                </a>
+                <a href="gallery.html" class="gallery-card">
+                    <img src="Gallery/emd.png" alt="EMD" class="gallery-img" loading="lazy">
                     <div class="gallery-caption">EMD</div>
-                </div>
-                <div class="gallery-card">
-                    <img src="Gallery/nemd.png" alt="NEMD" class="gallery-img">
+                </a>
+                <a href="gallery.html" class="gallery-card">
+                    <img src="Gallery/nemd.png" alt="NEMD" class="gallery-img" loading="lazy">
                     <div class="gallery-caption">NEMD</div>
-                </div>
-                <div class="gallery-card">
-                    <img src="Gallery/hnemd.png" alt="HNEMD" class="gallery-img">
+                </a>
+                <a href="gallery.html" class="gallery-card">
+                    <img src="Gallery/hnemd.png" alt="HNEMD" class="gallery-img" loading="lazy">
                     <div class="gallery-caption">HNEMD</div>
-                </div>
+                </a>
             </div>
             <div class="view-all-container">
                 <a href="gallery.html" class="view-all-btn">View All Gallery</a>
@@ -241,7 +247,12 @@
                         <div class="cc-bg-decor-1"></div>
                         <div class="card-content">
                             <div class="card-header">
-                                <div class="icon-box-modern">🛠️</div>
+                                <div class="icon-box-modern">
+                                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                        <path d="M15 22v-4a4.8 4.8 0 0 0-1-3.5c3 0 6-2 6-5.5.08-1.25-.27-2.48-1-3.5.28-1.15.28-2.35 0-3.5 0 0-1 0-3 1.5-2.64-.5-5.36-.5-8 0C6 2 5 2 5 2c-.3 1.15-.3 2.35 0 3.5A5.403 5.403 0 0 0 4 9c0 3.5 3 5.5 6 5.5-.39.49-.68 1.05-.85 1.65-.17.6-.22 1.23-.15 1.85v4"/>
+                                        <path d="M9 18c-4.51 2-5-2-7-2"/>
+                                    </svg>
+                                </div>
                                 <h3>Contribute</h3>
                             </div>
                             <p class="card-desc">Help us improve GPUMDkit by contributing code.</p>
@@ -255,7 +266,11 @@
                         <div class="cc-bg-decor-2"></div>
                         <div class="card-content">
                             <div class="card-header">
-                                <div class="icon-box-modern">⭐</div>
+                                <div class="icon-box-modern">
+                                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                        <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
+                                    </svg>
+                                </div>
                                 <h3>Star Us</h3>
                             </div>
                             <p class="card-desc">Support our project by starring on GitHub.</p>
@@ -275,11 +290,15 @@
                         <div class="cc-bg-decor-3"></div>
                         <div class="card-content-center">
                             <div class="card-header-center">
-                                <div class="icon-box-modern">💬</div>
+                                <div class="icon-box-modern">
+                                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                        <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
+                                    </svg>
+                                </div>
                                 <h3>Join QQ Group</h3>
                             </div>
                             <div class="qr-container-modern">
-                                <img src="Gallery/gpumdkit_qqgroup.jpg" alt="QQ Group QR" class="qr-img-modern">
+                                <img src="Gallery/gpumdkit_qqgroup.jpg" alt="QQ Group QR" class="qr-img-modern" loading="lazy">
                                 <span class="qr-caption-modern">Scan to Join</span>
                             </div>
                         </div>
@@ -293,17 +312,22 @@
                         <div class="card-content citation-layout">
                             <div class="citation-header">
                                 <div style="display: flex; align-items: center; gap: 12px;">
-                                    <div class="icon-box-modern">📝</div>
+                                    <div class="icon-box-modern">
+                                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                            <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/>
+                                            <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/>
+                                        </svg>
+                                    </div>
                                     <h3>Citation</h3>
                                 </div>
-                                <a href="https://doi.org/10.48550/arXiv.2603.17367" class="modern-btn outline" target="_blank">
-                                    View on arXiv
+                                <a href="https://doi.org/10.1002/mgea.70074" class="modern-btn outline" target="_blank">
+                                    View on Wiley
                                 </a>
                             </div>
                             <div class="citation-body-modern">
                                 <h4 class="paper-title-modern">GPUMDkit: A User-Friendly Toolkit for GPUMD and NEP</h4>
                                 <div class="paper-meta-modern">
-                                    <span class="meta-text">arXiv.2603.17367</span>
+                                    <span class="meta-text">MGE Advances, 2026, 4, e70074</span>
                                 </div>
                                 <div class="paper-authors-modern">
                                     Zihan Yan, Denan Li, Xin Wu, Zhoulin Liu, Chen Hua, Boyi Situ, Hao Yang, Shengjie Tang, Benrui Tang, Ziyang Wang, Shangzhao Yi, Huan Wang, Dian Huang, Ke Li, Qilin Guo, Zherui Chen, Ke Xu, Yanzhou Wang, Ziliang Wang, Gang Tang, Shi Liu, Zheyong Fan, Yizhou Zhu
@@ -316,16 +340,16 @@
             </div>
         </section>
 
-            </div>
-        </section>
-
     </div>
     <footer class="footer">
             <div class="footer-content">
                 <div class="footer-column">
-                    <h4>Research Group</h4>
+                    <h4>Quick Links</h4>
                     <ul>
-                        <li><a href="https://zhuyizhou.github.io/" target="_blank">Yizhou Zhu Group</a></li>
+                        <li><a href="htmls/index.html">Documentation</a></li>
+                        <li><a href="gallery.html">Gallery</a></li>
+                        <li><a href="publications.html">Publications</a></li>
+                        <li><a href="https://github.com/zhyan0603/GPUMDkit/archive/refs/heads/main.zip">Download</a></li>
                     </ul>
                 </div>
                 <div class="footer-column">
@@ -348,19 +372,20 @@
                 </div>
             </div>
             <div class="footer-bottom">
-                <p>&copy; 2026 GPUMDkit Teams. All rights reserved. 苏ICP备2026013707-1号</p>
+                <div class="footer-info-row">
+                    <span class="copyright">&copy; 2026 GPUMDkit Teams. All rights reserved.</span>
+                    <span class="beian-info">
+                        <a href="https://beian.miit.gov.cn/" target="_blank">苏ICP备2026013707-1号</a>
+                        <span class="separator">|</span>
+                        <span>苏公网安备32132202001502号</span>
+                    </span>
+                    <span class="site-stats">
+                        <span id="busuanzi_container_site_pv">Views: <span id="busuanzi_value_site_pv"></span></span>
+                        <span class="separator">|</span>
+                        <span id="busuanzi_container_site_uv">Visitors: <span id="busuanzi_value_site_uv"></span></span>
+                    </span>
+                </div>
             </div>
-            <div class="site-stats">
-                <span id="busuanzi_container_site_pv" style="display: inline;"> Views: <span id="busuanzi_value_site_pv"></span></span>
-                <span id="busuanzi_container_site_uv" style="display: inline;"> Visitors: <span id="busuanzi_value_site_uv"></span></span>
-            </div>
-            <!-- <div class="beian-info" style="text-align: center; margin-top: 10px; font-size: 0.85rem; color: #64748b;"> -->
-                <!-- <a href="https://beian.miit.gov.cn/" target="_blank" style="color: inherit; text-decoration: none; margin-right: 15px;">苏ICP备2026013707-1号</a> -->
-                <!-- <span style="display: inline-flex; align-items: center;">
-                    <img src="path/to/gongan_icon.png" alt="" style="width: 14px; height: 14px; margin-right: 4px;">
-                    苏公网安备XXXXXXXXXXXXXX号
-                </span> -->
-            <!-- </div> -->
         </footer>
     <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
     <script src="js/home-terminal.js"></script>

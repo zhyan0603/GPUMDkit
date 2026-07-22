@@ -1,5 +1,12 @@
 [
     {
+        "title": "Bridging accuracy and efficiency in solid-liquid interface simulations: An accelerated fine-tuning strategy for MgO hydration",
+        "authors": "Yuanrui Wang, Sijin Zhou, Ziliang Wang",
+        "journal": "Comput. Mater. Sci. 2026, 269, 114726",
+        "year": "2026",
+        "link": "https://doi.org/10.1016/j.commatsci.2026.114726"
+    },
+    {
         "title": "A Perspective on Training Machine Learning Force Fields for Solid-State Electrolyte Materials",
         "authors": "Zihan Yan, Shengjie Tang, Yizhou Zhu",
         "journal": "arXiv:2603.07425",

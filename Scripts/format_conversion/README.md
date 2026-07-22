@@ -11,6 +11,7 @@ The format conversion scripts provide seamless interconversion between:
 - **ABACUS** output → extxyz  
 - **LAMMPS** dump → extxyz
 - **CIF** → POSCAR/extxyz
+- **DeepMD** `npy` datasets → extxyz
 - Adding metadata (group labels, weights)
 - Frame extraction and manipulation
 
@@ -24,20 +25,38 @@ The format conversion scripts provide seamless interconversion between:
 | OUTCAR | extxyz | `gpumdkit.sh -out2exyz <dir>` |
 | POSCAR | extxyz | `gpumdkit.sh -pos2exyz <poscar> <xyz>` |
 | extxyz | POSCAR | `gpumdkit.sh -exyz2pos <xyz>` |
-| POSCAR | LAMMPS | `gpumdkit.sh -pos2lmp <poscar> <lmp> <elem...>` |
+| POSCAR | LAMMPS | `gpumdkit.sh -pos2lmp <poscar> <lmp>` |
 | XDATCAR | extxyz | `gpumdkit.sh -xdat2exyz XDATCAR dump.xyz` |
 | LAMMPS dump | extxyz | `gpumdkit.sh -lmp2exyz <dump> <elem...>` |
-| CIF | extxyz | `gpumdkit.sh -cif2exyz <cif>` |
-| CIF | POSCAR | `gpumdkit.sh -cif2pos <cif>` |
+| CIF | extxyz | `gpumdkit.sh -cif2exyz <input.cif> <output.xyz>` |
+| CIF | POSCAR | `gpumdkit.sh -cif2pos <input.cif> <output.vasp>` |
 | Add groups | - | `gpumdkit.sh -addgroup <poscar> <elem...>` |
 | Add weight | - | `gpumdkit.sh -addweight <in> <out> <weight>` |
 | Replicate1 | - | `gpumdkit.sh -replicate input.vasp output.vasp 2 2 2` |
 | Replicate2 | - | `gpumdkit.sh -replicate input.vasp output.vasp <target_num>` |
-| Get frame | - | `gpumdkit.sh -ge_frame <extxyz> <index>` |
+| Get frame | - | `gpumdkit.sh -get_frame <extxyz> <index>` |
+| Clean extxyz | - | `gpumdkit.sh -clean_xyz <input.xyz> <output.xyz>` |
+| ASE traj | extxyz | `gpumdkit.sh -traj2exyz <input.traj> <output.xyz>` |
+| DeepMD `npy` directory | extxyz | `gpumdkit.sh -dp2xyz <input_dir/> [output.xyz]` |
 
 ---
 
 ## Scripts
+
+### dp2xyz.py
+
+Recursively converts DeepMD `npy` datasets to extxyz. The directory must
+contain DeepMD dataset files such as `type.raw`, `type_map.raw`, and `set.000/`.
+
+```bash
+gpumdkit.sh -dp2xyz database train.xyz
+```
+
+The output argument is optional and defaults to `train.xyz`. This conversion
+requires `dpdata` and `ase`; use `gpumdkit.sh -doctor` to check whether the
+optional package is available before running it.
+
+---
 
 ### add_groups.py
 
@@ -82,8 +101,8 @@ This script adds weight labels to structures.
 python add_weight.py <input_file> <output_file> <new_weight>
 ```
 
-- `<inputfile>`: The path to the input file (e.g., train.xyz).
-- `<outputfile>`: The path to the input file (e.g., train_weighted.xyz).
+- `<input_file>`: The path to the input file (e.g., train.xyz).
+- `<output_file>`: The path to the output file (e.g., train_weighted.xyz).
 - `<new_weight>`: The `weight` you need to change.
 
 #### Example
@@ -208,6 +227,112 @@ This command will split all frames in `extxyz_file` into separate files named `m
 
 
 
+### out2exyz.py
+
+---
+
+This script searches a directory for VASP `OUTCAR` files and writes the converged configurations to `train.xyz` in extxyz format.
+
+#### Usage
+
+```
+python out2exyz.py <directory>
+```
+
+#### Example
+
+```sh
+python out2exyz.py ./
+```
+
+#### Command-Line Mode Example
+
+```
+gpumdkit.sh -out2exyz ./
+```
+
+The output file is `train.xyz`.
+
+
+
+### cif2pos.py
+
+---
+
+This script converts a CIF file to VASP POSCAR format.
+
+#### Usage
+
+```
+python cif2pos.py <input.cif> <output.vasp>
+```
+
+#### Example
+
+```sh
+python cif2pos.py input.cif POSCAR.vasp
+```
+
+#### Command-Line Mode Example
+
+```
+gpumdkit.sh -cif2pos input.cif POSCAR.vasp
+```
+
+
+
+### cif2exyz.py
+
+---
+
+This script converts a CIF file to extxyz format.
+
+#### Usage
+
+```
+python cif2exyz.py <input.cif> <output.xyz>
+```
+
+#### Example
+
+```sh
+python cif2exyz.py input.cif model.xyz
+```
+
+#### Command-Line Mode Example
+
+```
+gpumdkit.sh -cif2exyz input.cif model.xyz
+```
+
+
+
+### xdatcar2exyz.py
+
+---
+
+This script converts a VASP `XDATCAR` trajectory to extxyz format.
+
+#### Usage
+
+```
+python xdatcar2exyz.py <XDATCAR> <output.xyz>
+```
+
+#### Example
+
+```sh
+python xdatcar2exyz.py XDATCAR dump.xyz
+```
+
+#### Command-Line Mode Example
+
+```
+gpumdkit.sh -xdat2exyz XDATCAR dump.xyz
+```
+
+
+
 ### lmp2exyz.py
 
 ---
@@ -243,7 +368,7 @@ It will convert the `dump.data` to `dump.xyz` file
 
 ---
 
-This script will read the `extxyz` file and return the specified frame by index..
+This script will read the `extxyz` file and return the specified frame by index.
 
 #### Usage
 
@@ -270,6 +395,58 @@ You will get the `frame_1000.xyz` file after perform the script.
 
 
 
+### clean_xyz.py
+
+---
+
+This script removes stress, virial, force, and calculator result information from an extxyz file and writes the cleaned structures to a new extxyz file.
+
+#### Usage
+
+```
+python clean_xyz.py <input.xyz> <output.xyz>
+```
+
+#### Example
+
+```sh
+python clean_xyz.py train.xyz train_clean.xyz
+```
+
+#### Command-Line Mode Example
+
+```
+gpumdkit.sh -clean_xyz train.xyz train_clean.xyz
+```
+
+
+
+### traj2exyz.py
+
+---
+
+This script converts an ASE `.traj` file to extxyz format.
+
+#### Usage
+
+```
+python traj2exyz.py <input.traj> <output.xyz>
+```
+
+#### Example
+
+```sh
+python traj2exyz.py input.traj output.xyz
+```
+
+#### Command-Line Mode Example
+
+```
+gpumdkit.sh -traj2exyz input.traj output.xyz
+```
+
+
+
 ## Contributing
 
 To add new format converters:
@@ -277,7 +454,7 @@ To add new format converters:
 1. **Follow naming**: `<source>2<target>.py`
 2. **Handle errors**: Validate input format before processing
 3. **Document**: Add usage to this README
-6. **Update gpumdkit.sh**: Add command-line flag if appropriate
+4. **Update gpumdkit.sh**: Add command-line flag if appropriate
 
 See [CONTRIBUTING.md](../../CONTRIBUTING.md) for detailed guidelines.
 

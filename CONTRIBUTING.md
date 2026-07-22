@@ -1,5 +1,11 @@
 # Contributing to GPUMDkit
 
+<p align="center">
+  <strong>English</strong>
+  &nbsp;·&nbsp;
+  <a href="./docs/CONTRIBUTING_zh-CN.md">简体中文</a>
+</p>
+
 Thank you for your interest in contributing to `GPUMDkit`! We appreciate your time and effort in helping improve this toolkit. `GPUMDkit` is an open-source package, and we welcome contributions from the community, whether you're fixing bugs, adding new features, improving documentation, or suggesting enhancements.
 
 ---
@@ -61,7 +67,9 @@ To maintain code quality and consistency across the project, please adhere to th
 ### Documentation
 
 - Ensure that help messages (e.g., `-h` flags) are clear and accurate.
-- Documentation files in the `docs/` directory will be updated by the maintainers, so you generally don't need to modify them.
+- Tutorial documentation lives in `docs/tutorials/en/` (English) and `docs/tutorials/zh/` (Chinese).
+  If you add a new feature, consider updating the relevant tutorial page.
+- After editing tutorial markdown files, rebuild the HTML with `mkdocs build -f docs/mkdocs.yml`.
 
 ---
 
@@ -123,7 +131,8 @@ Name your branch as you prefer.
 
 The structure of `GPUMDkit` consists of:
 - **`gpumdkit.sh`**: Main entry point (Bash script) handling both interactive menu mode and command-line mode
-- **`Scripts/`**: Python utility scripts organized by functionality
+- **`install.sh`**: Installation script that sets up environment variables and shell configuration
+- **`Scripts/`**: Python and Bash implementation scripts organized by functionality
   - `plt_scripts/`: Plotting scripts
   - `calculators/`: Calculation utilities
   - `format_conversion/`: Format conversion tools
@@ -137,7 +146,14 @@ The structure of `GPUMDkit` consists of:
   - `f3_workflows.sh`
   - `f4_calculators.sh`
   - `f5_analyzers.sh`
+  - `f6_plots.sh`
+  - `f7_utilities.sh`
+- **`skills/`**: Portable Agent Skills definition (`gpumdkit-skill/SKILL.md`) and on-demand references
 - **`docs/`**: Documentation files
+  - `tutorials/en/` and `tutorials/zh/`: Bilingual tutorial pages
+  - `mkdocs.yml`: MkDocs configuration for building tutorial HTML
+  - `command_reference.tsv`: Machine-readable command reference
+  - `htmls/`: Generated HTML output from MkDocs
 
 #### Interactive Mode Contributions
 
@@ -160,18 +176,18 @@ To add a new feature accessible through the interactive menu:
    
    Add a new function:
    ```bash
-   function f106_new_converter(){
+   function f111_new_converter(){
    echo " >-------------------------------------------------<"
    echo " | Calling the script in Scripts/format_conversion |"
    echo " | Script: new_converter.py                        |"
    echo " | Developer: Your Name (your@email.com)           |"
    echo " >-------------------------------------------------<"
-   echo " Input the required parameters:"
-   echo " Examp: input.xyz output.lmp"
+   echo " Input <required_param1> <required_param2>"
+   echo " Example: input.xyz output.lmp"
    echo " ------------>>"
-   read -p " " converter_params
+   read_menu_array converter_args || return 1
    echo " ---------------------------------------------------"
-   python ${GPUMDkit_path}/Scripts/format_conversion/new_converter.py ${converter_params}
+   python ${GPUMDkit_path}/Scripts/format_conversion/new_converter.py "${converter_args[@]}"
    echo " Code path: ${GPUMDkit_path}/Scripts/format_conversion/new_converter.py"
    echo " ---------------------------------------------------"
    }
@@ -182,7 +198,7 @@ To add a new feature accessible through the interactive menu:
    # Find the menu() function and update it if needed
    # Find the array_choice array and add your new choice number
    array_choice=(
-       "0" "1" "101" "102" "103" "104" "105" "106"  # Added "106"
+       "0" "1" "101" "102" "103" "104" "105" "106" "107" "108" "109" "110" "111"  # Added "111"
        # ... rest of choices
    )
    ```
@@ -196,9 +212,9 @@ To add a new feature accessible through the interactive menu:
            source ${GPUMDkit_path}/src/f1_format_conversions.sh
            case $choice in
                "1") f1_format_conversion ;;
-               "101") f101_out2xyz ;;
-               # ... existing cases ...
-               "106") f106_new_converter ;;  # Add your case
+                "101") f101_out2xyz ;;
+                # ... existing cases ...
+                "111") f111_new_converter ;;  # Add your case
            esac ;;
        # ...
    esac
@@ -214,42 +230,47 @@ To add a new command-line flag or subcommand:
    touch Scripts/analyzer/analyze_bonds.py
    ```
 
-2. **Implement your functionality** with clear parameter requirements:
+2. **Implement your functionality** with clear parameter requirements. Python scripts
+   should own detailed argument parsing, help text, type conversion, file checks, and
+   user-facing error messages:
    ```python
    # Example: Scripts/analyzer/analyze_bonds.py
    import sys
    
-   def main():
-       if len(sys.argv) != 3:
-           print("Usage: gpumdkit.sh -analyze_bonds <input.xyz> <cutoff_distance>")
-           print("Example: gpumdkit.sh -analyze_bonds structure.xyz 3.0")
-           sys.exit(1)
-       
-       input_file = sys.argv[1]
-       cutoff = float(sys.argv[2])
-       
-       # Your implementation here
-       
-   if __name__ == "__main__":
-       main()
+   args = sys.argv[1:]
+   if len(args) < 2 or args[0] in ("-h", "--help"):
+       print(" Usage: gpumdkit.sh -analyze_bonds <input.xyz> <cutoff_distance>")
+       print("    or: python3 analyze_bonds.py <input.xyz> <cutoff_distance>")
+       print("")
+       print(" Arguments:")
+       print("   input.xyz        Input extxyz file")
+       print("   cutoff_distance  Bond cutoff distance")
+       print("")
+       print(" Example: gpumdkit.sh -analyze_bonds structure.xyz 3.0")
+       print("")
+       sys.exit(0 if args and args[0] in ("-h", "--help") else 1)
+   
+   input_file = args[0]
+   cutoff = float(args[1])
+   
+   # Your implementation here
    ```
+   
+   > **Note**: GPUMDkit Python scripts are designed to run directly (not imported as modules).
+   > You may use a `main()` function with `if __name__ == "__main__":` guard if you prefer,
+   > but it is not required. Most existing scripts execute at module level.
 
-3. **Add the command-line flag handler** in `gpumdkit.sh`:
+3. **Add the command-line flag handler** in `gpumdkit.sh`. Keep this layer as a
+   lightweight router. Detailed parameter validation should stay in the Python script,
+   not in the main shell entry point.
    ```bash
-   # Find the command-line parsing section (after line ~167)
+   # Find the command-line parsing section (the large "case $1 in" block)
    # Add your new flag in the appropriate location
    
    case $1 in
        # ... existing cases ...
        -analyze_bonds)
-           if [ ! -z "$2" ] && [ ! -z "$3" ]; then
-               python ${analyzer_path}/analyze_bonds.py "$2" "$3"
-           else
-               echo " Usage: gpumdkit.sh -analyze_bonds <input.xyz> <cutoff_distance>"
-               echo " Example: gpumdkit.sh -analyze_bonds structure.xyz 3.0"
-               echo " Code path: ${analyzer_path}/analyze_bonds.py"
-               exit 1
-           fi ;;
+           run_python_script "Your Name (your@email.com)" "${analyzer_path}/analyze_bonds.py" "${@:2}" ;;
        # ... rest of cases ...
    esac
    ```
@@ -276,17 +297,23 @@ vim Scripts/utils/completion.sh
 Add your new flag to the `opts` variable:
 ```bash
 # Find the line with local opts=...
-local opts="-h -update -U -help -clean -time -plt -calc -analyze_bonds -range -out2xyz ..."
-#                                                      ^^^^^^^^^^^^^^ Add your flag here
+local opts="-h -help -update -U -clean -time -plt -calc ... -your_new_flag ..."
+#                                                        Add your flag here
 ```
 
-If your flag accepts secondary options (like `-plt` or `-calc`), add a case for it:
+If your flag requires file arguments, add it to the existing file-completion case:
+```bash
+# Find the case for file-requiring flags and add yours with |
+-out2xyz|-out2exyz|-...|-your_new_flag)
+    COMPREPLY=($(compgen -f -- "$cur")) ;;
+```
+
+If your flag accepts secondary options (like `-plt` or `-calc`), add a new case:
 ```bash
 case "$prev" in
     # ... existing cases ...
-    -analyze_bonds)
-        COMPREPLY=($(compgen -f -- "$cur"))  # Complete with filenames
-        ;;
+    -your_new_flag)
+        COMPREPLY=($(compgen -W "option1 option2 option3" -- "$cur")) ;;
     # ... rest of cases ...
 esac
 ```
@@ -295,15 +322,54 @@ esac
 
 - **Shell Scripts**:
   - Use `${variable}` for variable expansion
-  - Write code that is clear and easy to maintain
+  - Use `[ ! -z "$var" ]` for shell control flow and broad dispatch checks (project convention)
+  - Interactive functions should follow the banner format:
+    ```bash
+    echo " >-------------------------------------------------<"
+    echo " | Calling the script in Scripts/<category>        |"
+    echo " | Script: <script_name>.py                        |"
+    echo " | Developer: <Name> (<email>)                     |"
+    echo " >-------------------------------------------------<"
+    ```
+  - Use `read_menu_choice varname || return 1` or `read_menu_array varname || return 1` for interactive input, then pass arrays with `"${varname[@]}"`
+  - Shell scripts in `src/` should start with a file header block:
+    ```bash
+    # ============================================================
+    # GPUMDkit <module name> module
+    # Repository: https://github.com/zhyan0603/GPUMDkit
+    # Author: <Name> (<email>)
+    # ============================================================
+    ```
 
 - **Python Scripts**:
   - Write clear, maintainable code
   - Use meaningful variable names
+  - Use `args = sys.argv[1:]` for simple positional argument parsing, or `argparse` for complex option sets
+  - Provide clear usage messages with leading-space prints such as `print(" Usage: ...")` and `print(" Example: ...")`
+  - Put help and missing-argument checks before heavy optional imports so `-h` works without optional packages installed
+  - If your script uses heavy/special packages (`NepTrain`, `calorine`, `dpdata`), add a
+    `print_dependency_notice()` function to inform users about citation recommendations
 
 ### Testing Your Changes
 
-Before submitting your contribution:
+Before submitting your contribution, run the relevant validation commands:
+
+```bash
+# Shell syntax checks (always run these)
+bash -n gpumdkit.sh
+find src Scripts -name '*.sh' -exec bash -n {} +
+
+# Python syntax checks (for modified Python files)
+python3 -m py_compile path/to/modified_script.py
+
+# MkDocs build (if you modified documentation)
+mkdocs build -f docs/mkdocs.yml
+
+# Check for trailing whitespace issues
+git diff --check
+```
+
+Then test functionality:
 
 1. **Test interactive mode** (if applicable):
    ```bash
@@ -342,10 +408,10 @@ Write clear, descriptive commit messages that explain what you changed. There ar
    git commit -m "your descriptive message"
    ```
 
-2. **Keep your branch updated** with the upstream `main` branch:
+2. **Keep your branch updated** with the latest `dev` branch:
    ```bash
-   git fetch upstream
-   git rebase upstream/main
+   git fetch origin
+   git rebase origin/dev
    ```
 
 3. **Push your branch** to your fork:

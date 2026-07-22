@@ -15,6 +15,22 @@ The analyzer scripts provide functionality for:
 
 Access analyzers through `gpumdkit.sh` using various flags or run scripts directly.
 
+### Direct CLI helpers
+
+These helpers are useful before selecting a filtering threshold or a downstream
+analysis path:
+
+| Command | Script | Purpose |
+|---|---|---|
+| `gpumdkit.sh -chem_species <input.xyz>` | `analyze_chem_species.py` | List the element symbols present in an extxyz file. |
+| `gpumdkit.sh -min_dist <input.xyz>` | `get_min_dist.py` | Fast minimum-distance check without PBC. |
+| `gpumdkit.sh -min_dist_pbc <input.xyz>` | `get_min_dist_pbc.py` | Minimum-distance check including periodic images. |
+| `gpumdkit.sh -pda <ref> <traj> <species> <interval>` | `probability_density_analysis.py` | Write a CHGCAR-like probability-density file. |
+
+Use the PBC-aware command for periodic cells. Distance, property, and box
+thresholds are system-dependent choices; inspect the corresponding check output
+before applying a `-filter_*` command.
+
 ---
 
 ## Scripts
@@ -23,7 +39,7 @@ Access analyzers through `gpumdkit.sh` using various flags or run scripts direct
 
 ---
 
-This script analyze the composition of your `extxyz` file.
+This script analyzes the composition of your `extxyz` file.
 
 #### Usage
 
@@ -279,11 +295,20 @@ python find_outliers.py
 ```
  Input the function number:
  5
- ------------>>
- 501) Analyze composition of extxyz
- 502) Find outliers of extxyz
- 000) Return to the main menu
- ------------>>
+ +------------------------------------------------------+
+ |                    ANALYZER TOOLS                    |
+ +------------------------------------------------------+
+ | 501) Analyze composition of extxyz                   |
+ | 502) Find outliers of extxyz                         |
+ | 503) Analyze chemical species of extxyz              |
+ | 504) Check charge balance of extxyz                  |
+ | 505) Analyze energy/force/virial range               |
+ | 506) Filter structures by minimum distance           |
+ | 507) Get minimum interatomic distance                |
+ | 508) Probability density analysis                    |
+ +------------------------------------------------------+
+ | 000) Return to the main menu                         |
+ +------------------------------------------------------+
  Input the function number:
  502
  >-------------------------------------------------<
@@ -298,33 +323,7 @@ python find_outliers.py
  Enter stress RMSE threshold (GPa): 0.03
 ```
 
-After that, you will get `selected.xyz`, `remained.xyz`, and `slected_remained.png`
-
-
-
-### filter_exyz_by_value.py
-
----
-
-This script filter the structures by min_dist.
-
-#### Usage
-
-```sh
-python filter_exyz_by_value.py <extxyz_file> <min_dist>
-```
-
-#### Example
-
-```sh
-python filter_exyz_by_value.py dump.xyz 1.4
-```
-
-#### Command-Line Mode Example
-
-```
-gpumdkit.sh -filter_value dump.xyz 1.4
-```
+After that, you will get `selected.xyz`, `remained.xyz`, and `selected_remained.png`
 
 
 
@@ -332,12 +331,12 @@ gpumdkit.sh -filter_value dump.xyz 1.4
 
 ---
 
-This script filter the structures by box limit.
+This script filters the structures by box limit.
 
 #### Usage
 
 ```
-python filter_exyz_by_box.py <extxyz_file> <min_dist>
+python filter_exyz_by_box.py <extxyz_file> <edge_limit>
 ```
 
 #### Example
@@ -358,7 +357,7 @@ gpumdkit.sh -filter_box dump.xyz 20
 
 ---
 
-This script filter the structures by specified value.
+This script filters the structures by specified value.
 
 #### Usage
 

@@ -98,6 +98,25 @@ gpumdkit.sh -plt train_test
 
 ---
 
+#### plt_born_charge.py
+
+Creates parity plots for Born effective charges (BEC) on training and testing datasets. Structures with all-zero reference BEC are filtered out.
+
+**Input Files:** `bec_train.out`, `bec_test.out`
+
+**Usage:**
+
+```bash
+gpumdkit.sh -plt born_charge
+gpumdkit.sh -plt bec          # Alternative command
+```
+
+<div align="center">
+    <img src="../../docs/Gallery/born_charge.png" alt="born charge" width="45%" />
+</div>
+
+---
+
 #### plt_parity_density.py
 
 Generates density-based parity plots for energies, forces, and stresses, useful for large datasets.
@@ -233,8 +252,8 @@ Plots MSD for all atomic species separately when using `all_groups` in GPUMD.
 
 **Usage:**
 ```bash
-gpumdkit.sh -plt msd_all <species1> <species2> ...
-gpumdkit.sh -plt msd_all Li P S
+gpumdkit.sh -plt msd_all msd.out <species1> <species2> ...
+gpumdkit.sh -plt msd_all msd.out Li P S
 ```
 
 **Requirements:** Must use `all_groups` in the `compute_msd` command in `run.in`.
@@ -249,7 +268,7 @@ gpumdkit.sh -plt msd_all Li P S
 
 Checks convergence of MSD calculations across different time windows.
 
-**Input File:** `msd.out` (computed with `save_every` option)
+**Input File:** `msd_step*.out` (computed with `save_every` option)
 
 **Usage:**
 ```bash
@@ -304,12 +323,23 @@ gpumdkit.sh -plt D  # Alternative command
 **Output:**
 
 ```
-T: 300K, D_total: 1.001e-07 cm2/s
-T: 350K, D_total: 4.184e-07 cm2/s
-T: 400K, D_total: 1.027e-06 cm2/s
-T: 450K, D_total: 2.069e-06 cm2/s
-T: 500K, D_total: 3.563e-06 cm2/s
-Ea: 0.230 eV
+Activation Energy: 0.235 eV
+
+Exportable arrays for Python:
+temperatures = [300, 350, 400, 450, 500]
+diffusion_coeffs = [8.859e-08, 3.981e-07, 9.882e-07, 1.99e-06, 3.453e-06]
+
++------------------------------+
+|   Diffusivity (unit: cm2/s)  |
++------------------------------+
+|   T (K)    |     D_total     |
++------------------------------+
+|    300     |    8.859e-08    |
+|    350     |    3.981e-07    |
+|    400     |    9.882e-07    |
+|    450     |    1.990e-06    |
+|    500     |    3.453e-06    |
++------------------------------+
 ```
 
 ---
@@ -335,19 +365,24 @@ gpumdkit.sh -plt sigma         # Alternative command
 
 ```
 [Note] No run.in file found, assuming no replication
++----------------------------------------------------+
+|     Conductivity (unit: S/cm, Sigma*T: K S/cm)     |
++----------------------------------------------------+
+|   T (K)    |      Sigma       |      Sigma*T       |
++----------------------------------------------------+
+|    300     |    1.141e-02     |     3.422e+00      |
+|    350     |    4.377e-02     |     1.532e+01      |
+|    400     |    9.470e-02     |     3.788e+01      |
+|    450     |    1.688e-01     |     7.595e+01      |
+|    500     |    2.625e-01     |     1.312e+02      |
++----------------------------------------------------+
 
-Conductivity Data:
-T (K)  Sigma (S/cm)    Sigma·T (K·S/cm)
-------------------------------------
-300    1.141e-02       3.422e+00
-350    4.377e-02       1.532e+01
-400    9.470e-02       3.788e+01
-450    1.688e-01       7.595e+01
-500    2.625e-01       1.312e+02
-------------------------------------
+NEP, Ea: 0.234 eV
+at 300K, NEP: Sigma = 1.250e-02 S/cm
 
-msd, Ea: 0.234 eV
-at 300K, LGPS: Sigma = 1.250e-02 S/cm
+Exportable arrays for Python:
+temperatures = [300, 350, 400, 450, 500]
+conductivity_values = [0.01141, 0.04377, 0.0947, 0.1688, 0.2625]
 ```
 
 ---
@@ -383,7 +418,7 @@ gpumdkit.sh -plt nemd [real_length] [scale_eff_size] [cutoff_freq] [save]
 **Params:**
 
 ```
-real_length   : Real length of heat tranfer zone in nm (set to 'Auto', with auto-calculation)
+real_length   : Real length of heat transfer zone in nm (set to 'Auto', with auto-calculation)
 scale_eff_size: Optional, Scale factor for effective cross-sectional area (default: 1)
                • For 3D bulk systems: use 1
                • For low-dimensional systems with vacuum layer: S_box / S_eff
@@ -563,7 +598,7 @@ gpumdkit.sh -plt dimer Li Li nep.txt
     <img src="../../docs/Gallery/dimer.png" alt="Dimer comparison" width="45%" />
 </div>
 
-**Reference:** [arXiv:2504.15925](https://doi.org/10.48550/arXiv.2504.15925)
+**Reference:** [J. Chem. Inf. Model. 2026, 66, 3, 1406-1413](https://doi.org/10.1021/acs.jcim.5c02335)
 
 ---
 
@@ -627,8 +662,8 @@ gpumdkit.sh -plt net_force train.xyz
 | `emd` | EMD outputs | EMD thermal conductivity |
 | `nemd` | NEMD outputs | NEMD thermal transport |
 | `hnemd` | HNEMD outputs | HNEMD thermal transport |
-| `arrhenius_d` | Multiple MSD | Arrhenius diffusivity |
-| `arrhenius_sigma` | Conductivity data | Arrhenius conductivity |
+| `D` | Multiple MSD | Arrhenius diffusivity |
+| `sigma` | Multiple MSD | Arrhenius conductivity |
 
 ## Contributing
 
@@ -646,26 +681,46 @@ See [CONTRIBUTING.md](../../CONTRIBUTING.md) for detailed guidelines.
 
 For quick reference, here's the complete command list:
 
-```bash
-gpumdkit.sh -plt
-+=====================================================================================================+
-|                              GPUMDkit 1.4.2 (dev) (2025-12-17) Plotting Usage                      |
-+=============================================== Plot Types ==========================================+
-| thermo          Plot thermo info                   | train          Plot NEP train results          |
-| prediction      Plot NEP prediction results        | train_test     Plot NEP train and test results |
-| msd             Plot mean square displacement      | msd_conv       Plot the convergence of MSD     |
-| msd_all         Plot MSD of all species            | sdc            Plot self diffusion coefficient |
-| rdf             Plot radial distribution function  | vac            Plot velocity autocorrelation   |
-| restart         Plot parameters in nep.restart     | dimer          Plot dimer plot                 |
-| force_errors    Plot force errors                  | des            Plot descriptors                |
-| charge          Plot charge distribution           | lr             Plot learning rate              |
-| doas            Plot density of atomistic states   | arrhenius_d    Plot Arrhenius diffusivity      |
-| arrhenius_sigma Plot Arrhenius sigma               | net_force      Plot net force distribution     |
-| emd             Plot EMD results                   | nemd           Plot NEMD results               |
-| hnemd           Plot HNEMD results                 | parity_density Parity plots with density       |
-+=====================================================================================================+
-| For detailed usage and examples, use: gpumdkit.sh -plt <plot_type> -h                              |
-+=====================================================================================================+
+```
+ +-----------------------------------------------------------------------------------------------+
+ |                     GPUMDkit 1.5.6 (dev) (2026-07-10) PLOT & VISUALIZATION TOOLS              |
+ +-----------------------------------------------------------------------------------------------+
+ |  Usage: gpumdkit.sh -plt <type>                        List: gpumdkit.sh -plt -h              |
+ +-----------------------------------------------------------------------------------------------+
+ |                                    NEP Training & Evaluation                                  |
+ +-----------------------------------------------------------------------------------------------+
+ |  train          - NEP training results           prediction     - NEP prediction results      |
+ |  train_test     - NEP train and test results     parity_density - Parity density plot         |
+ |  train_density  - Training results density plot  restart        - Parameters in nep.restart   |
+ |  charge         - Charge distribution            born_charge    - Born effective charges      |
+ |  dimer          - Dimer energy/force curve       force_errors   - Force errors                |
+ |  des            - Descriptors                    lr             - Learning rate for gnep      |
+ +-----------------------------------------------------------------------------------------------+
+ |                                     Diffusion & Transport                                     |
+ +-----------------------------------------------------------------------------------------------+
+ |  msd            - Mean square displacement       msd_conv       - MSD convergence             |
+ |  msd_all        - MSD for all species            sdc            - Self diffusion coefficient  |
+ |  msd_sdc        - MSD and SDC together           sigma          - Arrhenius ionic conductivity|
+ |  D              - Arrhenius diffusivity          sigma_xyz      - Directional Arrhenius sigma |
+ |  D_xyz          - Directional Arrhenius D                                                     |
+ |  doas           - Density of atomistic states                                                 |
+ +-----------------------------------------------------------------------------------------------+
+ |                                    MD & Structural Analysis                                   |
+ +-----------------------------------------------------------------------------------------------+
+ |  thermo         - thermo info in thermo.out      thermo2/3      - Thermo in different styles  |
+ |  rdf            - Radial distribution function   rdf_pmf        - Potential of mean force     |
+ |  vac            - Velocity autocorrelation       cohesive       - Cohesive energy curve       |
+ |  net_force      - Net force distribution         plane-grid     - Displacement plane grid     |
+ +-----------------------------------------------------------------------------------------------+
+ |                                        Heat Transport                                         |
+ +-----------------------------------------------------------------------------------------------+
+ |  emd            - EMD results                    nemd           - NEMD results                |
+ |  hnemd          - HNEMD results                  viscosity      - Viscosity                   |
+ +-----------------------------------------------------------------------------------------------+
+ |                                          Phonons                                              |
+ +-----------------------------------------------------------------------------------------------+
+ |  pdos           - VAC and PDOS                                                                |
+ +-----------------------------------------------------------------------------------------------+
 ```
 
 ---
