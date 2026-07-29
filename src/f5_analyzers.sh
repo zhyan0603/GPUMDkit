@@ -159,6 +159,20 @@ echo " Code path: ${GPUMDkit_path}/Scripts/analyzer/probability_density_analysis
 echo " ---------------------------------------------------"
 }
 
+# Shift atomic energy references interactively
+function f509_shift_energy(){
+echo " >-----------------------------------------------------<"
+echo " | This function calls the script in analyzer          |"
+echo " | Script: align_energy_reference.py                   |"
+echo " | Developer: Zherui CHEN (chenzherui0124@foxmail.com) |"
+echo " >-----------------------------------------------------<"
+echo " The Python script will open the interactive page."
+echo " ---------------------------------------------------"
+python "${GPUMDkit_path}/Scripts/analyzer/align_energy_reference.py"
+echo " Code path: ${GPUMDkit_path}/Scripts/analyzer/align_energy_reference.py"
+echo " ---------------------------------------------------"
+}
+
 # main function of analyzers
 function f5_analyzers(){
 echo " +------------------------------------------------------+"
@@ -172,12 +186,13 @@ echo " | 505) Analyze energy/force/virial range               |"
 echo " | 506) Filter structures by minimum distance           |"
 echo " | 507) Get minimum interatomic distance                |"
 echo " | 508) Probability density analysis                    |"
+echo " | 509) Shift energy reference interactively            |"
 echo " +------------------------------------------------------+"
 echo " | 000) Return to the main menu                         |"
 echo " +------------------------------------------------------+"
 echo " Input the function number:"
 
-valid_menu_choices=("000" "501" "502" "503" "504" "505" "506" "507" "508") 
+valid_menu_choices=("000" "501" "502" "503" "504" "505" "506" "507" "508" "509")
 read_menu_choice num_choice || return 1
 while ! echo "${valid_menu_choices[@]}" | grep -wq "$num_choice" 
 do
@@ -195,6 +210,7 @@ case $num_choice in
     "506") f506_filter_structures_by_distance ;;
     "507") f507_get_min_dist ;;
     "508") f508_probability_density_analysis ;;
+    "509") f509_shift_energy ;;
     "000") menu; main ;;
 esac
 }

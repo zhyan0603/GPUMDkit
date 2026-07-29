@@ -36,6 +36,7 @@ calc	-calc avg-struct	gpumdkit.sh -calc avg-struct [args...]	Calculate averaged 
 calc	-calc oct-tilt	gpumdkit.sh -calc oct-tilt [args...]	Calculate octahedral tilt	计算八面体倾斜	stable
 calc	-calc pol-abo3	gpumdkit.sh -calc pol-abo3 [args...]	Calculate ABO3 local polarization	计算 ABO3 局域极化	stable
 analyze	-range	gpumdkit.sh -range <input.xyz> <energy|force|virial> [hist]	Analyze property ranges	分析性质范围	stable
+analyze	-shift_energy	gpumdkit.sh -shift_energy	Interactively shift extxyz energy references	交互式平移 extxyz 能量参考	stable
 analyze	-analyze_comp	gpumdkit.sh -analyze_comp <input.xyz>	Analyze structure composition	分析结构成分	stable
 analyze	-chem_species	gpumdkit.sh -chem_species <input.xyz>	List chemical species	列出化学元素	stable
 analyze	-cbc	gpumdkit.sh -cbc <input.xyz>	Check charge balance	检查电荷平衡	stable
