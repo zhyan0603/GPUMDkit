@@ -98,6 +98,7 @@ The source table is maintained in `docs/command_reference.tsv`.
 | Command | Syntax | Description |
 |---|---|---|
 | `-range` | `gpumdkit.sh -range <input.xyz> <energy\|force\|virial> [hist]` | Property range analysis |
+| `-shift_energy` | `gpumdkit.sh -shift_energy` | Interactive energy reference shifting |
 | `-analyze_comp` | `gpumdkit.sh -analyze_comp <input.xyz>` | Composition analysis |
 | `-chem_species` | `gpumdkit.sh -chem_species <input.xyz>` | Chemical species list |
 | `-cbc` | `gpumdkit.sh -cbc <input.xyz>` | Charge-balance check |

@@ -66,7 +66,7 @@ function main(){
         "2" "201" "202" "203" "204" "205" "206"
         "3" "301" "302" "303" 
         "4" "401" "402" "403" "404" "405" "406" "407" "408" "409" "410" "411" "412"
-        "5" "501" "502" "503" "504" "505" "506" "507" "508"
+        "5" "501" "502" "503" "504" "505" "506" "507" "508" "509"
         "6"
         "7" "701"
         "8"
@@ -152,6 +152,7 @@ function main(){
                 "506") f506_filter_structures_by_distance ;;
                 "507") f507_get_min_dist ;;
                 "508") f508_probability_density_analysis ;;
+                "509") f509_shift_energy ;;
             esac ;;  
         "6")
             source ${GPUMDkit_path}/src/f6_plots.sh
@@ -215,6 +216,7 @@ function help_info_table(){
     echo " | -filter_dist  Filter by min_dist (no PBC)     | -filter_dist_pbc   Filter by min_dist (PBC)           |"
     echo " | -pda          Probability density analysis    | -filter_box        Filter by box-edge length          |"
     echo " | -pynep        Deprecated PyNEP sampling       | -nep_modifier      Modify NEP model interactively     |"
+    echo " | -shift_energy  Interactive energy shift       |                                                       |"
     echo " +-------------------------------------------------------------------------------------------------------+"
     echo " | Python option help: gpumdkit.sh -<option> -h    Plot list: gpumdkit.sh -plt -h                        |"
     echo " +-------------------------------------------------------------------------------------------------------+"
@@ -392,6 +394,9 @@ if [ ! -z "$1" ]; then
 
         -range)
             run_python_script "Zihan YAN (yanzihan@westlake.edu.cn)" "${analyzer_path}/energy_force_virial_analyzer.py" "${@:2}" ;;
+
+        -shift_energy)
+            run_python_script "Chen Zherui (chenzherui0124@foxmail.com)" "${analyzer_path}/align_energy_reference.py" "${@:2}" ;;
 
         -replicate)
             run_python_script "Boyi SITU (situboyi@westlake.edu.cn)" "${format_conv_path}/replicate.py" "${@:2}" ;;
