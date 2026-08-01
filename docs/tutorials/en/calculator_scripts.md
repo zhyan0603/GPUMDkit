@@ -10,16 +10,18 @@
 The calculator module can be read as three groups:
 
 - **Trajectory properties:** compute time-dependent quantities such as MSD and ionic conductivity from GPUMD or extxyz trajectories, and calculate X-ray diffraction from extxyz trajectories;
+- **Phonon properties:** calculate phonon force constants and band structures from a primitive cell, a NEP model, and a `QPOINTS` path;
 - **NEP-assisted calculations:** use a NEP model to predict energies/forces/stresses, extract descriptors, calculate DOAS, run NEB, or minimize structures;
 - **Polar-material analysis:** build neighbor lists and calculate local displacement, averaged structures, octahedral tilt, and local polarization for perovskite or polar systems.
 
-If you are not sure about the required arguments, start from the interactive menu to see the prompt. If the arguments are already clear, use `gpumdkit.sh -calc ...` directly for calculators that provide a CLI; XRD is intentionally interactive only.
+If you are not sure about the required arguments, start from the interactive menu to see the prompt. If the arguments are already clear, use `gpumdkit.sh -calc ...` directly for calculators that provide a CLI; XRD and phonon calculations are intentionally interactive only.
 
 | Task | Command | Main Input |
 |------|---------|------------|
 | Ionic conductivity | `gpumdkit.sh -calc ionic-cond <element> <charge>` | `msd.out`, `thermo.out`, `model.xyz` |
 | MSD from trajectory | `gpumdkit.sh -calc msd <trajectory.xyz> <element> <dt_fs>` | extxyz trajectory |
 | X-ray diffraction | `4 → 413` (interactive only) | extxyz trajectory with `Lattice`/`pbc` |
+| Phonon band structure | `4 → 414` (interactive only) | `PRIMCELL.vasp`, `nep.txt`, `QPOINTS` |
 | NEP prediction | `gpumdkit.sh -calc nep <input.xyz> <output.xyz> <nep.txt>` | extxyz + NEP model |
 | NEP descriptors | `gpumdkit.sh -calc des <input.xyz> <output.npy> <nep.txt> <element>` | extxyz + NEP model |
 | DOAS | `gpumdkit.sh -calc doas <input.xyz> <nep.txt> <output.txt>` | extxyz + NEP model |
@@ -79,6 +81,7 @@ In interactive mode, choose `4) Calculators`. The menu is:
 | 411) Minimize structure by nep                           |
 | 412) Calc mean square displacement (MSD) from trajectory |
 | 413) Calc XRD from extxyz trajectory                     |
+| 414) Calc phonon band structure                          |
 +----------------------------------------------------------+
 | 000) Return to the main menu                             |
 +----------------------------------------------------------+
@@ -248,6 +251,36 @@ For faster runs, the script reads the trajectory once, reuses the reciprocal
 mesh when the cell is unchanged, groups atoms by element, and supports ordered
 threaded workers. These optimizations preserve the selected atoms, scattering
 formula, and `2theta` bin definition.
+
+## Phonon Band Structure
+
+`calc_phonon.py` calculates force constants with a NEP model and evaluates the
+phonon band structure along the path defined in `QPOINTS`. It is available
+through the interactive menu only:
+
+```text
+gpumdkit.sh -> 4) Calculators -> 414) Calc phonon band structure
+```
+
+The Python page asks for the following values:
+
+```text
+Primitive cell structure [PRIMCELL.vasp]
+NEP model [nep.txt]
+QPOINTS file [QPOINTS]
+Supercell dimensions [1 1 1]
+Displacement distance [0.015]
+Output phonon file [phonon_NEP.dat]
+```
+
+The `QPOINTS` file must use line-mode endpoint pairs. The number of points per
+segment is read from its second line, and the resulting output rows are later
+used by `plt_phonon.py` and `plt_phonon_comp.py`. Install `phonopy` before
+running this calculator:
+
+```bash
+pip install phonopy
+```
 
 ## NEP Property Prediction
 

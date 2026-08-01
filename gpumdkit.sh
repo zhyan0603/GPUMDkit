@@ -19,7 +19,7 @@ if [ -z "$GPUMDkit_path" ]; then
     exit 1
 fi
 
-VERSION="1.5.6 (dev) (2026-07-10)"
+VERSION="1.5.7 (dev) (2026-08-1)"
 
 plt_path="${GPUMDkit_path}/Scripts/plt_scripts"
 analyzer_path="${GPUMDkit_path}/Scripts/analyzer"
@@ -65,7 +65,7 @@ function main(){
         "0" "1" "101" "102" "103" "104" "105" "106" "107" "108" "109" "110"
         "2" "201" "202" "203" "204" "205" "206"
         "3" "301" "302" "303" 
-        "4" "401" "402" "403" "404" "405" "406" "407" "408" "409" "410" "411" "412" "413"
+        "4" "401" "402" "403" "404" "405" "406" "407" "408" "409" "410" "411" "412" "413" "414"
         "5" "501" "502" "503" "504" "505" "506" "507" "508" "509"
         "6"
         "7" "701"
@@ -140,6 +140,7 @@ function main(){
                 "411") f411_minimize_structure_by_nep ;;
                 "412") f412_calc_msd_from_trajectory ;;
                 "413") f413_calc_xrd ;;
+                "414") f414_calc_phonon ;;
             esac ;;           
         "5")
             source ${GPUMDkit_path}/src/f5_analyzers.sh
@@ -282,8 +283,6 @@ if [ ! -z "$1" ]; then
             skill_info_table ;;
         -doctor)
             GPUMDKIT_BASH_VERSION="${BASH_VERSION}" python "${utils_path}/doctor.py" "${@:2}" ;;
-        -input)
-            bash "${GPUMDkit_path}/Scripts/input_generator/input_generator.sh" "${@:2}" ;;
         -clean) 
             source ${utils_path}/clean_extra_files.sh
             clean_extra_files ;;
@@ -319,6 +318,8 @@ if [ ! -z "$1" ]; then
                     "sdc") python ${plt_path}/plt_sdc.py $3 ;;
                     "rdf") python ${plt_path}/plt_rdf.py ${@:3} ;;
                     "xrd") python ${plt_path}/plt_xrd.py ${@:3} ;;
+                    "phonon") python "${plt_path}/plt_phonon.py" "${@:3}" ;;
+                    "phonon_comp") python "${plt_path}/plt_phonon_comp.py" "${@:3}" ;;
                     "vac") python ${plt_path}/plt_vac.py $3 ;;
                     "restart") python ${plt_path}/plt_nep_restart.py $3 ;;
                     "dimer") python ${plt_path}/plt_dimer.py $3 $4 $5 $6 ;;
