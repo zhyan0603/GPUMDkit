@@ -269,6 +269,23 @@ if not os.path.isfile(input_file):
 - 输出文件名应包含足够上下文以避免冲突（例如 `filtered_Li_Li_1.8_2.0.xyz`，而非仅 `filtered.xyz`）
 - 覆写现有文件无需警告（项目约定 — 这是 CLI 工具包，不是交互式软件）
 
+### 绘图脚本与 Gallery 示例
+
+新增绘图脚本时，遵循 `references/plotting-style.md` 中的绘图规范，并在
+`docs/Gallery/` 中提供一个有代表性的示例图。Gallery 示例应通过独立的示例
+命令或压缩流程以 100 DPI 生成，以减小文档资源大小；不要为了生成示例图而
+降低正式绘图设置。
+
+正式脚本中，交互式 `plt.show()` 图使用 150 DPI，`savefig()` 的默认 DPI
+不得低于 300。需要在中英文 tutorials 源文件以及对应子功能 README（例如
+`Scripts/plt_scripts/README.md`）中补充用法和 Gallery 示例图。
+
+迭代开发阶段的文档更新遵循显式授权原则。除非用户明确要求更新文档，否则
+修改代码时不要改动 tutorials、子功能 README、Gallery 资源，也不要生成
+`docs/htmls/**`。用户明确要求文档更新后，才同步修改中英文源文件，并在验证
+阶段为每个新的用户可见功能更新对应 tutorials 和子功能 README，再重新构建
+生成的 HTML。
+
 ### 依赖提示
 
 如果你的脚本需要重量级/特殊包（`NepTrain`、`calorine`、`dpdata`、`ovito`），添加提示：
@@ -459,7 +476,7 @@ Python：`print(" Error: <message>."); sys.exit(1)` — 相同格式，之后始
 | 将 `if __name__ == "__main__":` 改造到现有 Python 脚本中 | 脚本独立运行；不要只为增加入口保护而大范围改动正常代码 |
 | 将 `from pylab import *` 替换为显式导入 | 保持现状 |
 | 统一 `-plt` "save" 参数位置 | 不同脚本有不同参数数量；保持灵活 |
-| 统一 DPI（150 -> 300）到所有绘图脚本 | 保持每脚本的 DPI 设置 |
+| 对新增或修改的绘图应用 DPI 规范 | `plt.show()` 使用 150 DPI，正式 `savefig()` 不低于 300 DPI，Gallery 示例单独使用 100 DPI |
 | 将工作流 sourced 脚本中的 `exit` 改为 `return` | 保持现状 |
 | 将 `-filter_value` / `-filter_range` / `-get_volume` / `-re_atoms` 添加到帮助表 | 刻意不记录 |
 | 使交互模式在一个功能后循环回菜单 | 保持单次执行；按此设计 |
@@ -533,7 +550,7 @@ git diff --check
 
 ### 何时构建 MkDocs
 
-仅当更改影响 MkDocs 消费的输入时，才运行
+仅当用户明确要求更新文档，且更改影响 MkDocs 消费的输入时，才运行
 `mkdocs build -f docs/mkdocs.yml`，包括：
 
 - `docs/tutorials/**`

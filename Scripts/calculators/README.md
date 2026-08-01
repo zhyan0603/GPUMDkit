@@ -17,6 +17,7 @@ The calculator scripts provide functionality for:
 - Octahedral tilt calculation from B-O neighbor lists
 - Local polarization calculation for ABO3 systems
 - X-ray diffraction (XRD) from extended XYZ trajectories
+- Phonon force constants and band structures from a NEP model
 - Radial distribution function (RDF) calculations
 
 ---
@@ -355,6 +356,7 @@ gpumdkit.sh -calc neb init.xyz fin.xyz 9 nep.txt
 | 411) Minimize structure by nep                           |
 | 412) Calc mean square displacement (MSD) from trajectory |
 | 413) Calc XRD from extxyz trajectory                     |
+| 414) Calc phonon band structure                          |
 +----------------------------------------------------------+
  | 000) Return to the main menu                             |
  +----------------------------------------------------------+
@@ -454,6 +456,44 @@ frames with the same cell, groups atoms by element, and uses ordered threaded
 workers when more than one CPU worker is selected. These are implementation
 optimizations and do not change the XRD formula or the selected `2theta`
 range.
+
+---
+
+### calc_phonon.py
+
+Calculates phonon force constants with a NEP model and evaluates the phonon
+band structure along a line-mode `QPOINTS` path. This calculator is interactive
+only.
+
+Start it from the main menu with:
+
+```text
+4) Calculators -> 414) Calc phonon band structure
+```
+
+The prompts use these defaults:
+
+```text
+Primitive cell structure [PRIMCELL.vasp]
+NEP model [nep.txt]
+QPOINTS file [QPOINTS]
+Supercell dimensions [1 1 1]
+Displacement distance [0.015]
+Output phonon file [phonon_NEP.dat]
+```
+
+The output is consumed by the plotting scripts:
+
+```bash
+gpumdkit.sh -plt phonon phonon_NEP.dat QPOINTS save
+gpumdkit.sh -plt phonon_comp phonon_DFT.dat phonon_NEP.dat save
+```
+
+Install `phonopy` before running the calculator:
+
+```bash
+pip install phonopy
+```
 
 ---
 

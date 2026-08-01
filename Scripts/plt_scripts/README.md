@@ -471,6 +471,51 @@ and heat capacity:
 
 ---
 
+#### plt_phonon.py
+
+Plots a phonon band structure from the output of `calc_phonon.py`. The path
+and high-symmetry labels are read directly from a line-mode `QPOINTS` file.
+Disconnected path segments are drawn separately, and boundary labels such as
+`S|S₀` are combined at the same horizontal position.
+
+**Input Files:** `phonon_NEP.dat` and `QPOINTS`
+
+**Usage:**
+
+```bash
+gpumdkit.sh -plt phonon
+gpumdkit.sh -plt phonon phonon_NEP.dat QPOINTS save
+```
+
+<div align="center">
+    <img src="../../docs/Gallery/phonon.png" alt="Phonon band structure" width="70%" />
+</div>
+
+---
+
+#### plt_phonon_comp.py
+
+Compares phonon band structures from two or more data files. The legend label
+is derived from each filename, so `phonon_DFT.dat` is shown as `DFT` and
+`phonon_MACE.dat` as `MACE`. For a two-file DFT/NEP comparison, the plot uses
+solid gray lines for DFT and dashed red lines for NEP.
+
+**Input Files:** Two or more `phonon_<label>.dat` files and `QPOINTS`
+
+**Usage:**
+
+```bash
+gpumdkit.sh -plt phonon_comp phonon_DFT.dat phonon_NEP.dat save
+gpumdkit.sh -plt phonon_comp phonon_DFT.dat phonon_NEP.dat phonon_MACE.dat \
+    --qpoints QPOINTS save
+```
+
+<div align="center">
+    <img src="../../docs/Gallery/phonon_comp.png" alt="Phonon band comparison" width="70%" />
+</div>
+
+---
+
 ### 📐 Structural Analysis
 
 Scripts for analyzing atomic structure and distributions.
@@ -513,6 +558,10 @@ and the fourth numeric column (column index 3) is the intensity. Lines beginning
 with `#` are ignored. The values are plotted as-is without smoothing or
 renormalization.
 
+The reader validates the calculator 413 header and four-column data layout. If
+the format is not recognized, plotting stops and asks you to regenerate the
+file with `gpumdkit.sh -> 4 -> 413`.
+
 **Usage:**
 
 ```bash
@@ -521,6 +570,15 @@ gpumdkit.sh -plt xrd path/to/xrd.out save
 ```
 
 The saved image is `xrd.png` in the current working directory.
+
+**Example:**
+
+<div align="center">
+    <img src="../../docs/Gallery/xrd.png" alt="X-ray diffraction example" width="75%" />
+</div>
+
+This Gallery example is generated separately at 100 DPI; the production
+script uses 150 DPI for display and at least 300 DPI when saving.
 
 ---
 

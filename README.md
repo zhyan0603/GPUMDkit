@@ -219,7 +219,8 @@ the help information:
  +-----------------------------------------------------------------------------------------------+
  |                                          Phonons                                              |
  +-----------------------------------------------------------------------------------------------+
- |  pdos           - VAC and PDOS                                                                |
+ |  pdos           - VAC and PDOS              phonon       - Phonon band structure                |
+ |  phonon_comp   - Compare phonon bands                                                          |
  +-----------------------------------------------------------------------------------------------+
 ```
 
@@ -272,6 +273,25 @@ You can also save images as PNG if your device doesn't support visualization:
 ```
 gpumdkit.sh -plt thermo save
 ```
+
+##### Example 7: Plot phonon band structures
+
+After calculating phonons through `gpumdkit.sh -> 4) Calculators -> 414) Calc
+phonon band structure`, plot the result using the `QPOINTS` path definition:
+
+```bash
+gpumdkit.sh -plt phonon phonon_NEP.dat QPOINTS save
+gpumdkit.sh -plt phonon_comp phonon_DFT.dat phonon_NEP.dat save
+```
+
+Comparison labels are read from filenames such as `phonon_NEP.dat` and
+`phonon_DFT.dat`. Two or more phonon files can be supplied to
+`phonon_comp`; use `--qpoints FILE` when the path file is not named `QPOINTS`.
+
+<div align="center">
+  <img src="./docs/Gallery/phonon.png" alt="Phonon band structure" width="48%" />
+  <img src="./docs/Gallery/phonon_comp.png" alt="Phonon band comparison" width="48%" />
+</div>
 
 Refer to our [documentation](https://gpumdkit.cn/) for more detailed examples and command options.
 
