@@ -16,6 +16,7 @@ The calculator scripts provide functionality for:
 - Averaged structure generation from trajectory slices
 - Octahedral tilt calculation from B-O neighbor lists
 - Local polarization calculation for ABO3 systems
+- X-ray diffraction (XRD) from extended XYZ trajectories
 - Radial distribution function (RDF) calculations
 
 ---
@@ -351,9 +352,10 @@ gpumdkit.sh -calc neb init.xyz fin.xyz 9 nep.txt
  | 408) Calc averaged structure                             |
  | 409) Calc octahedral tilt                                |
  | 410) Calc polarization for ABO3                          |
- | 411) Minimize structure by nep                           |
- | 412) Calc mean square displacement (MSD) from trajectory |
- +----------------------------------------------------------+
+| 411) Minimize structure by nep                           |
+| 412) Calc mean square displacement (MSD) from trajectory |
+| 413) Calc XRD from extxyz trajectory                     |
++----------------------------------------------------------+
  | 000) Return to the main menu                             |
  +----------------------------------------------------------+
  Input the function number:
@@ -419,6 +421,39 @@ gpumdkit.sh -calc msd dump.xyz Li 10
 ```
 
 The output file is `msd.out`.
+
+---
+
+### calc_xrd.py
+
+Calculates histogrammed X-ray diffraction intensities from an extended XYZ
+trajectory using the LAMMPS-compatible atomic scattering-factor table embedded
+in the script. This feature is intentionally interactive only; it has no CLI
+interface.
+
+Start it from the main menu with `4) Calculators -> 413) Calc XRD`.
+
+The Python page asks for:
+
+1. input extended XYZ trajectory;
+2. output XRD file;
+3. X-ray wavelength in Angstrom;
+4. `2theta` minimum and maximum in degrees;
+5. number of bins over exactly that `2theta` interval;
+6. atoms to include: `all` or comma/space-separated element symbols;
+7. CPU workers, where `0` selects automatic parallelism.
+
+The default calculation uses all atoms, the `Lattice`/`pbc` metadata from the
+trajectory, standard scattering factors, and the Lorentz-polarization factor.
+The cell must be orthogonal and contain periodic directions. The output starts
+with metadata headers and then contains `Bin`, `Coord`, `Count`, and
+`Count/Total` columns.
+
+The implementation streams the trajectory once, caches the reciprocal mesh for
+frames with the same cell, groups atoms by element, and uses ordered threaded
+workers when more than one CPU worker is selected. These are implementation
+optimizations and do not change the XRD formula or the selected `2theta`
+range.
 
 ---
 

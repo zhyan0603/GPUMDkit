@@ -23,6 +23,7 @@
 | Polarization | `-calc pol-abo3` | ABO3 local polarization |
 | Minimization | `-calc minimize` | Structure relaxation with NEP |
 | MSD | `-calc msd` | Mean square displacement from trajectory |
+| XRD | `4 -> 413` (interactive only) | X-ray diffraction from an extxyz trajectory |
 
 ## Command Reference
 
@@ -88,6 +89,27 @@ gpumdkit.sh -calc msd dump.xyz Li 10
 
 # Output: msd.out (Time/ps, MSD_x, MSD_y, MSD_z)
 ```
+
+### X-ray Diffraction (interactive only)
+
+XRD is intentionally exposed only through the interactive calculator menu:
+
+```text
+gpumdkit.sh -> 4) Calculators -> 413) Calc XRD from extxyz trajectory
+```
+
+The Python page asks for the input extxyz trajectory, output file, wavelength
+in Angstrom, a `2theta` minimum and maximum, the number of bins over that exact
+interval, an element selection (`all` or comma/space-separated symbols), and a
+CPU worker count (`0` means automatic). It uses the input `Lattice`/`pbc`, all
+atoms by default, standard LAMMPS scattering factors, and the
+Lorentz-polarization factor. Orthogonal cells are supported; triclinic cells
+are not.
+
+The output contains averaged `Count` and `Count/Total` columns at the centers
+of the selected `2theta` bins. The implementation streams the trajectory once,
+caches the reciprocal mesh for unchanged cells, groups atoms by element, and
+uses ordered threaded workers without changing the XRD formula or bin range.
 
 ### Neighbor List
 ```bash
@@ -232,6 +254,7 @@ gpumdkit.sh -plt thermo  # If running MD after relaxation
 | nep, des, doas, minimize | `calorine` |
 | nlist, disp, oct-tilt, pol-abo3 | `ferrodispcalc` |
 | neb | `calorine`, `matplotlib` |
+| xrd | `numpy` |
 
 Install dependencies:
 ```bash
