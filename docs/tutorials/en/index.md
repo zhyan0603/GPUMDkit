@@ -15,7 +15,7 @@ GPUMDkit helps you perform common tasks in computational materials science witho
 | Plan a GPUMD/NEP simulation and its post-processing | [Simulation and Post-processing](simulation_and_postprocessing.md) |
 | Convert VASP, LAMMPS, CP2K, or CIF files to extxyz | [Format Conversion](format_conversion.md) |
 | Check structure distances, filter datasets, or find outliers | [Analyzer Scripts](analyzer_scripts.md) |
-| Calculate MSD, ionic conductivity, or descriptors | [Calculator Scripts](calculator_scripts.md) |
+| Calculate MSD, ionic conductivity, XRD, or descriptors | [Calculator Scripts](calculator_scripts.md) |
 | Analyze polar materials, ferroelectrics, or ABO3 systems | [Polar Material Analysis](polar_material_analysis.md) |
 | Plot NEP training results or thermodynamic data | [Plot Scripts](plot_scripts.md) |
 | Run batch DFT or MD simulations | [Workflow Scripts](workflow_scripts.md) |

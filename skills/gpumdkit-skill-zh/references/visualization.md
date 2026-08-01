@@ -84,7 +84,7 @@ gpumdkit.sh -plt arrhenius_d
 gpumdkit.sh -plt doas doas.out Li
 ```
 
-### 结构分析（9 种绘图类型）
+### 结构分析（10 种绘图类型）
 
 | 命令 | 输入文件 | 描述 |
 |---------|-------------|-------------|
@@ -93,6 +93,7 @@ gpumdkit.sh -plt doas doas.out Li
 | `thermo3` | `thermo.out` | 第三种热力学样式 |
 | `rdf` | `rdf.out` | 径向分布函数 |
 | `rdf_pmf` | `rdf.out` | RDF + 平均力势 |
+| `xrd` | `xrd.out` 或指定的 XRD 输出 | XRD 强度曲线 |
 | `vac` | `sdc.out` | 速度自相关 |
 | `cohesive` | `cohesive.out` | 内聚能曲线 |
 | `net_force` | extxyz 文件 | 净力分布 |
@@ -106,6 +107,10 @@ gpumdkit.sh -plt thermo
 gpumdkit.sh -plt rdf
 gpumdkit.sh -plt rdf 2              # 特定列
 gpumdkit.sh -plt rdf_pmf 300        # 300K 下的 PMF
+
+# XRD 输出：第 2 列是角度，第 4 列是强度
+gpumdkit.sh -plt xrd
+gpumdkit.sh -plt xrd path/to/xrd.out save
 
 # 平面网格位移
 gpumdkit.sh -plt plane-grid -i model.xyz -d displacements.dat -e Pb Sr
@@ -195,6 +200,7 @@ gpumdkit.sh -plt nemd 10 1 60 save
 | `msd_sdc` | `msd_sdc.png` |
 | `thermo` | `thermo.png` |
 | `rdf` | `rdf.png` |
+| `xrd` | `xrd.png` |
 | `arrhenius_sigma` | `Arrhenius_sigma.png` |
 | `arrhenius_d` | `Arrhenius_D.png` |
 | `emd` | `emd.png` |

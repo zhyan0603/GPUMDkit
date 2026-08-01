@@ -66,6 +66,7 @@ Contains calculator functions (Interactive mode `option 4`).
 - `f410_calc_polarization_abo3` - Calculate local polarization for ABO3 from neighbor lists
 - `f411_minimize_structure_by_nep` - Minimize structure using NEP
 - `f412_calc_msd_from_trajectory` - Calculate MSD from trajectory
+- `f413_calc_xrd` - Calculate XRD from an extxyz trajectory (interactive only)
 
 ### f5_analyzers.sh
 Contains analysis functions (Interactive mode `option 5`).

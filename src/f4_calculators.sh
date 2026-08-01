@@ -212,6 +212,20 @@ echo " Code path: ${GPUMDkit_path}/Scripts/calculators/calc_msd.py"
 echo " ---------------------------------------------------"
 }
 
+# Calculate X-ray diffraction from an extended XYZ trajectory
+function f413_calc_xrd(){
+echo " >-------------------------------------------------<"
+echo " | Calling the script in Scripts/calculators       |"
+echo " | Script: calc_xrd.py                             |"
+echo " | Developer: Zihan YAN (yanzihan@westlake.edu.cn) |"
+echo " >-------------------------------------------------<"
+echo " The XRD parameters will be entered interactively in Python."
+echo " ---------------------------------------------------"
+python "${GPUMDkit_path}/Scripts/calculators/calc_xrd.py"
+echo " Code path: ${GPUMDkit_path}/Scripts/calculators/calc_xrd.py"
+echo " ---------------------------------------------------"
+}
+
 # main function of calculators
 function f4_calculators(){
 echo " +----------------------------------------------------------+"
@@ -229,12 +243,13 @@ echo " | 409) Calc octahedral tilt                                |"
 echo " | 410) Calc polarization for ABO3                          |"
 echo " | 411) Minimize structure by nep                           |"
 echo " | 412) Calc mean square displacement (MSD) from trajectory |"
+echo " | 413) Calc XRD from extxyz trajectory                     |"
 echo " +----------------------------------------------------------+"
 echo " | 000) Return to the main menu                             |"
 echo " +----------------------------------------------------------+"
 echo " Input the function number:"
 
-valid_menu_choices=("000" "401" "402" "403" "404" "405" "406" "407" "408" "409" "410" "411" "412")
+valid_menu_choices=("000" "401" "402" "403" "404" "405" "406" "407" "408" "409" "410" "411" "412" "413")
 read_menu_choice num_choice || return 1
 while ! echo "${valid_menu_choices[@]}" | grep -wq "$num_choice"
 do
@@ -256,6 +271,7 @@ case $num_choice in
     "410") f410_calc_polarization_abo3 ;;
     "411") f411_minimize_structure_by_nep ;;
     "412") f412_calc_msd_from_trajectory ;;
+    "413") f413_calc_xrd ;;
     "000") menu; main ;;
 esac
 }
