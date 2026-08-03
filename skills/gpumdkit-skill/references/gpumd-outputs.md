@@ -14,13 +14,13 @@ Use this self-contained reference to select outputs, estimate storage, and preve
 
 | Keyword | Current signature | Output | Behavior |
 |---|---|---|---|
-| `dump_exyz` | `dump_exyz <interval> [<has_velocity> [<has_force> [<has_potential> [<separated>]]]]` | `dump.xyz` or `dump.<step>.xyz` | Append; optional flags are 0/1; `separated=1` writes per-frame files |
-| `dump_xyz` | `dump_xyz <grouping_method> <group_id> <interval> <filename> [<properties> ...]` | User filename(s) | Append; multiple instances allowed; `*` filename writes per-frame files |
+| `dump_exyz` | `dump_exyz <interval> [<has_velocity> [<has_force> [<has_potential> [<separated>]]]]` | `dump.xyz` or `dump.<step>.xyz` | Append; optional flags are 0/1; `separated=1` writes per-frame files (use with caution — generates hundreds of individual files for long runs) |
+| `dump_xyz` | `dump_xyz <grouping_method> <group_id> <interval> <filename> [<properties> ...]` | User filename(s) | Append; multiple instances allowed; `*` filename writes per-frame files. Recommended for most trajectory output; use negative grouping method (e.g. `-1`) to dump all atoms |
 | `dump_position` | `dump_position <interval> [group <method> <id>] [precision single|double]` | `movie.xyz` | Append; optional group and precision selectors |
 | `dump_velocity` | `dump_velocity <interval> [group <method> <id>]` | `velocity.out` | Append; velocities in Angstrom/fs |
 | `dump_force` | `dump_force <interval> [group <method> <id>]` | `force.out` | Append; forces in eV/Angstrom |
 | `dump_netcdf` | `dump_netcdf <interval> <has_velocity> [precision single|double]` | `movie.nc`, numbered if present | Requires NetCDF-enabled build; velocity flag is 0/1; precision defaults to double and cannot be changed after its first definition in a simulation |
-| `dump_restart` | `dump_restart <interval>` | `restart.xyz` | Overwrites latest restart state |
+| `dump_restart` | `dump_restart <interval>` | `restart.xyz` | Overwrites latest restart state; interval should be close to total run length (e.g. write once at the end or a few times) |
 | `dump_beads` | no parameters | `beads_dump_<k>.xyz` | PIMD bead data only |
 
 `dump_xyz` always includes wrapped positions. Optional properties currently include mass, velocity, force, potential, virial, charge, BEC, group, and unwrapped position. A negative grouping method outputs the whole system and ignores group ID. A filename ending in `*` produces one file per frame.

@@ -14,13 +14,13 @@
 
 | 关键字 | 当前参数格式 | 输出 | 行为 |
 |---|---|---|---|
-| `dump_exyz` | `dump_exyz <interval> [<has_velocity> [<has_force> [<has_potential> [<separated>]]]]` | `dump.xyz` 或 `dump.<step>.xyz` | 追加；可选标志为 0/1；`separated=1` 写入每帧文件 |
-| `dump_xyz` | `dump_xyz <grouping_method> <group_id> <interval> <filename> [<properties> ...]` | 用户文件名 | 追加；允许多个实例；`*` 文件名写入每帧文件 |
+| `dump_exyz` | `dump_exyz <interval> [<has_velocity> [<has_force> [<has_potential> [<separated>]]]]` | `dump.xyz` 或 `dump.<step>.xyz` | 追加；可选标志为 0/1；`separated=1` 写入每帧文件（谨慎使用——长模拟会产生数百个独立文件） |
+| `dump_xyz` | `dump_xyz <grouping_method> <group_id> <interval> <filename> [<properties> ...]` | 用户文件名 | 追加；允许多个实例；`*` 文件名写入每帧文件。推荐用于大多数轨迹输出；使用负分组方法（如 `-1`）输出所有原子 |
 | `dump_position` | `dump_position <interval> [group <method> <id>] [precision single\|double]` | `movie.xyz` | 追加；可选分组和精度选择器 |
 | `dump_velocity` | `dump_velocity <interval> [group <method> <id>]` | `velocity.out` | 追加；速度单位为 Angstrom/fs |
 | `dump_force` | `dump_force <interval> [group <method> <id>]` | `force.out` | 追加；力单位为 eV/Angstrom |
 | `dump_netcdf` | `dump_netcdf <interval> <has_velocity> [precision single\|double]` | `movie.nc`，如果存在则带编号 | 需要启用 NetCDF 的构建；速度标志为 0/1；精度默认为 double，在模拟中首次定义后无法更改 |
-| `dump_restart` | `dump_restart <interval>` | `restart.xyz` | 覆盖最新的重启状态 |
+| `dump_restart` | `dump_restart <interval>` | `restart.xyz` | 覆盖最新的重启状态；interval 应接近总运行步数（例如只在末尾或少数几次输出） |
 | `dump_beads` | 无参数 | `beads_dump_<k>.xyz` | 仅 PIMD 珠子数据 |
 
 `dump_xyz` 始终包含包装坐标。可选属性目前包括质量、速度、力、势能、应力、电荷、BEC、分组和非包装坐标。负分组方法输出整个系统并忽略分组 ID。以 `*` 结尾的文件名每帧生成一个文件。
