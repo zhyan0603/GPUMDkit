@@ -140,15 +140,25 @@ gpumdkit.sh -plt hnemd <scale_eff_size> <cutoff_freq> save
 gpumdkit.sh -plt viscosity save
 ```
 
-### Phonons (1 plot type)
+### Phonons (3 plot types)
 
 | Command | Input Files | Description |
 |---------|-------------|-------------|
 | `pdos` | `model.xyz`, `run.in`, `dos.out`, `mvac.out` | Phonon DOS and heat capacity |
+| `phonon` | `phonon_NEP.dat`, `QPOINTS` | Phonon band structure from calculator 414 |
+| `phonon_comp` | Two or more phonon data files, `QPOINTS` | Compare phonon band structures; labels come from filenames |
 
 ```bash
 gpumdkit.sh -plt pdos save
+gpumdkit.sh -plt phonon
+gpumdkit.sh -plt phonon phonon_NEP.dat QPOINTS save
+gpumdkit.sh -plt phonon_comp phonon_DFT.dat phonon_NEP.dat save
 ```
+
+`phonon_comp` accepts two or more compatible phonon data files. For conventional
+names such as `phonon_NEP.dat`, `phonon_DFT.dat`, and `phonon_MACE.dat`, the text
+after `phonon_` is used as the legend label. The plotters validate the phonon
+rows and the supplied `QPOINTS` path before drawing.
 
 ## Common Workflows
 

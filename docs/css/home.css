@@ -821,22 +821,6 @@ body {
     font-weight: 500;
 }
 
-.footer-info-row .beian-info {
-    display: inline-flex;
-    align-items: center;
-    gap: 8px;
-}
-
-.footer-info-row .beian-info a {
-    color: #ffffff;
-    text-decoration: none;
-    transition: opacity 0.2s;
-}
-
-.footer-info-row .beian-info a:hover {
-    opacity: 0.8;
-}
-
 .footer-info-row .separator {
     color: rgba(255,255,255,0.4);
     margin: 0 4px;
