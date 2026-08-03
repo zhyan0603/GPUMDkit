@@ -20,6 +20,7 @@
 | MTP | .cfg | Moment Tensor Potential format |
 | ASE | .traj | Atomic Simulation Environment trajectory |
 | extxyz | .xyz | Extended XYZ (primary working format) |
+| DeepMD | `npy` dataset | DeepMD-kit training dataset format |
 
 ## Command Reference
 
@@ -94,6 +95,26 @@ gpumdkit.sh -dp2xyz database train.xyz
 Dependencies: `dpdata`, `ase`.
 Author: Denan LI (lidenan@westlake.edu.cn)
 
+### xyz2dp
+
+Converts labeled extxyz data to a DeepMD npy dataset. The user supplies the
+element order used by the DeepMD `type_map.raw` file.
+
+**Usage:**
+```
+gpumdkit.sh -xyz2dp
+```
+
+The same conversion can be called directly with Python:
+
+```
+python3 ${GPUMDkit_path}/Scripts/format_conversion/xyz2dp.py train.xyz Li P S
+```
+
+The input should contain labeled extxyz energy and force data. The output is
+written under `deepmd_data/` in the current directory. This command requires
+`dpdata`.
+
 ### Structure Manipulation
 
 ```bash
@@ -131,6 +152,7 @@ gpumdkit.sh -clean_xyz input.xyz clean.xyz
 | `-xdat2exyz` | XDATCAR -> extxyz | `gpumdkit.sh -xdat2exyz XDATCAR dump.xyz` |
 | `-traj2exyz` | ASE traj -> extxyz | `gpumdkit.sh -traj2exyz <traj> <xyz>` |
 | `-dp2xyz` | DeepMD npy → extxyz (via dpdata) | `gpumdkit.sh -dp2xyz <input_dir/> [output.xyz]` |
+| `-xyz2dp` | extxyz → DeepMD npy (via dpdata) | `gpumdkit.sh -xyz2dp` (interactive) |
 | `-addgroup` | Add group labels | `gpumdkit.sh -addgroup <poscar> <elem...>` |
 | `-addweight` | Add weight | `gpumdkit.sh -addweight <in> <out> <weight>` |
 | `-replicate` | Replicate structure | `gpumdkit.sh -replicate <in> <out> a b c` |

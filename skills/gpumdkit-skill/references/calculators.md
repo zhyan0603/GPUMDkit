@@ -24,6 +24,7 @@
 | Minimization | `-calc minimize` | Structure relaxation with NEP |
 | MSD | `-calc msd` | Mean square displacement from trajectory |
 | XRD | `4 -> 413` (interactive only) | X-ray diffraction from an extxyz trajectory |
+| Phonon band structure | `4 -> 414` (interactive only) | Calculate a NEP phonon band structure along `QPOINTS` |
 
 ## Command Reference
 
@@ -110,6 +111,23 @@ The output contains averaged `Count` and `Count/Total` columns at the centers
 of the selected `2theta` bins. The implementation streams the trajectory once,
 caches the reciprocal mesh for unchanged cells, groups atoms by element, and
 uses ordered threaded workers without changing the XRD formula or bin range.
+
+### Phonon Band Structure (interactive only)
+
+The phonon calculator is exposed through the interactive calculator menu:
+
+```text
+gpumdkit.sh -> 4) Calculators -> 414) Calc phonon band structure
+```
+
+It prompts for a primitive-cell structure, a Calorine-compatible NEP model, a
+line-mode `QPOINTS` file, diagonal supercell factors, a displacement, and an
+output file. The q-point path, segment count, and labels are read from the
+supplied `QPOINTS` file; do not replace them with a hard-coded path.
+
+The output is line-oriented phonon data in THz, normally written as
+`phonon_NEP.dat`. The calculation requires `ASE`, `Calorine`, `phonopy`, and
+`NumPy`.
 
 ### Neighbor List
 ```bash
@@ -255,6 +273,7 @@ gpumdkit.sh -plt thermo  # If running MD after relaxation
 | nlist, disp, oct-tilt, pol-abo3 | `ferrodispcalc` |
 | neb | `calorine`, `matplotlib` |
 | xrd | `numpy` |
+| phonon | `calorine`, `phonopy` |
 
 Install dependencies:
 ```bash

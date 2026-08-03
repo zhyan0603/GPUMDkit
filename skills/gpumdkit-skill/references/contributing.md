@@ -7,6 +7,7 @@ Read this reference before changing GPUMDkit code, scripts, CLI routing, documen
 - Project structure and routing
 - Adding interactive and CLI features
 - Python and shell conventions
+- Update bookkeeping and version/date policy
 - Maintainer decisions and rejected changes
 - Validation checklist
 
@@ -37,6 +38,7 @@ GPUMDkit/
 │   ├── tutorials/en/        # English tutorials
 │   ├── tutorials/zh/        # Chinese tutorials
 │   ├── mkdocs.yml           # MkDocs config
+│   ├── updates.info         # Recent feature and bug-fix records
 │   └── htmls/               # Generated HTML
 ```
 
@@ -52,6 +54,12 @@ GPUMDkit/
 2. **CLI mode**: `gpumdkit.sh -flag [args]` → routes via `case $1 in`
    - Each flag maps to a script in `Scripts/`
    - Help messages go in `help_info_table()` and `calculator_help_table()`
+
+## Update and Version Bookkeeping
+
+- When adding a feature or fixing a bug, update `docs/updates.info` in the same change. Add a concise entry to `NEW_FEATURES` or `BUG_FIXES`; keep the other list as `"None"` only when it has no entries.
+- If `gpumdkit.sh` is modified, update the date in its `VERSION="..."` declaration to the current date using `YYYY-MM-DD` format.
+- Preserve the existing version string. Do not change any version number in `gpumdkit.sh` or `docs/updates.info` unless the user explicitly requests a version update.
 
 ## Adding a New Interactive Mode Feature
 

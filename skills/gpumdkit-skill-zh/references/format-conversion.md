@@ -20,6 +20,7 @@
 | MTP | .cfg | Moment Tensor Potential 格式 |
 | ASE | .traj | Atomic Simulation Environment 轨迹 |
 | extxyz | .xyz | 扩展 XYZ（主要工作格式） |
+| DeepMD | `npy` 数据集 | DeepMD-kit 训练数据集格式 |
 
 ## 命令参考
 
@@ -94,6 +95,25 @@ gpumdkit.sh -dp2xyz database train.xyz
 依赖：`dpdata`、`ase`。
 作者：Denan LI (lidenan@westlake.edu.cn)
 
+### xyz2dp
+
+将带标签的 extxyz 数据转换为 DeepMD npy 数据集。用户需要提供写入
+DeepMD `type_map.raw` 的元素顺序。
+
+**用法：**
+```
+gpumdkit.sh -xyz2dp
+```
+
+也可以直接运行 Python 脚本：
+
+```
+python3 ${GPUMDkit_path}/Scripts/format_conversion/xyz2dp.py train.xyz Li P S
+```
+
+输入应包含带能量和力标签的 extxyz 数据。输出写入当前目录下的
+`deepmd_data/`。该命令依赖 `dpdata`。
+
 ### 结构操作
 
 ```bash
@@ -131,6 +151,7 @@ gpumdkit.sh -clean_xyz input.xyz clean.xyz
 | `-xdat2exyz` | XDATCAR -> extxyz | `gpumdkit.sh -xdat2exyz XDATCAR dump.xyz` |
 | `-traj2exyz` | ASE traj -> extxyz | `gpumdkit.sh -traj2exyz <traj> <xyz>` |
 | `-dp2xyz` | DeepMD npy -> extxyz（通过 dpdata） | `gpumdkit.sh -dp2xyz <input_dir/> [output.xyz]` |
+| `-xyz2dp` | extxyz -> DeepMD npy（通过 dpdata） | `gpumdkit.sh -xyz2dp`（交互式） |
 | `-addgroup` | 添加分组标签 | `gpumdkit.sh -addgroup <poscar> <elem...>` |
 | `-addweight` | 添加权重 | `gpumdkit.sh -addweight <in> <out> <weight>` |
 | `-replicate` | 复制结构 | `gpumdkit.sh -replicate <in> <out> a b c` |

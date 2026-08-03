@@ -140,15 +140,25 @@ gpumdkit.sh -plt hnemd <scale_eff_size> <cutoff_freq> save
 gpumdkit.sh -plt viscosity save
 ```
 
-### 声子（1 种绘图类型）
+### 声子（3 种绘图类型）
 
 | 命令 | 输入文件 | 描述 |
 |---------|-------------|-------------|
 | `pdos` | `model.xyz`、`run.in`、`dos.out`、`mvac.out` | 声子态密度和热容 |
+| `phonon` | `phonon_NEP.dat`、`QPOINTS` | 绘制计算器 414 生成的声子谱 |
+| `phonon_comp` | 两个或更多声子数据文件、`QPOINTS` | 比较声子谱，图例从文件名读取 |
 
 ```bash
 gpumdkit.sh -plt pdos save
+gpumdkit.sh -plt phonon
+gpumdkit.sh -plt phonon phonon_NEP.dat QPOINTS save
+gpumdkit.sh -plt phonon_comp phonon_DFT.dat phonon_NEP.dat save
 ```
+
+`phonon_comp` 接受两个或更多兼容的声子数据文件。对于
+`phonon_NEP.dat`、`phonon_DFT.dat`、`phonon_MACE.dat` 等常规命名，图例使用
+`phonon_` 后面的文本。绘图脚本会在绘图前检查声子数据行和提供的 `QPOINTS`
+路径。
 
 ## 常用工作流
 

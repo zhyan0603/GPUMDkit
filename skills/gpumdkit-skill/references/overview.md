@@ -54,7 +54,7 @@ For current Python-backed commands, detailed usage, type conversion, file checks
 
 | Module | Description | Reference |
 |--------|-------------|-----------|
-| Format Conversion | Convert between VASP, LAMMPS, CP2K, ABACUS, CIF, extxyz | `references/format-conversion.md` |
+| Format Conversion | Convert between VASP, LAMMPS, CP2K, ABACUS, CIF, extxyz, and DeepMD | `references/format-conversion.md` |
 | Calculators | Compute ionic conductivity, descriptors, MSD, NEB, etc. | `references/calculators.md` |
 | Analyzers | Structure validation, filtering, composition analysis | `references/analyzers.md` |
 | Visualization | Plot training results, transport properties, structural data | `references/visualization.md` |

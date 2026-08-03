@@ -54,7 +54,7 @@ gpumdkit.sh -calc -h              # 计算器帮助
 
 | 模块 | 描述 | 参考 |
 |--------|-------------|-----------|
-| 格式转换 | 在 VASP、LAMMPS、CP2K、ABACUS、CIF、extxyz 之间转换 | `references/format-conversion.md` |
+| 格式转换 | 在 VASP、LAMMPS、CP2K、ABACUS、CIF、extxyz 和 DeepMD 之间转换 | `references/format-conversion.md` |
 | 计算器 | 计算离子电导率、描述符、MSD、NEB 等 | `references/calculators.md` |
 | 分析器 | 结构验证、过滤、成分分析 | `references/analyzers.md` |
 | 可视化 | 绘制训练结果、输运性质、结构数据 | `references/visualization.md` |

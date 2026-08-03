@@ -19,7 +19,7 @@ if [ -z "$GPUMDkit_path" ]; then
     exit 1
 fi
 
-VERSION="1.5.7 (dev) (2026-08-1)"
+VERSION="1.5.7 (dev) (2026-08-03)"
 
 plt_path="${GPUMDkit_path}/Scripts/plt_scripts"
 analyzer_path="${GPUMDkit_path}/Scripts/analyzer"
@@ -209,6 +209,7 @@ function help_info_table(){
     echo " | -addgroup     Add group labels                | -addweight         Add structure weight in extxyz     |"
     echo " | -clean_xyz    Clean extra info in extxyz      | -get_frame         Extract specific frame             |"
     echo " | -frame_range  Extract frames by range         | -dp2xyz            DeepMD npy -> extxyz               |"
+    echo " | -xyz2dp       extxyz -> DeepMD npy            |                                                       |"
     echo " +-------------------------------------------------------------------------------------------------------+"
     echo " |                                            ANALYSIS                                                   |"
     echo " +-------------------------------------------------------------------------------------------------------+"
@@ -449,6 +450,10 @@ if [ ! -z "$1" ]; then
 
         -dp2xyz)
             run_python_script "Denan LI (lidenan@westlake.edu.cn)" "${format_conv_path}/dp2xyz.py" "${@:2}" ;;
+
+        -xyz2dp)
+            source ${GPUMDkit_path}/src/f1_format_conversions.sh
+            xyz2dp ;;
 
         -addgroup|-addlabel)
             run_python_script "Zihan YAN (yanzihan@westlake.edu.cn)" "${format_conv_path}/add_groups.py" "${@:2}" ;;
