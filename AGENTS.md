@@ -11,6 +11,7 @@ gpumdkit.sh -> src/fN_*.sh menu wrappers -> Scripts/<module>/ implementations
 - `gpumdkit.sh`: interactive and CLI entry point (`-h` lists commands; `-skill` locates skills).
 - `Scripts/`: conversion, sampling, workflow, calculator, analyzer, plot, and utility implementations.
 - `docs/tutorials/{en,zh}/`: bilingual sources; `docs/mkdocs.yml`: site config.
+- `docs/updates.info`: records recent GPUMDkit features and bug fixes.
 - `skills/gpumdkit-skill/`: canonical agent skill; `gpumdkit-skill-zh/`: Chinese version.
 
 ## Agent Routing
@@ -36,3 +37,5 @@ Key references under `skills/gpumdkit-skill/references/`:
 - Never invent consequential scientific or execution choices; ask the user.
 - Simulations, training, DFT, scheduler jobs, destructive operations, and expensive runs require explicit authorization.
 - Preserve unrelated changes. Before repository edits, read `contributing.md`; keep changes minimal, update both documentation languages for user-visible features, and run its validation checklist.
+- When adding a feature or fixing a bug, update `docs/updates.info` in the same change: add a concise entry to `NEW_FEATURES` or `BUG_FIXES`, and keep the other list as `"None"` only when it has no entries.
+- If `gpumdkit.sh` is modified, update the date in its `VERSION="..."` declaration to the current date in `YYYY-MM-DD` format. Preserve the existing version string; do not change any version number in `gpumdkit.sh` or `docs/updates.info` unless the user explicitly requests a version update.

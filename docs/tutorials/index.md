@@ -19,7 +19,7 @@ This documentation is organized as a practical tutorial rather than only a comma
 | Quick Start | Installation, environment setup, interactive mode, direct command mode |
 | Format Conversion | VASP, LAMMPS, CP2K, ABACUS, CIF, extxyz, group labels, weights |
 | Sampling | Uniform/random sampling, NepTrain FPS, perturbation, force-deviation selection |
-| Calculators | MSD, ionic conductivity, NEP prediction, descriptors, DOAS, NEB, polarization tools |
+| Calculators | MSD, ionic conductivity, XRD, NEP prediction, descriptors, DOAS, NEB, polarization tools |
 | Analyzers | Composition checks, distance checks, filters, property range analysis |
 | Visualization | NEP training plots, MD plots, transport plots, thermal transport plots, example figures |
 | Workflows | Batch DFT/MD processing and active-learning style workflows |

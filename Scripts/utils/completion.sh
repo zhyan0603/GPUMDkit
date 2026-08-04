@@ -1,5 +1,18 @@
 #!/usr/bin/env bash
 
+# Enable bash-style completion under zsh; bash is unaffected (block guarded by $ZSH_VERSION).
+if [ -n "$ZSH_VERSION" ]; then
+    case $- in
+        *i*) ;;
+        *) return 0 2>/dev/null || exit 0 ;;
+    esac
+    # Initialize zsh completion only if not already done (e.g. by oh-my-zsh)
+    if ! typeset -p _comps >/dev/null 2>&1; then
+        autoload -Uz +X compinit 2>/dev/null && compinit -i 2>/dev/null
+    fi
+    autoload -Uz +X bashcompinit 2>/dev/null && bashcompinit 2>/dev/null
+fi
+
 # Check if 'complete' and 'compgen' commands are available
 if ! command -v complete >/dev/null 2>&1 || ! command -v compgen >/dev/null 2>&1; then
     # If either command is not found, exit silently
@@ -13,7 +26,7 @@ _gpumdkit_completions() {
     prev="${COMP_WORDS[COMP_CWORD-1]}" # Previous word
 
     # List of primary options (extracted from gpumdkit.sh)
-    local opts="-h -help -skill -doctor -update -U -clean -time -plt -calc -cbc -range -out2xyz -out2exyz -cp2k2xyz -pos2exyz -cif2pos -cif2exyz -exyz2pos -xdat2exyz -pos2lmp -lmp2exyz -traj2exyz -dp2xyz -addgroup -addlabel -addweight -min_dist -min_dist_pbc -filter_dist -filter_dist_pbc -filter_box -filter_value -filter_range -get_frame -clean_xyz -analyze_comp -chem_species -replicate -pda -pynep -frame_range -nep_modifier"
+    local opts="-h -help -skill -doctor -update -U -clean -time -plt -calc -cbc -range -shift_energy -out2xyz -out2exyz -cp2k2xyz -pos2exyz -cif2pos -cif2exyz -exyz2pos -xdat2exyz -pos2lmp -lmp2exyz -traj2exyz -dp2xyz -xyz2dp -addgroup -addlabel -addweight -min_dist -min_dist_pbc -filter_dist -filter_dist_pbc -filter_box -filter_value -filter_range -get_frame -clean_xyz -analyze_comp -chem_species -replicate -pda -pynep -frame_range -nep_modifier"
 
     # Calculator subcommands
     local calc_subcmds="ionic-cond nep des doas neb minimize msd nlist disp avg-struct oct-tilt pol-abo3"
@@ -32,7 +45,7 @@ _gpumdkit_completions() {
 
         # Secondary options for -plt
         -plt)
-            COMPREPLY=($(compgen -W "thermo thermo2 thermo3 train train_density prediction test train_test parity_density born_charge bec msd msd_all msd_conv msd_sdc sdc rdf rdf_pmf vac restart dimer force_errors des doas charge lr arrhenius_d arrhenius_sigma sigma D sigma_xyz D_xyz net_force emd nemd hnemd pdos plane-grid cohesive viscosity" -- "$cur")) ;;
+            COMPREPLY=($(compgen -W "thermo thermo2 thermo3 train train_density prediction test train_test parity_density born_charge bec msd msd_all msd_conv msd_sdc sdc rdf rdf_pmf vac restart dimer force_errors des doas charge lr arrhenius_d arrhenius_sigma sigma D sigma_xyz D_xyz net_force emd nemd hnemd pdos phonon phonon_comp plane-grid cohesive viscosity" -- "$cur")) ;;
 
         # Options requiring files or directories, complete with filenames
         -out2xyz|-out2exyz|-cp2k2xyz|-exyz2pos|-min_dist|-min_dist_pbc|-filter_dist|-filter_dist_pbc|-filter_box|-filter_value|-filter_range|-get_frame|-clean_xyz|-pos2exyz|-cif2exyz|-cif2pos|-pos2lmp|-lmp2exyz|-traj2exyz|-dp2xyz|-addgroup|-addlabel|-addweight|-analyze_comp|-replicate|-pda|-cbc|-frame_range|-chem_species|-xdat2exyz)

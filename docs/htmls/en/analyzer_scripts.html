@@ -745,6 +745,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#energy-reference-shifting" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Energy Reference Shifting
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#minimum-distance-checks" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -1681,6 +1692,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#energy-reference-shifting" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Energy Reference Shifting
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#minimum-distance-checks" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -1958,6 +1980,11 @@
 <td>Inspect energy/force/virial range</td>
 </tr>
 <tr>
+<td>Energy reference shifting</td>
+<td><code>gpumdkit.sh -shift_energy</code></td>
+<td>Interactively shift extxyz energy references</td>
+</tr>
+<tr>
 <td>Minimum distance</td>
 <td><code>gpumdkit.sh -min_dist dump.xyz</code></td>
 <td>Fast distance check without PBC</td>
@@ -2068,10 +2095,11 @@ for another material or workflow.</p>
 <a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>| 506) Filter structures by minimum distance           |
 <a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>| 507) Get minimum interatomic distance                |
 <a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>| 508) Probability density analysis                    |
-<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>+------------------------------------------------------+
-<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>| 000) Return to the main menu                         |
-<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>+------------------------------------------------------+
-<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>Input the function number:
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>| 509) Shift energy reference interactively            |
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>+------------------------------------------------------+
+<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>| 000) Return to the main menu                         |
+<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>+------------------------------------------------------+
+<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>Input the function number:
 </code></pre></div>
 <p>Most analyzer functions also have direct CLI shortcuts, which are listed in the overview table and in the sections below.</p>
 <hr />
@@ -2115,81 +2143,102 @@ for another material or workflow.</p>
 </div>
 
 <hr />
+<h2 id="energy-reference-shifting">Energy Reference Shifting</h2>
+<p><code>align_energy_reference.py</code> interactively shifts the <code>energy=</code> values in a
+multi-frame extxyz file. Atom lines and all other header fields are copied to
+the output file unchanged.</p>
+<p>Start the interface directly:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>gpumdkit.sh<span class="w"> </span>-shift_energy
+</code></pre></div>
+<p>Or choose <code>5) Analyzer -&gt; 509</code> from the main menu. The interface first shows
+the detected elements and <code>config_type</code> groups, then offers three modes:</p>
+<ol>
+<li>Reference-group alignment: align selected groups to the mean energy of a
+   reference group.</li>
+<li>Zero atomic baseline alignment: optimize a baseline for each group so its
+   shifted energies target zero.</li>
+<li>DFT-to-NEP alignment: calculate NEP energies and align the original DFT
+   energies to them.</li>
+</ol>
+<p>The existing NES defaults are retained. Advanced NES settings can be changed
+inside the Python interface when needed. The DFT-to-NEP mode requires the
+<code>calorine</code> package and a compatible NEP model file.</p>
+<hr />
 <h2 id="minimum-distance-checks">Minimum Distance Checks</h2>
 <h3 id="without-pbc-fast">Without PBC (Fast)</h3>
 <p><code>get_min_dist.py</code> calculates minimum interatomic distances without considering periodic boundary conditions. Fast but may be inaccurate for periodic systems.</p>
 <p><strong>What it does:</strong> Reports the minimum distance between each pair of elements in every frame, ignoring periodic boundary conditions.</p>
 <p><strong>CLI mode:</strong></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>gpumdkit.sh<span class="w"> </span>-min_dist<span class="w"> </span>dump.xyz
+<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>gpumdkit.sh<span class="w"> </span>-min_dist<span class="w"> </span>dump.xyz
 </code></pre></div>
 <p><strong>Interactive mode:</strong> Choose <code>507</code> from the analyzer menu.</p>
 <p><strong>Output example:</strong></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>+---------------------------+
-<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>|   PBC ignored for speed   |
-<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a>| use -min_dist_pbc for PBC |
-<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a>+---------------------------+
-<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a>Minimum interatomic distances:
-<a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a>+---------------------------+
-<a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a>| Atom Pair |  Distance (Å) |
-<a id="__codelineno-8-8" name="__codelineno-8-8" href="#__codelineno-8-8"></a>+---------------------------+
-<a id="__codelineno-8-9" name="__codelineno-8-9" href="#__codelineno-8-9"></a>|   Li-Li   |     1.696     |
-<a id="__codelineno-8-10" name="__codelineno-8-10" href="#__codelineno-8-10"></a>|   Li-O    |     1.587     |
-<a id="__codelineno-8-11" name="__codelineno-8-11" href="#__codelineno-8-11"></a>|   O-O     |     2.480     |
-<a id="__codelineno-8-12" name="__codelineno-8-12" href="#__codelineno-8-12"></a>+---------------------------+
-<a id="__codelineno-8-13" name="__codelineno-8-13" href="#__codelineno-8-13"></a>Overall min_distance: 1.587 Å
+<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>+---------------------------+
+<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>|   PBC ignored for speed   |
+<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a>| use -min_dist_pbc for PBC |
+<a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a>+---------------------------+
+<a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a>Minimum interatomic distances:
+<a id="__codelineno-9-6" name="__codelineno-9-6" href="#__codelineno-9-6"></a>+---------------------------+
+<a id="__codelineno-9-7" name="__codelineno-9-7" href="#__codelineno-9-7"></a>| Atom Pair |  Distance (Å) |
+<a id="__codelineno-9-8" name="__codelineno-9-8" href="#__codelineno-9-8"></a>+---------------------------+
+<a id="__codelineno-9-9" name="__codelineno-9-9" href="#__codelineno-9-9"></a>|   Li-Li   |     1.696     |
+<a id="__codelineno-9-10" name="__codelineno-9-10" href="#__codelineno-9-10"></a>|   Li-O    |     1.587     |
+<a id="__codelineno-9-11" name="__codelineno-9-11" href="#__codelineno-9-11"></a>|   O-O     |     2.480     |
+<a id="__codelineno-9-12" name="__codelineno-9-12" href="#__codelineno-9-12"></a>+---------------------------+
+<a id="__codelineno-9-13" name="__codelineno-9-13" href="#__codelineno-9-13"></a>Overall min_distance: 1.587 Å
 </code></pre></div>
 <p><strong>Notes:</strong> Use this for a quick check. For periodic systems, prefer <code>-min_dist_pbc</code> for accurate results.</p>
 <h3 id="with-pbc-accurate">With PBC (Accurate)</h3>
 <p><code>get_min_dist_pbc.py</code> calculates minimum interatomic distances considering periodic boundary conditions.</p>
 <p><strong>What it does:</strong> Reports the minimum distance between each pair of elements, accounting for periodic boundary conditions.</p>
 <p><strong>CLI mode:</strong></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>gpumdkit.sh<span class="w"> </span>-min_dist_pbc<span class="w"> </span>dump.xyz
+<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a>gpumdkit.sh<span class="w"> </span>-min_dist_pbc<span class="w"> </span>dump.xyz
 </code></pre></div>
 <p><strong>Interactive mode:</strong> Choose <code>507</code> from the analyzer menu and answer <code>y</code> when asked whether to consider PBC.</p>
 <p><strong>Output example:</strong></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a>Minimum interatomic distances (with PBC):
-<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a>+---------------------------+
-<a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a>| Atom Pair |  Distance (Å) |
-<a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a>+---------------------------+
-<a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a>|   Li-Li   |     1.696     |
-<a id="__codelineno-10-6" name="__codelineno-10-6" href="#__codelineno-10-6"></a>|   Li-O    |     1.587     |
-<a id="__codelineno-10-7" name="__codelineno-10-7" href="#__codelineno-10-7"></a>|   O-O     |     2.355     |
-<a id="__codelineno-10-8" name="__codelineno-10-8" href="#__codelineno-10-8"></a>+---------------------------+
-<a id="__codelineno-10-9" name="__codelineno-10-9" href="#__codelineno-10-9"></a>Overall min_distance: 1.587 Å
+<div class="highlight"><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a>Minimum interatomic distances (with PBC):
+<a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a>+---------------------------+
+<a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a>| Atom Pair |  Distance (Å) |
+<a id="__codelineno-11-4" name="__codelineno-11-4" href="#__codelineno-11-4"></a>+---------------------------+
+<a id="__codelineno-11-5" name="__codelineno-11-5" href="#__codelineno-11-5"></a>|   Li-Li   |     1.696     |
+<a id="__codelineno-11-6" name="__codelineno-11-6" href="#__codelineno-11-6"></a>|   Li-O    |     1.587     |
+<a id="__codelineno-11-7" name="__codelineno-11-7" href="#__codelineno-11-7"></a>|   O-O     |     2.355     |
+<a id="__codelineno-11-8" name="__codelineno-11-8" href="#__codelineno-11-8"></a>+---------------------------+
+<a id="__codelineno-11-9" name="__codelineno-11-9" href="#__codelineno-11-9"></a>Overall min_distance: 1.587 Å
 </code></pre></div>
 <hr />
 <h2 id="filtering-structures">Filtering Structures</h2>
 <h3 id="filter-by-minimum-distance">Filter by Minimum Distance</h3>
 <p><code>filter_structures_by_distance_pbc.py</code> removes structures with any interatomic distance below a threshold.</p>
 <p><strong>Input file:</strong> <code>dump.xyz</code> (extxyz format)</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a>gpumdkit.sh<span class="w"> </span>-filter_dist_pbc<span class="w"> </span>dump.xyz<span class="w"> </span><span class="m">1</span>.0
+<div class="highlight"><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a>gpumdkit.sh<span class="w"> </span>-filter_dist_pbc<span class="w"> </span>dump.xyz<span class="w"> </span><span class="m">1</span>.0
 </code></pre></div>
 <p>This removes structures with any interatomic distance below <code>1.0 Å</code>.</p>
 <h3 id="filter-by-box-size">Filter by Box Size</h3>
 <p><code>filter_exyz_by_box.py</code> filters structures by box-edge length.</p>
 <p><strong>Input file:</strong> <code>dump.xyz</code> (extxyz format)</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a>gpumdkit.sh<span class="w"> </span>-filter_box<span class="w"> </span>dump.xyz<span class="w"> </span><span class="m">13</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a>gpumdkit.sh<span class="w"> </span>-filter_box<span class="w"> </span>dump.xyz<span class="w"> </span><span class="m">13</span>
 </code></pre></div>
 <p>This keeps structures where all box edges are below <code>13 Å</code>.</p>
 <h3 id="filter-by-property-value">Filter by Property Value</h3>
 <p><code>filter_exyz_by_value.py</code> filters structures by energy, force, or virial threshold.</p>
 <p><strong>Input file:</strong> <code>train.xyz</code> (extxyz format)</p>
 <p><strong>Supported properties:</strong> <code>energy</code>, <code>force</code>, <code>virial</code></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a>gpumdkit.sh<span class="w"> </span>-filter_value<span class="w"> </span>train.xyz<span class="w"> </span>force<span class="w"> </span><span class="m">20</span>
-<a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a>gpumdkit.sh<span class="w"> </span>-filter_value<span class="w"> </span>train.xyz<span class="w"> </span>energy<span class="w"> </span><span class="m">5</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a>gpumdkit.sh<span class="w"> </span>-filter_value<span class="w"> </span>train.xyz<span class="w"> </span>force<span class="w"> </span><span class="m">20</span>
+<a id="__codelineno-14-2" name="__codelineno-14-2" href="#__codelineno-14-2"></a>gpumdkit.sh<span class="w"> </span>-filter_value<span class="w"> </span>train.xyz<span class="w"> </span>energy<span class="w"> </span><span class="m">5</span>
 </code></pre></div>
 <p>This filters out structures with force components exceeding <code>20 eV/Å</code> (or energy exceeding <code>5 eV/atom</code>).</p>
 <h3 id="filter-by-pair-distance-range">Filter by Pair-Distance Range</h3>
 <p><code>filter_dist_range.py</code> extracts structures where a specific element-pair distance falls within a given range.</p>
 <p><strong>Input file:</strong> <code>dump.xyz</code> (extxyz format)</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a>gpumdkit.sh<span class="w"> </span>-filter_range<span class="w"> </span>dump.xyz<span class="w"> </span>Li<span class="w"> </span>Li<span class="w"> </span><span class="m">1</span>.8<span class="w"> </span><span class="m">2</span>.0
+<div class="highlight"><pre><span></span><code><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a>gpumdkit.sh<span class="w"> </span>-filter_range<span class="w"> </span>dump.xyz<span class="w"> </span>Li<span class="w"> </span>Li<span class="w"> </span><span class="m">1</span>.8<span class="w"> </span><span class="m">2</span>.0
 </code></pre></div>
 <p>This extracts structures where the Li-Li minimum distance is between <code>1.8 Å</code> and <code>2.0 Å</code>. Output: <code>filtered_Li_Li_1.8_2.0.xyz</code>.</p>
 <hr />
 <h2 id="charge-balance-check">Charge Balance Check</h2>
 <p><code>charge_balance_check.py</code> checks the oxidation-state balance of structures.</p>
 <p><strong>Input file:</strong> <code>train.xyz</code> (extxyz format)</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a>gpumdkit.sh<span class="w"> </span>-cbc<span class="w"> </span>train.xyz
+<div class="highlight"><pre><span></span><code><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a>gpumdkit.sh<span class="w"> </span>-cbc<span class="w"> </span>train.xyz
 </code></pre></div>
 <p><strong>Output files:</strong></p>
 <ul>
@@ -2203,13 +2252,13 @@ for another material or workflow.</p>
 <p><code>find_outliers.py</code> finds outlier structures in NEP training data based on RMSE thresholds for energy, force, and stress.</p>
 <p><strong>Input files:</strong> <code>energy_train.out</code>, <code>force_train.out</code>, <code>stress_train.out</code>, <code>train.xyz</code></p>
 <p>These files are generated during NEP training. The script compares DFT vs NEP predictions and identifies structures with large errors.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a><span class="c1"># Interactive mode</span>
-<a id="__codelineno-16-2" name="__codelineno-16-2" href="#__codelineno-16-2"></a>gpumdkit.sh<span class="w">    </span><span class="c1"># Select: 5) Analyzer → 502) Find outliers of extxyz</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-17-1" name="__codelineno-17-1" href="#__codelineno-17-1"></a><span class="c1"># Interactive mode</span>
+<a id="__codelineno-17-2" name="__codelineno-17-2" href="#__codelineno-17-2"></a>gpumdkit.sh<span class="w">    </span><span class="c1"># Select: 5) Analyzer → 502) Find outliers of extxyz</span>
 </code></pre></div>
 <p><strong>Interactive prompts:</strong></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-17-1" name="__codelineno-17-1" href="#__codelineno-17-1"></a>Enter energy RMSE threshold (meV/atom): 1
-<a id="__codelineno-17-2" name="__codelineno-17-2" href="#__codelineno-17-2"></a>Enter force RMSE threshold (meV/Å): 60
-<a id="__codelineno-17-3" name="__codelineno-17-3" href="#__codelineno-17-3"></a>Enter stress RMSE threshold (GPa): 0.03
+<div class="highlight"><pre><span></span><code><a id="__codelineno-18-1" name="__codelineno-18-1" href="#__codelineno-18-1"></a>Enter energy RMSE threshold (meV/atom): 1
+<a id="__codelineno-18-2" name="__codelineno-18-2" href="#__codelineno-18-2"></a>Enter force RMSE threshold (meV/Å): 60
+<a id="__codelineno-18-3" name="__codelineno-18-3" href="#__codelineno-18-3"></a>Enter stress RMSE threshold (GPa): 0.03
 </code></pre></div>
 <p><strong>Output files:</strong></p>
 <ul>
@@ -2223,37 +2272,37 @@ for another material or workflow.</p>
 <h3 id="gpumd-remaining-time">GPUMD Remaining Time</h3>
 <p><code>time_consuming_gpumd.sh</code> estimates the remaining time for a GPUMD simulation.</p>
 <p><strong>Input files:</strong> <code>run.in</code>, <code>thermo.out</code> (in the current GPUMD working directory)</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-18-1" name="__codelineno-18-1" href="#__codelineno-18-1"></a>gpumdkit.sh<span class="w"> </span>-time<span class="w"> </span>gpumd
+<div class="highlight"><pre><span></span><code><a id="__codelineno-19-1" name="__codelineno-19-1" href="#__codelineno-19-1"></a>gpumdkit.sh<span class="w"> </span>-time<span class="w"> </span>gpumd
 </code></pre></div>
 <p><strong>Output example:</strong></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-19-1" name="__codelineno-19-1" href="#__codelineno-19-1"></a>----------------- System Information ----------------
-<a id="__codelineno-19-2" name="__codelineno-19-2" href="#__codelineno-19-2"></a>total frames: 1050000
-<a id="__codelineno-19-3" name="__codelineno-19-3" href="#__codelineno-19-3"></a>-----------------------------------------------------
-<a id="__codelineno-19-4" name="__codelineno-19-4" href="#__codelineno-19-4"></a>Current Frame  Speed (steps/s)   Total Time       Time Left       Estimated End
-<a id="__codelineno-19-5" name="__codelineno-19-5" href="#__codelineno-19-5"></a>-------------   -------------   -------------   -------------   -----------------
-<a id="__codelineno-19-6" name="__codelineno-19-6" href="#__codelineno-19-6"></a>    13000          499.86         0h 35m 0s      0h 34m 34s    2025-12-27 18:12:04
-<a id="__codelineno-19-7" name="__codelineno-19-7" href="#__codelineno-19-7"></a>    14000          199.93        1h 27m 31s      1h 26m 21s    2025-12-27 19:03:56
+<div class="highlight"><pre><span></span><code><a id="__codelineno-20-1" name="__codelineno-20-1" href="#__codelineno-20-1"></a>----------------- System Information ----------------
+<a id="__codelineno-20-2" name="__codelineno-20-2" href="#__codelineno-20-2"></a>total frames: 1050000
+<a id="__codelineno-20-3" name="__codelineno-20-3" href="#__codelineno-20-3"></a>-----------------------------------------------------
+<a id="__codelineno-20-4" name="__codelineno-20-4" href="#__codelineno-20-4"></a>Current Frame  Speed (steps/s)   Total Time       Time Left       Estimated End
+<a id="__codelineno-20-5" name="__codelineno-20-5" href="#__codelineno-20-5"></a>-------------   -------------   -------------   -------------   -----------------
+<a id="__codelineno-20-6" name="__codelineno-20-6" href="#__codelineno-20-6"></a>    13000          499.86         0h 35m 0s      0h 34m 34s    2025-12-27 18:12:04
+<a id="__codelineno-20-7" name="__codelineno-20-7" href="#__codelineno-20-7"></a>    14000          199.93        1h 27m 31s      1h 26m 21s    2025-12-27 19:03:56
 </code></pre></div>
 <h3 id="nep-remaining-time">NEP Remaining Time</h3>
 <p><code>time_consuming_nep.sh</code> estimates the remaining time for NEP training.</p>
 <p><strong>Input files:</strong> <code>loss.out</code> (in the current NEP working directory)</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-20-1" name="__codelineno-20-1" href="#__codelineno-20-1"></a>gpumdkit.sh<span class="w"> </span>-time<span class="w"> </span>nep
+<div class="highlight"><pre><span></span><code><a id="__codelineno-21-1" name="__codelineno-21-1" href="#__codelineno-21-1"></a>gpumdkit.sh<span class="w"> </span>-time<span class="w"> </span>nep
 </code></pre></div>
 <p><strong>Output example:</strong></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-21-1" name="__codelineno-21-1" href="#__codelineno-21-1"></a>+-----------------+-----------+-----------------+---------------------+
-<a id="__codelineno-21-2" name="__codelineno-21-2" href="#__codelineno-21-2"></a>|       Step      | Time Diff |    Time Left    |    Finish Time      |
-<a id="__codelineno-21-3" name="__codelineno-21-3" href="#__codelineno-21-3"></a>+-----------------+-----------+-----------------+---------------------+
-<a id="__codelineno-21-4" name="__codelineno-21-4" href="#__codelineno-21-4"></a>| 6700            | 1 s       | 0 h 15 m 33 s   | 2025-10-23 15:34:11 |
-<a id="__codelineno-21-5" name="__codelineno-21-5" href="#__codelineno-21-5"></a>| 6800            | 2 s       | 0 h 31 m 4 s    | 2025-10-23 15:49:44 |
-<a id="__codelineno-21-6" name="__codelineno-21-6" href="#__codelineno-21-6"></a>| 6900            | 2 s       | 0 h 31 m 2 s    | 2025-10-23 15:49:44 |
-<a id="__codelineno-21-7" name="__codelineno-21-7" href="#__codelineno-21-7"></a>+-----------------+-----------+-----------------+---------------------+
+<div class="highlight"><pre><span></span><code><a id="__codelineno-22-1" name="__codelineno-22-1" href="#__codelineno-22-1"></a>+-----------------+-----------+-----------------+---------------------+
+<a id="__codelineno-22-2" name="__codelineno-22-2" href="#__codelineno-22-2"></a>|       Step      | Time Diff |    Time Left    |    Finish Time      |
+<a id="__codelineno-22-3" name="__codelineno-22-3" href="#__codelineno-22-3"></a>+-----------------+-----------+-----------------+---------------------+
+<a id="__codelineno-22-4" name="__codelineno-22-4" href="#__codelineno-22-4"></a>| 6700            | 1 s       | 0 h 15 m 33 s   | 2025-10-23 15:34:11 |
+<a id="__codelineno-22-5" name="__codelineno-22-5" href="#__codelineno-22-5"></a>| 6800            | 2 s       | 0 h 31 m 4 s    | 2025-10-23 15:49:44 |
+<a id="__codelineno-22-6" name="__codelineno-22-6" href="#__codelineno-22-6"></a>| 6900            | 2 s       | 0 h 31 m 2 s    | 2025-10-23 15:49:44 |
+<a id="__codelineno-22-7" name="__codelineno-22-7" href="#__codelineno-22-7"></a>+-----------------+-----------+-----------------+---------------------+
 </code></pre></div>
 <hr />
 <h2 id="probability-density-analysis">Probability Density Analysis</h2>
 <p><code>probability_density_analysis.py</code> calculates 3D probability density of mobile ions for diffusion channel analysis.</p>
 <p><strong>Input files:</strong> Reference structure (POSCAR), trajectory file (extxyz)</p>
 <p><strong>CLI mode:</strong></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-22-1" name="__codelineno-22-1" href="#__codelineno-22-1"></a>gpumdkit.sh<span class="w"> </span>-pda<span class="w"> </span>LLZO.vasp<span class="w"> </span>dump.xyz<span class="w"> </span>Li<span class="w"> </span><span class="m">0</span>.25
+<div class="highlight"><pre><span></span><code><a id="__codelineno-23-1" name="__codelineno-23-1" href="#__codelineno-23-1"></a>gpumdkit.sh<span class="w"> </span>-pda<span class="w"> </span>LLZO.vasp<span class="w"> </span>dump.xyz<span class="w"> </span>Li<span class="w"> </span><span class="m">0</span>.25
 </code></pre></div>
 <p><strong>Arguments:</strong></p>
 <table>
@@ -2293,34 +2342,34 @@ for another material or workflow.</p>
 <hr />
 <h2 id="example-workflows">Example Workflows</h2>
 <h3 id="structure-quality-check">Structure Quality Check</h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-23-1" name="__codelineno-23-1" href="#__codelineno-23-1"></a><span class="c1"># 1. Check composition</span>
-<a id="__codelineno-23-2" name="__codelineno-23-2" href="#__codelineno-23-2"></a>gpumdkit.sh<span class="w"> </span>-analyze_comp<span class="w"> </span>train.xyz
-<a id="__codelineno-23-3" name="__codelineno-23-3" href="#__codelineno-23-3"></a>
-<a id="__codelineno-23-4" name="__codelineno-23-4" href="#__codelineno-23-4"></a><span class="c1"># 2. Check energy/force range</span>
-<a id="__codelineno-23-5" name="__codelineno-23-5" href="#__codelineno-23-5"></a>gpumdkit.sh<span class="w"> </span>-range<span class="w"> </span>train.xyz<span class="w"> </span>force<span class="w"> </span>hist
-<a id="__codelineno-23-6" name="__codelineno-23-6" href="#__codelineno-23-6"></a>
-<a id="__codelineno-23-7" name="__codelineno-23-7" href="#__codelineno-23-7"></a><span class="c1"># 3. Check minimum distances</span>
-<a id="__codelineno-23-8" name="__codelineno-23-8" href="#__codelineno-23-8"></a>gpumdkit.sh<span class="w"> </span>-min_dist_pbc<span class="w"> </span>train.xyz
-<a id="__codelineno-23-9" name="__codelineno-23-9" href="#__codelineno-23-9"></a>
-<a id="__codelineno-23-10" name="__codelineno-23-10" href="#__codelineno-23-10"></a><span class="c1"># 4. Find outliers (after NEP training)</span>
-<a id="__codelineno-23-11" name="__codelineno-23-11" href="#__codelineno-23-11"></a><span class="c1"># Interactive: 5) Analyzer → 502</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-24-1" name="__codelineno-24-1" href="#__codelineno-24-1"></a><span class="c1"># 1. Check composition</span>
+<a id="__codelineno-24-2" name="__codelineno-24-2" href="#__codelineno-24-2"></a>gpumdkit.sh<span class="w"> </span>-analyze_comp<span class="w"> </span>train.xyz
+<a id="__codelineno-24-3" name="__codelineno-24-3" href="#__codelineno-24-3"></a>
+<a id="__codelineno-24-4" name="__codelineno-24-4" href="#__codelineno-24-4"></a><span class="c1"># 2. Check energy/force range</span>
+<a id="__codelineno-24-5" name="__codelineno-24-5" href="#__codelineno-24-5"></a>gpumdkit.sh<span class="w"> </span>-range<span class="w"> </span>train.xyz<span class="w"> </span>force<span class="w"> </span>hist
+<a id="__codelineno-24-6" name="__codelineno-24-6" href="#__codelineno-24-6"></a>
+<a id="__codelineno-24-7" name="__codelineno-24-7" href="#__codelineno-24-7"></a><span class="c1"># 3. Check minimum distances</span>
+<a id="__codelineno-24-8" name="__codelineno-24-8" href="#__codelineno-24-8"></a>gpumdkit.sh<span class="w"> </span>-min_dist_pbc<span class="w"> </span>train.xyz
+<a id="__codelineno-24-9" name="__codelineno-24-9" href="#__codelineno-24-9"></a>
+<a id="__codelineno-24-10" name="__codelineno-24-10" href="#__codelineno-24-10"></a><span class="c1"># 4. Find outliers (after NEP training)</span>
+<a id="__codelineno-24-11" name="__codelineno-24-11" href="#__codelineno-24-11"></a><span class="c1"># Interactive: 5) Analyzer → 502</span>
 </code></pre></div>
 <h3 id="structure-filtering-pipeline">Structure Filtering Pipeline</h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-24-1" name="__codelineno-24-1" href="#__codelineno-24-1"></a><span class="c1"># 1. Filter by minimum distance</span>
-<a id="__codelineno-24-2" name="__codelineno-24-2" href="#__codelineno-24-2"></a>gpumdkit.sh<span class="w"> </span>-filter_dist_pbc<span class="w"> </span>dump.xyz<span class="w"> </span><span class="m">1</span>.0
-<a id="__codelineno-24-3" name="__codelineno-24-3" href="#__codelineno-24-3"></a>
-<a id="__codelineno-24-4" name="__codelineno-24-4" href="#__codelineno-24-4"></a><span class="c1"># 2. Filter by box size</span>
-<a id="__codelineno-24-5" name="__codelineno-24-5" href="#__codelineno-24-5"></a>gpumdkit.sh<span class="w"> </span>-filter_box<span class="w"> </span>filtered_dist_pbc.xyz<span class="w"> </span><span class="m">13</span>
-<a id="__codelineno-24-6" name="__codelineno-24-6" href="#__codelineno-24-6"></a>
-<a id="__codelineno-24-7" name="__codelineno-24-7" href="#__codelineno-24-7"></a><span class="c1"># 3. Filter by force threshold</span>
-<a id="__codelineno-24-8" name="__codelineno-24-8" href="#__codelineno-24-8"></a>gpumdkit.sh<span class="w"> </span>-filter_value<span class="w"> </span>filtered_box.xyz<span class="w"> </span>force<span class="w"> </span><span class="m">20</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-25-1" name="__codelineno-25-1" href="#__codelineno-25-1"></a><span class="c1"># 1. Filter by minimum distance</span>
+<a id="__codelineno-25-2" name="__codelineno-25-2" href="#__codelineno-25-2"></a>gpumdkit.sh<span class="w"> </span>-filter_dist_pbc<span class="w"> </span>dump.xyz<span class="w"> </span><span class="m">1</span>.0
+<a id="__codelineno-25-3" name="__codelineno-25-3" href="#__codelineno-25-3"></a>
+<a id="__codelineno-25-4" name="__codelineno-25-4" href="#__codelineno-25-4"></a><span class="c1"># 2. Filter by box size</span>
+<a id="__codelineno-25-5" name="__codelineno-25-5" href="#__codelineno-25-5"></a>gpumdkit.sh<span class="w"> </span>-filter_box<span class="w"> </span>filtered_dist_pbc.xyz<span class="w"> </span><span class="m">13</span>
+<a id="__codelineno-25-6" name="__codelineno-25-6" href="#__codelineno-25-6"></a>
+<a id="__codelineno-25-7" name="__codelineno-25-7" href="#__codelineno-25-7"></a><span class="c1"># 3. Filter by force threshold</span>
+<a id="__codelineno-25-8" name="__codelineno-25-8" href="#__codelineno-25-8"></a>gpumdkit.sh<span class="w"> </span>-filter_value<span class="w"> </span>filtered_box.xyz<span class="w"> </span>force<span class="w"> </span><span class="m">20</span>
 </code></pre></div>
 <h3 id="diffusion-channel-analysis">Diffusion Channel Analysis</h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-25-1" name="__codelineno-25-1" href="#__codelineno-25-1"></a><span class="c1"># 1. Calculate probability density</span>
-<a id="__codelineno-25-2" name="__codelineno-25-2" href="#__codelineno-25-2"></a>gpumdkit.sh<span class="w"> </span>-pda<span class="w"> </span>LLZO.vasp<span class="w"> </span>dump.xyz<span class="w"> </span>Li<span class="w"> </span><span class="m">0</span>.25
-<a id="__codelineno-25-3" name="__codelineno-25-3" href="#__codelineno-25-3"></a>
-<a id="__codelineno-25-4" name="__codelineno-25-4" href="#__codelineno-25-4"></a><span class="c1"># 2. Visualize with VESTA</span>
-<a id="__codelineno-25-5" name="__codelineno-25-5" href="#__codelineno-25-5"></a><span class="c1"># Open probability_density_0.25.vasp</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-26-1" name="__codelineno-26-1" href="#__codelineno-26-1"></a><span class="c1"># 1. Calculate probability density</span>
+<a id="__codelineno-26-2" name="__codelineno-26-2" href="#__codelineno-26-2"></a>gpumdkit.sh<span class="w"> </span>-pda<span class="w"> </span>LLZO.vasp<span class="w"> </span>dump.xyz<span class="w"> </span>Li<span class="w"> </span><span class="m">0</span>.25
+<a id="__codelineno-26-3" name="__codelineno-26-3" href="#__codelineno-26-3"></a>
+<a id="__codelineno-26-4" name="__codelineno-26-4" href="#__codelineno-26-4"></a><span class="c1"># 2. Visualize with VESTA</span>
+<a id="__codelineno-26-5" name="__codelineno-26-5" href="#__codelineno-26-5"></a><span class="c1"># Open probability_density_0.25.vasp</span>
 </code></pre></div>
 
 

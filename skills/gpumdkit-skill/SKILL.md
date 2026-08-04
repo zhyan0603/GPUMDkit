@@ -27,7 +27,7 @@ Read one or more references according to the task. Do not load every file by def
 | Structure/data conversion, labels, weights, replication, frame extraction | [format-conversion.md](references/format-conversion.md) |
 | Uniform/random/FPS sampling, train/test splitting, perturbation, force-deviation selection | [sampling.md](references/sampling.md) |
 | Batch SCF/MD preparation and active-learning workflows | [workflows.md](references/workflows.md) |
-| MSD, ionic conductivity, descriptors, NEB, minimization, polarization | [calculators.md](references/calculators.md) |
+| MSD, ionic conductivity, XRD, descriptors, NEB, minimization, polarization | [calculators.md](references/calculators.md) |
 | Composition, ranges, distances, filtering, outliers, probability density | [analyzers.md](references/analyzers.md) |
 | NEP/MD/transport/structure plots and fit outputs | [visualization.md](references/visualization.md) |
 | Creating or restyling GPUMDkit plots; project plotting style and review checklist | [plotting-style.md](references/plotting-style.md) |

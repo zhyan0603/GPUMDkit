@@ -27,7 +27,7 @@ description: 端到端使用 GPUMDkit、GPUMD 与 NEP。适用于安装和了解
 | 结构/数据格式转换、标签、权重、扩胞、帧提取 | [format-conversion.md](references/format-conversion.md) |
 | 均匀/随机/FPS 采样、训练集/测试集划分、结构扰动、力偏差筛选 | [sampling.md](references/sampling.md) |
 | 批量 SCF/MD 准备和主动学习流程 | [workflows.md](references/workflows.md) |
-| MSD、离子电导率、描述符、NEB、结构优化、极化 | [calculators.md](references/calculators.md) |
+| MSD、离子电导率、XRD、描述符、NEB、结构优化、极化 | [calculators.md](references/calculators.md) |
 | 组成、数值范围、原子间距、结构筛选、异常值、概率密度 | [analyzers.md](references/analyzers.md) |
 | NEP/MD/输运/结构绘图与拟合输出 | [visualization.md](references/visualization.md) |
 | 新增或调整 GPUMDkit 图形；绘图风格与审查清单 | [plotting-style.md](references/plotting-style.md) |

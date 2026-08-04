@@ -21,6 +21,7 @@
 | Minimum Distance | `-min_dist` | Calculate min distances (no PBC) |
 | Minimum Distance (PBC) | `-min_dist_pbc` | Calculate min distances (with PBC) |
 | Probability Density | `-pda` or Menu 508 | 3D diffusion channel analysis |
+| Energy Reference Shifting | `-shift_energy` or Menu 509 | Interactively shift extxyz energy references |
 
 ## Command Reference
 
@@ -47,6 +48,19 @@ gpumdkit.sh -range train.xyz virial
 # With histogram plot
 gpumdkit.sh -range train.xyz force hist
 ```
+
+### Energy Reference Shifting
+```bash
+# Open the interactive energy reference shifter
+gpumdkit.sh -shift_energy
+
+# The same tool is available from menu 5 -> 509
+```
+
+`align_energy_reference.py` preserves atom lines and all other header fields
+while updating `energy=` values. It supports reference-group alignment, zero
+atomic baseline alignment, and DFT-to-NEP alignment. The latter requires the
+`calorine` package and a compatible NEP model file.
 
 ### Minimum Distance
 ```bash
@@ -206,6 +220,7 @@ gpumdkit.sh -time nep
 |------|-------------|--------|
 | `-analyze_comp` | Composition analysis | `gpumdkit.sh -analyze_comp <file>` |
 | `-range` | Property range | `gpumdkit.sh -range <file> <prop>` |
+| `-shift_energy` | Interactive energy reference shifting | `gpumdkit.sh -shift_energy` |
 | `-min_dist` | Min distance (no PBC) | `gpumdkit.sh -min_dist <file>` |
 | `-min_dist_pbc` | Min distance (PBC) | `gpumdkit.sh -min_dist_pbc <file>` |
 | `-chem_species` | Chemical species list | `gpumdkit.sh -chem_species <file>` |
@@ -226,6 +241,7 @@ gpumdkit.sh -time nep
 | Charge balance | `pymatgen`, `tqdm` |
 | Property range | `matplotlib` |
 | Probability density | `pymatgen` |
+| DFT-to-NEP energy shifting | `calorine` |
 
 ## Detailed Documentation
 

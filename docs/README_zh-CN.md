@@ -110,7 +110,7 @@ wget https://github.com/zhyan0603/GPUMDkit/archive/refs/heads/main.zip
              | |_| |  __/| |_| | |  | | |_| |   <| | |_
               \____|_|    \___/|_|  |_|____/|_|\_\_|\__|
     
-              GPUMDkit Version 1.5.6 (dev) (2026-07-10)
+              GPUMDkit Version 1.5.7 (dev) (2026-08-03)
         Core Developer: Zihan YAN (yanzihan@westlake.edu.cn)
      Main Contributors: Denan LI, Xin WU, Zhoulin LIU & Chen HUA
     
@@ -140,7 +140,7 @@ gpumdkit.sh -h
 
 ```
 +-------------------------------------------------------------------------------------------------------+
-|                          GPUMDkit 1.5.6 (dev) (2026-07-10) Command Help                               |
+|                          GPUMDkit 1.5.7 (dev) (2026-08-03) Command Help                               |
 +-------------------------------------------------------------------------------------------------------+
 |                                          MAIN FUNCTIONS                                               |
 +-------------------------------------------------------------------------------------------------------+
@@ -160,6 +160,7 @@ gpumdkit.sh -h
 | -addgroup     Add group labels                | -addweight         Add structure weight in extxyz     |
 | -clean_xyz    Clean extra info in extxyz      | -get_frame         Extract specific frame             |
 | -frame_range  Extract frames by range         | -dp2xyz            DeepMD npy -> extxyz               |
+| -xyz2dp       extxyz -> DeepMD npy            |                                                       |
 +-------------------------------------------------------------------------------------------------------+
 |                                            ANALYSIS                                                   |
 +-------------------------------------------------------------------------------------------------------+
@@ -184,7 +185,7 @@ gpumdkit.sh -plt -h
 
 ```
  +-----------------------------------------------------------------------------------------------+
- |                     GPUMDkit 1.5.6 (dev) (2026-07-10) PLOT & VISUALIZATION TOOLS              |
+ |                     GPUMDkit 1.5.7 (dev) (2026-08-03) PLOT & VISUALIZATION TOOLS              |
  +-----------------------------------------------------------------------------------------------+
  |  Usage: gpumdkit.sh -plt <type>                        List: gpumdkit.sh -plt -h              |
  +-----------------------------------------------------------------------------------------------+
@@ -220,7 +221,8 @@ gpumdkit.sh -plt -h
  +-----------------------------------------------------------------------------------------------+
  |                                          Phonons                                              |
  +-----------------------------------------------------------------------------------------------+
- |  pdos           - VAC and PDOS                                                                |
+ |  pdos           - VAC and PDOS              phonon       - Phonon band structure                |
+ |  phonon_comp   - Compare phonon bands                                                          |
  +-----------------------------------------------------------------------------------------------+
 ```
 
@@ -271,6 +273,25 @@ gpumdkit.sh -plt thermo
 ```
 gpumdkit.sh -plt thermo save
 ```
+
+##### 示例 7：绘制声子谱
+
+先通过 `gpumdkit.sh -> 4) Calculators -> 414) Calc phonon band structure`
+计算声子谱，再根据 `QPOINTS` 中的路径绘图：
+
+```bash
+gpumdkit.sh -plt phonon phonon_NEP.dat QPOINTS save
+gpumdkit.sh -plt phonon_comp phonon_DFT.dat phonon_NEP.dat save
+```
+
+对比图会从文件名中自动读取图例，例如 `phonon_NEP.dat` 对应 `NEP`，
+`phonon_DFT.dat` 对应 `DFT`。`phonon_comp` 支持两个或更多声子文件；如果
+路径文件不是 `QPOINTS`，可以使用 `--qpoints FILE` 指定。
+
+<div align="center">
+  <img src="./Gallery/phonon.png" alt="声子谱" width="48%" />
+  <img src="./Gallery/phonon_comp.png" alt="声子谱对比" width="48%" />
+</div>
 
 更多详细示例和命令选项请参考我们的[文档](https://gpumdkit.cn/)。
 

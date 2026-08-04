@@ -84,7 +84,7 @@ gpumdkit.sh -plt arrhenius_d
 gpumdkit.sh -plt doas doas.out Li
 ```
 
-### 结构分析（9 种绘图类型）
+### 结构分析（10 种绘图类型）
 
 | 命令 | 输入文件 | 描述 |
 |---------|-------------|-------------|
@@ -93,6 +93,7 @@ gpumdkit.sh -plt doas doas.out Li
 | `thermo3` | `thermo.out` | 第三种热力学样式 |
 | `rdf` | `rdf.out` | 径向分布函数 |
 | `rdf_pmf` | `rdf.out` | RDF + 平均力势 |
+| `xrd` | `xrd.out` 或指定的 XRD 输出 | XRD 强度曲线 |
 | `vac` | `sdc.out` | 速度自相关 |
 | `cohesive` | `cohesive.out` | 内聚能曲线 |
 | `net_force` | extxyz 文件 | 净力分布 |
@@ -106,6 +107,10 @@ gpumdkit.sh -plt thermo
 gpumdkit.sh -plt rdf
 gpumdkit.sh -plt rdf 2              # 特定列
 gpumdkit.sh -plt rdf_pmf 300        # 300K 下的 PMF
+
+# XRD 输出：第 2 列是角度，第 4 列是强度
+gpumdkit.sh -plt xrd
+gpumdkit.sh -plt xrd path/to/xrd.out save
 
 # 平面网格位移
 gpumdkit.sh -plt plane-grid -i model.xyz -d displacements.dat -e Pb Sr
@@ -135,15 +140,25 @@ gpumdkit.sh -plt hnemd <scale_eff_size> <cutoff_freq> save
 gpumdkit.sh -plt viscosity save
 ```
 
-### 声子（1 种绘图类型）
+### 声子（3 种绘图类型）
 
 | 命令 | 输入文件 | 描述 |
 |---------|-------------|-------------|
 | `pdos` | `model.xyz`、`run.in`、`dos.out`、`mvac.out` | 声子态密度和热容 |
+| `phonon` | `phonon_NEP.dat`、`QPOINTS` | 绘制计算器 414 生成的声子谱 |
+| `phonon_comp` | 两个或更多声子数据文件、`QPOINTS` | 比较声子谱，图例从文件名读取 |
 
 ```bash
 gpumdkit.sh -plt pdos save
+gpumdkit.sh -plt phonon
+gpumdkit.sh -plt phonon phonon_NEP.dat QPOINTS save
+gpumdkit.sh -plt phonon_comp phonon_DFT.dat phonon_NEP.dat save
 ```
+
+`phonon_comp` 接受两个或更多兼容的声子数据文件。对于
+`phonon_NEP.dat`、`phonon_DFT.dat`、`phonon_MACE.dat` 等常规命名，图例使用
+`phonon_` 后面的文本。绘图脚本会在绘图前检查声子数据行和提供的 `QPOINTS`
+路径。
 
 ## 常用工作流
 
@@ -195,6 +210,7 @@ gpumdkit.sh -plt nemd 10 1 60 save
 | `msd_sdc` | `msd_sdc.png` |
 | `thermo` | `thermo.png` |
 | `rdf` | `rdf.png` |
+| `xrd` | `xrd.png` |
 | `arrhenius_sigma` | `Arrhenius_sigma.png` |
 | `arrhenius_d` | `Arrhenius_D.png` |
 | `emd` | `emd.png` |

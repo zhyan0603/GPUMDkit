@@ -9,7 +9,7 @@ The source table is maintained in `docs/command_reference.tsv`.
 
 ```text
 +-------------------------------------------------------------------------------------------------------+
-|                          GPUMDkit 1.5.6 (dev) (2026-07-10) Command Help                               |
+|                          GPUMDkit 1.5.7 (dev) (2026-08-03) Command Help                               |
 +-------------------------------------------------------------------------------------------------------+
 |                                          MAIN FUNCTIONS                                               |
 +-------------------------------------------------------------------------------------------------------+
@@ -29,6 +29,7 @@ The source table is maintained in `docs/command_reference.tsv`.
 | -addgroup     Add group labels                | -addweight         Add structure weight in extxyz     |
 | -clean_xyz    Clean extra info in extxyz      | -get_frame         Extract specific frame             |
 | -frame_range  Extract frames by range         | -dp2xyz            DeepMD npy -> extxyz               |
+| -xyz2dp       extxyz -> DeepMD npy            |                                                       |
 +-------------------------------------------------------------------------------------------------------+
 |                                            ANALYSIS                                                   |
 +-------------------------------------------------------------------------------------------------------+
@@ -75,6 +76,7 @@ The source table is maintained in `docs/command_reference.tsv`.
 | `-clean_xyz` | `gpumdkit.sh -clean_xyz <input.xyz> <output.xyz>` | Remove extra extxyz properties |
 | `-frame_range` | `gpumdkit.sh -frame_range <input.xyz> <start_frac> <end_frac>` | Extract frames by fractional range |
 | `-dp2xyz` | `gpumdkit.sh -dp2xyz <input_dir/> [output.xyz]` | DeepMD npy datasets to extxyz |
+| `-xyz2dp` | `gpumdkit.sh -xyz2dp` | Convert labeled extxyz to DeepMD npy data through the interactive prompts |
 
 ## Calculators
 
@@ -98,6 +100,7 @@ The source table is maintained in `docs/command_reference.tsv`.
 | Command | Syntax | Description |
 |---|---|---|
 | `-range` | `gpumdkit.sh -range <input.xyz> <energy\|force\|virial> [hist]` | Property range analysis |
+| `-shift_energy` | `gpumdkit.sh -shift_energy` | Interactive energy reference shifting |
 | `-analyze_comp` | `gpumdkit.sh -analyze_comp <input.xyz>` | Composition analysis |
 | `-chem_species` | `gpumdkit.sh -chem_species <input.xyz>` | Chemical species list |
 | `-cbc` | `gpumdkit.sh -cbc <input.xyz>` | Charge-balance check |

@@ -385,6 +385,27 @@ echo " Code path: ${GPUMDkit_path}/Scripts/format_conversion/dp2xyz.py"
 echo " ---------------------------------------------------"
 }
 
+# Convert extxyz to DeepMD npy
+function xyz2dp(){
+echo " >-------------------------------------------------<"
+echo " | Calling the script in Scripts/format_conversion |"
+echo " | Script: xyz2dp.py                               |"
+echo " | Developer: Zihan YAN (yanzihan@westlake.edu.cn) |"
+echo " >-------------------------------------------------<"
+echo " Input <input.xyz>"
+echo " Example: train.xyz"
+echo " ------------>>"
+read_menu_choice xyz2dp_input || return 1
+echo " Input the DeepMD type-map order (eg. Li P S)"
+echo " ------------>>"
+read_menu_array xyz2dp_type_map || return 1
+echo " ---------------------------------------------------"
+python3 ${GPUMDkit_path}/Scripts/format_conversion/xyz2dp.py \
+    "${xyz2dp_input}" "${xyz2dp_type_map[@]}"
+echo " Code path: ${GPUMDkit_path}/Scripts/format_conversion/xyz2dp.py"
+echo " ---------------------------------------------------"
+}
+
 #--------------------- function 1 ----------------------
 function f1_format_conversion(){
     echo " +-------------------------------------------------------------+"
@@ -401,6 +422,7 @@ function f1_format_conversion(){
     echo " | cif2pos)  CIF to POSCAR        lmp2exyz)  LAMMPS to extxyz  |"
     echo " | cif2exyz) CIF to extxyz        traj2exyz) ASE traj to extxyz|"
     echo " | dp2xyz)   DeepMD to extxyz                                  |"
+    echo " | xyz2dp)   extxyz to DeepMD npy                              |"
     echo " +-------------------------------------------------------------+"
     echo " | 000) Return to main menu                                    |"
     echo " +-------------------------------------------------------------+"
@@ -408,7 +430,7 @@ function f1_format_conversion(){
 
 valid_menu_choices=(
     "000" "101" "102" "103" "104" "105" "106" "107" "108" "109" "110" \
-    "out2exyz" "pos2exyz" "cif2pos" "cif2exyz" "xdat2exyz" "pos2lmp" "lmp2exyz" "traj2exyz" "dp2xyz"
+    "out2exyz" "pos2exyz" "cif2pos" "cif2exyz" "xdat2exyz" "pos2lmp" "lmp2exyz" "traj2exyz" "dp2xyz" "xyz2dp"
 ) 
 read_menu_choice num_choice || return 1
 while ! echo "${valid_menu_choices[@]}" | grep -wq "$num_choice" 
@@ -438,6 +460,7 @@ case $num_choice in
     "lmp2exyz") lammps2extxyz ;;
     "traj2exyz") traj2extxyz ;;
     "dp2xyz") dp2extxyz ;;
+    "xyz2dp") xyz2dp ;;
     "000") menu; main ;;
 esac
 }

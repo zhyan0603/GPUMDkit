@@ -109,7 +109,7 @@ There are two options, <u>*interactive mode*</u> and <u>*command-line mode*</u>
              | |_| |  __/| |_| | |  | | |_| |   <| | |_
               \____|_|    \___/|_|  |_|____/|_|\_\_|\__|
     
-              GPUMDkit Version 1.5.6 (dev) (2026-07-10)
+              GPUMDkit Version 1.5.7 (dev) (2026-08-03)
         Core Developer: Zihan YAN (yanzihan@westlake.edu.cn)
      Main Contributors: Denan LI, Xin WU, Zhoulin LIU & Chen HUA
     
@@ -139,7 +139,7 @@ the help information:
 
 ```
 +-------------------------------------------------------------------------------------------------------+
-|                          GPUMDkit 1.5.6 (dev) (2026-07-10) Command Help                               |
+|                          GPUMDkit 1.5.7 (dev) (2026-08-03) Command Help                               |
 +-------------------------------------------------------------------------------------------------------+
 |                                          MAIN FUNCTIONS                                               |
 +-------------------------------------------------------------------------------------------------------+
@@ -159,6 +159,7 @@ the help information:
 | -addgroup     Add group labels                | -addweight         Add structure weight in extxyz     |
 | -clean_xyz    Clean extra info in extxyz      | -get_frame         Extract specific frame             |
 | -frame_range  Extract frames by range         | -dp2xyz            DeepMD npy -> extxyz               |
+| -xyz2dp       extxyz -> DeepMD npy            |                                                       |
 +-------------------------------------------------------------------------------------------------------+
 |                                            ANALYSIS                                                   |
 +-------------------------------------------------------------------------------------------------------+
@@ -183,7 +184,7 @@ the help information:
 
 ```
  +-----------------------------------------------------------------------------------------------+
- |                     GPUMDkit 1.5.6 (dev) (2026-07-10) PLOT & VISUALIZATION TOOLS              |
+ |                     GPUMDkit 1.5.7 (dev) (2026-08-03) PLOT & VISUALIZATION TOOLS              |
  +-----------------------------------------------------------------------------------------------+
  |  Usage: gpumdkit.sh -plt <type>                        List: gpumdkit.sh -plt -h              |
  +-----------------------------------------------------------------------------------------------+
@@ -219,7 +220,8 @@ the help information:
  +-----------------------------------------------------------------------------------------------+
  |                                          Phonons                                              |
  +-----------------------------------------------------------------------------------------------+
- |  pdos           - VAC and PDOS                                                                |
+ |  pdos           - VAC and PDOS              phonon       - Phonon band structure                |
+ |  phonon_comp   - Compare phonon bands                                                          |
  +-----------------------------------------------------------------------------------------------+
 ```
 
@@ -272,6 +274,25 @@ You can also save images as PNG if your device doesn't support visualization:
 ```
 gpumdkit.sh -plt thermo save
 ```
+
+##### Example 7: Plot phonon band structures
+
+After calculating phonons through `gpumdkit.sh -> 4) Calculators -> 414) Calc
+phonon band structure`, plot the result using the `QPOINTS` path definition:
+
+```bash
+gpumdkit.sh -plt phonon phonon_NEP.dat QPOINTS save
+gpumdkit.sh -plt phonon_comp phonon_DFT.dat phonon_NEP.dat save
+```
+
+Comparison labels are read from filenames such as `phonon_NEP.dat` and
+`phonon_DFT.dat`. Two or more phonon files can be supplied to
+`phonon_comp`; use `--qpoints FILE` when the path file is not named `QPOINTS`.
+
+<div align="center">
+  <img src="./docs/Gallery/phonon.png" alt="Phonon band structure" width="48%" />
+  <img src="./docs/Gallery/phonon_comp.png" alt="Phonon band comparison" width="48%" />
+</div>
 
 Refer to our [documentation](https://gpumdkit.cn/) for more detailed examples and command options.
 

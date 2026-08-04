@@ -66,6 +66,7 @@ Contains calculator functions (Interactive mode `option 4`).
 - `f410_calc_polarization_abo3` - Calculate local polarization for ABO3 from neighbor lists
 - `f411_minimize_structure_by_nep` - Minimize structure using NEP
 - `f412_calc_msd_from_trajectory` - Calculate MSD from trajectory
+- `f413_calc_xrd` - Calculate XRD from an extxyz trajectory (interactive only)
 
 ### f5_analyzers.sh
 Contains analysis functions (Interactive mode `option 5`).
@@ -115,7 +116,7 @@ then you will see:
        | |_| |  __/| |_| | |  | | |_| |   <| | |_
         \____|_|    \___/|_|  |_|____/|_|\_\_|\__|
 
-        GPUMDkit Version 1.5.6 (dev) (2026-07-10)
+        GPUMDkit Version 1.5.7 (dev) (2026-08-03)
   Core Developer: Zihan YAN (yanzihan@westlake.edu.cn)
  Main Contributors: Denan LI, Xin WU, Zhoulin LIU & Chen HUA
 

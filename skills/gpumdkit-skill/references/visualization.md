@@ -84,7 +84,7 @@ gpumdkit.sh -plt arrhenius_d
 gpumdkit.sh -plt doas doas.out Li
 ```
 
-### Structural Analysis (9 plot types)
+### Structural Analysis (10 plot types)
 
 | Command | Input Files | Description |
 |---------|-------------|-------------|
@@ -93,6 +93,7 @@ gpumdkit.sh -plt doas doas.out Li
 | `thermo3` | `thermo.out` | Third thermo style |
 | `rdf` | `rdf.out` | Radial distribution function |
 | `rdf_pmf` | `rdf.out` | RDF + potential of mean force |
+| `xrd` | `xrd.out` or specified XRD output | X-ray diffraction intensity |
 | `vac` | `sdc.out` | Velocity autocorrelation |
 | `cohesive` | `cohesive.out` | Cohesive energy curve |
 | `net_force` | extxyz file | Net force distribution |
@@ -106,6 +107,10 @@ gpumdkit.sh -plt thermo
 gpumdkit.sh -plt rdf
 gpumdkit.sh -plt rdf 2              # Specific column
 gpumdkit.sh -plt rdf_pmf 300        # With PMF at 300K
+
+# XRD output: column 2 is angle, column 4 is intensity
+gpumdkit.sh -plt xrd
+gpumdkit.sh -plt xrd path/to/xrd.out save
 
 # Plane-grid displacement
 gpumdkit.sh -plt plane-grid -i model.xyz -d displacements.dat -e Pb Sr
@@ -135,15 +140,25 @@ gpumdkit.sh -plt hnemd <scale_eff_size> <cutoff_freq> save
 gpumdkit.sh -plt viscosity save
 ```
 
-### Phonons (1 plot type)
+### Phonons (3 plot types)
 
 | Command | Input Files | Description |
 |---------|-------------|-------------|
 | `pdos` | `model.xyz`, `run.in`, `dos.out`, `mvac.out` | Phonon DOS and heat capacity |
+| `phonon` | `phonon_NEP.dat`, `QPOINTS` | Phonon band structure from calculator 414 |
+| `phonon_comp` | Two or more phonon data files, `QPOINTS` | Compare phonon band structures; labels come from filenames |
 
 ```bash
 gpumdkit.sh -plt pdos save
+gpumdkit.sh -plt phonon
+gpumdkit.sh -plt phonon phonon_NEP.dat QPOINTS save
+gpumdkit.sh -plt phonon_comp phonon_DFT.dat phonon_NEP.dat save
 ```
+
+`phonon_comp` accepts two or more compatible phonon data files. For conventional
+names such as `phonon_NEP.dat`, `phonon_DFT.dat`, and `phonon_MACE.dat`, the text
+after `phonon_` is used as the legend label. The plotters validate the phonon
+rows and the supplied `QPOINTS` path before drawing.
 
 ## Common Workflows
 
@@ -195,6 +210,7 @@ gpumdkit.sh -plt nemd 10 1 60 save
 | `msd_sdc` | `msd_sdc.png` |
 | `thermo` | `thermo.png` |
 | `rdf` | `rdf.png` |
+| `xrd` | `xrd.png` |
 | `arrhenius_sigma` | `Arrhenius_sigma.png` |
 | `arrhenius_d` | `Arrhenius_D.png` |
 | `emd` | `emd.png` |

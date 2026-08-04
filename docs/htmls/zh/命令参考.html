@@ -1620,7 +1620,7 @@
 <p>源表维护在 <code>docs/command_reference.tsv</code>。</p>
 <h2 id="gpumdkitsh-h"><code>gpumdkit.sh -h</code> 输出</h2>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>+-------------------------------------------------------------------------------------------------------+
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>|                          GPUMDkit 1.5.6 (dev) (2026-07-10) Command Help                               |
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>|                          GPUMDkit 1.5.7 (dev) (2026-08-03) Command Help                               |
 <a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>+-------------------------------------------------------------------------------------------------------+
 <a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>|                                          MAIN FUNCTIONS                                               |
 <a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>+-------------------------------------------------------------------------------------------------------+
@@ -1640,18 +1640,19 @@
 <a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a>| -addgroup     Add group labels                | -addweight         Add structure weight in extxyz     |
 <a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a>| -clean_xyz    Clean extra info in extxyz      | -get_frame         Extract specific frame             |
 <a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a>| -frame_range  Extract frames by range         | -dp2xyz            DeepMD npy -&gt; extxyz               |
-<a id="__codelineno-0-22" name="__codelineno-0-22" href="#__codelineno-0-22"></a>+-------------------------------------------------------------------------------------------------------+
-<a id="__codelineno-0-23" name="__codelineno-0-23" href="#__codelineno-0-23"></a>|                                            ANALYSIS                                                   |
-<a id="__codelineno-0-24" name="__codelineno-0-24" href="#__codelineno-0-24"></a>+-------------------------------------------------------------------------------------------------------+
-<a id="__codelineno-0-25" name="__codelineno-0-25" href="#__codelineno-0-25"></a>| -range        Energy/force/virial statistics  | -analyze_comp      Analyze composition                |
-<a id="__codelineno-0-26" name="__codelineno-0-26" href="#__codelineno-0-26"></a>| -chem_species Analyze chemical species        | -cbc               Charge balance check               |
-<a id="__codelineno-0-27" name="__codelineno-0-27" href="#__codelineno-0-27"></a>| -min_dist     Min distance (no PBC)           | -min_dist_pbc      Min distance with PBC              |
-<a id="__codelineno-0-28" name="__codelineno-0-28" href="#__codelineno-0-28"></a>| -filter_dist  Filter by min_dist (no PBC)     | -filter_dist_pbc   Filter by min_dist (PBC)           |
-<a id="__codelineno-0-29" name="__codelineno-0-29" href="#__codelineno-0-29"></a>| -pda          Probability density analysis    | -filter_box        Filter by box-edge length          |
-<a id="__codelineno-0-30" name="__codelineno-0-30" href="#__codelineno-0-30"></a>| -pynep        Deprecated PyNEP sampling       | -nep_modifier      Modify NEP model interactively     |
-<a id="__codelineno-0-31" name="__codelineno-0-31" href="#__codelineno-0-31"></a>+-------------------------------------------------------------------------------------------------------+
-<a id="__codelineno-0-32" name="__codelineno-0-32" href="#__codelineno-0-32"></a>| Python option help: gpumdkit.sh -&lt;option&gt; -h    Plot list: gpumdkit.sh -plt -h                     |
-<a id="__codelineno-0-33" name="__codelineno-0-33" href="#__codelineno-0-33"></a>+-------------------------------------------------------------------------------------------------------+
+<a id="__codelineno-0-22" name="__codelineno-0-22" href="#__codelineno-0-22"></a>| -xyz2dp       extxyz -&gt; DeepMD npy            |                                                       |
+<a id="__codelineno-0-23" name="__codelineno-0-23" href="#__codelineno-0-23"></a>+-------------------------------------------------------------------------------------------------------+
+<a id="__codelineno-0-24" name="__codelineno-0-24" href="#__codelineno-0-24"></a>|                                            ANALYSIS                                                   |
+<a id="__codelineno-0-25" name="__codelineno-0-25" href="#__codelineno-0-25"></a>+-------------------------------------------------------------------------------------------------------+
+<a id="__codelineno-0-26" name="__codelineno-0-26" href="#__codelineno-0-26"></a>| -range        Energy/force/virial statistics  | -analyze_comp      Analyze composition                |
+<a id="__codelineno-0-27" name="__codelineno-0-27" href="#__codelineno-0-27"></a>| -chem_species Analyze chemical species        | -cbc               Charge balance check               |
+<a id="__codelineno-0-28" name="__codelineno-0-28" href="#__codelineno-0-28"></a>| -min_dist     Min distance (no PBC)           | -min_dist_pbc      Min distance with PBC              |
+<a id="__codelineno-0-29" name="__codelineno-0-29" href="#__codelineno-0-29"></a>| -filter_dist  Filter by min_dist (no PBC)     | -filter_dist_pbc   Filter by min_dist (PBC)           |
+<a id="__codelineno-0-30" name="__codelineno-0-30" href="#__codelineno-0-30"></a>| -pda          Probability density analysis    | -filter_box        Filter by box-edge length          |
+<a id="__codelineno-0-31" name="__codelineno-0-31" href="#__codelineno-0-31"></a>| -pynep        Deprecated PyNEP sampling       | -nep_modifier      Modify NEP model interactively     |
+<a id="__codelineno-0-32" name="__codelineno-0-32" href="#__codelineno-0-32"></a>+-------------------------------------------------------------------------------------------------------+
+<a id="__codelineno-0-33" name="__codelineno-0-33" href="#__codelineno-0-33"></a>| Python option help: gpumdkit.sh -&lt;option&gt; -h    Plot list: gpumdkit.sh -plt -h                     |
+<a id="__codelineno-0-34" name="__codelineno-0-34" href="#__codelineno-0-34"></a>+-------------------------------------------------------------------------------------------------------+
 </code></pre></div>
 <h2 id="_1">主命令</h2>
 <table>
@@ -1790,6 +1791,11 @@
 <td><code>gpumdkit.sh -dp2xyz &lt;input_dir/&gt; [output.xyz]</code></td>
 <td>将 DeepMD npy 数据集转换为 extxyz</td>
 </tr>
+<tr>
+<td><code>-xyz2dp</code></td>
+<td><code>gpumdkit.sh -xyz2dp</code></td>
+<td>通过交互提示将带标签的 extxyz 转换为 DeepMD npy 数据</td>
+</tr>
 </tbody>
 </table>
 <h2 id="_3">计算器</h2>
@@ -1878,6 +1884,11 @@
 <td><code>-range</code></td>
 <td><code>gpumdkit.sh -range &lt;input.xyz&gt; &lt;energy\|force\|virial&gt; [hist]</code></td>
 <td>性质范围分析</td>
+</tr>
+<tr>
+<td><code>-shift_energy</code></td>
+<td><code>gpumdkit.sh -shift_energy</code></td>
+<td>交互式能量参考平移</td>
 </tr>
 <tr>
 <td><code>-analyze_comp</code></td>
