@@ -1,17 +1,18 @@
 # === User Configuration Section: Only modify these variables ===
 VERSION="1.5.7"
-RELEASE_DATE="2026-08-03"
+RELEASE_DATE="2026-08-12"
 HOME_PAGE="https://gpumdkit.cn"
 CONTACT="yanzihan@westlake.edu.cn"
 
 # New features (one per line, in an array)
 NEW_FEATURES=(
     "add -xyz2dp"
+    "add perturb.txt report for structure perturbation"
 )
 
 # Bug fixes (one per line, in an array)
 BUG_FIXES=(
-    "None"
+    "replace outdated automated active-learning guidance with a manual MD/FPS workflow"
 )
 
 # === Formatted Output Logic ===

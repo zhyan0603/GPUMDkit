@@ -174,6 +174,12 @@ Example: POSCAR 20 0.03 0.2 uniform
 
 This function requires the `dpdata` package. If you use this function, we recommend citing dpdata.
 
+In addition to `POSCAR_*.vasp`, the script writes `perturb.txt`. This concise
+report summarizes cell-length, angle, and volume changes, the distribution of
+non-affine atomic displacements after removing cell deformation, and the most
+extreme generated structures. Periodic minimum-distance statistics are included
+when ASE is available. No structural acceptance threshold is applied.
+
 
 
 ### select_max_modev.py

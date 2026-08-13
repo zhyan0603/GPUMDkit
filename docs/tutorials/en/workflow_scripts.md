@@ -205,30 +205,16 @@ You must place `lmprun.in` and `nep.txt` in the generated `md/` directory.
 A common NEP improvement loop is:
 
 1. run MD with the current `nep.txt`;
-2. collect `dump.xyz` or `active.xyz`;
+2. collect a stable `dump.xyz` trajectory;
 3. remove unphysical structures;
-4. select diverse or uncertain structures;
+4. select diverse structures with NepTrain FPS;
 5. run DFT single-point calculations;
 6. convert DFT results to extxyz;
 7. append new structures to `train.xyz`;
 8. retrain the NEP model.
 
-For the development active-learning script, see [Active Learning](active_learning_workflow.md).
-
-## Template-Based Temperature Series
-
-For a simple temperature series, a shell loop is often enough:
-
-```bash
-for temp in 300 500 700 900; do
-    mkdir -p "${temp}K"
-    cp model.xyz "${temp}K/"
-    cp nep.txt "${temp}K/"
-    sed "s/TEMPERATURE/$temp/g" run_template.in > "${temp}K/run.in"
-done
-```
-
-Then submit the generated folders according to your local cluster system.
+For the staged, manually reviewed protocol, see
+[Active Learning](active_learning_workflow.md).
 
 ## Practical Notes
 
