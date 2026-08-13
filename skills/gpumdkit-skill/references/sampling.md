@@ -105,10 +105,18 @@ python3 ${GPUMDkit_path}/Scripts/sample_structures/perturb_structure.py POSCAR 2
 # - atom_pert: Atom perturbation distance in Angstrom (e.g., 0.2)
 # - style: 'normal', 'uniform', or 'const'
 
-# Output: POSCAR_01.vasp, POSCAR_02.vasp, ..., POSCAR_<N>.vasp
+# Output:
+# - POSCAR_01.vasp, POSCAR_02.vasp, ..., POSCAR_<N>.vasp
+# - perturb.txt
 ```
 
-**How it works**: Uses `dpdata.System.perturb()` to generate perturbed variants of the input structure, varying both cell vectors and atomic positions.
+**How it works**: Uses `dpdata.System.perturb()` to generate perturbed variants
+of the input structure, varying both cell vectors and atomic positions. The
+`perturb.txt` report summarizes cell-length, angle, and volume changes; the
+distribution of non-affine atomic displacements after removing cell deformation;
+and the most extreme generated structures. Periodic minimum-distance statistics
+are included when ASE is available. The report does not apply a structural
+acceptance threshold.
 
 ### Force Deviation Selection
 
@@ -245,7 +253,7 @@ dump.xyz train.xyz nep.txt 8
 | Uniform/Random | `numpy`, `ase` |
 | FPS (NepTrain) | `numpy`, `ase`, `matplotlib`, `scikit-learn`, `scipy`, `NepTrain` |
 | FPS (PyNEP) | `numpy`, `ase`, `matplotlib`, `scikit-learn`, `pynep` |
-| Perturbation | `dpdata` |
+| Perturbation | `dpdata`; ASE is optional for minimum-distance report statistics |
 | Force Deviation | `numpy`, `ase` |
 | Train/Test Split (Uniform/Random) | `numpy`, `ase` |
 | Train/Test Split (FPS) | `numpy`, `ase`, `scipy`, `NepTrain` |

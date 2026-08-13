@@ -1,204 +1,149 @@
 <div align="center">
   <h1>🔁 Active Learning Workflow</h1>
-  <p style="text-align: justify;">This tutorial explains the steps and considerations involved in the <code>workflow_active_learning_dev.sh</code> script. The workflow is used to generate, select, and analyze molecular structures, followed by simulations and data collection.</p>
+  <p style="text-align: justify;">A manually reviewed NEP data-iteration protocol built from GPUMDkit sampling, filtering, batch-preparation, conversion, and validation tools.</p>
 </div>
 
-**Script Location:** `Scripts/workflow/`
+## Scope
 
-## Overview
+This page intentionally documents a staged, manually reviewed iteration.
+Sampling conditions, selection criteria, DFT settings, scheduler resources,
+dataset policy, and model acceptance criteria depend on the scientific system.
 
-This script automates one iteration of NEP active learning. The typical workflow includes:
+GPUMDkit supports the individual preparation and analysis stages. GPUMD, DFT,
+and NEP calculations are run separately only after their inputs and cost have
+been approved.
 
-| Step | Action | Purpose |
-|------|--------|---------|
-| 1 | Run MD simulations | Generate candidate structures with current NEP model |
-| 2 | Filter structures | Remove unphysical configurations (short distances, large boxes) |
-| 3 | Sample structures | Select diverse or uncertain structures for DFT |
-| 4 | Run SCF calculations | Compute DFT reference energies/forces |
-| 5 | NEP prediction | Check model accuracy on new structures |
+## Before starting an iteration
 
-Unlike menu-driven modules, this workflow is a shell script that you customize and run directly:
+Define and record:
+
+| Item | Required decision |
+|---|---|
+| Model | Current `nep.txt` revision and intended deployment domain |
+| Candidate generation | Starting structures and GPUMD conditions |
+| Selection | MD trajectory filtering followed by NepTrain FPS |
+| Criteria | Distance, box, FPS stopping, and structure-count limits |
+| DFT | Code, functional, pseudopotentials, convergence settings, and job budget |
+| Dataset | Merge, weighting, exclusion, split, and leakage policy |
+| Validation | NEP accuracy and target-domain stability acceptance criteria |
+
+Do not copy thresholds or simulation parameters from another material system.
+
+## 1. Generate candidate structures
+
+Prepare GPUMD batch directories with function 302 when multiple starting
+structures or `run.in` files are needed:
 
 ```bash
-bash Scripts/workflow/workflow_active_learning_dev.sh
+gpumdkit.sh  # Select: 3) Workflow -> 302
 ```
 
-The sections below explain the main blocks in the script and what each part does.
+The command prepares directories and symlinks. Put the approved `nep.txt` and
+`run_<index>.in` files in the generated `md/` directory, inspect every mapping,
+and run GPUMD through your own approved execution procedure.
 
-## 1. **SLURM Directives**
+Use a clean output directory or archive append-mode GPUMD outputs before a
+rerun. Check the exit status, log, temperature, energy, pressure, cell, and
+trajectory before selecting structures.
 
-```
-#!/bin/bash -l
-#SBATCH -p intel-sc3,intel-sc3-32c
-#SBATCH -q huge
-#SBATCH -N 1
-#SBATCH -J workflow
-#SBATCH -o workflow.log
-#SBATCH --ntasks-per-node=1
-```
+## 2. Select candidates
 
-The SLURM directives are used to define how the job will be submitted to the cluster:
+The recommended route is direct MD sampling followed by geometry filtering and
+NepTrain FPS.
 
-- `#SBATCH -p` defines the partition, in this case, it's `intel-sc3` and `intel-sc3-32c`.
-- `#SBATCH -q` specifies the queue, in this case, `huge`.
-- `#SBATCH -N` allocates 1 node for the job.
-- `#SBATCH -J` names the job `workflow`.
-- `#SBATCH -o` defines the output log file as `workflow.log`.
-- `--ntasks-per-node=1` specifies that only one task should run per node.
+### MD trajectory and NepTrain FPS
 
-**<u>NOTE:</u>** If your machine does not have the SLURM environment, you can also run the script directly from the command line. For example:
+For an ordinary stable MD trajectory, first inspect periodic distances, then
+apply only approved filters:
 
-```
-nohup bash workflow_active_learning_dev.sh &>workflow.log &
+```bash
+gpumdkit.sh -min_dist_pbc dump.xyz
+gpumdkit.sh -filter_dist_pbc dump.xyz <minimum_distance>
+gpumdkit.sh -filter_box filtered_dump.xyz <maximum_box_edge>
+gpumdkit.sh  # Select: 2) Sample Structures -> 203) FPS by NepTrain
 ```
 
-## 2. **Basic Setup**
+`-min_dist_pbc` reports distances but does not remove structures. Use
+`-filter_dist_pbc` for actual filtering. The box filter is optional and should
+be skipped when no approved box-edge criterion applies. Record all thresholds,
+rejected structures, and the NepTrain FPS stopping rule.
 
-```
-cd $SLURM_SUBMIT_DIR 
-```
+### Optional committee-uncertainty alternative
 
-Ensure the working directory is correct, and that all necessary files are present for the job.
+Use committee uncertainty only when it is explicitly part of the project.
+GPUMD `active` requires compatible committee models and produces `active.out`
+and `active.xyz`; function 205 can then rank or cap high-force-deviation
+structures. Confirm all uncertainty settings and keep the two files from the
+same run.
 
-```
-source ${GPUMDkit_path}/Scripts/workflow/submit_template.sh  # Load the submit template
-python_pynep=python  # Python executable for the deprecated pynep branch if needed
-```
+## 3. Prepare reference calculations
 
-- `GPUMDkit_path` is the environment variable that stores the path for the `GPUMDkit` .
-- `python_pynep` points to the Python environment used for the deprecated `pynep`-related branch if needed.
+Use function 301 with the reviewed `selected.xyz`:
 
-------
-
-## 3. **Variable Definitions**
-
-```
-work_dir=${PWD}  # Set the working directory
-prefix_name=LiF_iter01  # Prefix for calculations
-min_dist=1.4  # Minimum atom distance
-box_limit=13  # Simulation box limit
-max_fp_num=50  # Maximum number of single point calculations
-sample_method=pynep  # Sampling method (options: uniform, random, pynep)
-pynep_sample_dist=0.01  # Sampling distance for pynep
+```bash
+gpumdkit.sh  # Select: 3) Workflow -> 301 -> VASP or CP2K
 ```
 
-You can customize:
+For VASP, the tool creates `struct_fp/`, `fp/`, calculation directories, and a
+`presub.sh` template. Put the approved `INCAR`, `POTCAR`, and `KPOINTS` files in
+`fp/` after preparation. For CP2K, provide an extxyz file, a reviewed template,
+and a prefix through menu 301 -> 2.
 
-- `prefix_name` to reflect the name of your current work.
-- `min_dist`, `box_limit`, and `max_fp_num` based on your own system.
-- `sample_method` (choose between `uniform`, `random`, or `pynep`).
-- `pynep_sample_dist` is the sampling distance for `pynep`.
+Before submission, verify the structure count, atom/type order, cells, DFT
+inputs, resource request, executable, and expected output. GPUMDkit does not
+submit the DFT jobs.
 
-------
+## 4. Convert and audit reference data
 
-## 4. **Check Required Files**
+After confirming that every accepted DFT calculation completed successfully,
+use the converter matching the DFT code:
 
-```
-if [ -f nep.txt ] && [ -f nep.in ] && [ -f train.xyz ] && [ "$(find . -maxdepth 1 -name 'run_*.in' | wc -l)" -ge 1 ] && [ -f INCAR ] && [ -f POTCAR ] ; then
-    # Check for the required files before proceeding.
-else
-    echo "Please put nep.in nep.txt train.xyz run_*.in (eg. run_1.in, run_2.in, ...) INCAR POTCAR [KPOINTS] and the sample_struct.xyz in the current directory."
-    exit 1
-fi
-```
+```bash
+# VASP results
+gpumdkit.sh -out2xyz <scf_results_directory>
 
-Make sure the necessary files (`nep.txt`, `nep.in`, `train.xyz`, `run_*.in` (e.g., `run_1.in`, `run_2.in`, ...), `INCAR`, `POTCAR`, `KPOINTS`) are available in the working directory. If any of these are missing, the script will terminate. `train.xyz` and `nep.txt` are always required as prerequisites for NEP model operation, and `run_*.in` files define the simulation parameters of MD in the current iteration.
+# CP2K results (interactive converter)
+gpumdkit.sh -cp2k2xyz
 
-------
-
-## 5. **File Organization**
-
-```
-mkdir 00.md common
-mv ${work_dir}/{nep.txt,nep.in,*.xyz,run_*.in,INCAR,KPOINTS,POTCAR} ./common
-cp ${work_dir}/common/$sample_xyz_file ${work_dir}/00.md
+# Continue with the extxyz file produced by the selected converter
+gpumdkit.sh -range <new_reference.xyz> energy
+gpumdkit.sh -range <new_reference.xyz> force
+gpumdkit.sh -min_dist_pbc <new_reference.xyz>
+gpumdkit.sh -analyze_comp <new_reference.xyz>
 ```
 
-The script organizes the working files into two folders:
+Validate energy/force/virial labels, units, cells, species/type order,
+composition coverage, duplicates, extreme structures, and failed or incomplete
+calculations. Preserve the raw DFT outputs and record all exclusions.
 
-- `00.md`: For molecular dynamics simulation.
-- `common`: For shared resources such as `nep.txt`, `run_*.in` files, and the structure files, etc.
+## 5. Update the dataset and validate the model
 
-------
+Keep the previous dataset revision before merging new reference structures.
+Record which configurations were added, rejected, weighted, or assigned to the
+training/test sets. Prevent closely related trajectory frames from leaking
+across an independence-sensitive split.
 
-## 6. **Molecular Dynamics Simulation Submission**
+Prepare or update `nep.in` only after its architecture, loss, optimizer,
+checkpoint, ZBL, and other nontrivial choices are approved. Run NEP separately,
+then inspect:
 
-```
-submit_gpumd_array md ${sample_struct_num}
-sbatch submit.slurm
-```
+- training and test losses;
+- energy, force, and virial/stress parity outputs;
+- errors by species, composition, phase, and configuration class;
+- outliers, short-range behavior, and target-domain MD stability;
+- the project-specific acceptance criteria.
 
-After preparing the input files, the script submits an array of molecular dynamics (MD) tasks using `submit_gpumd_array`.
+Aggregate RMSE alone is not evidence that a model is ready for production.
 
-------
+## Iteration record
 
-## 7. **Monitoring Task Completion**
-
-```
-while true; do
-    logs=$(find "${work_dir}/00.md/" -type f -name log -path "*/sample_*/log")
-    finished_tasks_md=$(grep "Finished running GPUMD." $logs | wc -l)
-    error_tasks_md=$(grep "Error" $logs | wc -l)
-
-    if [ "$error_tasks_md" -ne 0 ]; then
-        echo "Error: MD simulation encountered an error."
-        exit 1
-    fi
-    if [ $finished_tasks_md -eq $sample_struct_num ]; then
-        break
-    fi
-    sleep 30
-done
-```
-
-The script continuously checks whether all MD tasks have finished by searching for a `Finished running GPUMD.` message in the logs. If an error is encountered, the script terminates.
-
-------
-
-## 8. **Analysis and Filtering**
-
-```
-mkdir ${work_dir}/01.select
-...
-```
-
-In the `01.select` folder, all structures in the trajectory file `dump.xyz` during the MD process will be analyzed and filtered to avoid the generation of non-physical structures as much as possible. Specifically, the `get_min_dist.py`, `filter_structures_by_distance.py` and `filter_exyz_by_box.py` scripts will be employed to check whether there are situations where the distance between atoms is too close or the simulated box exceeds the limit value, and such structures will be filtered out.
-
-------
-
-## 9. **Sampling Methods**
-
-```
-case $sample_method in
-    "uniform")
-    "random")
-    "pynep")
-```
-
-The script supports three sampling methods: `uniform`, `random`, and `pynep`. It selects structures according to the chosen method and checks if the number exceeds `max_fp_num`, ensuring the final structure count is within limits.
-
-------
-
-## 10. **SCF Calculations**
-
-```
-submit_vasp_array scf ${selected_struct_num} ${prefix_name}
-```
-
-After sampling, SCF calculations are submitted using `submit_vasp_array`. The process is similar to the MD submission, but for SCF calculations.
-
-------
-
-## 11. **Prediction Step**
-
-```
-submit_nep_prediction
-```
-
-The final step involves submitting the NEP prediction task to check the accuracy of the NEP model. 
-
-
+For reproducibility, retain the model/data revisions, approved decisions, exact
+commands, working directories, executable versions, exit status, warnings,
+generated files, rejected structures, validation results, and known
+limitations. Stop the iteration whenever required outputs are missing or a
+validation issue remains unresolved.
 
 ---
 
-Thank you for using `GPUMDkit`! If you have any questions or need further assistance, feel free to open an issue on our GitHub repository or contact Zihan YAN (yanzihan@westlake.edu.cn).
+Thank you for using `GPUMDkit`! For questions or feedback, open an issue on the
+GPUMDkit repository or contact Zihan YAN (yanzihan@westlake.edu.cn).

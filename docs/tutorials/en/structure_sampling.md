@@ -214,6 +214,16 @@ Arguments:
 Output:
 
 - `POSCAR_01.vasp`, `POSCAR_02.vasp`, ...
+- `perturb.txt`
+
+`perturb.txt` gives a concise overview rather than listing every generated
+structure in detail. It reports the minimum, mean, and maximum cell-length,
+angle, and volume changes; an ASCII histogram of non-affine atomic
+displacements after removing affine cell deformation; and the structures with
+the largest contraction, expansion, cell strain, and atomic displacement. If
+ASE is installed, it also reports periodic minimum-distance statistics. These
+values are descriptive only; GPUMDkit does not apply a structural acceptance
+threshold.
 
 This function requires `dpdata`. If you use this function, we recommend citing the dpdata package.
 

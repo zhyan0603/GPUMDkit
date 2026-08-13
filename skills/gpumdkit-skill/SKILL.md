@@ -26,7 +26,7 @@ Read one or more references according to the task. Do not load every file by def
 | Installation, command discovery, module selection, common CLI usage | [overview.md](references/overview.md) |
 | Structure/data conversion, labels, weights, replication, frame extraction | [format-conversion.md](references/format-conversion.md) |
 | Uniform/random/FPS sampling, train/test splitting, perturbation, force-deviation selection | [sampling.md](references/sampling.md) |
-| Batch SCF/MD preparation and active-learning workflows | [workflows.md](references/workflows.md) |
+| Batch SCF/MD preparation and manual MD/FPS active-learning orchestration | [workflows.md](references/workflows.md) |
 | MSD, ionic conductivity, XRD, descriptors, NEB, minimization, polarization | [calculators.md](references/calculators.md) |
 | Composition, ranges, distances, filtering, outliers, probability density | [analyzers.md](references/analyzers.md) |
 | NEP/MD/transport/structure plots and fit outputs | [visualization.md](references/visualization.md) |
@@ -48,7 +48,7 @@ For cross-module work, load every relevant reference. Examples:
 
 - Arrhenius study: read `gpumd.md`, `gpumd-inputs.md`, `gpumd-ensembles.md`, `gpumd-computes.md`, `gpumd-outputs.md`, `arrhenius.md`, `calculators.md`, and `visualization.md`; also read `format-conversion.md` if preparing `model.xyz`.
 - NEP training pipeline: read `nep.md`, `nep-data.md`, `nep-parameters.md`, `nep-outputs.md`, `format-conversion.md`, `analyzers.md`, `sampling.md`, and `visualization.md`.
-- GPUMD batch sampling for active learning: read `gpumd.md`, the GPUMD parameter references used by the protocol, `workflows.md`, `sampling.md`, and `analyzers.md`.
+- MD/FPS active-learning iteration: read `gpumd.md`, the GPUMD parameter references used by the protocol, `workflows.md`, `sampling.md`, `analyzers.md`, `format-conversion.md`, `nep.md`, `nep-data.md`, `nep-outputs.md`, and `visualization.md`; also read `nep-parameters.md` when preparing or changing the training configuration.
 - New GPUMDkit command: read `contributing.md` plus the reference for the affected module.
 - New or restyled plot: read `visualization.md`, `plotting-style.md`, and `contributing.md`; also read the scientific reference for the quantity being plotted.
 

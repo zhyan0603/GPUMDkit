@@ -26,7 +26,7 @@ description: 端到端使用 GPUMDkit、GPUMD 与 NEP。适用于安装和了解
 | 安装、查找命令、选择模块、常见 CLI 用法 | [overview.md](references/overview.md) |
 | 结构/数据格式转换、标签、权重、扩胞、帧提取 | [format-conversion.md](references/format-conversion.md) |
 | 均匀/随机/FPS 采样、训练集/测试集划分、结构扰动、力偏差筛选 | [sampling.md](references/sampling.md) |
-| 批量 SCF/MD 准备和主动学习流程 | [workflows.md](references/workflows.md) |
+| 批量 SCF/MD 准备和手动 MD/FPS 主动学习编排 | [workflows.md](references/workflows.md) |
 | MSD、离子电导率、XRD、描述符、NEB、结构优化、极化 | [calculators.md](references/calculators.md) |
 | 组成、数值范围、原子间距、结构筛选、异常值、概率密度 | [analyzers.md](references/analyzers.md) |
 | NEP/MD/输运/结构绘图与拟合输出 | [visualization.md](references/visualization.md) |
@@ -48,7 +48,7 @@ description: 端到端使用 GPUMDkit、GPUMD 与 NEP。适用于安装和了解
 
 - Arrhenius 研究：读取 `gpumd.md`、`gpumd-inputs.md`、`gpumd-ensembles.md`、`gpumd-computes.md`、`gpumd-outputs.md`、`arrhenius.md`、`calculators.md` 和 `visualization.md`；如需准备 `model.xyz`，再读取 `format-conversion.md`。
 - NEP 训练流程：读取 `nep.md`、`nep-data.md`、`nep-parameters.md`、`nep-outputs.md`、`format-conversion.md`、`analyzers.md`、`sampling.md` 和 `visualization.md`。
-- 面向主动学习的 GPUMD 批量采样：读取 `gpumd.md`、采样方案涉及的 GPUMD 参数参考、`workflows.md`、`sampling.md` 和 `analyzers.md`。
+- MD/FPS 主动学习迭代：读取 `gpumd.md`、当前方案涉及的 GPUMD 参数参考、`workflows.md`、`sampling.md`、`analyzers.md`、`format-conversion.md`、`nep.md`、`nep-data.md`、`nep-outputs.md` 和 `visualization.md`；准备或修改训练配置时还要读取 `nep-parameters.md`。
 - 新增 GPUMDkit 命令：读取 `contributing.md` 和受影响模块的参考文件。
 - 新增或调整绘图：读取 `visualization.md`、`plotting-style.md`、`contributing.md`，以及该物理量对应的科学参考。
 

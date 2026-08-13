@@ -97,7 +97,7 @@ Use `gpumdkit.sh -h` to see all available options.
 | [Workflow Scripts](workflow_scripts.md) | Batch processing and automation |
 | [Structure Sampling](structure_sampling.md) | Structure selection methods |
 | [Custom Commands](custom_commands.md) | User-defined GPUMDkit shortcuts |
-| [Active Learning Workflow](active_learning_workflow.md) | Batch active-learning workflow notes |
+| [Active Learning Workflow](active_learning_workflow.md) | Manually reviewed NEP data-iteration protocol |
 | [Polar Material Analysis](polar_material_analysis.md) | Ferroelectric and polarization tools |
 | [Contributing to GPUMDkit](contributing_to_gpumdkit.md) | Development notes |
 
