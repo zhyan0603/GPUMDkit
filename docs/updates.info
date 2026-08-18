@@ -8,6 +8,7 @@ CONTACT="yanzihan@westlake.edu.cn"
 NEW_FEATURES=(
     "add -xyz2dp"
     "add perturb.txt report for structure perturbation"
+    "add -plt emd2 for EMD thermal conductivity in all directions"
 )
 
 # Bug fixes (one per line, in an array)

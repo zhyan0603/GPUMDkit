@@ -116,11 +116,12 @@ gpumdkit.sh -plt xrd path/to/xrd.out save
 gpumdkit.sh -plt plane-grid -i model.xyz -d displacements.dat -e Pb Sr
 ```
 
-### Heat Transport (4 plot types)
+### Heat Transport (5 plot types)
 
 | Command | Input Files | Description |
 |---------|-------------|-------------|
 | `emd` | EMD outputs | EMD thermal conductivity |
+| `emd2` | EMD outputs | EMD thermal conductivity in all directions |
 | `nemd` | NEMD outputs | NEMD thermal transport |
 | `hnemd` | HNEMD outputs | HNEMD thermal transport |
 | `viscosity` | `viscosity.out` | Viscosity components |
@@ -128,6 +129,7 @@ gpumdkit.sh -plt plane-grid -i model.xyz -d displacements.dat -e Pb Sr
 ```bash
 # EMD thermal conductivity
 gpumdkit.sh -plt emd x
+gpumdkit.sh -plt emd2 save
 
 # NEMD thermal transport
 # Parameters: real_length scale_eff_size cutoff_freq
@@ -214,6 +216,7 @@ gpumdkit.sh -plt nemd 10 1 60 save
 | `arrhenius_sigma` | `Arrhenius_sigma.png` |
 | `arrhenius_d` | `Arrhenius_D.png` |
 | `emd` | `emd.png` |
+| `emd2` | `emd2.png` |
 | `nemd` | `nemd.png` |
 | `hnemd` | `hnemd.png` |
 | `viscosity` | `viscosity.png` |

@@ -19,7 +19,7 @@ if [ -z "$GPUMDkit_path" ]; then
     exit 1
 fi
 
-VERSION="1.5.7 (dev) (2026-08-03)"
+VERSION="1.5.7 (dev) (2026-08-18)"
 
 plt_path="${GPUMDkit_path}/Scripts/plt_scripts"
 analyzer_path="${GPUMDkit_path}/Scripts/analyzer"
@@ -334,6 +334,7 @@ if [ ! -z "$1" ]; then
                     "sigma_xyz") python ${plt_path}/plt_arrhenius_sigma_xyz.py $3 ;;
                     "net_force") python ${plt_path}/plt_net_force.py ${@:3} ;;
                     "emd") python ${plt_path}/plt_emd.py ${@:3} ;;
+                    "emd2") python ${plt_path}/plt_emd2.py ${@:3} ;;
                     "nemd") python ${plt_path}/plt_nemd.py ${@:3} ;;
                     "hnemd") python ${plt_path}/plt_hnemd.py ${@:3} ;;
                     "pdos") python ${plt_path}/plt_pdos.py $3 ;;

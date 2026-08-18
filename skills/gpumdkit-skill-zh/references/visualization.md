@@ -116,11 +116,12 @@ gpumdkit.sh -plt xrd path/to/xrd.out save
 gpumdkit.sh -plt plane-grid -i model.xyz -d displacements.dat -e Pb Sr
 ```
 
-### 热输运（4 种绘图类型）
+### 热输运（5 种绘图类型）
 
 | 命令 | 输入文件 | 描述 |
 |---------|-------------|-------------|
 | `emd` | EMD 输出 | EMD 热导率 |
+| `emd2` | EMD 输出 | 全部方向的 EMD 热导率 |
 | `nemd` | NEMD 输出 | NEMD 热输运 |
 | `hnemd` | HNEMD 输出 | HNEMD 热输运 |
 | `viscosity` | `viscosity.out` | 粘度分量 |
@@ -128,6 +129,7 @@ gpumdkit.sh -plt plane-grid -i model.xyz -d displacements.dat -e Pb Sr
 ```bash
 # EMD 热导率
 gpumdkit.sh -plt emd x
+gpumdkit.sh -plt emd2 save
 
 # NEMD 热输运
 # 参数：real_length scale_eff_size cutoff_freq
@@ -214,6 +216,7 @@ gpumdkit.sh -plt nemd 10 1 60 save
 | `arrhenius_sigma` | `Arrhenius_sigma.png` |
 | `arrhenius_d` | `Arrhenius_D.png` |
 | `emd` | `emd.png` |
+| `emd2` | `emd2.png` |
 | `nemd` | `nemd.png` |
 | `hnemd` | `hnemd.png` |
 | `viscosity` | `viscosity.png` |
