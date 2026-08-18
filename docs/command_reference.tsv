@@ -51,3 +51,4 @@ analyze	-filter_range	gpumdkit.sh -filter_range <input.xyz> <element1> <element2
 analyze	-pda	gpumdkit.sh -pda <ref_struct> <trajectory.xyz> <species> <interval>	Calculate probability density	计算概率密度	stable
 utility	-time	gpumdkit.sh -time <gpumd|nep>	Monitor GPUMD or NEP progress	监控 GPUMD 或 NEP 进度	stable
 utility	-nep_modifier	gpumdkit.sh -nep_modifier [nep.txt] [nep.restart|-] [nep.in|-]	Safely modify and export a NEP4 model package	安全修改并导出 NEP4 模型文件包	testing
+plot	-plt emd2	gpumdkit.sh -plt emd2 [save]	Plot EMD thermal conductivity in all directions	绘制全部方向的 EMD 热导率	stable

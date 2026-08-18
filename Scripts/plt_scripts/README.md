@@ -388,6 +388,23 @@ gpumdkit.sh -plt emd x # for x direction
 
 ---
 
+#### plt_emd2.py
+
+Plots heat-current correlation and total EMD thermal conductivity in all three
+directions using the same `run.in`, `hac.out`, and averaging rule as
+`plt_emd.py`.
+
+**Usage:**
+
+```bash
+gpumdkit.sh -plt emd2
+gpumdkit.sh -plt emd2 save
+```
+
+The saved output is `emd2.png`.
+
+---
+
 #### plt_nemd.py
 
 Visualizes non-equilibrium molecular dynamics (NEMD) thermal transport properties.
@@ -726,6 +743,7 @@ gpumdkit.sh -plt net_force train.xyz
 | `restart`      | `nep.restart` from `nep`    | Restart file parameters            |
 | `net_force`    | train.xyz                   | Net force distribution             |
 | `emd`          | EMD outputs                 | EMD thermal conductivity           |
+| `emd2`         | EMD outputs                 | EMD conductivity in all directions|
 | `nemd`         | NEMD outputs                | NEMD thermal transport             |
 | `hnemd`        | HNEMD outputs               | HNEMD thermal transport            |
 | `D`            | Multiple MSD                | Arrhenius diffusivity              |
@@ -781,8 +799,9 @@ For quick reference, here's the complete command list:
  +-----------------------------------------------------------------------------------------------+
  |                                        Heat Transport                                         |
  +-----------------------------------------------------------------------------------------------+
- |  emd            - EMD results                    nemd           - NEMD results                |
- |  hnemd          - HNEMD results                  viscosity      - Viscosity                   |
+ |  emd            - EMD results                    emd2           - EMD all directions         |
+ |  nemd           - NEMD results                  hnemd          - HNEMD results               |
+ |  viscosity      - Viscosity                                                                  |
  +-----------------------------------------------------------------------------------------------+
  |                                          Phonons                                              |
  +-----------------------------------------------------------------------------------------------+
