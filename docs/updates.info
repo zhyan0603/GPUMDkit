@@ -13,6 +13,7 @@ NEW_FEATURES=(
 # Bug fixes (one per line, in an array)
 BUG_FIXES=(
     "replace outdated automated active-learning guidance with a manual MD/FPS workflow"
+    "fix thermo3 volume and lattice-angle axis offset display"
 )
 
 # === Formatted Output Logic ===
