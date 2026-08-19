@@ -50,8 +50,9 @@ Running `gpumdkit.sh -plt` prints the plotting command menu:
 +-----------------------------------------------------------------------------------------------+
 |                                        Heat Transport                                         |
 +-----------------------------------------------------------------------------------------------+
-|  emd            - EMD results                    nemd           - NEMD results                |
-|  hnemd          - HNEMD results                  viscosity      - Viscosity                   |
+|  emd            - EMD results                    emd2           - EMD all directions         |
+|  nemd           - NEMD results                  hnemd          - HNEMD results               |
+|  viscosity      - Viscosity                                                                     |
 +-----------------------------------------------------------------------------------------------+
 |                                          Phonons                                              |
 +-----------------------------------------------------------------------------------------------+
@@ -413,6 +414,25 @@ gpumdkit.sh -plt emd x        # for x direction
 
 <div align="center">
   <img src="../../Gallery/emd.png" alt="EMD thermal conductivity" width="70%" />
+</div>
+
+---
+
+### plt_emd2.py
+
+Plots heat-current correlation and total EMD thermal conductivity in the x, y,
+and z directions in one figure. It uses the same `run.in` and `hac.out` files
+and averaging rule as `plt_emd.py`.
+
+**Input Files:** EMD output files from GPUMD
+
+```bash
+gpumdkit.sh -plt emd2             # Display all directional results
+gpumdkit.sh -plt emd2 save        # Save as emd2.png
+```
+
+<div align="center">
+  <img src="../../Gallery/emd2.png" alt="EMD thermal conductivity in all directions" width="90%" />
 </div>
 
 ---
@@ -796,7 +816,8 @@ gpumdkit.sh -plt plane-grid -i averaged_structure.xyz -d displacements.dat -e Pb
 | `des` | `descriptors.npy` | Descriptor PCA/UMAP |
 | `dimer` | `nep.txt` | Dimer energy/force curve |
 | `pdos` | `model.xyz`, `run.in`, `dos.out`, `mvac.out` | VAC and PDOS |
-| `emd` | EMD outputs | EMD thermal conductivity |
+| `emd` | EMD outputs | EMD thermal conductivity in one direction |
+| `emd2` | EMD outputs | EMD thermal conductivity in all directions |
 | `nemd` | NEMD outputs | NEMD thermal transport |
 | `hnemd` | HNEMD outputs | HNEMD thermal transport |
 | `viscosity` | Viscosity outputs | Viscosity |
