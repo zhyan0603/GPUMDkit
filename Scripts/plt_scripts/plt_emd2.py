@@ -7,8 +7,8 @@ Citation: Z. Yan et al., GPUMDkit: A User-Friendly Toolkit for GPUMD and NEP,
 =============================================================================
 Script:     plt_emd2.py
 Category:   Plot Scripts
-Purpose:    Plot EMD HAC and thermal conductivity convergence in all three
-            directions.
+Purpose:    Plot signed EMD HAC and thermal conductivity convergence in all
+            three directions.
 Usage:      gpumdkit.sh -plt emd2 [save]
             python plt_emd2.py [save]
 Arguments:
@@ -16,7 +16,7 @@ Arguments:
 Output:
   emd2.png   (if save is used)
 Author:     Xin Wu (xinwuchn97@gmial.com)
-Last-modified: 2026-08-18
+Last-modified: 2026-08-19
 =============================================================================
 """
 
@@ -84,9 +84,9 @@ class EMD2Processor:
     def _read_run_parameters(self):
         """Read the time step and HAC sampling parameters from run.in."""
         time_step = None
+        sampling_interval = None
+        correlation_steps = None
         output_interval = None
-        run_steps = None
-        sample_interval = None
 
         with open(self.run_path, "r", encoding="utf-8") as file:
             for line in file:
@@ -96,22 +96,34 @@ class EMD2Processor:
                 if tokens[0] == "time_step" and len(tokens) >= 2:
                     time_step = float(tokens[1])
                 elif tokens[0] == "compute_hac" and len(tokens) >= 4:
-                    output_interval = int(tokens[1])
-                    run_steps = int(tokens[2])
-                    sample_interval = int(tokens[3])
+                    sampling_interval = int(tokens[1])
+                    correlation_steps = int(tokens[2])
+                    output_interval = int(tokens[3])
 
-        if None in (time_step, output_interval, run_steps, sample_interval):
+        if any(
+            parameter is None
+            for parameter in (
+                time_step, sampling_interval, correlation_steps, output_interval
+            )
+        ):
             raise ValueError(
                 "run.in must contain time_step and compute_hac commands."
             )
-        if run_steps <= 0 or sample_interval <= 0:
+        if (
+            time_step <= 0
+            or sampling_interval <= 0
+            or correlation_steps <= 0
+            or output_interval <= 0
+        ):
             raise ValueError("run.in contains invalid compute_hac intervals.")
-        if run_steps % sample_interval != 0:
+        if correlation_steps % output_interval != 0:
             raise ValueError(
-                "The compute_hac run length must be divisible by its sample interval."
+                "The compute_hac correlation steps must be divisible by its "
+                "output interval."
             )
 
-        return time_step, output_interval, run_steps, run_steps // sample_interval
+        n_hac_data = correlation_steps // output_interval
+        return time_step, sampling_interval, correlation_steps, n_hac_data
 
     def _load_data(self):
         """Load and reshape HAC output into one column per repeat."""
@@ -120,7 +132,9 @@ class EMD2Processor:
         if not os.path.isfile(self.hac_path):
             raise FileNotFoundError(f"Input file '{self.hac_path}' does not exist.")
 
-        time_step, output_interval, run_steps, n_hac_data = self._read_run_parameters()
+        time_step, sampling_interval, correlation_steps, n_hac_data = (
+            self._read_run_parameters()
+        )
         raw_data = np.loadtxt(self.hac_path, ndmin=2)
         if raw_data.ndim != 2 or raw_data.shape[1] != len(self.COLUMNS):
             raise ValueError(
@@ -143,12 +157,12 @@ class EMD2Processor:
         data["kx_tot"] = data["kx_in"] + data["kx_out"]
         data["ky_tot"] = data["ky_in"] + data["ky_out"]
         data["Results"] = self._compute_results(data, n_repeat)
-        time_upper = output_interval * run_steps * time_step * 1e-6
+        time_upper = sampling_interval * correlation_steps * time_step * 1e-6
         return data, time_upper, n_repeat
 
     @staticmethod
     def _compute_results(data, n_repeat):
-        """Calculate the mean and standard error using the original EMD rule."""
+        """Calculate averages and legacy half-window spreads for EMD output."""
         results = {}
         for direction in EMD2Processor.DIRECTIONS:
             key = f"k{direction}_tot"
@@ -162,6 +176,7 @@ class EMD2Processor:
         """Print all directional thermal conductivity results."""
         print("\n" + "=" * 60)
         print("EMD Thermal Conductivity Results")
+        print("(uncertainty: half-window spread / sqrt(number of HAC repeats))")
         print("=" * 60)
         for direction in EMD2Processor.DIRECTIONS:
             key = f"k{direction}_tot"
@@ -171,6 +186,14 @@ class EMD2Processor:
                 f"{results[f'{key}_std']:.4f} W/mK"
             )
         print("=" * 60 + "\n")
+
+    @staticmethod
+    def _normalize_hac(values):
+        """Normalize signed HAC values without discarding their sign."""
+        scale = np.max(np.abs(values))
+        if scale == 0:
+            return np.zeros_like(values), True
+        return values / scale, False
 
     @staticmethod
     def _plot_results(data, time_upper, n_repeat, save_plot):
@@ -188,26 +211,27 @@ class EMD2Processor:
         for column, direction in enumerate(EMD2Processor.DIRECTIONS):
             hac_axis, conductivity_axis = axes[:, column]
             set_fig_properties(hac_axis)
+            hac_axis.set_xscale("log")
+            hac_axis.axhline(0.0, color="0.5", linewidth=0.8)
             for key, label, color in hac_columns[direction]:
                 for repeat in range(n_repeat):
                     values = data[key][:, repeat]
-                    scale = values.max()
-                    if scale == 0:
-                        raise ValueError(f"HAC column '{key}' is identically zero.")
-                    hac_axis.loglog(
-                        time_data[:, repeat], values / scale,
+                    normalized_values, _ = EMD2Processor._normalize_hac(values)
+                    hac_axis.plot(
+                        time_data[:, repeat], normalized_values,
                         color="k", alpha=0.25, linewidth=0.8,
                     )
                 mean_values = data[key][:, -1]
-                scale = mean_values.max()
-                if scale == 0:
-                    raise ValueError(f"HAC column '{key}' is identically zero.")
-                hac_axis.loglog(
-                    time_data[:, -1], mean_values / scale,
-                    color=color, linewidth=2.0, label=label,
+                normalized_mean, mean_is_zero = EMD2Processor._normalize_hac(
+                    mean_values
+                )
+                mean_label = label + (" (zero)" if mean_is_zero else "")
+                hac_axis.plot(
+                    time_data[:, -1], normalized_mean,
+                    color=color, linewidth=2.0, label=mean_label,
                 )
             hac_axis.set_xlim(1e-5, time_upper)
-            hac_axis.set_ylabel("Normalized HAC")
+            hac_axis.set_ylabel("Signed normalized HAC")
             hac_axis.set_title(f"{direction}: heat-current correlation")
             hac_axis.legend(frameon=False, fontsize=9)
 
@@ -221,19 +245,19 @@ class EMD2Processor:
             axis.plot(time_data[:, -1], data[key][:, -1], color=color, linewidth=2.5,
                       label="Running average")
             average = results[f"{key}_ave"]
-            standard_error = results[f"{key}_std"]
+            uncertainty = results[f"{key}_std"]
             axis.axhline(y=average, color="0.25", linestyle="--", linewidth=1.0,
                          label="Half-window average")
             axis.fill_between(
-                time_data[:, -1], average - standard_error,
-                average + standard_error, color=color, alpha=0.18,
-                label="Standard error",
+                time_data[:, -1], average - uncertainty,
+                average + uncertainty, color=color, alpha=0.18,
+                label="Half-window spread / sqrt(repeats)",
             )
             axis.set_xlim(0, time_upper)
             axis.set_xlabel("Correlation Time (ns)")
             axis.set_ylabel(r"$\kappa_{%s}$ (W/mK)" % direction)
             axis.set_title(
-                rf"{direction}: $\kappa$ = {average:.2f} +/- {standard_error:.2f} W/mK"
+                rf"{direction}: $\kappa$ = {average:.2f} +/- {uncertainty:.2f} W/mK"
             )
             axis.legend(frameon=False, fontsize=9)
 

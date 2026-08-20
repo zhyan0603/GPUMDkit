@@ -15,6 +15,7 @@ NEW_FEATURES=(
 BUG_FIXES=(
     "replace outdated automated active-learning guidance with a manual MD/FPS workflow"
     "fix thermo3 volume and lattice-angle axis offset display"
+    "fix signed HAC and zero-direction handling in -plt emd2"
 )
 
 # === Formatted Output Logic ===

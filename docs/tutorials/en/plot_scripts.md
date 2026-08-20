@@ -431,6 +431,12 @@ gpumdkit.sh -plt emd2             # Display all directional results
 gpumdkit.sh -plt emd2 save        # Save as emd2.png
 ```
 
+The HAC panels use a logarithmic correlation-time axis and retain the signed
+HAC values on the y-axis. A physically zero direction is shown as a zero
+curve. The reported uncertainty follows the legacy half-window spread divided
+by the square root of the number of HAC repeats; it is not an independent-
+trajectory standard error.
+
 <div align="center">
   <img src="../../Gallery/emd2.png" alt="EMD thermal conductivity in all directions" width="90%" />
 </div>
