@@ -403,6 +403,12 @@ gpumdkit.sh -plt emd2 save
 
 The saved output is `emd2.png`.
 
+The HAC panels use a logarithmic correlation-time axis while preserving signed
+HAC values on the y-axis. A physically zero direction is shown as a zero
+curve. The reported uncertainty follows the legacy half-window spread divided
+by the square root of the number of HAC repeats, rather than an independent-
+trajectory standard error.
+
 ---
 
 #### plt_nemd.py
