@@ -21,7 +21,7 @@ Output:
   phonon_comp.png  Comparison figure when saving is requested or the selected
                    Matplotlib backend cannot display figures.
 Author:     Zihan YAN (yanzihan@westlake.edu.cn)
-Last-modified: 2026-08-01
+Last-modified: 2026-08-23
 =============================================================================
 """
 
@@ -30,6 +30,8 @@ from __future__ import annotations
 import sys
 from pathlib import Path
 from typing import List, Optional, Tuple
+
+import numpy as np
 
 from plt_phonon import (
     _tick_positions,
@@ -212,6 +214,11 @@ def main() -> int:
                 raise ValueError(
                     f"'{filename}' has {len(q_lengths)} q-points; all comparison files "
                     f"must have {reference_rows}"
+                )
+            elif not np.allclose(q_lengths, reference_q_lengths):
+                raise ValueError(
+                    f"'{filename}' uses a different q-point path; all comparison "
+                    "files must have matching q-point distances"
                 )
             datasets.append((filename, frequencies))
 

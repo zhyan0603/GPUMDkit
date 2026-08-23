@@ -19,7 +19,7 @@ if [ -z "$GPUMDkit_path" ]; then
     exit 1
 fi
 
-VERSION="1.5.7 (dev) (2026-08-18)"
+VERSION="1.5.7 (2026-08-23)"
 
 plt_path="${GPUMDkit_path}/Scripts/plt_scripts"
 analyzer_path="${GPUMDkit_path}/Scripts/analyzer"
@@ -189,7 +189,7 @@ function main(){
 
 function help_info_table(){
     echo " +-------------------------------------------------------------------------------------------------------+"
-    echo " |                          GPUMDkit ${VERSION} Command Help                               |"
+    echo " |                          GPUMDkit ${VERSION}       Command Help                               |"
     echo " +-------------------------------------------------------------------------------------------------------+"
     echo " |                                          MAIN FUNCTIONS                                               |"
     echo " +-------------------------------------------------------------------------------------------------------+"
@@ -453,8 +453,12 @@ if [ ! -z "$1" ]; then
             run_python_script "Denan LI (lidenan@westlake.edu.cn)" "${format_conv_path}/dp2xyz.py" "${@:2}" ;;
 
         -xyz2dp)
-            source ${GPUMDkit_path}/src/f1_format_conversions.sh
-            xyz2dp ;;
+            if [ "$2" = "-h" ] || [ "$2" = "--help" ]; then
+                python3 "${format_conv_path}/xyz2dp.py" "$2"
+            else
+                source ${GPUMDkit_path}/src/f1_format_conversions.sh
+                xyz2dp
+            fi ;;
 
         -addgroup|-addlabel)
             run_python_script "Zihan YAN (yanzihan@westlake.edu.cn)" "${format_conv_path}/add_groups.py" "${@:2}" ;;

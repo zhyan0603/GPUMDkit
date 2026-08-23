@@ -74,7 +74,7 @@ function f6_plots_one_column(){
 
 function f6_plots_two_column(){
     echo " +-----------------------------------------------------------------------------------------------+"
-    echo " |                     GPUMDkit ${VERSION} PLOT & VISUALIZATION TOOLS              |"
+    echo " |                     GPUMDkit ${VERSION}       PLOT & VISUALIZATION TOOLS              |"
     echo " +-----------------------------------------------------------------------------------------------+"
     echo " |  Usage: gpumdkit.sh -plt <type>                        List: gpumdkit.sh -plt -h              |"
     echo " +-----------------------------------------------------------------------------------------------+"

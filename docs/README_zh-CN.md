@@ -110,7 +110,7 @@ wget https://github.com/zhyan0603/GPUMDkit/archive/refs/heads/main.zip
              | |_| |  __/| |_| | |  | | |_| |   <| | |_
               \____|_|    \___/|_|  |_|____/|_|\_\_|\__|
     
-              GPUMDkit Version 1.5.7 (dev) (2026-08-03)
+              GPUMDkit Version 1.5.7 (2026-08-23)
         Core Developer: Zihan YAN (yanzihan@westlake.edu.cn)
      Main Contributors: Denan LI, Xin WU, Zhoulin LIU & Chen HUA
     
@@ -140,7 +140,7 @@ gpumdkit.sh -h
 
 ```
 +-------------------------------------------------------------------------------------------------------+
-|                          GPUMDkit 1.5.7 (dev) (2026-08-03) Command Help                               |
+|                          GPUMDkit 1.5.7 (2026-08-23)       Command Help                               |
 +-------------------------------------------------------------------------------------------------------+
 |                                          MAIN FUNCTIONS                                               |
 +-------------------------------------------------------------------------------------------------------+
@@ -170,8 +170,9 @@ gpumdkit.sh -h
 | -filter_dist  Filter by min_dist (no PBC)     | -filter_dist_pbc   Filter by min_dist (PBC)           |
 | -pda          Probability density analysis    | -filter_box        Filter by box-edge length          |
 | -pynep        Deprecated PyNEP sampling       | -nep_modifier      Modify NEP model interactively     |
+| -shift_energy  Interactive energy shift       |                                                       |
 +-------------------------------------------------------------------------------------------------------+
-| Python option help: gpumdkit.sh -<option> -h    Plot list: gpumdkit.sh -plt -h                     |
+| Python option help: gpumdkit.sh -<option> -h    Plot list: gpumdkit.sh -plt -h                        |
 +-------------------------------------------------------------------------------------------------------+
 ```
 
@@ -185,7 +186,7 @@ gpumdkit.sh -plt -h
 
 ```
  +-----------------------------------------------------------------------------------------------+
- |                     GPUMDkit 1.5.7 (dev) (2026-08-03) PLOT & VISUALIZATION TOOLS              |
+ |                     GPUMDkit 1.5.7 (2026-08-23)       PLOT & VISUALIZATION TOOLS              |
  +-----------------------------------------------------------------------------------------------+
  |  Usage: gpumdkit.sh -plt <type>                        List: gpumdkit.sh -plt -h              |
  +-----------------------------------------------------------------------------------------------+
@@ -197,6 +198,7 @@ gpumdkit.sh -plt -h
  |  charge         - Charge distribution            born_charge    - Born effective charges      |
  |  dimer          - Dimer energy/force curve       force_errors   - Force errors                |
  |  des            - Descriptors                    lr             - Learning rate for gnep      |
+ |  net_force      Plot net force distribution                                                   |
  +-----------------------------------------------------------------------------------------------+
  |                                     Diffusion & Transport                                     |
  +-----------------------------------------------------------------------------------------------+
@@ -205,25 +207,25 @@ gpumdkit.sh -plt -h
  |  msd_sdc        - MSD and SDC together           sigma          - Arrhenius ionic conductivity|
  |  D              - Arrhenius diffusivity          sigma_xyz      - Directional Arrhenius sigma |
  |  D_xyz          - Directional Arrhenius D                                                     |
+ |  doas           - Density of atomistic states                                                 |
  +-----------------------------------------------------------------------------------------------+
  |                                    MD & Structural Analysis                                   |
  +-----------------------------------------------------------------------------------------------+
  |  thermo         - thermo info in thermo.out      thermo2/3      - Thermo in different styles  |
  |  rdf            - Radial distribution function   rdf_pmf        - Potential of mean force     |
  |  vac            - Velocity autocorrelation       cohesive       - Cohesive energy curve       |
- |  net_force      - Net force distribution         plane-grid     - Displacement plane grid     |
- |  doas           - Density of atomistic states                                                 |
+ |  xrd            - X-ray diffraction              plane-grid     - Displacement plane grid     |
  +-----------------------------------------------------------------------------------------------+
  |                                        Heat Transport                                         |
  +-----------------------------------------------------------------------------------------------+
- |  emd            - EMD results                    emd2           - EMD all directions         |
- |  nemd           - NEMD results                  hnemd          - HNEMD results               |
- |  viscosity      - Viscosity                                                                  |
+ |  emd            - EMD results                    emd2           - EMD all directions          |
+ |  nemd           - NEMD results                   hnemd          - HNEMD results               |
+ |  viscosity      - Viscosity                                                                   |
  +-----------------------------------------------------------------------------------------------+
  |                                          Phonons                                              |
  +-----------------------------------------------------------------------------------------------+
- |  pdos           - VAC and PDOS              phonon       - Phonon band structure                |
- |  phonon_comp   - Compare phonon bands                                                          |
+ |  pdos           - VAC and PDOS                 phonon         - Phonon band structure         |
+ |  phonon_comp    - Compare phonon band structures                                              |
  +-----------------------------------------------------------------------------------------------+
 ```
 
@@ -249,14 +251,16 @@ gpumdkit.sh -plt train
     <img src="./Gallery/train.png" alt="msd" width="75%" />
 </div>
 
-##### 示例 5：绘制 parity 图
+##### 示例 5：绘制 prediction 模式的 parity 结果
+
+绘制 prediction 模式对 `train.xyz` 中结构生成的 parity 结果：
 
 ```
 gpumdkit.sh -plt test
 ```
 
 <div align="center">
-    <img src="./Gallery/prediction.png" alt="msd" width="95%" />
+    <img src="./Gallery/prediction.png" alt="NEP prediction-mode parity results" width="95%" />
 </div>
 
 ##### 示例 6：绘制 thermo 演化图

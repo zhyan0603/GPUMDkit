@@ -206,6 +206,16 @@ python3 ${GPUMDkit_path}/Scripts/sample_structures/perturb_structure.py POSCAR 5
 
 在进行 DFT 之前，应检查扰动结构的最小原子间距和晶胞是否合理。不得擅自采用示例中的扰动幅度作为正式参数。
 
+### PyNEP 兼容入口
+
+```bash
+# gpumdkit.sh -pynep 调用并行 PyNEP 兼容脚本
+gpumdkit.sh -pynep
+
+# 启动后的输入示例
+dump.xyz train.xyz nep.txt 8
+```
+
 ## 依赖
 
 | 方法 | Python 依赖 |

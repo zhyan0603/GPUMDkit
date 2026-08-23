@@ -493,7 +493,7 @@ Python：`print(" Error: <message>."); sys.exit(1)` — 相同格式，之后始
 | 随意更改 MSD 拟合范围 | 科学选择；先问维护者 |
 | 移除故障排除页面 | 由维护者明确要求移除；不要重新添加 |
 | 将 `des_compare` 添加到 CLI | 脚本存在但维护者选择不接入 |
-| 调试后保留 `__pycache__` | 必须始终 `find . -type d -name __pycache__ -exec rm -rf {} +` |
+| 调试后保留 `__pycache__` | 优先使用不写缓存的语法检查；如果产生缓存，交付前删除已记录的具体缓存路径 |
 | 将 `-get_volume` / `-re_atoms` 添加到 completion.sh | 刻意从补全和帮助表中排除 |
 | 修改 plt_scripts 中的逻辑 | 除非明确请求，否则仅对绘图脚本进行外观/格式更改 |
 
@@ -527,16 +527,26 @@ python3 Scripts/path/to/script.py        # 缺少参数必须打印用法 + exit
 
 只运行与已修改文件相关的检查；不要无条件运行全部项目检查。始终运行空白检查。
 
+### 临时测试产物
+
+- 在隔离的临时工作目录中运行冒烟测试，避免 `deepmd_data/`、绘图、日志和缓存等
+  固定名称输出出现在仓库根目录。
+- 记录验证过程创建的每个临时路径。交付前移除其中的测试输出、
+  `MPLCONFIGDIR`、构建目录、日志和缓存；命令失败后也必须清理。
+- 删除前将清理目标解析为显式路径，并确认它们属于本次工作。不得使用宽泛通配符，
+  也不得递归删除共享的临时目录根路径。
+- 最后以只读方式检查相关临时前缀和仓库状态，确认没有遗留测试产物。
+
 ```bash
 # Shell 语法（仅当 .sh 文件有更改时）
 bash -n gpumdkit.sh
 find src Scripts -name '*.sh' -exec bash -n {} +
 
-# Python 语法（仅检查已修改的 Python 文件）
-python3 -m py_compile Scripts/path/to/your_script.py
+# Python 语法检查且不生成 __pycache__（仅检查已修改的 Python 文件）
+python3 -B -c 'from pathlib import Path; p=Path("Scripts/path/to/your_script.py"); compile(p.read_text(), str(p), "exec")'
 
-# py_compile 后清理 __pycache__
-find . -type d -name "__pycache__" -exec rm -rf {} + 2>/dev/null
+# 如果其他测试产生缓存，只删除已记录的显式路径
+# rm -rf /exact/path/to/the/test-created/__pycache__
 
 # MkDocs 构建（仅当 MkDocs 输入有更改时；见下文）
 mkdocs build -f docs/mkdocs.yml

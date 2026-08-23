@@ -20,7 +20,7 @@ Running `gpumdkit.sh -plt` prints the plotting command menu:
 +-----------------------------------------------------------------------------------------------+
 |                     GPUMDkit <version> PLOT & VISUALIZATION TOOLS              |
 +-----------------------------------------------------------------------------------------------+
-|  Usage: gpumdkit.sh -plt <type>                        Plot list: gpumdkit.sh -plt -h         |
+|  Usage: gpumdkit.sh -plt <type>                        List: gpumdkit.sh -plt -h              |
 +-----------------------------------------------------------------------------------------------+
 |                                    NEP Training & Evaluation                                  |
 +-----------------------------------------------------------------------------------------------+
@@ -30,6 +30,7 @@ Running `gpumdkit.sh -plt` prints the plotting command menu:
 |  charge         - Charge distribution            born_charge    - Born effective charges      |
 |  dimer          - Dimer energy/force curve       force_errors   - Force errors                |
 |  des            - Descriptors                    lr             - Learning rate for gnep      |
+|  net_force      Plot net force distribution                                                   |
 +-----------------------------------------------------------------------------------------------+
 |                                     Diffusion & Transport                                     |
 +-----------------------------------------------------------------------------------------------+
@@ -45,18 +46,18 @@ Running `gpumdkit.sh -plt` prints the plotting command menu:
 |  thermo         - thermo info in thermo.out      thermo2/3      - Thermo in different styles  |
 |  rdf            - Radial distribution function   rdf_pmf        - Potential of mean force     |
 |  vac            - Velocity autocorrelation       cohesive       - Cohesive energy curve       |
-|  net_force      - Net force distribution         plane-grid     - Displacement plane grid     |
-|  xrd            - X-ray diffraction                                                           |
+|  xrd            - X-ray diffraction              plane-grid     - Displacement plane grid     |
 +-----------------------------------------------------------------------------------------------+
 |                                        Heat Transport                                         |
 +-----------------------------------------------------------------------------------------------+
-|  emd            - EMD results                    emd2           - EMD all directions         |
-|  nemd           - NEMD results                  hnemd          - HNEMD results               |
-|  viscosity      - Viscosity                                                                     |
+|  emd            - EMD results                    emd2           - EMD all directions          |
+|  nemd           - NEMD results                   hnemd          - HNEMD results               |
+|  viscosity      - Viscosity                                                                   |
 +-----------------------------------------------------------------------------------------------+
 |                                          Phonons                                              |
 +-----------------------------------------------------------------------------------------------+
-|  pdos           - VAC and PDOS                                                                |
+|  pdos           - VAC and PDOS                 phonon         - Phonon band structure         |
+|  phonon_comp    - Compare phonon band structures                                              |
 +-----------------------------------------------------------------------------------------------+
 ```
 
@@ -74,7 +75,7 @@ Use the following sequence instead of trying plot names at random:
 | If you have... | Start with... | What to inspect first |
 |---|---|---|
 | `loss.out`, `energy_train.out`, and `force_train.out` | `gpumdkit.sh -plt train` | loss trend and energy/force parity |
-| `energy_test.out` and `force_test.out` | `gpumdkit.sh -plt prediction` | generalization on the test set |
+| `energy_train.out` and `force_train.out` from prediction mode | `gpumdkit.sh -plt prediction` | parity results for structures in `train.xyz` |
 | `thermo.out` | `gpumdkit.sh -plt thermo` | equilibration and thermodynamic evolution |
 | `msd.out` | `gpumdkit.sh -plt msd` or `gpumdkit.sh -plt sdc` | diffusion regime before interpreting a fit |
 | `rdf.out` | `gpumdkit.sh -plt rdf` | selected pair column and peak positions |
@@ -107,7 +108,8 @@ stress. If no valid stress rows are available, the stress entries are `N/A`.
 
 Visualizes NEP training progress including loss curves, RMSE evolution, and parity plots comparing DFT vs NEP predictions for energy, forces, and stresses.
 
-**Input Files:** `loss.out`, `energy_train.out`, `force_train.out`, `virial_train.out`
+**Input Files:** `loss.out`, `energy_train.out`, `force_train.out`, and either
+`stress_train.out` (preferred) or `virial_train.out`
 
 ```bash
 gpumdkit.sh -plt train
@@ -121,9 +123,11 @@ gpumdkit.sh -plt train
 
 ### plt_prediction.py
 
-Visualizes NEP prediction results on the test set.
+Visualizes NEP prediction-mode results for the structures in `train.xyz`.
+Prediction mode still writes the parity data to files ending in `_train.out`.
 
-**Input Files:** `energy_test.out`, `force_test.out`, `virial_test.out`
+**Input Files:** `energy_train.out`, `force_train.out`, and either
+`stress_train.out` (preferred) or `virial_train.out`
 
 ```bash
 gpumdkit.sh -plt prediction
@@ -140,7 +144,8 @@ gpumdkit.sh -plt test         # Alternative command
 
 Creates combined parity plots for both training and testing datasets.
 
-**Input Files:** `energy_train.out`, `force_train.out`, `virial_train.out`, `energy_test.out`, `force_test.out`, `virial_test.out`
+**Input Files:** `energy_train.out`, `force_train.out`, `stress_train.out`,
+`energy_test.out`, `force_test.out`, and `stress_test.out`
 
 ```bash
 gpumdkit.sh -plt train_test
@@ -156,7 +161,8 @@ gpumdkit.sh -plt train_test
 
 Generates density-based parity plots for energies, forces, and stresses. Useful for large datasets where scatter plots become unreadable.
 
-**Input Files:** `energy_train.out`, `force_train.out`, `virial_train.out`
+**Input Files:** `energy_train.out`, `force_train.out`, and either
+`stress_train.out` (preferred) or `virial_train.out`
 
 ```bash
 gpumdkit.sh -plt parity_density
@@ -223,7 +229,7 @@ gpumdkit.sh -plt restart
 
 Plots charge distribution from `qNEP` model.
 
-**Input File:** `charge_train.out`
+**Input Files:** `train.xyz` and `charge_train.out`
 
 **Important:** Ensure consistency between training set and charge output atom ordering. Use full batch training or run prediction step first.
 
@@ -241,7 +247,7 @@ gpumdkit.sh -plt charge
 
 Creates parity plots for Born effective charges (BEC) on training and testing datasets. Structures with all-zero reference BEC are filtered out.
 
-**Input Files:** `bec_train.out`, `bec_test.out`
+**Input Files:** `bec_train.out`; optional `bec_test.out`
 
 ```bash
 gpumdkit.sh -plt born_charge
@@ -387,7 +393,8 @@ Ea: 0.230 eV
 
 Creates Arrhenius plot for ionic conductivity (ln(σ·T) vs 1000/T).
 
-**Input Files:** `*K/{model.xyz, run.in, thermo.out, msd.out}` (each temperature subdirectory)
+**Input Files:** `thermo.out` and `msd.out` in each `*K/` directory;
+`model.xyz` and optional `run.in` in the first temperature directory
 
 ```bash
 gpumdkit.sh -plt arrhenius_sigma
@@ -670,7 +677,8 @@ gpumdkit.sh -plt phonon_comp phonon_DFT.dat phonon_NEP.dat phonon_MACE.dat \
 The default path file is `QPOINTS`; use `--qpoints FILE` for another path
 definition. For two-file DFT/NEP comparisons, DFT is gray and solid while NEP
 is firebrick and dashed. Additional models use the comparison palette and
-distinct line styles.
+distinct line styles. Every comparison file must contain matching q-point
+distances; matching row counts alone are not sufficient.
 
 <div align="center">
   <img src="../../Gallery/phonon_comp.png" alt="Phonon band comparison" width="70%" />
@@ -797,21 +805,21 @@ gpumdkit.sh -plt plane-grid -i averaged_structure.xyz -d displacements.dat -e Pb
 | Command | Input File(s) | Description |
 |---------|---------------|-------------|
 | `train` | `loss.out`, `*_train.out` | NEP training plots |
-| `prediction` / `test` | `*_test.out` | NEP prediction plots |
+| `prediction` / `test` | `*_train.out` | NEP prediction-mode parity plots for `train.xyz` |
 | `train_test` | `*_train.out`, `*_test.out` | Combined parity plots |
 | `parity_density` | `*_train.out` | Density-based parity plots |
 | `force_errors` | `force_train.out` | Force error metrics |
 | `lr` | `loss.out` (gnep) | Learning rate |
 | `restart` | `nep.restart` | Restart file parameters |
-| `charge` | `charge_train.out` | Charge distribution |
-| `born_charge` / `bec` | `bec_train.out`, `bec_test.out` | Born effective charges |
+| `charge` | `train.xyz`, `charge_train.out` | Charge distribution |
+| `born_charge` / `bec` | `bec_train.out`, optional `bec_test.out` | Born effective charges |
 | `thermo` | `thermo.out` | Thermodynamic properties |
 | `msd` | `msd.out` | Mean square displacement |
 | `msd_all` | `msd.out` (all_groups) | MSD for all species |
 | `msd_conv` | `msd_step*.out` | MSD convergence check |
 | `sdc` | `msd.out` | Self-diffusion coefficient |
 | `arrhenius_d` / `D` | `*K/msd.out` | Arrhenius diffusivity |
-| `arrhenius_sigma` / `sigma` | `*K/{model.xyz, run.in, thermo.out, msd.out}` | Arrhenius ionic conductivity |
+| `arrhenius_sigma` / `sigma` | `*K/{thermo.out, msd.out}` plus first-directory `model.xyz` and optional `run.in` | Arrhenius ionic conductivity |
 | `rdf` | `rdf.out` | Radial distribution function |
 | `rdf_pmf` | `rdf.out` | RDF + potential of mean force |
 | `xrd` | `xrd.out` | X-ray diffraction intensity |

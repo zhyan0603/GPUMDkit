@@ -511,7 +511,7 @@ These changes have been **explicitly rejected** by the project maintainer. Do no
 | Change MSD fitting range arbitrarily | Scientific choice; ask maintainer first |
 | Remove troubleshooting pages | Removed by maintainer's explicit request; do not re-add |
 | Add `des_compare` to CLI | Script exists but maintainer chose not to wire it |
-| Keep `__pycache__` after debugging | Must always `find . -type d -name __pycache__ -exec rm -rf {} +` |
+| Keep `__pycache__` after debugging | Prefer a non-writing syntax check; if a cache is created, remove the exact recorded cache path before handoff |
 | Add `-get_volume` / `-re_atoms` to completion.sh | Intentionally excluded from completion and help table |
 | Modify logic in plt_scripts | Unless explicitly requested, only cosmetic/formatting changes to plotting scripts |
 
@@ -546,16 +546,30 @@ python3 Scripts/path/to/script.py        # missing args must print usage + exit 
 Run only the checks relevant to the files changed; do not run every project check
 unconditionally. Always run the whitespace check.
 
+### Temporary test artifacts
+
+- Run smoke tests from an isolated temporary working directory so fixed-name
+  outputs such as `deepmd_data/`, plots, logs, and caches never appear in the
+  repository root.
+- Record every temporary path created by the validation. Remove its test
+  outputs, `MPLCONFIGDIR`, build directories, logs, and caches before handoff,
+  including after failed commands.
+- Resolve cleanup targets to explicit paths and confirm they belong to the
+  current work before deletion. Do not use broad globs or recursively delete a
+  shared temporary root.
+- Finish with a read-only inventory of the relevant temporary prefix and the
+  repository status to verify that no test artifacts remain.
+
 ```bash
 # Shell syntax (only when .sh files changed)
 bash -n gpumdkit.sh
 find src Scripts -name '*.sh' -exec bash -n {} +
 
-# Python syntax (only for changed Python files)
-python3 -m py_compile Scripts/path/to/your_script.py
+# Python syntax without creating __pycache__ (only for changed Python files)
+python3 -B -c 'from pathlib import Path; p=Path("Scripts/path/to/your_script.py"); compile(p.read_text(), str(p), "exec")'
 
-# Clean up __pycache__ after py_compile
-find . -type d -name "__pycache__" -exec rm -rf {} + 2>/dev/null
+# If another test creates a cache, remove only its recorded explicit path
+# rm -rf /exact/path/to/the/test-created/__pycache__
 
 # MkDocs build (only when MkDocs inputs changed; see below)
 mkdocs build -f docs/mkdocs.yml

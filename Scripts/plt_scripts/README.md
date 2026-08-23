@@ -31,7 +31,8 @@ Scripts for monitoring and analyzing NEP model training and predictions.
 
 Visualizes NEP training progress including loss curves, RMSE evolution, and parity plots comparing DFT vs NEP predictions for energy, forces, and stresses.
 
-**Input File:** `loss.out`, `energy_train.out`, `force_train.out`, `virial_train.out`
+**Input Files:** `loss.out`, `energy_train.out`, `force_train.out`, and either
+`stress_train.out` (preferred) or `virial_train.out`
 
 **Usage:**
 
@@ -47,9 +48,10 @@ gpumdkit.sh -plt train          # Display plot
 
 #### plt_prediction.py
 
-Visualizes NEP prediction results.
+Visualizes NEP prediction-mode results for the structures in `train.xyz`.
 
-**Input Files:** `energy_test.out`, `force_test.out`, `virial_test.out`
+**Input Files:** `energy_train.out`, `force_train.out`, and either
+`stress_train.out` (preferred) or `virial_train.out`
 
 **Usage:**
 
@@ -66,7 +68,8 @@ gpumdkit.sh -plt test             # Alternative command
 
 Creates combined parity plots for both training and testing datasets.
 
-**Input Files:** `*_train.out`, `*_test.out`
+**Input Files:** `energy_train.out`, `force_train.out`, `stress_train.out`,
+`energy_test.out`, `force_test.out`, and `stress_test.out`
 
 **Usage:**
 
@@ -82,7 +85,7 @@ gpumdkit.sh -plt train_test
 
 Creates parity plots for Born effective charges (BEC) on training and testing datasets. Structures with all-zero reference BEC are filtered out.
 
-**Input Files:** `bec_train.out`, `bec_test.out`
+**Input Files:** `bec_train.out`; optional `bec_test.out`
 
 **Usage:**
 
@@ -101,7 +104,8 @@ gpumdkit.sh -plt bec          # Alternative command
 
 Generates density-based parity plots for energies, forces, and stresses, useful for large datasets.
 
-**Input Files:** `energy_train.out`, `force_train.out`, `virial_train.out`
+**Input Files:** `energy_train.out`, `force_train.out`, and either
+`stress_train.out` (preferred) or `virial_train.out`
 
 **Usage:**
 
@@ -332,7 +336,8 @@ diffusion_coeffs = [8.859e-08, 3.981e-07, 9.882e-07, 1.99e-06, 3.453e-06]
 
 Creates Arrhenius plot for ionic conductivity (ln(σ·T) vs 1000/T).
 
-**Input Files:** `*K/{model.xyz, run.in, thermo.out, msd.out}`
+**Input Files:** `thermo.out` and `msd.out` in each `*K/` directory;
+`model.xyz` and optional `run.in` in the first temperature directory
 
 **Usage:**
 
@@ -522,6 +527,8 @@ Compares phonon band structures from two or more data files. The legend label
 is derived from each filename, so `phonon_DFT.dat` is shown as `DFT` and
 `phonon_MACE.dat` as `MACE`. For a two-file DFT/NEP comparison, the plot uses
 solid gray lines for DFT and dashed red lines for NEP.
+All comparison files must contain the same q-point distances, not only the same
+number of rows.
 
 **Input Files:** Two or more `phonon_<label>.dat` files and `QPOINTS`
 
@@ -609,7 +616,7 @@ script uses 150 DPI for display and at least 300 DPI when saving.
 
 Plots charge distribution in `charge_train.out` from `qNEP` model.
 
-**Input File:** `charge_train.out`
+**Input Files:** `train.xyz` and `charge_train.out`
 
 **Usage:**
 
@@ -733,14 +740,14 @@ gpumdkit.sh -plt net_force train.xyz
 | -------------- | --------------------------- | ---------------------------------- |
 | `thermo`       | `thermo.out`                | Thermodynamic properties evolution |
 | `train`        | `loss.out`, `*_train.out`   | NEP training plot                  |
-| `prediction`   | `*_test.out`                | NEP prediction plot                |
+| `prediction`   | `*_train.out`               | NEP prediction-mode plot           |
 | `train_test`   | `*_train.out`, `*_test.out` | parity plots of train&test         |
 | `msd`          | `msd.out`                   | Mean square displacement           |
 | `sdc`          | `msd.out`                   | Self-diffusion coefficient         |
 | `rdf`          | `rdf.out`                   | Radial distribution function       |
 | `xrd`          | `xrd.out`                   | X-ray diffraction intensity        |
-| `vac`          | `vac.out`                   | Velocity autocorrelation           |
-| `charge`       | `charge_train.out`          | Charge distribution                |
+| `vac`          | `sdc.out`                   | Velocity autocorrelation           |
+| `charge`       | `train.xyz`, `charge_train.out` | Charge distribution             |
 | `doas`         | DOAS files                  | Density of atomistic states        |
 | `des`          | `descriptors.npy`           | Descriptor visualization           |
 | `dimer`        | Needs nep model             | Dimer interaction curve            |
@@ -773,7 +780,7 @@ For quick reference, here's the complete command list:
 
 ```
  +-----------------------------------------------------------------------------------------------+
- |                     GPUMDkit 1.5.7 (dev) (2026-08-03) PLOT & VISUALIZATION TOOLS              |
+ |                     GPUMDkit 1.5.7 (2026-08-23)       PLOT & VISUALIZATION TOOLS              |
  +-----------------------------------------------------------------------------------------------+
  |  Usage: gpumdkit.sh -plt <type>                        List: gpumdkit.sh -plt -h              |
  +-----------------------------------------------------------------------------------------------+
@@ -785,6 +792,7 @@ For quick reference, here's the complete command list:
  |  charge         - Charge distribution            born_charge    - Born effective charges      |
  |  dimer          - Dimer energy/force curve       force_errors   - Force errors                |
  |  des            - Descriptors                    lr             - Learning rate for gnep      |
+ |  net_force      Plot net force distribution                                                   |
  +-----------------------------------------------------------------------------------------------+
  |                                     Diffusion & Transport                                     |
  +-----------------------------------------------------------------------------------------------+
@@ -799,19 +807,19 @@ For quick reference, here's the complete command list:
  +-----------------------------------------------------------------------------------------------+
  |  thermo         - thermo info in thermo.out      thermo2/3      - Thermo in different styles  |
  |  rdf            - Radial distribution function   rdf_pmf        - Potential of mean force     |
- |  xrd            - X-ray diffraction                                                           |
  |  vac            - Velocity autocorrelation       cohesive       - Cohesive energy curve       |
- |  net_force      - Net force distribution         plane-grid     - Displacement plane grid     |
+ |  xrd            - X-ray diffraction              plane-grid     - Displacement plane grid     |
  +-----------------------------------------------------------------------------------------------+
  |                                        Heat Transport                                         |
  +-----------------------------------------------------------------------------------------------+
- |  emd            - EMD results                    emd2           - EMD all directions         |
- |  nemd           - NEMD results                  hnemd          - HNEMD results               |
- |  viscosity      - Viscosity                                                                  |
+ |  emd            - EMD results                    emd2           - EMD all directions          |
+ |  nemd           - NEMD results                   hnemd          - HNEMD results               |
+ |  viscosity      - Viscosity                                                                   |
  +-----------------------------------------------------------------------------------------------+
  |                                          Phonons                                              |
  +-----------------------------------------------------------------------------------------------+
- |  pdos           - VAC and PDOS                                                                |
+ |  pdos           - VAC and PDOS                 phonon         - Phonon band structure         |
+ |  phonon_comp    - Compare phonon band structures                                              |
  +-----------------------------------------------------------------------------------------------+
 ```
 
