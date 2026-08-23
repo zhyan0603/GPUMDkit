@@ -15,7 +15,7 @@ Usage:      gpumdkit.sh -plt born_charge
 Output:
   Display of BEC parity plot
 Author:     Denan LI (lidenan@westlake.edu.cn)
-Last-modified: 2026-05-16
+Last-modified: 2026-08-23
 =============================================================================
 """
 
@@ -97,7 +97,7 @@ else:
     from matplotlib import get_backend
     if get_backend().lower() in ['agg', 'cairo', 'pdf', 'ps', 'svg']:
         print("Unable to display the plot due to the non-interactive backend.")
-        print("The plot has been automatically saved as 'bec_parity.png'.")
+        print("The plot has been automatically saved as 'bec.png'.")
         plt.savefig('bec.png', dpi=300)
     else:
         plt.show()

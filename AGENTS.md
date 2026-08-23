@@ -37,5 +37,6 @@ Key references under `skills/gpumdkit-skill/references/`:
 - Never invent consequential scientific or execution choices; ask the user.
 - Simulations, training, DFT, scheduler jobs, destructive operations, and expensive runs require explicit authorization.
 - Preserve unrelated changes. Before repository edits, read `contributing.md`; keep changes minimal, update both documentation languages for user-visible features, and run its validation checklist.
+- Run smoke tests in isolated temporary directories. Before handoff, remove every temporary file, directory, cache, and generated test output created by the work, including artifacts from failed commands; delete only verified explicit paths and finish with a read-only inventory confirming that nothing remains.
 - When adding a feature or fixing a bug, update `docs/updates.info` in the same change: add a concise entry to `NEW_FEATURES` or `BUG_FIXES`, and keep the other list as `"None"` only when it has no entries.
 - If `gpumdkit.sh` is modified, update the date in its `VERSION="..."` declaration to the current date in `YYYY-MM-DD` format. Preserve the existing version string; do not change any version number in `gpumdkit.sh` or `docs/updates.info` unless the user explicitly requests a version update.

@@ -113,7 +113,9 @@ python3 ${GPUMDkit_path}/Scripts/format_conversion/xyz2dp.py train.xyz Li P S
 
 The input should contain labeled extxyz energy and force data. The output is
 written under `deepmd_data/` in the current directory. This command requires
-`dpdata`.
+`dpdata`. The requested element order is preserved exactly in every generated
+`type_map.raw` file. Use `gpumdkit.sh -xyz2dp -h` to print usage without
+starting the interactive prompts.
 
 ### Structure Manipulation
 

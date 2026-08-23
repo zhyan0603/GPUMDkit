@@ -116,7 +116,7 @@ then you will see:
        | |_| |  __/| |_| | |  | | |_| |   <| | |_
         \____|_|    \___/|_|  |_|____/|_|\_\_|\__|
 
-        GPUMDkit Version 1.5.7 (dev) (2026-08-03)
+        GPUMDkit Version 1.5.7 (2026-08-23)
   Core Developer: Zihan YAN (yanzihan@westlake.edu.cn)
  Main Contributors: Denan LI, Xin WU, Zhoulin LIU & Chen HUA
 

@@ -20,7 +20,7 @@ Output:
 Dependencies:
   dpdata       DeepMD-kit data conversion library
 Author:     Zihan YAN (yanzihan@westlake.edu.cn)
-Last-modified: 2026-08-03
+Last-modified: 2026-08-23
 =============================================================================
 """
 
@@ -187,9 +187,12 @@ def main(args):
             )
             return 1
 
+        multi_systems = MultiSystems(
+            *multi_systems.systems.values(), type_map=type_map
+        )
         print_system_summary(multi_systems, type_map)
         try:
-            multi_systems.to_deepmd_npy(OUTPUT_DIR, type_map=type_map)
+            multi_systems.to_deepmd_npy(OUTPUT_DIR)
         except Exception as error:
             print(f" Error: failed to write DeepMD npy data to '{OUTPUT_DIR}': {error}")
             return 1

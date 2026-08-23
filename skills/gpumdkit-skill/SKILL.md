@@ -16,6 +16,7 @@ Use this skill as the single entry point for GPUMDkit utilities, GPUMD simulatio
 - Do not overwrite inputs, discard structures, launch GPUMD/NEP/DFT, submit scheduler jobs, or start long/expensive calculations unless the user explicitly authorizes that action.
 - Stop on parser errors, NaN/Inf values, missing outputs, unstable behavior, or unexplained warnings. Report the evidence and ask before changing scientific parameters or retrying.
 - Preserve original data and unrelated worktree changes. Record transformations, filters, exclusions, commands, versions, and assumptions.
+- Run smoke tests in isolated temporary directories and remove every temporary file, directory, cache, and generated test output before handoff. Resolve and delete only paths created by the current work; never use a broad cleanup target that could remove user data.
 
 ## Reference router
 

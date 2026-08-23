@@ -23,18 +23,19 @@ The dispatcher does not provide a uniform `-plt <type> -h` contract, and argumen
 
 | Command | Input Files | Description |
 |---------|-------------|-------------|
-| `train` | `loss.out`, `*_train.out` | Training loss curves and parity plots |
-| `prediction` / `test` | `*_test.out` | Test set parity plots |
-| `train_test` | `*_train.out`, `*_test.out` | Combined train/test parity plots |
-| `parity_density` | `*_train.out` | Density-based parity plots for large datasets |
-| `train_density` | `loss.out`, `*_train.out` | Training with density visualization |
+| `train` | `loss.out`, energy/force `_train.out`, stress or virial `_train.out` | Training loss curves and parity plots |
+| `prediction` / `test` | energy/force `_train.out`, stress or virial `_train.out` | Prediction-mode parity plots for the structures in `train.xyz` |
+| `train_test` | energy/force/stress `_train.out` and `_test.out` | Combined train/test parity plots |
+| `parity_density` | energy/force `_train.out`, stress or virial `_train.out` | Density-based parity plots for large datasets |
+| `train_density` | `loss.out`, energy/force `_train.out`, stress or virial `_train.out` | Training with density visualization |
 | `force_errors` | `force_train.out` | Force error analysis |
 | `restart` | `nep.restart` | NEP restart file visualization |
-| `charge` | `charge_train.out` | Charge distribution (qNEP) |
-| `born_charge` / `bec` | `bec_train.out`, `bec_test.out` | Born effective charges |
+| `charge` | `train.xyz`, `charge_train.out` | Charge distribution (qNEP) |
+| `born_charge` / `bec` | `bec_train.out`, optional `bec_test.out` | Born effective charges |
 | `dimer` | NEP model | Dimer interaction curves |
 | `des` | `descriptors.npy` | Descriptor PCA/UMAP visualization |
 | `lr` | `loss.out` (gnep) | Learning rate decay |
+| `net_force` | extxyz file | Net force distribution |
 
 ```bash
 # Training results
@@ -60,7 +61,7 @@ gpumdkit.sh -plt dimer Li Li nep.txt
 | `msd_all` | `msd.out` (all_groups) | MSD per species |
 | `sdc` | `msd.out` | Self-diffusion coefficient |
 | `msd_sdc` | `msd.out` | MSD and SDC combined |
-| `sigma` / `arrhenius_sigma` | `*K/` directories | Arrhenius ionic conductivity |
+| `sigma` / `arrhenius_sigma` | `thermo.out` and `msd.out` per `*K/`; first `*K/` also has `model.xyz` and optional `run.in` | Arrhenius ionic conductivity |
 | `D` / `arrhenius_d` | `*K/` directories | Arrhenius diffusivity |
 | `sigma_xyz` | `*K/` directories | Directional Arrhenius conductivity |
 | `D_xyz` | `*K/` directories | Directional Arrhenius diffusivity |
@@ -76,7 +77,9 @@ gpumdkit.sh -plt msd_sdc
 gpumdkit.sh -plt msd_all msd.out Li P S
 
 # Arrhenius plots (requires temperature-organized directories)
-# Directory structure: 300K/, 350K/, 400K/, ... each containing msd.out
+# Diffusivity: each temperature directory contains msd.out
+# Conductivity: each contains thermo.out and msd.out; the first also contains
+# model.xyz and may contain run.in for replicate detection
 gpumdkit.sh -plt arrhenius_sigma
 gpumdkit.sh -plt arrhenius_d
 
@@ -84,7 +87,7 @@ gpumdkit.sh -plt arrhenius_d
 gpumdkit.sh -plt doas doas.out Li
 ```
 
-### Structural Analysis (10 plot types)
+### Structural Analysis (9 plot types)
 
 | Command | Input Files | Description |
 |---------|-------------|-------------|
@@ -96,7 +99,6 @@ gpumdkit.sh -plt doas doas.out Li
 | `xrd` | `xrd.out` or specified XRD output | X-ray diffraction intensity |
 | `vac` | `sdc.out` | Velocity autocorrelation |
 | `cohesive` | `cohesive.out` | Cohesive energy curve |
-| `net_force` | extxyz file | Net force distribution |
 | `plane-grid` | `model.xyz`, `displacements.dat` | Displacement grid visualization |
 
 ```bash
@@ -160,7 +162,8 @@ gpumdkit.sh -plt phonon_comp phonon_DFT.dat phonon_NEP.dat save
 `phonon_comp` accepts two or more compatible phonon data files. For conventional
 names such as `phonon_NEP.dat`, `phonon_DFT.dat`, and `phonon_MACE.dat`, the text
 after `phonon_` is used as the legend label. The plotters validate the phonon
-rows and the supplied `QPOINTS` path before drawing.
+rows and the supplied `QPOINTS` path before drawing. Comparison files must use
+matching q-point distances, not only the same number of rows.
 
 ## Common Workflows
 
@@ -168,7 +171,7 @@ rows and the supplied `QPOINTS` path before drawing.
 ```bash
 # 1. Plot training loss
 gpumdkit.sh -plt train
-# 2. Check test predictions
+# 2. Check prediction-mode results for train.xyz
 gpumdkit.sh -plt prediction
 # 3. Analyze force errors
 gpumdkit.sh -plt force_errors
@@ -220,7 +223,7 @@ gpumdkit.sh -plt nemd 10 1 60 save
 | `nemd` | `nemd.png` |
 | `hnemd` | `hnemd.png` |
 | `viscosity` | `viscosity.png` |
-| `cohesive` | `Cohesive.png` |
+| `cohesive` | `cohesive.png` |
 
 ## Dependencies
 

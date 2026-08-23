@@ -112,7 +112,9 @@ python3 ${GPUMDkit_path}/Scripts/format_conversion/xyz2dp.py train.xyz Li P S
 ```
 
 输入应包含带能量和力标签的 extxyz 数据。输出写入当前目录下的
-`deepmd_data/`。该命令依赖 `dpdata`。
+`deepmd_data/`。该命令依赖 `dpdata`。用户指定的元素顺序会原样保留在每个
+生成的 `type_map.raw` 中。使用 `gpumdkit.sh -xyz2dp -h` 可以直接显示用法，
+而不进入交互提示。
 
 ### 结构操作
 

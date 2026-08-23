@@ -139,7 +139,7 @@ This opens the main menu:
          | |_| |  __/| |_| | |  | | |_| |   <| | |_
           \____|_|    \___/|_|  |_|____/|_|\_\_|\__|
 
-          GPUMDkit Version 1.5.7 (dev) (2026-08-03)
+          GPUMDkit Version 1.5.7 (2026-08-23)
     Core Developer: Zihan YAN (yanzihan@westlake.edu.cn)
  Main Contributors: Denan LI, Xin WU, Zhoulin LIU & Chen HUA
 
@@ -223,14 +223,14 @@ gpumdkit.sh -plt train
   <img src="../../Gallery/train.png" alt="NEP training results" width="72%" />
 </div>
 
-### Plot NEP test results
+### Plot NEP prediction-mode results
 
 ```bash
 gpumdkit.sh -plt test
 ```
 
 <div align="center">
-  <img src="../../Gallery/prediction.png" alt="NEP test results" width="72%" />
+  <img src="../../Gallery/prediction.png" alt="NEP prediction-mode results" width="72%" />
 </div>
 
 ### Plot thermodynamic data

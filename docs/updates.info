@@ -1,6 +1,6 @@
 # === User Configuration Section: Only modify these variables ===
 VERSION="1.5.7"
-RELEASE_DATE="2026-08-12"
+RELEASE_DATE="2026-08-23"
 HOME_PAGE="https://gpumdkit.cn"
 CONTACT="yanzihan@westlake.edu.cn"
 
@@ -16,6 +16,9 @@ BUG_FIXES=(
     "replace outdated automated active-learning guidance with a manual MD/FPS workflow"
     "fix thermo3 volume and lattice-angle axis offset display"
     "fix signed HAC and zero-direction handling in -plt emd2"
+    "preserve the requested element order in -xyz2dp type_map.raw output"
+    "reject mismatched q-point paths in -plt phonon_comp"
+    "correct plotting documentation, -plt xrd completion, and output filename text inconsistencies"
 )
 
 # === Formatted Output Logic ===
