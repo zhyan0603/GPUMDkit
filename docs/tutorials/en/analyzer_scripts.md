@@ -20,6 +20,7 @@ Make sure GPUMDkit is installed. See [Quick Start](quick_start.md) for installat
 | Composition | `gpumdkit.sh -analyze_comp train.xyz` | Group structures by chemical composition |
 | Chemical species | `gpumdkit.sh -chem_species train.xyz` | List species in a file |
 | Property range | `gpumdkit.sh -range train.xyz force` | Inspect energy/force/virial range |
+| Energy reference shifting | `gpumdkit.sh -shift_energy` | Interactively shift extxyz energy references |
 | Minimum distance | `gpumdkit.sh -min_dist dump.xyz` | Fast distance check without PBC |
 | Minimum distance with PBC | `gpumdkit.sh -min_dist_pbc dump.xyz` | Accurate distance check with PBC |
 | Charge balance | `gpumdkit.sh -cbc train.xyz` | Oxidation-state balance check |
@@ -72,6 +73,7 @@ The analyzer menu is:
 | 506) Filter structures by minimum distance           |
 | 507) Get minimum interatomic distance                |
 | 508) Probability density analysis                    |
+| 509) Shift energy reference interactively            |
 +------------------------------------------------------+
 | 000) Return to the main menu                         |
 +------------------------------------------------------+
@@ -148,6 +150,34 @@ With `hist` option:
 <div align="center">
   <img src="../../Gallery/range_force.png" alt="Force range histogram" width="52%" />
 </div>
+
+---
+
+## Energy Reference Shifting
+
+`align_energy_reference.py` interactively shifts the `energy=` values in a
+multi-frame extxyz file. Atom lines and all other header fields are copied to
+the output file unchanged.
+
+Start the interface directly:
+
+```bash
+gpumdkit.sh -shift_energy
+```
+
+Or choose `5) Analyzer -> 509` from the main menu. The interface first shows
+the detected elements and `config_type` groups, then offers three modes:
+
+1. Reference-group alignment: align selected groups to the mean energy of a
+   reference group.
+2. Zero atomic baseline alignment: optimize a baseline for each group so its
+   shifted energies target zero.
+3. DFT-to-NEP alignment: calculate NEP energies and align the original DFT
+   energies to them.
+
+The existing NES defaults are retained. Advanced NES settings can be changed
+inside the Python interface when needed. The DFT-to-NEP mode requires the
+`calorine` package and a compatible NEP model file.
 
 ---
 

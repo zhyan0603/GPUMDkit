@@ -23,18 +23,19 @@ The dispatcher does not provide a uniform `-plt <type> -h` contract, and argumen
 
 | Command | Input Files | Description |
 |---------|-------------|-------------|
-| `train` | `loss.out`, `*_train.out` | Training loss curves and parity plots |
-| `prediction` / `test` | `*_test.out` | Test set parity plots |
-| `train_test` | `*_train.out`, `*_test.out` | Combined train/test parity plots |
-| `parity_density` | `*_train.out` | Density-based parity plots for large datasets |
-| `train_density` | `loss.out`, `*_train.out` | Training with density visualization |
+| `train` | `loss.out`, energy/force `_train.out`, stress or virial `_train.out` | Training loss curves and parity plots |
+| `prediction` / `test` | energy/force `_train.out`, stress or virial `_train.out` | Prediction-mode parity plots for the structures in `train.xyz` |
+| `train_test` | energy/force/stress `_train.out` and `_test.out` | Combined train/test parity plots |
+| `parity_density` | energy/force `_train.out`, stress or virial `_train.out` | Density-based parity plots for large datasets |
+| `train_density` | `loss.out`, energy/force `_train.out`, stress or virial `_train.out` | Training with density visualization |
 | `force_errors` | `force_train.out` | Force error analysis |
 | `restart` | `nep.restart` | NEP restart file visualization |
-| `charge` | `charge_train.out` | Charge distribution (qNEP) |
-| `born_charge` / `bec` | `bec_train.out`, `bec_test.out` | Born effective charges |
+| `charge` | `train.xyz`, `charge_train.out` | Charge distribution (qNEP) |
+| `born_charge` / `bec` | `bec_train.out`, optional `bec_test.out` | Born effective charges |
 | `dimer` | NEP model | Dimer interaction curves |
 | `des` | `descriptors.npy` | Descriptor PCA/UMAP visualization |
 | `lr` | `loss.out` (gnep) | Learning rate decay |
+| `net_force` | extxyz file | Net force distribution |
 
 ```bash
 # Training results
@@ -60,7 +61,7 @@ gpumdkit.sh -plt dimer Li Li nep.txt
 | `msd_all` | `msd.out` (all_groups) | MSD per species |
 | `sdc` | `msd.out` | Self-diffusion coefficient |
 | `msd_sdc` | `msd.out` | MSD and SDC combined |
-| `sigma` / `arrhenius_sigma` | `*K/` directories | Arrhenius ionic conductivity |
+| `sigma` / `arrhenius_sigma` | `thermo.out` and `msd.out` per `*K/`; first `*K/` also has `model.xyz` and optional `run.in` | Arrhenius ionic conductivity |
 | `D` / `arrhenius_d` | `*K/` directories | Arrhenius diffusivity |
 | `sigma_xyz` | `*K/` directories | Directional Arrhenius conductivity |
 | `D_xyz` | `*K/` directories | Directional Arrhenius diffusivity |
@@ -76,7 +77,9 @@ gpumdkit.sh -plt msd_sdc
 gpumdkit.sh -plt msd_all msd.out Li P S
 
 # Arrhenius plots (requires temperature-organized directories)
-# Directory structure: 300K/, 350K/, 400K/, ... each containing msd.out
+# Diffusivity: each temperature directory contains msd.out
+# Conductivity: each contains thermo.out and msd.out; the first also contains
+# model.xyz and may contain run.in for replicate detection
 gpumdkit.sh -plt arrhenius_sigma
 gpumdkit.sh -plt arrhenius_d
 
@@ -93,9 +96,9 @@ gpumdkit.sh -plt doas doas.out Li
 | `thermo3` | `thermo.out` | Third thermo style |
 | `rdf` | `rdf.out` | Radial distribution function |
 | `rdf_pmf` | `rdf.out` | RDF + potential of mean force |
+| `xrd` | `xrd.out` or specified XRD output | X-ray diffraction intensity |
 | `vac` | `sdc.out` | Velocity autocorrelation |
 | `cohesive` | `cohesive.out` | Cohesive energy curve |
-| `net_force` | extxyz file | Net force distribution |
 | `plane-grid` | `model.xyz`, `displacements.dat` | Displacement grid visualization |
 
 ```bash
@@ -107,15 +110,20 @@ gpumdkit.sh -plt rdf
 gpumdkit.sh -plt rdf 2              # Specific column
 gpumdkit.sh -plt rdf_pmf 300        # With PMF at 300K
 
+# XRD output: column 2 is angle, column 4 is intensity
+gpumdkit.sh -plt xrd
+gpumdkit.sh -plt xrd path/to/xrd.out save
+
 # Plane-grid displacement
 gpumdkit.sh -plt plane-grid -i model.xyz -d displacements.dat -e Pb Sr
 ```
 
-### Heat Transport (4 plot types)
+### Heat Transport (5 plot types)
 
 | Command | Input Files | Description |
 |---------|-------------|-------------|
 | `emd` | EMD outputs | EMD thermal conductivity |
+| `emd2` | EMD outputs | EMD thermal conductivity in all directions |
 | `nemd` | NEMD outputs | NEMD thermal transport |
 | `hnemd` | HNEMD outputs | HNEMD thermal transport |
 | `viscosity` | `viscosity.out` | Viscosity components |
@@ -123,6 +131,7 @@ gpumdkit.sh -plt plane-grid -i model.xyz -d displacements.dat -e Pb Sr
 ```bash
 # EMD thermal conductivity
 gpumdkit.sh -plt emd x
+gpumdkit.sh -plt emd2 save
 
 # NEMD thermal transport
 # Parameters: real_length scale_eff_size cutoff_freq
@@ -135,15 +144,26 @@ gpumdkit.sh -plt hnemd <scale_eff_size> <cutoff_freq> save
 gpumdkit.sh -plt viscosity save
 ```
 
-### Phonons (1 plot type)
+### Phonons (3 plot types)
 
 | Command | Input Files | Description |
 |---------|-------------|-------------|
 | `pdos` | `model.xyz`, `run.in`, `dos.out`, `mvac.out` | Phonon DOS and heat capacity |
+| `phonon` | `phonon_NEP.dat`, `QPOINTS` | Phonon band structure from calculator 414 |
+| `phonon_comp` | Two or more phonon data files, `QPOINTS` | Compare phonon band structures; labels come from filenames |
 
 ```bash
 gpumdkit.sh -plt pdos save
+gpumdkit.sh -plt phonon
+gpumdkit.sh -plt phonon phonon_NEP.dat QPOINTS save
+gpumdkit.sh -plt phonon_comp phonon_DFT.dat phonon_NEP.dat save
 ```
+
+`phonon_comp` accepts two or more compatible phonon data files. For conventional
+names such as `phonon_NEP.dat`, `phonon_DFT.dat`, and `phonon_MACE.dat`, the text
+after `phonon_` is used as the legend label. The plotters validate the phonon
+rows and the supplied `QPOINTS` path before drawing. Comparison files must use
+matching q-point distances, not only the same number of rows.
 
 ## Common Workflows
 
@@ -151,7 +171,7 @@ gpumdkit.sh -plt pdos save
 ```bash
 # 1. Plot training loss
 gpumdkit.sh -plt train
-# 2. Check test predictions
+# 2. Check prediction-mode results for train.xyz
 gpumdkit.sh -plt prediction
 # 3. Analyze force errors
 gpumdkit.sh -plt force_errors
@@ -195,13 +215,15 @@ gpumdkit.sh -plt nemd 10 1 60 save
 | `msd_sdc` | `msd_sdc.png` |
 | `thermo` | `thermo.png` |
 | `rdf` | `rdf.png` |
+| `xrd` | `xrd.png` |
 | `arrhenius_sigma` | `Arrhenius_sigma.png` |
 | `arrhenius_d` | `Arrhenius_D.png` |
 | `emd` | `emd.png` |
+| `emd2` | `emd2.png` |
 | `nemd` | `nemd.png` |
 | `hnemd` | `hnemd.png` |
 | `viscosity` | `viscosity.png` |
-| `cohesive` | `Cohesive.png` |
+| `cohesive` | `cohesive.png` |
 
 ## Dependencies
 

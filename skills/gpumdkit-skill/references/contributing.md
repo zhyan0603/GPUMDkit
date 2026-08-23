@@ -7,6 +7,7 @@ Read this reference before changing GPUMDkit code, scripts, CLI routing, documen
 - Project structure and routing
 - Adding interactive and CLI features
 - Python and shell conventions
+- Update bookkeeping and version/date policy
 - Maintainer decisions and rejected changes
 - Validation checklist
 
@@ -37,6 +38,7 @@ GPUMDkit/
 │   ├── tutorials/en/        # English tutorials
 │   ├── tutorials/zh/        # Chinese tutorials
 │   ├── mkdocs.yml           # MkDocs config
+│   ├── updates.info         # Recent feature and bug-fix records
 │   └── htmls/               # Generated HTML
 ```
 
@@ -52,6 +54,12 @@ GPUMDkit/
 2. **CLI mode**: `gpumdkit.sh -flag [args]` → routes via `case $1 in`
    - Each flag maps to a script in `Scripts/`
    - Help messages go in `help_info_table()` and `calculator_help_table()`
+
+## Update and Version Bookkeeping
+
+- When adding a feature or fixing a bug, update `docs/updates.info` in the same change. Add a concise entry to `NEW_FEATURES` or `BUG_FIXES`; keep the other list as `"None"` only when it has no entries.
+- If `gpumdkit.sh` is modified, update the date in its `VERSION="..."` declaration to the current date using `YYYY-MM-DD` format.
+- Preserve the existing version string. Do not change any version number in `gpumdkit.sh` or `docs/updates.info` unless the user explicitly requests a version update.
 
 ## Adding a New Interactive Mode Feature
 
@@ -279,6 +287,26 @@ if not os.path.isfile(input_file):
 - Output filenames should include enough context to avoid collisions (e.g., `filtered_Li_Li_1.8_2.0.xyz`, not just `filtered.xyz`)
 - Overwriting existing files without warning is accepted (project convention — this is a CLI toolkit, not interactive software)
 
+### Plot scripts and Gallery examples
+
+When adding a new plot script, follow the plotting rules in
+`references/plotting-style.md` and provide a representative example image in
+`docs/Gallery/`. Generate the Gallery image through a separate example-only
+command or compression step at 100 DPI so documentation assets stay small; do
+not lower the production plot settings to create the example.
+
+For the production script, use 150 DPI for the interactive `plt.show()` figure
+and a default `savefig()` DPI of at least 300. Add the plot usage and the
+Gallery image to both bilingual tutorial sources and the corresponding
+submodule README (for example, `Scripts/plt_scripts/README.md`).
+
+Documentation changes are opt-in during iterative development. Unless the user
+explicitly asks for documentation updates, do not modify tutorials, submodule
+README files, Gallery assets, or generate `docs/htmls/**` while refining code.
+When documentation is explicitly requested, update the relevant English and
+Chinese tutorial sources and the corresponding submodule README for every new
+user-visible feature, then rebuild the generated HTML as part of validation.
+
 ### Dependency notices
 
 If your script requires a heavy/special package (`NepTrain`, `calorine`, `dpdata`, `ovito`), add a notice:
@@ -474,7 +502,7 @@ These changes have been **explicitly rejected** by the project maintainer. Do no
 | Retrofit `if __name__ == "__main__":` into existing Python scripts | Scripts run standalone; do not churn working scripts just to add a guard |
 | Replace `from pylab import *` with explicit imports | Keep as-is |
 | Unify `-plt` "save" argument position | Different scripts have different arg counts; keep flexible |
-| Unify DPI (150 → 300) across plotting scripts | Keep per-script DPI settings |
+| Apply plot DPI policy to new or modified plots | Use 150 DPI for `plt.show()`, at least 300 DPI for production `savefig()`, and 100 DPI only for separate Gallery examples |
 | Change `exit` → `return` in workflow sourced scripts | Keep as-is |
 | Add `-filter_value` / `-filter_range` / `-get_volume` / `-re_atoms` to the help table | Intentionally undocumented |
 | Make interactive mode loop back to menu after one function | Keeps shots single-shot; designed this way |
@@ -483,7 +511,7 @@ These changes have been **explicitly rejected** by the project maintainer. Do no
 | Change MSD fitting range arbitrarily | Scientific choice; ask maintainer first |
 | Remove troubleshooting pages | Removed by maintainer's explicit request; do not re-add |
 | Add `des_compare` to CLI | Script exists but maintainer chose not to wire it |
-| Keep `__pycache__` after debugging | Must always `find . -type d -name __pycache__ -exec rm -rf {} +` |
+| Keep `__pycache__` after debugging | Prefer a non-writing syntax check; if a cache is created, remove the exact recorded cache path before handoff |
 | Add `-get_volume` / `-re_atoms` to completion.sh | Intentionally excluded from completion and help table |
 | Modify logic in plt_scripts | Unless explicitly requested, only cosmetic/formatting changes to plotting scripts |
 
@@ -518,16 +546,30 @@ python3 Scripts/path/to/script.py        # missing args must print usage + exit 
 Run only the checks relevant to the files changed; do not run every project check
 unconditionally. Always run the whitespace check.
 
+### Temporary test artifacts
+
+- Run smoke tests from an isolated temporary working directory so fixed-name
+  outputs such as `deepmd_data/`, plots, logs, and caches never appear in the
+  repository root.
+- Record every temporary path created by the validation. Remove its test
+  outputs, `MPLCONFIGDIR`, build directories, logs, and caches before handoff,
+  including after failed commands.
+- Resolve cleanup targets to explicit paths and confirm they belong to the
+  current work before deletion. Do not use broad globs or recursively delete a
+  shared temporary root.
+- Finish with a read-only inventory of the relevant temporary prefix and the
+  repository status to verify that no test artifacts remain.
+
 ```bash
 # Shell syntax (only when .sh files changed)
 bash -n gpumdkit.sh
 find src Scripts -name '*.sh' -exec bash -n {} +
 
-# Python syntax (only for changed Python files)
-python3 -m py_compile Scripts/path/to/your_script.py
+# Python syntax without creating __pycache__ (only for changed Python files)
+python3 -B -c 'from pathlib import Path; p=Path("Scripts/path/to/your_script.py"); compile(p.read_text(), str(p), "exec")'
 
-# Clean up __pycache__ after py_compile
-find . -type d -name "__pycache__" -exec rm -rf {} + 2>/dev/null
+# If another test creates a cache, remove only its recorded explicit path
+# rm -rf /exact/path/to/the/test-created/__pycache__
 
 # MkDocs build (only when MkDocs inputs changed; see below)
 mkdocs build -f docs/mkdocs.yml
@@ -562,8 +604,8 @@ coverage changes, update the matching file under
 
 ### When to Build MkDocs
 
-Run `mkdocs build -f docs/mkdocs.yml` only when a change affects input consumed by
-MkDocs, including:
+Run `mkdocs build -f docs/mkdocs.yml` only when the user has explicitly requested
+documentation updates and a change affects input consumed by MkDocs, including:
 
 - `docs/tutorials/**`
 - `docs/mkdocs.yml`

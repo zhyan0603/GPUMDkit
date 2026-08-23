@@ -57,6 +57,7 @@ The format conversion menu is:
 | cif2pos)  CIF to POSCAR        lmp2exyz)  LAMMPS to extxyz  |
 | cif2exyz) CIF to extxyz        traj2exyz) ASE traj to extxyz|
 | dp2xyz)   DeepMD to extxyz                                  |
+| xyz2dp)   extxyz to DeepMD npy                              |
 +-------------------------------------------------------------+
 | 000) Return to main menu                                    |
 +-------------------------------------------------------------+
@@ -86,6 +87,7 @@ Input the function number or converter keyword:
 | `lmp2exyz` | `lmp2exyz.py` | LAMMPS dump to extxyz | convert LAMMPS trajectory |
 | `traj2exyz` | `traj2exyz.py` | ASE traj to extxyz | convert ASE trajectory |
 | `dp2xyz` | `dp2xyz.py` | DeepMD npy to extxyz | convert DeepMD datasets for GPUMD/NEP workflows |
+| `xyz2dp` | `xyz2dp.py` | extxyz to DeepMD npy | prepare DeepMD datasets from labeled extxyz |
 
 ## Quick Command Reference
 
@@ -102,6 +104,7 @@ Input the function number or converter keyword:
 | CIF | extxyz | `gpumdkit.sh -cif2exyz input.cif model.xyz` |
 | ASE traj | extxyz | `gpumdkit.sh -traj2exyz input.traj output.xyz` |
 | DeepMD npy directory | extxyz | `gpumdkit.sh -dp2xyz database train.xyz` |
+| extxyz | DeepMD npy dataset | `gpumdkit.sh -xyz2dp` or direct Python invocation |
 | extxyz | clean extxyz | `gpumdkit.sh -clean_xyz input.xyz clean.xyz` |
 
 ## Understand input and output names
@@ -143,6 +146,22 @@ gpumdkit.sh -dp2xyz database train.xyz
 ```
 
 The input directory must contain DeepMD dataset files such as `type.raw`, `type_map.raw`, and `set.000/`. This command requires `dpdata` and `ase`.
+
+### Convert labeled extxyz to a DeepMD dataset
+
+Use the direct converter route to enter the input file and explicit DeepMD type-map order:
+
+```bash
+gpumdkit.sh -xyz2dp
+```
+
+The same conversion can be called directly with Python:
+
+```bash
+python3 ${GPUMDkit_path}/Scripts/format_conversion/xyz2dp.py train.xyz Li P S
+```
+
+The input should contain labeled extxyz energy and force data. The output is written under `deepmd_data/` in the current directory. This command requires `dpdata`.
 
 ### Convert VASP calculations to extxyz
 

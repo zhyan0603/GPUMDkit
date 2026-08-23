@@ -12,8 +12,22 @@ The analyzer scripts provide functionality for:
 - Composition analysis of multi-component systems
 - Time estimation for GPUMD and NEP calculations
 - Dataset quality checks and outlier detection
+- Atomic energy reference shifting for extxyz datasets
 
 Access analyzers through `gpumdkit.sh` using various flags or run scripts directly.
+
+### Energy reference shifting
+
+`align_energy_reference.py` opens an interactive interface for shifting the
+`energy=` values in a multi-frame extxyz file. It preserves atom lines and all
+other header fields in the output file.
+
+```bash
+gpumdkit.sh -shift_energy
+```
+
+The same tool is available from `5) Analyzer -> 509`. It supports reference-
+group alignment, zero atomic baseline alignment, and DFT-to-NEP alignment.
 
 ### Direct CLI helpers
 

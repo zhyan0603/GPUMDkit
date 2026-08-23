@@ -1414,6 +1414,17 @@
 </li>
         
           <li class="md-nav__item">
+  <a href="#plt_emd2py" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        plt_emd2.py
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#plt_nemdpy" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -1457,6 +1468,17 @@
     <span class="md-ellipsis">
       
         plt_rdf.py
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#plt_xrdpy" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        plt_xrd.py
       
     </span>
   </a>
@@ -1523,6 +1545,28 @@
   
     <nav class="md-nav" aria-label="声子">
       <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#plt_phononpy" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        plt_phonon.py
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#plt_phonon_comppy" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        plt_phonon_comp.py
+      
+    </span>
+  </a>
+  
+</li>
         
           <li class="md-nav__item">
   <a href="#plt_pdospy" class="md-nav__link">
@@ -2048,6 +2092,17 @@
 </li>
         
           <li class="md-nav__item">
+  <a href="#plt_emd2py" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        plt_emd2.py
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#plt_nemdpy" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -2091,6 +2146,17 @@
     <span class="md-ellipsis">
       
         plt_rdf.py
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#plt_xrdpy" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        plt_xrd.py
       
     </span>
   </a>
@@ -2157,6 +2223,28 @@
   
     <nav class="md-nav" aria-label="声子">
       <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#plt_phononpy" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        plt_phonon.py
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#plt_phonon_comppy" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        plt_phonon_comp.py
+      
+    </span>
+  </a>
+  
+</li>
         
           <li class="md-nav__item">
   <a href="#plt_pdospy" class="md-nav__link">
@@ -2282,7 +2370,7 @@
 <div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>+-----------------------------------------------------------------------------------------------+
 <a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>|                     GPUMDkit &lt;version&gt; PLOT &amp; VISUALIZATION TOOLS              |
 <a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>+-----------------------------------------------------------------------------------------------+
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>|  Usage: gpumdkit.sh -plt &lt;type&gt;                        Plot list: gpumdkit.sh -plt -h         |
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>|  Usage: gpumdkit.sh -plt &lt;type&gt;                        List: gpumdkit.sh -plt -h              |
 <a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>+-----------------------------------------------------------------------------------------------+
 <a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>|                                    NEP Training &amp; Evaluation                                  |
 <a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>+-----------------------------------------------------------------------------------------------+
@@ -2292,32 +2380,35 @@
 <a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>|  charge         - Charge distribution            born_charge    - Born effective charges      |
 <a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>|  dimer          - Dimer energy/force curve       force_errors   - Force errors                |
 <a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>|  des            - Descriptors                    lr             - Learning rate for gnep      |
-<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>+-----------------------------------------------------------------------------------------------+
-<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>|                                     Diffusion &amp; Transport                                     |
-<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>+-----------------------------------------------------------------------------------------------+
-<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>|  msd            - Mean square displacement       msd_conv       - MSD convergence             |
-<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a>|  msd_all        - MSD for all species            sdc            - Self diffusion coefficient  |
-<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a>|  msd_sdc        - MSD and SDC together           sigma          - Arrhenius ionic conductivity|
-<a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a>|  D              - Arrhenius diffusivity          sigma_xyz      - Directional Arrhenius sigma |
-<a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a>|  D_xyz          - Directional Arrhenius D                                                     |
-<a id="__codelineno-1-22" name="__codelineno-1-22" href="#__codelineno-1-22"></a>|  doas           - Density of atomistic states                                                 |
-<a id="__codelineno-1-23" name="__codelineno-1-23" href="#__codelineno-1-23"></a>+-----------------------------------------------------------------------------------------------+
-<a id="__codelineno-1-24" name="__codelineno-1-24" href="#__codelineno-1-24"></a>|                                    MD &amp; Structural Analysis                                   |
-<a id="__codelineno-1-25" name="__codelineno-1-25" href="#__codelineno-1-25"></a>+-----------------------------------------------------------------------------------------------+
-<a id="__codelineno-1-26" name="__codelineno-1-26" href="#__codelineno-1-26"></a>|  thermo         - thermo info in thermo.out      thermo2/3      - Thermo in different styles  |
-<a id="__codelineno-1-27" name="__codelineno-1-27" href="#__codelineno-1-27"></a>|  rdf            - Radial distribution function   rdf_pmf        - Potential of mean force     |
-<a id="__codelineno-1-28" name="__codelineno-1-28" href="#__codelineno-1-28"></a>|  vac            - Velocity autocorrelation       cohesive       - Cohesive energy curve       |
-<a id="__codelineno-1-29" name="__codelineno-1-29" href="#__codelineno-1-29"></a>|  net_force      - Net force distribution         plane-grid     - Displacement plane grid     |
-<a id="__codelineno-1-30" name="__codelineno-1-30" href="#__codelineno-1-30"></a>+-----------------------------------------------------------------------------------------------+
-<a id="__codelineno-1-31" name="__codelineno-1-31" href="#__codelineno-1-31"></a>|                                        Heat Transport                                         |
-<a id="__codelineno-1-32" name="__codelineno-1-32" href="#__codelineno-1-32"></a>+-----------------------------------------------------------------------------------------------+
-<a id="__codelineno-1-33" name="__codelineno-1-33" href="#__codelineno-1-33"></a>|  emd            - EMD results                    nemd           - NEMD results                |
-<a id="__codelineno-1-34" name="__codelineno-1-34" href="#__codelineno-1-34"></a>|  hnemd          - HNEMD results                  viscosity      - Viscosity                   |
-<a id="__codelineno-1-35" name="__codelineno-1-35" href="#__codelineno-1-35"></a>+-----------------------------------------------------------------------------------------------+
-<a id="__codelineno-1-36" name="__codelineno-1-36" href="#__codelineno-1-36"></a>|                                          Phonons                                              |
+<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>|  net_force      Plot net force distribution                                                   |
+<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>+-----------------------------------------------------------------------------------------------+
+<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>|                                     Diffusion &amp; Transport                                     |
+<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>+-----------------------------------------------------------------------------------------------+
+<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a>|  msd            - Mean square displacement       msd_conv       - MSD convergence             |
+<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a>|  msd_all        - MSD for all species            sdc            - Self diffusion coefficient  |
+<a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a>|  msd_sdc        - MSD and SDC together           sigma          - Arrhenius ionic conductivity|
+<a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a>|  D              - Arrhenius diffusivity          sigma_xyz      - Directional Arrhenius sigma |
+<a id="__codelineno-1-22" name="__codelineno-1-22" href="#__codelineno-1-22"></a>|  D_xyz          - Directional Arrhenius D                                                     |
+<a id="__codelineno-1-23" name="__codelineno-1-23" href="#__codelineno-1-23"></a>|  doas           - Density of atomistic states                                                 |
+<a id="__codelineno-1-24" name="__codelineno-1-24" href="#__codelineno-1-24"></a>+-----------------------------------------------------------------------------------------------+
+<a id="__codelineno-1-25" name="__codelineno-1-25" href="#__codelineno-1-25"></a>|                                    MD &amp; Structural Analysis                                   |
+<a id="__codelineno-1-26" name="__codelineno-1-26" href="#__codelineno-1-26"></a>+-----------------------------------------------------------------------------------------------+
+<a id="__codelineno-1-27" name="__codelineno-1-27" href="#__codelineno-1-27"></a>|  thermo         - thermo info in thermo.out      thermo2/3      - Thermo in different styles  |
+<a id="__codelineno-1-28" name="__codelineno-1-28" href="#__codelineno-1-28"></a>|  rdf            - Radial distribution function   rdf_pmf        - Potential of mean force     |
+<a id="__codelineno-1-29" name="__codelineno-1-29" href="#__codelineno-1-29"></a>|  vac            - Velocity autocorrelation       cohesive       - Cohesive energy curve       |
+<a id="__codelineno-1-30" name="__codelineno-1-30" href="#__codelineno-1-30"></a>|  xrd            - X-ray diffraction              plane-grid     - Displacement plane grid     |
+<a id="__codelineno-1-31" name="__codelineno-1-31" href="#__codelineno-1-31"></a>+-----------------------------------------------------------------------------------------------+
+<a id="__codelineno-1-32" name="__codelineno-1-32" href="#__codelineno-1-32"></a>|                                        Heat Transport                                         |
+<a id="__codelineno-1-33" name="__codelineno-1-33" href="#__codelineno-1-33"></a>+-----------------------------------------------------------------------------------------------+
+<a id="__codelineno-1-34" name="__codelineno-1-34" href="#__codelineno-1-34"></a>|  emd            - EMD results                    emd2           - EMD all directions          |
+<a id="__codelineno-1-35" name="__codelineno-1-35" href="#__codelineno-1-35"></a>|  nemd           - NEMD results                   hnemd          - HNEMD results               |
+<a id="__codelineno-1-36" name="__codelineno-1-36" href="#__codelineno-1-36"></a>|  viscosity      - Viscosity                                                                   |
 <a id="__codelineno-1-37" name="__codelineno-1-37" href="#__codelineno-1-37"></a>+-----------------------------------------------------------------------------------------------+
-<a id="__codelineno-1-38" name="__codelineno-1-38" href="#__codelineno-1-38"></a>|  pdos           - VAC and PDOS                                                                |
+<a id="__codelineno-1-38" name="__codelineno-1-38" href="#__codelineno-1-38"></a>|                                          Phonons                                              |
 <a id="__codelineno-1-39" name="__codelineno-1-39" href="#__codelineno-1-39"></a>+-----------------------------------------------------------------------------------------------+
+<a id="__codelineno-1-40" name="__codelineno-1-40" href="#__codelineno-1-40"></a>|  pdos           - VAC and PDOS                 phonon         - Phonon band structure         |
+<a id="__codelineno-1-41" name="__codelineno-1-41" href="#__codelineno-1-41"></a>|  phonon_comp    - Compare phonon band structures                                              |
+<a id="__codelineno-1-42" name="__codelineno-1-42" href="#__codelineno-1-42"></a>+-----------------------------------------------------------------------------------------------+
 </code></pre></div>
 <hr />
 <h2 id="_2">稳妥的绘图步骤</h2>
@@ -2343,9 +2434,9 @@
 <td>loss 趋势与能量/力 parity</td>
 </tr>
 <tr>
-<td><code>energy_test.out</code>、<code>force_test.out</code></td>
+<td>prediction 模式生成的 <code>energy_train.out</code>、<code>force_train.out</code></td>
 <td><code>gpumdkit.sh -plt prediction</code></td>
-<td>测试集上的泛化表现</td>
+<td><code>train.xyz</code> 中结构的 parity 结果</td>
 </tr>
 <tr>
 <td><code>thermo.out</code></td>
@@ -2361,6 +2452,11 @@
 <td><code>rdf.out</code></td>
 <td><code>gpumdkit.sh -plt rdf</code></td>
 <td>所选原子对列和峰位置</td>
+</tr>
+<tr>
+<td><code>xrd.out</code></td>
+<td><code>gpumdkit.sh -plt xrd</code></td>
+<td>第 2 列角度和第 4 列强度</td>
 </tr>
 </tbody>
 </table>
@@ -2378,7 +2474,8 @@
 应力项显示为 <code>N/A</code>。</p>
 <h3 id="plt_trainpy">plt_train.py</h3>
 <p>可视化 NEP 训练过程，包括 loss 曲线、RMSE 演化，以及能量/力/virial 的 DFT vs NEP parity plot。</p>
-<p><strong>输入文件：</strong> <code>loss.out</code>、<code>energy_train.out</code>、<code>force_train.out</code>、<code>virial_train.out</code></p>
+<p><strong>输入文件：</strong> <code>loss.out</code>、<code>energy_train.out</code>、<code>force_train.out</code>，以及优先读取的
+<code>stress_train.out</code> 或回退使用的 <code>virial_train.out</code></p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>gpumdkit.sh<span class="w"> </span>-plt<span class="w"> </span>train
 </code></pre></div>
 <div align="center">
@@ -2387,8 +2484,10 @@
 
 <hr />
 <h3 id="plt_predictionpy">plt_prediction.py</h3>
-<p>可视化测试集上的 NEP 预测结果。</p>
-<p><strong>输入文件：</strong> <code>energy_test.out</code>、<code>force_test.out</code>、<code>virial_test.out</code></p>
+<p>可视化 prediction 模式对 <code>train.xyz</code> 中结构生成的 NEP 预测结果。
+prediction 模式的 parity 数据仍写入以 <code>_train.out</code> 结尾的文件。</p>
+<p><strong>输入文件：</strong> <code>energy_train.out</code>、<code>force_train.out</code>，以及优先读取的
+<code>stress_train.out</code> 或回退使用的 <code>virial_train.out</code></p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>gpumdkit.sh<span class="w"> </span>-plt<span class="w"> </span>prediction
 <a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>gpumdkit.sh<span class="w"> </span>-plt<span class="w"> </span><span class="nb">test</span><span class="w">         </span><span class="c1"># 替代命令</span>
 </code></pre></div>
@@ -2399,7 +2498,8 @@
 <hr />
 <h3 id="plt_train_testpy">plt_train_test.py</h3>
 <p>将训练集和测试集的 parity plot 合并显示。</p>
-<p><strong>输入文件：</strong> <code>energy_train.out</code>、<code>force_train.out</code>、<code>virial_train.out</code>、<code>energy_test.out</code>、<code>force_test.out</code>、<code>virial_test.out</code></p>
+<p><strong>输入文件：</strong> <code>energy_train.out</code>、<code>force_train.out</code>、<code>stress_train.out</code>、
+<code>energy_test.out</code>、<code>force_test.out</code> 和 <code>stress_test.out</code></p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>gpumdkit.sh<span class="w"> </span>-plt<span class="w"> </span>train_test
 </code></pre></div>
 <div align="center">
@@ -2409,7 +2509,8 @@
 <hr />
 <h3 id="plt_parity_densitypy">plt_parity_density.py</h3>
 <p>生成基于密度的 parity plot，适用于大数据集（散点图过于密集时更易阅读）。</p>
-<p><strong>输入文件：</strong> <code>energy_train.out</code>、<code>force_train.out</code>、<code>virial_train.out</code></p>
+<p><strong>输入文件：</strong> <code>energy_train.out</code>、<code>force_train.out</code>，以及优先读取的
+<code>stress_train.out</code> 或回退使用的 <code>virial_train.out</code></p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>gpumdkit.sh<span class="w"> </span>-plt<span class="w"> </span>parity_density
 </code></pre></div>
 <div align="center">
@@ -2450,7 +2551,7 @@
 <hr />
 <h3 id="plt_chargepy">plt_charge.py</h3>
 <p>绘制 <code>qNEP</code> 模型的电荷分布。</p>
-<p><strong>输入文件：</strong> <code>charge_train.out</code></p>
+<p><strong>输入文件：</strong> <code>train.xyz</code> 和 <code>charge_train.out</code></p>
 <p><strong>重要提示：</strong> 确保训练集和电荷输出的原子排序一致。建议使用全 batch 训练或先运行预测步骤。</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a>gpumdkit.sh<span class="w"> </span>-plt<span class="w"> </span>charge
 </code></pre></div>
@@ -2461,7 +2562,7 @@
 <hr />
 <h3 id="plt_born_chargepy">plt_born_charge.py</h3>
 <p>为训练集和测试集创建 Born 有效电荷 (BEC) 的 parity plot。全零参考 BEC 的结构会被过滤。</p>
-<p><strong>输入文件：</strong> <code>bec_train.out</code>、<code>bec_test.out</code></p>
+<p><strong>输入文件：</strong> <code>bec_train.out</code>；可选 <code>bec_test.out</code></p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a>gpumdkit.sh<span class="w"> </span>-plt<span class="w"> </span>born_charge
 <a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a>gpumdkit.sh<span class="w"> </span>-plt<span class="w"> </span>bec<span class="w">          </span><span class="c1"># 替代命令</span>
 </code></pre></div>
@@ -2551,7 +2652,8 @@
 <hr />
 <h3 id="plt_arrhenius_sigmapy">plt_arrhenius_sigma.py</h3>
 <p>创建 Arrhenius 离子电导率图（ln(σ·T) vs 1000/T）。</p>
-<p><strong>输入文件：</strong> <code>*K/{model.xyz, run.in, thermo.out, msd.out}</code>（每个温度子目录）</p>
+<p><strong>输入文件：</strong> 每个 <code>*K/</code> 目录中的 <code>thermo.out</code> 和 <code>msd.out</code>；首个温度目录中的
+<code>model.xyz</code> 以及可选的 <code>run.in</code></p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-20-1" name="__codelineno-20-1" href="#__codelineno-20-1"></a>gpumdkit.sh<span class="w"> </span>-plt<span class="w"> </span>arrhenius_sigma
 <a id="__codelineno-20-2" name="__codelineno-20-2" href="#__codelineno-20-2"></a>gpumdkit.sh<span class="w"> </span>-plt<span class="w"> </span>sigma<span class="w">         </span><span class="c1"># 替代命令</span>
 </code></pre></div>
@@ -2568,6 +2670,21 @@
 </code></pre></div>
 <div align="center">
   <img src="../../Gallery/emd.png" alt="EMD thermal conductivity" width="70%" />
+</div>
+
+<hr />
+<h3 id="plt_emd2py">plt_emd2.py</h3>
+<p>在同一幅图中绘制 x、y、z 三个方向的热流关联函数和 EMD 总热导率。该功能使用与
+<code>plt_emd.py</code> 相同的 <code>run.in</code>、<code>hac.out</code> 和平均规则。</p>
+<p><strong>输入文件：</strong> GPUMD 的 EMD 输出文件</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-22-1" name="__codelineno-22-1" href="#__codelineno-22-1"></a>gpumdkit.sh<span class="w"> </span>-plt<span class="w"> </span>emd2<span class="w">             </span><span class="c1"># 显示全部方向结果</span>
+<a id="__codelineno-22-2" name="__codelineno-22-2" href="#__codelineno-22-2"></a>gpumdkit.sh<span class="w"> </span>-plt<span class="w"> </span>emd2<span class="w"> </span>save<span class="w">        </span><span class="c1"># 保存为 emd2.png</span>
+</code></pre></div>
+<p>HAC 图使用对数相关时间轴，同时在纵轴保留 HAC 的正负号。物理上为零的
+方向会显示为零曲线。输出的不确定度沿用旧版规则，即后半段窗口波动除以
+HAC 重复次数的平方根；它不是独立轨迹之间的标准误差。</p>
+<div align="center">
+  <img src="../../Gallery/emd2.png" alt="EMD thermal conductivity in all directions" width="90%" />
 </div>
 
 <hr />
@@ -2602,7 +2719,7 @@
 </tbody>
 </table>
 <p><strong>注意：</strong> 如果没有 SHC 数据，使用 <code>save</code> 时请将 <code>scale_eff_size</code> 和 <code>cutoff_freq</code> 设为任意占位数字。</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-22-1" name="__codelineno-22-1" href="#__codelineno-22-1"></a>gpumdkit.sh<span class="w"> </span>-plt<span class="w"> </span>nemd<span class="w"> </span><span class="o">[</span>real_length<span class="o">]</span><span class="w"> </span><span class="o">[</span>scale_eff_size<span class="o">]</span><span class="w"> </span><span class="o">[</span>cutoff_freq<span class="o">]</span><span class="w"> </span><span class="o">[</span>save<span class="o">]</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-23-1" name="__codelineno-23-1" href="#__codelineno-23-1"></a>gpumdkit.sh<span class="w"> </span>-plt<span class="w"> </span>nemd<span class="w"> </span><span class="o">[</span>real_length<span class="o">]</span><span class="w"> </span><span class="o">[</span>scale_eff_size<span class="o">]</span><span class="w"> </span><span class="o">[</span>cutoff_freq<span class="o">]</span><span class="w"> </span><span class="o">[</span>save<span class="o">]</span>
 </code></pre></div>
 <div align="center">
   <img src="../../Gallery/nemd.png" alt="NEMD results" width="70%" />
@@ -2636,7 +2753,7 @@
 </tbody>
 </table>
 <p><strong>注意：</strong> 如果没有 SHC 数据，使用 <code>save</code> 时请将 <code>scale_eff_size</code> 和 <code>cutoff_freq</code> 设为任意占位数字。</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-23-1" name="__codelineno-23-1" href="#__codelineno-23-1"></a>gpumdkit.sh<span class="w"> </span>-plt<span class="w"> </span>hnemd<span class="w"> </span><span class="o">[</span>scale_eff_size<span class="o">]</span><span class="w"> </span><span class="o">[</span>cutoff_freq<span class="o">]</span><span class="w"> </span><span class="o">[</span>save<span class="o">]</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-24-1" name="__codelineno-24-1" href="#__codelineno-24-1"></a>gpumdkit.sh<span class="w"> </span>-plt<span class="w"> </span>hnemd<span class="w"> </span><span class="o">[</span>scale_eff_size<span class="o">]</span><span class="w"> </span><span class="o">[</span>cutoff_freq<span class="o">]</span><span class="w"> </span><span class="o">[</span>save<span class="o">]</span>
 </code></pre></div>
 <div align="center">
   <img src="../../Gallery/hnemd.png" alt="HNEMD results" width="70%" />
@@ -2647,8 +2764,8 @@
 <h3 id="plt_rdfpy">plt_rdf.py</h3>
 <p>绘制径向分布函数 (RDF)，展示原子对关联。</p>
 <p><strong>输入文件：</strong> <code>rdf.out</code></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-24-1" name="__codelineno-24-1" href="#__codelineno-24-1"></a>gpumdkit.sh<span class="w"> </span>-plt<span class="w"> </span>rdf<span class="w">               </span><span class="c1"># 显示所有 RDF 对</span>
-<a id="__codelineno-24-2" name="__codelineno-24-2" href="#__codelineno-24-2"></a>gpumdkit.sh<span class="w"> </span>-plt<span class="w"> </span>rdf<span class="w"> </span>&lt;column&gt;<span class="w">      </span><span class="c1"># 显示特定对</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-25-1" name="__codelineno-25-1" href="#__codelineno-25-1"></a>gpumdkit.sh<span class="w"> </span>-plt<span class="w"> </span>rdf<span class="w">               </span><span class="c1"># 显示所有 RDF 对</span>
+<a id="__codelineno-25-2" name="__codelineno-25-2" href="#__codelineno-25-2"></a>gpumdkit.sh<span class="w"> </span>-plt<span class="w"> </span>rdf<span class="w"> </span>&lt;column&gt;<span class="w">      </span><span class="c1"># 显示特定对</span>
 </code></pre></div>
 <p><strong>完整 RDF 输出：</strong></p>
 <div align="center">
@@ -2661,30 +2778,49 @@
 </div>
 
 <hr />
+<h3 id="plt_xrdpy">plt_xrd.py</h3>
+<p>绘制计算器 413 生成的 X 射线衍射（XRD）输出。</p>
+<p><strong>输入文件：</strong> 默认读取 <code>xrd.out</code>；也可以将其他 XRD 输出文件路径作为第一个参数传入。</p>
+<p>绘图脚本直接读取数值数据的第 2 列（索引 1）作为角度，第 4 列（索引 3）作为强度。
+以 <code>#</code> 开头的说明行会被忽略，不进行平滑或重新归一化。</p>
+<p>绘图脚本会检查计算器 413 写出的文件头和四列数据格式。如果格式无法识别，
+程序会停止并提示使用 <code>gpumdkit.sh -&gt; 4 -&gt; 413</code> 重新生成 XRD 文件。</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-26-1" name="__codelineno-26-1" href="#__codelineno-26-1"></a>gpumdkit.sh<span class="w"> </span>-plt<span class="w"> </span>xrd
+<a id="__codelineno-26-2" name="__codelineno-26-2" href="#__codelineno-26-2"></a>gpumdkit.sh<span class="w"> </span>-plt<span class="w"> </span>xrd<span class="w"> </span>path/to/xrd.out<span class="w"> </span>save
+</code></pre></div>
+<p>使用 <code>save</code> 时，图片保存为当前工作目录下的 <code>xrd.png</code>。</p>
+<p><strong>示例：</strong></p>
+<div align="center">
+  <img src="../../Gallery/xrd.png" alt="XRD 绘图示例" width="75%" />
+</div>
+
+<p>Gallery 中的示例图使用独立流程以 100 DPI 生成；正式脚本显示时使用 150 DPI，
+保存图片时使用不低于 300 DPI。</p>
+<hr />
 <h3 id="plt_rdf_pmfpy">plt_rdf_pmf.py</h3>
 <p>绘制 RDF 与平均力势 (PMF) 的组合图。</p>
 <p><strong>输入文件：</strong> <code>rdf.out</code></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-25-1" name="__codelineno-25-1" href="#__codelineno-25-1"></a>gpumdkit.sh<span class="w"> </span>-plt<span class="w"> </span>rdf_pmf
+<div class="highlight"><pre><span></span><code><a id="__codelineno-27-1" name="__codelineno-27-1" href="#__codelineno-27-1"></a>gpumdkit.sh<span class="w"> </span>-plt<span class="w"> </span>rdf_pmf
 </code></pre></div>
 <hr />
 <h3 id="plt_vacpy">plt_vac.py</h3>
 <p>绘制速度自相关函数 (VAC)。可用于分析声子性质和原子动力学。</p>
 <p><strong>输入文件：</strong> <code>sdc.out</code>（绘图脚本会从该文件中读取 VAC 相关列）</p>
 <p><strong>输出：</strong> 交互式图表或 <code>vac.png</code>（使用 <code>save</code> 选项时）</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-26-1" name="__codelineno-26-1" href="#__codelineno-26-1"></a>gpumdkit.sh<span class="w"> </span>-plt<span class="w"> </span>vac
+<div class="highlight"><pre><span></span><code><a id="__codelineno-28-1" name="__codelineno-28-1" href="#__codelineno-28-1"></a>gpumdkit.sh<span class="w"> </span>-plt<span class="w"> </span>vac
 </code></pre></div>
 <hr />
 <h3 id="plt_cohesivepy">plt_cohesive.py</h3>
 <p>从 <code>cohesive.out</code> 绘制内聚能曲线。可用于分析晶格稳定性和平衡晶格常数。</p>
 <p><strong>输入文件：</strong> <code>cohesive.out</code>（各向同性缩放因子 vs 内聚能）</p>
 <p><strong>输出：</strong> 交互式图表或 <code>cohesive.png</code>（使用 <code>save</code> 选项时）</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-27-1" name="__codelineno-27-1" href="#__codelineno-27-1"></a>gpumdkit.sh<span class="w"> </span>-plt<span class="w"> </span>cohesive
+<div class="highlight"><pre><span></span><code><a id="__codelineno-29-1" name="__codelineno-29-1" href="#__codelineno-29-1"></a>gpumdkit.sh<span class="w"> </span>-plt<span class="w"> </span>cohesive
 </code></pre></div>
 <hr />
 <h3 id="plt_net_forcepy">plt_net_force.py</h3>
 <p>绘制结构上的净力分布，可用于识别问题构型。</p>
 <p><strong>输入文件：</strong> <code>train.xyz</code>（extxyz 格式）</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-28-1" name="__codelineno-28-1" href="#__codelineno-28-1"></a>gpumdkit.sh<span class="w"> </span>-plt<span class="w"> </span>net_force<span class="w"> </span>train.xyz
+<div class="highlight"><pre><span></span><code><a id="__codelineno-30-1" name="__codelineno-30-1" href="#__codelineno-30-1"></a>gpumdkit.sh<span class="w"> </span>-plt<span class="w"> </span>net_force<span class="w"> </span>train.xyz
 </code></pre></div>
 <p><strong>参考文献：</strong> <a href="https://arxiv.org/abs/2510.19774">arXiv:2510.19774</a></p>
 <div align="center">
@@ -2693,11 +2829,51 @@
 
 <hr />
 <h2 id="_7">声子</h2>
+<h3 id="plt_phononpy">plt_phonon.py</h3>
+<p>绘制由计算器 <code>414</code> 生成的声子谱。绘图脚本会直接读取 line-mode 格式的
+<code>QPOINTS</code> 文件中的 Q 点路径和高对称点标签，因此不需要在脚本中重复写死
+路径。</p>
+<p><strong>输入文件：</strong> <code>phonon_NEP.dat</code> 和 <code>QPOINTS</code></p>
+<p>计算步骤使用交互模式：</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-31-1" name="__codelineno-31-1" href="#__codelineno-31-1"></a>gpumdkit.sh -&gt; 4) Calculators -&gt; 414) Calc phonon band structure
+</code></pre></div>
+<p>Python 页面会依次询问原胞结构（默认 <code>PRIMCELL.vasp</code>）、NEP 模型（默认
+<code>nep.txt</code>）、路径文件（默认 <code>QPOINTS</code>）、超胞、位移幅度和输出文件名
+（默认 <code>phonon_NEP.dat</code>）。该功能除了 GPUMDkit/Calorine 的常规依赖外，还
+需要安装 <code>phonopy</code>。</p>
+<p>绘图命令：</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-32-1" name="__codelineno-32-1" href="#__codelineno-32-1"></a>gpumdkit.sh<span class="w"> </span>-plt<span class="w"> </span>phonon
+<a id="__codelineno-32-2" name="__codelineno-32-2" href="#__codelineno-32-2"></a>gpumdkit.sh<span class="w"> </span>-plt<span class="w"> </span>phonon<span class="w"> </span>phonon_NEP.dat<span class="w"> </span>QPOINTS<span class="w"> </span>save
+</code></pre></div>
+<p>不同的 Q 点路径段会分别绘制，避免在路径断点处产生伪连接。类似 <code>S|S₀</code> 的
+边界标签会合并在同一个横坐标位置；标签默认保持同一高度，只有相邻标签拥挤
+时才通过横向对齐尽量分开。</p>
+<div align="center">
+  <img src="../../Gallery/phonon.png" alt="声子谱" width="70%" />
+</div>
+
+<hr />
+<h3 id="plt_phonon_comppy">plt_phonon_comp.py</h3>
+<p>比较两个或多个声子谱文件。图例会从文件名自动读取：<code>phonon_NEP.dat</code> 显示
+为 <code>NEP</code>，<code>phonon_DFT.dat</code> 显示为 <code>DFT</code>，<code>phonon_MACE.dat</code> 显示为 <code>MACE</code>。</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-33-1" name="__codelineno-33-1" href="#__codelineno-33-1"></a>gpumdkit.sh<span class="w"> </span>-plt<span class="w"> </span>phonon_comp<span class="w"> </span>phonon_DFT.dat<span class="w"> </span>phonon_NEP.dat<span class="w"> </span>save
+<a id="__codelineno-33-2" name="__codelineno-33-2" href="#__codelineno-33-2"></a>gpumdkit.sh<span class="w"> </span>-plt<span class="w"> </span>phonon_comp<span class="w"> </span>phonon_DFT.dat<span class="w"> </span>phonon_NEP.dat<span class="w"> </span>phonon_MACE.dat<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-33-3" name="__codelineno-33-3" href="#__codelineno-33-3"></a><span class="w">    </span>--qpoints<span class="w"> </span>QPOINTS<span class="w"> </span>save
+</code></pre></div>
+<p>默认读取 <code>QPOINTS</code> 作为路径文件；如果路径文件名称不同，可以使用
+<code>--qpoints FILE</code> 指定。两个文件比较时，DFT 使用灰色实线，NEP 使用砖红色
+虚线；增加其他模型时会自动使用其他配色和线型。所有对比文件的 q 点距离
+必须一致；只有行数相同并不足以保证路径一致。</p>
+<div align="center">
+  <img src="../../Gallery/phonon_comp.png" alt="声子谱对比" width="70%" />
+</div>
+
+<hr />
 <h3 id="plt_pdospy">plt_pdos.py</h3>
 <p>计算并绘制归一化的速度自相关函数 (VAC)、声子态密度 (PDOS) 和热容 (Cv)。</p>
 <p><strong>输入文件：</strong> <code>model.xyz</code>、<code>run.in</code>、<code>dos.out</code>、<code>mvac.out</code></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-29-1" name="__codelineno-29-1" href="#__codelineno-29-1"></a>gpumdkit.sh<span class="w"> </span>-plt<span class="w"> </span>pdos
-<a id="__codelineno-29-2" name="__codelineno-29-2" href="#__codelineno-29-2"></a>gpumdkit.sh<span class="w"> </span>-plt<span class="w"> </span>pdos<span class="w"> </span>save
+<div class="highlight"><pre><span></span><code><a id="__codelineno-34-1" name="__codelineno-34-1" href="#__codelineno-34-1"></a>gpumdkit.sh<span class="w"> </span>-plt<span class="w"> </span>pdos
+<a id="__codelineno-34-2" name="__codelineno-34-2" href="#__codelineno-34-2"></a>gpumdkit.sh<span class="w"> </span>-plt<span class="w"> </span>pdos<span class="w"> </span>save
 </code></pre></div>
 <div align="center">
   <img src="../../Gallery/vac_pdos.png" alt="VAC and PDOS" width="70%" />
@@ -2716,12 +2892,12 @@
 <p><strong>方法：</strong>
 - <code>pca</code> — 主成分分析
 - <code>umap</code> — 统一流形逼近与投影</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-30-1" name="__codelineno-30-1" href="#__codelineno-30-1"></a><span class="c1"># 先计算描述符</span>
-<a id="__codelineno-30-2" name="__codelineno-30-2" href="#__codelineno-30-2"></a>gpumdkit.sh<span class="w"> </span>-calc<span class="w"> </span>des<span class="w"> </span>train.xyz<span class="w"> </span>descriptors.npy<span class="w"> </span>nep.txt<span class="w"> </span>Li
-<a id="__codelineno-30-3" name="__codelineno-30-3" href="#__codelineno-30-3"></a>
-<a id="__codelineno-30-4" name="__codelineno-30-4" href="#__codelineno-30-4"></a><span class="c1"># 再可视化</span>
-<a id="__codelineno-30-5" name="__codelineno-30-5" href="#__codelineno-30-5"></a>gpumdkit.sh<span class="w"> </span>-plt<span class="w"> </span>des<span class="w"> </span>pca
-<a id="__codelineno-30-6" name="__codelineno-30-6" href="#__codelineno-30-6"></a>gpumdkit.sh<span class="w"> </span>-plt<span class="w"> </span>des<span class="w"> </span>umap
+<div class="highlight"><pre><span></span><code><a id="__codelineno-35-1" name="__codelineno-35-1" href="#__codelineno-35-1"></a><span class="c1"># 先计算描述符</span>
+<a id="__codelineno-35-2" name="__codelineno-35-2" href="#__codelineno-35-2"></a>gpumdkit.sh<span class="w"> </span>-calc<span class="w"> </span>des<span class="w"> </span>train.xyz<span class="w"> </span>descriptors.npy<span class="w"> </span>nep.txt<span class="w"> </span>Li
+<a id="__codelineno-35-3" name="__codelineno-35-3" href="#__codelineno-35-3"></a>
+<a id="__codelineno-35-4" name="__codelineno-35-4" href="#__codelineno-35-4"></a><span class="c1"># 再可视化</span>
+<a id="__codelineno-35-5" name="__codelineno-35-5" href="#__codelineno-35-5"></a>gpumdkit.sh<span class="w"> </span>-plt<span class="w"> </span>des<span class="w"> </span>pca
+<a id="__codelineno-35-6" name="__codelineno-35-6" href="#__codelineno-35-6"></a>gpumdkit.sh<span class="w"> </span>-plt<span class="w"> </span>des<span class="w"> </span>umap
 </code></pre></div>
 <div align="center">
   <img src="../../Gallery/des_umap.png" alt="UMAP descriptor visualization" width="52%" />
@@ -2731,8 +2907,8 @@
 <h3 id="plt_dimerpy">plt_dimer.py</h3>
 <p>绘制二聚体相互作用曲线。将两个原子放入立方盒子（30 Å），使用 NEP 模型计算势能和力随距离的变化。</p>
 <p><strong>输入文件：</strong> <code>nep.txt</code></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-31-1" name="__codelineno-31-1" href="#__codelineno-31-1"></a>gpumdkit.sh<span class="w"> </span>-plt<span class="w"> </span>dimer<span class="w"> </span>&lt;element1&gt;<span class="w"> </span>&lt;element2&gt;<span class="w"> </span>&lt;nep_model&gt;
-<a id="__codelineno-31-2" name="__codelineno-31-2" href="#__codelineno-31-2"></a>gpumdkit.sh<span class="w"> </span>-plt<span class="w"> </span>dimer<span class="w"> </span>Li<span class="w"> </span>Li<span class="w"> </span>nep.txt
+<div class="highlight"><pre><span></span><code><a id="__codelineno-36-1" name="__codelineno-36-1" href="#__codelineno-36-1"></a>gpumdkit.sh<span class="w"> </span>-plt<span class="w"> </span>dimer<span class="w"> </span>&lt;element1&gt;<span class="w"> </span>&lt;element2&gt;<span class="w"> </span>&lt;nep_model&gt;
+<a id="__codelineno-36-2" name="__codelineno-36-2" href="#__codelineno-36-2"></a>gpumdkit.sh<span class="w"> </span>-plt<span class="w"> </span>dimer<span class="w"> </span>Li<span class="w"> </span>Li<span class="w"> </span>nep.txt
 </code></pre></div>
 <div align="center">
   <img src="../../Gallery/dimer_nep.png" alt="Dimer NEP curve" width="45%" />
@@ -2744,8 +2920,8 @@
 <h3 id="plt_doaspy">plt_doas.py</h3>
 <p>绘制 <a href="https://doi.org/10.1002/anie.202215544">Wang et al.</a> 提出的原子态密度 (DOAS)。</p>
 <p><strong>输入文件：</strong> <code>doas.out</code>（由 <code>gpumdkit.sh -calc doas</code> 计算）</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-32-1" name="__codelineno-32-1" href="#__codelineno-32-1"></a>gpumdkit.sh<span class="w"> </span>-plt<span class="w"> </span>doas<span class="w"> </span>&lt;doas.out&gt;<span class="w"> </span>&lt;species&gt;
-<a id="__codelineno-32-2" name="__codelineno-32-2" href="#__codelineno-32-2"></a>gpumdkit.sh<span class="w"> </span>-plt<span class="w"> </span>doas<span class="w"> </span>doas.out<span class="w"> </span>Li
+<div class="highlight"><pre><span></span><code><a id="__codelineno-37-1" name="__codelineno-37-1" href="#__codelineno-37-1"></a>gpumdkit.sh<span class="w"> </span>-plt<span class="w"> </span>doas<span class="w"> </span>&lt;doas.out&gt;<span class="w"> </span>&lt;species&gt;
+<a id="__codelineno-37-2" name="__codelineno-37-2" href="#__codelineno-37-2"></a>gpumdkit.sh<span class="w"> </span>-plt<span class="w"> </span>doas<span class="w"> </span>doas.out<span class="w"> </span>Li
 </code></pre></div>
 <div align="center">
   <img src="../../Gallery/doas.png" alt="Density of atomistic states" width="52%" />
@@ -2755,16 +2931,16 @@
 <h2 id="plane-grid">极性材料的 Plane-Grid 绘图</h2>
 <p>此工作流将位移或极化数据映射到网格上，并绘制选定平面的轮廓。详细用法和实际案例请参见 <strong><a href="%E6%9E%81%E6%80%A7%E6%9D%90%E6%96%99%E5%88%86%E6%9E%90.html">极性材料分析</a></strong>。</p>
 <p><strong>依赖：</strong></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-33-1" name="__codelineno-33-1" href="#__codelineno-33-1"></a>pip3<span class="w"> </span>install<span class="w"> </span>git+https://github.com/MoseyQAQ/ferrodispcalc.git
+<div class="highlight"><pre><span></span><code><a id="__codelineno-38-1" name="__codelineno-38-1" href="#__codelineno-38-1"></a>pip3<span class="w"> </span>install<span class="w"> </span>git+https://github.com/MoseyQAQ/ferrodispcalc.git
 </code></pre></div>
 <p><strong>典型前置步骤：</strong></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-34-1" name="__codelineno-34-1" href="#__codelineno-34-1"></a>gpumdkit.sh<span class="w"> </span>-calc<span class="w"> </span>nlist<span class="w"> </span>-i<span class="w"> </span>model.xyz<span class="w"> </span>-c<span class="w"> </span><span class="m">4</span><span class="w"> </span>-n<span class="w"> </span><span class="m">12</span><span class="w"> </span>-C<span class="w"> </span>Pb<span class="w"> </span>Sr<span class="w"> </span>-E<span class="w"> </span>O
-<a id="__codelineno-34-2" name="__codelineno-34-2" href="#__codelineno-34-2"></a>gpumdkit.sh<span class="w"> </span>-calc<span class="w"> </span>disp<span class="w"> </span>-i<span class="w"> </span>movie.xyz<span class="w"> </span>-n<span class="w"> </span>nl-Pb_Sr-O.dat<span class="w"> </span>-o<span class="w"> </span>displacements.dat
-<a id="__codelineno-34-3" name="__codelineno-34-3" href="#__codelineno-34-3"></a>gpumdkit.sh<span class="w"> </span>-calc<span class="w"> </span>avg-struct<span class="w"> </span>-i<span class="w"> </span>movie.xyz<span class="w"> </span>-l<span class="w"> </span><span class="m">0</span>.2<span class="w"> </span>-o<span class="w"> </span>averaged_structure.xyz
+<div class="highlight"><pre><span></span><code><a id="__codelineno-39-1" name="__codelineno-39-1" href="#__codelineno-39-1"></a>gpumdkit.sh<span class="w"> </span>-calc<span class="w"> </span>nlist<span class="w"> </span>-i<span class="w"> </span>model.xyz<span class="w"> </span>-c<span class="w"> </span><span class="m">4</span><span class="w"> </span>-n<span class="w"> </span><span class="m">12</span><span class="w"> </span>-C<span class="w"> </span>Pb<span class="w"> </span>Sr<span class="w"> </span>-E<span class="w"> </span>O
+<a id="__codelineno-39-2" name="__codelineno-39-2" href="#__codelineno-39-2"></a>gpumdkit.sh<span class="w"> </span>-calc<span class="w"> </span>disp<span class="w"> </span>-i<span class="w"> </span>movie.xyz<span class="w"> </span>-n<span class="w"> </span>nl-Pb_Sr-O.dat<span class="w"> </span>-o<span class="w"> </span>displacements.dat
+<a id="__codelineno-39-3" name="__codelineno-39-3" href="#__codelineno-39-3"></a>gpumdkit.sh<span class="w"> </span>-calc<span class="w"> </span>avg-struct<span class="w"> </span>-i<span class="w"> </span>movie.xyz<span class="w"> </span>-l<span class="w"> </span><span class="m">0</span>.2<span class="w"> </span>-o<span class="w"> </span>averaged_structure.xyz
 </code></pre></div>
 <p><strong>使用方法：</strong></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-35-1" name="__codelineno-35-1" href="#__codelineno-35-1"></a>gpumdkit.sh<span class="w"> </span>-plt<span class="w"> </span>plane-grid<span class="w"> </span>-i<span class="w"> </span>averaged_structure.xyz<span class="w"> </span>-d<span class="w"> </span>displacements.dat<span class="w"> </span>-e<span class="w"> </span>Pb<span class="w"> </span>Sr
-<a id="__codelineno-35-2" name="__codelineno-35-2" href="#__codelineno-35-2"></a>gpumdkit.sh<span class="w"> </span>-plt<span class="w"> </span>plane-grid<span class="w"> </span>-i<span class="w"> </span>averaged_structure.xyz<span class="w"> </span>-d<span class="w"> </span>displacements.dat<span class="w"> </span>-e<span class="w"> </span>Pb<span class="w"> </span>Sr<span class="w"> </span>--select-xy<span class="w"> </span><span class="m">0</span><span class="w"> </span><span class="m">1</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-40-1" name="__codelineno-40-1" href="#__codelineno-40-1"></a>gpumdkit.sh<span class="w"> </span>-plt<span class="w"> </span>plane-grid<span class="w"> </span>-i<span class="w"> </span>averaged_structure.xyz<span class="w"> </span>-d<span class="w"> </span>displacements.dat<span class="w"> </span>-e<span class="w"> </span>Pb<span class="w"> </span>Sr
+<a id="__codelineno-40-2" name="__codelineno-40-2" href="#__codelineno-40-2"></a>gpumdkit.sh<span class="w"> </span>-plt<span class="w"> </span>plane-grid<span class="w"> </span>-i<span class="w"> </span>averaged_structure.xyz<span class="w"> </span>-d<span class="w"> </span>displacements.dat<span class="w"> </span>-e<span class="w"> </span>Pb<span class="w"> </span>Sr<span class="w"> </span>--select-xy<span class="w"> </span><span class="m">0</span><span class="w"> </span><span class="m">1</span>
 </code></pre></div>
 <hr />
 <h2 id="_8">快速参考表</h2>
@@ -2784,8 +2960,8 @@
 </tr>
 <tr>
 <td><code>prediction</code> / <code>test</code></td>
-<td><code>*_test.out</code></td>
-<td>NEP 预测结果</td>
+<td><code>*_train.out</code></td>
+<td><code>train.xyz</code> 的 prediction 模式 parity 结果</td>
 </tr>
 <tr>
 <td><code>train_test</code></td>
@@ -2814,12 +2990,12 @@
 </tr>
 <tr>
 <td><code>charge</code></td>
-<td><code>charge_train.out</code></td>
+<td><code>train.xyz</code>, <code>charge_train.out</code></td>
 <td>电荷分布</td>
 </tr>
 <tr>
 <td><code>born_charge</code> / <code>bec</code></td>
-<td><code>bec_train.out</code>, <code>bec_test.out</code></td>
+<td><code>bec_train.out</code>, 可选 <code>bec_test.out</code></td>
 <td>Born 有效电荷</td>
 </tr>
 <tr>
@@ -2854,7 +3030,7 @@
 </tr>
 <tr>
 <td><code>arrhenius_sigma</code> / <code>sigma</code></td>
-<td><code>*K/{model.xyz, run.in, thermo.out, msd.out}</code></td>
+<td><code>*K/{thermo.out, msd.out}</code>，以及首个温度目录中的 <code>model.xyz</code> 和可选 <code>run.in</code></td>
 <td>Arrhenius 离子电导率</td>
 </tr>
 <tr>
@@ -2866,6 +3042,11 @@
 <td><code>rdf_pmf</code></td>
 <td><code>rdf.out</code></td>
 <td>RDF + 平均力势</td>
+</tr>
+<tr>
+<td><code>xrd</code></td>
+<td><code>xrd.out</code></td>
+<td>XRD 强度曲线</td>
 </tr>
 <tr>
 <td><code>vac</code></td>
@@ -2905,7 +3086,12 @@
 <tr>
 <td><code>emd</code></td>
 <td>EMD 输出</td>
-<td>EMD 热导率</td>
+<td>单个方向的 EMD 热导率</td>
+</tr>
+<tr>
+<td><code>emd2</code></td>
+<td>EMD 输出</td>
+<td>全部方向的 EMD 热导率</td>
 </tr>
 <tr>
 <td><code>nemd</code></td>

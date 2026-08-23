@@ -109,7 +109,7 @@ There are two options, <u>*interactive mode*</u> and <u>*command-line mode*</u>
              | |_| |  __/| |_| | |  | | |_| |   <| | |_
               \____|_|    \___/|_|  |_|____/|_|\_\_|\__|
     
-              GPUMDkit Version 1.5.6 (dev) (2026-07-10)
+              GPUMDkit Version 1.5.7 (2026-08-23)
         Core Developer: Zihan YAN (yanzihan@westlake.edu.cn)
      Main Contributors: Denan LI, Xin WU, Zhoulin LIU & Chen HUA
     
@@ -139,7 +139,7 @@ the help information:
 
 ```
 +-------------------------------------------------------------------------------------------------------+
-|                          GPUMDkit 1.5.6 (dev) (2026-07-10) Command Help                               |
+|                          GPUMDkit 1.5.7 (2026-08-23)       Command Help                               |
 +-------------------------------------------------------------------------------------------------------+
 |                                          MAIN FUNCTIONS                                               |
 +-------------------------------------------------------------------------------------------------------+
@@ -159,6 +159,7 @@ the help information:
 | -addgroup     Add group labels                | -addweight         Add structure weight in extxyz     |
 | -clean_xyz    Clean extra info in extxyz      | -get_frame         Extract specific frame             |
 | -frame_range  Extract frames by range         | -dp2xyz            DeepMD npy -> extxyz               |
+| -xyz2dp       extxyz -> DeepMD npy            |                                                       |
 +-------------------------------------------------------------------------------------------------------+
 |                                            ANALYSIS                                                   |
 +-------------------------------------------------------------------------------------------------------+
@@ -168,8 +169,9 @@ the help information:
 | -filter_dist  Filter by min_dist (no PBC)     | -filter_dist_pbc   Filter by min_dist (PBC)           |
 | -pda          Probability density analysis    | -filter_box        Filter by box-edge length          |
 | -pynep        Deprecated PyNEP sampling       | -nep_modifier      Modify NEP model interactively     |
+| -shift_energy  Interactive energy shift       |                                                       |
 +-------------------------------------------------------------------------------------------------------+
-| Python option help: gpumdkit.sh -<option> -h    Plot list: gpumdkit.sh -plt -h                     |
+| Python option help: gpumdkit.sh -<option> -h    Plot list: gpumdkit.sh -plt -h                        |
 +-------------------------------------------------------------------------------------------------------+
 ```
 
@@ -183,7 +185,7 @@ the help information:
 
 ```
  +-----------------------------------------------------------------------------------------------+
- |                     GPUMDkit 1.5.6 (dev) (2026-07-10) PLOT & VISUALIZATION TOOLS              |
+ |                     GPUMDkit 1.5.7 (2026-08-23)       PLOT & VISUALIZATION TOOLS              |
  +-----------------------------------------------------------------------------------------------+
  |  Usage: gpumdkit.sh -plt <type>                        List: gpumdkit.sh -plt -h              |
  +-----------------------------------------------------------------------------------------------+
@@ -195,6 +197,7 @@ the help information:
  |  charge         - Charge distribution            born_charge    - Born effective charges      |
  |  dimer          - Dimer energy/force curve       force_errors   - Force errors                |
  |  des            - Descriptors                    lr             - Learning rate for gnep      |
+ |  net_force      Plot net force distribution                                                   |
  +-----------------------------------------------------------------------------------------------+
  |                                     Diffusion & Transport                                     |
  +-----------------------------------------------------------------------------------------------+
@@ -203,23 +206,25 @@ the help information:
  |  msd_sdc        - MSD and SDC together           sigma          - Arrhenius ionic conductivity|
  |  D              - Arrhenius diffusivity          sigma_xyz      - Directional Arrhenius sigma |
  |  D_xyz          - Directional Arrhenius D                                                     |
+ |  doas           - Density of atomistic states                                                 |
  +-----------------------------------------------------------------------------------------------+
  |                                    MD & Structural Analysis                                   |
  +-----------------------------------------------------------------------------------------------+
  |  thermo         - thermo info in thermo.out      thermo2/3      - Thermo in different styles  |
  |  rdf            - Radial distribution function   rdf_pmf        - Potential of mean force     |
  |  vac            - Velocity autocorrelation       cohesive       - Cohesive energy curve       |
- |  net_force      - Net force distribution         plane-grid     - Displacement plane grid     |
- |  doas           - Density of atomistic states                                                 |
+ |  xrd            - X-ray diffraction              plane-grid     - Displacement plane grid     |
  +-----------------------------------------------------------------------------------------------+
  |                                        Heat Transport                                         |
  +-----------------------------------------------------------------------------------------------+
- |  emd            - EMD results                    nemd           - NEMD results                |
- |  hnemd          - HNEMD results                  viscosity      - Viscosity                   |
+ |  emd            - EMD results                    emd2           - EMD all directions          |
+ |  nemd           - NEMD results                   hnemd          - HNEMD results               |
+ |  viscosity      - Viscosity                                                                   |
  +-----------------------------------------------------------------------------------------------+
  |                                          Phonons                                              |
  +-----------------------------------------------------------------------------------------------+
- |  pdos           - VAC and PDOS                                                                |
+ |  pdos           - VAC and PDOS                 phonon         - Phonon band structure         |
+ |  phonon_comp    - Compare phonon band structures                                              |
  +-----------------------------------------------------------------------------------------------+
 ```
 
@@ -245,16 +250,16 @@ gpumdkit.sh -plt train
     <img src="./docs/Gallery/train.png" alt="msd" width="75%" />
 </div>
 
-##### Example 5: Plot the parity plots
+##### Example 5: Plot prediction-mode parity results
 
-To visualize the parity plots:
+To visualize the prediction-mode parity results for structures in `train.xyz`:
 
 ```
 gpumdkit.sh -plt test
 ```
 
 <div align="center">
-    <img src="./docs/Gallery/prediction.png" alt="msd" width="95%" />
+    <img src="./docs/Gallery/prediction.png" alt="NEP prediction-mode parity results" width="95%" />
 </div>
 
 ##### Example 6: Plot thermo evolution
@@ -272,6 +277,25 @@ You can also save images as PNG if your device doesn't support visualization:
 ```
 gpumdkit.sh -plt thermo save
 ```
+
+##### Example 7: Plot phonon band structures
+
+After calculating phonons through `gpumdkit.sh -> 4) Calculators -> 414) Calc
+phonon band structure`, plot the result using the `QPOINTS` path definition:
+
+```bash
+gpumdkit.sh -plt phonon phonon_NEP.dat QPOINTS save
+gpumdkit.sh -plt phonon_comp phonon_DFT.dat phonon_NEP.dat save
+```
+
+Comparison labels are read from filenames such as `phonon_NEP.dat` and
+`phonon_DFT.dat`. Two or more phonon files can be supplied to
+`phonon_comp`; use `--qpoints FILE` when the path file is not named `QPOINTS`.
+
+<div align="center">
+  <img src="./docs/Gallery/phonon.png" alt="Phonon band structure" width="48%" />
+  <img src="./docs/Gallery/phonon_comp.png" alt="Phonon band comparison" width="48%" />
+</div>
 
 Refer to our [documentation](https://gpumdkit.cn/) for more detailed examples and command options.
 

@@ -23,18 +23,19 @@ gpumdkit.sh -plt -h                  # 列出绘图类型
 
 | 命令 | 输入文件 | 描述 |
 |---------|-------------|-------------|
-| `train` | `loss.out`、`*_train.out` | 训练损失曲线和对比图 |
-| `prediction` / `test` | `*_test.out` | 测试集对比图 |
-| `train_test` | `*_train.out`、`*_test.out` | 合并训练/测试对比图 |
-| `parity_density` | `*_train.out` | 大数据集的密度对比图 |
-| `train_density` | `loss.out`、`*_train.out` | 带密度可视化的训练 |
+| `train` | `loss.out`、能量/力 `_train.out`、应力或 virial `_train.out` | 训练损失曲线和对比图 |
+| `prediction` / `test` | 能量/力 `_train.out`、应力或 virial `_train.out` | `train.xyz` 中结构的 prediction 模式对比图 |
+| `train_test` | 能量/力/应力的 `_train.out` 和 `_test.out` | 合并训练/测试对比图 |
+| `parity_density` | 能量/力 `_train.out`、应力或 virial `_train.out` | 大数据集的密度对比图 |
+| `train_density` | `loss.out`、能量/力 `_train.out`、应力或 virial `_train.out` | 带密度可视化的训练 |
 | `force_errors` | `force_train.out` | 力误差分析 |
 | `restart` | `nep.restart` | NEP 重启文件可视化 |
-| `charge` | `charge_train.out` | 电荷分布（qNEP） |
-| `born_charge` / `bec` | `bec_train.out`、`bec_test.out` | Born 有效电荷 |
+| `charge` | `train.xyz`、`charge_train.out` | 电荷分布（qNEP） |
+| `born_charge` / `bec` | `bec_train.out`、可选的 `bec_test.out` | Born 有效电荷 |
 | `dimer` | NEP 模型 | 二聚体相互作用曲线 |
 | `des` | `descriptors.npy` | 描述符 PCA/UMAP 可视化 |
 | `lr` | `loss.out`（gnep） | 学习率衰减 |
+| `net_force` | extxyz 文件 | 净力分布 |
 
 ```bash
 # 训练结果
@@ -60,7 +61,7 @@ gpumdkit.sh -plt dimer Li Li nep.txt
 | `msd_all` | `msd.out`（all_groups） | 各物种的 MSD |
 | `sdc` | `msd.out` | 自扩散系数 |
 | `msd_sdc` | `msd.out` | MSD 和 SDC 合并 |
-| `sigma` / `arrhenius_sigma` | `*K/` 目录 | Arrhenius 离子电导率 |
+| `sigma` / `arrhenius_sigma` | 每个 `*K/` 中的 `thermo.out` 和 `msd.out`；首个 `*K/` 还需 `model.xyz`，`run.in` 可选 | Arrhenius 离子电导率 |
 | `D` / `arrhenius_d` | `*K/` 目录 | Arrhenius 扩散系数 |
 | `sigma_xyz` | `*K/` 目录 | 方向性 Arrhenius 电导率 |
 | `D_xyz` | `*K/` 目录 | 方向性 Arrhenius 扩散系数 |
@@ -76,7 +77,9 @@ gpumdkit.sh -plt msd_sdc
 gpumdkit.sh -plt msd_all msd.out Li P S
 
 # Arrhenius 绘图（需要按温度组织的目录）
-# 目录结构：300K/、350K/、400K/、...，每个包含 msd.out
+# 扩散系数：每个温度目录包含 msd.out
+# 电导率：每个目录包含 thermo.out 和 msd.out；首个目录还包含 model.xyz，
+# 并可用 run.in 检测 replicate
 gpumdkit.sh -plt arrhenius_sigma
 gpumdkit.sh -plt arrhenius_d
 
@@ -93,9 +96,9 @@ gpumdkit.sh -plt doas doas.out Li
 | `thermo3` | `thermo.out` | 第三种热力学样式 |
 | `rdf` | `rdf.out` | 径向分布函数 |
 | `rdf_pmf` | `rdf.out` | RDF + 平均力势 |
+| `xrd` | `xrd.out` 或指定的 XRD 输出 | XRD 强度曲线 |
 | `vac` | `sdc.out` | 速度自相关 |
 | `cohesive` | `cohesive.out` | 内聚能曲线 |
-| `net_force` | extxyz 文件 | 净力分布 |
 | `plane-grid` | `model.xyz`、`displacements.dat` | 位移网格可视化 |
 
 ```bash
@@ -107,15 +110,20 @@ gpumdkit.sh -plt rdf
 gpumdkit.sh -plt rdf 2              # 特定列
 gpumdkit.sh -plt rdf_pmf 300        # 300K 下的 PMF
 
+# XRD 输出：第 2 列是角度，第 4 列是强度
+gpumdkit.sh -plt xrd
+gpumdkit.sh -plt xrd path/to/xrd.out save
+
 # 平面网格位移
 gpumdkit.sh -plt plane-grid -i model.xyz -d displacements.dat -e Pb Sr
 ```
 
-### 热输运（4 种绘图类型）
+### 热输运（5 种绘图类型）
 
 | 命令 | 输入文件 | 描述 |
 |---------|-------------|-------------|
 | `emd` | EMD 输出 | EMD 热导率 |
+| `emd2` | EMD 输出 | 全部方向的 EMD 热导率 |
 | `nemd` | NEMD 输出 | NEMD 热输运 |
 | `hnemd` | HNEMD 输出 | HNEMD 热输运 |
 | `viscosity` | `viscosity.out` | 粘度分量 |
@@ -123,6 +131,7 @@ gpumdkit.sh -plt plane-grid -i model.xyz -d displacements.dat -e Pb Sr
 ```bash
 # EMD 热导率
 gpumdkit.sh -plt emd x
+gpumdkit.sh -plt emd2 save
 
 # NEMD 热输运
 # 参数：real_length scale_eff_size cutoff_freq
@@ -135,15 +144,25 @@ gpumdkit.sh -plt hnemd <scale_eff_size> <cutoff_freq> save
 gpumdkit.sh -plt viscosity save
 ```
 
-### 声子（1 种绘图类型）
+### 声子（3 种绘图类型）
 
 | 命令 | 输入文件 | 描述 |
 |---------|-------------|-------------|
 | `pdos` | `model.xyz`、`run.in`、`dos.out`、`mvac.out` | 声子态密度和热容 |
+| `phonon` | `phonon_NEP.dat`、`QPOINTS` | 绘制计算器 414 生成的声子谱 |
+| `phonon_comp` | 两个或更多声子数据文件、`QPOINTS` | 比较声子谱，图例从文件名读取 |
 
 ```bash
 gpumdkit.sh -plt pdos save
+gpumdkit.sh -plt phonon
+gpumdkit.sh -plt phonon phonon_NEP.dat QPOINTS save
+gpumdkit.sh -plt phonon_comp phonon_DFT.dat phonon_NEP.dat save
 ```
+
+`phonon_comp` 接受两个或更多兼容的声子数据文件。对于
+`phonon_NEP.dat`、`phonon_DFT.dat`、`phonon_MACE.dat` 等常规命名，图例使用
+`phonon_` 后面的文本。绘图脚本会在绘图前检查声子数据行和提供的 `QPOINTS`
+路径。比较文件必须具有一致的 q 点距离，而不仅是相同的行数。
 
 ## 常用工作流
 
@@ -151,7 +170,7 @@ gpumdkit.sh -plt pdos save
 ```bash
 # 1. 绘制训练损失
 gpumdkit.sh -plt train
-# 2. 检查测试预测
+# 2. 检查 train.xyz 的 prediction 模式结果
 gpumdkit.sh -plt prediction
 # 3. 分析力误差
 gpumdkit.sh -plt force_errors
@@ -195,13 +214,15 @@ gpumdkit.sh -plt nemd 10 1 60 save
 | `msd_sdc` | `msd_sdc.png` |
 | `thermo` | `thermo.png` |
 | `rdf` | `rdf.png` |
+| `xrd` | `xrd.png` |
 | `arrhenius_sigma` | `Arrhenius_sigma.png` |
 | `arrhenius_d` | `Arrhenius_D.png` |
 | `emd` | `emd.png` |
+| `emd2` | `emd2.png` |
 | `nemd` | `nemd.png` |
 | `hnemd` | `hnemd.png` |
 | `viscosity` | `viscosity.png` |
-| `cohesive` | `Cohesive.png` |
+| `cohesive` | `cohesive.png` |
 
 ## 依赖
 

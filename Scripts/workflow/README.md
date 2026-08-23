@@ -1,6 +1,6 @@
 <div align="center">
   <h1>🔧 Workflow Scripts</h1>
-    <p style="text-align: justify;">This directory contains automation scripts for high-throughput computational workflows, particularly for NEP model development and active learning cycles.</p>
+    <p style="text-align: justify;">This directory contains preparation tools for high-throughput SCF and MD workflows.</p>
 </div>
 
 ## Overview
@@ -9,7 +9,7 @@ Workflow scripts automate repetitive tasks in computational materials research:
 
 - **SCF batch preprocessing**: Set up VASP/CP2K single-point energy calculations
 - **MD sampling**: Prepare molecular dynamics simulations with GPUMD/LAMMPS
-- **Active learning**: Iterative NEP model improvement workflows
+- **Active learning support**: Reusable SCF/MD preparation steps for a manually reviewed iteration
 
 ---
 
@@ -73,33 +73,15 @@ This entry prepares LAMMPS MD sampling folders. The input-file selection rules a
 After running, put `lmprun.in` and `nep.txt` into the generated `md/` directory. The sample folders link `lammps.data`, `lmprun.in`, and `nep.txt`.
 
 
-### workflow_active_learning_dev.sh
+### Manual active-learning support
 
-Implements automated active learning cycles for iterative NEP model improvement.
+For current active-learning work, use entries 301-303 as preparation steps in a
+manually reviewed MD -> filtering -> NepTrain FPS -> DFT -> validation cycle.
+Review every generated directory, and submit external calculations only after
+explicit approval.
 
-**Purpose:** Automates the active learning pipeline:
-
-1. Generate candidate structures (MD sampling)
-2. Evaluate with current NEP model
-3. Select uncertain structures
-4. Run DFT calculations
-5. Add to training set
-6. Retrain NEP model
-
-**Status:** Development version - **under active development**
-
-**Documentation:** See detailed tutorial in [docs/tutorials/](../../docs/tutorials/)
-
-### Development active-learning templates: read before running
-
-`workflow_active_learning_dev.sh` and
-`workflow_active_learning_dev_multielement.sh` are scheduler-oriented development
-templates, not one-command examples. They can create directories, move inputs,
-submit jobs, and wait for those jobs to finish. Before using either file, make a
-copy outside the repository and review the scheduler directives, executable
-paths, input-file requirements, selection method, and all scientific thresholds
-for your own system. Do not run the bundled values unchanged as a production
-workflow.
+The staged workflow and validation gates are documented in the English and
+Chinese active-learning tutorials and in the bilingual GPUMDkit skills.
 
 ---
 

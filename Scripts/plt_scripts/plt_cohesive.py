@@ -12,11 +12,11 @@ Purpose:    Plot cohesive energy curve from GPUMD cohesive.out: isotropic
 Usage:      gpumdkit.sh -plt cohesive [save]
             python plt_cohesive.py [save]
 Arguments:
-  save      Save the plot as 'Cohesive.png' instead of displaying it
+  save      Save the plot as 'cohesive.png' instead of displaying it
 Output:
-  Cohesive.png  (if save is used)
+  cohesive.png  (if save is used)
 Author:     Qilin Guo (guoqilin@buaa.edu.cn), Zihan YAN (yanzihan@westlake.edu.cn)
-Last-modified: 2026-05-16
+Last-modified: 2026-08-23
 =============================================================================
 """
 

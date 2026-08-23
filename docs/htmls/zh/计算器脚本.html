@@ -1108,6 +1108,28 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#x-xrd" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        X 射线衍射（XRD）
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_3" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        声子谱
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#nep" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -1163,7 +1185,7 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#_3" class="md-nav__link">
+  <a href="#_4" class="md-nav__link">
     <span class="md-ellipsis">
       
         铁电和极性材料工具
@@ -1415,6 +1437,28 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#x-xrd" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        X 射线衍射（XRD）
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_3" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        声子谱
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#nep" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -1470,7 +1514,7 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#_3" class="md-nav__link">
+  <a href="#_4" class="md-nav__link">
     <span class="md-ellipsis">
       
         铁电和极性材料工具
@@ -1509,11 +1553,12 @@
 <h2 id="_1">功能概览</h2>
 <p>计算器模块大致可以分为三类：</p>
 <ul>
-<li><strong>轨迹性质：</strong> 从 GPUMD 或 extxyz 轨迹计算 MSD、离子电导率等时间相关性质；</li>
+<li><strong>轨迹性质：</strong> 从 GPUMD 或 extxyz 轨迹计算 MSD、离子电导率等时间相关性质，并从 extxyz 轨迹计算 X 射线衍射；</li>
+<li><strong>声子性质：</strong> 使用原胞、NEP 模型和 <code>QPOINTS</code> 路径计算力常数和声子谱；</li>
 <li><strong>NEP 辅助计算：</strong> 使用 NEP 模型预测能量/力/应力、提取描述符、计算 DOAS、进行 NEB 或结构优化；</li>
 <li><strong>极性材料分析：</strong> 为钙钛矿和极性材料构建近邻列表、计算局域位移、平均结构、八面体倾转和局域极化。</li>
 </ul>
-<p>如果你还不熟悉某个脚本，建议先用交互模式查看输入提示；如果已经知道参数，则可以直接使用 <code>gpumdkit.sh -calc ...</code> 调用。</p>
+<p>如果你还不熟悉某个脚本，建议先用交互模式查看输入提示；如果已经知道参数，可以直接使用 <code>gpumdkit.sh -calc ...</code> 调用支持 CLI 的计算器。XRD 和声子计算均只保留交互模式。</p>
 <table>
 <thead>
 <tr>
@@ -1532,6 +1577,16 @@
 <td>MSD</td>
 <td><code>gpumdkit.sh -calc msd &lt;trajectory.xyz&gt; &lt;element&gt; &lt;dt_fs&gt;</code></td>
 <td>extxyz 轨迹</td>
+</tr>
+<tr>
+<td>X 射线衍射</td>
+<td><code>4 → 413</code>（仅交互模式）</td>
+<td>带有 <code>Lattice</code>/<code>pbc</code> 的 extxyz 轨迹</td>
+</tr>
+<tr>
+<td>声子谱</td>
+<td><code>4 → 414</code>（仅交互模式）</td>
+<td><code>PRIMCELL.vasp</code>、<code>nep.txt</code>、<code>QPOINTS</code></td>
 </tr>
 <tr>
 <td>NEP 预测</td>
@@ -1624,10 +1679,12 @@
 <a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a>| 410) Calc polarization for ABO3                          |
 <a id="__codelineno-2-14" name="__codelineno-2-14" href="#__codelineno-2-14"></a>| 411) Minimize structure by nep                           |
 <a id="__codelineno-2-15" name="__codelineno-2-15" href="#__codelineno-2-15"></a>| 412) Calc mean square displacement (MSD) from trajectory |
-<a id="__codelineno-2-16" name="__codelineno-2-16" href="#__codelineno-2-16"></a>+----------------------------------------------------------+
-<a id="__codelineno-2-17" name="__codelineno-2-17" href="#__codelineno-2-17"></a>| 000) Return to the main menu                             |
+<a id="__codelineno-2-16" name="__codelineno-2-16" href="#__codelineno-2-16"></a>| 413) Calc XRD from extxyz trajectory                     |
+<a id="__codelineno-2-17" name="__codelineno-2-17" href="#__codelineno-2-17"></a>| 414) Calc phonon band structure                          |
 <a id="__codelineno-2-18" name="__codelineno-2-18" href="#__codelineno-2-18"></a>+----------------------------------------------------------+
-<a id="__codelineno-2-19" name="__codelineno-2-19" href="#__codelineno-2-19"></a>Input the function number:
+<a id="__codelineno-2-19" name="__codelineno-2-19" href="#__codelineno-2-19"></a>| 000) Return to the main menu                             |
+<a id="__codelineno-2-20" name="__codelineno-2-20" href="#__codelineno-2-20"></a>+----------------------------------------------------------+
+<a id="__codelineno-2-21" name="__codelineno-2-21" href="#__codelineno-2-21"></a>Input the function number:
 </code></pre></div>
 <h2 id="_2">离子电导率</h2>
 <p><code>calc_ion_conductivity.py</code> 从 <code>msd.out</code> 计算离子扩散系数和离子电导率。</p>
@@ -1766,19 +1823,86 @@
   <img src="../../Gallery/sdc.png" alt="SDC plot" width="45%" />
 </div>
 
+<h2 id="x-xrd">X 射线衍射（XRD）</h2>
+<p><code>calc_xrd.py</code> 从 extxyz 轨迹计算并平均与 LAMMPS 兼容的 XRD 强度。该功能
+只保留交互式入口，不提供 CLI 参数接口。</p>
+<p>在菜单中选择 <code>4) Calculators</code>，再选择 <code>413) Calc XRD from extxyz
+trajectory</code>。Python 交互页面依次询问：</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a>Input extended XYZ trajectory
+<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a>Output XRD file
+<a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a>X-ray wavelength (Angstrom)
+<a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a>2theta range (degrees; min max)
+<a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a>Number of bins in this 2theta range
+<a id="__codelineno-10-6" name="__codelineno-10-6" href="#__codelineno-10-6"></a>Elements to include (all or comma-separated) [all]
+<a id="__codelineno-10-7" name="__codelineno-10-7" href="#__codelineno-10-7"></a>CPU workers (0 means automatic) [0]
+</code></pre></div>
+<p>bins 始终覆盖选定的 <code>2theta</code> 区间。例如，选择 <code>10 60</code> 和 <code>500</code> 个 bins，
+表示将 10 到 60 度均匀划分为 500 个区间，不再单独设置输出 bin 范围。</p>
+<p>元素选择输入 <code>all</code> 可包含全部原子，也可以输入 <code>Li</code> 或 <code>Li,Cl</code> 等元素符号；
+元素匹配不区分大小写。默认使用输入轨迹中的 <code>Lattice</code> 和 <code>pbc</code>、标准
+LAMMPS 散射因子以及 Lorentz-polarization 因子。当前支持正交晶胞；非正交
+晶胞会被拒绝，因为该计算器使用当前 LAMMPS 兼容的 reciprocal mesh 约定。</p>
+<p>输出文件包含元数据表头，随后是四列数据：</p>
+<table>
+<thead>
+<tr>
+<th>列</th>
+<th>含义</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Bin</code></td>
+<td>从 1 开始的直方图 bin 序号</td>
+</tr>
+<tr>
+<td><code>Coord</code></td>
+<td>选定 <code>2theta</code> 区间内 bin 的中心，单位为度</td>
+</tr>
+<tr>
+<td><code>Count</code></td>
+<td>平均 XRD 强度</td>
+</tr>
+<tr>
+<td><code>Count/Total</code></td>
+<td>用选定区间总强度归一化后的强度</td>
+</tr>
+</tbody>
+</table>
+<p>为提高速度，脚本只读取一次轨迹；晶胞不变时复用 reciprocal mesh；同时按
+元素分组计算，并支持按顺序归并的多 worker 线程。这些优化不会改变原子选择、
+散射公式或 <code>2theta</code> 分箱定义。</p>
+<h2 id="_3">声子谱</h2>
+<p><code>calc_phonon.py</code> 使用 NEP 模型计算力常数，并沿 <code>QPOINTS</code> 中定义的路径计算
+声子谱。该功能只通过交互模式使用：</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a>gpumdkit.sh -&gt; 4) Calculators -&gt; 414) Calc phonon band structure
+</code></pre></div>
+<p>Python 页面会依次询问：</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a>Primitive cell structure [PRIMCELL.vasp]
+<a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a>NEP model [nep.txt]
+<a id="__codelineno-12-3" name="__codelineno-12-3" href="#__codelineno-12-3"></a>QPOINTS file [QPOINTS]
+<a id="__codelineno-12-4" name="__codelineno-12-4" href="#__codelineno-12-4"></a>Supercell dimensions [1 1 1]
+<a id="__codelineno-12-5" name="__codelineno-12-5" href="#__codelineno-12-5"></a>Displacement distance [0.015]
+<a id="__codelineno-12-6" name="__codelineno-12-6" href="#__codelineno-12-6"></a>Output phonon file [phonon_NEP.dat]
+</code></pre></div>
+<p><code>QPOINTS</code> 必须使用 line-mode 的起点/终点成对格式。脚本从第二行读取每段
+Q 点数，生成的输出行随后由 <code>plt_phonon.py</code> 和 <code>plt_phonon_comp.py</code> 使用。
+运行前请安装 <code>phonopy</code>：</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a>pip<span class="w"> </span>install<span class="w"> </span>phonopy
+</code></pre></div>
 <h2 id="nep">NEP 预测性质</h2>
 <p><code>calc_properties_with_nep.py</code> 使用训练好的 NEP 模型计算能量、力和应力。</p>
 <p><strong>依赖：</strong> <code>calorine</code></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a>pip<span class="w"> </span>install<span class="w"> </span>calorine
+<div class="highlight"><pre><span></span><code><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a>pip<span class="w"> </span>install<span class="w"> </span>calorine
 </code></pre></div>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a>gpumdkit.sh<span class="w"> </span>-calc<span class="w"> </span>nep<span class="w"> </span>structures.xyz<span class="w"> </span>predictions.xyz<span class="w"> </span>nep.txt
+<div class="highlight"><pre><span></span><code><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a>gpumdkit.sh<span class="w"> </span>-calc<span class="w"> </span>nep<span class="w"> </span>structures.xyz<span class="w"> </span>predictions.xyz<span class="w"> </span>nep.txt
 </code></pre></div>
 <p>使用此功能可以用训练好的 NEP 模型进行预测。建议在使用前先验证模型在目标结构上的预测质量，再将输出作为后续分析或筛选依据。</p>
 <p><strong>提示：</strong> 预测前可以清理 extxyz 元数据：</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a>gpumdkit.sh<span class="w"> </span>-clean_xyz<span class="w"> </span>train.xyz<span class="w"> </span>clean_train.xyz
+<div class="highlight"><pre><span></span><code><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a>gpumdkit.sh<span class="w"> </span>-clean_xyz<span class="w"> </span>train.xyz<span class="w"> </span>clean_train.xyz
 </code></pre></div>
 <h2 id="nep_1">NEP 描述符</h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a>gpumdkit.sh<span class="w"> </span>-calc<span class="w"> </span>des<span class="w"> </span>train.xyz<span class="w"> </span>descriptors.npy<span class="w"> </span>nep.txt<span class="w"> </span>Li
+<div class="highlight"><pre><span></span><code><a id="__codelineno-17-1" name="__codelineno-17-1" href="#__codelineno-17-1"></a>gpumdkit.sh<span class="w"> </span>-calc<span class="w"> </span>des<span class="w"> </span>train.xyz<span class="w"> </span>descriptors.npy<span class="w"> </span>nep.txt<span class="w"> </span>Li
 </code></pre></div>
 <p>用途包括：</p>
 <ul>
@@ -1787,8 +1911,8 @@
 <li>判断新数据是否扩展了描述符空间。</li>
 </ul>
 <p>绘图：</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a>gpumdkit.sh<span class="w"> </span>-plt<span class="w"> </span>des<span class="w"> </span>pca
-<a id="__codelineno-14-2" name="__codelineno-14-2" href="#__codelineno-14-2"></a>gpumdkit.sh<span class="w"> </span>-plt<span class="w"> </span>des<span class="w"> </span>umap
+<div class="highlight"><pre><span></span><code><a id="__codelineno-18-1" name="__codelineno-18-1" href="#__codelineno-18-1"></a>gpumdkit.sh<span class="w"> </span>-plt<span class="w"> </span>des<span class="w"> </span>pca
+<a id="__codelineno-18-2" name="__codelineno-18-2" href="#__codelineno-18-2"></a>gpumdkit.sh<span class="w"> </span>-plt<span class="w"> </span>des<span class="w"> </span>umap
 </code></pre></div>
 <div align="center">
   <img src="../../Gallery/des_umap.png" alt="Descriptor UMAP" width="52%" />
@@ -1796,8 +1920,8 @@
 
 <h2 id="doas">DOAS</h2>
 <p><code>calc_doas.py</code> 用于计算 <a href="https://doi.org/10.1002/anie.202215544">Wang et al.</a> 提出的 density of atomistic states。</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a>gpumdkit.sh<span class="w"> </span>-calc<span class="w"> </span>doas<span class="w"> </span>structures.xyz<span class="w"> </span>nep.txt<span class="w"> </span>doas.out
-<a id="__codelineno-15-2" name="__codelineno-15-2" href="#__codelineno-15-2"></a>gpumdkit.sh<span class="w"> </span>-plt<span class="w"> </span>doas<span class="w"> </span>doas.out<span class="w"> </span>Li
+<div class="highlight"><pre><span></span><code><a id="__codelineno-19-1" name="__codelineno-19-1" href="#__codelineno-19-1"></a>gpumdkit.sh<span class="w"> </span>-calc<span class="w"> </span>doas<span class="w"> </span>structures.xyz<span class="w"> </span>nep.txt<span class="w"> </span>doas.out
+<a id="__codelineno-19-2" name="__codelineno-19-2" href="#__codelineno-19-2"></a>gpumdkit.sh<span class="w"> </span>-plt<span class="w"> </span>doas<span class="w"> </span>doas.out<span class="w"> </span>Li
 </code></pre></div>
 <p>脚本会：</p>
 <ol>
@@ -1814,7 +1938,7 @@
 
 <h2 id="neb">NEB 和结构优化</h2>
 <p>NEB：</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a>gpumdkit.sh<span class="w"> </span>-calc<span class="w"> </span>neb<span class="w"> </span>initial.xyz<span class="w"> </span>final.xyz<span class="w"> </span><span class="m">9</span><span class="w"> </span>nep.txt
+<div class="highlight"><pre><span></span><code><a id="__codelineno-20-1" name="__codelineno-20-1" href="#__codelineno-20-1"></a>gpumdkit.sh<span class="w"> </span>-calc<span class="w"> </span>neb<span class="w"> </span>initial.xyz<span class="w"> </span>final.xyz<span class="w"> </span><span class="m">9</span><span class="w"> </span>nep.txt
 </code></pre></div>
 <p>这会使用 NEP 模型运行含 <code>9</code> 个中间像的 NEB 计算。运行过程中脚本会询问原子固定方式：</p>
 <ul>
@@ -1825,9 +1949,9 @@
 </ul>
 <p>结构优化（通过 <code>calorine</code>）：</p>
 <p><strong>依赖：</strong> <code>calorine</code></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-17-1" name="__codelineno-17-1" href="#__codelineno-17-1"></a>pip<span class="w"> </span>install<span class="w"> </span>calorine
+<div class="highlight"><pre><span></span><code><a id="__codelineno-21-1" name="__codelineno-21-1" href="#__codelineno-21-1"></a>pip<span class="w"> </span>install<span class="w"> </span>calorine
 </code></pre></div>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-18-1" name="__codelineno-18-1" href="#__codelineno-18-1"></a>gpumdkit.sh<span class="w"> </span>-calc<span class="w"> </span>minimize<span class="w"> </span>POSCAR<span class="w"> </span>nep.txt<span class="w"> </span><span class="m">0</span>.01<span class="w"> </span><span class="m">1000</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-22-1" name="__codelineno-22-1" href="#__codelineno-22-1"></a>gpumdkit.sh<span class="w"> </span>-calc<span class="w"> </span>minimize<span class="w"> </span>POSCAR<span class="w"> </span>nep.txt<span class="w"> </span><span class="m">0</span>.01<span class="w"> </span><span class="m">1000</span>
 </code></pre></div>
 <p>输出包括：</p>
 <ul>
@@ -1837,10 +1961,10 @@
 <h2 id="ovito-rdf">使用 OVITO 计算 RDF</h2>
 <p><code>rdf_calculator_ovito.py</code> 使用 OVITO 的分析工具计算径向分布函数。</p>
 <p><strong>依赖：</strong> OVITO</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-19-1" name="__codelineno-19-1" href="#__codelineno-19-1"></a>pip<span class="w"> </span>install<span class="w"> </span>ovito
+<div class="highlight"><pre><span></span><code><a id="__codelineno-23-1" name="__codelineno-23-1" href="#__codelineno-23-1"></a>pip<span class="w"> </span>install<span class="w"> </span>ovito
 </code></pre></div>
 <p><strong>输入文件：</strong> 结构文件（单帧或轨迹）</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-20-1" name="__codelineno-20-1" href="#__codelineno-20-1"></a>python<span class="w"> </span>Scripts/calculators/rdf_calculator_ovito.py<span class="w"> </span>trajectory.xyz<span class="w"> </span><span class="m">6</span>.0<span class="w"> </span><span class="m">400</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-24-1" name="__codelineno-24-1" href="#__codelineno-24-1"></a>python<span class="w"> </span>Scripts/calculators/rdf_calculator_ovito.py<span class="w"> </span>trajectory.xyz<span class="w"> </span><span class="m">6</span>.0<span class="w"> </span><span class="m">400</span>
 </code></pre></div>
 <p><strong>参数：</strong></p>
 <table>
@@ -1866,10 +1990,10 @@
 </tbody>
 </table>
 <p><strong>可视化：</strong></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-21-1" name="__codelineno-21-1" href="#__codelineno-21-1"></a>gpumdkit.sh<span class="w"> </span>-plt<span class="w"> </span>rdf
+<div class="highlight"><pre><span></span><code><a id="__codelineno-25-1" name="__codelineno-25-1" href="#__codelineno-25-1"></a>gpumdkit.sh<span class="w"> </span>-plt<span class="w"> </span>rdf
 </code></pre></div>
 <p><strong>注意：</strong> 建议优先使用 GPUMD 中的 <code>compute_rdf</code> 命令。</p>
-<h2 id="_3">铁电和极性材料工具</h2>
+<h2 id="_4">铁电和极性材料工具</h2>
 <p>选项 <code>406–410</code> 面向钙钛矿和极性材料分析，常用于从 MD 轨迹中提取局域结构信息，然后进一步分析相变、畴结构或极化纹理。</p>
 <p>这些脚本在本页只做快速索引，因为它们通常需要组合使用。推荐阅读专题教程中的完整工作流和参数说明：<strong><a href="%E6%9E%81%E6%80%A7%E6%9D%90%E6%96%99%E5%88%86%E6%9E%90.html">极性材料分析</a></strong>。</p>
 <table>
@@ -1915,7 +2039,7 @@
 </tbody>
 </table>
 <p>部分脚本需要安装 <code>ferrodispcalc</code>：</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-22-1" name="__codelineno-22-1" href="#__codelineno-22-1"></a>pip3<span class="w"> </span>install<span class="w"> </span>git+https://github.com/MoseyQAQ/ferrodispcalc.git
+<div class="highlight"><pre><span></span><code><a id="__codelineno-26-1" name="__codelineno-26-1" href="#__codelineno-26-1"></a>pip3<span class="w"> </span>install<span class="w"> </span>git+https://github.com/MoseyQAQ/ferrodispcalc.git
 </code></pre></div>
 <p>一个典型顺序是先用 <code>nlist</code> 建立近邻列表，再用该近邻列表计算位移、倾转或极化。对于平均结构，可以直接从轨迹出发，用长度容差控制哪些帧参与平均。</p>
 

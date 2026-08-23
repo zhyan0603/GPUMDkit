@@ -10,9 +10,9 @@
         "command": "gpumdkit.sh -plt thermo"
     },    
     {
-        "title": "Parity Plot",
+        "title": "Prediction-mode Parity Plot",
         "image": "Gallery/prediction.png",
-        "command": "gpumdkit.sh -plt prediction/test"
+        "command": "gpumdkit.sh -plt prediction"
     },
     {
         "title": "Parity Plot (train vs test)",

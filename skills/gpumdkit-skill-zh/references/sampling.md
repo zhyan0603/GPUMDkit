@@ -107,7 +107,10 @@ python3 ${GPUMDkit_path}/Scripts/sample_structures/perturb_structure.py POSCAR 2
 - `style`：`normal`、`uniform` 或 `const`。
 
 脚本使用 `dpdata.System.perturb()` 同时扰动晶胞矢量和原子位置，输出
-`POSCAR_01.vasp` 至 `POSCAR_<N>.vasp`。
+`POSCAR_01.vasp` 至 `POSCAR_<N>.vasp`，并生成 `perturb.txt`。该报告汇总
+晶胞长度、角度和体积变化，扣除晶胞变形后的非仿射原子位移分布，以及
+变化最显著的结构。安装 ASE 时还会给出周期性最短距离统计。报告不会
+自行应用结构合格阈值。
 
 ### 力偏差筛选
 
@@ -203,6 +206,16 @@ python3 ${GPUMDkit_path}/Scripts/sample_structures/perturb_structure.py POSCAR 5
 
 在进行 DFT 之前，应检查扰动结构的最小原子间距和晶胞是否合理。不得擅自采用示例中的扰动幅度作为正式参数。
 
+### PyNEP 兼容入口
+
+```bash
+# gpumdkit.sh -pynep 调用并行 PyNEP 兼容脚本
+gpumdkit.sh -pynep
+
+# 启动后的输入示例
+dump.xyz train.xyz nep.txt 8
+```
+
 ## 依赖
 
 | 方法 | Python 依赖 |
@@ -210,7 +223,7 @@ python3 ${GPUMDkit_path}/Scripts/sample_structures/perturb_structure.py POSCAR 5
 | 均匀/随机采样 | `numpy`、`ase` |
 | NepTrain FPS | `numpy`、`ase`、`matplotlib`、`scikit-learn`、`scipy`、`NepTrain` |
 | PyNEP FPS | `numpy`、`ase`、`matplotlib`、`scikit-learn`、`pynep` |
-| 结构扰动 | `dpdata` |
+| 结构扰动 | `dpdata`；最短距离报告统计可选使用 ASE |
 | 力偏差筛选 | `numpy`、`ase` |
 | 训练集/测试集划分（Uniform/Random） | `numpy`、`ase` |
 | 训练集/测试集划分（FPS） | `numpy`、`ase`、`scipy`、`NepTrain` |

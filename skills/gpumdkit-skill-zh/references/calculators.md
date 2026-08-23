@@ -23,6 +23,8 @@
 | 极化 | `-calc pol-abo3` | ABO3 局部极化 |
 | 最小化 | `-calc minimize` | 使用 NEP 进行结构弛豫 |
 | MSD | `-calc msd` | 从轨迹计算均方位移 |
+| XRD | `4 -> 413`（仅交互模式） | 从 extxyz 轨迹计算 X 射线衍射 |
+| 声子谱 | `4 -> 414`（仅交互模式） | 沿 `QPOINTS` 路径计算 NEP 声子谱 |
 
 ## 命令参考
 
@@ -88,6 +90,39 @@ gpumdkit.sh -calc msd dump.xyz Li 10
 
 # 输出：msd.out（Time/ps、MSD_x、MSD_y、MSD_z）
 ```
+
+### X 射线衍射（仅交互模式）
+
+XRD 只通过交互式计算器菜单提供：
+
+```text
+gpumdkit.sh -> 4) Calculators -> 413) Calc XRD from extxyz trajectory
+```
+
+Python 页面依次询问 extxyz 轨迹、输出文件、单位为 Angstrom 的波长、
+`2theta` 最小值和最大值、覆盖该区间的 bins 数量、元素选择（`all` 或以
+逗号/空格分隔的元素符号）以及 CPU worker 数量（`0` 表示自动选择）。默认
+使用输入轨迹的 `Lattice`/`pbc`、全部原子、标准 LAMMPS 散射因子和
+Lorentz-polarization 因子。支持正交晶胞，不支持非正交晶胞。
+
+输出包含选定 `2theta` 区间内各 bin 中心处的平均 `Count` 和 `Count/Total`。
+实现只读取一次轨迹；晶胞不变时缓存 reciprocal mesh；按元素分组，并按帧顺序
+归并多 worker 线程。这些优化不会改变 XRD 公式或分箱区间。
+
+### 声子谱（仅交互模式）
+
+声子计算器通过交互式计算器菜单提供：
+
+```text
+gpumdkit.sh -> 4) Calculators -> 414) Calc phonon band structure
+```
+
+脚本依次询问原胞结构、兼容 Calorine 的 NEP 模型、line-mode `QPOINTS` 文件、
+对角超胞倍数、位移和输出文件。q 点路径、每段点数和标签均从提供的
+`QPOINTS` 文件读取，不应替换为硬编码路径。
+
+输出为单位为 THz 的逐行声子数据，默认通常写入 `phonon_NEP.dat`。该计算需要
+`ASE`、`Calorine`、`phonopy` 和 `NumPy`。
 
 ### 邻居列表
 ```bash
@@ -232,6 +267,8 @@ gpumdkit.sh -plt thermo  # 如果弛豫后运行 MD
 | nep、des、doas、minimize | `calorine` |
 | nlist、disp、oct-tilt、pol-abo3 | `ferrodispcalc` |
 | neb | `calorine`、`matplotlib` |
+| xrd | `numpy` |
+| phonon | `calorine`、`phonopy` |
 
 安装依赖：
 ```bash

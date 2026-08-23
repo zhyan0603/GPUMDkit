@@ -7,6 +7,7 @@
 - 项目结构与路由
 - 添加交互和 CLI 功能
 - Python 和 Shell 约定
+- 更新记录与版本/日期规则
 - 维护者决定与被拒绝的更改
 - 验证清单
 
@@ -37,6 +38,7 @@ GPUMDkit/
 │   ├── tutorials/en/        # 英文教程
 │   ├── tutorials/zh/        # 中文教程
 │   ├── mkdocs.yml           # MkDocs 配置
+│   ├── updates.info         # 最近新增功能和 bug 修复记录
 │   └── htmls/               # 生成的 HTML
 ```
 
@@ -52,6 +54,12 @@ GPUMDkit/
 2. **CLI 模式**：`gpumdkit.sh -flag [args]` -> 通过 `case $1 in` 路由
    - 每个标志映射到 `Scripts/` 中的一个脚本
    - 帮助信息放在 `help_info_table()` 和 `calculator_help_table()` 中
+
+## 更新记录与版本/日期规则
+
+- 新增功能或修复 bug 时，必须在同一次修改中更新 `docs/updates.info`。在 `NEW_FEATURES` 或 `BUG_FIXES` 中添加简洁条目；只有在另一列表没有条目时才保留 `"None"`。
+- 如果修改了 `gpumdkit.sh`，必须将其中 `VERSION="..."` 声明里的日期更新为当前日期，并使用 `YYYY-MM-DD` 格式。
+- 保留现有版本字符串。除非用户明确要求更新版本，否则不得修改 `gpumdkit.sh` 或 `docs/updates.info` 中的任何版本号。
 
 ## 添加新的交互模式功能
 
@@ -269,6 +277,23 @@ if not os.path.isfile(input_file):
 - 输出文件名应包含足够上下文以避免冲突（例如 `filtered_Li_Li_1.8_2.0.xyz`，而非仅 `filtered.xyz`）
 - 覆写现有文件无需警告（项目约定 — 这是 CLI 工具包，不是交互式软件）
 
+### 绘图脚本与 Gallery 示例
+
+新增绘图脚本时，遵循 `references/plotting-style.md` 中的绘图规范，并在
+`docs/Gallery/` 中提供一个有代表性的示例图。Gallery 示例应通过独立的示例
+命令或压缩流程以 100 DPI 生成，以减小文档资源大小；不要为了生成示例图而
+降低正式绘图设置。
+
+正式脚本中，交互式 `plt.show()` 图使用 150 DPI，`savefig()` 的默认 DPI
+不得低于 300。需要在中英文 tutorials 源文件以及对应子功能 README（例如
+`Scripts/plt_scripts/README.md`）中补充用法和 Gallery 示例图。
+
+迭代开发阶段的文档更新遵循显式授权原则。除非用户明确要求更新文档，否则
+修改代码时不要改动 tutorials、子功能 README、Gallery 资源，也不要生成
+`docs/htmls/**`。用户明确要求文档更新后，才同步修改中英文源文件，并在验证
+阶段为每个新的用户可见功能更新对应 tutorials 和子功能 README，再重新构建
+生成的 HTML。
+
 ### 依赖提示
 
 如果你的脚本需要重量级/特殊包（`NepTrain`、`calorine`、`dpdata`、`ovito`），添加提示：
@@ -459,7 +484,7 @@ Python：`print(" Error: <message>."); sys.exit(1)` — 相同格式，之后始
 | 将 `if __name__ == "__main__":` 改造到现有 Python 脚本中 | 脚本独立运行；不要只为增加入口保护而大范围改动正常代码 |
 | 将 `from pylab import *` 替换为显式导入 | 保持现状 |
 | 统一 `-plt` "save" 参数位置 | 不同脚本有不同参数数量；保持灵活 |
-| 统一 DPI（150 -> 300）到所有绘图脚本 | 保持每脚本的 DPI 设置 |
+| 对新增或修改的绘图应用 DPI 规范 | `plt.show()` 使用 150 DPI，正式 `savefig()` 不低于 300 DPI，Gallery 示例单独使用 100 DPI |
 | 将工作流 sourced 脚本中的 `exit` 改为 `return` | 保持现状 |
 | 将 `-filter_value` / `-filter_range` / `-get_volume` / `-re_atoms` 添加到帮助表 | 刻意不记录 |
 | 使交互模式在一个功能后循环回菜单 | 保持单次执行；按此设计 |
@@ -468,7 +493,7 @@ Python：`print(" Error: <message>."); sys.exit(1)` — 相同格式，之后始
 | 随意更改 MSD 拟合范围 | 科学选择；先问维护者 |
 | 移除故障排除页面 | 由维护者明确要求移除；不要重新添加 |
 | 将 `des_compare` 添加到 CLI | 脚本存在但维护者选择不接入 |
-| 调试后保留 `__pycache__` | 必须始终 `find . -type d -name __pycache__ -exec rm -rf {} +` |
+| 调试后保留 `__pycache__` | 优先使用不写缓存的语法检查；如果产生缓存，交付前删除已记录的具体缓存路径 |
 | 将 `-get_volume` / `-re_atoms` 添加到 completion.sh | 刻意从补全和帮助表中排除 |
 | 修改 plt_scripts 中的逻辑 | 除非明确请求，否则仅对绘图脚本进行外观/格式更改 |
 
@@ -502,16 +527,26 @@ python3 Scripts/path/to/script.py        # 缺少参数必须打印用法 + exit
 
 只运行与已修改文件相关的检查；不要无条件运行全部项目检查。始终运行空白检查。
 
+### 临时测试产物
+
+- 在隔离的临时工作目录中运行冒烟测试，避免 `deepmd_data/`、绘图、日志和缓存等
+  固定名称输出出现在仓库根目录。
+- 记录验证过程创建的每个临时路径。交付前移除其中的测试输出、
+  `MPLCONFIGDIR`、构建目录、日志和缓存；命令失败后也必须清理。
+- 删除前将清理目标解析为显式路径，并确认它们属于本次工作。不得使用宽泛通配符，
+  也不得递归删除共享的临时目录根路径。
+- 最后以只读方式检查相关临时前缀和仓库状态，确认没有遗留测试产物。
+
 ```bash
 # Shell 语法（仅当 .sh 文件有更改时）
 bash -n gpumdkit.sh
 find src Scripts -name '*.sh' -exec bash -n {} +
 
-# Python 语法（仅检查已修改的 Python 文件）
-python3 -m py_compile Scripts/path/to/your_script.py
+# Python 语法检查且不生成 __pycache__（仅检查已修改的 Python 文件）
+python3 -B -c 'from pathlib import Path; p=Path("Scripts/path/to/your_script.py"); compile(p.read_text(), str(p), "exec")'
 
-# py_compile 后清理 __pycache__
-find . -type d -name "__pycache__" -exec rm -rf {} + 2>/dev/null
+# 如果其他测试产生缓存，只删除已记录的显式路径
+# rm -rf /exact/path/to/the/test-created/__pycache__
 
 # MkDocs 构建（仅当 MkDocs 输入有更改时；见下文）
 mkdocs build -f docs/mkdocs.yml
@@ -533,7 +568,7 @@ git diff --check
 
 ### 何时构建 MkDocs
 
-仅当更改影响 MkDocs 消费的输入时，才运行
+仅当用户明确要求更新文档，且更改影响 MkDocs 消费的输入时，才运行
 `mkdocs build -f docs/mkdocs.yml`，包括：
 
 - `docs/tutorials/**`

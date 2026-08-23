@@ -16,6 +16,7 @@ Use this skill as the single entry point for GPUMDkit utilities, GPUMD simulatio
 - Do not overwrite inputs, discard structures, launch GPUMD/NEP/DFT, submit scheduler jobs, or start long/expensive calculations unless the user explicitly authorizes that action.
 - Stop on parser errors, NaN/Inf values, missing outputs, unstable behavior, or unexplained warnings. Report the evidence and ask before changing scientific parameters or retrying.
 - Preserve original data and unrelated worktree changes. Record transformations, filters, exclusions, commands, versions, and assumptions.
+- Run smoke tests in isolated temporary directories and remove every temporary file, directory, cache, and generated test output before handoff. Resolve and delete only paths created by the current work; never use a broad cleanup target that could remove user data.
 
 ## Reference router
 
@@ -26,8 +27,8 @@ Read one or more references according to the task. Do not load every file by def
 | Installation, command discovery, module selection, common CLI usage | [overview.md](references/overview.md) |
 | Structure/data conversion, labels, weights, replication, frame extraction | [format-conversion.md](references/format-conversion.md) |
 | Uniform/random/FPS sampling, train/test splitting, perturbation, force-deviation selection | [sampling.md](references/sampling.md) |
-| Batch SCF/MD preparation and active-learning workflows | [workflows.md](references/workflows.md) |
-| MSD, ionic conductivity, descriptors, NEB, minimization, polarization | [calculators.md](references/calculators.md) |
+| Batch SCF/MD preparation and manual MD/FPS active-learning orchestration | [workflows.md](references/workflows.md) |
+| MSD, ionic conductivity, XRD, descriptors, NEB, minimization, polarization | [calculators.md](references/calculators.md) |
 | Composition, ranges, distances, filtering, outliers, probability density | [analyzers.md](references/analyzers.md) |
 | NEP/MD/transport/structure plots and fit outputs | [visualization.md](references/visualization.md) |
 | Creating or restyling GPUMDkit plots; project plotting style and review checklist | [plotting-style.md](references/plotting-style.md) |
@@ -48,7 +49,7 @@ For cross-module work, load every relevant reference. Examples:
 
 - Arrhenius study: read `gpumd.md`, `gpumd-inputs.md`, `gpumd-ensembles.md`, `gpumd-computes.md`, `gpumd-outputs.md`, `arrhenius.md`, `calculators.md`, and `visualization.md`; also read `format-conversion.md` if preparing `model.xyz`.
 - NEP training pipeline: read `nep.md`, `nep-data.md`, `nep-parameters.md`, `nep-outputs.md`, `format-conversion.md`, `analyzers.md`, `sampling.md`, and `visualization.md`.
-- GPUMD batch sampling for active learning: read `gpumd.md`, the GPUMD parameter references used by the protocol, `workflows.md`, `sampling.md`, and `analyzers.md`.
+- MD/FPS active-learning iteration: read `gpumd.md`, the GPUMD parameter references used by the protocol, `workflows.md`, `sampling.md`, `analyzers.md`, `format-conversion.md`, `nep.md`, `nep-data.md`, `nep-outputs.md`, and `visualization.md`; also read `nep-parameters.md` when preparing or changing the training configuration.
 - New GPUMDkit command: read `contributing.md` plus the reference for the affected module.
 - New or restyled plot: read `visualization.md`, `plotting-style.md`, and `contributing.md`; also read the scientific reference for the quantity being plotted.
 

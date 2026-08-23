@@ -21,6 +21,7 @@
 | 最小距离 | `-min_dist` | 计算最小距离（无 PBC） |
 | 最小距离（PBC） | `-min_dist_pbc` | 计算最小距离（含 PBC） |
 | 概率密度 | `-pda` 或菜单 508 | 3D 扩散通道分析 |
+| 能量参考平移 | `-shift_energy` 或菜单 509 | 交互式平移 extxyz 能量参考 |
 
 ## 命令参考
 
@@ -47,6 +48,18 @@ gpumdkit.sh -range train.xyz virial
 # 带直方图
 gpumdkit.sh -range train.xyz force hist
 ```
+
+### 能量参考平移
+```bash
+# 打开交互式能量参考平移页面
+gpumdkit.sh -shift_energy
+
+# 也可以从菜单 5 -> 509 进入
+```
+
+`align_energy_reference.py` 会保留原子行和其他 header 字段，只更新
+`energy=` 值。支持参考组对齐、零原子基线对齐以及 DFT 到 NEP 对齐；后一
+模式需要 `calorine` 和兼容的 NEP 模型文件。
 
 ### 最小距离
 ```bash
@@ -206,6 +219,7 @@ gpumdkit.sh -time nep
 |------|-------------|--------|
 | `-analyze_comp` | 成分分析 | `gpumdkit.sh -analyze_comp <file>` |
 | `-range` | 性质范围 | `gpumdkit.sh -range <file> <prop>` |
+| `-shift_energy` | 交互式能量参考平移 | `gpumdkit.sh -shift_energy` |
 | `-min_dist` | 最小距离（无 PBC） | `gpumdkit.sh -min_dist <file>` |
 | `-min_dist_pbc` | 最小距离（PBC） | `gpumdkit.sh -min_dist_pbc <file>` |
 | `-chem_species` | 化学种类列表 | `gpumdkit.sh -chem_species <file>` |
@@ -226,6 +240,7 @@ gpumdkit.sh -time nep
 | 电荷平衡 | `pymatgen`、`tqdm` |
 | 性质范围 | `matplotlib` |
 | 概率密度 | `pymatgen` |
+| DFT 到 NEP 能量平移 | `calorine` |
 
 ## 详细文档
 

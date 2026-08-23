@@ -19,7 +19,7 @@ if [ -z "$GPUMDkit_path" ]; then
     exit 1
 fi
 
-VERSION="1.5.6 (dev) (2026-07-10)"
+VERSION="1.5.7 (2026-08-23)"
 
 plt_path="${GPUMDkit_path}/Scripts/plt_scripts"
 analyzer_path="${GPUMDkit_path}/Scripts/analyzer"
@@ -65,8 +65,8 @@ function main(){
         "0" "1" "101" "102" "103" "104" "105" "106" "107" "108" "109" "110"
         "2" "201" "202" "203" "204" "205" "206"
         "3" "301" "302" "303" 
-        "4" "401" "402" "403" "404" "405" "406" "407" "408" "409" "410" "411" "412"
-        "5" "501" "502" "503" "504" "505" "506" "507" "508"
+        "4" "401" "402" "403" "404" "405" "406" "407" "408" "409" "410" "411" "412" "413" "414"
+        "5" "501" "502" "503" "504" "505" "506" "507" "508" "509"
         "6"
         "7" "701"
         "8"
@@ -139,6 +139,8 @@ function main(){
                 "410") f410_calc_polarization_abo3 ;;
                 "411") f411_minimize_structure_by_nep ;;
                 "412") f412_calc_msd_from_trajectory ;;
+                "413") f413_calc_xrd ;;
+                "414") f414_calc_phonon ;;
             esac ;;           
         "5")
             source ${GPUMDkit_path}/src/f5_analyzers.sh
@@ -152,6 +154,7 @@ function main(){
                 "506") f506_filter_structures_by_distance ;;
                 "507") f507_get_min_dist ;;
                 "508") f508_probability_density_analysis ;;
+                "509") f509_shift_energy ;;
             esac ;;  
         "6")
             source ${GPUMDkit_path}/src/f6_plots.sh
@@ -186,7 +189,7 @@ function main(){
 
 function help_info_table(){
     echo " +-------------------------------------------------------------------------------------------------------+"
-    echo " |                          GPUMDkit ${VERSION} Command Help                               |"
+    echo " |                          GPUMDkit ${VERSION}       Command Help                               |"
     echo " +-------------------------------------------------------------------------------------------------------+"
     echo " |                                          MAIN FUNCTIONS                                               |"
     echo " +-------------------------------------------------------------------------------------------------------+"
@@ -206,6 +209,7 @@ function help_info_table(){
     echo " | -addgroup     Add group labels                | -addweight         Add structure weight in extxyz     |"
     echo " | -clean_xyz    Clean extra info in extxyz      | -get_frame         Extract specific frame             |"
     echo " | -frame_range  Extract frames by range         | -dp2xyz            DeepMD npy -> extxyz               |"
+    echo " | -xyz2dp       extxyz -> DeepMD npy            |                                                       |"
     echo " +-------------------------------------------------------------------------------------------------------+"
     echo " |                                            ANALYSIS                                                   |"
     echo " +-------------------------------------------------------------------------------------------------------+"
@@ -215,6 +219,7 @@ function help_info_table(){
     echo " | -filter_dist  Filter by min_dist (no PBC)     | -filter_dist_pbc   Filter by min_dist (PBC)           |"
     echo " | -pda          Probability density analysis    | -filter_box        Filter by box-edge length          |"
     echo " | -pynep        Deprecated PyNEP sampling       | -nep_modifier      Modify NEP model interactively     |"
+    echo " | -shift_energy  Interactive energy shift       |                                                       |"
     echo " +-------------------------------------------------------------------------------------------------------+"
     echo " | Python option help: gpumdkit.sh -<option> -h    Plot list: gpumdkit.sh -plt -h                        |"
     echo " +-------------------------------------------------------------------------------------------------------+"
@@ -279,8 +284,6 @@ if [ ! -z "$1" ]; then
             skill_info_table ;;
         -doctor)
             GPUMDKIT_BASH_VERSION="${BASH_VERSION}" python "${utils_path}/doctor.py" "${@:2}" ;;
-        -input)
-            bash "${GPUMDkit_path}/Scripts/input_generator/input_generator.sh" "${@:2}" ;;
         -clean) 
             source ${utils_path}/clean_extra_files.sh
             clean_extra_files ;;
@@ -315,6 +318,9 @@ if [ ! -z "$1" ]; then
                     "msd_sdc") python ${plt_path}/plt_msd_sdc.py $3 ;;
                     "sdc") python ${plt_path}/plt_sdc.py $3 ;;
                     "rdf") python ${plt_path}/plt_rdf.py ${@:3} ;;
+                    "xrd") python ${plt_path}/plt_xrd.py ${@:3} ;;
+                    "phonon") python "${plt_path}/plt_phonon.py" "${@:3}" ;;
+                    "phonon_comp") python "${plt_path}/plt_phonon_comp.py" "${@:3}" ;;
                     "vac") python ${plt_path}/plt_vac.py $3 ;;
                     "restart") python ${plt_path}/plt_nep_restart.py $3 ;;
                     "dimer") python ${plt_path}/plt_dimer.py $3 $4 $5 $6 ;;
@@ -328,6 +334,7 @@ if [ ! -z "$1" ]; then
                     "sigma_xyz") python ${plt_path}/plt_arrhenius_sigma_xyz.py $3 ;;
                     "net_force") python ${plt_path}/plt_net_force.py ${@:3} ;;
                     "emd") python ${plt_path}/plt_emd.py ${@:3} ;;
+                    "emd2") python ${plt_path}/plt_emd2.py ${@:3} ;;
                     "nemd") python ${plt_path}/plt_nemd.py ${@:3} ;;
                     "hnemd") python ${plt_path}/plt_hnemd.py ${@:3} ;;
                     "pdos") python ${plt_path}/plt_pdos.py $3 ;;
@@ -393,6 +400,9 @@ if [ ! -z "$1" ]; then
         -range)
             run_python_script "Zihan YAN (yanzihan@westlake.edu.cn)" "${analyzer_path}/energy_force_virial_analyzer.py" "${@:2}" ;;
 
+        -shift_energy)
+            run_python_script "Chen Zherui (chenzherui0124@foxmail.com)" "${analyzer_path}/align_energy_reference.py" "${@:2}" ;;
+
         -replicate)
             run_python_script "Boyi SITU (situboyi@westlake.edu.cn)" "${format_conv_path}/replicate.py" "${@:2}" ;;
 
@@ -441,6 +451,14 @@ if [ ! -z "$1" ]; then
 
         -dp2xyz)
             run_python_script "Denan LI (lidenan@westlake.edu.cn)" "${format_conv_path}/dp2xyz.py" "${@:2}" ;;
+
+        -xyz2dp)
+            if [ "$2" = "-h" ] || [ "$2" = "--help" ]; then
+                python3 "${format_conv_path}/xyz2dp.py" "$2"
+            else
+                source ${GPUMDkit_path}/src/f1_format_conversions.sh
+                xyz2dp
+            fi ;;
 
         -addgroup|-addlabel)
             run_python_script "Zihan YAN (yanzihan@westlake.edu.cn)" "${format_conv_path}/add_groups.py" "${@:2}" ;;
