@@ -29,7 +29,7 @@
 | `lattice="ax ay az bx by bz cx cy cz"` | 必需的晶胞矢量，单位为埃（Angstrom） |
 | `energy=<total_energy>` | 必需的总能量字段，单位为 eV；偶极矩/极化率训练时忽略 |
 | `virial="9 components"` | 可选的全晶胞维里张量，单位为 eV |
-| `stress="9 components"` | 可选的应力张量，单位为 eV/Angstrom^3；如果存在 virial 则忽略 |
+| `stress="9 components"` | 可选的 NEP 应力张量，单位为 eV/Angstrom^3；与 virial 使用相同符号约定，如果存在 virial 则忽略 |
 | `weight=<relative_weight>` | 可选的构型权重 |
 | `properties=...` | 必需的逐原子列格式 |
 
@@ -73,7 +73,8 @@ properties=species:S:1:pos:R:3:force:R:3
 | BEC | 基本电荷 |
 | 偶极矩/极化率 | 用户选择的一致单位；请记录 |
 
-维里输入中正值表示压缩，负值表示拉伸。应力输入使用相反的符号约定：正值表示拉伸，负值表示压缩。如果两者同时存在，使用维里。
+维里和 stress 使用相同的 NEP 符号约定。stress 由 virial 除以晶胞体积得到，
+即 `stress = virial / volume`；如果两者同时存在，使用维里。
 
 NEP 训练假设所有方向均为周期性边界条件。对于平板、团簇或真空体系，请向用户确认周期性晶胞和参考计算如何表征该体系。
 

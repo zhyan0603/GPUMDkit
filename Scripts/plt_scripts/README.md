@@ -51,7 +51,7 @@ gpumdkit.sh -plt train          # Display plot
 Visualizes NEP prediction-mode results for the structures in `train.xyz`.
 
 **Input Files:** `energy_train.out`, `force_train.out`, and either
-`stress_train.out` (preferred) or `virial_train.out`
+`stress_train.out` (preferred when it contains valid rows) or `virial_train.out`
 
 **Usage:**
 

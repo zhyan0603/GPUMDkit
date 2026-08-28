@@ -6,6 +6,7 @@ CONTACT="yanzihan@westlake.edu.cn"
 
 # New features (one per line, in an array)
 NEW_FEATURES=(
+    "add -prediction for Calorine NEP .out predictions with optional CPU parallelism"
     "add -xyz2dp"
     "add perturb.txt report for structure perturbation"
     "add -plt emd2 for EMD thermal conductivity in all directions"
@@ -14,6 +15,7 @@ NEW_FEATURES=(
 
 # Bug fixes (one per line, in an array)
 BUG_FIXES=(
+    "align -prediction stress/virial conversions with the NEP sign convention and add tqdm progress"
     "replace outdated automated active-learning guidance with a manual MD/FPS workflow"
     "fix thermo3 volume and lattice-angle axis offset display"
     "fix signed HAC and zero-direction handling in -plt emd2"

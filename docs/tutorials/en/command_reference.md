@@ -9,12 +9,13 @@ The source table is maintained in `docs/command_reference.tsv`.
 
 ```text
 +-------------------------------------------------------------------------------------------------------+
-|                          GPUMDkit 1.5.7 (2026-08-23)       Command Help                               |
+|                          GPUMDkit 1.5.7 (2026-08-28)       Command Help                               |
 +-------------------------------------------------------------------------------------------------------+
 |                                          MAIN FUNCTIONS                                               |
 +-------------------------------------------------------------------------------------------------------+
 | -h            Show this help table            | -plt <type>        Plot and visualization tools       |
 | -calc <type>  Calculator tools                | -time <gpumd|nep>  Time-consuming analyzer            |
+| -prediction   Write NEP prediction .out files |                                                       |
 | -update       Update GPUMDkit                 | -clean             Clean extra files in current dir   |
 | -skill        Show GPUMDkit agent skill info  | -doctor           Check Python environment          |
 +-------------------------------------------------------------------------------------------------------+
@@ -53,6 +54,7 @@ The source table is maintained in `docs/command_reference.tsv`.
 | `-doctor` | `gpumdkit.sh -doctor` | Check Python and GPUMDkit package availability |
 | `-update` | `gpumdkit.sh -update` | Update GPUMDkit |
 | `-clean` | `gpumdkit.sh -clean` | Clean extra files in the current directory |
+| `-prediction` | `gpumdkit.sh -prediction <input.xyz> <nep.txt> [workers]` | Write NEP-compatible energy, force, stress, and virial prediction files |
 
 ## Format Conversion
 
@@ -85,6 +87,7 @@ The source table is maintained in `docs/command_reference.tsv`.
 |---|---|---|
 | `-calc ionic-cond` | `gpumdkit.sh -calc ionic-cond <element> <charge>` | Ionic conductivity |
 | `-calc nep` | `gpumdkit.sh -calc nep <input.xyz> <output.xyz> <nep.txt>` | NEP property prediction |
+| `-prediction` | `gpumdkit.sh -prediction <input.xyz> <nep.txt> [workers]` | NEP-compatible prediction output files |
 | `-calc des` | `gpumdkit.sh -calc des <input.xyz> <output.npy> <nep.txt> <element>` | NEP descriptors |
 | `-calc doas` | `gpumdkit.sh -calc doas <input.xyz> <nep.txt> <output.txt>` | Density of atomistic states |
 | `-calc neb` | `gpumdkit.sh -calc neb <initial.xyz> <final.xyz> <n_images> <nep.txt>` | NEB with a NEP model |

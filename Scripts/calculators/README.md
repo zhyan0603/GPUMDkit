@@ -132,6 +132,35 @@ pip install calorine
 
 ---
 
+### prediction.py
+
+Evaluates all frames in an extended XYZ file with Calorine's `CPUNEP`
+calculator and writes NEP-compatible prediction/target files. The output
+suffix is derived from the input filename: `test.xyz` produces
+`energy_test.out`, `force_test.out`, `stress_test.out`, and `virial_test.out`.
+
+#### Usage
+
+```bash
+# Single-core prediction (default)
+gpumdkit.sh -prediction train.xyz nep.txt
+
+# Eight CPU workers
+gpumdkit.sh -prediction train.xyz nep.txt 8
+```
+
+The output files contain predicted columns followed by target columns. Energy
+is written in eV/atom, forces in eV/Angstrom, stress in GPa, and virial in
+eV/atom, using the NEP tensor order `xx yy zz xy yz xz` and the same sign
+convention for stress and virial. If only one of stress or virial is supplied,
+the other target is derived from `stress = virial / volume` with the appropriate
+unit conversion. Only frames missing both use the `-1e6` NEP sentinel; energy
+and force targets are required. A `tqdm` progress bar is shown during prediction.
+
+The command requires `ase`, `calorine`, and `tqdm`.
+
+---
+
 ### calc_descriptors.py
 
 Calculates descriptors for the specific species, which can be used for dimensionality reduction and structure analysis.

@@ -128,7 +128,7 @@ Visualizes NEP prediction-mode results for the structures in `train.xyz`.
 Prediction mode still writes the parity data to files ending in `_train.out`.
 
 **Input Files:** `energy_train.out`, `force_train.out`, and either
-`stress_train.out` (preferred) or `virial_train.out`
+`stress_train.out` (preferred when it contains valid rows) or `virial_train.out`
 
 ```bash
 gpumdkit.sh -plt prediction

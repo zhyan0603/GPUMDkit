@@ -195,6 +195,7 @@ function help_info_table(){
     echo " +-------------------------------------------------------------------------------------------------------+"
     echo " | -h            Show this help table            | -plt <type>        Plot and visualization tools       |"
     echo " | -calc <type>  Calculator tools                | -time <gpumd|nep>  Time-consuming analyzer            |"
+    echo " | -prediction   Write NEP prediction .out files |                                                       |"
     echo " | -update       Update GPUMDkit                 | -clean             Clean extra files in current dir   |"
     echo " | -skill        Show GPUMDkit agent skill info  | -doctor            Check Python environment           |"
     echo " +-------------------------------------------------------------------------------------------------------+"
@@ -300,6 +301,9 @@ if [ ! -z "$1" ]; then
                     echo " Code path: ${analyzer_path}/time_consuming_*.sh"
                     exit 1 ;;
             esac ;;
+        -prediction)
+            run_python_script "Zihan YAN (yanzihan@westlake.edu.cn)" "${calc_path}/prediction.py" "${@:2}" ;;
+
         -plt)
             if [ ! -z "$2" ] && [ "$2" != "-h" ]; then
                 case $2 in

@@ -26,6 +26,7 @@ format	-xyz2dp	gpumdkit.sh -xyz2dp	Convert labeled extxyz to DeepMD npy data thr
 sampling	-pynep	gpumdkit.sh -pynep	Run PyNEP FPS sampling	运行 PyNEP FPS 采样	deprecated
 calc	-calc ionic-cond	gpumdkit.sh -calc ionic-cond <element> <charge>	Calculate ionic conductivity	计算离子电导率	stable
 calc	-calc nep	gpumdkit.sh -calc nep <input.xyz> <output.xyz> <nep.txt>	Predict properties with a NEP model	使用 NEP 模型预测性质	stable
+calc	-prediction	gpumdkit.sh -prediction <input.xyz> <nep.txt> [workers]	Write NEP-compatible energy, force, stress, and virial prediction files	写入 NEP 格式的能量、力、应力和 virial 预测文件	stable
 calc	-calc des	gpumdkit.sh -calc des <input.xyz> <output.npy> <nep.txt> <element>	Calculate NEP descriptors	计算 NEP 描述符	stable
 calc	-calc doas	gpumdkit.sh -calc doas <input.xyz> <nep.txt> <output.txt>	Calculate density of atomistic states	计算原子态密度	stable
 calc	-calc neb	gpumdkit.sh -calc neb <initial.xyz> <final.xyz> <n_images> <nep.txt>	Run NEB with a NEP model	使用 NEP 模型运行 NEB	stable
