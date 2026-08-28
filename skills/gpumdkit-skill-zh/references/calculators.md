@@ -57,6 +57,28 @@ gpumdkit.sh -calc nep structures.xyz predictions.xyz nep.txt
 # 注意：先用 gpumdkit.sh -clean_xyz 清理输入以移除已有性质
 ```
 
+### NEP 预测输出文件
+```bash
+# 为每个 frame 写出能量、力、应力和 virial 预测文件。
+# 输出后缀来自输入文件名（test.xyz -> *_test.out）。
+gpumdkit.sh -prediction <input.xyz> <nep.txt> [workers]
+
+# 默认单核
+gpumdkit.sh -prediction train.xyz nep.txt
+
+# 八个 CPU worker
+gpumdkit.sh -prediction train.xyz nep.txt 8
+```
+
+输出文件为当前目录中的 `energy_<input-stem>.out`、
+`force_<input-stem>.out`、`stress_<input-stem>.out` 和
+`virial_<input-stem>.out`。每行先写预测列，再写目标列。能量和 virial 单位为
+eV/atom，力为 eV/Angstrom，应力为 GPa。张量列使用 NEP 的
+`xx yy zz xy yz xz` 顺序，并遵循 stress 与 virial 同号的 NEP 约定。如果只提供 stress
+或 virial 中的一种，程序会使用 `stress = virial / volume` 和相应单位换算自动推导另一种；
+只有两者都缺失时才写入 `-1e6` 哨兵值。energy 和 force 标签必须存在。计算过程中会显示
+`tqdm` 进度条。
+
 ### 描述符
 ```bash
 # 计算特定元素的 NEP 描述符

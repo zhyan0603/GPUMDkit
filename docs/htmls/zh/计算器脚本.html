@@ -1138,10 +1138,27 @@
     </span>
   </a>
   
+    <nav class="md-nav" aria-label="NEP 预测性质">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#nep_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        NEP 预测输出文件
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
 </li>
       
         <li class="md-nav__item">
-  <a href="#nep_1" class="md-nav__link">
+  <a href="#nep_2" class="md-nav__link">
     <span class="md-ellipsis">
       
         NEP 描述符
@@ -1467,10 +1484,27 @@
     </span>
   </a>
   
+    <nav class="md-nav" aria-label="NEP 预测性质">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#nep_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        NEP 预测输出文件
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
 </li>
       
         <li class="md-nav__item">
-  <a href="#nep_1" class="md-nav__link">
+  <a href="#nep_2" class="md-nav__link">
     <span class="md-ellipsis">
       
         NEP 描述符
@@ -1592,6 +1626,11 @@
 <td>NEP 预测</td>
 <td><code>gpumdkit.sh -calc nep &lt;input.xyz&gt; &lt;output.xyz&gt; &lt;nep.txt&gt;</code></td>
 <td>extxyz + NEP 模型</td>
+</tr>
+<tr>
+<td>NEP 预测输出</td>
+<td><code>gpumdkit.sh -prediction &lt;input.xyz&gt; &lt;nep.txt&gt; [workers]</code></td>
+<td>带标签 extxyz + NEP 模型</td>
 </tr>
 <tr>
 <td>NEP 描述符</td>
@@ -1901,8 +1940,28 @@ Q 点数，生成的输出行随后由 <code>plt_phonon.py</code> 和 <code>plt_
 <p><strong>提示：</strong> 预测前可以清理 extxyz 元数据：</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a>gpumdkit.sh<span class="w"> </span>-clean_xyz<span class="w"> </span>train.xyz<span class="w"> </span>clean_train.xyz
 </code></pre></div>
-<h2 id="nep_1">NEP 描述符</h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-17-1" name="__codelineno-17-1" href="#__codelineno-17-1"></a>gpumdkit.sh<span class="w"> </span>-calc<span class="w"> </span>des<span class="w"> </span>train.xyz<span class="w"> </span>descriptors.npy<span class="w"> </span>nep.txt<span class="w"> </span>Li
+<h3 id="nep_1">NEP 预测输出文件</h3>
+<p><code>prediction.py</code> 使用 Calorine 的 <code>CPUNEP</code> 计算每个 frame，并写出 NEP
+parity 工具使用的四类预测文件。输出后缀根据输入文件名自动确定：例如输入
+<code>test.xyz</code> 时，当前目录会生成 <code>energy_test.out</code>、<code>force_test.out</code>、
+<code>stress_test.out</code> 和 <code>virial_test.out</code>。</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-17-1" name="__codelineno-17-1" href="#__codelineno-17-1"></a><span class="c1"># 单核计算（默认）</span>
+<a id="__codelineno-17-2" name="__codelineno-17-2" href="#__codelineno-17-2"></a>gpumdkit.sh<span class="w"> </span>-prediction<span class="w"> </span>train.xyz<span class="w"> </span>nep.txt
+<a id="__codelineno-17-3" name="__codelineno-17-3" href="#__codelineno-17-3"></a>
+<a id="__codelineno-17-4" name="__codelineno-17-4" href="#__codelineno-17-4"></a><span class="c1"># 使用八个独立 CPU worker</span>
+<a id="__codelineno-17-5" name="__codelineno-17-5" href="#__codelineno-17-5"></a>gpumdkit.sh<span class="w"> </span>-prediction<span class="w"> </span>train.xyz<span class="w"> </span>nep.txt<span class="w"> </span><span class="m">8</span>
+</code></pre></div>
+<p>每行先写预测值，再写目标值。能量单位为 eV/atom，力为 eV/Angstrom，应力为
+GPa，virial 为 eV/atom。应力和 virial 张量使用 NEP 顺序
+<code>xx yy zz xy yz xz</code>，并遵循 NEP 相同的符号约定。如果某个 frame 只有 stress 或 virial
+中的一种标签，程序会根据 <code>stress = virial / volume</code> 及相应单位换算自动推导另一种；
+只有两种标签都缺失时，两个目标列才写入 NEP 约定的 <code>-1e6</code> 哨兵值。energy 和 force
+标签必须存在。计算过程中会显示 <code>tqdm</code> 进度条。</p>
+<p>该命令需要 <code>calorine</code>、<code>ase</code> 和 <code>tqdm</code>：</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-18-1" name="__codelineno-18-1" href="#__codelineno-18-1"></a>pip<span class="w"> </span>install<span class="w"> </span>ase<span class="w"> </span>calorine<span class="w"> </span>tqdm
+</code></pre></div>
+<h2 id="nep_2">NEP 描述符</h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-19-1" name="__codelineno-19-1" href="#__codelineno-19-1"></a>gpumdkit.sh<span class="w"> </span>-calc<span class="w"> </span>des<span class="w"> </span>train.xyz<span class="w"> </span>descriptors.npy<span class="w"> </span>nep.txt<span class="w"> </span>Li
 </code></pre></div>
 <p>用途包括：</p>
 <ul>
@@ -1911,8 +1970,8 @@ Q 点数，生成的输出行随后由 <code>plt_phonon.py</code> 和 <code>plt_
 <li>判断新数据是否扩展了描述符空间。</li>
 </ul>
 <p>绘图：</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-18-1" name="__codelineno-18-1" href="#__codelineno-18-1"></a>gpumdkit.sh<span class="w"> </span>-plt<span class="w"> </span>des<span class="w"> </span>pca
-<a id="__codelineno-18-2" name="__codelineno-18-2" href="#__codelineno-18-2"></a>gpumdkit.sh<span class="w"> </span>-plt<span class="w"> </span>des<span class="w"> </span>umap
+<div class="highlight"><pre><span></span><code><a id="__codelineno-20-1" name="__codelineno-20-1" href="#__codelineno-20-1"></a>gpumdkit.sh<span class="w"> </span>-plt<span class="w"> </span>des<span class="w"> </span>pca
+<a id="__codelineno-20-2" name="__codelineno-20-2" href="#__codelineno-20-2"></a>gpumdkit.sh<span class="w"> </span>-plt<span class="w"> </span>des<span class="w"> </span>umap
 </code></pre></div>
 <div align="center">
   <img src="../../Gallery/des_umap.png" alt="Descriptor UMAP" width="52%" />
@@ -1920,8 +1979,8 @@ Q 点数，生成的输出行随后由 <code>plt_phonon.py</code> 和 <code>plt_
 
 <h2 id="doas">DOAS</h2>
 <p><code>calc_doas.py</code> 用于计算 <a href="https://doi.org/10.1002/anie.202215544">Wang et al.</a> 提出的 density of atomistic states。</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-19-1" name="__codelineno-19-1" href="#__codelineno-19-1"></a>gpumdkit.sh<span class="w"> </span>-calc<span class="w"> </span>doas<span class="w"> </span>structures.xyz<span class="w"> </span>nep.txt<span class="w"> </span>doas.out
-<a id="__codelineno-19-2" name="__codelineno-19-2" href="#__codelineno-19-2"></a>gpumdkit.sh<span class="w"> </span>-plt<span class="w"> </span>doas<span class="w"> </span>doas.out<span class="w"> </span>Li
+<div class="highlight"><pre><span></span><code><a id="__codelineno-21-1" name="__codelineno-21-1" href="#__codelineno-21-1"></a>gpumdkit.sh<span class="w"> </span>-calc<span class="w"> </span>doas<span class="w"> </span>structures.xyz<span class="w"> </span>nep.txt<span class="w"> </span>doas.out
+<a id="__codelineno-21-2" name="__codelineno-21-2" href="#__codelineno-21-2"></a>gpumdkit.sh<span class="w"> </span>-plt<span class="w"> </span>doas<span class="w"> </span>doas.out<span class="w"> </span>Li
 </code></pre></div>
 <p>脚本会：</p>
 <ol>
@@ -1938,7 +1997,7 @@ Q 点数，生成的输出行随后由 <code>plt_phonon.py</code> 和 <code>plt_
 
 <h2 id="neb">NEB 和结构优化</h2>
 <p>NEB：</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-20-1" name="__codelineno-20-1" href="#__codelineno-20-1"></a>gpumdkit.sh<span class="w"> </span>-calc<span class="w"> </span>neb<span class="w"> </span>initial.xyz<span class="w"> </span>final.xyz<span class="w"> </span><span class="m">9</span><span class="w"> </span>nep.txt
+<div class="highlight"><pre><span></span><code><a id="__codelineno-22-1" name="__codelineno-22-1" href="#__codelineno-22-1"></a>gpumdkit.sh<span class="w"> </span>-calc<span class="w"> </span>neb<span class="w"> </span>initial.xyz<span class="w"> </span>final.xyz<span class="w"> </span><span class="m">9</span><span class="w"> </span>nep.txt
 </code></pre></div>
 <p>这会使用 NEP 模型运行含 <code>9</code> 个中间像的 NEB 计算。运行过程中脚本会询问原子固定方式：</p>
 <ul>
@@ -1949,9 +2008,9 @@ Q 点数，生成的输出行随后由 <code>plt_phonon.py</code> 和 <code>plt_
 </ul>
 <p>结构优化（通过 <code>calorine</code>）：</p>
 <p><strong>依赖：</strong> <code>calorine</code></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-21-1" name="__codelineno-21-1" href="#__codelineno-21-1"></a>pip<span class="w"> </span>install<span class="w"> </span>calorine
+<div class="highlight"><pre><span></span><code><a id="__codelineno-23-1" name="__codelineno-23-1" href="#__codelineno-23-1"></a>pip<span class="w"> </span>install<span class="w"> </span>calorine
 </code></pre></div>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-22-1" name="__codelineno-22-1" href="#__codelineno-22-1"></a>gpumdkit.sh<span class="w"> </span>-calc<span class="w"> </span>minimize<span class="w"> </span>POSCAR<span class="w"> </span>nep.txt<span class="w"> </span><span class="m">0</span>.01<span class="w"> </span><span class="m">1000</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-24-1" name="__codelineno-24-1" href="#__codelineno-24-1"></a>gpumdkit.sh<span class="w"> </span>-calc<span class="w"> </span>minimize<span class="w"> </span>POSCAR<span class="w"> </span>nep.txt<span class="w"> </span><span class="m">0</span>.01<span class="w"> </span><span class="m">1000</span>
 </code></pre></div>
 <p>输出包括：</p>
 <ul>
@@ -1961,10 +2020,10 @@ Q 点数，生成的输出行随后由 <code>plt_phonon.py</code> 和 <code>plt_
 <h2 id="ovito-rdf">使用 OVITO 计算 RDF</h2>
 <p><code>rdf_calculator_ovito.py</code> 使用 OVITO 的分析工具计算径向分布函数。</p>
 <p><strong>依赖：</strong> OVITO</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-23-1" name="__codelineno-23-1" href="#__codelineno-23-1"></a>pip<span class="w"> </span>install<span class="w"> </span>ovito
+<div class="highlight"><pre><span></span><code><a id="__codelineno-25-1" name="__codelineno-25-1" href="#__codelineno-25-1"></a>pip<span class="w"> </span>install<span class="w"> </span>ovito
 </code></pre></div>
 <p><strong>输入文件：</strong> 结构文件（单帧或轨迹）</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-24-1" name="__codelineno-24-1" href="#__codelineno-24-1"></a>python<span class="w"> </span>Scripts/calculators/rdf_calculator_ovito.py<span class="w"> </span>trajectory.xyz<span class="w"> </span><span class="m">6</span>.0<span class="w"> </span><span class="m">400</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-26-1" name="__codelineno-26-1" href="#__codelineno-26-1"></a>python<span class="w"> </span>Scripts/calculators/rdf_calculator_ovito.py<span class="w"> </span>trajectory.xyz<span class="w"> </span><span class="m">6</span>.0<span class="w"> </span><span class="m">400</span>
 </code></pre></div>
 <p><strong>参数：</strong></p>
 <table>
@@ -1990,7 +2049,7 @@ Q 点数，生成的输出行随后由 <code>plt_phonon.py</code> 和 <code>plt_
 </tbody>
 </table>
 <p><strong>可视化：</strong></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-25-1" name="__codelineno-25-1" href="#__codelineno-25-1"></a>gpumdkit.sh<span class="w"> </span>-plt<span class="w"> </span>rdf
+<div class="highlight"><pre><span></span><code><a id="__codelineno-27-1" name="__codelineno-27-1" href="#__codelineno-27-1"></a>gpumdkit.sh<span class="w"> </span>-plt<span class="w"> </span>rdf
 </code></pre></div>
 <p><strong>注意：</strong> 建议优先使用 GPUMD 中的 <code>compute_rdf</code> 命令。</p>
 <h2 id="_4">铁电和极性材料工具</h2>
@@ -2039,7 +2098,7 @@ Q 点数，生成的输出行随后由 <code>plt_phonon.py</code> 和 <code>plt_
 </tbody>
 </table>
 <p>部分脚本需要安装 <code>ferrodispcalc</code>：</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-26-1" name="__codelineno-26-1" href="#__codelineno-26-1"></a>pip3<span class="w"> </span>install<span class="w"> </span>git+https://github.com/MoseyQAQ/ferrodispcalc.git
+<div class="highlight"><pre><span></span><code><a id="__codelineno-28-1" name="__codelineno-28-1" href="#__codelineno-28-1"></a>pip3<span class="w"> </span>install<span class="w"> </span>git+https://github.com/MoseyQAQ/ferrodispcalc.git
 </code></pre></div>
 <p>一个典型顺序是先用 <code>nlist</code> 建立近邻列表，再用该近邻列表计算位移、倾转或极化。对于平均结构，可以直接从轨迹出发，用长度容差控制哪些帧参与平均。</p>
 

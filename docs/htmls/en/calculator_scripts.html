@@ -731,6 +731,23 @@
     </span>
   </a>
   
+    <nav class="md-nav" aria-label="NEP Property Prediction">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#nep-prediction-output-files" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        NEP Prediction Output Files
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
 </li>
       
         <li class="md-nav__item">
@@ -1556,6 +1573,23 @@
     </span>
   </a>
   
+    <nav class="md-nav" aria-label="NEP Property Prediction">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#nep-prediction-output-files" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        NEP Prediction Output Files
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
 </li>
       
         <li class="md-nav__item">
@@ -1692,6 +1726,11 @@
 <td>NEP prediction</td>
 <td><code>gpumdkit.sh -calc nep &lt;input.xyz&gt; &lt;output.xyz&gt; &lt;nep.txt&gt;</code></td>
 <td>extxyz + NEP model</td>
+</tr>
+<tr>
+<td>NEP prediction outputs</td>
+<td><code>gpumdkit.sh -prediction &lt;input.xyz&gt; &lt;nep.txt&gt; [workers]</code></td>
+<td>labeled extxyz + NEP model</td>
 </tr>
 <tr>
 <td>NEP descriptors</td>
@@ -2015,9 +2054,32 @@ running this calculator:</p>
 <p><strong>Tip:</strong> Before prediction, you may want to clean the extxyz metadata:</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a>gpumdkit.sh<span class="w"> </span>-clean_xyz<span class="w"> </span>train.xyz<span class="w"> </span>clean_train.xyz
 </code></pre></div>
+<h3 id="nep-prediction-output-files">NEP Prediction Output Files</h3>
+<p><code>prediction.py</code> evaluates every frame with Calorine's <code>CPUNEP</code> calculator and
+writes the four prediction files used by NEP parity tools. The command derives
+the output suffix from the input filename, so <code>test.xyz</code> produces
+<code>energy_test.out</code>, <code>force_test.out</code>, <code>stress_test.out</code>, and <code>virial_test.out</code> in
+the current directory.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-17-1" name="__codelineno-17-1" href="#__codelineno-17-1"></a><span class="c1"># Single-core prediction (default)</span>
+<a id="__codelineno-17-2" name="__codelineno-17-2" href="#__codelineno-17-2"></a>gpumdkit.sh<span class="w"> </span>-prediction<span class="w"> </span>train.xyz<span class="w"> </span>nep.txt
+<a id="__codelineno-17-3" name="__codelineno-17-3" href="#__codelineno-17-3"></a>
+<a id="__codelineno-17-4" name="__codelineno-17-4" href="#__codelineno-17-4"></a><span class="c1"># Use eight independent CPU workers</span>
+<a id="__codelineno-17-5" name="__codelineno-17-5" href="#__codelineno-17-5"></a>gpumdkit.sh<span class="w"> </span>-prediction<span class="w"> </span>train.xyz<span class="w"> </span>nep.txt<span class="w"> </span><span class="m">8</span>
+</code></pre></div>
+<p>Each row stores predicted values first and target values second. Energy is in
+eV/atom, force in eV/Angstrom, stress in GPa, and virial in eV/atom. Stress and
+virial tensors use the NEP order <code>xx yy zz xy yz xz</code> and the same NEP sign
+convention. When only one of stress or virial is present in a frame, the other
+is derived using <code>stress = virial / volume</code> and the corresponding unit
+conversion. If neither target is present, both target columns contain NEP's
+<code>-1e6</code> sentinel. Energy and force targets are required. A <code>tqdm</code> progress bar
+is shown during prediction.</p>
+<p>The command requires <code>calorine</code>, <code>ase</code>, and <code>tqdm</code>:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-18-1" name="__codelineno-18-1" href="#__codelineno-18-1"></a>pip<span class="w"> </span>install<span class="w"> </span>ase<span class="w"> </span>calorine<span class="w"> </span>tqdm
+</code></pre></div>
 <h2 id="nep-descriptors">NEP Descriptors</h2>
 <p><code>calc_descriptors.py</code> extracts NEP descriptors for a selected element.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-17-1" name="__codelineno-17-1" href="#__codelineno-17-1"></a>gpumdkit.sh<span class="w"> </span>-calc<span class="w"> </span>des<span class="w"> </span>train.xyz<span class="w"> </span>descriptors.npy<span class="w"> </span>nep.txt<span class="w"> </span>Li
+<div class="highlight"><pre><span></span><code><a id="__codelineno-19-1" name="__codelineno-19-1" href="#__codelineno-19-1"></a>gpumdkit.sh<span class="w"> </span>-calc<span class="w"> </span>des<span class="w"> </span>train.xyz<span class="w"> </span>descriptors.npy<span class="w"> </span>nep.txt<span class="w"> </span>Li
 </code></pre></div>
 <p>Use cases:</p>
 <ul>
@@ -2026,8 +2088,8 @@ running this calculator:</p>
 <li>inspect whether new data expands descriptor space.</li>
 </ul>
 <p>Plot descriptors with:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-18-1" name="__codelineno-18-1" href="#__codelineno-18-1"></a>gpumdkit.sh<span class="w"> </span>-plt<span class="w"> </span>des<span class="w"> </span>pca
-<a id="__codelineno-18-2" name="__codelineno-18-2" href="#__codelineno-18-2"></a>gpumdkit.sh<span class="w"> </span>-plt<span class="w"> </span>des<span class="w"> </span>umap
+<div class="highlight"><pre><span></span><code><a id="__codelineno-20-1" name="__codelineno-20-1" href="#__codelineno-20-1"></a>gpumdkit.sh<span class="w"> </span>-plt<span class="w"> </span>des<span class="w"> </span>pca
+<a id="__codelineno-20-2" name="__codelineno-20-2" href="#__codelineno-20-2"></a>gpumdkit.sh<span class="w"> </span>-plt<span class="w"> </span>des<span class="w"> </span>umap
 </code></pre></div>
 <div align="center">
   <img src="../../Gallery/des_umap.png" alt="Descriptor UMAP" width="52%" />
@@ -2035,8 +2097,8 @@ running this calculator:</p>
 
 <h2 id="density-of-atomistic-states">Density of Atomistic States</h2>
 <p><code>calc_doas.py</code> calculates density of atomistic states (DOAS), following the idea proposed by <a href="https://doi.org/10.1002/anie.202215544">Wang et al.</a>.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-19-1" name="__codelineno-19-1" href="#__codelineno-19-1"></a>gpumdkit.sh<span class="w"> </span>-calc<span class="w"> </span>doas<span class="w"> </span>structures.xyz<span class="w"> </span>nep.txt<span class="w"> </span>doas.out
-<a id="__codelineno-19-2" name="__codelineno-19-2" href="#__codelineno-19-2"></a>gpumdkit.sh<span class="w"> </span>-plt<span class="w"> </span>doas<span class="w"> </span>doas.out<span class="w"> </span>Li
+<div class="highlight"><pre><span></span><code><a id="__codelineno-21-1" name="__codelineno-21-1" href="#__codelineno-21-1"></a>gpumdkit.sh<span class="w"> </span>-calc<span class="w"> </span>doas<span class="w"> </span>structures.xyz<span class="w"> </span>nep.txt<span class="w"> </span>doas.out
+<a id="__codelineno-21-2" name="__codelineno-21-2" href="#__codelineno-21-2"></a>gpumdkit.sh<span class="w"> </span>-plt<span class="w"> </span>doas<span class="w"> </span>doas.out<span class="w"> </span>Li
 </code></pre></div>
 <p>The script:</p>
 <ol>
@@ -2052,7 +2114,7 @@ running this calculator:</p>
 </div>
 
 <h2 id="neb-with-a-nep-model">NEB with a NEP Model</h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-20-1" name="__codelineno-20-1" href="#__codelineno-20-1"></a>gpumdkit.sh<span class="w"> </span>-calc<span class="w"> </span>neb<span class="w"> </span>initial.xyz<span class="w"> </span>final.xyz<span class="w"> </span><span class="m">9</span><span class="w"> </span>nep.txt
+<div class="highlight"><pre><span></span><code><a id="__codelineno-22-1" name="__codelineno-22-1" href="#__codelineno-22-1"></a>gpumdkit.sh<span class="w"> </span>-calc<span class="w"> </span>neb<span class="w"> </span>initial.xyz<span class="w"> </span>final.xyz<span class="w"> </span><span class="m">9</span><span class="w"> </span>nep.txt
 </code></pre></div>
 <p>This runs a NEB calculation with <code>9</code> intermediate images. During execution, the script asks how atoms should be fixed:</p>
 <ul>
@@ -2064,9 +2126,9 @@ running this calculator:</p>
 <h2 id="structure-minimization">Structure Minimization</h2>
 <p><code>calc_minimize.py</code> minimizes a structure using a NEP model through <code>calorine</code>.</p>
 <p><strong>Dependency:</strong> <code>calorine</code></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-21-1" name="__codelineno-21-1" href="#__codelineno-21-1"></a>pip<span class="w"> </span>install<span class="w"> </span>calorine
+<div class="highlight"><pre><span></span><code><a id="__codelineno-23-1" name="__codelineno-23-1" href="#__codelineno-23-1"></a>pip<span class="w"> </span>install<span class="w"> </span>calorine
 </code></pre></div>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-22-1" name="__codelineno-22-1" href="#__codelineno-22-1"></a>gpumdkit.sh<span class="w"> </span>-calc<span class="w"> </span>minimize<span class="w"> </span>POSCAR<span class="w"> </span>nep.txt<span class="w"> </span><span class="m">0</span>.01<span class="w"> </span><span class="m">1000</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-24-1" name="__codelineno-24-1" href="#__codelineno-24-1"></a>gpumdkit.sh<span class="w"> </span>-calc<span class="w"> </span>minimize<span class="w"> </span>POSCAR<span class="w"> </span>nep.txt<span class="w"> </span><span class="m">0</span>.01<span class="w"> </span><span class="m">1000</span>
 </code></pre></div>
 <p>Arguments:</p>
 <table>
@@ -2103,10 +2165,10 @@ running this calculator:</p>
 <h2 id="rdf-calculation-with-ovito">RDF Calculation with OVITO</h2>
 <p><code>rdf_calculator_ovito.py</code> calculates radial distribution function using OVITO's analysis tools.</p>
 <p><strong>Dependency:</strong> OVITO</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-23-1" name="__codelineno-23-1" href="#__codelineno-23-1"></a>pip<span class="w"> </span>install<span class="w"> </span>ovito
+<div class="highlight"><pre><span></span><code><a id="__codelineno-25-1" name="__codelineno-25-1" href="#__codelineno-25-1"></a>pip<span class="w"> </span>install<span class="w"> </span>ovito
 </code></pre></div>
 <p><strong>Input file:</strong> Structure file (single frame or trajectory)</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-24-1" name="__codelineno-24-1" href="#__codelineno-24-1"></a>python<span class="w"> </span>Scripts/calculators/rdf_calculator_ovito.py<span class="w"> </span>trajectory.xyz<span class="w"> </span><span class="m">6</span>.0<span class="w"> </span><span class="m">400</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-26-1" name="__codelineno-26-1" href="#__codelineno-26-1"></a>python<span class="w"> </span>Scripts/calculators/rdf_calculator_ovito.py<span class="w"> </span>trajectory.xyz<span class="w"> </span><span class="m">6</span>.0<span class="w"> </span><span class="m">400</span>
 </code></pre></div>
 <p><strong>Parameters:</strong></p>
 <table>
@@ -2132,7 +2194,7 @@ running this calculator:</p>
 </tbody>
 </table>
 <p><strong>Visualization:</strong></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-25-1" name="__codelineno-25-1" href="#__codelineno-25-1"></a>gpumdkit.sh<span class="w"> </span>-plt<span class="w"> </span>rdf
+<div class="highlight"><pre><span></span><code><a id="__codelineno-27-1" name="__codelineno-27-1" href="#__codelineno-27-1"></a>gpumdkit.sh<span class="w"> </span>-plt<span class="w"> </span>rdf
 </code></pre></div>
 <p><strong>Note:</strong> It is recommended to use the <code>compute_rdf</code> command directly in GPUMD when possible.</p>
 <hr />
@@ -2182,7 +2244,7 @@ running this calculator:</p>
 </tbody>
 </table>
 <p>Some scripts require <code>ferrodispcalc</code>:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-26-1" name="__codelineno-26-1" href="#__codelineno-26-1"></a>pip3<span class="w"> </span>install<span class="w"> </span>git+https://github.com/MoseyQAQ/ferrodispcalc.git
+<div class="highlight"><pre><span></span><code><a id="__codelineno-28-1" name="__codelineno-28-1" href="#__codelineno-28-1"></a>pip3<span class="w"> </span>install<span class="w"> </span>git+https://github.com/MoseyQAQ/ferrodispcalc.git
 </code></pre></div>
 <p>A typical sequence is to build neighbor lists with <code>nlist</code>, then reuse those lists for displacement, tilt, or polarization calculations. For averaged structures, you can start directly from the trajectory and use the length tolerance to control which frames are included.</p>
 

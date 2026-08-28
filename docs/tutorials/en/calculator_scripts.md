@@ -23,6 +23,7 @@ If you are not sure about the required arguments, start from the interactive men
 | X-ray diffraction | `4 → 413` (interactive only) | extxyz trajectory with `Lattice`/`pbc` |
 | Phonon band structure | `4 → 414` (interactive only) | `PRIMCELL.vasp`, `nep.txt`, `QPOINTS` |
 | NEP prediction | `gpumdkit.sh -calc nep <input.xyz> <output.xyz> <nep.txt>` | extxyz + NEP model |
+| NEP prediction outputs | `gpumdkit.sh -prediction <input.xyz> <nep.txt> [workers]` | labeled extxyz + NEP model |
 | NEP descriptors | `gpumdkit.sh -calc des <input.xyz> <output.npy> <nep.txt> <element>` | extxyz + NEP model |
 | DOAS | `gpumdkit.sh -calc doas <input.xyz> <nep.txt> <output.txt>` | extxyz + NEP model |
 | NEB | `gpumdkit.sh -calc neb <initial.xyz> <final.xyz> <n_images> <nep.txt>` | initial/final structures |
@@ -302,6 +303,37 @@ Use this function to run predictions with a trained NEP model. For best results,
 
 ```bash
 gpumdkit.sh -clean_xyz train.xyz clean_train.xyz
+```
+
+### NEP Prediction Output Files
+
+`prediction.py` evaluates every frame with Calorine's `CPUNEP` calculator and
+writes the four prediction files used by NEP parity tools. The command derives
+the output suffix from the input filename, so `test.xyz` produces
+`energy_test.out`, `force_test.out`, `stress_test.out`, and `virial_test.out` in
+the current directory.
+
+```bash
+# Single-core prediction (default)
+gpumdkit.sh -prediction train.xyz nep.txt
+
+# Use eight independent CPU workers
+gpumdkit.sh -prediction train.xyz nep.txt 8
+```
+
+Each row stores predicted values first and target values second. Energy is in
+eV/atom, force in eV/Angstrom, stress in GPa, and virial in eV/atom. Stress and
+virial tensors use the NEP order `xx yy zz xy yz xz` and the same NEP sign
+convention. When only one of stress or virial is present in a frame, the other
+is derived using `stress = virial / volume` and the corresponding unit
+conversion. If neither target is present, both target columns contain NEP's
+`-1e6` sentinel. Energy and force targets are required. A `tqdm` progress bar
+is shown during prediction.
+
+The command requires `calorine`, `ase`, and `tqdm`:
+
+```bash
+pip install ase calorine tqdm
 ```
 
 ## NEP Descriptors

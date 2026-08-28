@@ -57,6 +57,29 @@ gpumdkit.sh -calc nep structures.xyz predictions.xyz nep.txt
 # Note: Clean input with gpumdkit.sh -clean_xyz first to remove existing properties
 ```
 
+### NEP Prediction Output Files
+```bash
+# Write energy, force, stress, and virial prediction files for every frame.
+# The output suffix comes from the input filename (test.xyz -> *_test.out).
+gpumdkit.sh -prediction <input.xyz> <nep.txt> [workers]
+
+# Single-core default
+gpumdkit.sh -prediction train.xyz nep.txt
+
+# Eight CPU workers
+gpumdkit.sh -prediction train.xyz nep.txt 8
+```
+
+The output files are `energy_<input-stem>.out`, `force_<input-stem>.out`,
+`stress_<input-stem>.out`, and `virial_<input-stem>.out` in the current
+directory. Predicted columns precede target columns. Energy and virial are
+eV/atom, force is eV/Angstrom, and stress is GPa. Tensor columns use NEP's
+`xx yy zz xy yz xz` order and the same sign convention for stress and virial.
+If only one of stress or virial is supplied, the other target is derived using
+`stress = virial / volume` and the appropriate unit conversion. Only frames
+missing both use the `-1e6` sentinel; energy and force targets are required. A
+`tqdm` progress bar is shown during prediction.
+
 ### Descriptors
 ```bash
 # Calculate NEP descriptors for specific element
