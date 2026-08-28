@@ -52,3 +52,5 @@ analyze	-pda	gpumdkit.sh -pda <ref_struct> <trajectory.xyz> <species> <interval>
 utility	-time	gpumdkit.sh -time <gpumd|nep>	Monitor GPUMD or NEP progress	监控 GPUMD 或 NEP 进度	stable
 utility	-nep_modifier	gpumdkit.sh -nep_modifier [nep.txt] [nep.restart|-] [nep.in|-]	Safely modify and export a NEP4 model package	安全修改并导出 NEP4 模型文件包	testing
 plot	-plt emd2	gpumdkit.sh -plt emd2 [save]	Plot EMD thermal conductivity in all directions	绘制全部方向的 EMD 热导率	stable
+plot	-plt D_PT	gpumdkit.sh -plt D_PT <transition_temperature> [save]	Plot piecewise Arrhenius diffusivity around a phase transition	绘制相变温度两侧的分段 Arrhenius 扩散系数	stable
+plot	-plt sigma_PT	gpumdkit.sh -plt sigma_PT <transition_temperature> [save]	Plot piecewise Arrhenius ionic conductivity around a phase transition	绘制相变温度两侧的分段 Arrhenius 离子电导率	stable

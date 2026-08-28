@@ -63,6 +63,8 @@ gpumdkit.sh -plt dimer Li Li nep.txt
 | `msd_sdc` | `msd.out` | MSD and SDC combined |
 | `sigma` / `arrhenius_sigma` | `thermo.out` and `msd.out` per `*K/`; first `*K/` also has `model.xyz` and optional `run.in` | Arrhenius ionic conductivity |
 | `D` / `arrhenius_d` | `*K/` directories | Arrhenius diffusivity |
+| `sigma_PT` | `thermo.out` and `msd.out` per `*K/`, first `*K/` also has `model.xyz` and optional `run.in`, plus a transition temperature | Piecewise Arrhenius ionic conductivity around a phase transition |
+| `D_PT` | `*K/` directories plus a transition temperature | Piecewise Arrhenius diffusivity around a phase transition |
 | `sigma_xyz` | `*K/` directories | Directional Arrhenius conductivity |
 | `D_xyz` | `*K/` directories | Directional Arrhenius diffusivity |
 | `doas` | `doas.out` | Density of atomistic states |
@@ -82,6 +84,8 @@ gpumdkit.sh -plt msd_all msd.out Li P S
 # model.xyz and may contain run.in for replicate detection
 gpumdkit.sh -plt arrhenius_sigma
 gpumdkit.sh -plt arrhenius_d
+gpumdkit.sh -plt sigma_PT 380
+gpumdkit.sh -plt D_PT 380
 
 # DOAS visualization (requires prior calculation)
 gpumdkit.sh -plt doas doas.out Li
@@ -218,6 +222,8 @@ gpumdkit.sh -plt nemd 10 1 60 save
 | `xrd` | `xrd.png` |
 | `arrhenius_sigma` | `Arrhenius_sigma.png` |
 | `arrhenius_d` | `Arrhenius_D.png` |
+| `sigma_PT` | `Arrhenius_sigma_PT.png` |
+| `D_PT` | `Arrhenius_D_PT.png` |
 | `emd` | `emd.png` |
 | `emd2` | `emd2.png` |
 | `nemd` | `nemd.png` |

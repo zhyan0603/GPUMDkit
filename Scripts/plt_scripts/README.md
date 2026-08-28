@@ -308,6 +308,28 @@ gpumdkit.sh -plt D  # Alternative command
     <img src="../../docs/Gallery/Arrhenius_D.png" alt="Arrhenius D" width="55%" />
 </div>
 
+---
+
+#### plt_arrhenius_d_PT.py
+
+Creates a piecewise Arrhenius diffusivity plot around a user-specified phase-transition temperature.
+The transition-temperature point is included in both the `LowT` (`T <= Tc`) and `HighT` (`T >= Tc`) fits.
+
+**Input Files:** `*K/msd.out` files
+
+**Usage:**
+
+```bash
+gpumdkit.sh -plt D_PT 380
+gpumdkit.sh -plt D_PT 380 save
+```
+
+The plot legend reports the activation energy of each branch as `HighT (xx eV)` and `LowT (xx eV)`.
+
+<div align="center">
+    <img src="../../docs/Gallery/Arrhenius_D_PT.png" alt="Phase-transition Arrhenius D" width="55%" />
+</div>
+
 **Output:**
 
 ```
@@ -348,6 +370,30 @@ gpumdkit.sh -plt sigma         # Alternative command
 
 <div align="center">
     <img src="../../docs/Gallery/Arrhenius_sigma.png" alt="Arrhenius sigma" width="55%" />
+</div>
+
+---
+
+#### plt_arrhenius_sigma_PT.py
+
+Creates a piecewise Arrhenius ionic-conductivity plot around a user-specified phase-transition temperature.
+The transition-temperature point is included in both the `LowT` (`T <= Tc`) and `HighT` (`T >= Tc`) fits.
+The 300 K conductivity is extrapolated from the branch on the same side of the transition as 300 K.
+
+**Input Files:** `thermo.out` and `msd.out` in each `*K/` directory;
+`model.xyz` and optional `run.in` in the first temperature directory
+
+**Usage:**
+
+```bash
+gpumdkit.sh -plt sigma_PT 380
+gpumdkit.sh -plt sigma_PT 380 save
+```
+
+The plot legend reports the activation energy of each branch as `HighT (xx eV)` and `LowT (xx eV)`.
+
+<div align="center">
+    <img src="../../docs/Gallery/Arrhenius_sigma_PT.png" alt="Phase-transition Arrhenius sigma" width="55%" />
 </div>
 
 **Output:**
@@ -780,7 +826,7 @@ For quick reference, here's the complete command list:
 
 ```
  +-----------------------------------------------------------------------------------------------+
- |                     GPUMDkit 1.5.7 (2026-08-23)       PLOT & VISUALIZATION TOOLS              |
+ |                     GPUMDkit 1.5.7 (2026-08-28)       PLOT & VISUALIZATION TOOLS              |
  +-----------------------------------------------------------------------------------------------+
  |  Usage: gpumdkit.sh -plt <type>                        List: gpumdkit.sh -plt -h              |
  +-----------------------------------------------------------------------------------------------+
@@ -801,6 +847,7 @@ For quick reference, here's the complete command list:
  |  msd_sdc        - MSD and SDC together           sigma          - Arrhenius ionic conductivity|
  |  D              - Arrhenius diffusivity          sigma_xyz      - Directional Arrhenius sigma |
  |  D_xyz          - Directional Arrhenius D                                                     |
+ |  D_PT           - PT Arrhenius D                 sigma_PT       - PT Arrhenius sigma          |
  |  doas           - Density of atomistic states                                                 |
  +-----------------------------------------------------------------------------------------------+
  |                                    MD & Structural Analysis                                   |

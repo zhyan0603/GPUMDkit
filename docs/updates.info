@@ -9,6 +9,7 @@ NEW_FEATURES=(
     "add -xyz2dp"
     "add perturb.txt report for structure perturbation"
     "add -plt emd2 for EMD thermal conductivity in all directions"
+    "add -plt D_PT and -plt sigma_PT for phase-transition piecewise Arrhenius fits"
 )
 
 # Bug fixes (one per line, in an array)

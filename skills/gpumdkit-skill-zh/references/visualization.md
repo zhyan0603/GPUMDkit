@@ -63,6 +63,8 @@ gpumdkit.sh -plt dimer Li Li nep.txt
 | `msd_sdc` | `msd.out` | MSD 和 SDC 合并 |
 | `sigma` / `arrhenius_sigma` | 每个 `*K/` 中的 `thermo.out` 和 `msd.out`；首个 `*K/` 还需 `model.xyz`，`run.in` 可选 | Arrhenius 离子电导率 |
 | `D` / `arrhenius_d` | `*K/` 目录 | Arrhenius 扩散系数 |
+| `sigma_PT` | 每个 `*K/` 中的 `thermo.out` 和 `msd.out`，首个 `*K/` 还需 `model.xyz`、可选 `run.in`，以及相变温度 | 相变温度两侧的分段 Arrhenius 离子电导率 |
+| `D_PT` | `*K/` 目录以及相变温度 | 相变温度两侧的分段 Arrhenius 扩散系数 |
 | `sigma_xyz` | `*K/` 目录 | 方向性 Arrhenius 电导率 |
 | `D_xyz` | `*K/` 目录 | 方向性 Arrhenius 扩散系数 |
 | `doas` | `doas.out` | 原子态密度 |
@@ -82,6 +84,8 @@ gpumdkit.sh -plt msd_all msd.out Li P S
 # 并可用 run.in 检测 replicate
 gpumdkit.sh -plt arrhenius_sigma
 gpumdkit.sh -plt arrhenius_d
+gpumdkit.sh -plt sigma_PT 380
+gpumdkit.sh -plt D_PT 380
 
 # DOAS 可视化（需先计算）
 gpumdkit.sh -plt doas doas.out Li
@@ -217,6 +221,8 @@ gpumdkit.sh -plt nemd 10 1 60 save
 | `xrd` | `xrd.png` |
 | `arrhenius_sigma` | `Arrhenius_sigma.png` |
 | `arrhenius_d` | `Arrhenius_D.png` |
+| `sigma_PT` | `Arrhenius_sigma_PT.png` |
+| `D_PT` | `Arrhenius_D_PT.png` |
 | `emd` | `emd.png` |
 | `emd2` | `emd2.png` |
 | `nemd` | `nemd.png` |
