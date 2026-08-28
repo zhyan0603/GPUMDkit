@@ -19,7 +19,7 @@ if [ -z "$GPUMDkit_path" ]; then
     exit 1
 fi
 
-VERSION="1.5.7 (2026-08-23)"
+VERSION="1.5.7 (2026-08-28)"
 
 plt_path="${GPUMDkit_path}/Scripts/plt_scripts"
 analyzer_path="${GPUMDkit_path}/Scripts/analyzer"
@@ -329,8 +329,10 @@ if [ ! -z "$1" ]; then
                     "lr") python ${plt_path}/plt_learning_rate.py $3 ;;
                     "doas") python ${plt_path}/plt_doas.py $3 $4 ;;
                     "arrhenius_d"|"D") python ${plt_path}/plt_arrhenius_d.py $3 ;;
+                    "D_PT") python "${plt_path}/plt_arrhenius_d_PT.py" "${@:3}" ;;
                     "D_xyz") python ${plt_path}/plt_arrhenius_d_xyz.py $3 ;;
                     "arrhenius_sigma"|"sigma") python ${plt_path}/plt_arrhenius_sigma.py $3 ;;
+                    "sigma_PT") python "${plt_path}/plt_arrhenius_sigma_PT.py" "${@:3}" ;;
                     "sigma_xyz") python ${plt_path}/plt_arrhenius_sigma_xyz.py $3 ;;
                     "net_force") python ${plt_path}/plt_net_force.py ${@:3} ;;
                     "emd") python ${plt_path}/plt_emd.py ${@:3} ;;
