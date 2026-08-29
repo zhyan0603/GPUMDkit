@@ -91,7 +91,7 @@ gpumdkit.sh -plt D_PT 380
 gpumdkit.sh -plt doas doas.out Li
 ```
 
-### Structural Analysis (9 plot types)
+### Structural Analysis (10 plot types)
 
 | Command | Input Files | Description |
 |---------|-------------|-------------|
@@ -101,6 +101,7 @@ gpumdkit.sh -plt doas doas.out Li
 | `rdf` | `rdf.out` | Radial distribution function |
 | `rdf_pmf` | `rdf.out` | RDF + potential of mean force |
 | `xrd` | `xrd.out` or specified XRD output | X-ray diffraction intensity |
+| `xrd_comp` | `<temperature>K/xrd.out` in the current directory | Compare XRD curves across temperature folders |
 | `vac` | `sdc.out` | Velocity autocorrelation |
 | `cohesive` | `cohesive.out` | Cohesive energy curve |
 | `plane-grid` | `model.xyz`, `displacements.dat` | Displacement grid visualization |
@@ -117,6 +118,10 @@ gpumdkit.sh -plt rdf_pmf 300        # With PMF at 300K
 # XRD output: column 2 is angle, column 4 is intensity
 gpumdkit.sh -plt xrd
 gpumdkit.sh -plt xrd path/to/xrd.out save
+
+# XRD comparison: run from the directory containing the *K subdirectories
+gpumdkit.sh -plt xrd_comp
+gpumdkit.sh -plt xrd_comp save
 
 # Plane-grid displacement
 gpumdkit.sh -plt plane-grid -i model.xyz -d displacements.dat -e Pb Sr
@@ -220,6 +225,7 @@ gpumdkit.sh -plt nemd 10 1 60 save
 | `thermo` | `thermo.png` |
 | `rdf` | `rdf.png` |
 | `xrd` | `xrd.png` |
+| `xrd_comp` | `xrd_comp.png` |
 | `arrhenius_sigma` | `Arrhenius_sigma.png` |
 | `arrhenius_d` | `Arrhenius_D.png` |
 | `sigma_PT` | `Arrhenius_sigma_PT.png` |

@@ -382,11 +382,11 @@ gpumdkit.sh -calc neb init.xyz fin.xyz 9 nep.txt
  | 408) Calc averaged structure                             |
  | 409) Calc octahedral tilt                                |
  | 410) Calc polarization for ABO3                          |
-| 411) Minimize structure by nep                           |
-| 412) Calc mean square displacement (MSD) from trajectory |
-| 413) Calc XRD from extxyz trajectory                     |
-| 414) Calc phonon band structure                          |
-+----------------------------------------------------------+
+ | 411) Minimize structure by nep                           |
+ | 412) Calc mean square displacement (MSD) from trajectory |
+ | 413) Calc XRD from extxyz trajectory                     |
+ | 414) Calc phonon band structure                          |
+ +----------------------------------------------------------+
  | 000) Return to the main menu                             |
  +----------------------------------------------------------+
  Input the function number:

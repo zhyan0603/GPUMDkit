@@ -185,7 +185,7 @@ the help information:
 
 ```
  +-----------------------------------------------------------------------------------------------+
- |                     GPUMDkit 1.5.7 (2026-08-23)       PLOT & VISUALIZATION TOOLS              |
+ |                     GPUMDkit 1.5.7 (2026-08-28)       PLOT & VISUALIZATION TOOLS              |
  +-----------------------------------------------------------------------------------------------+
  |  Usage: gpumdkit.sh -plt <type>                        List: gpumdkit.sh -plt -h              |
  +-----------------------------------------------------------------------------------------------+
@@ -203,10 +203,10 @@ the help information:
  +-----------------------------------------------------------------------------------------------+
  |  msd            - Mean square displacement       msd_conv       - MSD convergence             |
  |  msd_all        - MSD for all species            sdc            - Self diffusion coefficient  |
- |  msd_sdc        - MSD and SDC together           sigma          - Arrhenius ionic conductivity|
- |  D              - Arrhenius diffusivity          sigma_xyz      - Directional Arrhenius sigma |
- |  D_xyz          - Directional Arrhenius D                                                     |
- |  doas           - Density of atomistic states                                                 |
+ |  msd_sdc        - MSD and SDC together           doas           - Density of atomistic states |
+ |  D              - Arrhenius diffusivity          sigma          - Arrhenius ionic conductivity|
+ |  D_xyz          - Directional Arrhenius D        sigma_xyz      - Directional Arrhenius sigma |
+ |  D_PT           - PT Arrhenius D                 sigma_PT       - PT Arrhenius sigma          |
  +-----------------------------------------------------------------------------------------------+
  |                                    MD & Structural Analysis                                   |
  +-----------------------------------------------------------------------------------------------+
@@ -214,6 +214,7 @@ the help information:
  |  rdf            - Radial distribution function   rdf_pmf        - Potential of mean force     |
  |  vac            - Velocity autocorrelation       cohesive       - Cohesive energy curve       |
  |  xrd            - X-ray diffraction              plane-grid     - Displacement plane grid     |
+ |  xrd_comp       - Compare XRD                                                                 |
  +-----------------------------------------------------------------------------------------------+
  |                                        Heat Transport                                         |
  +-----------------------------------------------------------------------------------------------+

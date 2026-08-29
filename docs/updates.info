@@ -11,6 +11,7 @@ NEW_FEATURES=(
     "add perturb.txt report for structure perturbation"
     "add -plt emd2 for EMD thermal conductivity in all directions"
     "add -plt D_PT and -plt sigma_PT for phase-transition piecewise Arrhenius fits"
+    "add -plt xrd_comp for stacked XRD comparison across temperature folders"
 )
 
 # Bug fixes (one per line, in an array)

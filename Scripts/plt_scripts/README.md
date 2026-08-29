@@ -658,6 +658,33 @@ script uses 150 DPI for display and at least 300 DPI when saving.
 
 ---
 
+#### plt_xrd_comp.py
+
+Compares XRD curves from several temperature folders in the current working
+directory. Each folder must be named `<temperature>K` and contain an
+`xrd.out` file written by calculator 413. The curves are stacked from high
+temperature at the top to low temperature at the bottom.
+
+`gpumdkit.sh -plt xrd` reads and plots an existing `xrd.out`; it does not
+create that file. Generate `xrd.out` with the XRD calculator first, then use
+`-plt xrd` in an individual temperature folder if you want to inspect that
+curve before comparing the series.
+
+**Usage:** Run the comparison from the directory containing the `*K`
+subdirectories. The command does not take a directory argument.
+
+```bash
+cd /path/to/xrd_series
+gpumdkit.sh -plt xrd_comp
+gpumdkit.sh -plt xrd_comp save
+```
+
+The saved image is `xrd_comp.png` in the current working directory. The
+plotter validates every discovered `xrd.out` using the calculator-413 output
+format and stops if a file is malformed.
+
+---
+
 #### plt_charge.py
 
 Plots charge distribution in `charge_train.out` from `qNEP` model.
@@ -792,6 +819,7 @@ gpumdkit.sh -plt net_force train.xyz
 | `sdc`          | `msd.out`                   | Self-diffusion coefficient         |
 | `rdf`          | `rdf.out`                   | Radial distribution function       |
 | `xrd`          | `xrd.out`                   | X-ray diffraction intensity        |
+| `xrd_comp`     | `*K/xrd.out`                | XRD comparison across temperatures |
 | `vac`          | `sdc.out`                   | Velocity autocorrelation           |
 | `charge`       | `train.xyz`, `charge_train.out` | Charge distribution             |
 | `doas`         | DOAS files                  | Density of atomistic states        |
@@ -856,6 +884,7 @@ For quick reference, here's the complete command list:
  |  rdf            - Radial distribution function   rdf_pmf        - Potential of mean force     |
  |  vac            - Velocity autocorrelation       cohesive       - Cohesive energy curve       |
  |  xrd            - X-ray diffraction              plane-grid     - Displacement plane grid     |
+ |  xrd_comp       - Compare XRD                                                                 |
  +-----------------------------------------------------------------------------------------------+
  |                                        Heat Transport                                         |
  +-----------------------------------------------------------------------------------------------+
