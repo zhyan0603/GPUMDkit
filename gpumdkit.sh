@@ -19,7 +19,7 @@ if [ -z "$GPUMDkit_path" ]; then
     exit 1
 fi
 
-VERSION="1.5.7 (2026-08-28)"
+VERSION="1.5.7 (2026-08-29)"
 
 plt_path="${GPUMDkit_path}/Scripts/plt_scripts"
 analyzer_path="${GPUMDkit_path}/Scripts/analyzer"
@@ -323,6 +323,7 @@ if [ ! -z "$1" ]; then
                     "sdc") python ${plt_path}/plt_sdc.py $3 ;;
                     "rdf") python ${plt_path}/plt_rdf.py ${@:3} ;;
                     "xrd") python ${plt_path}/plt_xrd.py ${@:3} ;;
+                    "xrd_comp") python "${plt_path}/plt_xrd_comp.py" "${@:3}" ;;
                     "phonon") python "${plt_path}/plt_phonon.py" "${@:3}" ;;
                     "phonon_comp") python "${plt_path}/plt_phonon_comp.py" "${@:3}" ;;
                     "vac") python ${plt_path}/plt_vac.py $3 ;;
