@@ -45,7 +45,7 @@ _gpumdkit_completions() {
 
         # Secondary options for -plt
         -plt)
-            COMPREPLY=($(compgen -W "thermo thermo2 thermo3 train train_density prediction test train_test parity_density born_charge bec msd msd_all msd_conv msd_sdc sdc rdf rdf_pmf xrd xrd_comp vac restart dimer force_errors des doas charge lr arrhenius_d arrhenius_sigma sigma D D_PT sigma_PT sigma_xyz D_xyz net_force emd emd2 nemd hnemd pdos phonon phonon_comp plane-grid cohesive viscosity" -- "$cur")) ;;
+            COMPREPLY=($(compgen -W "thermo thermo2 thermo3 train train_density prediction test train_test parity_density born_charge bec msd msd_all msd_conv msd_sdc sdc rdf rdf_pmf xrd xrd_comp vac restart dimer force_errors des doas charge arrhenius_d arrhenius_sigma sigma D D_PT sigma_PT sigma_xyz D_xyz net_force emd emd2 nemd hnemd pdos phonon phonon_comp plane-grid cohesive viscosity" -- "$cur")) ;;
 
         # Options requiring files or directories, complete with filenames
         -out2xyz|-out2exyz|-cp2k2xyz|-exyz2pos|-min_dist|-min_dist_pbc|-filter_dist|-filter_dist_pbc|-filter_box|-filter_value|-filter_range|-get_frame|-clean_xyz|-pos2exyz|-cif2exyz|-cif2pos|-pos2lmp|-lmp2exyz|-traj2exyz|-dp2xyz|-addgroup|-addlabel|-addweight|-analyze_comp|-replicate|-pda|-cbc|-frame_range|-chem_species|-xdat2exyz|-prediction)

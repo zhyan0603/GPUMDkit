@@ -440,7 +440,7 @@
   <span class="md-ellipsis">
     
   
-    Simulation and Post-processing
+    GPUMDkit Agent Skill
   
 
     
@@ -774,27 +774,16 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#2-select-candidates" class="md-nav__link">
+  <a href="#2-select-candidate-structures" class="md-nav__link">
     <span class="md-ellipsis">
       
-        2. Select candidates
+        2. Select candidate structures
       
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="2. Select candidates">
+    <nav class="md-nav" aria-label="2. Select candidate structures">
       <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#md-trajectory-and-neptrain-fps" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        MD trajectory and NepTrain FPS
-      
-    </span>
-  </a>
-  
-</li>
         
           <li class="md-nav__item">
   <a href="#optional-committee-uncertainty-alternative" class="md-nav__link">
@@ -850,6 +839,17 @@
     <span class="md-ellipsis">
       
         Iteration record
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#ai-assistance-and-authorization-boundaries" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        AI Assistance and Authorization Boundaries
       
     </span>
   </a>
@@ -1045,7 +1045,7 @@
   <span class="md-ellipsis">
     
   
-    模拟与后处理
+    GPUMDkit Agent Skill
   
 
     
@@ -1432,27 +1432,16 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#2-select-candidates" class="md-nav__link">
+  <a href="#2-select-candidate-structures" class="md-nav__link">
     <span class="md-ellipsis">
       
-        2. Select candidates
+        2. Select candidate structures
       
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="2. Select candidates">
+    <nav class="md-nav" aria-label="2. Select candidate structures">
       <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#md-trajectory-and-neptrain-fps" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        MD trajectory and NepTrain FPS
-      
-    </span>
-  </a>
-  
-</li>
         
           <li class="md-nav__item">
   <a href="#optional-committee-uncertainty-alternative" class="md-nav__link">
@@ -1514,6 +1503,17 @@
   
 </li>
       
+        <li class="md-nav__item">
+  <a href="#ai-assistance-and-authorization-boundaries" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        AI Assistance and Authorization Boundaries
+      
+    </span>
+  </a>
+  
+</li>
+      
     </ul>
   
 </nav>
@@ -1536,18 +1536,17 @@
 
 <div align="center">
   <h1>🔁 Active Learning Workflow</h1>
-  <p style="text-align: justify;">A manually reviewed NEP data-iteration protocol built from GPUMDkit sampling, filtering, batch-preparation, conversion, and validation tools.</p>
+  <p style="text-align: justify;">A manually reviewed NEP data iteration using GPUMDkit sampling, filtering, batch preparation, conversion, and validation tools.</p>
 </div>
 
 <h2 id="scope">Scope</h2>
-<p>This page intentionally documents a staged, manually reviewed iteration.
-Sampling conditions, selection criteria, DFT settings, scheduler resources,
-dataset policy, and model acceptance criteria depend on the scientific system.</p>
-<p>GPUMDkit supports the individual preparation and analysis stages. GPUMD, DFT,
-and NEP calculations are run separately only after their inputs and cost have
-been approved.</p>
+<p>This page breaks one NEP data iteration into checkable stages: generate candidate
+structures, filter them, prepare reference calculations, convert the results,
+update the dataset, and validate the model. GPUMDkit prepares and analyzes files;
+GPUMD, DFT, and NEP calculations use the project's own execution procedure.</p>
 <h2 id="before-starting-an-iteration">Before starting an iteration</h2>
-<p>Define and record:</p>
+<p>Create a dedicated working directory, preserve the previous dataset and model, and
+record these decisions:</p>
 <table>
 <thead>
 <tr>
@@ -1586,93 +1585,121 @@ been approved.</p>
 </tr>
 </tbody>
 </table>
-<p>Do not copy thresholds or simulation parameters from another material system.</p>
 <h2 id="1-generate-candidate-structures">1. Generate candidate structures</h2>
-<p>Prepare GPUMD batch directories with function 302 when multiple starting
-structures or <code>run.in</code> files are needed:</p>
+<p>When there are multiple starting structures or <code>run.in</code> files, first prepare GPUMD
+batch directories with function 302:</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>gpumdkit.sh<span class="w">  </span><span class="c1"># Select: 3) Workflow -&gt; 302</span>
 </code></pre></div>
-<p>The command prepares directories and symlinks. Put the approved <code>nep.txt</code> and
-<code>run_&lt;index&gt;.in</code> files in the generated <code>md/</code> directory, inspect every mapping,
-and run GPUMD through your own approved execution procedure.</p>
-<p>Use a clean output directory or archive append-mode GPUMD outputs before a
-rerun. Check the exit status, log, temperature, energy, pressure, cell, and
-trajectory before selecting structures.</p>
-<h2 id="2-select-candidates">2. Select candidates</h2>
-<p>The recommended route is direct MD sampling followed by geometry filtering and
-NepTrain FPS.</p>
-<h3 id="md-trajectory-and-neptrain-fps">MD trajectory and NepTrain FPS</h3>
-<p>For an ordinary stable MD trajectory, first inspect periodic distances, then
-apply only approved filters:</p>
+<p>This function creates directories and symlinks only. After preparation, put the
+reviewed <code>nep.txt</code> and the matching <code>run_&lt;index&gt;.in</code> file for each sample in the
+generated <code>md/</code> directory. Inspect every mapping before running GPUMD through the
+project's procedure.</p>
+<p>Use a clean output directory before a rerun, or archive GPUMD outputs that use
+append mode. Before selecting structures, check exit status, logs, temperature,
+energy, pressure, cell, and trajectory, and confirm that <code>dump.xyz</code> is complete
+and contains no obvious unphysical structures.</p>
+<h2 id="2-select-candidate-structures">2. Select candidate structures</h2>
+<p>For a stable MD trajectory, inspect the geometry first and then apply only the
+approved filters:</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>gpumdkit.sh<span class="w"> </span>-min_dist_pbc<span class="w"> </span>dump.xyz
 <a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>gpumdkit.sh<span class="w"> </span>-filter_dist_pbc<span class="w"> </span>dump.xyz<span class="w"> </span>&lt;minimum_distance&gt;
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>gpumdkit.sh<span class="w"> </span>-filter_box<span class="w"> </span>filtered_dump.xyz<span class="w"> </span>&lt;maximum_box_edge&gt;
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>gpumdkit.sh<span class="w">  </span><span class="c1"># Select: 2) Sample Structures -&gt; 203) FPS by NepTrain</span>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="c1"># Run this only when a box-edge criterion has been approved:</span>
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>gpumdkit.sh<span class="w"> </span>-filter_box<span class="w"> </span>filtered_dump.xyz<span class="w"> </span>&lt;maximum_box_edge&gt;
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>gpumdkit.sh<span class="w">  </span><span class="c1"># Select: 2) Sample Structures -&gt; 203) FPS by NepTrain</span>
 </code></pre></div>
-<p><code>-min_dist_pbc</code> reports distances but does not remove structures. Use
-<code>-filter_dist_pbc</code> for actual filtering. The box filter is optional and should
-be skipped when no approved box-edge criterion applies. Record all thresholds,
-rejected structures, and the NepTrain FPS stopping rule.</p>
+<p><code>-min_dist_pbc</code> reports distances but does not remove structures;
+<code>-filter_dist_pbc</code> performs the distance filter. The box filter is optional and
+should be skipped when no applicable, approved box-edge criterion exists. When
+used, it writes <code>filtered_by_box.xyz</code>; provide this file as the candidate input at
+the 203 prompt. Record all thresholds, rejected structures, the FPS stopping rule,
+and the mapping from selected structures to source frames.</p>
 <h3 id="optional-committee-uncertainty-alternative">Optional committee-uncertainty alternative</h3>
-<p>Use committee uncertainty only when it is explicitly part of the project.
-GPUMD <code>active</code> requires compatible committee models and produces <code>active.out</code>
-and <code>active.xyz</code>; function 205 can then rank or cap high-force-deviation
-structures. Confirm all uncertainty settings and keep the two files from the
-same run.</p>
+<p>Use committee uncertainty only when it is part of the project. GPUMD <code>active</code>
+requires compatible committee models and produces <code>active.out</code> and <code>active.xyz</code>
+from the same run. Function 205 can then rank or cap high-force-deviation
+structures. Confirm the model order, check interval, output options, threshold,
+<code>top_n</code>, and <code>min_deviation</code> before using it.</p>
 <h2 id="3-prepare-reference-calculations">3. Prepare reference calculations</h2>
 <p>Use function 301 with the reviewed <code>selected.xyz</code>:</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>gpumdkit.sh<span class="w">  </span><span class="c1"># Select: 3) Workflow -&gt; 301 -&gt; VASP or CP2K</span>
 </code></pre></div>
-<p>For VASP, the tool creates <code>struct_fp/</code>, <code>fp/</code>, calculation directories, and a
-<code>presub.sh</code> template. Put the approved <code>INCAR</code>, <code>POTCAR</code>, and <code>KPOINTS</code> files in
-<code>fp/</code> after preparation. For CP2K, provide an extxyz file, a reviewed template,
-and a prefix through menu 301 -&gt; 2.</p>
-<p>Before submission, verify the structure count, atom/type order, cells, DFT
-inputs, resource request, executable, and expected output. GPUMDkit does not
-submit the DFT jobs.</p>
+<p>The VASP branch creates <code>struct_fp/</code>, <code>fp/</code>, calculation directories, and
+<code>presub.sh</code>. After preparation, put the reviewed <code>INCAR</code>, <code>POTCAR</code>, and <code>KPOINTS</code>
+files in <code>fp/</code>. The CP2K branch, through menu 301 -&gt; 2, accepts an extxyz file,
+a reviewed template, and a directory prefix.</p>
+<p>Before submission, check the structure count, atom and type order, cells, DFT
+inputs, resource request, executable, and expected outputs. GPUMDkit prepares files;
+it does not submit DFT jobs.</p>
 <h2 id="4-convert-and-audit-reference-data">4. Convert and audit reference data</h2>
-<p>After confirming that every accepted DFT calculation completed successfully,
-use the converter matching the DFT code:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># VASP results</span>
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>gpumdkit.sh<span class="w"> </span>-out2xyz<span class="w"> </span>&lt;scf_results_directory&gt;
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>
-<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="c1"># CP2K results (interactive converter)</span>
-<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>gpumdkit.sh<span class="w"> </span>-cp2k2xyz
-<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>
-<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="c1"># Continue with the extxyz file produced by the selected converter</span>
-<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>gpumdkit.sh<span class="w"> </span>-range<span class="w"> </span>&lt;new_reference.xyz&gt;<span class="w"> </span>energy
-<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>gpumdkit.sh<span class="w"> </span>-range<span class="w"> </span>&lt;new_reference.xyz&gt;<span class="w"> </span>force
-<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a>gpumdkit.sh<span class="w"> </span>-min_dist_pbc<span class="w"> </span>&lt;new_reference.xyz&gt;
-<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a>gpumdkit.sh<span class="w"> </span>-analyze_comp<span class="w"> </span>&lt;new_reference.xyz&gt;
+<p>After confirming that every accepted DFT calculation completed successfully, use
+the converter for the DFT code:</p>
+<p>For VASP results:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>gpumdkit.sh<span class="w"> </span>-out2xyz<span class="w"> </span>&lt;scf_results_directory&gt;
 </code></pre></div>
-<p>Validate energy/force/virial labels, units, cells, species/type order,
+<p>For CP2K logs and structure files, first enter the CP2K results root. The following command recursively scans <code>.log</code> files and their accompanying <code>.xyz</code>/<code>.inp</code> files under the current directory. Successful conversion writes <code>cp2k_exyz.xyz</code> there, with processing details in <code>Logfile.txt</code>.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>gpumdkit.sh<span class="w"> </span>-cp2k2xyz
+</code></pre></div>
+<p>The VASP <code>-out2xyz</code>/menu 101 route writes <code>NEPdataset/train.xyz</code> in the current
+directory by default; the CP2K route above writes <code>cp2k_exyz.xyz</code>. Replace <code>&lt;new_reference.xyz&gt;</code> in the following commands with the extxyz
+file actually produced by the selected converter:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>gpumdkit.sh<span class="w"> </span>-range<span class="w"> </span>&lt;new_reference.xyz&gt;<span class="w"> </span>energy
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>gpumdkit.sh<span class="w"> </span>-range<span class="w"> </span>&lt;new_reference.xyz&gt;<span class="w"> </span>force
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>gpumdkit.sh<span class="w"> </span>-min_dist_pbc<span class="w"> </span>&lt;new_reference.xyz&gt;
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>gpumdkit.sh<span class="w"> </span>-analyze_comp<span class="w"> </span>&lt;new_reference.xyz&gt;
+</code></pre></div>
+<p>Check energy, force, and virial labels, units, cells, species and type order,
 composition coverage, duplicates, extreme structures, and failed or incomplete
-calculations. Preserve the raw DFT outputs and record all exclusions.</p>
+calculations. Preserve the raw DFT outputs and record every exclusion. See <a href="format_conversion.html">Format Conversion</a> for output locations and overwrite risks.</p>
 <h2 id="5-update-the-dataset-and-validate-the-model">5. Update the dataset and validate the model</h2>
-<p>Keep the previous dataset revision before merging new reference structures.
-Record which configurations were added, rejected, weighted, or assigned to the
-training/test sets. Prevent closely related trajectory frames from leaking
-across an independence-sensitive split.</p>
-<p>Prepare or update <code>nep.in</code> only after its architecture, loss, optimizer,
-checkpoint, ZBL, and other nontrivial choices are approved. Run NEP separately,
-then inspect:</p>
+<p>Keep the previous dataset revision before merging new reference structures. Record
+which configurations were added, rejected, weighted, or assigned to training and
+test sets. Where independence matters, prevent neighboring trajectory frames from
+leaking across the split.</p>
+<p>After checking the dataset, prepare or update <code>nep.in</code> using the confirmed
+settings. Run NEP training through the project's execution procedure, then inspect:</p>
 <ul>
 <li>training and test losses;</li>
 <li>energy, force, and virial/stress parity outputs;</li>
 <li>errors by species, composition, phase, and configuration class;</li>
 <li>outliers, short-range behavior, and target-domain MD stability;</li>
-<li>the project-specific acceptance criteria.</li>
+<li>the project's model-acceptance criteria.</li>
 </ul>
-<p>Aggregate RMSE alone is not evidence that a model is ready for production.</p>
+<p>Aggregate RMSE alone is not evidence that a model is ready for production. Preserve
+the model and dataset revisions and record the changes before using the new model
+for another MD iteration.</p>
 <h2 id="iteration-record">Iteration record</h2>
-<p>For reproducibility, retain the model/data revisions, approved decisions, exact
+<p>For reproducibility, retain model and data revisions, resolved decisions, exact
 commands, working directories, executable versions, exit status, warnings,
-generated files, rejected structures, validation results, and known
-limitations. Stop the iteration whenever required outputs are missing or a
-validation issue remains unresolved.</p>
-<hr />
-<p>Thank you for using <code>GPUMDkit</code>! For questions or feedback, open an issue on the
-GPUMDkit repository or contact Zihan YAN (yanzihan@westlake.edu.cn).</p>
+generated files, rejected structures, validation results, and known limitations.
+Stop the iteration when required outputs are missing or a validation issue remains
+unresolved.</p>
+<h2 id="ai-assistance-and-authorization-boundaries">AI Assistance and Authorization Boundaries</h2>
+<p>Sampling conditions, selection criteria, DFT settings, scheduler resources,
+dataset policy, and model-acceptance criteria depend on the scientific system.
+An agent must not copy thresholds or simulation parameters from another material
+system, or infer the potential, species/type mapping, charge, temperature, time
+step, ensemble, pressure, run length, fit window, resources, or convergence
+criteria.</p>
+<p>Preparing directories, templates, or input files does not authorize execution.
+GPUMD, DFT, and NEP calculations and scheduler submissions require explicit user
+approval of the inputs, cost, and scientific settings. <code>presub.sh</code> is a template,
+not permission to submit. Model architecture, loss, optimizer, checkpoint, ZBL,
+and other nontrivial <code>nep.in</code> settings also require approval.</p>
+<p>At each stage, an agent should check parser and log output, geometry and labels,
+units, cells, species/type order, duplicates, leakage, failed outputs, and
+target-domain stability. Stop and report missing outputs, parser errors, NaN/Inf
+values, unphysical structures, and unexplained warnings.</p>
+<p>Relevant skill references:</p>
+<ul>
+<li><code>skills/gpumdkit-skill/references/workflows.md</code></li>
+<li><code>skills/gpumdkit-skill/references/sampling.md</code></li>
+<li><code>skills/gpumdkit-skill/references/format-conversion.md</code></li>
+<li><code>skills/gpumdkit-skill/references/nep-data.md</code></li>
+<li><code>skills/gpumdkit-skill/references/nep-parameters.md</code></li>
+<li><code>skills/gpumdkit-skill/references/nep-outputs.md</code></li>
+</ul>
+<p>This page does not execute a complete active-learning loop or choose the candidate,
+selection, DFT, dataset, or model-acceptance procedure for the user.</p>
 
 
 

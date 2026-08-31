@@ -34,11 +34,11 @@ def read_data(file_name):
     data = np.loadtxt(file_name)
     return data[:, 0], data[:, 1], data[:, 2], data[:, 3]
 
-# Function to calculate the slope of the first 50% of the data
+# Function to calculate the slope over the middle 40%-80% of the data
 def calculate_slope(x, y):
     len_data = len(x)
-    start_idx = int(0.1 * len_data)  # 10% of the data
-    end_idx = int(0.3 * len_data)    # 30% of the data
+    start_idx = int(0.4 * len_data)  # 40% of the data
+    end_idx = int(0.8 * len_data)    # 80% of the data
     x_range, y_range = x[start_idx:end_idx], y[start_idx:end_idx]
     coeffs = np.polyfit(x_range, y_range, 1)  # Linear fit
     return coeffs[0]  # Slope of the linear fit

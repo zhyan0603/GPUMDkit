@@ -104,8 +104,7 @@ const plotContentText = `  +----------------------------------------------------
  |  train_density  - Training results density plot  restart        - Parameters in nep.restart   |
  |  charge         - Charge distribution            born_charge    - Born effective charges      |
  |  dimer          - Dimer energy/force curve       force_errors   - Force errors                |
- |  des            - Descriptors                    lr             - Learning rate for gnep      |
- |  net_force      Plot net force distribution                                                   |
+ |  des            - Descriptors                    net_force      - Net force distribution      |
  +-----------------------------------------------------------------------------------------------+
  |                                     Diffusion & Transport                                     |
  +-----------------------------------------------------------------------------------------------+

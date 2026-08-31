@@ -23,6 +23,16 @@ BUG_FIXES=(
     "preserve the requested element order in -xyz2dp type_map.raw output"
     "reject mismatched q-point paths in -plt phonon_comp"
     "correct plotting documentation, -plt xrd completion, and output filename text inconsistencies"
+    "use the established 40%-80% MSD fit window in -plt msd and -plt msd_sdc"
+    "remove the obsolete -plt lr learning-rate plotting route"
+    "correct bilingual frame indexing, sampling examples, descriptor arguments, and contribution guides"
+    "include elements from all frames in minimum-distance analysis"
+    "exclude missing-stress sentinel rows from outlier analysis and handle empty valid sets"
+    "include bilingual agent skills in the conda package"
+    "clarify MSD plotting inputs and conversion output locations in bilingual documentation"
+    "streamline onboarding tutorials and improve Chinese workflow guidance"
+    "replace the simulation tutorial overview with a concise agent skill setup guide"
+    "correct bilingual skill installation, polar-tool dependencies, README onboarding, and command-reference guidance"
 )
 
 # === Formatted Output Logic ===

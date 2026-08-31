@@ -23,6 +23,7 @@ gpumdkit.sh -analyze_comp train.xyz     # Analyze composition
 ### 🧮 [calculators/](calculators/README.md)
 Computational tools for property calculations:
 - Ionic conductivity from MSD data
+- X-ray diffraction and phonon band-structure calculations
 - Property predictions using NEP models
 - Descriptor calculations
 - Density of atomistic states (DOAS)

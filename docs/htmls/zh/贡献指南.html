@@ -436,7 +436,7 @@
   <span class="md-ellipsis">
     
   
-    Simulation and Post-processing
+    GPUMDkit Agent Skill
   
 
     
@@ -884,7 +884,7 @@
   <span class="md-ellipsis">
     
   
-    模拟与后处理
+    GPUMDkit Agent Skill
   
 
     
@@ -1778,7 +1778,7 @@
 
 <div align="center">
   <h1>🤝 为 GPUMDkit 贡献代码</h1>
-  <p style="text-align: justify;">感谢你有兴趣为 <strong>GPUMDkit</strong> 做出贡献！我们感谢你为改善这个工具包所付出的时间和努力。</p>
+  <p style="text-align: justify;">感谢你愿意为 <strong>GPUMDkit</strong> 贡献力量！无论是修复 bug、添加功能、改进文档，还是提出建议，都欢迎参与。</p>
 </div>
 
 <p align="center">
@@ -1787,7 +1787,7 @@
   <strong>简体中文</strong>
 </p>
 
-<p><code>GPUMDkit</code> 是一个开源项目，我们欢迎社区的各种贡献，无论是修复 bug、添加新功能、改进文档还是提出建议。</p>
+<p><code>GPUMDkit</code> 是一个开源项目，欢迎社区贡献代码、文档和改进建议。</p>
 <blockquote>
 <p><strong>注意</strong>：本文档的权威版本位于仓库根目录的 <a href="https://github.com/zhyan0603/GPUMDkit/blob/main/CONTRIBUTING.md"><code>CONTRIBUTING.md</code></a>。本教程页面同步其内容。中文版请参见 <a href="https://github.com/zhyan0603/GPUMDkit/blob/main/docs/CONTRIBUTING_zh-CN.md"><code>docs/CONTRIBUTING_zh-CN.md</code></a>。</p>
 </blockquote>
@@ -1961,8 +1961,8 @@
 <li>
 <p><strong>在 <code>gpumdkit.sh</code> 中更新菜单显示</strong>：
    <div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="c1"># 找到 menu() 函数并按需更新</span>
-<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a><span class="c1"># 找到 array_choice 数组并添加你的新选择编号</span>
-<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a><span class="nv">array_choice</span><span class="o">=(</span>
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a><span class="c1"># 找到 valid_menu_choices 数组并添加你的新选择编号</span>
+<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a><span class="nv">valid_menu_choices</span><span class="o">=(</span>
 <a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a><span class="w">    </span><span class="s2">&quot;0&quot;</span><span class="w"> </span><span class="s2">&quot;1&quot;</span><span class="w"> </span><span class="s2">&quot;101&quot;</span><span class="w"> </span><span class="s2">&quot;102&quot;</span><span class="w"> </span><span class="s2">&quot;103&quot;</span><span class="w"> </span><span class="s2">&quot;104&quot;</span><span class="w"> </span><span class="s2">&quot;105&quot;</span><span class="w"> </span><span class="s2">&quot;106&quot;</span><span class="w"> </span><span class="s2">&quot;107&quot;</span><span class="w"> </span><span class="s2">&quot;108&quot;</span><span class="w"> </span><span class="s2">&quot;109&quot;</span><span class="w"> </span><span class="s2">&quot;110&quot;</span><span class="w"> </span><span class="s2">&quot;111&quot;</span><span class="w">  </span><span class="c1"># 添加 &quot;111&quot;</span>
 <a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a><span class="w">    </span><span class="c1"># ... 其余选择</span>
 <a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a><span class="o">)</span>

@@ -26,6 +26,8 @@
 
 ### VASP Conversions
 
+`-out2xyz` (also menu `101`) writes `NEPdataset/train.xyz` in the terminal's current directory and deletes/recreates any existing `NEPdataset/`. `-out2exyz` writes and overwrites `train.xyz` in the current directory. The input-directory argument does not change the output location; back up previous results or use a new working directory before repeating a conversion. Choose one converter route.
+
 ```bash
 # OUTCAR to extxyz (directory, shell version)
 gpumdkit.sh -out2xyz <directory>
@@ -77,7 +79,8 @@ gpumdkit.sh -traj2exyz input.traj output.xyz
 # MTP cfg to extxyz
 python3 ${GPUMDkit_path}/Scripts/format_conversion/mtp2xyz.py train.cfg Pd Ag
 
-# CP2K conversion through CLI menu helper
+# Run in the CP2K results root: recursively read logs and structure files
+# Outputs in the current directory: cp2k_exyz.xyz and Logfile.txt
 gpumdkit.sh -cp2k2xyz
 
 # ABACUS conversion is available through the interactive menu:
@@ -168,10 +171,8 @@ gpumdkit.sh -clean_xyz input.xyz clean.xyz
 # Convert all OUTCAR files in current directory
 gpumdkit.sh -out2xyz .
 
-# Add group labels only if a later workflow needs them
-gpumdkit.sh -addgroup POSCAR Pb Ti O
-
-# Result: model.xyz ready for NEP training
+# Inspect the output atom count and extxyz metadata
+head -n 2 NEPdataset/train.xyz
 ```
 
 ### Example 2: Prepare LAMMPS Simulation
@@ -185,11 +186,9 @@ gpumdkit.sh -lmp2exyz dump.lammpstrj Li P S
 
 ### Example 3: Batch Conversion
 ```bash
-# Convert multiple OUTCAR files
-for dir in run_*; do
-    gpumdkit.sh -out2xyz "$dir"
-    mv "$dir"/model.xyz "$dir"/trajectory.xyz
-done
+# vasp_results/ contains multiple calculation subdirectories; convert recursively once
+gpumdkit.sh -out2xyz ./vasp_results/
+# Combined output: NEPdataset/train.xyz in the current directory
 ```
 
 ### Example 4: Structure Replication

@@ -223,7 +223,7 @@ This script splits an `extxyz` file into individual frames, each written to a se
 python split_single_xyz.py <extxyz_file>
 ```
 
-This command will split all frames in `extxyz_file` into separate files named `model_*.xyz`.
+This command will split all frames in `extxyz_file` into separate files named `model_1.xyz`, `model_2.xyz`, and so on.
 
 
 
@@ -251,7 +251,7 @@ python out2exyz.py ./
 gpumdkit.sh -out2exyz ./
 ```
 
-The output file is `train.xyz`.
+The output file is `train.xyz` in the terminal's current directory, not necessarily the input directory. Existing `train.xyz` is overwritten. The shell route `gpumdkit.sh -out2xyz <directory>` (also menu `101`) instead deletes/recreates `NEPdataset/` in the current directory and writes `NEPdataset/train.xyz`; back up existing results before repeating it.
 
 
 
@@ -368,7 +368,7 @@ It will convert the `dump.data` to `dump.xyz` file
 
 ---
 
-This script will read the `extxyz` file and return the specified frame by index.
+This script will read the `extxyz` file and return the specified frame by its 1-based index.
 
 #### Usage
 
@@ -377,7 +377,7 @@ python get_frame.py <extxyz_file> <frame_index>
 ```
 
 - `<extxyz_file>`: The path to the input `extxyz` file.
-- `<frame_index>`: The index of the specified frame.
+- `<frame_index>`: The 1-based index of the specified frame; the first frame is `1`.
 
 #### Example
 

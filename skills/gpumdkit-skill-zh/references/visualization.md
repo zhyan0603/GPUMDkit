@@ -19,7 +19,7 @@ gpumdkit.sh -plt -h                  # 列出绘图类型
 
 ## 绘图类别
 
-### NEP 训练与评估（13 种绘图类型）
+### NEP 训练与评估（12 种绘图类型）
 
 | 命令 | 输入文件 | 描述 |
 |---------|-------------|-------------|
@@ -34,7 +34,6 @@ gpumdkit.sh -plt -h                  # 列出绘图类型
 | `born_charge` / `bec` | `bec_train.out`、可选的 `bec_test.out` | Born 有效电荷 |
 | `dimer` | NEP 模型 | 二聚体相互作用曲线 |
 | `des` | `descriptors.npy` | 描述符 PCA/UMAP 可视化 |
-| `lr` | `loss.out`（gnep） | 学习率衰减 |
 | `net_force` | extxyz 文件 | 净力分布 |
 
 ```bash
@@ -45,22 +44,22 @@ gpumdkit.sh -plt force_errors
 
 # 描述符可视化（需先计算）
 gpumdkit.sh -calc des train.xyz descriptors.npy nep.txt Li
-gpumdkit.sh -plt des pca
-gpumdkit.sh -plt des umap
+gpumdkit.sh -plt des pca descriptors.npy
+gpumdkit.sh -plt des umap descriptors.npy
 
 # 二聚体绘图
 gpumdkit.sh -plt dimer Li Li nep.txt
 ```
 
-### 输运性质（10 种绘图类型）
+### 输运性质（12 种绘图类型）
 
 | 命令 | 输入文件 | 描述 |
 |---------|-------------|-------------|
-| `msd` | `msd.out` | 均方位移 |
+| `msd` | `-calc msd` 生成的四列 `msd.out`，或 GPUMD `compute_msd` 输出的前四列 | 均方位移 |
 | `msd_conv` | `msd_step*.out` | MSD 收敛检查 |
 | `msd_all` | `msd.out`（all_groups） | 各物种的 MSD |
-| `sdc` | `msd.out` | 自扩散系数 |
-| `msd_sdc` | `msd.out` | MSD 和 SDC 合并 |
+| `sdc` | GPUMD `compute_msd` 单分组七列 `msd.out` | 自扩散系数 |
+| `msd_sdc` | GPUMD `compute_msd` 单分组七列 `msd.out` | MSD 和 SDC 合并 |
 | `sigma` / `arrhenius_sigma` | 每个 `*K/` 中的 `thermo.out` 和 `msd.out`；首个 `*K/` 还需 `model.xyz`，`run.in` 可选 | Arrhenius 离子电导率 |
 | `D` / `arrhenius_d` | `*K/` 目录 | Arrhenius 扩散系数 |
 | `sigma_PT` | 每个 `*K/` 中的 `thermo.out` 和 `msd.out`，首个 `*K/` 还需 `model.xyz`、可选 `run.in`，以及相变温度 | 相变温度两侧的分段 Arrhenius 离子电导率 |
@@ -70,8 +69,9 @@ gpumdkit.sh -plt dimer Li Li nep.txt
 | `doas` | `doas.out` | 原子态密度 |
 
 ```bash
-# MSD 和扩散
+# 四列轨迹 MSD
 gpumdkit.sh -plt msd
+# SDC 列要求单分组 compute_msd 输出
 gpumdkit.sh -plt sdc
 gpumdkit.sh -plt msd_sdc
 
@@ -91,6 +91,11 @@ gpumdkit.sh -plt D_PT 380
 gpumdkit.sh -plt doas doas.out Li
 ```
 
+多个分组的 `compute_msd` 输出会追加其他分组的数据。请检查分组布局，并在
+适用时使用 `msd_all`，不要把每个 `msd.out` 都当作七列文件。独立的
+`compute_sdc` 命令写入 `sdc.out`，供 `gpumdkit.sh -plt vac` 使用；它不是 SDC
+绘图脚本的输入。
+
 ### 结构分析（10 种绘图类型）
 
 | 命令 | 输入文件 | 描述 |
@@ -102,7 +107,7 @@ gpumdkit.sh -plt doas doas.out Li
 | `rdf_pmf` | `rdf.out` | RDF + 平均力势 |
 | `xrd` | `xrd.out` 或指定的 XRD 输出 | XRD 强度曲线 |
 | `xrd_comp` | 当前目录下的 `<temperature>K/xrd.out` | 对比不同温度目录中的 XRD 曲线 |
-| `vac` | `sdc.out` | 速度自相关 |
+| `vac` | GPUMD `compute_sdc` 生成的 `sdc.out` | 速度自相关 |
 | `cohesive` | `cohesive.out` | 内聚能曲线 |
 | `plane-grid` | `model.xyz`、`displacements.dat` | 位移网格可视化 |
 
@@ -184,20 +189,22 @@ gpumdkit.sh -plt prediction
 # 3. 分析力误差
 gpumdkit.sh -plt force_errors
 # 4. 可视化描述符
-gpumdkit.sh -plt des pca
+gpumdkit.sh -plt des pca descriptors.npy
 ```
 
 ### 扩散分析
 ```bash
-# 1. 绘制 MSD
+# 1. 绘制四列轨迹 MSD 或 compute_msd 的 MSD 列
 gpumdkit.sh -plt msd
-# 2. 绘制自扩散系数
+# 2. 绘制单分组 compute_msd 输出中的自扩散系数
 gpumdkit.sh -plt sdc
-# 3. 合并 MSD-SDC 绘图
+# 3. 使用单分组 compute_msd 输出合并绘制 MSD-SDC
 gpumdkit.sh -plt msd_sdc
 # 4. Arrhenius 分析（多温度）
 gpumdkit.sh -plt arrhenius_d
 ```
+
+`-plt msd` 和 `-plt msd_sdc` 中的斜率均使用 MSD 数据中间 40%–80% 的区间拟合。
 
 ### 热输运
 ```bash

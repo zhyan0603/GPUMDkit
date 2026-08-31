@@ -143,7 +143,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#_1" class="md-skip">
+        <a href="#what-it-does" class="md-skip">
           Skip to content
         </a>
       
@@ -438,7 +438,7 @@
   <span class="md-ellipsis">
     
   
-    Simulation and Post-processing
+    GPUMDkit Agent Skill
   
 
     
@@ -907,7 +907,7 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#_1" class="md-nav__link">
+  <a href="#what-it-does" class="md-nav__link">
     <span class="md-ellipsis">
       
         功能简介
@@ -918,7 +918,7 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#_2" class="md-nav__link">
+  <a href="#before-you-start" class="md-nav__link">
     <span class="md-ellipsis">
       
         准备工作
@@ -930,7 +930,7 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#1-conda" class="md-nav__link">
+  <a href="#install-with-conda-recommended" class="md-nav__link">
     <span class="md-ellipsis">
       
         1. 使用 Conda 安装（推荐）
@@ -941,21 +941,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#2" class="md-nav__link">
+  <a href="#verify-the-installation" class="md-nav__link">
     <span class="md-ellipsis">
       
-        2. 从源码安装（可选）
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#3" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        3. 验证安装
+        2. 检查安装
       
     </span>
   </a>
@@ -968,7 +957,51 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#_3" class="md-nav__link">
+  <a href="#hello-world-example" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        第一个练习：转换一个 POSCAR
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#common-examples" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        已有数据：选择下一步
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#optional-dependencies" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        可选依赖与 Agent Skill
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#install-from-source-optional" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        从源码安装（可选）
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#read-a-command-before-running-it" class="md-nav__link">
     <span class="md-ellipsis">
       
         运行前先读懂命令
@@ -979,7 +1012,7 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#_4" class="md-nav__link">
+  <a href="#interactive-mode" class="md-nav__link">
     <span class="md-ellipsis">
       
         交互模式
@@ -990,7 +1023,7 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#_5" class="md-nav__link">
+  <a href="#cli-mode" class="md-nav__link">
     <span class="md-ellipsis">
       
         命令行模式
@@ -1001,101 +1034,7 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#hello-world" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Hello World 示例
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#_6" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        常见示例
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="常见示例">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#poscar-extxyz" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        POSCAR 转 extxyz
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#gpumd-group" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        添加 GPUMD group 标签
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#nep" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        绘制 NEP 训练结果
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#nep-prediction" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        绘制 NEP prediction 模式结果
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#_7" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        绘制热力学量
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#msd" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        绘制 MSD 和自扩散系数
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#_8" class="md-nav__link">
+  <a href="#notes" class="md-nav__link">
     <span class="md-ellipsis">
       
         说明
@@ -1128,7 +1067,7 @@
   <span class="md-ellipsis">
     
   
-    模拟与后处理
+    GPUMDkit Agent Skill
   
 
     
@@ -1482,7 +1421,7 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#_1" class="md-nav__link">
+  <a href="#what-it-does" class="md-nav__link">
     <span class="md-ellipsis">
       
         功能简介
@@ -1493,7 +1432,7 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#_2" class="md-nav__link">
+  <a href="#before-you-start" class="md-nav__link">
     <span class="md-ellipsis">
       
         准备工作
@@ -1505,7 +1444,7 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#1-conda" class="md-nav__link">
+  <a href="#install-with-conda-recommended" class="md-nav__link">
     <span class="md-ellipsis">
       
         1. 使用 Conda 安装（推荐）
@@ -1516,21 +1455,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#2" class="md-nav__link">
+  <a href="#verify-the-installation" class="md-nav__link">
     <span class="md-ellipsis">
       
-        2. 从源码安装（可选）
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#3" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        3. 验证安装
+        2. 检查安装
       
     </span>
   </a>
@@ -1543,7 +1471,51 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#_3" class="md-nav__link">
+  <a href="#hello-world-example" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        第一个练习：转换一个 POSCAR
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#common-examples" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        已有数据：选择下一步
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#optional-dependencies" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        可选依赖与 Agent Skill
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#install-from-source-optional" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        从源码安装（可选）
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#read-a-command-before-running-it" class="md-nav__link">
     <span class="md-ellipsis">
       
         运行前先读懂命令
@@ -1554,7 +1526,7 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#_4" class="md-nav__link">
+  <a href="#interactive-mode" class="md-nav__link">
     <span class="md-ellipsis">
       
         交互模式
@@ -1565,7 +1537,7 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#_5" class="md-nav__link">
+  <a href="#cli-mode" class="md-nav__link">
     <span class="md-ellipsis">
       
         命令行模式
@@ -1576,101 +1548,7 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#hello-world" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Hello World 示例
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#_6" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        常见示例
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="常见示例">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#poscar-extxyz" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        POSCAR 转 extxyz
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#gpumd-group" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        添加 GPUMD group 标签
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#nep" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        绘制 NEP 训练结果
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#nep-prediction" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        绘制 NEP prediction 模式结果
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#_7" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        绘制热力学量
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#msd" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        绘制 MSD 和自扩散系数
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#_8" class="md-nav__link">
+  <a href="#notes" class="md-nav__link">
     <span class="md-ellipsis">
       
         说明
@@ -1702,65 +1580,62 @@
 
 <div align="center">
   <h1>🚀 快速入门</h1>
-  <p style="text-align: justify;">本页帮助你安装 GPUMDkit 并运行第一个命令。你可以通过交互菜单或直接使用命令行选项来使用 GPUMDkit。</p>
+  <p style="text-align: justify;">本页带你完成 GPUMDkit 的安装、首次检查和一个独立的小练习，然后根据已有数据进入下一步。</p>
 </div>
 
-<h2 id="_1">功能简介</h2>
-<p>GPUMDkit 为计算材料科学中的常见任务提供统一入口——格式转换、结构分析、性质计算和可视化——无需编写自定义脚本。</p>
-<h2 id="_2">准备工作</h2>
-<h3 id="1-conda">1. 使用 Conda 安装（推荐）</h3>
+<h2 id="what-it-does">功能简介</h2>
+<p>GPUMDkit 将格式转换、结构分析、性质计算和可视化等计算材料学常见任务统一到一个命令行工具中，无需另写脚本。</p>
+<h2 id="before-you-start">准备工作</h2>
+<p>先安装 GPUMDkit，再进行命令检查。推荐使用 Conda：</p>
+<h3 id="install-with-conda-recommended">1. 使用 Conda 安装（推荐）</h3>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>conda<span class="w"> </span>create<span class="w"> </span>-n<span class="w"> </span>gpumdkit<span class="w"> </span>-c<span class="w"> </span>gpumdkit<span class="w"> </span>-c<span class="w"> </span>conda-forge<span class="w"> </span>gpumdkit
 <a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>conda<span class="w"> </span>activate<span class="w"> </span>gpumdkit
 </code></pre></div>
-<p>该方式会安装 GPUMDkit 及其标准依赖，无需克隆仓库或配置环境变量。</p>
+<p>这种方式会安装 GPUMDkit 及其标准依赖，不需要先克隆仓库或配置环境变量。</p>
+<h3 id="verify-the-installation">2. 检查安装</h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>gpumdkit.sh<span class="w"> </span>-h
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>gpumdkit.sh<span class="w"> </span>-doctor
+</code></pre></div>
+<p><code>-h</code> 会列出可用选项；<code>-doctor</code> 会检查 Python 环境，并分别报告环境、常用包和可选包的状态。可选包显示 <code>MISS</code> 不代表安装失败，只有使用对应功能时才需要安装它们。</p>
+<h2 id="hello-world-example">第一个练习：转换一个 POSCAR</h2>
+<p>为了避免覆盖已有文件，请在一个新的练习目录中完成下面的步骤。整个练习在子 shell 中运行；<code>mkdir</code> 不带 <code>-p</code>，如果目录已存在会失败并退出子 shell，不会进入该目录覆盖文件。</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="o">(</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="nb">set</span><span class="w"> </span>-e
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>mkdir<span class="w"> </span>gpumdkit-first-check<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="nb">cd</span><span class="w"> </span>gpumdkit-first-check<span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="nb">exit</span><span class="w"> </span><span class="m">1</span>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>cat<span class="w"> </span>&gt;<span class="w"> </span>POSCAR<span class="w"> </span><span class="s">&lt;&lt; &#39;EOF&#39;</span>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="s">Si</span>
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="s">1.0</span>
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="s">0 2.715 2.715</span>
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a><span class="s">2.715 0 2.715</span>
+<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a><span class="s">2.715 2.715 0</span>
+<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a><span class="s">Si</span>
+<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a><span class="s">1</span>
+<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a><span class="s">direct</span>
+<a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a><span class="s">0 0 0</span>
+<a id="__codelineno-2-14" name="__codelineno-2-14" href="#__codelineno-2-14"></a><span class="s">EOF</span>
+<a id="__codelineno-2-15" name="__codelineno-2-15" href="#__codelineno-2-15"></a>gpumdkit.sh<span class="w"> </span>-pos2exyz<span class="w"> </span>POSCAR<span class="w"> </span>model.xyz
+<a id="__codelineno-2-16" name="__codelineno-2-16" href="#__codelineno-2-16"></a>head<span class="w"> </span>model.xyz
+<a id="__codelineno-2-17" name="__codelineno-2-17" href="#__codelineno-2-17"></a><span class="o">)</span>
+</code></pre></div>
+<p>如果 <code>model.xyz</code> 中显示一个 Si 原子及晶格信息，说明这次 POSCAR 到 extxyz 的转换和输出检查已经成功；这不代表其他计算器、绘图或模拟功能也都完成了验证。</p>
+<p><code>extxyz</code> 是扩展 XYZ 格式：第一行是原子数，第二行包含晶格和结构级属性，后续行记录每个原子的元素、坐标及其他原子级属性；它是 NEP 使用的原生训练数据格式。</p>
+<h2 id="common-examples">已有数据：选择下一步</h2>
+<p>如果你已经有结构或轨迹，不必重复上面的练习。回到<a href="index.html">教程首页</a>，在“常见任务”表中按目标进入格式转换、结构采样、分析、计算器、绘图或工作流教程；具体页面会说明所需输入、输出和适用条件。</p>
+<h2 id="optional-dependencies">可选依赖与 Agent Skill</h2>
 <p>部分功能需要额外安装可选依赖：</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>pip<span class="w"> </span>install<span class="w"> </span>neptrain<span class="w"> </span>calorine
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>pip<span class="w"> </span>install<span class="w"> </span>neptrain<span class="w"> </span>calorine
 </code></pre></div>
-<h3 id="2">2. 从源码安装（可选）</h3>
-<p>如需使用源码，请克隆仓库并运行安装脚本：</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>git<span class="w"> </span>clone<span class="w"> </span>https://github.com/zhyan0603/GPUMDkit.git
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="nb">cd</span><span class="w"> </span>GPUMDkit
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="nb">source</span><span class="w"> </span>./install.sh
+<p>安装包同时包含中英文 Agent Skill。运行下面的命令可查看其安装路径，以及在 Agent 客户端中配置 Skill 的方法：</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>gpumdkit.sh<span class="w"> </span>-skill
 </code></pre></div>
-<p>安装脚本会写入 <code>GPUMDkit_path</code> 和 <code>PATH</code> 设置，并在当前 shell 中加载。默认写入 <code>~/.bashrc</code>；如果当前 shell 是 zsh，则写入 <code>~/.zshrc</code>。如果检测到已有 GPUMDkit 路径，安装脚本会打印旧路径并询问是否替换；修改 rc 文件前会先创建备份。</p>
-<p>典型安装输出：</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>======================================================
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>  GPUMDkit Installation
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>======================================================
-<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a> [1/4] Detecting GPUMDkit directory...
-<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>       /path/to/GPUMDkit
-<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a> [2/4] Detecting shell configuration...
-<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>       Target: /Users/you/.bashrc
-<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>       Adding environment variables to /Users/you/.bashrc
-<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>       Success: Environment variables added.
-<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a> [3/4] Setting executable permissions...
-<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a>       Added executable permission to gpumdkit.sh
-<a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a> [4/4] Loading environment...
-<a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a>
-<a id="__codelineno-3-14" name="__codelineno-3-14" href="#__codelineno-3-14"></a>======================================================
-<a id="__codelineno-3-15" name="__codelineno-3-15" href="#__codelineno-3-15"></a>  Installation Complete!  GPUMDkit is ready to use.
-<a id="__codelineno-3-16" name="__codelineno-3-16" href="#__codelineno-3-16"></a>======================================================
+<h2 id="install-from-source-optional">从源码安装（可选）</h2>
+<p>如果需要使用或修改源码，请克隆仓库并运行安装脚本：</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>git<span class="w"> </span>clone<span class="w"> </span>https://github.com/zhyan0603/GPUMDkit.git
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="nb">cd</span><span class="w"> </span>GPUMDkit
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="nb">source</span><span class="w"> </span>./install.sh
 </code></pre></div>
-<p>如果之前已经安装过 GPUMDkit，可能会看到：</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>Existing GPUMDkit configuration found.
-<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>Existing path(s):
-<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>  - /old/path/to/GPUMDkit
-<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>New path:
-<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>  - /new/path/to/GPUMDkit
-<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>
-<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a>Replace the existing GPUMDkit configuration with the new path? [y/N]:
-</code></pre></div>
-<h3 id="3">3. 验证安装</h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>gpumdkit.sh<span class="w"> </span>-h
-</code></pre></div>
-<p>此命令会打印帮助表，列出所有可用选项。</p>
-<p>更实用的首次检查是运行：</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>gpumdkit.sh<span class="w"> </span>-doctor
-</code></pre></div>
-<p>终端会分别显示 <strong>Environment</strong>、<strong>Common packages</strong> 和 <strong>Optional packages</strong>。
-可选包显示 <code>MISS</code> 并不表示安装失败：只有需要对应功能时才安装。例如，DeepMD
-转换需要 <code>dpdata</code>，NEP 辅助计算会使用 <code>calorine</code>。这样可以在开始流程前先定位缺少的模块。</p>
-<h2 id="_3">运行前先读懂命令</h2>
+<p>安装脚本会根据 <code>$SHELL</code> 选择 shell 配置文件，将 <code>GPUMDkit_path</code> 和 <code>PATH</code> 设置写入其中，并在当前 shell 中加载。默认使用 <code>~/.bashrc</code>；如果 <code>$SHELL</code> 指向 zsh，则使用 <code>~/.zshrc</code>。如果检测到已有 GPUMDkit 路径，脚本会打印旧路径并询问是否替换；修改 rc 文件前会先创建备份。</p>
+<h2 id="read-a-command-before-running-it">运行前先读懂命令</h2>
 <p>CLI 示例中使用以下记号：</p>
 <table>
 <thead>
@@ -1788,115 +1663,20 @@
 </tr>
 </tbody>
 </table>
-<p>对于不熟悉的 Python 命令，先让命令本身解释参数。例如：</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>$ gpumdkit.sh -calc msd -h
-<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a> Usage: gpumdkit.sh -calc msd &lt;extxyz_file&gt; &lt;element_symbol&gt; &lt;dt_fs&gt; [max_corr_steps]
-<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>
-<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a> Arguments:
-<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a>   extxyz_file       Path to the input extxyz trajectory file
-<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a>   element_symbol    Chemical symbol (e.g., Li, O, Na)
-<a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a>   dt_fs             Time step between consecutive frames (fs)
-<a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a>   max_corr_steps    Max correlation lag steps (optional)
-</code></pre></div>
-<p>这里的 <code>dt_fs</code> 是<strong>相邻已写出轨迹帧</strong>之间的时间间隔（fs），不会从 MD 输入文件中自动推断；应以自己的轨迹写出设置为准。绘图模块请用 <code>gpumdkit.sh -plt -h</code> 查看图类型；各图参数的位置见<a href="%E7%BB%98%E5%9B%BE%E8%84%9A%E6%9C%AC.html">绘图脚本</a>。</p>
-<p>交互菜单中的 <code>------------&gt;&gt;</code> 表示等待输入。许多 CLI 命令结束后还会打印 <code>Code path:</code>，可据此定位产生结果或报错的实现脚本。</p>
-<h2 id="_4">交互模式</h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>gpumdkit.sh
-</code></pre></div>
-<p>打开主菜单：</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>           ____ ____  _   _ __  __ ____  _    _ _
-<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>          / ___|  _ \| | | |  \/  |  _ \| | _(_) |_
-<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a>         | |  _| |_) | | | | |\/| | | | | |/ / | __|
-<a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a>         | |_| |  __/| |_| | |  | | |_| |   &lt;| | |_
-<a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a>          \____|_|    \___/|_|  |_|____/|_|\_\_|\__|
-<a id="__codelineno-9-6" name="__codelineno-9-6" href="#__codelineno-9-6"></a>
-<a id="__codelineno-9-7" name="__codelineno-9-7" href="#__codelineno-9-7"></a>          GPUMDkit Version 1.5.7 (2026-08-23)
-<a id="__codelineno-9-8" name="__codelineno-9-8" href="#__codelineno-9-8"></a>    Core Developer: Zihan YAN (yanzihan@westlake.edu.cn)
-<a id="__codelineno-9-9" name="__codelineno-9-9" href="#__codelineno-9-9"></a> Main Contributors: Denan LI, Xin WU, Zhoulin LIU &amp; Chen HUA
-<a id="__codelineno-9-10" name="__codelineno-9-10" href="#__codelineno-9-10"></a>
-<a id="__codelineno-9-11" name="__codelineno-9-11" href="#__codelineno-9-11"></a> ---------------------- GPUMD ------------------------
-<a id="__codelineno-9-12" name="__codelineno-9-12" href="#__codelineno-9-12"></a> 1) Format Conversion          2) Sample Structures
-<a id="__codelineno-9-13" name="__codelineno-9-13" href="#__codelineno-9-13"></a> 3) Workflow                   4) Calculators
-<a id="__codelineno-9-14" name="__codelineno-9-14" href="#__codelineno-9-14"></a> 5) Analyzer                   6) Visualization
-<a id="__codelineno-9-15" name="__codelineno-9-15" href="#__codelineno-9-15"></a> 7) Utilities                  8) Help                
-<a id="__codelineno-9-16" name="__codelineno-9-16" href="#__codelineno-9-16"></a> 0) Exit
-<a id="__codelineno-9-17" name="__codelineno-9-17" href="#__codelineno-9-17"></a> ------------&gt;&gt;
-<a id="__codelineno-9-18" name="__codelineno-9-18" href="#__codelineno-9-18"></a> Input the function number:
-</code></pre></div>
-<p>按数字选择模块。每个模块提供包含具体功能的子菜单。</p>
-<h2 id="_5">命令行模式</h2>
+<p>对于不熟悉的 Python 命令，可以先运行它的 <code>-h</code> 查看参数说明。<code>dt_fs</code> 等时间参数应根据自己的轨迹写出设置确定，不会从 MD 输入文件中自动推断；绘图类型和参数位置请参见<a href="%E7%BB%98%E5%9B%BE%E8%84%9A%E6%9C%AC.html">绘图脚本</a>。</p>
+<h2 id="interactive-mode">交互模式</h2>
+<p>运行 <code>gpumdkit.sh</code> 后，按数字选择模块；每个模块都有对应的子菜单。</p>
+<h2 id="cli-mode">命令行模式</h2>
 <p>直接命令使用固定的位置参数：</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a>gpumdkit.sh<span class="w"> </span>-&lt;选项&gt;<span class="w"> </span><span class="o">[</span>参数...<span class="o">]</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>gpumdkit.sh<span class="w"> </span>-&lt;选项&gt;<span class="w"> </span><span class="o">[</span>参数...<span class="o">]</span>
 </code></pre></div>
-<p>示例：</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a>gpumdkit.sh<span class="w"> </span>-pos2exyz<span class="w"> </span>POSCAR<span class="w"> </span>model.xyz
-<a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a>gpumdkit.sh<span class="w"> </span>-plt<span class="w"> </span>train
-<a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a>gpumdkit.sh<span class="w"> </span>-calc<span class="w"> </span>msd<span class="w"> </span>trajectory.xyz<span class="w"> </span>Li<span class="w"> </span><span class="m">10</span>
+<p>需要查看完整选项时，运行：</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>gpumdkit.sh<span class="w"> </span>-h
 </code></pre></div>
-<p>第一个示例读取 <code>POSCAR</code>，写出 <code>model.xyz</code>。</p>
-<h2 id="hello-world">Hello World 示例</h2>
-<p>一个最小化的端到端检查，确认安装是否正常——创建一个极小的硅 POSCAR，转换为 extxyz，并查看输出：</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a>cat<span class="w"> </span>&gt;<span class="w"> </span>POSCAR<span class="w"> </span><span class="s">&lt;&lt; &#39;EOF&#39;</span>
-<a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a><span class="s">Si</span>
-<a id="__codelineno-12-3" name="__codelineno-12-3" href="#__codelineno-12-3"></a><span class="s">1.0</span>
-<a id="__codelineno-12-4" name="__codelineno-12-4" href="#__codelineno-12-4"></a><span class="s">0 2.715 2.715</span>
-<a id="__codelineno-12-5" name="__codelineno-12-5" href="#__codelineno-12-5"></a><span class="s">2.715 0 2.715</span>
-<a id="__codelineno-12-6" name="__codelineno-12-6" href="#__codelineno-12-6"></a><span class="s">2.715 2.715 0</span>
-<a id="__codelineno-12-7" name="__codelineno-12-7" href="#__codelineno-12-7"></a><span class="s">Si</span>
-<a id="__codelineno-12-8" name="__codelineno-12-8" href="#__codelineno-12-8"></a><span class="s">1</span>
-<a id="__codelineno-12-9" name="__codelineno-12-9" href="#__codelineno-12-9"></a><span class="s">direct</span>
-<a id="__codelineno-12-10" name="__codelineno-12-10" href="#__codelineno-12-10"></a><span class="s">0 0 0</span>
-<a id="__codelineno-12-11" name="__codelineno-12-11" href="#__codelineno-12-11"></a><span class="s">EOF</span>
-<a id="__codelineno-12-12" name="__codelineno-12-12" href="#__codelineno-12-12"></a>gpumdkit.sh<span class="w"> </span>-pos2exyz<span class="w"> </span>POSCAR<span class="w"> </span>model.xyz
-<a id="__codelineno-12-13" name="__codelineno-12-13" href="#__codelineno-12-13"></a>head<span class="w"> </span>model.xyz
-</code></pre></div>
-<p>如果 <code>model.xyz</code> 显示一个 Si 原子及晶格信息，说明安装成功。</p>
-<blockquote>
-<p><strong>什么是 extxyz？</strong> extxyz 是扩展 XYZ 格式：第 1 行是原子数，第 2 行包含晶格及结构级属性（按需包含能量/力/维里），第 3 行及以后是每个原子及其原子级属性。它是 NEP 的原生训练数据格式。</p>
-</blockquote>
-<h2 id="_6">常见示例</h2>
-<h3 id="poscar-extxyz">POSCAR 转 extxyz</h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a>gpumdkit.sh<span class="w"> </span>-pos2exyz<span class="w"> </span>POSCAR<span class="w"> </span>model.xyz
-</code></pre></div>
-<h3 id="gpumd-group">添加 GPUMD group 标签</h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a>gpumdkit.sh<span class="w"> </span>-addgroup<span class="w"> </span>POSCAR<span class="w"> </span>Li<span class="w"> </span>Y<span class="w"> </span>Cl
-</code></pre></div>
-<p>group 标签用于一些需要原子分组的 GPUMD 相关流程和分析，例如特定元素的 MSD 或扩散性质计算。</p>
-<h3 id="nep">绘制 NEP 训练结果</h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a>gpumdkit.sh<span class="w"> </span>-plt<span class="w"> </span>train
-</code></pre></div>
-<div align="center">
-  <img src="../../Gallery/train.png" alt="NEP training results" width="72%" />
-</div>
-
-<h3 id="nep-prediction">绘制 NEP prediction 模式结果</h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a>gpumdkit.sh<span class="w"> </span>-plt<span class="w"> </span><span class="nb">test</span>
-</code></pre></div>
-<div align="center">
-  <img src="../../Gallery/prediction.png" alt="NEP prediction-mode results" width="72%" />
-</div>
-
-<h3 id="_7">绘制热力学量</h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-17-1" name="__codelineno-17-1" href="#__codelineno-17-1"></a>gpumdkit.sh<span class="w"> </span>-plt<span class="w"> </span>thermo
-</code></pre></div>
-<div align="center">
-  <img src="../../Gallery/thermo.png" alt="Thermo plot" width="72%" />
-</div>
-
-<h3 id="msd">绘制 MSD 和自扩散系数</h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-18-1" name="__codelineno-18-1" href="#__codelineno-18-1"></a>gpumdkit.sh<span class="w"> </span>-plt<span class="w"> </span>msd
-<a id="__codelineno-18-2" name="__codelineno-18-2" href="#__codelineno-18-2"></a>gpumdkit.sh<span class="w"> </span>-plt<span class="w"> </span>sdc
-</code></pre></div>
-<div align="center">
-  <img src="../../Gallery/msd.png" alt="MSD plot" width="45%" />
-  <img src="../../Gallery/sdc.png" alt="SDC plot" width="45%" />
-</div>
-
-<h2 id="_8">说明</h2>
+<h2 id="notes">说明</h2>
 <ul>
-<li>使用 <code>gpumdkit.sh -h</code> 查看所有可用选项。</li>
-<li>Python 后端命令可使用 <code>gpumdkit.sh -&lt;选项&gt; -h</code> 查看帮助；使用 <code>gpumdkit.sh -plt -h</code> 列出绘图类型，各绘图脚本的参数位置并不统一。</li>
-<li>各模块的详细用法请参见<a href="index.html">首页</a>中链接的对应教程页面。</li>
+<li>对于提供选项帮助的 Python 后端命令，可以使用 <code>gpumdkit.sh -&lt;选项&gt; -h</code> 查看帮助；使用 <code>gpumdkit.sh -plt -h</code> 列出绘图类型。各绘图脚本的参数位置并不统一。</li>
+<li>各模块的详细用法请参见<a href="index.html">教程首页</a>中的任务导航。</li>
 </ul>
 
 

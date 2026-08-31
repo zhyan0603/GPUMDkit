@@ -440,7 +440,7 @@
   <span class="md-ellipsis">
     
   
-    Simulation and Post-processing
+    GPUMDkit Agent Skill
   
 
     
@@ -1250,7 +1250,7 @@
   <span class="md-ellipsis">
     
   
-    模拟与后处理
+    GPUMDkit Agent Skill
   
 
     
@@ -2167,7 +2167,7 @@ inside the Python interface when needed. The DFT-to-NEP mode requires the
 <h2 id="minimum-distance-checks">Minimum Distance Checks</h2>
 <h3 id="without-pbc-fast">Without PBC (Fast)</h3>
 <p><code>get_min_dist.py</code> calculates minimum interatomic distances without considering periodic boundary conditions. Fast but may be inaccurate for periodic systems.</p>
-<p><strong>What it does:</strong> Reports the minimum distance between each pair of elements in every frame, ignoring periodic boundary conditions.</p>
+<p><strong>What it does:</strong> Reports the minimum distance for each element pair across all frames, ignoring periodic boundary conditions. Elements are collected from the entire dataset in first-appearance order; pairs absent from a frame are skipped. The PBC version follows the same element-pair coverage.</p>
 <p><strong>CLI mode:</strong></p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>gpumdkit.sh<span class="w"> </span>-min_dist<span class="w"> </span>dump.xyz
 </code></pre></div>
@@ -2252,6 +2252,7 @@ inside the Python interface when needed. The DFT-to-NEP mode requires the
 <p><code>find_outliers.py</code> finds outlier structures in NEP training data based on RMSE thresholds for energy, force, and stress.</p>
 <p><strong>Input files:</strong> <code>energy_train.out</code>, <code>force_train.out</code>, <code>stress_train.out</code>, <code>train.xyz</code></p>
 <p>These files are generated during NEP training. The script compares DFT vs NEP predictions and identifies structures with large errors.</p>
+<p>Structures with a <code>-1e6</code> missing-stress marker or a stress component whose absolute value exceeds <code>1e6</code> are excluded before RMSE calculation and are not written to either output dataset. If no valid structures remain, the script reports an error without writing outputs.</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-17-1" name="__codelineno-17-1" href="#__codelineno-17-1"></a><span class="c1"># Interactive mode</span>
 <a id="__codelineno-17-2" name="__codelineno-17-2" href="#__codelineno-17-2"></a>gpumdkit.sh<span class="w">    </span><span class="c1"># Select: 5) Analyzer → 502) Find outliers of extxyz</span>
 </code></pre></div>

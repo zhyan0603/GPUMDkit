@@ -26,6 +26,8 @@
 
 ### VASP 转换
 
+`-out2xyz`（以及菜单 `101`）将结果写入终端当前目录的 `NEPdataset/train.xyz`，并会删除重建已有的 `NEPdataset/`。`-out2exyz` 则写入并覆盖当前目录的 `train.xyz`。输入目录参数不会改变输出位置；重复转换前先备份结果，或换用新的工作目录。两种入口选择其一即可。
+
 ```bash
 # OUTCAR 转 extxyz（目录，Shell 版本）
 gpumdkit.sh -out2xyz <directory>
@@ -77,7 +79,8 @@ gpumdkit.sh -traj2exyz input.traj output.xyz
 # MTP cfg 转 extxyz
 python3 ${GPUMDkit_path}/Scripts/format_conversion/mtp2xyz.py train.cfg Pd Ag
 
-# 通过 CLI 菜单助手进行 CP2K 转换
+# 在 CP2K 结果根目录运行：递归读取日志和结构文件
+# 输出：当前目录的 cp2k_exyz.xyz 和 Logfile.txt
 gpumdkit.sh -cp2k2xyz
 
 # ABACUS 转换可通过交互菜单使用：
@@ -167,10 +170,8 @@ gpumdkit.sh -clean_xyz input.xyz clean.xyz
 # 转换当前目录中的所有 OUTCAR 文件
 gpumdkit.sh -out2xyz .
 
-# 仅在后续工作流需要时添加分组标签
-gpumdkit.sh -addgroup POSCAR Pb Ti O
-
-# 结果：model.xyz 可用于 NEP 训练
+# 查看输出的原子数与 extxyz 元数据
+head -n 2 NEPdataset/train.xyz
 ```
 
 ### 示例 2：准备 LAMMPS 模拟
@@ -184,11 +185,9 @@ gpumdkit.sh -lmp2exyz dump.lammpstrj Li P S
 
 ### 示例 3：批量转换
 ```bash
-# 转换多个 OUTCAR 文件
-for dir in run_*; do
-    gpumdkit.sh -out2xyz "$dir"
-    mv "$dir"/model.xyz "$dir"/trajectory.xyz
-done
+# 假定 vasp_results/ 下包含多个计算子目录，递归转换一次即可
+gpumdkit.sh -out2xyz ./vasp_results/
+# 合并结果位于当前目录的 NEPdataset/train.xyz
 ```
 
 ### 示例 4：结构复制

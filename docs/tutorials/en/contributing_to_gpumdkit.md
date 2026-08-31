@@ -201,8 +201,8 @@ To add a new feature accessible through the interactive menu:
 4. **Update the menu display** in `gpumdkit.sh`:
    ```bash
    # Find the menu() function and update it if needed
-   # Find the array_choice array and add your new choice number
-   array_choice=(
+   # Find the valid_menu_choices array and add your new choice number
+   valid_menu_choices=(
        "0" "1" "101" "102" "103" "104" "105" "106" "107" "108" "109" "110" "111"  # Added "111"
        # ... rest of choices
    )

@@ -438,7 +438,7 @@
   <span class="md-ellipsis">
     
   
-    Simulation and Post-processing
+    GPUMDkit Agent Skill
   
 
     
@@ -886,7 +886,7 @@
   <span class="md-ellipsis">
     
   
-    模拟与后处理
+    GPUMDkit Agent Skill
   
 
     
@@ -1606,6 +1606,8 @@
 </div>
 
 <p><strong>脚本位置：</strong> <code>Scripts/sample_structures/</code></p>
+<p>在候选轨迹、参考数据和模型所在的工作目录中运行 <code>gpumdkit.sh</code>，按菜单提示输入文件名；文件位于其他目录时，请输入实际路径。相对路径以终端当前目录为起点，生成文件也会写入各功能说明的位置，运行前请检查是否已有同名结果。</p>
+<p>下文的 <code>python Scripts/...</code> 仅作为可选源码调用示例：需在 GPUMDkit 源码根目录运行并调整数据路径，或在数据目录中使用脚本的绝对路径。Conda 用户可直接使用菜单，不必寻找 <code>Scripts/</code> 目录。</p>
 <h2 id="_1">交互模式入口</h2>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>gpumdkit.sh
 </code></pre></div>
@@ -1938,16 +1940,18 @@
 <h2 id="_6">帧范围提取</h2>
 <p><code>frame_range.py</code> 是一个独立的 CLI 工具，不在结构采样交互菜单 <code>201–206</code> 中。它适合在采样前先截取轨迹的一段，例如只保留平衡后的后半段轨迹。</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-21-1" name="__codelineno-21-1" href="#__codelineno-21-1"></a>gpumdkit.sh<span class="w"> </span>-frame_range<span class="w"> </span>dump.xyz<span class="w"> </span><span class="m">0</span><span class="w"> </span><span class="m">0</span>.8
-<a id="__codelineno-21-2" name="__codelineno-21-2" href="#__codelineno-21-2"></a>python<span class="w"> </span>Scripts/sample_structures/frame_range.py<span class="w"> </span>dump.xyz<span class="w"> </span><span class="m">0</span><span class="w"> </span><span class="m">0</span>.8
 </code></pre></div>
 <p>这会写入轨迹 0% 到 80% 的帧。参数使用轨迹比例，范围为 <code>0</code> 到 <code>1</code>。</p>
 <h2 id="_7">示例命令</h2>
 <p>下面是一个常见的采样前处理顺序：先用分析工具检查和过滤候选轨迹，再进行 FPS 采样。前两个命令属于<a href="%E5%88%86%E6%9E%90%E5%B7%A5%E5%85%B7.html">分析工具</a>，最后一步属于本页的结构采样。</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-22-1" name="__codelineno-22-1" href="#__codelineno-22-1"></a>gpumdkit.sh<span class="w"> </span>-min_dist_pbc<span class="w"> </span>dump.xyz
 <a id="__codelineno-22-2" name="__codelineno-22-2" href="#__codelineno-22-2"></a>gpumdkit.sh<span class="w"> </span>-filter_box<span class="w"> </span>dump.xyz<span class="w"> </span><span class="m">13</span>
-<a id="__codelineno-22-3" name="__codelineno-22-3" href="#__codelineno-22-3"></a>python<span class="w"> </span>Scripts/sample_structures/parallel_neptrain_select_structs.py<span class="w"> </span>dump.xyz<span class="w"> </span>train.xyz<span class="w"> </span>nep.txt<span class="w"> </span><span class="m">4</span>
+<a id="__codelineno-22-3" name="__codelineno-22-3" href="#__codelineno-22-3"></a>gpumdkit.sh<span class="w">  </span><span class="c1"># 选择 2 → 203</span>
 </code></pre></div>
-<p>最后一步也可以在交互模式中选择 <code>2) 结构采样 → 203</code>。</p>
+<p><code>-filter_box</code> 将保留的结构写入 <code>filtered_by_box.xyz</code>。随后在菜单 <code>203</code> 的参数提示处输入：</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-23-1" name="__codelineno-23-1" href="#__codelineno-23-1"></a>filtered_by_box.xyz train.xyz nep.txt 4
+</code></pre></div>
+<p>这四项分别是过滤后的候选文件、已有参考数据集、兼容的 NEP 模型和并行核数。先准备好 <code>train.xyz</code> 和 <code>nep.txt</code>，再运行 FPS；没有执行过滤时，候选文件仍应使用原轨迹。示例中的盒长阈值 <code>13</code> 需要根据自己的体系确定，不能直接作为通用筛选标准。</p>
 <h2 id="_8">常见问题</h2>
 <table>
 <thead>

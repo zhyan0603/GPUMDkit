@@ -438,7 +438,7 @@
   <span class="md-ellipsis">
     
   
-    Simulation and Post-processing
+    GPUMDkit Agent Skill
   
 
     
@@ -886,7 +886,7 @@
   <span class="md-ellipsis">
     
   
-    模拟与后处理
+    GPUMDkit Agent Skill
   
 
     
@@ -1898,6 +1898,8 @@
 <h2 id="_2">准备工作</h2>
 <p><strong>脚本位置：</strong> <code>Scripts/format_conversion/</code></p>
 <p>确保已安装 GPUMDkit。安装说明请参见<a href="%E5%BF%AB%E9%80%9F%E5%85%A5%E9%97%A8.html">快速入门</a>。</p>
+<p>安装后，在准备存放转换结果的工作目录中运行 <code>gpumdkit.sh</code>。相对路径以终端当前目录为起点；输出位置见各命令说明，并不一定与输入文件同目录。建议先复制少量数据到新的练习目录，避免覆盖已有结果。</p>
+<p>本页优先介绍已安装版本可用的命令和菜单。<code>python Scripts/...</code> 是可选的源码调用方式：需要在 GPUMDkit 源码根目录运行，并相应调整输入路径；也可以在数据目录中使用脚本的绝对路径。仅通过 Conda 安装时，优先使用 <code>gpumdkit.sh</code>，不必切换到安装目录。</p>
 <h2 id="_3">支持的格式</h2>
 <ul>
 <li><strong>VASP</strong>：<code>POSCAR</code>、<code>CONTCAR</code>、<code>OUTCAR</code>、<code>XDATCAR</code></li>
@@ -2157,7 +2159,7 @@
 <a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>   output.xyz   Output extxyz file
 </code></pre></div>
 <p><code>POSCAR</code> 是输入结构文件名，<code>output.xyz</code> 是命令创建的 extxyz 文件。通配符由 shell 展开；批量转换前应先确认实际匹配到的文件名。转换完成后可以先做一个轻量格式检查：</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>head<span class="w"> </span>-n<span class="w"> </span><span class="m">2</span><span class="w"> </span>model.xyz
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>head<span class="w"> </span>-n<span class="w"> </span><span class="m">2</span><span class="w"> </span>output.xyz
 </code></pre></div>
 <p>第一行是原子数，第二行包含晶胞和已有性质等 extxyz 元数据。这本身不能验证计算的物理合理性；用于训练或模拟前，请再按分析工具教程检查数据集。</p>
 <h2 id="_8">常见例子</h2>
@@ -2170,8 +2172,8 @@
 <p>使用直接转换入口，然后输入源文件和明确的 DeepMD type-map 顺序：</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>gpumdkit.sh<span class="w"> </span>-xyz2dp
 </code></pre></div>
-<p>也可以直接运行 Python 脚本：</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>python3<span class="w"> </span><span class="si">${</span><span class="nv">GPUMDkit_path</span><span class="si">}</span>/Scripts/format_conversion/xyz2dp.py<span class="w"> </span>train.xyz<span class="w"> </span>Li<span class="w"> </span>P<span class="w"> </span>S
+<p>源码用户也可以直接运行 Python 脚本。下面假定终端当前目录是 GPUMDkit 源码根目录；请将 <code>train.xyz</code> 换成数据文件的实际路径：</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>python3<span class="w"> </span>Scripts/format_conversion/xyz2dp.py<span class="w"> </span>train.xyz<span class="w"> </span>Li<span class="w"> </span>P<span class="w"> </span>S
 </code></pre></div>
 <p>输入应包含带能量和力标签的 extxyz 数据。输出写入当前目录下的 <code>deepmd_data/</code>。该命令依赖 <code>dpdata</code>。</p>
 <h3 id="vasp">转换 VASP 结果</h3>
@@ -2179,7 +2181,7 @@
 <p><strong>命令行模式：</strong></p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>gpumdkit.sh<span class="w"> </span>-out2xyz<span class="w"> </span>./vasp_results/
 </code></pre></div>
-<p>也可以使用 Python 版本：</p>
+<p>上面是 shell 版本。也可以选择 Python 版本；同一批数据只需选择其中一种：</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>gpumdkit.sh<span class="w"> </span>-out2exyz<span class="w"> </span>./vasp_results/
 </code></pre></div>
 <p><strong>交互模式：</strong> 在格式转换菜单中选择 <code>101</code>，会看到：</p>
@@ -2192,7 +2194,30 @@
 <a id="__codelineno-10-7" name="__codelineno-10-7" href="#__codelineno-10-7"></a>Example: ./
 <a id="__codelineno-10-8" name="__codelineno-10-8" href="#__codelineno-10-8"></a>------------&gt;&gt;
 </code></pre></div>
-<p><strong>输出：</strong> 包含转换后结构的 extxyz 文件，可用于 NEP 训练或进一步分析。</p>
+<p><strong>输出位置：</strong> 两种命令都从指定的 <code>vasp_results/</code> 读取数据，但将结果写入<strong>终端当前目录</strong>：</p>
+<table>
+<thead>
+<tr>
+<th>入口</th>
+<th>输出文件</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>-out2xyz</code> 或菜单 <code>101</code></td>
+<td><code>NEPdataset/train.xyz</code></td>
+</tr>
+<tr>
+<td><code>-out2exyz</code></td>
+<td><code>train.xyz</code></td>
+</tr>
+</tbody>
+</table>
+<div class="admonition warning">
+<p class="admonition-title">重复转换前检查输出目录</p>
+<p>shell 版本会删除并重建当前目录下已有的 <code>NEPdataset/</code>；Python 版本会覆盖当前目录下的 <code>train.xyz</code>。请先备份结果，或在新的工作目录中运行并指定输入目录的实际路径。</p>
+</div>
+<p>转换后可用 <code>head -n 2 NEPdataset/train.xyz</code>（shell 版本）或 <code>head -n 2 train.xyz</code>（Python 版本）查看原子数和 extxyz 元数据。文件生成成功不等于数据可直接用于训练，还需检查计算收敛情况、单位和标签。</p>
 <h3 id="group">添加 group 标签</h3>
 <p><strong>功能：</strong> 为结构文件添加原子 group 标签。一些 GPUMD 相关流程需要 group 标签，例如特定元素的 MSD 或扩散性质计算。</p>
 <p><strong>命令行模式：</strong></p>
@@ -2255,12 +2280,12 @@
 <h3 id="_12">提取单帧</h3>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-22-1" name="__codelineno-22-1" href="#__codelineno-22-1"></a>gpumdkit.sh<span class="w"> </span>-get_frame<span class="w"> </span>dump.xyz<span class="w"> </span><span class="m">1000</span>
 </code></pre></div>
-<p>从 extxyz 轨迹中提取第 <code>1000</code> 帧（索引从 0 开始）。</p>
+<p>从 extxyz 轨迹中提取第 <code>1000</code> 帧（帧编号从 1 开始，第一帧为 <code>1</code>）。</p>
 <h3 id="extxyz">拆分多帧 extxyz</h3>
 <p><code>split_single_xyz.py</code> 将多帧 extxyz 文件拆分为单帧文件。</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-23-1" name="__codelineno-23-1" href="#__codelineno-23-1"></a>python<span class="w"> </span>Scripts/format_conversion/split_single_xyz.py<span class="w"> </span>dump.xyz
 </code></pre></div>
-<p>生成 <code>model_0.xyz</code>、<code>model_1.xyz</code>、... 等单帧文件。</p>
+<p>生成 <code>model_1.xyz</code>、<code>model_2.xyz</code>、... 等单帧文件。</p>
 <h3 id="mtp">MTP 转换</h3>
 <p>将 MTP <code>.cfg</code> 格式转换为 extxyz：</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-24-1" name="__codelineno-24-1" href="#__codelineno-24-1"></a>gpumdkit.sh<span class="w">    </span><span class="c1"># 选择：1) 格式转换 → 102</span>
@@ -2302,7 +2327,7 @@
 </tr>
 <tr>
 <td>提取帧不对</td>
-<td>注意帧索引通常从 0 开始</td>
+<td>注意 <code>-get_frame</code> 的帧编号从 1 开始</td>
 </tr>
 </tbody>
 </table>

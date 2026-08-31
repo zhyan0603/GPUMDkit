@@ -440,7 +440,7 @@
   <span class="md-ellipsis">
     
   
-    Simulation and Post-processing
+    GPUMDkit Agent Skill
   
 
     
@@ -774,17 +774,6 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#plt_learning_ratepy" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        plt_learning_rate.py
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
   <a href="#plt_nep_restartpy" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -911,6 +900,17 @@
     <span class="md-ellipsis">
       
         plt_sdc.py
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#plt_msd_sdcpy" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        plt_msd_sdc.py
       
     </span>
   </a>
@@ -1488,7 +1488,7 @@
   <span class="md-ellipsis">
     
   
-    模拟与后处理
+    GPUMDkit Agent Skill
   
 
     
@@ -1931,17 +1931,6 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#plt_learning_ratepy" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        plt_learning_rate.py
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
   <a href="#plt_nep_restartpy" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -2068,6 +2057,17 @@
     <span class="md-ellipsis">
       
         plt_sdc.py
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#plt_msd_sdcpy" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        plt_msd_sdc.py
       
     </span>
   </a>
@@ -2432,53 +2432,6 @@
 <a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>gpumdkit.sh<span class="w"> </span>-plt<span class="w"> </span>&lt;type&gt;<span class="w"> </span>save<span class="w">  </span><span class="c1"># Save plot as PNG</span>
 <a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>gpumdkit.sh<span class="w"> </span>-plt<span class="w"> </span>-h<span class="w">           </span><span class="c1"># List available plot types</span>
 </code></pre></div>
-<p>Running <code>gpumdkit.sh -plt</code> prints the plotting command menu:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>+-----------------------------------------------------------------------------------------------+
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>|                     GPUMDkit &lt;version&gt; PLOT &amp; VISUALIZATION TOOLS              |
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>+-----------------------------------------------------------------------------------------------+
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>|  Usage: gpumdkit.sh -plt &lt;type&gt;                        List: gpumdkit.sh -plt -h              |
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>+-----------------------------------------------------------------------------------------------+
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>|                                    NEP Training &amp; Evaluation                                  |
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>+-----------------------------------------------------------------------------------------------+
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>|  train          - NEP training results           prediction     - NEP prediction results      |
-<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>|  train_test     - NEP train and test results     parity_density - Parity density plot         |
-<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>|  train_density  - Training results density plot  restart        - Parameters in nep.restart   |
-<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>|  charge         - Charge distribution            born_charge    - Born effective charges      |
-<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>|  dimer          - Dimer energy/force curve       force_errors   - Force errors                |
-<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>|  des            - Descriptors                    lr             - Learning rate for gnep      |
-<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>|  net_force      Plot net force distribution                                                   |
-<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>+-----------------------------------------------------------------------------------------------+
-<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>|                                     Diffusion &amp; Transport                                     |
-<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>+-----------------------------------------------------------------------------------------------+
-<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a>|  msd            - Mean square displacement       msd_conv       - MSD convergence             |
-<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a>|  msd_all        - MSD for all species            sdc            - Self diffusion coefficient  |
-<a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a>|  msd_sdc        - MSD and SDC together           sigma          - Arrhenius ionic conductivity|
-<a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a>|  D              - Arrhenius diffusivity          sigma_xyz      - Directional Arrhenius sigma |
-<a id="__codelineno-1-22" name="__codelineno-1-22" href="#__codelineno-1-22"></a>|  D_xyz          - Directional Arrhenius D                                                     |
-<a id="__codelineno-1-23" name="__codelineno-1-23" href="#__codelineno-1-23"></a>|  D_PT           - PT Arrhenius D                 sigma_PT       - PT Arrhenius sigma          |
-<a id="__codelineno-1-24" name="__codelineno-1-24" href="#__codelineno-1-24"></a>|  doas           - Density of atomistic states                                                 |
-<a id="__codelineno-1-25" name="__codelineno-1-25" href="#__codelineno-1-25"></a>+-----------------------------------------------------------------------------------------------+
-<a id="__codelineno-1-26" name="__codelineno-1-26" href="#__codelineno-1-26"></a>|                                    MD &amp; Structural Analysis                                   |
-<a id="__codelineno-1-27" name="__codelineno-1-27" href="#__codelineno-1-27"></a>+-----------------------------------------------------------------------------------------------+
-<a id="__codelineno-1-28" name="__codelineno-1-28" href="#__codelineno-1-28"></a>|  thermo         - thermo info in thermo.out      thermo2/3      - Thermo in different styles  |
-<a id="__codelineno-1-29" name="__codelineno-1-29" href="#__codelineno-1-29"></a>|  rdf            - Radial distribution function   rdf_pmf        - Potential of mean force     |
-<a id="__codelineno-1-30" name="__codelineno-1-30" href="#__codelineno-1-30"></a>|  vac            - Velocity autocorrelation       cohesive       - Cohesive energy curve       |
-<a id="__codelineno-1-31" name="__codelineno-1-31" href="#__codelineno-1-31"></a>|  xrd            - X-ray diffraction              plane-grid     - Displacement plane grid     |
-<a id="__codelineno-1-32" name="__codelineno-1-32" href="#__codelineno-1-32"></a>|  xrd_comp       - Compare XRD                                                                 |
-<a id="__codelineno-1-33" name="__codelineno-1-33" href="#__codelineno-1-33"></a>+-----------------------------------------------------------------------------------------------+
-<a id="__codelineno-1-34" name="__codelineno-1-34" href="#__codelineno-1-34"></a>|                                        Heat Transport                                         |
-<a id="__codelineno-1-35" name="__codelineno-1-35" href="#__codelineno-1-35"></a>+-----------------------------------------------------------------------------------------------+
-<a id="__codelineno-1-36" name="__codelineno-1-36" href="#__codelineno-1-36"></a>|  emd            - EMD results                    emd2           - EMD all directions          |
-<a id="__codelineno-1-37" name="__codelineno-1-37" href="#__codelineno-1-37"></a>|  nemd           - NEMD results                   hnemd          - HNEMD results               |
-<a id="__codelineno-1-38" name="__codelineno-1-38" href="#__codelineno-1-38"></a>|  viscosity      - Viscosity                                                                   |
-<a id="__codelineno-1-39" name="__codelineno-1-39" href="#__codelineno-1-39"></a>+-----------------------------------------------------------------------------------------------+
-<a id="__codelineno-1-40" name="__codelineno-1-40" href="#__codelineno-1-40"></a>|                                          Phonons                                              |
-<a id="__codelineno-1-41" name="__codelineno-1-41" href="#__codelineno-1-41"></a>+-----------------------------------------------------------------------------------------------+
-<a id="__codelineno-1-42" name="__codelineno-1-42" href="#__codelineno-1-42"></a>|  pdos           - VAC and PDOS                 phonon         - Phonon band structure         |
-<a id="__codelineno-1-43" name="__codelineno-1-43" href="#__codelineno-1-43"></a>|  phonon_comp    - Compare phonon band structures                                              |
-<a id="__codelineno-1-44" name="__codelineno-1-44" href="#__codelineno-1-44"></a>+-----------------------------------------------------------------------------------------------+
-</code></pre></div>
-<hr />
 <h2 id="a-reliable-plotting-workflow">A reliable plotting workflow</h2>
 <p>Use the following sequence instead of trying plot names at random:</p>
 <ol>
@@ -2512,9 +2465,19 @@
 <td>equilibration and thermodynamic evolution</td>
 </tr>
 <tr>
-<td><code>msd.out</code></td>
-<td><code>gpumdkit.sh -plt msd</code> or <code>gpumdkit.sh -plt sdc</code></td>
+<td>four-column <code>msd.out</code> from <code>gpumdkit.sh -calc msd</code></td>
+<td><code>gpumdkit.sh -plt msd</code></td>
 <td>diffusion regime before interpreting a fit</td>
+</tr>
+<tr>
+<td>single-group seven-column <code>msd.out</code> from GPUMD <code>compute_msd</code></td>
+<td><code>gpumdkit.sh -plt sdc</code> or <code>gpumdkit.sh -plt msd_sdc</code></td>
+<td>SDC columns and diffusion regime</td>
+</tr>
+<tr>
+<td><code>sdc.out</code> from GPUMD <code>compute_sdc</code></td>
+<td><code>gpumdkit.sh -plt vac</code></td>
+<td>velocity autocorrelation</td>
 </tr>
 <tr>
 <td><code>rdf.out</code></td>
@@ -2528,8 +2491,11 @@
 </tr>
 </tbody>
 </table>
+<p><code>compute_msd</code> output for multiple groups appends additional group data. Inspect
+the grouping layout and use <code>msd_all</code> where appropriate instead of assuming
+that every <code>msd.out</code> has seven columns.</p>
 <p>For example, a saved training plot is requested as:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>gpumdkit.sh<span class="w"> </span>-plt<span class="w"> </span>train<span class="w"> </span>save
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>gpumdkit.sh<span class="w"> </span>-plt<span class="w"> </span>train<span class="w"> </span>save
 </code></pre></div>
 <p>The Gallery image below is an example of the figure layout, not a universal
 quality threshold. Whether a loss curve, parity scatter, or transport fit is
@@ -2540,6 +2506,55 @@ scientific conclusion from the image alone.</p>
 uniform per-plot <code>-h</code> interface. Use <code>gpumdkit.sh -plt -h</code> for the list, then
 use the exact signature and input-file notes in the matching section below.</p>
 </blockquote>
+<hr />
+<details>
+<summary>Show the full plotting command menu</summary>
+<p>Running <code>gpumdkit.sh -plt</code> prints the plotting command menu:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>+-----------------------------------------------------------------------------------------------+
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>|                     GPUMDkit &lt;version&gt; PLOT &amp; VISUALIZATION TOOLS              |
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>+-----------------------------------------------------------------------------------------------+
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>|  Usage: gpumdkit.sh -plt &lt;type&gt;                        List: gpumdkit.sh -plt -h              |
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>+-----------------------------------------------------------------------------------------------+
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>|                                    NEP Training &amp; Evaluation                                  |
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a>+-----------------------------------------------------------------------------------------------+
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>|  train          - NEP training results           prediction     - NEP prediction results      |
+<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a>|  train_test     - NEP train and test results     parity_density - Parity density plot         |
+<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a>|  train_density  - Training results density plot  restart        - Parameters in nep.restart   |
+<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a>|  charge         - Charge distribution            born_charge    - Born effective charges      |
+<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a>|  dimer          - Dimer energy/force curve       force_errors   - Force errors                |
+<a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a>|  des            - Descriptors                    net_force      - Net force distribution      |
+<a id="__codelineno-2-14" name="__codelineno-2-14" href="#__codelineno-2-14"></a>+-----------------------------------------------------------------------------------------------+
+<a id="__codelineno-2-15" name="__codelineno-2-15" href="#__codelineno-2-15"></a>|                                     Diffusion &amp; Transport                                     |
+<a id="__codelineno-2-16" name="__codelineno-2-16" href="#__codelineno-2-16"></a>+-----------------------------------------------------------------------------------------------+
+<a id="__codelineno-2-17" name="__codelineno-2-17" href="#__codelineno-2-17"></a>|  msd            - Mean square displacement       msd_conv       - MSD convergence             |
+<a id="__codelineno-2-18" name="__codelineno-2-18" href="#__codelineno-2-18"></a>|  msd_all        - MSD for all species            sdc            - Self diffusion coefficient  |
+<a id="__codelineno-2-19" name="__codelineno-2-19" href="#__codelineno-2-19"></a>|  msd_sdc        - MSD and SDC together           sigma          - Arrhenius ionic conductivity|
+<a id="__codelineno-2-20" name="__codelineno-2-20" href="#__codelineno-2-20"></a>|  D              - Arrhenius diffusivity          sigma_xyz      - Directional Arrhenius sigma |
+<a id="__codelineno-2-21" name="__codelineno-2-21" href="#__codelineno-2-21"></a>|  D_xyz          - Directional Arrhenius D                                                     |
+<a id="__codelineno-2-22" name="__codelineno-2-22" href="#__codelineno-2-22"></a>|  D_PT           - PT Arrhenius D                 sigma_PT       - PT Arrhenius sigma          |
+<a id="__codelineno-2-23" name="__codelineno-2-23" href="#__codelineno-2-23"></a>|  doas           - Density of atomistic states                                                 |
+<a id="__codelineno-2-24" name="__codelineno-2-24" href="#__codelineno-2-24"></a>+-----------------------------------------------------------------------------------------------+
+<a id="__codelineno-2-25" name="__codelineno-2-25" href="#__codelineno-2-25"></a>|                                    MD &amp; Structural Analysis                                   |
+<a id="__codelineno-2-26" name="__codelineno-2-26" href="#__codelineno-2-26"></a>+-----------------------------------------------------------------------------------------------+
+<a id="__codelineno-2-27" name="__codelineno-2-27" href="#__codelineno-2-27"></a>|  thermo         - thermo info in thermo.out      thermo2/3      - Thermo in different styles  |
+<a id="__codelineno-2-28" name="__codelineno-2-28" href="#__codelineno-2-28"></a>|  rdf            - Radial distribution function   rdf_pmf        - Potential of mean force     |
+<a id="__codelineno-2-29" name="__codelineno-2-29" href="#__codelineno-2-29"></a>|  vac            - Velocity autocorrelation       cohesive       - Cohesive energy curve       |
+<a id="__codelineno-2-30" name="__codelineno-2-30" href="#__codelineno-2-30"></a>|  xrd            - X-ray diffraction              plane-grid     - Displacement plane grid     |
+<a id="__codelineno-2-31" name="__codelineno-2-31" href="#__codelineno-2-31"></a>|  xrd_comp       - Compare XRD                                                                 |
+<a id="__codelineno-2-32" name="__codelineno-2-32" href="#__codelineno-2-32"></a>+-----------------------------------------------------------------------------------------------+
+<a id="__codelineno-2-33" name="__codelineno-2-33" href="#__codelineno-2-33"></a>|                                        Heat Transport                                         |
+<a id="__codelineno-2-34" name="__codelineno-2-34" href="#__codelineno-2-34"></a>+-----------------------------------------------------------------------------------------------+
+<a id="__codelineno-2-35" name="__codelineno-2-35" href="#__codelineno-2-35"></a>|  emd            - EMD results                    emd2           - EMD all directions          |
+<a id="__codelineno-2-36" name="__codelineno-2-36" href="#__codelineno-2-36"></a>|  nemd           - NEMD results                   hnemd          - HNEMD results               |
+<a id="__codelineno-2-37" name="__codelineno-2-37" href="#__codelineno-2-37"></a>|  viscosity      - Viscosity                                                                   |
+<a id="__codelineno-2-38" name="__codelineno-2-38" href="#__codelineno-2-38"></a>+-----------------------------------------------------------------------------------------------+
+<a id="__codelineno-2-39" name="__codelineno-2-39" href="#__codelineno-2-39"></a>|                                          Phonons                                              |
+<a id="__codelineno-2-40" name="__codelineno-2-40" href="#__codelineno-2-40"></a>+-----------------------------------------------------------------------------------------------+
+<a id="__codelineno-2-41" name="__codelineno-2-41" href="#__codelineno-2-41"></a>|  pdos           - VAC and PDOS                 phonon         - Phonon band structure         |
+<a id="__codelineno-2-42" name="__codelineno-2-42" href="#__codelineno-2-42"></a>|  phonon_comp    - Compare phonon band structures                                              |
+<a id="__codelineno-2-43" name="__codelineno-2-43" href="#__codelineno-2-43"></a>+-----------------------------------------------------------------------------------------------+
+</code></pre></div>
+</details>
 <hr />
 <h2 id="nep-training-and-prediction">NEP Training and Prediction</h2>
 <p>The <code>train</code>, <code>prediction</code>, <code>train_density</code>, and <code>parity_density</code> plots also
@@ -2605,17 +2620,10 @@ Prediction mode still writes the parity data to files ending in <code>_train.out
 </div>
 
 <hr />
-<h3 id="plt_learning_ratepy">plt_learning_rate.py</h3>
-<p>Visualizes learning rate during <code>gnep</code> training.</p>
-<p><strong>Input File:</strong> <code>loss.out</code></p>
-<p><strong>Note:</strong> Only for the <code>gnep</code> training process.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>gpumdkit.sh<span class="w"> </span>-plt<span class="w"> </span>lr
-</code></pre></div>
-<hr />
 <h3 id="plt_nep_restartpy">plt_nep_restart.py</h3>
 <p>Visualizes parameters stored in the <code>nep.restart</code> file.</p>
 <p><strong>Input File:</strong> <code>nep.restart</code></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>gpumdkit.sh<span class="w"> </span>-plt<span class="w"> </span>restart
+<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>gpumdkit.sh<span class="w"> </span>-plt<span class="w"> </span>restart
 </code></pre></div>
 <div align="center">
   <img src="../../Gallery/nep_restart.png" alt="NEP restart parameters" width="60%" />
@@ -2626,7 +2634,7 @@ Prediction mode still writes the parity data to files ending in <code>_train.out
 <p>Plots charge distribution from <code>qNEP</code> model.</p>
 <p><strong>Input Files:</strong> <code>train.xyz</code> and <code>charge_train.out</code></p>
 <p><strong>Important:</strong> Ensure consistency between training set and charge output atom ordering. Use full batch training or run prediction step first.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a>gpumdkit.sh<span class="w"> </span>-plt<span class="w"> </span>charge
+<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>gpumdkit.sh<span class="w"> </span>-plt<span class="w"> </span>charge
 </code></pre></div>
 <div align="center">
   <img src="../../Gallery/charge.png" alt="Charge distribution" width="45%" />
@@ -2636,8 +2644,8 @@ Prediction mode still writes the parity data to files ending in <code>_train.out
 <h3 id="plt_born_chargepy">plt_born_charge.py</h3>
 <p>Creates parity plots for Born effective charges (BEC) on training and testing datasets. Structures with all-zero reference BEC are filtered out.</p>
 <p><strong>Input Files:</strong> <code>bec_train.out</code>; optional <code>bec_test.out</code></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a>gpumdkit.sh<span class="w"> </span>-plt<span class="w"> </span>born_charge
-<a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a>gpumdkit.sh<span class="w"> </span>-plt<span class="w"> </span>bec<span class="w">          </span><span class="c1"># Alternative command</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a>gpumdkit.sh<span class="w"> </span>-plt<span class="w"> </span>born_charge
+<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a>gpumdkit.sh<span class="w"> </span>-plt<span class="w"> </span>bec<span class="w">          </span><span class="c1"># Alternative command</span>
 </code></pre></div>
 <div align="center">
   <img src="../../Gallery/born_charge.png" alt="Born effective charge parity plot" width="45%" />
@@ -2648,7 +2656,7 @@ Prediction mode still writes the parity data to files ending in <code>_train.out
 <h3 id="plt_thermopy">plt_thermo.py</h3>
 <p>Primary script for comprehensive thermodynamic property visualization.</p>
 <p><strong>Input File:</strong> <code>thermo.out</code></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a>gpumdkit.sh<span class="w"> </span>-plt<span class="w"> </span>thermo
+<div class="highlight"><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a>gpumdkit.sh<span class="w"> </span>-plt<span class="w"> </span>thermo
 </code></pre></div>
 <div align="center">
   <img src="../../Gallery/thermo.png" alt="Thermo plot" width="75%" />
@@ -2658,15 +2666,18 @@ Prediction mode still writes the parity data to files ending in <code>_train.out
 <h3 id="plt_thermo2py-plt_thermo3py">plt_thermo2.py &amp; plt_thermo3.py</h3>
 <p>Alternative thermodynamic visualization with different styles.</p>
 <p><strong>Input File:</strong> <code>thermo.out</code></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a>gpumdkit.sh<span class="w"> </span>-plt<span class="w"> </span>thermo2
-<a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a>gpumdkit.sh<span class="w"> </span>-plt<span class="w"> </span>thermo3
+<div class="highlight"><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a>gpumdkit.sh<span class="w"> </span>-plt<span class="w"> </span>thermo2
+<a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a>gpumdkit.sh<span class="w"> </span>-plt<span class="w"> </span>thermo3
 </code></pre></div>
 <hr />
 <h2 id="diffusion-and-ionic-transport">Diffusion and Ionic Transport</h2>
 <h3 id="plt_msdpy">plt_msd.py</h3>
 <p>Plots mean square displacement (MSD) for all directions.</p>
-<p><strong>Input File:</strong> <code>msd.out</code></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a>gpumdkit.sh<span class="w"> </span>-plt<span class="w"> </span>msd
+<p><strong>Input File:</strong> <code>msd.out</code> with time and <code>MSD_x/y/z</code> in its first four columns.
+This accepts the four-column output from <code>gpumdkit.sh -calc msd</code> and the first
+four columns of GPUMD <code>compute_msd</code> output.</p>
+<p>The slope annotations use the middle 40%-80% of the MSD series.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a>gpumdkit.sh<span class="w"> </span>-plt<span class="w"> </span>msd
 </code></pre></div>
 <div align="center">
   <img src="../../Gallery/msd.png" alt="Mean square displacement" width="48%" />
@@ -2676,8 +2687,10 @@ Prediction mode still writes the parity data to files ending in <code>_train.out
 <h3 id="plt_msd_allpy">plt_msd_all.py</h3>
 <p>Plots MSD for all atomic species separately when using <code>all_groups</code> in GPUMD.</p>
 <p><strong>Input File:</strong> <code>msd.out</code> (computed with <code>all_groups</code> option)</p>
-<p><strong>Requirements:</strong> Must use <code>all_groups</code> in the <code>compute_msd</code> command in <code>run.in</code>.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a>gpumdkit.sh<span class="w"> </span>-plt<span class="w"> </span>msd_all<span class="w"> </span>msd.out<span class="w"> </span>Li<span class="w"> </span>P<span class="w"> </span>S
+<p><strong>Requirements:</strong> Must use <code>all_groups</code> in the <code>compute_msd</code> command in <code>run.in</code>.
+For multiple groups, GPUMD appends group data; inspect that layout rather than
+assuming the file has the seven columns of a single-group result.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a>gpumdkit.sh<span class="w"> </span>-plt<span class="w"> </span>msd_all<span class="w"> </span>msd.out<span class="w"> </span>Li<span class="w"> </span>P<span class="w"> </span>S
 </code></pre></div>
 <div align="center">
   <img src="../../Gallery/msd_all.png" alt="MSD for all species" width="48%" />
@@ -2689,7 +2702,7 @@ Prediction mode still writes the parity data to files ending in <code>_train.out
 <p><strong>Input File:</strong> <code>msd_step*.out</code> (computed with <code>save_every</code> option)</p>
 <p><strong>Requirements:</strong> Use <code>save_every</code> in the <code>compute_msd</code> command.</p>
 <p><strong>Purpose:</strong> Verify MSD has converged sufficiently for accurate diffusion coefficient calculation.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a>gpumdkit.sh<span class="w"> </span>-plt<span class="w"> </span>msd_conv
+<div class="highlight"><pre><span></span><code><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a>gpumdkit.sh<span class="w"> </span>-plt<span class="w"> </span>msd_conv
 </code></pre></div>
 <div align="center">
   <img src="../../Gallery/msd_convergence.png" alt="MSD convergence" width="48%" />
@@ -2698,13 +2711,25 @@ Prediction mode still writes the parity data to files ending in <code>_train.out
 <hr />
 <h3 id="plt_sdcpy">plt_sdc.py</h3>
 <p>Plots self-diffusion coefficient (SDC) vs time.</p>
-<p><strong>Input File:</strong> <code>msd.out</code></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-17-1" name="__codelineno-17-1" href="#__codelineno-17-1"></a>gpumdkit.sh<span class="w"> </span>-plt<span class="w"> </span>sdc
+<p><strong>Input File:</strong> a single-group seven-column <code>msd.out</code> from GPUMD <code>compute_msd</code>:
+time, <code>MSD_x/y/z</code>, and <code>SDC_x/y/z</code>. The four-column file from <code>-calc msd</code> is
+not sufficient for this plot.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a>gpumdkit.sh<span class="w"> </span>-plt<span class="w"> </span>sdc
 </code></pre></div>
 <div align="center">
   <img src="../../Gallery/sdc.png" alt="Self-diffusion coefficient" width="48%" />
 </div>
 
+<hr />
+<h3 id="plt_msd_sdcpy">plt_msd_sdc.py</h3>
+<p>Plots MSD and self-diffusion coefficient (SDC) side by side. The slope
+annotations use the middle 40%-80% of the MSD series; the inset shows the
+last 80% of the SDC data with a moving-average overlay.</p>
+<p><strong>Input File:</strong> a single-group seven-column <code>msd.out</code> from GPUMD <code>compute_msd</code>:
+time, <code>MSD_x/y/z</code>, and <code>SDC_x/y/z</code>. The four-column file from <code>-calc msd</code> is
+not sufficient for this plot.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-17-1" name="__codelineno-17-1" href="#__codelineno-17-1"></a>gpumdkit.sh<span class="w"> </span>-plt<span class="w"> </span>msd_sdc
+</code></pre></div>
 <hr />
 <h3 id="plt_arrhenius_dpy">plt_arrhenius_d.py</h3>
 <p>Creates Arrhenius plot for diffusivity (log10 D vs 1000/T).</p>
@@ -2934,7 +2959,9 @@ plot has no Gallery example.</p>
 <hr />
 <h3 id="plt_vacpy">plt_vac.py</h3>
 <p>Plots velocity autocorrelation function (VAC). Useful for analyzing phonon properties and atomic dynamics.</p>
-<p><strong>Input File:</strong> <code>sdc.out</code> (the VAC columns are read from this file by the plotting script)</p>
+<p><strong>Input File:</strong> <code>sdc.out</code> written by GPUMD <code>compute_sdc</code> (the VAC columns are
+read from this file by the plotting script). This is separate from the
+<code>msd.out</code> input used by <code>-plt sdc</code> and <code>-plt msd_sdc</code>.</p>
 <p><strong>Output:</strong> Interactive plot or <code>vac.png</code> (with <code>save</code> option)</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-31-1" name="__codelineno-31-1" href="#__codelineno-31-1"></a>gpumdkit.sh<span class="w"> </span>-plt<span class="w"> </span>vac
 </code></pre></div>
@@ -3028,8 +3055,8 @@ distances; matching row counts alone are not sufficient.</p>
 <a id="__codelineno-38-2" name="__codelineno-38-2" href="#__codelineno-38-2"></a>gpumdkit.sh<span class="w"> </span>-calc<span class="w"> </span>des<span class="w"> </span>train.xyz<span class="w"> </span>descriptors.npy<span class="w"> </span>nep.txt<span class="w"> </span>Li
 <a id="__codelineno-38-3" name="__codelineno-38-3" href="#__codelineno-38-3"></a>
 <a id="__codelineno-38-4" name="__codelineno-38-4" href="#__codelineno-38-4"></a><span class="c1"># Then visualize</span>
-<a id="__codelineno-38-5" name="__codelineno-38-5" href="#__codelineno-38-5"></a>gpumdkit.sh<span class="w"> </span>-plt<span class="w"> </span>des<span class="w"> </span>pca
-<a id="__codelineno-38-6" name="__codelineno-38-6" href="#__codelineno-38-6"></a>gpumdkit.sh<span class="w"> </span>-plt<span class="w"> </span>des<span class="w"> </span>umap
+<a id="__codelineno-38-5" name="__codelineno-38-5" href="#__codelineno-38-5"></a>gpumdkit.sh<span class="w"> </span>-plt<span class="w"> </span>des<span class="w"> </span>pca<span class="w"> </span>descriptors.npy
+<a id="__codelineno-38-6" name="__codelineno-38-6" href="#__codelineno-38-6"></a>gpumdkit.sh<span class="w"> </span>-plt<span class="w"> </span>des<span class="w"> </span>umap<span class="w"> </span>descriptors.npy
 </code></pre></div>
 <div align="center">
   <img src="../../Gallery/des_umap.png" alt="UMAP descriptor visualization" width="52%" />
@@ -3111,11 +3138,6 @@ distances; matching row counts alone are not sufficient.</p>
 <td>Force error metrics</td>
 </tr>
 <tr>
-<td><code>lr</code></td>
-<td><code>loss.out</code> (gnep)</td>
-<td>Learning rate</td>
-</tr>
-<tr>
 <td><code>restart</code></td>
 <td><code>nep.restart</code></td>
 <td>Restart file parameters</td>
@@ -3137,7 +3159,7 @@ distances; matching row counts alone are not sufficient.</p>
 </tr>
 <tr>
 <td><code>msd</code></td>
-<td><code>msd.out</code></td>
+<td>four-column <code>msd.out</code> from <code>-calc msd</code>, or first four columns of GPUMD <code>compute_msd</code> output</td>
 <td>Mean square displacement</td>
 </tr>
 <tr>
@@ -3152,8 +3174,13 @@ distances; matching row counts alone are not sufficient.</p>
 </tr>
 <tr>
 <td><code>sdc</code></td>
-<td><code>msd.out</code></td>
+<td>single-group seven-column <code>msd.out</code> from GPUMD <code>compute_msd</code></td>
 <td>Self-diffusion coefficient</td>
+</tr>
+<tr>
+<td><code>msd_sdc</code></td>
+<td>single-group seven-column <code>msd.out</code> from GPUMD <code>compute_msd</code></td>
+<td>MSD and SDC combined</td>
 </tr>
 <tr>
 <td><code>arrhenius_d</code> / <code>D</code></td>

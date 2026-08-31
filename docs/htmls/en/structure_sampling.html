@@ -440,7 +440,7 @@
   <span class="md-ellipsis">
     
   
-    Simulation and Post-processing
+    GPUMDkit Agent Skill
   
 
     
@@ -1078,7 +1078,7 @@
   <span class="md-ellipsis">
     
   
-    模拟与后处理
+    GPUMDkit Agent Skill
   
 
     
@@ -1606,6 +1606,8 @@
 </div>
 
 <p><strong>Script Location:</strong> <code>Scripts/sample_structures/</code></p>
+<p>Run <code>gpumdkit.sh</code> in the working directory containing your candidate trajectory, reference data, and model, then enter filenames at the menu prompts. Use actual paths for files elsewhere. Relative paths start from the terminal's current directory; check each function's output location and any existing files with the same names before running.</p>
+<p>The <code>python Scripts/...</code> examples below are optional source invocations: run them from the GPUMDkit checkout root with adjusted data paths, or use the script's absolute path from your data directory. Conda users can use the menus without locating <code>Scripts/</code>.</p>
 <h2 id="interactive-mode">Interactive Mode</h2>
 <p>Sampling tasks are usually easier to run from the interactive menu:</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>gpumdkit.sh
@@ -1979,16 +1981,18 @@ dataset.</p>
 <h2 id="frame-range-extraction">Frame Range Extraction</h2>
 <p><code>frame_range.py</code> is an independent CLI tool and is not part of the interactive sampling menu <code>201–206</code>. Use it when you want to keep only a fraction of a trajectory before sampling, for example after equilibration.</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-21-1" name="__codelineno-21-1" href="#__codelineno-21-1"></a>gpumdkit.sh<span class="w"> </span>-frame_range<span class="w"> </span>dump.xyz<span class="w"> </span><span class="m">0</span><span class="w"> </span><span class="m">0</span>.8
-<a id="__codelineno-21-2" name="__codelineno-21-2" href="#__codelineno-21-2"></a>python<span class="w"> </span>Scripts/sample_structures/frame_range.py<span class="w"> </span>dump.xyz<span class="w"> </span><span class="m">0</span><span class="w"> </span><span class="m">0</span>.8
 </code></pre></div>
 <p>This writes frames from 0% to 80% of the trajectory. The range arguments are trajectory fractions from <code>0</code> to <code>1</code>.</p>
 <h2 id="example-commands">Example Commands</h2>
 <p>An example preprocessing-and-sampling sequence is shown below. The first two commands are analyzer tools; the final step is structure sampling.</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-22-1" name="__codelineno-22-1" href="#__codelineno-22-1"></a>gpumdkit.sh<span class="w"> </span>-min_dist_pbc<span class="w"> </span>dump.xyz
 <a id="__codelineno-22-2" name="__codelineno-22-2" href="#__codelineno-22-2"></a>gpumdkit.sh<span class="w"> </span>-filter_box<span class="w"> </span>dump.xyz<span class="w"> </span><span class="m">13</span>
-<a id="__codelineno-22-3" name="__codelineno-22-3" href="#__codelineno-22-3"></a>python<span class="w"> </span>Scripts/sample_structures/parallel_neptrain_select_structs.py<span class="w"> </span>dump.xyz<span class="w"> </span>train.xyz<span class="w"> </span>nep.txt<span class="w"> </span><span class="m">4</span>
+<a id="__codelineno-22-3" name="__codelineno-22-3" href="#__codelineno-22-3"></a>gpumdkit.sh<span class="w">  </span><span class="c1"># choose 2 → 203</span>
 </code></pre></div>
-<p>The final step can also be run from interactive mode by choosing <code>2) Sample Structures -&gt; 203</code>.</p>
+<p><code>-filter_box</code> writes the retained structures to <code>filtered_by_box.xyz</code>. At the parameter prompt in menu <code>203</code>, enter:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-23-1" name="__codelineno-23-1" href="#__codelineno-23-1"></a>filtered_by_box.xyz train.xyz nep.txt 4
+</code></pre></div>
+<p>These are the filtered candidates, existing reference dataset, compatible NEP model, and number of parallel workers. Prepare <code>train.xyz</code> and <code>nep.txt</code> before running FPS; use the original trajectory if filtering was not performed. Choose the box-length threshold for your own system; the example value <code>13</code> is not a universal filtering criterion.</p>
 <h2 id="common-mistakes">Common Mistakes</h2>
 <table>
 <thead>

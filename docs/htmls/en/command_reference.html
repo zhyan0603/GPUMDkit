@@ -440,7 +440,7 @@
   <span class="md-ellipsis">
     
   
-    Simulation and Post-processing
+    GPUMDkit Agent Skill
   
 
     
@@ -1084,7 +1084,7 @@
   <span class="md-ellipsis">
     
   
-    模拟与后处理
+    GPUMDkit Agent Skill
   
 
     
@@ -1618,6 +1618,10 @@
 </div>
 
 <p>The source table is maintained in <code>docs/command_reference.tsv</code>.</p>
+<p>If you are new to GPUMDkit, start with <a href="quick_start.html">Quick Start</a>. For
+agent-assisted work, use the <a href="simulation_and_postprocessing.html">GPUMDkit Agent Skill</a>.
+The <code>-h</code> form is available only for commands that expose their own option help;
+otherwise use <code>gpumdkit.sh -h</code>, the relevant module help, or interactive mode.</p>
 <h2 id="gpumdkitsh-h-output"><code>gpumdkit.sh -h</code> Output</h2>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>+-------------------------------------------------------------------------------------------------------+
 <a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>|                          GPUMDkit 1.5.7 (2026-08-28)       Command Help                               |
@@ -1781,7 +1785,7 @@
 <tr>
 <td><code>-get_frame</code></td>
 <td><code>gpumdkit.sh -get_frame &lt;input.xyz&gt; &lt;frame_index&gt;</code></td>
-<td>Extract one frame</td>
+<td>Extract one frame (1-based index)</td>
 </tr>
 <tr>
 <td><code>-clean_xyz</code></td>
@@ -1882,6 +1886,9 @@
 </tr>
 </tbody>
 </table>
+<p><code>-calc nep</code> writes an output extxyz containing properties predicted by a NEP
+model. <code>-prediction</code> writes the separate NEP prediction files used by training
+and validation workflows.</p>
 <h2 id="analyzers">Analyzers</h2>
 <table>
 <thead>

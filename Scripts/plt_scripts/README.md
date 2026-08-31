@@ -139,24 +139,6 @@ gpumdkit.sh -plt force_errors
 
 ---
 
-#### plt_learning_rate.py
-
-Visualizes learning rate during `gnep` training.
-
-**Input File:** `loss.out` 
-
-**Usage:**
-
-```bash
-gpumdkit.sh -plt lr 
-```
-
-**Use Case:** Monitor learning rate decay. 
-
-**Note:** this is only for the `gnep` training process.
-
----
-
 #### plt_nep_restart.py
 
 Visualizes parameters stored in `nep.restart` file.
@@ -216,7 +198,11 @@ Scripts for analyzing diffusion, ionic conductivity, and thermal transport, etc.
 
 Plots mean square displacement (MSD) for all directions.
 
-**Input File:** `msd.out`
+**Input File:** `msd.out` with time and `MSD_x/y/z` in its first four columns.
+This accepts the four-column output from `gpumdkit.sh -calc msd` and the first
+four columns of GPUMD `compute_msd` output.
+
+The slope annotations use the middle 40%-80% of the MSD series.
 
 **Usage:**
 
@@ -244,6 +230,8 @@ gpumdkit.sh -plt msd_all msd.out Li P S
 ```
 
 **Requirements:** Must use `all_groups` in the `compute_msd` command in `run.in`.
+For multiple groups, GPUMD appends group data; inspect that layout rather than
+assuming the file has the seven columns of a single-group result.
 
 <div align="center">
     <img src="../../docs/Gallery/msd_all.png" alt="MSD for all species" width="45%" />
@@ -277,7 +265,9 @@ gpumdkit.sh -plt msd_conv
 
 Plots self-diffusion coefficient (SDC) vs time.
 
-**Input File:** `msd.out`
+**Input File:** a single-group seven-column `msd.out` from GPUMD `compute_msd`:
+time, `MSD_x/y/z`, and `SDC_x/y/z`. The four-column file from `-calc msd` is
+not sufficient for this plot.
 
 **Usage:**
 
@@ -288,6 +278,24 @@ gpumdkit.sh -plt sdc
 <div align="center">
     <img src="../../docs/Gallery/sdc.png" alt="Self-diffusion coefficient" width="45%" />
 </div>
+
+---
+
+#### plt_msd_sdc.py
+
+Plots MSD and self-diffusion coefficient (SDC) side by side. The slope
+annotations use the middle 40%-80% of the MSD series; the inset shows the last
+80% of the SDC data with a moving-average overlay.
+
+**Input File:** a single-group seven-column `msd.out` from GPUMD `compute_msd`:
+time, `MSD_x/y/z`, and `SDC_x/y/z`. The four-column file from `-calc msd` is
+not sufficient for this plot.
+
+**Usage:**
+
+```bash
+gpumdkit.sh -plt msd_sdc
+```
 
 ---
 
@@ -722,7 +730,7 @@ Visualizes high-dimensional descriptors using dimensionality reduction (PCA/UMAP
 gpumdkit.sh -calc des train.xyz descriptors.npy nep.txt Li
 
 # Then plot
-gpumdkit.sh -plt des <method>
+gpumdkit.sh -plt des <method> descriptors.npy
 ```
 
 **Methods:**
@@ -815,18 +823,18 @@ gpumdkit.sh -plt net_force train.xyz
 | `train`        | `loss.out`, `*_train.out`   | NEP training plot                  |
 | `prediction`   | `*_train.out`               | NEP prediction-mode plot           |
 | `train_test`   | `*_train.out`, `*_test.out` | parity plots of train&test         |
-| `msd`          | `msd.out`                   | Mean square displacement           |
-| `sdc`          | `msd.out`                   | Self-diffusion coefficient         |
+| `msd`          | four-column `msd.out` from `-calc msd`, or first four columns of GPUMD `compute_msd` output | Mean square displacement           |
+| `sdc`          | single-group seven-column `msd.out` from GPUMD `compute_msd` | Self-diffusion coefficient         |
+| `msd_sdc`      | single-group seven-column `msd.out` from GPUMD `compute_msd` | MSD and SDC combined               |
 | `rdf`          | `rdf.out`                   | Radial distribution function       |
 | `xrd`          | `xrd.out`                   | X-ray diffraction intensity        |
 | `xrd_comp`     | `*K/xrd.out`                | XRD comparison across temperatures |
-| `vac`          | `sdc.out`                   | Velocity autocorrelation           |
+| `vac`          | `sdc.out` from GPUMD `compute_sdc` | Velocity autocorrelation           |
 | `charge`       | `train.xyz`, `charge_train.out` | Charge distribution             |
 | `doas`         | DOAS files                  | Density of atomistic states        |
 | `des`          | `descriptors.npy`           | Descriptor visualization           |
 | `dimer`        | Needs nep model             | Dimer interaction curve            |
 | `force_errors` | `force_train.out`           | Force error metrics                |
-| `lr`           | `loss.out` from `gnep`      | Learning rate                      |
 | `restart`      | `nep.restart` from `nep`    | Restart file parameters            |
 | `net_force`    | train.xyz                   | Net force distribution             |
 | `emd`          | EMD outputs                 | EMD thermal conductivity           |
@@ -865,8 +873,7 @@ For quick reference, here's the complete command list:
  |  train_density  - Training results density plot  restart        - Parameters in nep.restart   |
  |  charge         - Charge distribution            born_charge    - Born effective charges      |
  |  dimer          - Dimer energy/force curve       force_errors   - Force errors                |
- |  des            - Descriptors                    lr             - Learning rate for gnep      |
- |  net_force      Plot net force distribution                                                   |
+ |  des            - Descriptors                    net_force      - Net force distribution      |
  +-----------------------------------------------------------------------------------------------+
  |                                     Diffusion & Transport                                     |
  +-----------------------------------------------------------------------------------------------+

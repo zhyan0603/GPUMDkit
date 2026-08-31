@@ -195,18 +195,25 @@ Output:
 
 - `msd.out`
 
-The beginning of `msd.out` is a text table with time and MSD columns. After generating it, use the plot commands below.
+`calc_msd.py` writes exactly four numeric columns to `msd.out`: `Time(ps)`,
+`MSD_x`, `MSD_y`, and `MSD_z`. This output can be plotted with `-plt msd`.
+
+For comparison, GPUMD's native `compute_msd` writes a different `msd.out`. For
+one selected group it contains seven columns: time, `MSD_x/y/z`, and
+`SDC_x/y/z`; this layout is required by `-plt sdc` and `-plt msd_sdc`. When
+`all_groups` or multiple groups are requested, GPUMD appends additional group
+data, so do not assume that every `msd.out` has seven columns. The separate
+GPUMD `compute_sdc` command writes `sdc.out`, which is used by `-plt vac` and
+is not the input for the `-plt sdc` or `-plt msd_sdc` plotters.
 
 You can then plot:
 
 ```bash
 gpumdkit.sh -plt msd
-gpumdkit.sh -plt sdc
 ```
 
 <div align="center">
   <img src="../../Gallery/msd.png" alt="MSD plot" width="45%" />
-  <img src="../../Gallery/sdc.png" alt="SDC plot" width="45%" />
 </div>
 
 ## X-ray Diffraction (XRD)
@@ -353,8 +360,8 @@ Use cases:
 Plot descriptors with:
 
 ```bash
-gpumdkit.sh -plt des pca
-gpumdkit.sh -plt des umap
+gpumdkit.sh -plt des pca descriptors.npy
+gpumdkit.sh -plt des umap descriptors.npy
 ```
 
 <div align="center">
