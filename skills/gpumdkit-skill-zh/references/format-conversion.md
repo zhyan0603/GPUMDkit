@@ -45,6 +45,11 @@ gpumdkit.sh -pos2exyz POSCAR model.xyz
 gpumdkit.sh -exyz2pos structures.xyz
 ```
 
+`exyz2pos` 会在当前目录生成 `POSCAR_1.vasp`、`POSCAR_2.vasp` 等文件。
+程序按照输入轨迹中元素首次出现的顺序对每帧原子分组；例如
+`Li La Zr O Li O La Zr O` 会使用 `Li La Zr O`。速度信息不会导出，
+不再使用 `-o` 或 `-v` 选项。
+
 ### LAMMPS 转换
 
 ```bash

@@ -13,7 +13,7 @@ Read this file for every NEP training, fine-tuning, prediction, or deployment ta
 
 ## Bundled reference scope
 
-The NEP files in this skill are a self-contained, categorized summary of the input data schema, all current `nep.in` keywords, defaults, constraints, output files, and deployment checks. They do not require a GPUMD source tree.
+The NEP files in this skill are a self-contained, categorized summary of the documented current `nep.in` keywords, defaults, constraints, output files, and deployment checks. They do not require a GPUMD source tree.
 
 Use parser messages and executable version output as runtime evidence. If local behavior differs, stop and report the exact line, error, and version, then ask the user for the governing version-specific behavior. Do not substitute syntax from memory.
 
@@ -22,7 +22,7 @@ Use parser messages and executable version output as runtime evidence. If local 
 | Need | Reference |
 |---|---|
 | `train.xyz`/`test.xyz` fields, units, model-type targets, validation | `references/nep-data.md` |
-| Every current `nep.in` keyword, syntax, constraints, and defaults | `references/nep-parameters.md` |
+| Every documented current `nep.in` keyword, syntax, constraints, and defaults | `references/nep-parameters.md` |
 | `loss.out`, model/restart files, parity outputs, prediction outputs | `references/nep-outputs.md` |
 | Conversion, filtering, sampling, plotting | Matching GPUMDkit module reference |
 | Using `nep.txt` in MD | `references/gpumd.md` and GPUMD parameter references |
@@ -80,6 +80,8 @@ Confirm the model header, species order, and any charge/k-space requirements bef
 ## Version-sensitive points
 
 - This bundled snapshot accepts only `version 4`. If a local parser behaves differently, report the executable version and stop for version resolution.
+- `output_interval` controls the generation cadence for loss, console, model, restart, and test-set outputs; the documented default is 100 generations.
+- `import_q_scaler 1` reads the scaler from the local `nep.txt` and requires a matching architecture and species set; use it only when the restart/model provenance supports that workflow.
 - Current `l_max` is a three-body limit followed by optional 0/1 descriptor switches, not the old three-number NEP3 form.
 - Current fine-tuning syntax is `fine_tune <nep_model_file> <nep_restart_file>`, not `fine_tune 1`.
 - `nep.restart` (dot) is the current documented restart filename; older text may use `nep_restart`.

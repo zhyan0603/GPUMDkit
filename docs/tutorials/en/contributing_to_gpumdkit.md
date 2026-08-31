@@ -76,6 +76,11 @@ To maintain code quality and consistency across the project, please adhere to th
   If you add a new feature, consider updating the relevant tutorial page.
 - After editing tutorial markdown files, rebuild the HTML with `mkdocs build -f docs/mkdocs.yml`.
 
+### Update Log
+
+- Use `docs/updates.info` only for recent user-visible feature additions and code, script, or CLI bug fixes. Documentation-only changes, including tutorials, README files, skills, references, wording corrections, and generated documentation, must not be added there.
+- Keep at most the five newest entries in each of the `NEW_FEATURES` and `BUG_FIXES` arrays; remove older entries when adding a new one. If a change includes both code and documentation, record only the code/behavior change, not the documentation synchronization.
+
 ---
 
 ## Reporting Bugs

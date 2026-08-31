@@ -16,8 +16,8 @@ Bundled write behavior:
 
 - `loss.out` is append mode;
 - other outputs are continuously overwritten;
-- energy/force/virial/stress/dipole/polarizability train/test outputs update every 1000 steps;
-- other output files update every 100 steps.
+- training/test output files, `nep.txt`, and `nep.restart` are written at the `output_interval` generation cadence; the documented default is 100 generations;
+- model/checkpoint files requested by `save_potential` follow their own checkpoint interval and should not be confused with `output_interval`.
 
 Use a clean directory or archive old `loss.out` before a new training run.
 
@@ -27,7 +27,7 @@ Use a clean directory or archive old `loss.out` before a new training run.
 |---|---|
 | `loss.out` | Generation, total/regularization loss, and train/test RMSE terms |
 | `nep.txt` | Current trained model parameters; deployable in GPUMD |
-| `nep.restart` | Continuously updated optimization state |
+| `nep.restart` | Optimization state updated at `output_interval` generations |
 | checkpointed `nep_*.txt`/restart | Periodic model/state files controlled by `save_potential` |
 
 Potential-model `loss.out` columns:

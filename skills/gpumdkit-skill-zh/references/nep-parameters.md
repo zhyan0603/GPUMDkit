@@ -71,7 +71,9 @@ ZBL 说明：
 | `population` | `population <size>` | 整数 10-100；默认 50 |
 | `generation` | `generation <count>` | 整数 0 到 10^7；默认 100000 |
 | `save_potential` | `save_potential <interval> <format> <save_restart>` | 间隔默认 100000；格式 0 使用代数命名，1 使用时间戳/扩展命名（默认）；重启标志为 0/1 |
+| `output_interval` | `output_interval <number_of_generations>` | 正整数；默认 100；控制 `loss.out`、控制台输出、`nep.txt`、`nep.restart` 和测试集输出文件的写出 |
 | `output_descriptor` | `output_descriptor 0\|1\|2` | 仅预测模式；0 关闭，1 逐结构，2 逐原子；默认 0 |
+| `import_q_scaler` | `import_q_scaler 0\|1` | 默认 0；设置为 1 时从当前目录的 `nep.txt` 读取 `q_scaler`，而不是在第 0 代重新计算；要求架构和元素集合匹配 |
 
 对于 `save_potential`，`save_restart=1` 表示请求保存匹配的重启检查点。已保存的 `nep.restart` 是重启/基础模型工作流所必需的。如果本地检查点名称不同，请在自动化收集之前确认可执行文件版本。
 

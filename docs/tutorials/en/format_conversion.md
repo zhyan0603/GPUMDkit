@@ -259,7 +259,11 @@ Example: POSCAR model.xyz
 gpumdkit.sh -exyz2pos structures.xyz
 ```
 
-This converts all frames in an extxyz file into `POSCAR_*.vasp` files. Output filenames use 1-based numbering. The `-get_frame` command also uses 1-based frame numbers.
+This converts all frames in an extxyz file into `POSCAR_1.vasp`,
+`POSCAR_2.vasp`, and so on in the current directory. Atoms are grouped by
+element using the first-seen element order in the input trajectory, and
+velocities are not exported. The `-get_frame` command also uses 1-based frame
+numbers.
 
 Interactive entry: `105`
 

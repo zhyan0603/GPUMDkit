@@ -16,8 +16,8 @@
 
 - `loss.out` 为追加模式；
 - 其他输出文件会被持续覆盖；
-- 能量/力/维里/应力/偶极矩/极化率的训练/测试输出每 1000 步更新一次；
-- 其他输出文件每 100 步更新一次。
+- 训练/测试输出文件、`nep.txt` 和 `nep.restart` 按 `output_interval` 的代数频率写出；文档默认值为 100 代；
+- `save_potential` 请求的模型/检查点文件使用自身的检查点间隔，不应与 `output_interval` 混淆。
 
 在新一轮训练之前，使用干净的目录或归档旧的 `loss.out`。
 
@@ -27,7 +27,7 @@
 |---|---|
 | `loss.out` | 迭代轮次（generation）、总损失、正则化损失以及训练集/测试集 RMSE 各项 |
 | `nep.txt` | 当前训练好的模型参数；可在 GPUMD 中部署 |
-| `nep.restart` | 持续更新的优化状态 |
+| `nep.restart` | 按 `output_interval` 代更新的优化状态 |
 | 检查点 `nep_*.txt`/restart | 由 `save_potential` 控制的周期性模型/状态文件 |
 
 势函数模型 `loss.out` 列：

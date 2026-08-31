@@ -38,7 +38,7 @@ GPUMDkit/
 │   ├── tutorials/en/        # 英文教程
 │   ├── tutorials/zh/        # 中文教程
 │   ├── mkdocs.yml           # MkDocs 配置
-│   ├── updates.info         # 最近新增功能和 bug 修复记录
+│   ├── updates.info         # 仅记录最新功能和代码/CLI bug 修复
 │   └── htmls/               # 生成的 HTML
 ```
 
@@ -57,7 +57,9 @@ GPUMDkit/
 
 ## 更新记录与版本/日期规则
 
-- 新增功能或修复 bug 时，必须在同一次修改中更新 `docs/updates.info`。在 `NEW_FEATURES` 或 `BUG_FIXES` 中添加简洁条目；只有在另一列表没有条目时才保留 `"None"`。
+- `docs/updates.info` 只用于记录近期的用户可见功能新增，以及代码、脚本或 CLI 的 bug 修复。纯文档修改，包括教程、README、skill、reference、措辞修正和生成的文档，不得写入该文件。
+- `NEW_FEATURES` 和 `BUG_FIXES` 各自最多保留最新的 5 条记录；添加新记录时删除更早的条目。如果一次修改同时包含代码和文档，只记录代码/行为变化，不记录文档同步本身。
+- 只有在另一列表没有条目时，才将其保留为 `"None"`。
 - 如果修改了 `gpumdkit.sh`，必须将其中 `VERSION="..."` 声明里的日期更新为当前日期，并使用 `YYYY-MM-DD` 格式。
 - 保留现有版本字符串。除非用户明确要求更新版本，否则不得修改 `gpumdkit.sh` 或 `docs/updates.info` 中的任何版本号。
 

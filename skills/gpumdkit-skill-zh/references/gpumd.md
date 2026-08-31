@@ -67,7 +67,8 @@ frame_dt_fs = dump_interval_steps * time_step_fs
 
 ## 已知版本敏感点
 
-- 当前 `dump_xyz` 以分组方法和分组 ID 开头；不要使用过时的 interval/frame-count 参数格式。
+- 本快照遵循 GPUMD 5.7 及更高版本的输出语法。在生成或翻译 `run.in` 之前，先确认用户使用的 GPUMD 版本。GPUMD 5.7 及更高版本的原子级输出只使用 `dump_xyz`；已删除的 5.7 之前关键字集中记录在 `gpumd-outputs.md` 的迁移说明中。
+- 当前 `dump_xyz` 以 `<interval> <filename>` 开头，之后可接 `group <grouping_method> <group_id>`、`precision` 和属性关键字。不要使用过时的 positional 分组格式。
 - `compute_phonon` 当前仅接受 `<displacement>` 并需要 `kpoints.in`；较旧的指南可能显示 cutoff 参数。
 - HNEMD 需要温度控制；使用 Nose-Hoover 链，不要为此目的使用 Langevin。
 - `compute_hac` 属于 EMD 正式采样阶段；它不是用于先前 `compute ... jp jk` 数据的单步后处理命令。

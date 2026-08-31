@@ -130,7 +130,7 @@ This script converts all frames in an `extxyz` file to `POSCAR` format.
 #### Usage
 
 ```sh
-python exyz2pos.py <extxyz_file>
+python3 exyz2pos.py <extxyz_file>
 ```
 
 #### Example
@@ -145,7 +145,10 @@ python exyz2pos.py structs.xyz
 gpumdkit.sh -exyz2pos structs.xyz
 ```
 
-This command will convert all frames in `structs.xyz` to `POSCAR_*.vasp` files.
+This command converts all frames in `structs.xyz` to `POSCAR_1.vasp`,
+`POSCAR_2.vasp`, and so on in the current directory. Atoms are grouped by
+element using the order in which each element first appears in the input
+trajectory, and velocities are not exported.
 
 
 

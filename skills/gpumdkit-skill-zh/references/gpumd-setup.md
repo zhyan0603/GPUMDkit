@@ -34,6 +34,7 @@
 | `add_force` | `add_force <group_method> <group_id> <Fx> <Fy> <Fz>` 或 `add_force <group_method> <group_id> <add_force_file>` | 向选定分组中的每个原子添加力，单位为 eV/Angstrom；文件形式提供周期性力序列 |
 | `add_efield` | `add_efield <method> <group> <Ex> <Ey> <Ez> [charge|bec]` 或 `add_efield <method> <group> <field_file> [charge|bec]` | 电场单位为 V/Angstrom。默认力使用 qNEP BEC 或 `model.xyz` 电荷；显式 `charge` 使用预测/提供的电荷，而 `bec` 需要 qNEP |
 | `add_spring` | `add_spring ghost_com|ghost_atom|com_com ... couple|decouple ...` | 使用以下六个完整参数格式之一；弹簧常数和参考值由用户提供 |
+| `deposit` | `deposit <interval> <direction> <height_min> [<height_max>] atom ...` 或 `deposit <interval> <direction> <height_min> file <add_atom_file> [velocity]` | 在运行过程中添加原子；只能出现一次，并会修改 run/model 文件，使用前应查看当前文档 |
 | `electron_stop` | `electron_stop <file>` | 加载电子阻止本领表；使用前验证表格单位/模式 |
 | `plumed` | `plumed <plumed_file> <interval> <if_restart>` | 需要启用 PLUMED 的 GPUMD 构建；间隔单位为 MD 步，重启标志为 0/1 |
 
@@ -67,7 +68,7 @@ add_spring com_com <method> <group1> <group2> decouple <kx> <ky> <kz>
 | `minimize` | `minimize <sd|fire> <force_tolerance> <max_steps> [<box_change> [<hydrostatic_strain>]]` | 容差单位为 eV/Angstrom；模拟盒优化目前需要 FIRE |
 | `run` | `run <number_of_steps>` | 正步数；执行当前运行作用域设置 |
 
-要输出最小化结构，使用零时间步、单步 NVE 块配合 `dump_xyz -1 0 1 relaxed.xyz`。使用前请加载 `gpumd-outputs.md`。
+要输出最小化结构，使用零时间步、单步 NVE 块配合 `dump_xyz 1 relaxed.xyz`。使用前请加载 `gpumd-outputs.md`。
 
 ## 版本处理
 

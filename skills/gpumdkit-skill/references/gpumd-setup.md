@@ -34,6 +34,7 @@ Recognized potential families include Tersoff-1988/1989/mini, EAM, FCP, LJ, NEP,
 | `add_force` | `add_force <group_method> <group_id> <Fx> <Fy> <Fz>` or `add_force <group_method> <group_id> <add_force_file>` | Adds force in eV/Angstrom to every atom in the selected group; file form supplies a periodic force series |
 | `add_efield` | `add_efield <method> <group> <Ex> <Ey> <Ez> [charge|bec]` or `add_efield <method> <group> <field_file> [charge|bec]` | Field is in V/Angstrom. Default force uses qNEP BEC or `model.xyz` charge; explicit `charge` uses predicted/supplied charge, while `bec` requires qNEP |
 | `add_spring` | `add_spring ghost_com|ghost_atom|com_com ... couple|decouple ...` | Use one of the six complete signatures below; spring constants and references are user inputs |
+| `deposit` | `deposit <interval> <direction> <height_min> [<height_max>] atom ...` or `deposit <interval> <direction> <height_min> file <add_atom_file> [velocity]` | Adds atoms during a run; it can appear only once and modifies the run/model files, so inspect the current documentation before use |
 | `electron_stop` | `electron_stop <file>` | Loads an electronic stopping-power table; validate table units/schema before use |
 | `plumed` | `plumed <plumed_file> <interval> <if_restart>` | Requires a PLUMED-enabled GPUMD build; interval is in MD steps and restart flag is 0/1 |
 
@@ -67,7 +68,7 @@ An `electron_stop` table starts with `N E_min E_max`, followed by `N` evenly spa
 | `minimize` | `minimize <sd|fire> <force_tolerance> <max_steps> [<box_change> [<hydrostatic_strain>]]` | Tolerance in eV/Angstrom; box optimization currently requires FIRE |
 | `run` | `run <number_of_steps>` | Positive step count; executes current run-scoped settings |
 
-To output a minimized structure, use a zero-time-step, one-step NVE block with `dump_xyz -1 0 1 relaxed.xyz`. Load `gpumd-outputs.md` before using it.
+To output a minimized structure, use a zero-time-step, one-step NVE block with `dump_xyz 1 relaxed.xyz`. Load `gpumd-outputs.md` before using it.
 
 ## Version handling
 

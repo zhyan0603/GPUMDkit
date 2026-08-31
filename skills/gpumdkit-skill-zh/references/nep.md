@@ -13,7 +13,7 @@
 
 ## 内置参考文件范围
 
-本技能中的 NEP 文件是一套自成体系、分类整理的参考摘要，涵盖输入数据格式、所有当前 `nep.in` 关键字、默认值、约束条件、输出文件和部署检查。它们不依赖 GPUMD 源代码树。
+本技能中的 NEP 文件是一套自成体系、分类整理的参考摘要，涵盖当前文档化的 `nep.in` 关键字、默认值、约束条件、输出文件和部署检查。它们不依赖 GPUMD 源代码树。
 
 以解析器消息和可执行文件版本输出作为运行时证据。如果本地行为与参考不同，请停止操作并报告具体的行号、错误和版本信息，然后向用户确认版本相关的具体行为。不要凭记忆替换语法。
 
@@ -22,7 +22,7 @@
 | 需求 | 参考文件 |
 |---|---|
 | `train.xyz`/`test.xyz` 字段、单位、模型类型目标、验证 | `references/nep-data.md` |
-| 所有当前 `nep.in` 关键字、语法、约束和默认值 | `references/nep-parameters.md` |
+| 所有当前文档化的 `nep.in` 关键字、语法、约束和默认值 | `references/nep-parameters.md` |
 | `loss.out`、模型/重启文件、拟合图输出、预测输出 | `references/nep-outputs.md` |
 | 转换、过滤、采样、绘图 | 对应的 GPUMDkit 模块参考文件 |
 | 在 MD 中使用 `nep.txt` | `references/gpumd.md` 和 GPUMD 参数参考文件 |
@@ -80,6 +80,8 @@ potential <path-to-nep.txt>
 ## 版本敏感事项
 
 - 本内置版本快照仅接受 `version 4`。如果本地解析器行为不同，请报告可执行文件版本并等待版本确认。
+- `output_interval` 控制损失、控制台、模型、重启和测试集输出的代数频率；文档默认值为 100 代。
+- `import_q_scaler 1` 从当前目录的 `nep.txt` 读取缩放器，并要求架构和元素集合匹配；只有重启/模型来源适合该流程时才使用。
 - 当前 `l_max` 是三体限制加可选的 0/1 描述符开关，而非旧的三数 NEP3 形式。
 - 当前微调语法为 `fine_tune <nep_model_file> <nep_restart_file>`，而非 `fine_tune 1`。
 - `nep.restart`（带点号）是当前文档记录的重启文件名；旧文本可能使用 `nep_restart`。

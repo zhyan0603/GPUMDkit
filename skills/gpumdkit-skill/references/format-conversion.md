@@ -45,6 +45,10 @@ gpumdkit.sh -pos2exyz POSCAR model.xyz
 gpumdkit.sh -exyz2pos structures.xyz
 ```
 
+`exyz2pos` writes `POSCAR_1.vasp`, `POSCAR_2.vasp`, and so on in the current
+directory. It groups atoms by element using the first-seen element order in the
+input trajectory, and does not export velocities. Do not pass `-o` or `-v`.
+
 ### LAMMPS Conversions
 
 ```bash
