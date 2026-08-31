@@ -194,6 +194,8 @@ This means you need to extract the structures with the `min_dist` of Li-Li in th
 
 This script is used to calculate the min_dist of the structures.
 
+Both minimum-distance scripts collect elements across all frames in first-appearance order and skip element pairs absent from a frame.
+
 #### Usage
 
 ```
@@ -298,6 +300,8 @@ gpumdkit.sh -min_dist_pbc dump.xyz
 
 This script is used to find outliers in training data based on RMSE thresholds for energy, force, and stress.
 
+Structures containing a `-1e6` missing-stress marker or a stress component with an absolute value above `1e6` are excluded from RMSE calculation and both output datasets. If none remain, the script reports an error without writing outputs.
+
 #### Usage
 
 ```sh
@@ -364,6 +368,8 @@ python filter_exyz_by_box.py dump.xyz 20
 ```
 gpumdkit.sh -filter_box dump.xyz 20
 ```
+
+The retained structures are written to `filtered_by_box.xyz`.
 
 
 

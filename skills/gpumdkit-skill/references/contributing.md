@@ -85,7 +85,7 @@ echo " >-------------------------------------------------<"
 echo " Input <param1> <param2> [optional_param3]"
 echo " Example: input.xyz nep.txt"
 echo " ------------>>"
-read_menu_choice feature_args || return 1
+read_menu_array feature_args || return 1
 echo " ---------------------------------------------------"
 python ${GPUMDkit_path}/Scripts/calculators/calc_new_feature.py "${feature_args[@]}"
 echo " Code path: ${GPUMDkit_path}/Scripts/calculators/calc_new_feature.py"
@@ -106,7 +106,7 @@ Key conventions:
 
 ### Step 3: Register in `gpumdkit.sh`
 
-1. Add the choice number to `array_choice` (line ~64)
+1. Add the choice number to `valid_menu_choices` (line ~64)
 2. Add the case in the `main()` function's nested case statement:
    ```bash
    "413") f413_new_feature ;;
@@ -365,7 +365,7 @@ echo " >-------------------------------------------------<"
 echo " Input <param1> <param2>"
 echo " Example: input.xyz nep.txt"
 echo " ------------>>"
-read_menu_choice feature_args || return 1   # EOF-safe; see project conventions
+read_menu_array feature_args || return 1   # EOF-safe; see project conventions
 echo " ---------------------------------------------------"
 python ${GPUMDkit_path}/Scripts/calculators/calc_new_feature.py "${feature_args[@]}"
 echo " Code path: ${GPUMDkit_path}/Scripts/calculators/calc_new_feature.py"

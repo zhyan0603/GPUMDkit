@@ -101,21 +101,35 @@ gpumdkit.sh -min_dist_pbc train.xyz
 ```
 
 ### 工作流 2：离子电导率计算
+
+在单个温度的工作目录中，根据数据来源选择一条路径。
+
+**路径 A：从轨迹计算 MSD。** 示例中的 `10` 是相邻保存帧的间隔（fs），应按实际轨迹替换。
+
 ```bash
-# 路径 A：从存储的 extxyz 轨迹计算 MSD
 gpumdkit.sh -calc msd trajectory.xyz Li 10
+gpumdkit.sh -plt msd
+```
 
-# 路径 B：使用 GPUMD compute_msd 直接生成 msd.out
-# 除非比较实现，否则不要同时运行两条路径。
+**路径 B：已有 GPUMD `compute_msd` 输出。** 单个选定分组的 `msd.out` 包含时间、三列 MSD 和三列 SDC，才可继续绘制 SDC：
 
-# 从验证过的 msd.out/model.xyz/run.in 输入计算离子电导率
-gpumdkit.sh -calc ionic-cond Li 1
-
-# 绘制结果
+```bash
 gpumdkit.sh -plt msd
 gpumdkit.sh -plt sdc
+gpumdkit.sh -plt msd_sdc
+```
 
-# Arrhenius 分析（多温度）
+两条路径选择其一；如需比较实现，分开保存结果，避免 `-calc msd` 覆盖已有的 `msd.out`。使用 `all_groups` 或多个 GPUMD 分组时会追加分组数据，不能把所有 `msd.out` 都当作七列文件。独立的 `compute_sdc` 命令生成 `sdc.out`，供 `gpumdkit.sh -plt vac` 使用。
+
+确认 `msd.out`、`thermo.out`、`model.xyz` 和可选的 `run.in` 后，在同一温度目录计算电导率：
+
+```bash
+gpumdkit.sh -calc ionic-cond Li 1
+```
+
+完成各温度点的检查后，进入包含 `500K/`、`600K/` 等温度子目录的父目录，再进行跨温度分析：
+
+```bash
 gpumdkit.sh -plt sigma
 gpumdkit.sh -plt D
 ```
@@ -143,11 +157,11 @@ gpumdkit.sh -range train.xyz energy
 | `model.xyz` | extxyz 格式的结构文件 |
 | `train.xyz` | 训练数据集 |
 | `nep.txt` | NEP 模型文件 |
-| `msd.out` | 均方位移数据 |
+| `msd.out` | GPUMDkit 四列轨迹 MSD，或 GPUMD `compute_msd` 的 MSD/SDC 数据；列数取决于生成程序和分组方式 |
 | `thermo.out` | 热力学性质 |
 | `loss.out` | 训练损失历史 |
 | `rdf.out` | 径向分布函数 |
-| `sdc.out` | 自扩散系数数据 |
+| `sdc.out` | `compute_sdc` 输出，供 VAC 绘图使用 |
 
 ## 故障排除
 

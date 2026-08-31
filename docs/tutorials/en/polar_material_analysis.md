@@ -24,11 +24,16 @@ This tutorial includes both general and system-specific tools:
 
 ## Dependency
 
-These scripts require `ferrodispcalc`:
+The commands that build neighbor lists, calculate displacements, calculate
+octahedral tilts, calculate ABO3 polarization, or draw `plane-grid` profiles
+require `ferrodispcalc`:
 
 ```bash
 pip3 install git+https://github.com/MoseyQAQ/ferrodispcalc.git
 ```
+
+`avg-struct` is separate and does not require `ferrodispcalc`; it uses the
+standard GPUMDkit `ASE` and `NumPy` dependencies.
 
 ## Interactive mode entry
 

@@ -195,8 +195,8 @@ git checkout -b your-branch-name
 4. **在 `gpumdkit.sh` 中更新菜单显示**：
    ```bash
    # 找到 menu() 函数并按需更新
-   # 找到 array_choice 数组并添加你的新选择编号
-   array_choice=(
+   # 找到 valid_menu_choices 数组并添加你的新选择编号
+   valid_menu_choices=(
        "0" "1" "101" "102" "103" "104" "105" "106" "107" "108" "109" "110" "111"  # 添加 "111"
        # ... 其余选择
    )

@@ -85,7 +85,7 @@ echo " >-------------------------------------------------<"
 echo " Input <param1> <param2> [optional_param3]"
 echo " Example: input.xyz nep.txt"
 echo " ------------>>"
-read_menu_choice feature_args || return 1
+read_menu_array feature_args || return 1
 echo " ---------------------------------------------------"
 python ${GPUMDkit_path}/Scripts/calculators/calc_new_feature.py "${feature_args[@]}"
 echo " Code path: ${GPUMDkit_path}/Scripts/calculators/calc_new_feature.py"
@@ -106,7 +106,7 @@ echo " ---------------------------------------------------"
 
 ### 步骤 3：在 `gpumdkit.sh` 中注册
 
-1. 将选择编号添加到 `array_choice`（约第 64 行）
+1. 将选择编号添加到 `valid_menu_choices`（约第 64 行）
 2. 在 `main()` 函数的嵌套 case 语句中添加 case：
    ```bash
    "413") f413_new_feature ;;
@@ -350,7 +350,7 @@ echo " >-------------------------------------------------<"
 echo " Input <param1> <param2>"
 echo " Example: input.xyz nep.txt"
 echo " ------------>>"
-read_menu_choice feature_args || return 1   # EOF 安全；见项目约定
+read_menu_array feature_args || return 1   # EOF 安全；见项目约定
 echo " ---------------------------------------------------"
 python ${GPUMDkit_path}/Scripts/calculators/calc_new_feature.py "${feature_args[@]}"
 echo " Code path: ${GPUMDkit_path}/Scripts/calculators/calc_new_feature.py"

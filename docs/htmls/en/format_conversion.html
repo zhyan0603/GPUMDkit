@@ -440,7 +440,7 @@
   <span class="md-ellipsis">
     
   
-    Simulation and Post-processing
+    GPUMDkit Agent Skill
   
 
     
@@ -1222,7 +1222,7 @@
   <span class="md-ellipsis">
     
   
-    模拟与后处理
+    GPUMDkit Agent Skill
   
 
     
@@ -1898,6 +1898,8 @@
 <h2 id="before-you-start">Before you start</h2>
 <p><strong>Script location:</strong> <code>Scripts/format_conversion/</code></p>
 <p>Make sure GPUMDkit is installed. See <a href="quick_start.html">Quick Start</a> for installation instructions.</p>
+<p>After installation, run <code>gpumdkit.sh</code> from the working directory where you want to store conversion results. Relative paths start from the terminal's current directory; check each command's output location, which may differ from the input location. Start with a small copy of your data in a new practice directory to avoid overwriting existing results.</p>
+<p>This page prioritizes installed commands and menus. Examples using <code>python Scripts/...</code> are optional source invocations: run them from the GPUMDkit checkout root and adjust input paths, or use the script's absolute path from your data directory. With a Conda installation, prefer <code>gpumdkit.sh</code>; there is no need to enter the installation directory.</p>
 <h2 id="supported-formats">Supported formats</h2>
 <p>The format conversion module covers:</p>
 <ul>
@@ -2162,7 +2164,7 @@ data flow explicit:</p>
 the command. Shell wildcards are expanded by your shell, so check the matched
 filenames before converting a group of files. After conversion, a lightweight
 format check is:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>head<span class="w"> </span>-n<span class="w"> </span><span class="m">2</span><span class="w"> </span>model.xyz
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>head<span class="w"> </span>-n<span class="w"> </span><span class="m">2</span><span class="w"> </span>output.xyz
 </code></pre></div>
 <p>The first line is the atom count. The second line contains extxyz metadata such
 as the cell and available properties. It does not by itself validate that the
@@ -2178,8 +2180,8 @@ check a dataset before training or simulation.</p>
 <p>Use the direct converter route to enter the input file and explicit DeepMD type-map order:</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>gpumdkit.sh<span class="w"> </span>-xyz2dp
 </code></pre></div>
-<p>The same conversion can be called directly with Python:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>python3<span class="w"> </span><span class="si">${</span><span class="nv">GPUMDkit_path</span><span class="si">}</span>/Scripts/format_conversion/xyz2dp.py<span class="w"> </span>train.xyz<span class="w"> </span>Li<span class="w"> </span>P<span class="w"> </span>S
+<p>Source users can also invoke Python directly. The example below assumes the terminal is at the GPUMDkit checkout root; replace <code>train.xyz</code> with the actual data path:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>python3<span class="w"> </span>Scripts/format_conversion/xyz2dp.py<span class="w"> </span>train.xyz<span class="w"> </span>Li<span class="w"> </span>P<span class="w"> </span>S
 </code></pre></div>
 <p>The input should contain labeled extxyz energy and force data. The output is written under <code>deepmd_data/</code> in the current directory. This command requires <code>dpdata</code>.</p>
 <h3 id="convert-vasp-calculations-to-extxyz">Convert VASP calculations to extxyz</h3>
@@ -2187,7 +2189,7 @@ check a dataset before training or simulation.</p>
 <p><strong>CLI mode:</strong></p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>gpumdkit.sh<span class="w"> </span>-out2xyz<span class="w"> </span>./vasp_results/
 </code></pre></div>
-<p>The shell version searches the target directory and converts VASP results into an extxyz file. If you prefer the Python implementation:</p>
+<p>The command above uses the shell converter. Alternatively, choose the Python converter; use one route for the same dataset:</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>gpumdkit.sh<span class="w"> </span>-out2exyz<span class="w"> </span>./vasp_results/
 </code></pre></div>
 <p><strong>Interactive mode:</strong> Choose <code>101</code> from the format conversion menu. You will see:</p>
@@ -2200,7 +2202,30 @@ check a dataset before training or simulation.</p>
 <a id="__codelineno-10-7" name="__codelineno-10-7" href="#__codelineno-10-7"></a>Example: ./
 <a id="__codelineno-10-8" name="__codelineno-10-8" href="#__codelineno-10-8"></a>------------&gt;&gt;
 </code></pre></div>
-<p><strong>Output:</strong> An extxyz file containing the converted structures, suitable for NEP training or further analysis.</p>
+<p><strong>Output location:</strong> Both routes read from the specified <code>vasp_results/</code> directory but write into the <strong>terminal's current directory</strong>:</p>
+<table>
+<thead>
+<tr>
+<th>Route</th>
+<th>Output file</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>-out2xyz</code> or menu <code>101</code></td>
+<td><code>NEPdataset/train.xyz</code></td>
+</tr>
+<tr>
+<td><code>-out2exyz</code></td>
+<td><code>train.xyz</code></td>
+</tr>
+</tbody>
+</table>
+<div class="admonition warning">
+<p class="admonition-title">Check the output directory before repeating a conversion</p>
+<p>The shell converter deletes and recreates an existing <code>NEPdataset/</code> in the current directory; the Python converter overwrites <code>train.xyz</code> there. Back up previous results, or run in a new working directory with the actual input directory path.</p>
+</div>
+<p>After conversion, use <code>head -n 2 NEPdataset/train.xyz</code> (shell route) or <code>head -n 2 train.xyz</code> (Python route) to inspect the atom count and extxyz metadata. A successfully written file still requires checks of convergence, units, and labels before training.</p>
 <h3 id="add-group-labels">Add group labels</h3>
 <p><strong>What it does:</strong> Adds atom group labels to a structure file. Group labels are required by some GPUMD-related workflows, such as species-specific MSD or diffusion calculations.</p>
 <p><strong>CLI mode:</strong></p>
@@ -2231,7 +2256,7 @@ check a dataset before training or simulation.</p>
 <h3 id="extxyz-to-poscar">extxyz to POSCAR</h3>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a>gpumdkit.sh<span class="w"> </span>-exyz2pos<span class="w"> </span>structures.xyz
 </code></pre></div>
-<p>This converts all frames in an extxyz file into <code>POSCAR_*.vasp</code> files. Frame indices are 0-based in most GPUMDkit scripts, but output filenames are meant for direct inspection and batch calculations.</p>
+<p>This converts all frames in an extxyz file into <code>POSCAR_*.vasp</code> files. Output filenames use 1-based numbering. The <code>-get_frame</code> command also uses 1-based frame numbers.</p>
 <p>Interactive entry: <code>105</code></p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a>Input the name of extxyz
 <a id="__codelineno-16-2" name="__codelineno-16-2" href="#__codelineno-16-2"></a>Example: ./train.xyz
@@ -2263,12 +2288,12 @@ check a dataset before training or simulation.</p>
 <h3 id="extract-one-frame">Extract one frame</h3>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-22-1" name="__codelineno-22-1" href="#__codelineno-22-1"></a>gpumdkit.sh<span class="w"> </span>-get_frame<span class="w"> </span>dump.xyz<span class="w"> </span><span class="m">1000</span>
 </code></pre></div>
-<p>This extracts frame index <code>1000</code> from an extxyz trajectory.</p>
+<p>This extracts frame number <code>1000</code> from an extxyz trajectory; the first frame is number <code>1</code>.</p>
 <h3 id="split-multi-frame-extxyz">Split multi-frame extxyz</h3>
 <p><code>split_single_xyz.py</code> splits an extxyz file into individual frames, each written to a separate file.</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-23-1" name="__codelineno-23-1" href="#__codelineno-23-1"></a>python<span class="w"> </span>Scripts/format_conversion/split_single_xyz.py<span class="w"> </span>dump.xyz
 </code></pre></div>
-<p>This creates <code>model_0.xyz</code>, <code>model_1.xyz</code>, ... for each frame in the trajectory.</p>
+<p>This creates <code>model_1.xyz</code>, <code>model_2.xyz</code>, ... for each frame in the trajectory.</p>
 <h3 id="mtp-conversion">MTP conversion</h3>
 <p>Convert MTP <code>.cfg</code> format to extxyz:</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-24-1" name="__codelineno-24-1" href="#__codelineno-24-1"></a>gpumdkit.sh<span class="w">    </span><span class="c1"># Select: 1) Format Conversion → 102</span>
@@ -2310,7 +2335,7 @@ check a dataset before training or simulation.</p>
 </tr>
 <tr>
 <td>Frame extraction gives the wrong structure</td>
-<td>Remember that frame indices are 0-based</td>
+<td>Remember that <code>-get_frame</code> uses 1-based frame numbers</td>
 </tr>
 </tbody>
 </table>

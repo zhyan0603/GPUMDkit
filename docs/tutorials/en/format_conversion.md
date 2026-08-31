@@ -13,6 +13,10 @@ This module converts structure and trajectory files between common formats used 
 
 Make sure GPUMDkit is installed. See [Quick Start](quick_start.md) for installation instructions.
 
+After installation, run `gpumdkit.sh` from the working directory where you want to store conversion results. Relative paths start from the terminal's current directory; check each command's output location, which may differ from the input location. Start with a small copy of your data in a new practice directory to avoid overwriting existing results.
+
+This page prioritizes installed commands and menus. Examples using `python Scripts/...` are optional source invocations: run them from the GPUMDkit checkout root and adjust input paths, or use the script's absolute path from your data directory. With a Conda installation, prefer `gpumdkit.sh`; there is no need to enter the installation directory.
+
 ## Supported formats
 
 The format conversion module covers:
@@ -127,7 +131,7 @@ filenames before converting a group of files. After conversion, a lightweight
 format check is:
 
 ```bash
-head -n 2 model.xyz
+head -n 2 output.xyz
 ```
 
 The first line is the atom count. The second line contains extxyz metadata such
@@ -155,10 +159,10 @@ Use the direct converter route to enter the input file and explicit DeepMD type-
 gpumdkit.sh -xyz2dp
 ```
 
-The same conversion can be called directly with Python:
+Source users can also invoke Python directly. The example below assumes the terminal is at the GPUMDkit checkout root; replace `train.xyz` with the actual data path:
 
 ```bash
-python3 ${GPUMDkit_path}/Scripts/format_conversion/xyz2dp.py train.xyz Li P S
+python3 Scripts/format_conversion/xyz2dp.py train.xyz Li P S
 ```
 
 The input should contain labeled extxyz energy and force data. The output is written under `deepmd_data/` in the current directory. This command requires `dpdata`.
@@ -173,7 +177,7 @@ The input should contain labeled extxyz energy and force data. The output is wri
 gpumdkit.sh -out2xyz ./vasp_results/
 ```
 
-The shell version searches the target directory and converts VASP results into an extxyz file. If you prefer the Python implementation:
+The command above uses the shell converter. Alternatively, choose the Python converter; use one route for the same dataset:
 
 ```bash
 gpumdkit.sh -out2exyz ./vasp_results/
@@ -192,7 +196,17 @@ Example: ./
 ------------>>
 ```
 
-**Output:** An extxyz file containing the converted structures, suitable for NEP training or further analysis.
+**Output location:** Both routes read from the specified `vasp_results/` directory but write into the **terminal's current directory**:
+
+| Route | Output file |
+|-------|-------------|
+| `-out2xyz` or menu `101` | `NEPdataset/train.xyz` |
+| `-out2exyz` | `train.xyz` |
+
+!!! warning "Check the output directory before repeating a conversion"
+    The shell converter deletes and recreates an existing `NEPdataset/` in the current directory; the Python converter overwrites `train.xyz` there. Back up previous results, or run in a new working directory with the actual input directory path.
+
+After conversion, use `head -n 2 NEPdataset/train.xyz` (shell route) or `head -n 2 train.xyz` (Python route) to inspect the atom count and extxyz metadata. A successfully written file still requires checks of convergence, units, and labels before training.
 
 ### Add group labels
 
@@ -245,7 +259,7 @@ Example: POSCAR model.xyz
 gpumdkit.sh -exyz2pos structures.xyz
 ```
 
-This converts all frames in an extxyz file into `POSCAR_*.vasp` files. Frame indices are 0-based in most GPUMDkit scripts, but output filenames are meant for direct inspection and batch calculations.
+This converts all frames in an extxyz file into `POSCAR_*.vasp` files. Output filenames use 1-based numbering. The `-get_frame` command also uses 1-based frame numbers.
 
 Interactive entry: `105`
 
@@ -303,7 +317,7 @@ The first form uses explicit replication factors. The second form tries to build
 gpumdkit.sh -get_frame dump.xyz 1000
 ```
 
-This extracts frame index `1000` from an extxyz trajectory.
+This extracts frame number `1000` from an extxyz trajectory; the first frame is number `1`.
 
 ### Split multi-frame extxyz
 
@@ -313,7 +327,7 @@ This extracts frame index `1000` from an extxyz trajectory.
 python Scripts/format_conversion/split_single_xyz.py dump.xyz
 ```
 
-This creates `model_0.xyz`, `model_1.xyz`, ... for each frame in the trajectory.
+This creates `model_1.xyz`, `model_2.xyz`, ... for each frame in the trajectory.
 
 ### MTP conversion
 
@@ -351,7 +365,7 @@ The menu offers two options:
 | LAMMPS elements are wrong | Check the element order passed after the dump file |
 | A trajectory has strange metadata | Try `-clean_xyz input.xyz clean.xyz` |
 | A converted structure looks shifted | Inspect PBC/cell information in the source file |
-| Frame extraction gives the wrong structure | Remember that frame indices are 0-based |
+| Frame extraction gives the wrong structure | Remember that `-get_frame` uses 1-based frame numbers |
 
 ## Notes
 

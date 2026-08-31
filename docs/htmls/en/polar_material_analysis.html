@@ -440,7 +440,7 @@
   <span class="md-ellipsis">
     
   
-    Simulation and Post-processing
+    GPUMDkit Agent Skill
   
 
     
@@ -1412,7 +1412,7 @@
   <span class="md-ellipsis">
     
   
-    模拟与后处理
+    GPUMDkit Agent Skill
   
 
     
@@ -2330,9 +2330,13 @@
 </tbody>
 </table>
 <h2 id="dependency">Dependency</h2>
-<p>These scripts require <code>ferrodispcalc</code>:</p>
+<p>The commands that build neighbor lists, calculate displacements, calculate
+octahedral tilts, calculate ABO3 polarization, or draw <code>plane-grid</code> profiles
+require <code>ferrodispcalc</code>:</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>pip3<span class="w"> </span>install<span class="w"> </span>git+https://github.com/MoseyQAQ/ferrodispcalc.git
 </code></pre></div>
+<p><code>avg-struct</code> is separate and does not require <code>ferrodispcalc</code>; it uses the
+standard GPUMDkit <code>ASE</code> and <code>NumPy</code> dependencies.</p>
 <h2 id="interactive-mode-entry">Interactive mode entry</h2>
 <p>Options <code>406-410</code> are the core functions for this tutorial. The sections below explain when to use each one and how to run it.</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>gpumdkit.sh

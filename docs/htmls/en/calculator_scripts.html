@@ -440,7 +440,7 @@
   <span class="md-ellipsis">
     
   
-    Simulation and Post-processing
+    GPUMDkit Agent Skill
   
 
     
@@ -1117,7 +1117,7 @@
   <span class="md-ellipsis">
     
   
-    模拟与后处理
+    GPUMDkit Agent Skill
   
 
     
@@ -1959,14 +1959,20 @@ trajectory rather than copying a value from another system.</p>
 <ul>
 <li><code>msd.out</code></li>
 </ul>
-<p>The beginning of <code>msd.out</code> is a text table with time and MSD columns. After generating it, use the plot commands below.</p>
+<p><code>calc_msd.py</code> writes exactly four numeric columns to <code>msd.out</code>: <code>Time(ps)</code>,
+<code>MSD_x</code>, <code>MSD_y</code>, and <code>MSD_z</code>. This output can be plotted with <code>-plt msd</code>.</p>
+<p>For comparison, GPUMD's native <code>compute_msd</code> writes a different <code>msd.out</code>. For
+one selected group it contains seven columns: time, <code>MSD_x/y/z</code>, and
+<code>SDC_x/y/z</code>; this layout is required by <code>-plt sdc</code> and <code>-plt msd_sdc</code>. When
+<code>all_groups</code> or multiple groups are requested, GPUMD appends additional group
+data, so do not assume that every <code>msd.out</code> has seven columns. The separate
+GPUMD <code>compute_sdc</code> command writes <code>sdc.out</code>, which is used by <code>-plt vac</code> and
+is not the input for the <code>-plt sdc</code> or <code>-plt msd_sdc</code> plotters.</p>
 <p>You can then plot:</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>gpumdkit.sh<span class="w"> </span>-plt<span class="w"> </span>msd
-<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>gpumdkit.sh<span class="w"> </span>-plt<span class="w"> </span>sdc
 </code></pre></div>
 <div align="center">
   <img src="../../Gallery/msd.png" alt="MSD plot" width="45%" />
-  <img src="../../Gallery/sdc.png" alt="SDC plot" width="45%" />
 </div>
 
 <h2 id="x-ray-diffraction-xrd">X-ray Diffraction (XRD)</h2>
@@ -2088,8 +2094,8 @@ is shown during prediction.</p>
 <li>inspect whether new data expands descriptor space.</li>
 </ul>
 <p>Plot descriptors with:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-20-1" name="__codelineno-20-1" href="#__codelineno-20-1"></a>gpumdkit.sh<span class="w"> </span>-plt<span class="w"> </span>des<span class="w"> </span>pca
-<a id="__codelineno-20-2" name="__codelineno-20-2" href="#__codelineno-20-2"></a>gpumdkit.sh<span class="w"> </span>-plt<span class="w"> </span>des<span class="w"> </span>umap
+<div class="highlight"><pre><span></span><code><a id="__codelineno-20-1" name="__codelineno-20-1" href="#__codelineno-20-1"></a>gpumdkit.sh<span class="w"> </span>-plt<span class="w"> </span>des<span class="w"> </span>pca<span class="w"> </span>descriptors.npy
+<a id="__codelineno-20-2" name="__codelineno-20-2" href="#__codelineno-20-2"></a>gpumdkit.sh<span class="w"> </span>-plt<span class="w"> </span>des<span class="w"> </span>umap<span class="w"> </span>descriptors.npy
 </code></pre></div>
 <div align="center">
   <img src="../../Gallery/des_umap.png" alt="Descriptor UMAP" width="52%" />

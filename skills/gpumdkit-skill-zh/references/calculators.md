@@ -40,7 +40,7 @@ gpumdkit.sh -calc ionic-cond Li 1
 gpumdkit.sh -calc ionic-cond O -2
 
 # 推荐的非交互式输入（当前目录）：
-# - msd.out（来自 GPUMD compute_msd）
+# - msd.out（来自 GPUMD compute_msd，或 calc_msd.py 的前四列）
 # - thermo.out（用于温度）
 # - model.xyz（用于体积）
 # - run.in（可选；用于检测复制因子）
@@ -87,8 +87,8 @@ gpumdkit.sh -calc des <input.xyz> <output.npy> <nep.txt> <element>
 # 示例
 gpumdkit.sh -calc des train.xyz descriptors.npy nep.txt Li
 
-# 可视化：gpumdkit.sh -plt des pca
-# 或：gpumdkit.sh -plt des umap
+# 可视化：gpumdkit.sh -plt des pca descriptors.npy
+# 或：gpumdkit.sh -plt des umap descriptors.npy
 ```
 
 ### 原子态密度（DOAS）
@@ -110,8 +110,16 @@ gpumdkit.sh -calc msd <trajectory.xyz> <element> <dt_fs> [max_corr_steps]
 # 示例：Li，时间步长 10 fs
 gpumdkit.sh -calc msd dump.xyz Li 10
 
-# 输出：msd.out（Time/ps、MSD_x、MSD_y、MSD_z）
+# 输出：四列 msd.out：Time/ps、MSD_x、MSD_y、MSD_z
+# 该输出可用于：gpumdkit.sh -plt msd
 ```
+
+GPUMD 原生的 `compute_msd` 写入另一种 `msd.out`。只选择一个分组时，它包含
+七列：时间、`MSD_x/y/z` 和 `SDC_x/y/z`；这种单分组格式是
+`gpumdkit.sh -plt sdc` 与 `gpumdkit.sh -plt msd_sdc` 所要求的。使用
+`all_groups` 或多个分组时，GPUMD 会追加其他分组的数据，因此不能假定每个
+`msd.out` 都有七列。独立的 `compute_sdc` 命令写入 `sdc.out`，该文件供
+`gpumdkit.sh -plt vac` 使用。
 
 ### X 射线衍射（仅交互模式）
 
@@ -234,29 +242,45 @@ python Scripts/calculators/neb_calculation_neptrain.py init.xyz fin.xyz 9 nep.tx
 ## 常用工作流
 
 ### 离子输运分析
+
+请在写入 `msd.out` 的工作目录中分别运行以下路径。
+
+路径 A：从 extxyz 轨迹推导四列 `msd.out`，并绘制 MSD：
+
 ```bash
-# 路径 A：从 extxyz 轨迹推导 msd.out
 gpumdkit.sh -calc msd dump.xyz Li 10
+gpumdkit.sh -plt msd
+```
 
-# 路径 B：使用 GPUMD compute_msd 直接生成 msd.out。
-# 除非比较实现，否则不要同时运行两条路径。
+路径 B：先运行包含 `compute_msd` 的 GPUMD，再在其输出目录绘制 SDC；单个选定
+分组的 `msd.out` 为七列：
 
-# 电导率需要验证过的 msd.out、thermo.out、model.xyz 和 run.in
-gpumdkit.sh -calc ionic-cond Li 1
-
-# 可视化
+```bash
+# 使用已经生成的 GPUMD compute_msd 输出
 gpumdkit.sh -plt msd
 gpumdkit.sh -plt sdc
+gpumdkit.sh -plt msd_sdc
 ```
+
+两条路径选择其一；比较两种实现时请分开保存结果，避免覆盖 `msd.out`。在同一工作目录使用已经验证的
+`msd.out` 计算离子电导率；该计算还需要 `thermo.out`、`model.xyz` 和可选的
+`run.in`：
+
+```bash
+gpumdkit.sh -calc ionic-cond Li 1
+```
+
+`compute_sdc` 单独写入 `sdc.out`，供 `gpumdkit.sh -plt vac` 使用；它不是 SDC
+绘图脚本读取的 `msd.out`。
 
 ### 描述符分析
 ```bash
 # 1. 计算描述符
 gpumdkit.sh -calc des train.xyz descriptors.npy nep.txt Li
 # 2. PCA 可视化
-gpumdkit.sh -plt des pca
+gpumdkit.sh -plt des pca descriptors.npy
 # 3. 或 UMAP 可视化
-gpumdkit.sh -plt des umap
+gpumdkit.sh -plt des umap descriptors.npy
 ```
 
 ### 钙钛矿分析

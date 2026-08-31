@@ -331,7 +331,6 @@ if [ ! -z "$1" ]; then
                     "dimer") python ${plt_path}/plt_dimer.py $3 $4 $5 $6 ;;
                     "force_errors") python ${plt_path}/plt_force_errors.py $3 ;;
                     "des") python ${plt_path}/plt_descriptors.py $3 ${@:4} ;;
-                    "lr") python ${plt_path}/plt_learning_rate.py $3 ;;
                     "doas") python ${plt_path}/plt_doas.py $3 $4 ;;
                     "arrhenius_d"|"D") python ${plt_path}/plt_arrhenius_d.py $3 ;;
                     "D_PT") python "${plt_path}/plt_arrhenius_d_PT.py" "${@:3}" ;;

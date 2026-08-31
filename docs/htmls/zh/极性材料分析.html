@@ -438,7 +438,7 @@
   <span class="md-ellipsis">
     
   
-    Simulation and Post-processing
+    GPUMDkit Agent Skill
   
 
     
@@ -886,7 +886,7 @@
   <span class="md-ellipsis">
     
   
-    模拟与后处理
+    GPUMDkit Agent Skill
   
 
     
@@ -2330,9 +2330,12 @@
 </tbody>
 </table>
 <h2 id="_2">依赖</h2>
-<p>这些脚本需要 <code>ferrodispcalc</code>：</p>
+<p>构建近邻列表、计算位移、计算八面体倾转、计算 ABO3 极化以及绘制
+<code>plane-grid</code> 平面剖面的命令需要 <code>ferrodispcalc</code>：</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>pip3<span class="w"> </span>install<span class="w"> </span>git+https://github.com/MoseyQAQ/ferrodispcalc.git
 </code></pre></div>
+<p><code>avg-struct</code> 不依赖 <code>ferrodispcalc</code>，只使用 GPUMDkit 的标准 <code>ASE</code> 和
+<code>NumPy</code> 依赖。</p>
 <h2 id="_3">交互模式入口</h2>
 <p>选项 <code>406-410</code> 是本教程中的核心功能。下面各节会说明每个功能的用途和运行方式。</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>gpumdkit.sh

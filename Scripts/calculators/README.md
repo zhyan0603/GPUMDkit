@@ -451,7 +451,13 @@ python calc_msd.py <extxyz_file> <element_symbol> <dt_fs> [max_corr_steps]
 gpumdkit.sh -calc msd dump.xyz Li 10
 ```
 
-The output file is `msd.out`.
+The output file is `msd.out` with four columns: `Time(ps)`, `MSD_x`, `MSD_y`,
+and `MSD_z`. Use `gpumdkit.sh -plt msd` to plot it.
+
+GPUMD's native `compute_msd` writes a seven-column `msd.out` for one selected
+group (`time`, `MSD_x/y/z`, `SDC_x/y/z`), which is the input for `-plt sdc` and
+`-plt msd_sdc`. Multi-group output appends group data. `compute_sdc` writes a
+separate `sdc.out` for `-plt vac`.
 
 ---
 

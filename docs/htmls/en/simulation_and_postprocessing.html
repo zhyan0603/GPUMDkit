@@ -29,7 +29,7 @@
     
     
       
-        <title>Simulation and Post-processing - GPUMDkit Tutorial</title>
+        <title>GPUMDkit Agent Skill - GPUMDkit Tutorial</title>
       
     
     
@@ -143,7 +143,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#simulation-and-post-processing" class="md-skip">
+        <a href="#gpumdkit-agent-skill" class="md-skip">
           Skip to content
         </a>
       
@@ -179,7 +179,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Simulation and Post-processing
+              GPUMDkit Agent Skill
             
           </span>
         </div>
@@ -442,24 +442,6 @@
         
       
       
-        <label class="md-nav__link md-nav__link--active" for="__toc">
-          
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Simulation and Post-processing
-  
-
-    
-  </span>
-  
-  
-
-          <span class="md-nav__icon md-icon"></span>
-        </label>
-      
       <a href="simulation_and_postprocessing.html" class="md-nav__link md-nav__link--active">
         
   
@@ -467,7 +449,7 @@
   <span class="md-ellipsis">
     
   
-    Simulation and Post-processing
+    GPUMDkit Agent Skill
   
 
     
@@ -476,80 +458,6 @@
   
 
       </a>
-      
-        
-
-<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
-  
-  
-  
-    
-  
-  
-    <label class="md-nav__title" for="__toc">
-      <span class="md-nav__icon md-icon"></span>
-      Table of contents
-    </label>
-    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
-      
-        <li class="md-nav__item">
-  <a href="#decision-boundary" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Decision boundary
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#one-skill-focused-references" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        One skill, focused references
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#end-to-end-workflow" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        End-to-end workflow
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#arrhenius-example" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Arrhenius example
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#skill-discovery" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Skill discovery
-      
-    </span>
-  </a>
-  
-</li>
-      
-    </ul>
-  
-</nav>
       
     </li>
   
@@ -988,7 +896,7 @@
   <span class="md-ellipsis">
     
   
-    模拟与后处理
+    GPUMDkit Agent Skill
   
 
     
@@ -1337,69 +1245,6 @@
     
   
   
-    <label class="md-nav__title" for="__toc">
-      <span class="md-nav__icon md-icon"></span>
-      Table of contents
-    </label>
-    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
-      
-        <li class="md-nav__item">
-  <a href="#decision-boundary" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Decision boundary
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#one-skill-focused-references" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        One skill, focused references
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#end-to-end-workflow" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        End-to-end workflow
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#arrhenius-example" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Arrhenius example
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#skill-discovery" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Skill discovery
-      
-    </span>
-  </a>
-  
-</li>
-      
-    </ul>
-  
 </nav>
                   </div>
                 </div>
@@ -1418,89 +1263,29 @@
   
 
 
-<h1 id="simulation-and-post-processing">Simulation and Post-processing</h1>
-<p>The unified <code>gpumdkit-skill</code> connects GPUMDkit utilities, GPUMD and NEP input preparation, controlled execution, validation, and post-processing. Its main file selects focused references for each task, including requests such as "run an Arrhenius diffusion study" or "train a NEP model and validate it in GPUMD."</p>
-<h2 id="decision-boundary">Decision boundary</h2>
-<p>An agent must ask before filling any unresolved scientific or execution choice. This includes the potential, species/type mapping, charge, temperatures, time step, ensemble, pressure, run length, output interval, fit policy, convergence criteria, scheduler resources, and overwrite behavior.</p>
-<p>Preparing inputs does not authorize running GPUMD or NEP. Long calculations and scheduler submissions require an explicit request.</p>
-<p>The skill bundles a portable, categorized summary of <code>model.xyz</code>, <code>run.in</code>, <code>nep.in</code>, GPUMD/NEP parameters, and output formats; users do not need a local GPUMD documentation tree. Local GPUMDkit and Python-script help govern post-processing commands. If parser behavior differs from the bundled snapshot, the agent must report the executable version and exact error, then request version-specific information instead of guessing.</p>
-<h2 id="one-skill-focused-references">One skill, focused references</h2>
-<p>Agents activate only <code>gpumdkit-skill</code>, then load the smallest relevant set from <code>references/</code>:</p>
-<table>
-<thead>
-<tr>
-<th>Task</th>
-<th>References</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>GPUMD simulation</td>
-<td><code>gpumd.md</code>, then the required <code>gpumd-inputs.md</code>, <code>gpumd-setup.md</code>, <code>gpumd-ensembles.md</code>, <code>gpumd-computes.md</code>, and <code>gpumd-outputs.md</code> catalogs</td>
-</tr>
-<tr>
-<td>NEP training or prediction</td>
-<td><code>nep.md</code>, then <code>nep-data.md</code>, <code>nep-parameters.md</code>, and <code>nep-outputs.md</code> as needed</td>
-</tr>
-<tr>
-<td>Arrhenius workflow</td>
-<td><code>gpumd.md</code>, <code>arrhenius.md</code>, <code>calculators.md</code>, and <code>visualization.md</code></td>
-</tr>
-<tr>
-<td>GPUMDkit utility</td>
-<td>The matching conversion, sampling, workflow, calculator, analyzer, or visualization reference</td>
-</tr>
-<tr>
-<td>GPUMDkit development</td>
-<td><code>contributing.md</code> plus the affected module reference</td>
-</tr>
-</tbody>
-</table>
-<p>This progressive-loading structure keeps discovery simple while avoiding the context cost of loading every module for every request.</p>
-<h2 id="end-to-end-workflow">End-to-end workflow</h2>
-<ol>
-<li>Define the observable, deliverables, and acceptance criteria.</li>
-<li>Confirm the structure, potential/model, software version, and scientific parameters.</li>
-<li>Prepare inputs and check species, cell, PBC, groups, units, and command syntax.</li>
-<li>Present the resolved protocol and unresolved questions.</li>
-<li>Run only when explicitly requested, beginning with a short approved smoke test when appropriate.</li>
-<li>Check completion, thermodynamic stability, trajectory integrity, and observable-specific convergence.</li>
-<li>Run GPUMDkit post-processing and report units, fit choices, uncertainty, exclusions, and limitations.</li>
-</ol>
-<h2 id="arrhenius-example">Arrhenius example</h2>
-<p>Before setting up an Arrhenius study, confirm whether the target is diffusivity, ionic conductivity, or both; the mobile species and charge; temperature points; ensemble sequence; time step; production length; replicas; MSD sampling; and fit/uncertainty policy.</p>
-<p>Use one integer-temperature directory per run:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>project/
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>  500K/{model.xyz,nep.txt,run.in}
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>  600K/{model.xyz,nep.txt,run.in}
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>  700K/{model.xyz,nep.txt,run.in}
+<h1 id="gpumdkit-agent-skill">GPUMDkit Agent Skill</h1>
+<p>GPUMDkit Agent Skill provides instructions for AI agents working with GPUMDkit
+tools, GPUMD simulations, and NEP training and analysis. Once it is installed,
+describe what you need: the agent can consult the guidance, choose suitable
+commands, and help carry out the task.</p>
+<p>Before using it, make sure GPUMDkit is installed and <code>gpumdkit.sh</code> runs in the
+environment where the agent works. The agent must also be allowed to run shell
+commands there. Choose the English or Chinese skill according to your language;
+both provide the current GPUMDkit guidance.</p>
+<p>You can copy this prompt to your agent:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>Run `gpumdkit.sh -skill`. Follow the guidance it prints to install the relevant
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>GPUMDkit skills in this client&#39;s user-level global skills directory, then confirm
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>that the skills are available.
 </code></pre></div>
-<p>MSD can come directly from GPUMD <code>compute_msd</code> or from an extxyz trajectory:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="nb">cd</span><span class="w"> </span>500K
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>gpumdkit.sh<span class="w"> </span>-calc<span class="w"> </span>msd<span class="w"> </span>dump.xyz<span class="w"> </span>Li<span class="w"> </span>&lt;frame_dt_fs&gt;<span class="w"> </span><span class="o">[</span>max_corr_steps<span class="o">]</span>
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>gpumdkit.sh<span class="w"> </span>-plt<span class="w"> </span>msd<span class="w"> </span>save
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>gpumdkit.sh<span class="w"> </span>-plt<span class="w"> </span>sdc<span class="w"> </span>save
-</code></pre></div>
-<p><code>frame_dt_fs</code> is the time between stored trajectory frames:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>frame_dt_fs = integration_time_step_fs * dump_interval_steps
-</code></pre></div>
-<p>After validating every temperature point, run from the parent directory:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>gpumdkit.sh<span class="w"> </span>-plt<span class="w"> </span>arrhenius_d<span class="w"> </span>save
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>gpumdkit.sh<span class="w"> </span>-plt<span class="w"> </span>D_xyz<span class="w"> </span>save
-</code></pre></div>
-<p>The current Arrhenius scripts fit 40%-80% of each MSD series. This is an established GPUMDkit choice and should not be changed without maintainer approval. The fit must still be checked against the observed diffusive regime.</p>
-<p>For one temperature, ionic conductivity can be calculated with a user-confirmed species and charge:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>gpumdkit.sh<span class="w"> </span>-calc<span class="w"> </span>ionic-cond<span class="w"> </span>Li<span class="w"> </span><span class="m">1</span>
-</code></pre></div>
-<p>The automatic conductivity Arrhenius scripts have narrower assumptions:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>gpumdkit.sh<span class="w"> </span>-plt<span class="w"> </span>arrhenius_sigma<span class="w"> </span>save
-<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>gpumdkit.sh<span class="w"> </span>-plt<span class="w"> </span>sigma_xyz<span class="w"> </span>save
-</code></pre></div>
-<p>They count only Li/Na, assume charge magnitude one, use the first temperature's composition/replication, and extrapolate the fit to 300 K. Do not use them as a general multivalent or mixed-ion workflow. Confirm the Nernst-Einstein approximation and any extrapolation with the user.</p>
-<h2 id="skill-discovery">Skill discovery</h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>gpumdkit.sh<span class="w"> </span>-skill
-</code></pre></div>
-<p>The command prints the canonical skill path and installation hints. The single portable skill is located at <code>${GPUMDkit_path}/skills/gpumdkit-skill/</code>; simulation details live in its <code>references/gpumd.md</code>, <code>nep.md</code>, and <code>arrhenius.md</code> files.</p>
+<p><code>gpumdkit.sh -skill</code> displays the skill locations and installation instructions;
+the agent performs the installation.</p>
+<p>After installation, describe your task directly in natural language. For example:</p>
+<ul>
+<li>“Convert this VASP structure to extxyz and check the result.”</li>
+<li>“Inspect my GPUMD outputs and plot the diffusion results.”</li>
+</ul>
+<p>If scientific parameters are unclear, the agent should ask before choosing them;
+long-running or expensive calculations require your confirmation first.</p>
 
 
 

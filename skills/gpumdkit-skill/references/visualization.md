@@ -19,7 +19,7 @@ The dispatcher does not provide a uniform `-plt <type> -h` contract, and argumen
 
 ## Plot Categories
 
-### NEP Training & Evaluation (13 plot types)
+### NEP Training & Evaluation (12 plot types)
 
 | Command | Input Files | Description |
 |---------|-------------|-------------|
@@ -34,7 +34,6 @@ The dispatcher does not provide a uniform `-plt <type> -h` contract, and argumen
 | `born_charge` / `bec` | `bec_train.out`, optional `bec_test.out` | Born effective charges |
 | `dimer` | NEP model | Dimer interaction curves |
 | `des` | `descriptors.npy` | Descriptor PCA/UMAP visualization |
-| `lr` | `loss.out` (gnep) | Learning rate decay |
 | `net_force` | extxyz file | Net force distribution |
 
 ```bash
@@ -45,22 +44,22 @@ gpumdkit.sh -plt force_errors
 
 # Descriptor visualization (requires prior calculation)
 gpumdkit.sh -calc des train.xyz descriptors.npy nep.txt Li
-gpumdkit.sh -plt des pca
-gpumdkit.sh -plt des umap
+gpumdkit.sh -plt des pca descriptors.npy
+gpumdkit.sh -plt des umap descriptors.npy
 
 # Dimer plot
 gpumdkit.sh -plt dimer Li Li nep.txt
 ```
 
-### Transport Properties (10 plot types)
+### Transport Properties (12 plot types)
 
 | Command | Input Files | Description |
 |---------|-------------|-------------|
-| `msd` | `msd.out` | Mean square displacement |
+| `msd` | four-column `msd.out` from `-calc msd`, or the first four columns of GPUMD `compute_msd` output | Mean square displacement |
 | `msd_conv` | `msd_step*.out` | MSD convergence check |
 | `msd_all` | `msd.out` (all_groups) | MSD per species |
-| `sdc` | `msd.out` | Self-diffusion coefficient |
-| `msd_sdc` | `msd.out` | MSD and SDC combined |
+| `sdc` | single-group seven-column `msd.out` from GPUMD `compute_msd` | Self-diffusion coefficient |
+| `msd_sdc` | single-group seven-column `msd.out` from GPUMD `compute_msd` | MSD and SDC combined |
 | `sigma` / `arrhenius_sigma` | `thermo.out` and `msd.out` per `*K/`; first `*K/` also has `model.xyz` and optional `run.in` | Arrhenius ionic conductivity |
 | `D` / `arrhenius_d` | `*K/` directories | Arrhenius diffusivity |
 | `sigma_PT` | `thermo.out` and `msd.out` per `*K/`, first `*K/` also has `model.xyz` and optional `run.in`, plus a transition temperature | Piecewise Arrhenius ionic conductivity around a phase transition |
@@ -70,8 +69,9 @@ gpumdkit.sh -plt dimer Li Li nep.txt
 | `doas` | `doas.out` | Density of atomistic states |
 
 ```bash
-# MSD and diffusion
+# Four-column trajectory MSD
 gpumdkit.sh -plt msd
+# SDC columns require single-group compute_msd output
 gpumdkit.sh -plt sdc
 gpumdkit.sh -plt msd_sdc
 
@@ -91,6 +91,12 @@ gpumdkit.sh -plt D_PT 380
 gpumdkit.sh -plt doas doas.out Li
 ```
 
+`compute_msd` output for multiple groups appends additional group data. Inspect
+the grouping layout and use `msd_all` where appropriate instead of assuming
+that every `msd.out` has seven columns. The separate `compute_sdc` command
+writes `sdc.out` for `gpumdkit.sh -plt vac`; it is not the input to the SDC
+plotters.
+
 ### Structural Analysis (10 plot types)
 
 | Command | Input Files | Description |
@@ -102,7 +108,7 @@ gpumdkit.sh -plt doas doas.out Li
 | `rdf_pmf` | `rdf.out` | RDF + potential of mean force |
 | `xrd` | `xrd.out` or specified XRD output | X-ray diffraction intensity |
 | `xrd_comp` | `<temperature>K/xrd.out` in the current directory | Compare XRD curves across temperature folders |
-| `vac` | `sdc.out` | Velocity autocorrelation |
+| `vac` | `sdc.out` from GPUMD `compute_sdc` | Velocity autocorrelation |
 | `cohesive` | `cohesive.out` | Cohesive energy curve |
 | `plane-grid` | `model.xyz`, `displacements.dat` | Displacement grid visualization |
 
@@ -185,20 +191,23 @@ gpumdkit.sh -plt prediction
 # 3. Analyze force errors
 gpumdkit.sh -plt force_errors
 # 4. Visualize descriptors
-gpumdkit.sh -plt des pca
+gpumdkit.sh -plt des pca descriptors.npy
 ```
 
 ### Diffusion Analysis
 ```bash
-# 1. Plot MSD
+# 1. Plot a four-column trajectory MSD or the MSD columns from compute_msd
 gpumdkit.sh -plt msd
-# 2. Plot self-diffusion coefficient
+# 2. Plot self-diffusion coefficient from single-group compute_msd output
 gpumdkit.sh -plt sdc
-# 3. Combined MSD-SDC plot
+# 3. Combined MSD-SDC plot from single-group compute_msd output
 gpumdkit.sh -plt msd_sdc
 # 4. Arrhenius analysis (multi-temperature)
 gpumdkit.sh -plt arrhenius_d
 ```
+
+The slope annotations in `-plt msd` and `-plt msd_sdc` use the middle 40%-80%
+of the MSD series.
 
 ### Thermal Transport
 ```bash

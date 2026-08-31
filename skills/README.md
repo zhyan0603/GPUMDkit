@@ -35,9 +35,12 @@ ${GPUMDkit_path}/skills/gpumdkit-skill-zh
 
 ## Install for Agent Skills-compatible clients
 
-The cross-client convention is `.agents/skills/`. Ask the user whether installation should be global or project-local before creating a link.
+The cross-client convention is `.agents/skills/`. Global installation is the
+normal recommendation when the skill should be available across projects. If
+the user has not specified global or project-local scope, ask before creating a
+link.
 
-Global:
+Global (recommended for normal use):
 
 ```bash
 target_dir="${HOME}/.agents/skills"
@@ -46,7 +49,7 @@ ln -s "${GPUMDkit_path}/skills/gpumdkit-skill" "${target_dir}/gpumdkit-skill"
 ln -s "${GPUMDkit_path}/skills/gpumdkit-skill-zh" "${target_dir}/gpumdkit-skill-zh"
 ```
 
-Current project only:
+Current project only (when requested or isolation is needed):
 
 ```bash
 target_dir=".agents/skills"

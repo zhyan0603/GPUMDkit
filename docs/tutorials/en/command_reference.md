@@ -5,6 +5,11 @@
 
 The source table is maintained in `docs/command_reference.tsv`.
 
+If you are new to GPUMDkit, start with [Quick Start](quick_start.md). For
+agent-assisted work, use the [GPUMDkit Agent Skill](simulation_and_postprocessing.md).
+The `-h` form is available only for commands that expose their own option help;
+otherwise use `gpumdkit.sh -h`, the relevant module help, or interactive mode.
+
 ## `gpumdkit.sh -h` Output
 
 ```text
@@ -75,7 +80,7 @@ The source table is maintained in `docs/command_reference.tsv`.
 | `-replicate` | `gpumdkit.sh -replicate <input> <output> <target_num>` | Replicate toward a target atom count |
 | `-addgroup` | `gpumdkit.sh -addgroup <POSCAR> <element...>` | Add GPUMD group labels |
 | `-addweight` | `gpumdkit.sh -addweight <input.xyz> <output.xyz> <weight>` | Add structure weights |
-| `-get_frame` | `gpumdkit.sh -get_frame <input.xyz> <frame_index>` | Extract one frame |
+| `-get_frame` | `gpumdkit.sh -get_frame <input.xyz> <frame_index>` | Extract one frame (1-based index) |
 | `-clean_xyz` | `gpumdkit.sh -clean_xyz <input.xyz> <output.xyz>` | Remove extra extxyz properties |
 | `-frame_range` | `gpumdkit.sh -frame_range <input.xyz> <start_frac> <end_frac>` | Extract frames by fractional range |
 | `-dp2xyz` | `gpumdkit.sh -dp2xyz <input_dir/> [output.xyz]` | DeepMD npy datasets to extxyz |
@@ -98,6 +103,10 @@ The source table is maintained in `docs/command_reference.tsv`.
 | `-calc avg-struct` | `gpumdkit.sh -calc avg-struct [args...]` | Averaged structure |
 | `-calc oct-tilt` | `gpumdkit.sh -calc oct-tilt [args...]` | Octahedral tilt |
 | `-calc pol-abo3` | `gpumdkit.sh -calc pol-abo3 [args...]` | ABO3 local polarization |
+
+`-calc nep` writes an output extxyz containing properties predicted by a NEP
+model. `-prediction` writes the separate NEP prediction files used by training
+and validation workflows.
 
 ## Analyzers
 

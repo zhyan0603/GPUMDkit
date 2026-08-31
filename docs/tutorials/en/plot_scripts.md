@@ -14,6 +14,50 @@ gpumdkit.sh -plt <type> save  # Save plot as PNG
 gpumdkit.sh -plt -h           # List available plot types
 ```
 
+## A reliable plotting workflow
+
+Use the following sequence instead of trying plot names at random:
+
+1. List the available types with `gpumdkit.sh -plt -h`.
+2. Identify the file already present in your working directory.
+3. Find the matching entry below, then run its exact command signature.
+4. Add `save` only where that entry shows it; the argument position is not identical for every plot.
+
+| If you have... | Start with... | What to inspect first |
+|---|---|---|
+| `loss.out`, `energy_train.out`, and `force_train.out` | `gpumdkit.sh -plt train` | loss trend and energy/force parity |
+| `energy_train.out` and `force_train.out` from prediction mode | `gpumdkit.sh -plt prediction` | parity results for structures in `train.xyz` |
+| `thermo.out` | `gpumdkit.sh -plt thermo` | equilibration and thermodynamic evolution |
+| four-column `msd.out` from `gpumdkit.sh -calc msd` | `gpumdkit.sh -plt msd` | diffusion regime before interpreting a fit |
+| single-group seven-column `msd.out` from GPUMD `compute_msd` | `gpumdkit.sh -plt sdc` or `gpumdkit.sh -plt msd_sdc` | SDC columns and diffusion regime |
+| `sdc.out` from GPUMD `compute_sdc` | `gpumdkit.sh -plt vac` | velocity autocorrelation |
+| `rdf.out` | `gpumdkit.sh -plt rdf` | selected pair column and peak positions |
+| `xrd.out` | `gpumdkit.sh -plt xrd` | angle in column 2 and intensity in column 4 |
+
+`compute_msd` output for multiple groups appends additional group data. Inspect
+the grouping layout and use `msd_all` where appropriate instead of assuming
+that every `msd.out` has seven columns.
+
+For example, a saved training plot is requested as:
+
+```bash
+gpumdkit.sh -plt train save
+```
+
+The Gallery image below is an example of the figure layout, not a universal
+quality threshold. Whether a loss curve, parity scatter, or transport fit is
+acceptable depends on the model, data, and simulation protocol; do not infer a
+scientific conclusion from the image alone.
+
+> **Why not use `gpumdkit.sh -plt train -h`?** Plot scripts do not share a
+> uniform per-plot `-h` interface. Use `gpumdkit.sh -plt -h` for the list, then
+> use the exact signature and input-file notes in the matching section below.
+
+---
+
+<details markdown="1">
+<summary>Show the full plotting command menu</summary>
+
 Running `gpumdkit.sh -plt` prints the plotting command menu:
 
 ```text
@@ -29,8 +73,7 @@ Running `gpumdkit.sh -plt` prints the plotting command menu:
 |  train_density  - Training results density plot  restart        - Parameters in nep.restart   |
 |  charge         - Charge distribution            born_charge    - Born effective charges      |
 |  dimer          - Dimer energy/force curve       force_errors   - Force errors                |
-|  des            - Descriptors                    lr             - Learning rate for gnep      |
-|  net_force      Plot net force distribution                                                   |
+|  des            - Descriptors                    net_force      - Net force distribution      |
 +-----------------------------------------------------------------------------------------------+
 |                                     Diffusion & Transport                                     |
 +-----------------------------------------------------------------------------------------------+
@@ -63,40 +106,7 @@ Running `gpumdkit.sh -plt` prints the plotting command menu:
 +-----------------------------------------------------------------------------------------------+
 ```
 
----
-
-## A reliable plotting workflow
-
-Use the following sequence instead of trying plot names at random:
-
-1. List the available types with `gpumdkit.sh -plt -h`.
-2. Identify the file already present in your working directory.
-3. Find the matching entry below, then run its exact command signature.
-4. Add `save` only where that entry shows it; the argument position is not identical for every plot.
-
-| If you have... | Start with... | What to inspect first |
-|---|---|---|
-| `loss.out`, `energy_train.out`, and `force_train.out` | `gpumdkit.sh -plt train` | loss trend and energy/force parity |
-| `energy_train.out` and `force_train.out` from prediction mode | `gpumdkit.sh -plt prediction` | parity results for structures in `train.xyz` |
-| `thermo.out` | `gpumdkit.sh -plt thermo` | equilibration and thermodynamic evolution |
-| `msd.out` | `gpumdkit.sh -plt msd` or `gpumdkit.sh -plt sdc` | diffusion regime before interpreting a fit |
-| `rdf.out` | `gpumdkit.sh -plt rdf` | selected pair column and peak positions |
-| `xrd.out` | `gpumdkit.sh -plt xrd` | angle in column 2 and intensity in column 4 |
-
-For example, a saved training plot is requested as:
-
-```bash
-gpumdkit.sh -plt train save
-```
-
-The Gallery image below is an example of the figure layout, not a universal
-quality threshold. Whether a loss curve, parity scatter, or transport fit is
-acceptable depends on the model, data, and simulation protocol; do not infer a
-scientific conclusion from the image alone.
-
-> **Why not use `gpumdkit.sh -plt train -h`?** Plot scripts do not share a
-> uniform per-plot `-h` interface. Use `gpumdkit.sh -plt -h` for the list, then
-> use the exact signature and input-file notes in the matching section below.
+</details>
 
 ---
 
@@ -197,20 +207,6 @@ gpumdkit.sh -plt force_errors
 
 ---
 
-### plt_learning_rate.py
-
-Visualizes learning rate during `gnep` training.
-
-**Input File:** `loss.out`
-
-**Note:** Only for the `gnep` training process.
-
-```bash
-gpumdkit.sh -plt lr
-```
-
----
-
 ### plt_nep_restart.py
 
 Visualizes parameters stored in the `nep.restart` file.
@@ -299,7 +295,11 @@ gpumdkit.sh -plt thermo3
 
 Plots mean square displacement (MSD) for all directions.
 
-**Input File:** `msd.out`
+**Input File:** `msd.out` with time and `MSD_x/y/z` in its first four columns.
+This accepts the four-column output from `gpumdkit.sh -calc msd` and the first
+four columns of GPUMD `compute_msd` output.
+
+The slope annotations use the middle 40%-80% of the MSD series.
 
 ```bash
 gpumdkit.sh -plt msd
@@ -318,6 +318,8 @@ Plots MSD for all atomic species separately when using `all_groups` in GPUMD.
 **Input File:** `msd.out` (computed with `all_groups` option)
 
 **Requirements:** Must use `all_groups` in the `compute_msd` command in `run.in`.
+For multiple groups, GPUMD appends group data; inspect that layout rather than
+assuming the file has the seven columns of a single-group result.
 
 ```bash
 gpumdkit.sh -plt msd_all msd.out Li P S
@@ -353,7 +355,9 @@ gpumdkit.sh -plt msd_conv
 
 Plots self-diffusion coefficient (SDC) vs time.
 
-**Input File:** `msd.out`
+**Input File:** a single-group seven-column `msd.out` from GPUMD `compute_msd`:
+time, `MSD_x/y/z`, and `SDC_x/y/z`. The four-column file from `-calc msd` is
+not sufficient for this plot.
 
 ```bash
 gpumdkit.sh -plt sdc
@@ -362,6 +366,22 @@ gpumdkit.sh -plt sdc
 <div align="center">
   <img src="../../Gallery/sdc.png" alt="Self-diffusion coefficient" width="48%" />
 </div>
+
+---
+
+### plt_msd_sdc.py
+
+Plots MSD and self-diffusion coefficient (SDC) side by side. The slope
+annotations use the middle 40%-80% of the MSD series; the inset shows the
+last 80% of the SDC data with a moving-average overlay.
+
+**Input File:** a single-group seven-column `msd.out` from GPUMD `compute_msd`:
+time, `MSD_x/y/z`, and `SDC_x/y/z`. The four-column file from `-calc msd` is
+not sufficient for this plot.
+
+```bash
+gpumdkit.sh -plt msd_sdc
+```
 
 ---
 
@@ -653,7 +673,9 @@ gpumdkit.sh -plt rdf_pmf
 
 Plots velocity autocorrelation function (VAC). Useful for analyzing phonon properties and atomic dynamics.
 
-**Input File:** `sdc.out` (the VAC columns are read from this file by the plotting script)
+**Input File:** `sdc.out` written by GPUMD `compute_sdc` (the VAC columns are
+read from this file by the plotting script). This is separate from the
+`msd.out` input used by `-plt sdc` and `-plt msd_sdc`.
 
 **Output:** Interactive plot or `vac.png` (with `save` option)
 
@@ -798,8 +820,8 @@ Visualizes high-dimensional NEP descriptors using dimensionality reduction (PCA 
 gpumdkit.sh -calc des train.xyz descriptors.npy nep.txt Li
 
 # Then visualize
-gpumdkit.sh -plt des pca
-gpumdkit.sh -plt des umap
+gpumdkit.sh -plt des pca descriptors.npy
+gpumdkit.sh -plt des umap descriptors.npy
 ```
 
 <div align="center">
@@ -881,15 +903,15 @@ gpumdkit.sh -plt plane-grid -i averaged_structure.xyz -d displacements.dat -e Pb
 | `train_test` | `*_train.out`, `*_test.out` | Combined parity plots |
 | `parity_density` | `*_train.out` | Density-based parity plots |
 | `force_errors` | `force_train.out` | Force error metrics |
-| `lr` | `loss.out` (gnep) | Learning rate |
 | `restart` | `nep.restart` | Restart file parameters |
 | `charge` | `train.xyz`, `charge_train.out` | Charge distribution |
 | `born_charge` / `bec` | `bec_train.out`, optional `bec_test.out` | Born effective charges |
 | `thermo` | `thermo.out` | Thermodynamic properties |
-| `msd` | `msd.out` | Mean square displacement |
+| `msd` | four-column `msd.out` from `-calc msd`, or first four columns of GPUMD `compute_msd` output | Mean square displacement |
 | `msd_all` | `msd.out` (all_groups) | MSD for all species |
 | `msd_conv` | `msd_step*.out` | MSD convergence check |
-| `sdc` | `msd.out` | Self-diffusion coefficient |
+| `sdc` | single-group seven-column `msd.out` from GPUMD `compute_msd` | Self-diffusion coefficient |
+| `msd_sdc` | single-group seven-column `msd.out` from GPUMD `compute_msd` | MSD and SDC combined |
 | `arrhenius_d` / `D` | `*K/msd.out` | Arrhenius diffusivity |
 | `arrhenius_sigma` / `sigma` | `*K/{thermo.out, msd.out}` plus first-directory `model.xyz` and optional `run.in` | Arrhenius ionic conductivity |
 | `D_PT` | `*K/msd.out` plus a transition temperature | Piecewise Arrhenius diffusivity around a phase transition |

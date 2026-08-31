@@ -438,7 +438,7 @@
   <span class="md-ellipsis">
     
   
-    Simulation and Post-processing
+    GPUMDkit Agent Skill
   
 
     
@@ -886,7 +886,7 @@
   <span class="md-ellipsis">
     
   
-    模拟与后处理
+    GPUMDkit Agent Skill
   
 
     
@@ -1585,7 +1585,7 @@
 
 <p><strong>脚本位置：</strong> <code>Scripts/calculators/</code></p>
 <h2 id="_1">功能概览</h2>
-<p>计算器模块大致可以分为三类：</p>
+<p>计算器模块大致可以分为四类：</p>
 <ul>
 <li><strong>轨迹性质：</strong> 从 GPUMD 或 extxyz 轨迹计算 MSD、离子电导率等时间相关性质，并从 extxyz 轨迹计算 X 射线衍射；</li>
 <li><strong>声子性质：</strong> 使用原胞、NEP 模型和 <code>QPOINTS</code> 路径计算力常数和声子谱；</li>
@@ -1852,14 +1852,19 @@
 <ul>
 <li><code>msd.out</code></li>
 </ul>
-<p><code>msd.out</code> 的开头是文本表格，包含时间和不同方向的 MSD 列。生成后可以继续使用绘图命令检查扩散区间和自扩散系数。</p>
+<p><code>calc_msd.py</code> 写入的 <code>msd.out</code> 恰好包含四个数值列：<code>Time(ps)</code>、<code>MSD_x</code>、
+<code>MSD_y</code> 和 <code>MSD_z</code>。该输出可以使用 <code>-plt msd</code> 绘图。</p>
+<p>相比之下，GPUMD 原生的 <code>compute_msd</code> 写入的是另一种 <code>msd.out</code>。只选择一个
+分组时，它包含七列：时间、<code>MSD_x/y/z</code> 和 <code>SDC_x/y/z</code>；<code>-plt sdc</code> 与
+<code>-plt msd_sdc</code> 要求这种格式。使用 <code>all_groups</code> 或多个分组时，GPUMD 会追加
+其他分组的数据，因此不能假定每个 <code>msd.out</code> 都有七列。GPUMD 的独立命令
+<code>compute_sdc</code> 写入 <code>sdc.out</code>，该文件供 <code>-plt vac</code> 使用，不是 <code>-plt sdc</code> 或
+<code>-plt msd_sdc</code> 的输入。</p>
 <p>随后可绘图：</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>gpumdkit.sh<span class="w"> </span>-plt<span class="w"> </span>msd
-<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>gpumdkit.sh<span class="w"> </span>-plt<span class="w"> </span>sdc
 </code></pre></div>
 <div align="center">
   <img src="../../Gallery/msd.png" alt="MSD plot" width="45%" />
-  <img src="../../Gallery/sdc.png" alt="SDC plot" width="45%" />
 </div>
 
 <h2 id="x-xrd">X 射线衍射（XRD）</h2>
@@ -1970,8 +1975,8 @@ GPa，virial 为 eV/atom。应力和 virial 张量使用 NEP 顺序
 <li>判断新数据是否扩展了描述符空间。</li>
 </ul>
 <p>绘图：</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-20-1" name="__codelineno-20-1" href="#__codelineno-20-1"></a>gpumdkit.sh<span class="w"> </span>-plt<span class="w"> </span>des<span class="w"> </span>pca
-<a id="__codelineno-20-2" name="__codelineno-20-2" href="#__codelineno-20-2"></a>gpumdkit.sh<span class="w"> </span>-plt<span class="w"> </span>des<span class="w"> </span>umap
+<div class="highlight"><pre><span></span><code><a id="__codelineno-20-1" name="__codelineno-20-1" href="#__codelineno-20-1"></a>gpumdkit.sh<span class="w"> </span>-plt<span class="w"> </span>des<span class="w"> </span>pca<span class="w"> </span>descriptors.npy
+<a id="__codelineno-20-2" name="__codelineno-20-2" href="#__codelineno-20-2"></a>gpumdkit.sh<span class="w"> </span>-plt<span class="w"> </span>des<span class="w"> </span>umap<span class="w"> </span>descriptors.npy
 </code></pre></div>
 <div align="center">
   <img src="../../Gallery/des_umap.png" alt="Descriptor UMAP" width="52%" />
