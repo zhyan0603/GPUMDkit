@@ -26,7 +26,7 @@
 
 ### VASP Conversions
 
-`-out2xyz` (also menu `101`) writes `NEPdataset/train.xyz` in the terminal's current directory and deletes/recreates any existing `NEPdataset/`. `-out2exyz` writes and overwrites `train.xyz` in the current directory. The input-directory argument does not change the output location; back up previous results or use a new working directory before repeating a conversion. Choose one converter route.
+`-out2xyz` (also menu `101`) writes `NEPdataset/train.xyz` in the terminal's current directory and deletes/recreates any existing `NEPdataset/`. `-out2xyz_bec` follows the same output convention, writes one final configuration per OUTCAR, and includes `bec:R:9` when a complete VASP `BORN EFFECTIVE CHARGES` block is present. `-out2exyz` writes and overwrites `train.xyz` in the current directory. The input-directory argument does not change the output location; back up previous results or use a new working directory before repeating a conversion. Choose one converter route.
 
 ```bash
 # OUTCAR to extxyz (directory, shell version)
@@ -34,6 +34,9 @@ gpumdkit.sh -out2xyz <directory>
 
 # OUTCAR to extxyz (Python version)
 gpumdkit.sh -out2exyz <directory>
+
+# OUTCAR to extxyz with Born effective charges
+gpumdkit.sh -out2xyz_bec <directory>
 
 # XDATCAR to extxyz
 gpumdkit.sh -xdat2exyz XDATCAR output.xyz
@@ -151,6 +154,7 @@ gpumdkit.sh -clean_xyz input.xyz clean.xyz
 | CLI Flag | Conversion | Syntax |
 |----------|-----------|--------|
 | `-out2xyz` | OUTCAR -> extxyz (shell) | `gpumdkit.sh -out2xyz <dir>` |
+| `-out2xyz_bec` | OUTCAR -> extxyz with BEC labels (shell) | `gpumdkit.sh -out2xyz_bec <dir>` |
 | `-out2exyz` | OUTCAR -> extxyz (python) | `gpumdkit.sh -out2exyz <dir>` |
 | `-pos2exyz` | POSCAR -> extxyz | `gpumdkit.sh -pos2exyz <poscar> <xyz>` |
 | `-exyz2pos` | extxyz -> POSCAR | `gpumdkit.sh -exyz2pos <xyz>` |

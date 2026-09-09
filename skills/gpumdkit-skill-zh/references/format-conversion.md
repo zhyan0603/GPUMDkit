@@ -26,7 +26,7 @@
 
 ### VASP 转换
 
-`-out2xyz`（以及菜单 `101`）将结果写入终端当前目录的 `NEPdataset/train.xyz`，并会删除重建已有的 `NEPdataset/`。`-out2exyz` 则写入并覆盖当前目录的 `train.xyz`。输入目录参数不会改变输出位置；重复转换前先备份结果，或换用新的工作目录。两种入口选择其一即可。
+`-out2xyz`（以及菜单 `101`）将结果写入终端当前目录的 `NEPdataset/train.xyz`，并会删除重建已有的 `NEPdataset/`。`-out2xyz_bec` 使用相同的输出约定，每个 OUTCAR 写出一个最终构型；当 VASP 文件包含完整的 `BORN EFFECTIVE CHARGES` 数据块时，逐原子追加 `bec:R:9`。`-out2exyz` 则写入并覆盖当前目录的 `train.xyz`。输入目录参数不会改变输出位置；重复转换前先备份结果，或换用新的工作目录。两种入口选择其一即可。
 
 ```bash
 # OUTCAR 转 extxyz（目录，Shell 版本）
@@ -34,6 +34,9 @@ gpumdkit.sh -out2xyz <directory>
 
 # OUTCAR 转 extxyz（Python 版本）
 gpumdkit.sh -out2exyz <directory>
+
+# OUTCAR 转带 Born 有效电荷的 extxyz
+gpumdkit.sh -out2xyz_bec <directory>
 
 # XDATCAR 转 extxyz
 gpumdkit.sh -xdat2exyz XDATCAR output.xyz
@@ -151,6 +154,7 @@ gpumdkit.sh -clean_xyz input.xyz clean.xyz
 | CLI 标志 | 转换 | 语法 |
 |----------|-----------|--------|
 | `-out2xyz` | OUTCAR -> extxyz（Shell） | `gpumdkit.sh -out2xyz <dir>` |
+| `-out2xyz_bec` | OUTCAR -> 带 BEC 标签的 extxyz（Shell） | `gpumdkit.sh -out2xyz_bec <dir>` |
 | `-out2exyz` | OUTCAR -> extxyz（Python） | `gpumdkit.sh -out2exyz <dir>` |
 | `-pos2exyz` | POSCAR -> extxyz | `gpumdkit.sh -pos2exyz <poscar> <xyz>` |
 | `-exyz2pos` | extxyz -> POSCAR | `gpumdkit.sh -exyz2pos <xyz>` |

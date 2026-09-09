@@ -1771,12 +1771,17 @@ code:</p>
 <p>For VASP results:</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-17-1" name="__codelineno-17-1" href="#__codelineno-17-1"></a>gpumdkit.sh<span class="w"> </span>-out2xyz<span class="w"> </span>&lt;scf_results_directory&gt;
 </code></pre></div>
-<p>For CP2K logs and structure files, first enter the CP2K results root. The following command recursively scans <code>.log</code> files and their accompanying <code>.xyz</code>/<code>.inp</code> files under the current directory. Successful conversion writes <code>cp2k_exyz.xyz</code> there, with processing details in <code>Logfile.txt</code>.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-18-1" name="__codelineno-18-1" href="#__codelineno-18-1"></a>gpumdkit.sh<span class="w"> </span>-cp2k2xyz
+<p>If the OUTCAR files contain complete <code>BORN EFFECTIVE CHARGES</code> blocks and the
+per-atom BEC labels are needed, use:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-18-1" name="__codelineno-18-1" href="#__codelineno-18-1"></a>gpumdkit.sh<span class="w"> </span>-out2xyz_bec<span class="w"> </span>&lt;scf_results_directory&gt;
 </code></pre></div>
-<p>The VASP <code>-out2xyz</code>/menu 101 route creates <code>NEPdataset/train.xyz</code> in the current
-directory; the Python <code>-out2exyz</code> route writes <code>train.xyz</code> there. Continue with
-the file actually produced by the selected route and preserve the raw DFT outputs.</p>
+<p>For CP2K logs and structure files, first enter the CP2K results root. The following command recursively scans <code>.log</code> files and their accompanying <code>.xyz</code>/<code>.inp</code> files under the current directory. Successful conversion writes <code>cp2k_exyz.xyz</code> there, with processing details in <code>Logfile.txt</code>.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-19-1" name="__codelineno-19-1" href="#__codelineno-19-1"></a>gpumdkit.sh<span class="w"> </span>-cp2k2xyz
+</code></pre></div>
+<p>The VASP <code>-out2xyz</code>/menu 101 route and the BEC-aware <code>-out2xyz_bec</code> route create
+<code>NEPdataset/train.xyz</code> in the current directory; the Python <code>-out2exyz</code> route
+writes <code>train.xyz</code> there. Continue with the file actually produced by the
+selected route and preserve the raw DFT outputs.</p>
 <p>Use analysis and sampling tools to inspect the resulting extxyz and record excluded
 directories.</p>
 <h2 id="active-learning-style-workflow">Active-Learning Style Workflow</h2>

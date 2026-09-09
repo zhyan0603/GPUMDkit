@@ -1636,11 +1636,15 @@ the converter for the DFT code:</p>
 <p>For VASP results:</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>gpumdkit.sh<span class="w"> </span>-out2xyz<span class="w"> </span>&lt;scf_results_directory&gt;
 </code></pre></div>
+<p>If the OUTCAR files contain complete <code>BORN EFFECTIVE CHARGES</code> blocks and the
+per-atom BEC labels are needed, use <code>gpumdkit.sh -out2xyz_bec
+&lt;scf_results_directory&gt;</code> instead.</p>
 <p>For CP2K logs and structure files, first enter the CP2K results root. The following command recursively scans <code>.log</code> files and their accompanying <code>.xyz</code>/<code>.inp</code> files under the current directory. Successful conversion writes <code>cp2k_exyz.xyz</code> there, with processing details in <code>Logfile.txt</code>.</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>gpumdkit.sh<span class="w"> </span>-cp2k2xyz
 </code></pre></div>
-<p>The VASP <code>-out2xyz</code>/menu 101 route writes <code>NEPdataset/train.xyz</code> in the current
-directory by default; the CP2K route above writes <code>cp2k_exyz.xyz</code>. Replace <code>&lt;new_reference.xyz&gt;</code> in the following commands with the extxyz
+<p>The VASP <code>-out2xyz</code>/menu 101 and BEC-aware <code>-out2xyz_bec</code> routes write
+<code>NEPdataset/train.xyz</code> in the current directory by default; the CP2K route above
+writes <code>cp2k_exyz.xyz</code>. Replace <code>&lt;new_reference.xyz&gt;</code> in the following commands with the extxyz
 file actually produced by the selected converter:</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>gpumdkit.sh<span class="w"> </span>-range<span class="w"> </span>&lt;new_reference.xyz&gt;<span class="w"> </span>energy
 <a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>gpumdkit.sh<span class="w"> </span>-range<span class="w"> </span>&lt;new_reference.xyz&gt;<span class="w"> </span>force

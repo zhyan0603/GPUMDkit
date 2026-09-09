@@ -3,12 +3,6 @@
   <p style="text-align: justify;">Thank you for your interest in contributing to <strong>GPUMDkit</strong>! We appreciate your time and effort in helping improve this toolkit.</p>
 </div>
 
-<p align="center">
-  <strong>English</strong>
-  &nbsp;·&nbsp;
-  <a href="../zh/贡献指南.md">简体中文</a>
-</p>
-
 `GPUMDkit` is an open-source package, and we welcome contributions from the community, whether you're fixing bugs, adding new features, improving documentation, or suggesting enhancements.
 
 > **Note**: The authoritative version of this document is [`CONTRIBUTING.md`](https://github.com/zhyan0603/GPUMDkit/blob/main/CONTRIBUTING.md) in the repository root. This tutorial page mirrors its content.

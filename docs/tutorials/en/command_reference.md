@@ -14,19 +14,20 @@ otherwise use `gpumdkit.sh -h`, the relevant module help, or interactive mode.
 
 ```text
 +-------------------------------------------------------------------------------------------------------+
-|                          GPUMDkit 1.5.7 (2026-08-28)       Command Help                               |
+|                          GPUMDkit 1.5.7 (2026-09-05)       Command Help                               |
 +-------------------------------------------------------------------------------------------------------+
 |                                          MAIN FUNCTIONS                                               |
 +-------------------------------------------------------------------------------------------------------+
 | -h            Show this help table            | -plt <type>        Plot and visualization tools       |
 | -calc <type>  Calculator tools                | -time <gpumd|nep>  Time-consuming analyzer            |
-| -prediction   Write NEP prediction .out files |                                                       |
 | -update       Update GPUMDkit                 | -clean             Clean extra files in current dir   |
-| -skill        Show GPUMDkit agent skill info  | -doctor           Check Python environment          |
+| -skill        Show GPUMDkit agent skill info  | -doctor            Check Python environment           |
+| -prediction   Write NEP prediction .out files |                                                       |
 +-------------------------------------------------------------------------------------------------------+
 |                                         FORMAT CONVERSION                                             |
 +-------------------------------------------------------------------------------------------------------+
-| -out2xyz      OUTCAR -> extxyz (shell)        | -out2exyz          OUTCAR -> extxyz (python)          |
+| -out2xyz      OUTCAR -> extxyz (shell)        | -out2xyz_bec       OUTCAR -> extxyz with BEC          |
+| -out2exyz     OUTCAR -> extxyz (python)       | -xyz2dp            extxyz -> DeepMD npy               |
 | -cp2k2xyz     CP2K log -> xyz                 | -xdat2exyz         XDATCAR -> extxyz                  |
 | -cif2pos      cif -> POSCAR                   | -cif2exyz          cif -> extxyz                      |
 | -pos2exyz     POSCAR -> extxyz                | -exyz2pos          extxyz -> POSCAR                   |
@@ -35,7 +36,6 @@ otherwise use `gpumdkit.sh -h`, the relevant module help, or interactive mode.
 | -addgroup     Add group labels                | -addweight         Add structure weight in extxyz     |
 | -clean_xyz    Clean extra info in extxyz      | -get_frame         Extract specific frame             |
 | -frame_range  Extract frames by range         | -dp2xyz            DeepMD npy -> extxyz               |
-| -xyz2dp       extxyz -> DeepMD npy            |                                                       |
 +-------------------------------------------------------------------------------------------------------+
 |                                            ANALYSIS                                                   |
 +-------------------------------------------------------------------------------------------------------+
@@ -45,7 +45,7 @@ otherwise use `gpumdkit.sh -h`, the relevant module help, or interactive mode.
 | -filter_dist  Filter by min_dist (no PBC)     | -filter_dist_pbc   Filter by min_dist (PBC)           |
 | -pda          Probability density analysis    | -filter_box        Filter by box-edge length          |
 | -pynep        Deprecated PyNEP sampling       | -nep_modifier      Modify NEP model interactively     |
-| -shift_energy  Interactive energy shift       |                                                       |
+| -shift_energy Interactive energy shift        |                                                       |
 +-------------------------------------------------------------------------------------------------------+
 | Python option help: gpumdkit.sh -<option> -h    Plot list: gpumdkit.sh -plt -h                        |
 +-------------------------------------------------------------------------------------------------------+
@@ -66,6 +66,7 @@ otherwise use `gpumdkit.sh -h`, the relevant module help, or interactive mode.
 | Command | Syntax | Description |
 |---|---|---|
 | `-out2xyz` | `gpumdkit.sh -out2xyz <dir>` | OUTCAR to extxyz, shell version |
+| `-out2xyz_bec` | `gpumdkit.sh -out2xyz_bec <dir>` | OUTCAR to extxyz with BEC labels |
 | `-out2exyz` | `gpumdkit.sh -out2exyz <dir>` | OUTCAR to extxyz, Python version |
 | `-cp2k2xyz` | `gpumdkit.sh -cp2k2xyz` | CP2K output to xyz/extxyz |
 | `-xdat2exyz` | `gpumdkit.sh -xdat2exyz <XDATCAR> <output.xyz>` | XDATCAR to extxyz |

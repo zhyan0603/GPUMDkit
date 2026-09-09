@@ -863,6 +863,17 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#update-log" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Update Log
+      
+    </span>
+  </a>
+  
+</li>
+        
       </ul>
     </nav>
   
@@ -1587,6 +1598,17 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#update-log" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Update Log
+      
+    </span>
+  </a>
+  
+</li>
+        
       </ul>
     </nav>
   
@@ -1783,12 +1805,6 @@
   <p style="text-align: justify;">Thank you for your interest in contributing to <strong>GPUMDkit</strong>! We appreciate your time and effort in helping improve this toolkit.</p>
 </div>
 
-<p align="center">
-  <strong>English</strong>
-  &nbsp;·&nbsp;
-  <a href="../zh/贡献指南.md">简体中文</a>
-</p>
-
 <p><code>GPUMDkit</code> is an open-source package, and we welcome contributions from the community, whether you're fixing bugs, adding new features, improving documentation, or suggesting enhancements.</p>
 <blockquote>
 <p><strong>Note</strong>: The authoritative version of this document is <a href="https://github.com/zhyan0603/GPUMDkit/blob/main/CONTRIBUTING.md"><code>CONTRIBUTING.md</code></a> in the repository root. This tutorial page mirrors its content.</p>
@@ -1852,6 +1868,11 @@
 <li>Tutorial documentation lives in <code>docs/tutorials/en/</code> (English) and <code>docs/tutorials/zh/</code> (Chinese).
   If you add a new feature, consider updating the relevant tutorial page.</li>
 <li>After editing tutorial markdown files, rebuild the HTML with <code>mkdocs build -f docs/mkdocs.yml</code>.</li>
+</ul>
+<h3 id="update-log">Update Log</h3>
+<ul>
+<li>Use <code>docs/updates.info</code> only for recent user-visible feature additions and code, script, or CLI bug fixes. Documentation-only changes, including tutorials, README files, skills, references, wording corrections, and generated documentation, must not be added there.</li>
+<li>Keep at most the five newest entries in each of the <code>NEW_FEATURES</code> and <code>BUG_FIXES</code> arrays; remove older entries when adding a new one. If a change includes both code and documentation, record only the code/behavior change, not the documentation synchronization.</li>
 </ul>
 <hr />
 <h2 id="reporting-bugs">Reporting Bugs</h2>

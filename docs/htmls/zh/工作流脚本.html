@@ -1764,12 +1764,16 @@
 <p>VASP 结果：</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-17-1" name="__codelineno-17-1" href="#__codelineno-17-1"></a>gpumdkit.sh<span class="w"> </span>-out2xyz<span class="w"> </span>&lt;scf_results_directory&gt;
 </code></pre></div>
-<p>CP2K 日志与结构文件：先进入 CP2K 结果根目录，再运行以下命令。它会递归扫描当前目录下的 <code>.log</code> 及配套 <code>.xyz</code>/<code>.inp</code>，成功转换后写入当前目录的 <code>cp2k_exyz.xyz</code>，并用 <code>Logfile.txt</code> 记录处理情况。</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-18-1" name="__codelineno-18-1" href="#__codelineno-18-1"></a>gpumdkit.sh<span class="w"> </span>-cp2k2xyz
+<p>如果 OUTCAR 包含完整的 <code>BORN EFFECTIVE CHARGES</code> 数据块，并且需要保留逐原子的
+BEC 标签，可以使用：</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-18-1" name="__codelineno-18-1" href="#__codelineno-18-1"></a>gpumdkit.sh<span class="w"> </span>-out2xyz_bec<span class="w"> </span>&lt;scf_results_directory&gt;
 </code></pre></div>
-<p>VASP 的 <code>-out2xyz</code>/菜单 101 会在当前目录生成 <code>NEPdataset/train.xyz</code>；
-Python 版 <code>-out2exyz</code> 会在当前目录写入 <code>train.xyz</code>。请根据转换入口继续
-使用实际生成的文件，并保留原始 DFT 输出。</p>
+<p>CP2K 日志与结构文件：先进入 CP2K 结果根目录，再运行以下命令。它会递归扫描当前目录下的 <code>.log</code> 及配套 <code>.xyz</code>/<code>.inp</code>，成功转换后写入当前目录的 <code>cp2k_exyz.xyz</code>，并用 <code>Logfile.txt</code> 记录处理情况。</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-19-1" name="__codelineno-19-1" href="#__codelineno-19-1"></a>gpumdkit.sh<span class="w"> </span>-cp2k2xyz
+</code></pre></div>
+<p>VASP 的 <code>-out2xyz</code>/菜单 101 和带 BEC 的 <code>-out2xyz_bec</code> 会在当前目录生成
+<code>NEPdataset/train.xyz</code>；Python 版 <code>-out2exyz</code> 会在当前目录写入 <code>train.xyz</code>。
+请根据转换入口继续使用实际生成的文件，并保留原始 DFT 输出。</p>
 <h2 id="_2">主动学习式流程</h2>
 <p>需要开展 NEP 数据迭代时，按“MD 轨迹 → 几何筛选 → NepTrain FPS → DFT →
 转换 → 数据集检查”的顺序操作，各阶段的检查要点见

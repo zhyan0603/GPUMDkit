@@ -2088,6 +2088,11 @@
 <td><code>gpumdkit.sh -out2xyz &lt;dir&gt;</code></td>
 </tr>
 <tr>
+<td>包含 BEC 数据的 OUTCAR 目录</td>
+<td>extxyz</td>
+<td><code>gpumdkit.sh -out2xyz_bec &lt;dir&gt;</code></td>
+</tr>
+<tr>
 <td>OUTCAR 目录</td>
 <td>extxyz</td>
 <td><code>gpumdkit.sh -out2exyz &lt;dir&gt;</code></td>
@@ -2184,15 +2189,22 @@
 <p>上面是 shell 版本。也可以选择 Python 版本；同一批数据只需选择其中一种：</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>gpumdkit.sh<span class="w"> </span>-out2exyz<span class="w"> </span>./vasp_results/
 </code></pre></div>
+<p>对于包含完整 VASP <code>BORN EFFECTIVE CHARGES</code> 数据块的 OUTCAR 文件，可以使用
+带 BEC 的 shell 转换器：</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a>gpumdkit.sh<span class="w"> </span>-out2xyz_bec<span class="w"> </span>./vasp_results/
+</code></pre></div>
+<p>该入口为每个 OUTCAR 写出一个最终构型；当 BEC 数据块完整时，追加逐原子的
+<code>bec:R:9</code> 属性。没有 BEC 数据块的 OUTCAR 仍会转换，但对应原子行不包含该属性，
+同时会显示警告。</p>
 <p><strong>交互模式：</strong> 在格式转换菜单中选择 <code>101</code>，会看到：</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a>&gt;-------------------------------------------------&lt;
-<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a>| Calling the script in Scripts/format_conversion |
-<a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a>| Script: out2xyz.sh                              |
-<a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a>| Developer: Yanzhou WANG (yanzhowang@gmail.com)  |
-<a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a>&gt;-------------------------------------------------&lt;
-<a id="__codelineno-10-6" name="__codelineno-10-6" href="#__codelineno-10-6"></a>Input the directory containing OUTCARs
-<a id="__codelineno-10-7" name="__codelineno-10-7" href="#__codelineno-10-7"></a>Example: ./
-<a id="__codelineno-10-8" name="__codelineno-10-8" href="#__codelineno-10-8"></a>------------&gt;&gt;
+<div class="highlight"><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a>&gt;-------------------------------------------------&lt;
+<a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a>| Calling the script in Scripts/format_conversion |
+<a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a>| Script: out2xyz.sh                              |
+<a id="__codelineno-11-4" name="__codelineno-11-4" href="#__codelineno-11-4"></a>| Developer: Yanzhou WANG (yanzhowang@gmail.com)  |
+<a id="__codelineno-11-5" name="__codelineno-11-5" href="#__codelineno-11-5"></a>&gt;-------------------------------------------------&lt;
+<a id="__codelineno-11-6" name="__codelineno-11-6" href="#__codelineno-11-6"></a>Input the directory containing OUTCARs
+<a id="__codelineno-11-7" name="__codelineno-11-7" href="#__codelineno-11-7"></a>Example: ./
+<a id="__codelineno-11-8" name="__codelineno-11-8" href="#__codelineno-11-8"></a>------------&gt;&gt;
 </code></pre></div>
 <p><strong>输出位置：</strong> 两种命令都从指定的 <code>vasp_results/</code> 读取数据，但将结果写入<strong>终端当前目录</strong>：</p>
 <table>
@@ -2208,6 +2220,10 @@
 <td><code>NEPdataset/train.xyz</code></td>
 </tr>
 <tr>
+<td><code>-out2xyz_bec</code></td>
+<td><code>NEPdataset/train.xyz</code></td>
+</tr>
+<tr>
 <td><code>-out2exyz</code></td>
 <td><code>train.xyz</code></td>
 </tr>
@@ -2215,89 +2231,91 @@
 </table>
 <div class="admonition warning">
 <p class="admonition-title">重复转换前检查输出目录</p>
-<p>shell 版本会删除并重建当前目录下已有的 <code>NEPdataset/</code>；Python 版本会覆盖当前目录下的 <code>train.xyz</code>。请先备份结果，或在新的工作目录中运行并指定输入目录的实际路径。</p>
+<p>shell 版本和 BEC shell 版本会删除并重建当前目录下已有的 <code>NEPdataset/</code>；Python 版本会覆盖当前目录下的 <code>train.xyz</code>。请先备份结果，或在新的工作目录中运行并指定输入目录的实际路径。</p>
 </div>
-<p>转换后可用 <code>head -n 2 NEPdataset/train.xyz</code>（shell 版本）或 <code>head -n 2 train.xyz</code>（Python 版本）查看原子数和 extxyz 元数据。文件生成成功不等于数据可直接用于训练，还需检查计算收敛情况、单位和标签。</p>
+<p>转换后可用 <code>head -n 2 NEPdataset/train.xyz</code>（shell/BEC 版本）或 <code>head -n 2 train.xyz</code>（Python 版本）查看原子数和 extxyz 元数据。文件生成成功不等于数据可直接用于训练，还需检查计算收敛情况、单位和标签。</p>
 <h3 id="group">添加 group 标签</h3>
 <p><strong>功能：</strong> 为结构文件添加原子 group 标签。一些 GPUMD 相关流程需要 group 标签，例如特定元素的 MSD 或扩散性质计算。</p>
 <p><strong>命令行模式：</strong></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a>gpumdkit.sh<span class="w"> </span>-addgroup<span class="w"> </span>POSCAR<span class="w"> </span>Li<span class="w"> </span>Y<span class="w"> </span>Cl
+<div class="highlight"><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a>gpumdkit.sh<span class="w"> </span>-addgroup<span class="w"> </span>POSCAR<span class="w"> </span>Li<span class="w"> </span>Y<span class="w"> </span>Cl
 </code></pre></div>
 <p>该命令读取输入结构，并写出带 group 信息的 extxyz 文件。</p>
 <p><strong>交互模式：</strong> 在格式转换菜单中选择 <code>106</code>，会看到：</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a>&gt;-------------------------------------------------&lt;
-<a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a>| Calling the script in Scripts/format_conversion |
-<a id="__codelineno-12-3" name="__codelineno-12-3" href="#__codelineno-12-3"></a>| Script: add_groups.py                           |
-<a id="__codelineno-12-4" name="__codelineno-12-4" href="#__codelineno-12-4"></a>| Developer: Zihan YAN (yanzihan@westlake.edu.cn) |
-<a id="__codelineno-12-5" name="__codelineno-12-5" href="#__codelineno-12-5"></a>&gt;-------------------------------------------------&lt;
-<a id="__codelineno-12-6" name="__codelineno-12-6" href="#__codelineno-12-6"></a>Input &lt;POSCAR&gt; &lt;element1&gt; &lt;element2&gt; ...
-<a id="__codelineno-12-7" name="__codelineno-12-7" href="#__codelineno-12-7"></a>Example: POSCAR Li Y Cl
-<a id="__codelineno-12-8" name="__codelineno-12-8" href="#__codelineno-12-8"></a>------------&gt;&gt;
+<div class="highlight"><pre><span></span><code><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a>&gt;-------------------------------------------------&lt;
+<a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a>| Calling the script in Scripts/format_conversion |
+<a id="__codelineno-13-3" name="__codelineno-13-3" href="#__codelineno-13-3"></a>| Script: add_groups.py                           |
+<a id="__codelineno-13-4" name="__codelineno-13-4" href="#__codelineno-13-4"></a>| Developer: Zihan YAN (yanzihan@westlake.edu.cn) |
+<a id="__codelineno-13-5" name="__codelineno-13-5" href="#__codelineno-13-5"></a>&gt;-------------------------------------------------&lt;
+<a id="__codelineno-13-6" name="__codelineno-13-6" href="#__codelineno-13-6"></a>Input &lt;POSCAR&gt; &lt;element1&gt; &lt;element2&gt; ...
+<a id="__codelineno-13-7" name="__codelineno-13-7" href="#__codelineno-13-7"></a>Example: POSCAR Li Y Cl
+<a id="__codelineno-13-8" name="__codelineno-13-8" href="#__codelineno-13-8"></a>------------&gt;&gt;
 </code></pre></div>
 <p><strong>输出：</strong> 添加了 group 标签的 extxyz 文件。</p>
 <h2 id="_9">常用脚本说明</h2>
 <h3 id="poscar-extxyz">POSCAR 转 extxyz</h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a>gpumdkit.sh<span class="w"> </span>-pos2exyz<span class="w"> </span>POSCAR<span class="w"> </span>model.xyz
+<div class="highlight"><pre><span></span><code><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a>gpumdkit.sh<span class="w"> </span>-pos2exyz<span class="w"> </span>POSCAR<span class="w"> </span>model.xyz
 </code></pre></div>
 <p>适合把单个 VASP 结构转成 extxyz 文件。</p>
 <p>交互模式关键词：<code>pos2exyz</code></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a>Input &lt;POSCAR&gt; &lt;output.xyz&gt;
-<a id="__codelineno-14-2" name="__codelineno-14-2" href="#__codelineno-14-2"></a>Example: POSCAR model.xyz
-<a id="__codelineno-14-3" name="__codelineno-14-3" href="#__codelineno-14-3"></a>------------&gt;&gt;
+<div class="highlight"><pre><span></span><code><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a>Input &lt;POSCAR&gt; &lt;output.xyz&gt;
+<a id="__codelineno-15-2" name="__codelineno-15-2" href="#__codelineno-15-2"></a>Example: POSCAR model.xyz
+<a id="__codelineno-15-3" name="__codelineno-15-3" href="#__codelineno-15-3"></a>------------&gt;&gt;
 </code></pre></div>
 <h3 id="extxyz-poscar">extxyz 转 POSCAR</h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a>gpumdkit.sh<span class="w"> </span>-exyz2pos<span class="w"> </span>structures.xyz
+<div class="highlight"><pre><span></span><code><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a>gpumdkit.sh<span class="w"> </span>-exyz2pos<span class="w"> </span>structures.xyz
 </code></pre></div>
-<p>会将 extxyz 中所有帧转换成 <code>POSCAR_*.vasp</code> 文件。</p>
+<p>会将 extxyz 中所有帧转换成当前目录下的 <code>POSCAR_1.vasp</code>、<code>POSCAR_2.vasp</code>
+等文件。程序按照输入轨迹中元素首次出现的顺序对每帧原子分组；例如
+<code>Li La Zr O Li O La Zr O</code> 会使用 <code>Li La Zr O</code>。速度信息不会导出。</p>
 <p>交互模式入口：<code>105</code></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a>Input the name of extxyz
-<a id="__codelineno-16-2" name="__codelineno-16-2" href="#__codelineno-16-2"></a>Example: ./train.xyz
-<a id="__codelineno-16-3" name="__codelineno-16-3" href="#__codelineno-16-3"></a>------------&gt;&gt;
+<div class="highlight"><pre><span></span><code><a id="__codelineno-17-1" name="__codelineno-17-1" href="#__codelineno-17-1"></a>Input the name of extxyz
+<a id="__codelineno-17-2" name="__codelineno-17-2" href="#__codelineno-17-2"></a>Example: ./train.xyz
+<a id="__codelineno-17-3" name="__codelineno-17-3" href="#__codelineno-17-3"></a>------------&gt;&gt;
 </code></pre></div>
 <h3 id="lammps-dump-extxyz">LAMMPS dump 转 extxyz</h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-17-1" name="__codelineno-17-1" href="#__codelineno-17-1"></a>gpumdkit.sh<span class="w"> </span>-lmp2exyz<span class="w"> </span>dump.lammpstrj<span class="w"> </span>Li<span class="w"> </span>Y<span class="w"> </span>Cl
+<div class="highlight"><pre><span></span><code><a id="__codelineno-18-1" name="__codelineno-18-1" href="#__codelineno-18-1"></a>gpumdkit.sh<span class="w"> </span>-lmp2exyz<span class="w"> </span>dump.lammpstrj<span class="w"> </span>Li<span class="w"> </span>Y<span class="w"> </span>Cl
 </code></pre></div>
 <p>元素顺序必须对应 LAMMPS 中的 atom type ID。例如 type 1 是 Li、type 2 是 Y、type 3 是 Cl，则输入 <code>Li Y Cl</code>。</p>
 <p>交互模式关键词：<code>lmp2exyz</code></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-18-1" name="__codelineno-18-1" href="#__codelineno-18-1"></a>Input &lt;dump_file&gt; &lt;element1&gt; &lt;element2&gt; ...
-<a id="__codelineno-18-2" name="__codelineno-18-2" href="#__codelineno-18-2"></a>Example: dump.lammpstrj Li O
-<a id="__codelineno-18-3" name="__codelineno-18-3" href="#__codelineno-18-3"></a>------------&gt;&gt;
+<div class="highlight"><pre><span></span><code><a id="__codelineno-19-1" name="__codelineno-19-1" href="#__codelineno-19-1"></a>Input &lt;dump_file&gt; &lt;element1&gt; &lt;element2&gt; ...
+<a id="__codelineno-19-2" name="__codelineno-19-2" href="#__codelineno-19-2"></a>Example: dump.lammpstrj Li O
+<a id="__codelineno-19-3" name="__codelineno-19-3" href="#__codelineno-19-3"></a>------------&gt;&gt;
 </code></pre></div>
 <h3 id="cif">CIF 转换</h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-19-1" name="__codelineno-19-1" href="#__codelineno-19-1"></a>gpumdkit.sh<span class="w"> </span>-cif2pos<span class="w"> </span>input.cif<span class="w"> </span>POSCAR.vasp
-<a id="__codelineno-19-2" name="__codelineno-19-2" href="#__codelineno-19-2"></a>gpumdkit.sh<span class="w"> </span>-cif2exyz<span class="w"> </span>input.cif<span class="w"> </span>model.xyz
+<div class="highlight"><pre><span></span><code><a id="__codelineno-20-1" name="__codelineno-20-1" href="#__codelineno-20-1"></a>gpumdkit.sh<span class="w"> </span>-cif2pos<span class="w"> </span>input.cif<span class="w"> </span>POSCAR.vasp
+<a id="__codelineno-20-2" name="__codelineno-20-2" href="#__codelineno-20-2"></a>gpumdkit.sh<span class="w"> </span>-cif2exyz<span class="w"> </span>input.cif<span class="w"> </span>model.xyz
 </code></pre></div>
 <p>如果后续需要 VASP 计算，使用 <code>-cif2pos</code>；如果后续要进入 GPUMDkit 分析，使用 <code>-cif2exyz</code>。</p>
 <h3 id="_10">添加权重</h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-20-1" name="__codelineno-20-1" href="#__codelineno-20-1"></a>gpumdkit.sh<span class="w"> </span>-addweight<span class="w"> </span>train.xyz<span class="w"> </span>train_weighted.xyz<span class="w"> </span><span class="m">5</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-21-1" name="__codelineno-21-1" href="#__codelineno-21-1"></a>gpumdkit.sh<span class="w"> </span>-addweight<span class="w"> </span>train.xyz<span class="w"> </span>train_weighted.xyz<span class="w"> </span><span class="m">5</span>
 </code></pre></div>
 <p>用于给训练集结构添加或修改权重。</p>
 <h3 id="_11">扩胞</h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-21-1" name="__codelineno-21-1" href="#__codelineno-21-1"></a>gpumdkit.sh<span class="w"> </span>-replicate<span class="w"> </span>POSCAR<span class="w"> </span>supercell.vasp<span class="w"> </span><span class="m">2</span><span class="w"> </span><span class="m">2</span><span class="w"> </span><span class="m">2</span>
-<a id="__codelineno-21-2" name="__codelineno-21-2" href="#__codelineno-21-2"></a>gpumdkit.sh<span class="w"> </span>-replicate<span class="w"> </span>POSCAR<span class="w"> </span>supercell.vasp<span class="w"> </span><span class="m">256</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-22-1" name="__codelineno-22-1" href="#__codelineno-22-1"></a>gpumdkit.sh<span class="w"> </span>-replicate<span class="w"> </span>POSCAR<span class="w"> </span>supercell.vasp<span class="w"> </span><span class="m">2</span><span class="w"> </span><span class="m">2</span><span class="w"> </span><span class="m">2</span>
+<a id="__codelineno-22-2" name="__codelineno-22-2" href="#__codelineno-22-2"></a>gpumdkit.sh<span class="w"> </span>-replicate<span class="w"> </span>POSCAR<span class="w"> </span>supercell.vasp<span class="w"> </span><span class="m">256</span>
 </code></pre></div>
 <p>第一种按晶胞倍数扩胞，第二种按目标原子数自动选择扩胞方式。</p>
 <h3 id="_12">提取单帧</h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-22-1" name="__codelineno-22-1" href="#__codelineno-22-1"></a>gpumdkit.sh<span class="w"> </span>-get_frame<span class="w"> </span>dump.xyz<span class="w"> </span><span class="m">1000</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-23-1" name="__codelineno-23-1" href="#__codelineno-23-1"></a>gpumdkit.sh<span class="w"> </span>-get_frame<span class="w"> </span>dump.xyz<span class="w"> </span><span class="m">1000</span>
 </code></pre></div>
 <p>从 extxyz 轨迹中提取第 <code>1000</code> 帧（帧编号从 1 开始，第一帧为 <code>1</code>）。</p>
 <h3 id="extxyz">拆分多帧 extxyz</h3>
 <p><code>split_single_xyz.py</code> 将多帧 extxyz 文件拆分为单帧文件。</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-23-1" name="__codelineno-23-1" href="#__codelineno-23-1"></a>python<span class="w"> </span>Scripts/format_conversion/split_single_xyz.py<span class="w"> </span>dump.xyz
+<div class="highlight"><pre><span></span><code><a id="__codelineno-24-1" name="__codelineno-24-1" href="#__codelineno-24-1"></a>python<span class="w"> </span>Scripts/format_conversion/split_single_xyz.py<span class="w"> </span>dump.xyz
 </code></pre></div>
 <p>生成 <code>model_1.xyz</code>、<code>model_2.xyz</code>、... 等单帧文件。</p>
 <h3 id="mtp">MTP 转换</h3>
 <p>将 MTP <code>.cfg</code> 格式转换为 extxyz：</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-24-1" name="__codelineno-24-1" href="#__codelineno-24-1"></a>gpumdkit.sh<span class="w">    </span><span class="c1"># 选择：1) 格式转换 → 102</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-25-1" name="__codelineno-25-1" href="#__codelineno-25-1"></a>gpumdkit.sh<span class="w">    </span><span class="c1"># 选择：1) 格式转换 → 102</span>
 </code></pre></div>
 <p>交互提示：</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-25-1" name="__codelineno-25-1" href="#__codelineno-25-1"></a>Input &lt;filename.cfg&gt; &lt;Symbol1 Symbol2 Symbol3 ...&gt;
-<a id="__codelineno-25-2" name="__codelineno-25-2" href="#__codelineno-25-2"></a>Example: train.cfg Pd Ag
-<a id="__codelineno-25-3" name="__codelineno-25-3" href="#__codelineno-25-3"></a>------------&gt;&gt;
+<div class="highlight"><pre><span></span><code><a id="__codelineno-26-1" name="__codelineno-26-1" href="#__codelineno-26-1"></a>Input &lt;filename.cfg&gt; &lt;Symbol1 Symbol2 Symbol3 ...&gt;
+<a id="__codelineno-26-2" name="__codelineno-26-2" href="#__codelineno-26-2"></a>Example: train.cfg Pd Ag
+<a id="__codelineno-26-3" name="__codelineno-26-3" href="#__codelineno-26-3"></a>------------&gt;&gt;
 </code></pre></div>
 <h3 id="abacus">ABACUS 转换</h3>
 <p>将 ABACUS 输出转换为 extxyz：</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-26-1" name="__codelineno-26-1" href="#__codelineno-26-1"></a>gpumdkit.sh<span class="w">    </span><span class="c1"># 选择：1) 格式转换 → 104</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-27-1" name="__codelineno-27-1" href="#__codelineno-27-1"></a>gpumdkit.sh<span class="w">    </span><span class="c1"># 选择：1) 格式转换 → 104</span>
 </code></pre></div>
 <p>菜单提供两个选项：</p>
 <ol>

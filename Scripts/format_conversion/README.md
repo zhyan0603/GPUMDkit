@@ -22,6 +22,7 @@ The format conversion scripts provide seamless interconversion between:
 | Source Format | Target Format | Command |
 |---------------|---------------|---------|
 | OUTCAR | extxyz | `gpumdkit.sh -out2xyz <dir>` |
+| OUTCAR with BEC data | extxyz | `gpumdkit.sh -out2xyz_bec <dir>` |
 | OUTCAR | extxyz | `gpumdkit.sh -out2exyz <dir>` |
 | POSCAR | extxyz | `gpumdkit.sh -pos2exyz <poscar> <xyz>` |
 | extxyz | POSCAR | `gpumdkit.sh -exyz2pos <xyz>` |
@@ -255,6 +256,21 @@ gpumdkit.sh -out2exyz ./
 ```
 
 The output file is `train.xyz` in the terminal's current directory, not necessarily the input directory. Existing `train.xyz` is overwritten. The shell route `gpumdkit.sh -out2xyz <directory>` (also menu `101`) instead deletes/recreates `NEPdataset/` in the current directory and writes `NEPdataset/train.xyz`; back up existing results before repeating it.
+
+### out2xyz_bec.sh
+
+This shell converter searches recursively for VASP `OUTCAR` files and writes one
+final configuration per file to `NEPdataset/train.xyz`. When an OUTCAR contains
+a complete `BORN EFFECTIVE CHARGES` block, the output includes the per-atom
+`bec:R:9` property. OUTCARs without a BEC block are converted without that
+property and produce a warning.
+
+```sh
+gpumdkit.sh -out2xyz_bec ./
+```
+
+Like the regular shell route, this command deletes and recreates an existing
+`NEPdataset/` in the terminal's current directory.
 
 
 

@@ -4,6 +4,7 @@ main	-doctor	gpumdkit.sh -doctor	Check the GPUMDkit Python environment	检查 GP
 main	-update	gpumdkit.sh -update	Update GPUMDkit from GitHub	从 GitHub 更新 GPUMDkit	stable
 main	-clean	gpumdkit.sh -clean	Clean extra files in current directory	清理当前目录中的冗余文件	stable
 format	-out2xyz	gpumdkit.sh -out2xyz <dir>	Convert VASP OUTCAR files to extxyz (shell version)	将 VASP OUTCAR 转换为 extxyz（shell 版本）	stable
+format	-out2xyz_bec	gpumdkit.sh -out2xyz_bec <dir>	Convert VASP OUTCAR files to extxyz with BEC labels	将包含 BEC 标签的 VASP OUTCAR 转换为 extxyz	stable
 format	-out2exyz	gpumdkit.sh -out2exyz <dir>	Convert VASP OUTCAR files to extxyz (Python version)	将 VASP OUTCAR 转换为 extxyz（Python 版本）	stable
 format	-cp2k2xyz	gpumdkit.sh -cp2k2xyz	Convert CP2K output to xyz/extxyz	转换 CP2K 输出为 xyz/extxyz	stable
 format	-xdat2exyz	gpumdkit.sh -xdat2exyz <XDATCAR> <output.xyz>	Convert XDATCAR to extxyz	将 XDATCAR 转换为 extxyz	stable

@@ -6,11 +6,11 @@ CONTACT="yanzihan@westlake.edu.cn"
 
 # New features (one per line, in an array; keep at most the five newest entries)
 NEW_FEATURES=(
+    "add -out2xyz_bec for VASP OUTCAR to extxyz conversion with BEC labels"
     "add perturb.txt report for structure perturbation"
     "add -plt emd2 for EMD thermal conductivity in all directions"
     "add -plt D_PT and -plt sigma_PT for phase-transition piecewise Arrhenius fits"
     "add -prediction for Calorine NEP .out predictions with optional CPU parallelism"
-    "add -plt xrd_comp for stacked XRD comparison across temperature folders"
 )
 
 # Bug fixes (one per line, in an array; keep at most the five newest entries)

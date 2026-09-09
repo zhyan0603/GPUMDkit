@@ -14,6 +14,7 @@
 </p>
 <p align="center">
   <a href="https://github.com/zhyan0603/GPUMDkit/releases"><img src="https://img.shields.io/github/v/tag/zhyan0603/GPUMDkit?label=version&style=flat-square&color=brightgreen" alt="Version"></a>
+  <a href="https://badge.dimensions.ai/details/doi/10.1002/mgea.70074"><img src="https://citations.njzjz.win/10.1002/mgea.70074" alt="Citations"></a>
   <a href="https://github.com/zhyan0603/GPUMDkit/blob/main/LICENCE"><img src="https://img.shields.io/badge/license-GPL--3.0-blue" alt="License"></a>
   <a href="https://github.com/zhyan0603/GPUMDkit/stargazers"><img src="https://img.shields.io/github/stars/zhyan0603/GPUMDkit?style=social" alt="Stars"></a>
   <img src="https://img.shields.io/github/languages/code-size/zhyan0603/GPUMDkit" alt="Code Size">
@@ -104,36 +105,219 @@ For a guided first run, see the [Quick Start](./docs/tutorials/en/quick_start.md
 Use the [Command Reference](./docs/tutorials/en/command_reference.md) when you
 already know the task and need exact syntax.
 
-### Interactive mode
+There are two options, <u>*interactive mode*</u> and <u>*command-line mode*</u>
 
-Run the menu and select a numbered module:
+#### Interactive Mode
 
-```bash
-gpumdkit.sh
+---
+
+1. Open your terminal.
+
+2. Execute the `gpumdkit.sh` script:
+
+   ```
+   gpumdkit.sh
+   ```
+
+3. Follow the on-screen prompts to interactively select and run the desired function.
+
+```
+               ____ ____  _   _ __  __ ____  _    _ _
+              / ___|  _ \| | | |  \/  |  _ \| | _(_) |_
+             | |  _| |_) | | | | |\/| | | | | |/ / | __|
+             | |_| |  __/| |_| | |  | | |_| |   <| | |_
+              \____|_|    \___/|_|  |_|____/|_|\_\_|\__|
+
+              GPUMDkit Version 1.5.7 (2026-09-05)
+        Core Developer: Zihan YAN (yanzihan@westlake.edu.cn)
+     Main Contributors: Denan LI, Xin WU, Zhoulin LIU & Chen HUA
+
+     ---------------------- GPUMD ------------------------
+     1) Format Conversion          2) Sample Structures
+     3) Workflow                   4) Calculators
+     5) Analyzer                   6) Visualization
+     7) Utilities                  8) Help
+     0) Exit
+     ------------>>
+     Input the function number:
 ```
 
-### Command-line mode
+#### Command-Line Mode
 
-Use direct options for repeatable tasks:
+----
 
-```bash
+For users familiar with the `GPUMDkit`, the command-line mode allows for faster execution by directly passing arguments to `gpumdkit.sh`. Here are some examples:
+
+##### Example 1: View help information
+
+```
 gpumdkit.sh -h
-gpumdkit.sh -doctor
-gpumdkit.sh -<option> [args...]
 ```
 
-Common examples:
+the help information:
 
-```bash
-gpumdkit.sh -pos2exyz POSCAR model.xyz
+```
++-------------------------------------------------------------------------------------------------------+
+|                          GPUMDkit 1.5.7 (2026-09-05)       Command Help                               |
++-------------------------------------------------------------------------------------------------------+
+|                                          MAIN FUNCTIONS                                               |
++-------------------------------------------------------------------------------------------------------+
+| -h            Show this help table            | -plt <type>        Plot and visualization tools       |
+| -calc <type>  Calculator tools                | -time <gpumd|nep>  Time-consuming analyzer            |
+| -update       Update GPUMDkit                 | -clean             Clean extra files in current dir   |
+| -skill        Show GPUMDkit agent skill info  | -doctor            Check Python environment           |
+| -prediction   Write NEP prediction .out files |                                                       |
++-------------------------------------------------------------------------------------------------------+
+|                                         FORMAT CONVERSION                                             |
++-------------------------------------------------------------------------------------------------------+
+| -out2xyz      OUTCAR -> extxyz (shell)        | -out2xyz_bec       OUTCAR -> extxyz with BEC          |
+| -out2exyz     OUTCAR -> extxyz (python)       | -xyz2dp            extxyz -> DeepMD npy               |
+| -cp2k2xyz     CP2K log -> xyz                 | -xdat2exyz         XDATCAR -> extxyz                  |
+| -cif2pos      cif -> POSCAR                   | -cif2exyz          cif -> extxyz                      |
+| -pos2exyz     POSCAR -> extxyz                | -exyz2pos          extxyz -> POSCAR                   |
+| -pos2lmp      POSCAR -> LAMMPS data           | -lmp2exyz          LAMMPS dump -> extxyz              |
+| -traj2exyz    ASE traj -> extxyz              | -replicate         Replicate structure                |
+| -addgroup     Add group labels                | -addweight         Add structure weight in extxyz     |
+| -clean_xyz    Clean extra info in extxyz      | -get_frame         Extract specific frame             |
+| -frame_range  Extract frames by range         | -dp2xyz            DeepMD npy -> extxyz               |
++-------------------------------------------------------------------------------------------------------+
+|                                            ANALYSIS                                                   |
++-------------------------------------------------------------------------------------------------------+
+| -range        Energy/force/virial statistics  | -analyze_comp      Analyze composition                |
+| -chem_species Analyze chemical species        | -cbc               Charge balance check               |
+| -min_dist     Min distance (no PBC)           | -min_dist_pbc      Min distance with PBC              |
+| -filter_dist  Filter by min_dist (no PBC)     | -filter_dist_pbc   Filter by min_dist (PBC)           |
+| -pda          Probability density analysis    | -filter_box        Filter by box-edge length          |
+| -pynep        Deprecated PyNEP sampling       | -nep_modifier      Modify NEP model interactively     |
+| -shift_energy Interactive energy shift        |                                                       |
++-------------------------------------------------------------------------------------------------------+
+| Python option help: gpumdkit.sh -<option> -h    Plot list: gpumdkit.sh -plt -h                        |
++-------------------------------------------------------------------------------------------------------+
+```
+
+##### Example 2: View help information for -plt
+
+```
+gpumdkit.sh -plt -h
+```
+
+the help information:
+
+```
+ +-----------------------------------------------------------------------------------------------+
+ |                     GPUMDkit 1.5.7 (2026-09-05)       PLOT & VISUALIZATION TOOLS              |
+ +-----------------------------------------------------------------------------------------------+
+ |  Usage: gpumdkit.sh -plt <type>                        List: gpumdkit.sh -plt -h              |
+ +-----------------------------------------------------------------------------------------------+
+ |                                    NEP Training & Evaluation                                  |
+ +-----------------------------------------------------------------------------------------------+
+ |  train          - NEP training results           prediction     - NEP prediction results      |
+ |  train_test     - NEP train and test results     parity_density - Parity density plot         |
+ |  train_density  - Training results density plot  restart        - Parameters in nep.restart   |
+ |  charge         - Charge distribution            born_charge    - Born effective charges      |
+ |  dimer          - Dimer energy/force curve       force_errors   - Force errors                |
+ |  des            - Descriptors                    net_force      - Net force distribution      |
+ +-----------------------------------------------------------------------------------------------+
+ |                                     Diffusion & Transport                                     |
+ +-----------------------------------------------------------------------------------------------+
+ |  msd            - Mean square displacement       msd_conv       - MSD convergence             |
+ |  msd_all        - MSD for all species            sdc            - Self diffusion coefficient  |
+ |  msd_sdc        - MSD and SDC together           doas           - Density of atomistic states |
+ |  D              - Arrhenius diffusivity          sigma          - Arrhenius ionic conductivity|
+ |  D_xyz          - Directional Arrhenius D        sigma_xyz      - Directional Arrhenius sigma |
+ |  D_PT           - PT Arrhenius D                 sigma_PT       - PT Arrhenius sigma          |
+ +-----------------------------------------------------------------------------------------------+
+ |                                    MD & Structural Analysis                                   |
+ +-----------------------------------------------------------------------------------------------+
+ |  thermo         - thermo info in thermo.out      thermo2/3      - Thermo in different styles  |
+ |  rdf            - Radial distribution function   rdf_pmf        - Potential of mean force     |
+ |  vac            - Velocity autocorrelation       cohesive       - Cohesive energy curve       |
+ |  xrd            - X-ray diffraction              plane-grid     - Displacement plane grid     |
+ |  xrd_comp       - Compare XRD                                                                 |
+ +-----------------------------------------------------------------------------------------------+
+ |                                        Heat Transport                                         |
+ +-----------------------------------------------------------------------------------------------+
+ |  emd            - EMD results                    emd2           - EMD all directions          |
+ |  nemd           - NEMD results                   hnemd          - HNEMD results               |
+ |  viscosity      - Viscosity                                                                   |
+ +-----------------------------------------------------------------------------------------------+
+ |                                          Phonons                                              |
+ +-----------------------------------------------------------------------------------------------+
+ |  pdos           - VAC and PDOS                 phonon         - Phonon band structure         |
+ |  phonon_comp    - Compare phonon band structures                                              |
+ +-----------------------------------------------------------------------------------------------+
+ See the codes in plt_scripts for more details
+```
+
+##### Example 3: Convert VASP OUTCARs to extxyz
+
+To convert a `VASP` `OUTCAR` file to an extended XYZ format (`extxyz`) file, use the following command:
+
+```
+gpumdkit.sh -out2xyz <dir_of_OUTCARs>
+
+Example: gpumdkit.sh -out2xyz .
+```
+
+##### Example 4: Plot loss and parity plots
+
+To visualize the evolution of various terms and parity plots:
+
+```
 gpumdkit.sh -plt train
+```
+
+<div align="center">
+    <img src="./docs/Gallery/train.png" alt="Training loss and parity plots" width="75%" />
+</div>
+
+##### Example 5: Plot prediction-mode parity results
+
+To visualize the prediction-mode parity results for structures in `train.xyz`:
+
+```
+gpumdkit.sh -plt test
+```
+
+<div align="center">
+    <img src="./docs/Gallery/prediction.png" alt="NEP prediction-mode parity results" width="95%" />
+</div>
+
+##### Example 6: Plot thermo evolution
+
+To visualize `thermo` evolution from `thermo.out`:
+
+```
+gpumdkit.sh -plt thermo
+```
+
+![](./docs/Gallery/thermo.png)
+
+You can also save images as PNG if your device doesn't support visualization:
+
+```
 gpumdkit.sh -plt thermo save
 ```
 
-Use `gpumdkit.sh -plt -h` to list plot types and `gpumdkit.sh -calc -h` to
-list calculator commands. For commands that expose option help, append `-h` to
-the command. The tutorials document required inputs, outputs, and scientific
-assumptions for each module.
+##### Example 7: Plot phonon band structures
+
+After calculating phonons through `gpumdkit.sh -> 4) Calculators -> 414) Calc phonon band structure`, plot the result using the `QPOINTS` path definition:
+
+```
+gpumdkit.sh -plt phonon phonon_NEP.dat QPOINTS save
+gpumdkit.sh -plt phonon_comp phonon_DFT.dat phonon_NEP.dat save
+```
+
+Comparison labels are read from filenames such as `phonon_NEP.dat` and
+`phonon_DFT.dat`. Two or more phonon files can be supplied to
+`phonon_comp`; use `--qpoints FILE` when the path file is not named `QPOINTS`.
+
+<div align="center">
+  <img src="./docs/Gallery/phonon.png" alt="Phonon band structure" width="42%" />
+  <img src="./docs/Gallery/phonon_comp.png" alt="Phonon band comparison" width="47%" />
+</div>
+
+Refer to our [documentation](https://gpumdkit.cn/) for more detailed examples and command options.
 
 #### Custom Commands
 

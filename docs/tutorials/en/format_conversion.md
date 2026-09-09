@@ -98,6 +98,7 @@ Input the function number or converter keyword:
 | Source | Target | Command |
 |--------|--------|---------|
 | OUTCAR directory | extxyz | `gpumdkit.sh -out2xyz <dir>` |
+| OUTCAR directory with BEC data | extxyz | `gpumdkit.sh -out2xyz_bec <dir>` |
 | OUTCAR directory | extxyz | `gpumdkit.sh -out2exyz <dir>` |
 | POSCAR | extxyz | `gpumdkit.sh -pos2exyz <POSCAR> <output.xyz>` |
 | extxyz | POSCAR files | `gpumdkit.sh -exyz2pos <input.xyz>` |
@@ -183,6 +184,17 @@ The command above uses the shell converter. Alternatively, choose the Python con
 gpumdkit.sh -out2exyz ./vasp_results/
 ```
 
+For OUTCAR files containing complete VASP `BORN EFFECTIVE CHARGES` blocks, use
+the BEC-aware shell converter:
+
+```bash
+gpumdkit.sh -out2xyz_bec ./vasp_results/
+```
+
+This route writes one final configuration per OUTCAR and adds the per-atom
+`bec:R:9` property when the BEC block is complete. OUTCARs without a BEC block
+are still converted, but their rows omit this property and a warning is shown.
+
 **Interactive mode:** Choose `101` from the format conversion menu. You will see:
 
 ```text
@@ -201,12 +213,13 @@ Example: ./
 | Route | Output file |
 |-------|-------------|
 | `-out2xyz` or menu `101` | `NEPdataset/train.xyz` |
+| `-out2xyz_bec` | `NEPdataset/train.xyz` |
 | `-out2exyz` | `train.xyz` |
 
 !!! warning "Check the output directory before repeating a conversion"
-    The shell converter deletes and recreates an existing `NEPdataset/` in the current directory; the Python converter overwrites `train.xyz` there. Back up previous results, or run in a new working directory with the actual input directory path.
+    The shell converters delete and recreate an existing `NEPdataset/` in the current directory; the Python converter overwrites `train.xyz` there. Back up previous results, or run in a new working directory with the actual input directory path.
 
-After conversion, use `head -n 2 NEPdataset/train.xyz` (shell route) or `head -n 2 train.xyz` (Python route) to inspect the atom count and extxyz metadata. A successfully written file still requires checks of convergence, units, and labels before training.
+After conversion, use `head -n 2 NEPdataset/train.xyz` (shell/BEC route) or `head -n 2 train.xyz` (Python route) to inspect the atom count and extxyz metadata. A successfully written file still requires checks of convergence, units, and labels before training.
 
 ### Add group labels
 

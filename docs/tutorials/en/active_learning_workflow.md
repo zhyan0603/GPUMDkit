@@ -100,14 +100,19 @@ For VASP results:
 gpumdkit.sh -out2xyz <scf_results_directory>
 ~~~
 
+If the OUTCAR files contain complete `BORN EFFECTIVE CHARGES` blocks and the
+per-atom BEC labels are needed, use `gpumdkit.sh -out2xyz_bec
+<scf_results_directory>` instead.
+
 For CP2K logs and structure files, first enter the CP2K results root. The following command recursively scans `.log` files and their accompanying `.xyz`/`.inp` files under the current directory. Successful conversion writes `cp2k_exyz.xyz` there, with processing details in `Logfile.txt`.
 
 ~~~bash
 gpumdkit.sh -cp2k2xyz
 ~~~
 
-The VASP `-out2xyz`/menu 101 route writes `NEPdataset/train.xyz` in the current
-directory by default; the CP2K route above writes `cp2k_exyz.xyz`. Replace `<new_reference.xyz>` in the following commands with the extxyz
+The VASP `-out2xyz`/menu 101 and BEC-aware `-out2xyz_bec` routes write
+`NEPdataset/train.xyz` in the current directory by default; the CP2K route above
+writes `cp2k_exyz.xyz`. Replace `<new_reference.xyz>` in the following commands with the extxyz
 file actually produced by the selected converter:
 
 ~~~bash

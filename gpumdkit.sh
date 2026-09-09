@@ -19,7 +19,7 @@ if [ -z "$GPUMDkit_path" ]; then
     exit 1
 fi
 
-VERSION="1.5.7 (2026-08-29)"
+VERSION="1.5.7 (2026-09-05)"
 
 plt_path="${GPUMDkit_path}/Scripts/plt_scripts"
 analyzer_path="${GPUMDkit_path}/Scripts/analyzer"
@@ -195,13 +195,14 @@ function help_info_table(){
     echo " +-------------------------------------------------------------------------------------------------------+"
     echo " | -h            Show this help table            | -plt <type>        Plot and visualization tools       |"
     echo " | -calc <type>  Calculator tools                | -time <gpumd|nep>  Time-consuming analyzer            |"
-    echo " | -prediction   Write NEP prediction .out files |                                                       |"
     echo " | -update       Update GPUMDkit                 | -clean             Clean extra files in current dir   |"
     echo " | -skill        Show GPUMDkit agent skill info  | -doctor            Check Python environment           |"
+    echo " | -prediction   Write NEP prediction .out files |                                                       |"    
     echo " +-------------------------------------------------------------------------------------------------------+"
     echo " |                                         FORMAT CONVERSION                                             |"
     echo " +-------------------------------------------------------------------------------------------------------+"
-    echo " | -out2xyz      OUTCAR -> extxyz (shell)        | -out2exyz          OUTCAR -> extxyz (python)          |"
+    echo " | -out2xyz      OUTCAR -> extxyz (shell)        | -out2xyz_bec       OUTCAR -> extxyz with BEC          |"
+    echo " | -out2exyz     OUTCAR -> extxyz (python)       | -xyz2dp            extxyz -> DeepMD npy               |"
     echo " | -cp2k2xyz     CP2K log -> xyz                 | -xdat2exyz         XDATCAR -> extxyz                  |"
     echo " | -cif2pos      cif -> POSCAR                   | -cif2exyz          cif -> extxyz                      |"
     echo " | -pos2exyz     POSCAR -> extxyz                | -exyz2pos          extxyz -> POSCAR                   |"
@@ -210,7 +211,6 @@ function help_info_table(){
     echo " | -addgroup     Add group labels                | -addweight         Add structure weight in extxyz     |"
     echo " | -clean_xyz    Clean extra info in extxyz      | -get_frame         Extract specific frame             |"
     echo " | -frame_range  Extract frames by range         | -dp2xyz            DeepMD npy -> extxyz               |"
-    echo " | -xyz2dp       extxyz -> DeepMD npy            |                                                       |"
     echo " +-------------------------------------------------------------------------------------------------------+"
     echo " |                                            ANALYSIS                                                   |"
     echo " +-------------------------------------------------------------------------------------------------------+"
@@ -220,7 +220,7 @@ function help_info_table(){
     echo " | -filter_dist  Filter by min_dist (no PBC)     | -filter_dist_pbc   Filter by min_dist (PBC)           |"
     echo " | -pda          Probability density analysis    | -filter_box        Filter by box-edge length          |"
     echo " | -pynep        Deprecated PyNEP sampling       | -nep_modifier      Modify NEP model interactively     |"
-    echo " | -shift_energy  Interactive energy shift       |                                                       |"
+    echo " | -shift_energy Interactive energy shift        |                                                       |"
     echo " +-------------------------------------------------------------------------------------------------------+"
     echo " | Python option help: gpumdkit.sh -<option> -h    Plot list: gpumdkit.sh -plt -h                        |"
     echo " +-------------------------------------------------------------------------------------------------------+"
@@ -236,7 +236,7 @@ function calculator_help_table(){
     echo " | nep <input.xyz> <output.xyz> <nep_model>      Calculate energy/force/virial with a NEP model          |"
     echo " | des <input.xyz> <output.npy> <nep_model> <el> Calculate NEP descriptors for one element               |"
     echo " | doas <input.xyz> <nep_model> <output.txt>     Calculate density of atomistic states                   |"
-    echo " | neb <initial.xyz> <final.xyz> <n_images> <nep> Run NEB calculation with a NEP model                   |"
+    echo " | neb <init.xyz> <final.xyz> <n_images> <nep>   Run NEB calculation with a NEP model                   |"
     echo " | minimize <structure> <nep_model> [fmax] [n]   Minimize a structure with a NEP model                   |"
     echo " | msd <trajectory.xyz> <element> <dt_fs> [n]    Calculate MSD from an extxyz trajectory                 |"
     echo " | nlist [script args...]                        Build neighbor lists                                    |"
@@ -422,6 +422,13 @@ if [ ! -z "$1" ]; then
                 echo " See the source code of out2xyz.sh for more details"
                 echo " Code path: ${format_conv_path}/out2xyz.sh"
             fi ;;
+
+        -out2xyz_bec)
+            echo " Calling script by Yanzhou WANG and Shunda Chen. "
+            bash "${format_conv_path}/out2xyz_bec.sh" "${@:2}"
+            status=$?
+            echo " Code path: ${format_conv_path}/out2xyz_bec.sh"
+            exit "$status" ;;
 
         -out2exyz)
             run_python_script "Zihan YAN (yanzihan@westlake.edu.cn)" "${format_conv_path}/out2exyz.py" "${@:2}" ;;
