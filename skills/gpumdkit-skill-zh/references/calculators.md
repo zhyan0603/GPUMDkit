@@ -79,6 +79,17 @@ eV/atom，力为 eV/Angstrom，应力为 GPa。张量列使用 NEP 的
 只有两者都缺失时才写入 `-1e6` 哨兵值。energy 和 force 标签必须存在。计算过程中会显示
 `tqdm` 进度条。
 
+### DeepMD DPA 训练集预测
+```bash
+# 在当前目录写出 NEP 兼容的训练集预测文件。
+gpumdkit.sh -prediction_dpa <input.xyz> <dpa_model>
+```
+
+该命令通过 `deepmd.infer.DeepPot` 使用 DeepMD DPA 模型计算带标签的
+extended-XYZ 训练集，并写出 `energy_train.out`、`force_train.out`、
+`virial_train.out` 和 `stress_train.out`。输出先写预测值，再写目标值，
+需要 `deepmd-kit` 和 `numpy`。
+
 ### 描述符
 ```bash
 # 计算特定元素的 NEP 描述符

@@ -19,7 +19,7 @@ if [ -z "$GPUMDkit_path" ]; then
     exit 1
 fi
 
-VERSION="1.5.7 (2026-09-05)"
+VERSION="1.5.7 (2026-09-12)"
 
 plt_path="${GPUMDkit_path}/Scripts/plt_scripts"
 analyzer_path="${GPUMDkit_path}/Scripts/analyzer"
@@ -197,7 +197,7 @@ function help_info_table(){
     echo " | -calc <type>  Calculator tools                | -time <gpumd|nep>  Time-consuming analyzer            |"
     echo " | -update       Update GPUMDkit                 | -clean             Clean extra files in current dir   |"
     echo " | -skill        Show GPUMDkit agent skill info  | -doctor            Check Python environment           |"
-    echo " | -prediction   Write NEP prediction .out files |                                                       |"    
+    echo " | -prediction   Write NEP prediction .out files | -prediction_dpa    Write DPA prediction .out files    |"
     echo " +-------------------------------------------------------------------------------------------------------+"
     echo " |                                         FORMAT CONVERSION                                             |"
     echo " +-------------------------------------------------------------------------------------------------------+"
@@ -236,7 +236,7 @@ function calculator_help_table(){
     echo " | nep <input.xyz> <output.xyz> <nep_model>      Calculate energy/force/virial with a NEP model          |"
     echo " | des <input.xyz> <output.npy> <nep_model> <el> Calculate NEP descriptors for one element               |"
     echo " | doas <input.xyz> <nep_model> <output.txt>     Calculate density of atomistic states                   |"
-    echo " | neb <init.xyz> <final.xyz> <n_images> <nep>   Run NEB calculation with a NEP model                   |"
+    echo " | neb <init.xyz> <final.xyz> <n_images> <nep>   Run NEB calculation with a NEP model                    |"
     echo " | minimize <structure> <nep_model> [fmax] [n]   Minimize a structure with a NEP model                   |"
     echo " | msd <trajectory.xyz> <element> <dt_fs> [n]    Calculate MSD from an extxyz trajectory                 |"
     echo " | nlist [script args...]                        Build neighbor lists                                    |"
@@ -303,6 +303,8 @@ if [ ! -z "$1" ]; then
             esac ;;
         -prediction)
             run_python_script "Zihan YAN (yanzihan@westlake.edu.cn)" "${calc_path}/prediction.py" "${@:2}" ;;
+        -prediction_dpa)
+            run_python_script "Zihan YAN (yanzihan@westlake.edu.cn)" "${calc_path}/prediction_dpa.py" "${@:2}" ;;
 
         -plt)
             if [ ! -z "$2" ] && [ "$2" != "-h" ]; then

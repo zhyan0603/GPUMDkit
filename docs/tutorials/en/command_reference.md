@@ -60,6 +60,7 @@ otherwise use `gpumdkit.sh -h`, the relevant module help, or interactive mode.
 | `-update` | `gpumdkit.sh -update` | Update GPUMDkit |
 | `-clean` | `gpumdkit.sh -clean` | Clean extra files in the current directory |
 | `-prediction` | `gpumdkit.sh -prediction <input.xyz> <nep.txt> [workers]` | Write NEP-compatible energy, force, stress, and virial prediction files |
+| `-prediction_dpa` | `gpumdkit.sh -prediction_dpa <input.xyz> <dpa_model>` | Write DPA training-set prediction files in the current directory |
 
 ## Format Conversion
 
@@ -94,6 +95,7 @@ otherwise use `gpumdkit.sh -h`, the relevant module help, or interactive mode.
 | `-calc ionic-cond` | `gpumdkit.sh -calc ionic-cond <element> <charge>` | Ionic conductivity |
 | `-calc nep` | `gpumdkit.sh -calc nep <input.xyz> <output.xyz> <nep.txt>` | NEP property prediction |
 | `-prediction` | `gpumdkit.sh -prediction <input.xyz> <nep.txt> [workers]` | NEP-compatible prediction output files |
+| `-prediction_dpa` | `gpumdkit.sh -prediction_dpa <input.xyz> <dpa_model>` | DPA training-set prediction output files |
 | `-calc des` | `gpumdkit.sh -calc des <input.xyz> <output.npy> <nep.txt> <element>` | NEP descriptors |
 | `-calc doas` | `gpumdkit.sh -calc doas <input.xyz> <nep.txt> <output.txt>` | Density of atomistic states |
 | `-calc neb` | `gpumdkit.sh -calc neb <initial.xyz> <final.xyz> <n_images> <nep.txt>` | NEB with a NEP model |

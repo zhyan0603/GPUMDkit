@@ -24,6 +24,7 @@ If you are not sure about the required arguments, start from the interactive men
 | Phonon band structure | `4 → 414` (interactive only) | `PRIMCELL.vasp`, `nep.txt`, `QPOINTS` |
 | NEP prediction | `gpumdkit.sh -calc nep <input.xyz> <output.xyz> <nep.txt>` | extxyz + NEP model |
 | NEP prediction outputs | `gpumdkit.sh -prediction <input.xyz> <nep.txt> [workers]` | labeled extxyz + NEP model |
+| DPA prediction outputs | `gpumdkit.sh -prediction_dpa <input.xyz> <dpa_model>` | labeled extxyz + DeepMD DPA model |
 | NEP descriptors | `gpumdkit.sh -calc des <input.xyz> <output.npy> <nep.txt> <element>` | extxyz + NEP model |
 | DOAS | `gpumdkit.sh -calc doas <input.xyz> <nep.txt> <output.txt>` | extxyz + NEP model |
 | NEB | `gpumdkit.sh -calc neb <initial.xyz> <final.xyz> <n_images> <nep.txt>` | initial/final structures |
@@ -342,6 +343,21 @@ The command requires `calorine`, `ase`, and `tqdm`:
 ```bash
 pip install ase calorine tqdm
 ```
+
+### DPA Prediction Output Files
+
+`prediction_dpa.py` evaluates every frame in a labeled extended XYZ training
+set with a DeepMD DPA model and writes `energy_train.out`, `force_train.out`,
+`virial_train.out`, and `stress_train.out` in the current directory.
+
+```bash
+gpumdkit.sh -prediction_dpa train.xyz model.ckpt.pt
+```
+
+The output layout follows the NEP training prediction convention: predicted
+values precede target values. Energy is in eV/atom, force is in eV/Angstrom,
+stress is in GPa, and virial is in eV/atom. The command requires `deepmd-kit`
+and `numpy`.
 
 ## NEP Descriptors
 

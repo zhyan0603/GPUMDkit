@@ -161,6 +161,34 @@ The command requires `ase`, `calorine`, and `tqdm`.
 
 ---
 
+### prediction_dpa.py
+
+Evaluates every frame in a labeled extended XYZ training set with a DeepMD
+DPA model through `deepmd.infer.DeepPot` and writes the four NEP-compatible
+training prediction files in the current directory:
+`energy_train.out`, `force_train.out`, `virial_train.out`, and
+`stress_train.out`.
+
+#### Usage
+
+```bash
+gpumdkit.sh -prediction_dpa train.xyz model.ckpt.pt
+```
+
+Direct execution is also supported:
+
+```bash
+python prediction_dpa.py train.xyz model.ckpt.pt
+```
+
+The output files contain predicted values followed by target values. Energy
+is written in eV/atom, forces in eV/Angstrom, stress in GPa, and virial in
+eV/atom, using the existing DPA prediction tensor and sign conventions.
+
+The command requires `deepmd-kit` and `numpy`.
+
+---
+
 ### calc_descriptors.py
 
 Calculates descriptors for the specific species, which can be used for dimensionality reduction and structure analysis.

@@ -8,7 +8,7 @@ const mainContentText = `
         | |_| |  __/| |_| | |  | | |_| |   <| | |_ 
          \\____|_|    \\___/|_|  |_|____/|_|\\_\\_|\\__| 
 
-         GPUMDkit Version 1.5.7 (2026-09-05)
+         GPUMDkit Version 1.5.7 (2026-09-12)
    Core Developer: Zihan YAN (yanzihan@westlake.edu.cn) 
 
  ----------------------- GPUMD ----------------------- 
@@ -41,7 +41,7 @@ const logsCommand2 = `
 `;
 
 const helpContentText = ` +-------------------------------------------------------------------------------------------------------+
- |                          GPUMDkit 1.5.7 (2026-09-05)       Command Help                               |
+ |                          GPUMDkit 1.5.7 (2026-09-12)       Command Help                               |
  +-------------------------------------------------------------------------------------------------------+
  |                                          MAIN FUNCTIONS                                               |
  +-------------------------------------------------------------------------------------------------------+
@@ -49,7 +49,7 @@ const helpContentText = ` +-----------------------------------------------------
  | -calc <type>  Calculator tools                | -time <gpumd|nep>  Time-consuming analyzer            |
  | -update       Update GPUMDkit                 | -clean             Clean extra files in current dir   |
  | -skill        Show GPUMDkit agent skill info  | -doctor            Check Python environment           |
- | -prediction   Write NEP prediction .out files |                                                       |
+ | -prediction   Write NEP prediction .out files | -prediction_dpa  Write DPA prediction .out files      |
  +-------------------------------------------------------------------------------------------------------+
  |                                         FORMAT CONVERSION                                             |
  +-------------------------------------------------------------------------------------------------------+
@@ -78,7 +78,7 @@ const helpContentText = ` +-----------------------------------------------------
  +-------------------------------------------------------------------------------------------------------+`;
 
 const plotContentText = ` +-----------------------------------------------------------------------------------------------+
- |                     GPUMDkit 1.5.7 (2026-09-05)       PLOT & VISUALIZATION TOOLS              |
+ |                     GPUMDkit 1.5.7 (2026-09-12)       PLOT & VISUALIZATION TOOLS              |
  +-----------------------------------------------------------------------------------------------+
  |  Usage: gpumdkit.sh -plt <type>                        List: gpumdkit.sh -plt -h              |
  +-----------------------------------------------------------------------------------------------+

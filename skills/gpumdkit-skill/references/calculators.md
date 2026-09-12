@@ -80,6 +80,18 @@ If only one of stress or virial is supplied, the other target is derived using
 missing both use the `-1e6` sentinel; energy and force targets are required. A
 `tqdm` progress bar is shown during prediction.
 
+### DeepMD DPA Training-Set Prediction
+```bash
+# Write NEP-compatible training prediction files in the current directory.
+gpumdkit.sh -prediction_dpa <input.xyz> <dpa_model>
+```
+
+This command evaluates a labeled extended-XYZ training set with a DeepMD DPA
+model through `deepmd.infer.DeepPot` and writes `energy_train.out`,
+`force_train.out`, `virial_train.out`, and `stress_train.out`. The output
+contains predicted values followed by target values and requires `deepmd-kit`
+and `numpy`.
+
 ### Descriptors
 ```bash
 # Calculate NEP descriptors for specific element
