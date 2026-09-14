@@ -16,7 +16,7 @@ Arguments:
 Output:
   <extxyz>  (converted structures in extxyz format)
 Author:     Benrui Tang (tang070205@proton.me)
-Last-modified: 2026-05-16
+Last-modified: 2026-09-14
 =============================================================================
 """
 
@@ -25,9 +25,18 @@ import numpy as np
 from ase.io import read, write
 
 def main():
-    if len(sys.argv) != 3:
+    args = sys.argv[1:]
+    if len(args) != 2 or args[0] in ("-h", "--help"):
         print(" Usage: python abacus2xyz_scf.py <dir> <extxyz>")
         print("  (invoked interactively via gpumdkit.sh menu 104)")
+        print("")
+        print(" Arguments:")
+        print("   dir      Directory containing ABACUS SCF outputs")
+        print("   extxyz   Output extxyz file")
+        print("")
+        sys.exit(0 if args and args[0] in ("-h", "--help") else 1)
+    if not os.path.isdir(args[0]):
+        print(f" Error: input directory '{args[0]}' does not exist.")
         sys.exit(1)
 if __name__ == "__main__":
     main()
@@ -73,7 +82,7 @@ for root, dirs, files in os.walk(os.path.abspath(sys.argv[1])):
         positions = atoms.get_positions()
         forces = atoms.get_forces()
     elif "abacus.json" in files and "running_scf.log" not in files:
-        print(f"Directory {root} with abacus.json")
+        print(f" Directory {root} with abacus.json")
         json_file = os.path.join(root, "abacus.json")
         scf_nmax = get_scf_info(root)
         with open(json_file, 'r', encoding='utf-8') as file_json:

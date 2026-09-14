@@ -35,6 +35,14 @@ from concurrent.futures import ProcessPoolExecutor
 _worker_calculator = None
 
 
+def read_prompt(message):
+    """Read one line from stdin with EOF-safe handling."""
+    try:
+        return input(message).strip()
+    except (EOFError, KeyboardInterrupt):
+        print("\n Input closed. Exiting.")
+        sys.exit(1)
+
 def print_dependency_notice():
     """Print the NepTrain dependency and citation notice."""
     print(" This function requires the NepTrain package.")
@@ -221,20 +229,20 @@ def main():
     print(" Choose selection method:")
     print(" 1) Select structures based on minimum distance")
     print(" 2) Select structures based on number of structures")
-    choice = input(" ------------>>\n ").strip()
+    choice = read_prompt(" ------------>>\n ")
 
     min_dist = None
     min_select = 1
     max_select = None
     if choice == '1':
         try:
-            min_dist = float(input(" Enter min_dist (e.g., 0.01): ").strip())
+            min_dist = float(read_prompt(" Enter min_dist (e.g., 0.01): "))
         except ValueError:
             print(" Error: min_dist must be a number.")
             sys.exit(1)
     elif choice == '2':
         try:
-            min_max_input = input(" Enter min_select and max_select (e.g., '50 100'): ").strip()
+            min_max_input = read_prompt(" Enter min_select and max_select (e.g., '50 100'): ")
             min_select, max_select = map(int, min_max_input.split())
         except ValueError:
             print(" Error: Please enter two integers separated by a space (e.g., '50 100').")

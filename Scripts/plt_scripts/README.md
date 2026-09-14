@@ -81,6 +81,22 @@ gpumdkit.sh -plt train_test
 
 ---
 
+#### plt_train_density.py
+
+Generates density-based parity plots for NEP training results (energy, forces,
+stress or virial), which are useful for large datasets. Stress is preferred
+when both tensor files exist.
+
+**Input File:** `*_train.out` (energy/force/stress/virial outputs of NEP training)
+
+**Usage:**
+
+```bash
+gpumdkit.sh -plt train_density [save]
+```
+
+---
+
 #### plt_born_charge.py
 
 Creates parity plots for Born effective charges (BEC) on training and testing datasets. Structures with all-zero reference BEC are filtered out.
@@ -299,6 +315,20 @@ gpumdkit.sh -plt msd_sdc
 
 ---
 
+#### plt_vac.py
+
+Plots the velocity autocorrelation function (VAC) from SDC output data.
+
+**Input File:** `sdc.out` from GPUMD `compute_sdc`
+
+**Usage:**
+
+```bash
+gpumdkit.sh -plt vac [save]
+```
+
+---
+
 #### plt_arrhenius_d.py
 
 Creates Arrhenius plot for diffusivity (log10 D vs 1000/T).
@@ -358,6 +388,22 @@ diffusion_coeffs = [8.859e-08, 3.981e-07, 9.882e-07, 1.99e-06, 3.453e-06]
 |    450     |    1.990e-06    |
 |    500     |    3.453e-06    |
 +------------------------------+
+```
+
+---
+
+#### plt_arrhenius_d_xyz.py
+
+Calculates diffusion coefficients from `msd.out` in temperature folders for
+the x/y/z directions, generates a directional Arrhenius plot, and extracts the
+activation energy for each component.
+
+**Input File:** `<T>K/msd.out` folders for a temperature series
+
+**Usage:**
+
+```bash
+gpumdkit.sh -plt D_xyz [save]
 ```
 
 ---
@@ -426,6 +472,23 @@ at 300K, NEP: Sigma = 1.250e-02 S/cm
 Exportable arrays for Python:
 temperatures = [300, 350, 400, 450, 500]
 conductivity_values = [0.01141, 0.04377, 0.0947, 0.1688, 0.2625]
+```
+
+---
+
+#### plt_arrhenius_sigma_xyz.py
+
+Calculates the ionic conductivity from MSD and thermo data in temperature
+folders, plots the Arrhenius relationship for the x/y/z directions, and
+extracts the activation energy for each direction using the
+Nernst-Einstein relation.
+
+**Input File:** `<T>K/msd.out` and `<T>K/thermo.out` folders for a temperature series
+
+**Usage:**
+
+```bash
+gpumdkit.sh -plt sigma_xyz [save]
 ```
 
 ---
@@ -546,6 +609,21 @@ cutoff_freq   : Optional, Cutoff frequency for SHC calculation in THz (default: 
 
 ---
 
+#### plt_viscosity.py
+
+Plots the stress autocorrelation and viscosity components from
+`viscosity.out`, including diagonal and off-diagonal components.
+
+**Input File:** `viscosity.out` from the GPUMD `compute_viscosity` output
+
+**Usage:**
+
+```bash
+gpumdkit.sh -plt viscosity [save]
+```
+
+---
+
 #### plt_pdos.py
 
 Calculates and Plots normalized VAC, PDOS, and Heat Capacity (Cv).
@@ -627,6 +705,21 @@ gpumdkit.sh -plt phonon_comp phonon_DFT.dat phonon_NEP.dat phonon_MACE.dat \
 
 Scripts for analyzing atomic structure and distributions.
 
+#### plt_cohesive.py
+
+Plots the cohesive energy curve from GPUMD `cohesive.out`: isotropic scaling
+factor versus cohesive energy.
+
+**Input File:** `cohesive.out` from the GPUMD cohesive-energy calculation
+
+**Usage:**
+
+```bash
+gpumdkit.sh -plt cohesive [save]
+```
+
+---
+
 #### plt_rdf.py
 
 Plots radial distribution function (RDF) showing pair correlations.
@@ -651,6 +744,21 @@ gpumdkit.sh -plt rdf <column>      # Display specific pair
 <div align="center">
     <img src="../../docs/Gallery/rdf2.png" alt="Single RDF" width="50%" />
 </div>
+
+---
+
+#### plt_rdf_pmf.py
+
+RDF + PMF visualization for GPUMD `rdf.out` with optional
+temperature-dependent PMF calculation.
+
+**Input File:** `rdf.out` from GPUMD `compute_rdf`
+
+**Usage:**
+
+```bash
+gpumdkit.sh -plt rdf_pmf [temperature] [column_index] [save]
+```
 
 ---
 
@@ -713,6 +821,21 @@ gpumdkit.sh -plt xrd_comp save
 The saved image is `xrd_comp.png` in the current working directory. The
 plotter validates every discovered `xrd.out` using the calculator-413 output
 format and stops if a file is malformed.
+
+---
+
+#### plt_plane_grid.py
+
+Maps displacement data onto a 3D grid and plots selected XY/XZ/YZ plane
+profiles from ferrodispcalc.
+
+**Input File:** `model.xyz`, `displacements.dat` (from `gpumdkit.sh -calc disp`)
+
+**Usage:**
+
+```bash
+gpumdkit.sh -plt plane-grid -i model.xyz -d displacements.dat -e Pb Sr [options]
+```
 
 ---
 
@@ -843,16 +966,28 @@ gpumdkit.sh -plt net_force train.xyz
 | Command        | Input File(s)               | Description                        |
 | -------------- | --------------------------- | ---------------------------------- |
 | `thermo`       | `thermo.out`                | Thermodynamic properties evolution |
+| `thermo2`      | `thermo.out`                | Thermo plot, style 2               |
+| `thermo3`      | `thermo.out`                | Thermo plot, style 3               |
 | `train`        | `loss.out`, `*_train.out`   | NEP training plot                  |
 | `prediction`   | `*_train.out`               | NEP prediction-mode plot           |
 | `train_test`   | `*_train.out`, `*_test.out` | parity plots of train&test         |
+| `train_density`| `*_train.out`               | density-based parity plots         |
+| `parity_density` | `*_train.out`, `*_test.out` | energy/force parity density plots |
+| `born_charge`  | `born.out`                  | Born effective charges             |
 | `msd`          | four-column `msd.out` from `-calc msd`, or first four columns of GPUMD `compute_msd` output | Mean square displacement           |
+| `msd_conv`     | `msd_step*.out`             | MSD convergence check              |
 | `sdc`          | single-group seven-column `msd.out` from GPUMD `compute_msd` | Self-diffusion coefficient         |
 | `msd_sdc`      | single-group seven-column `msd.out` from GPUMD `compute_msd` | MSD and SDC combined               |
 | `rdf`          | `rdf.out`                   | Radial distribution function       |
+| `rdf_pmf`      | `rdf.out`                   | RDF and potential of mean force    |
 | `xrd`          | `xrd.out`                   | X-ray diffraction intensity        |
 | `xrd_comp`     | `*K/xrd.out`                | XRD comparison across temperatures |
+| `plane-grid`   | `model.xyz`, displacements  | Displacement plane grid            |
 | `vac`          | `sdc.out` from GPUMD `compute_sdc` | Velocity autocorrelation           |
+| `pdos`         | `sdc.out`                   | Phonon density of states           |
+| `phonon`       | phonopy band data           | Phonon band structure              |
+| `phonon_comp`  | phonopy band data           | Compare phonon band structures     |
+| `cohesive`     | `cohesive.out`              | Cohesive energy curve              |
 | `charge`       | `train.xyz`, `charge_train.out` | Charge distribution             |
 | `doas`         | DOAS files                  | Density of atomistic states        |
 | `des`          | `descriptors.npy`           | Descriptor visualization           |
@@ -866,6 +1001,11 @@ gpumdkit.sh -plt net_force train.xyz
 | `hnemd`        | HNEMD outputs               | HNEMD thermal transport            |
 | `D`            | Multiple MSD                | Arrhenius diffusivity              |
 | `sigma`        | Multiple MSD                | Arrhenius conductivity             |
+| `D_PT`         | Multiple MSD                | Phase-transition Arrhenius D       |
+| `sigma_PT`     | Multiple MSD                | Phase-transition Arrhenius sigma   |
+| `D_xyz`        | Multiple MSD                | Directional Arrhenius D            |
+| `sigma_xyz`    | Multiple MSD                | Directional Arrhenius sigma        |
+| `viscosity`    | `viscosity.out`             | Viscosity components               |
 
 ## Contributing
 
@@ -885,7 +1025,7 @@ For quick reference, here's the complete command list:
 
 ```
  +-----------------------------------------------------------------------------------------------+
- |                     GPUMDkit 1.5.7 (2026-08-28)       PLOT & VISUALIZATION TOOLS              |
+ |                     GPUMDkit 1.5.7 (2026-09-14)       PLOT & VISUALIZATION TOOLS              |
  +-----------------------------------------------------------------------------------------------+
  |  Usage: gpumdkit.sh -plt <type>                        List: gpumdkit.sh -plt -h              |
  +-----------------------------------------------------------------------------------------------+
@@ -902,11 +1042,10 @@ For quick reference, here's the complete command list:
  +-----------------------------------------------------------------------------------------------+
  |  msd            - Mean square displacement       msd_conv       - MSD convergence             |
  |  msd_all        - MSD for all species            sdc            - Self diffusion coefficient  |
- |  msd_sdc        - MSD and SDC together           sigma          - Arrhenius ionic conductivity|
- |  D              - Arrhenius diffusivity          sigma_xyz      - Directional Arrhenius sigma |
- |  D_xyz          - Directional Arrhenius D                                                     |
+ |  msd_sdc        - MSD and SDC together           doas           - Density of atomistic states |
+ |  D              - Arrhenius diffusivity          sigma          - Arrhenius ionic conductivity|
+ |  D_xyz          - Directional Arrhenius D        sigma_xyz      - Directional Arrhenius sigma |
  |  D_PT           - PT Arrhenius D                 sigma_PT       - PT Arrhenius sigma          |
- |  doas           - Density of atomistic states                                                 |
  +-----------------------------------------------------------------------------------------------+
  |                                    MD & Structural Analysis                                   |
  +-----------------------------------------------------------------------------------------------+
@@ -924,7 +1063,7 @@ For quick reference, here's the complete command list:
  +-----------------------------------------------------------------------------------------------+
  |                                          Phonons                                              |
  +-----------------------------------------------------------------------------------------------+
- |  pdos           - VAC and PDOS                 phonon         - Phonon band structure         |
+ |  pdos           - VAC and PDOS                   phonon       - Phonon band structure         |
  |  phonon_comp    - Compare phonon band structures                                              |
  +-----------------------------------------------------------------------------------------------+
 ```

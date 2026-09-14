@@ -6,20 +6,20 @@ CONTACT="yanzihan@westlake.edu.cn"
 
 # New features (one per line, in an array; keep at most the five newest entries)
 NEW_FEATURES=(
+    "let -xyz2dp forward the input file and type-map order as command-line arguments"
     "add --save-data TAB-separated export for EMD, NEMD, and HNEMD plot data"
     "add -prediction_dpa for DeepMD DPA training-set .out predictions"
     "add -out2xyz_bec for VASP OUTCAR to extxyz conversion with BEC labels"
     "add perturb.txt report for structure perturbation"
-    "add -plt emd2 for EMD thermal conductivity in all directions"
 )
 
 # Bug fixes (one per line, in an array; keep at most the five newest entries)
 BUG_FIXES=(
-    "ignore commented-out run.in directives in EMD, NEMD, and HNEMD plot parsing"
-    "show phonon plot examples and align compatible disconnected q-path offsets"
-    "remove the obsolete -plt lr learning-rate plotting route"
-    "include elements from all frames in minimum-distance analysis"
-    "exclude missing-stress sentinel rows from outlier analysis and handle empty valid sets"
+    "fix abacus2xyz_md.sh ignoring its directory argument and silently reading the current directory"
+    "fix out2xyz.sh integer-expression error when an OUTCAR has no NSW line and follow symlinks consistently"
+    "fix the UTF-8 BOM in plt_rdf_pmf.py that broke Python syntax checks"
+    "quote install.sh rc-file exports so paths with spaces work, and report rc-file write failures"
+    "replace raw tracebacks with friendly missing-file errors, -h help, and EOF-safe prompts across scripts"
 )
 
 # === Formatted Output Logic ===

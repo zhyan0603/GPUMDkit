@@ -23,11 +23,20 @@ Last-modified: 2026-05-16
 =============================================================================
 """
 
+import os
 import sys
+
+args = sys.argv[1:]
+if len(args) < 3 or args[0] in ("-h", "--help"):
+    print(" Usage: python pynep_select_structs.py <sampledata_file> <traindata_file> <nep_model_file>")
+    print("        (superseded by parallel_pynep_select_structs.py / NepTrain sampling)")
+    print("")
+    print(" Example: python pynep_select_structs.py dump.xyz train.xyz nep.txt")
+    print("")
+    sys.exit(0 if args and args[0] in ("-h", "--help") else 1)
+
 import numpy as np
 from ase.io import read, write
-import matplotlib.pyplot as plt
-from sklearn.decomposition import PCA
 from pynep.calculate import NEP
 from pynep.select import FarthestPointSample
 
@@ -36,6 +45,14 @@ def print_dependency_notice():
     print(" This function requires the pynep package.")
     print(" This PyNEP sampling entry is deprecated. We recommend using NepTrain sampling instead.")
 
+
+def read_prompt(message):
+    """Read one line from stdin with EOF-safe handling."""
+    try:
+        return input(message).strip()
+    except (EOFError, KeyboardInterrupt):
+        print("\n Input closed. Exiting.")
+        sys.exit(1)
 
 def print_progress_bar(iteration, total, prefix='', suffix='', decimals=1, length=50, fill='█'):
     percent = ("{0:." + str(decimals) + "f}").format(100 * (iteration / float(total)))
@@ -69,36 +86,35 @@ def calculate_descriptors():
     
     return des_sample, des_train
 
-# Check command line arguments
-if len(sys.argv) < 4:
-    print(" Usage: python pynep_select_structs.py <sampledata_file> <traindata_file> <nep_model_file>")
-    print(" Example: python pynep_select_structs.py dump.xyz train.xyz nep.txt")
-    sys.exit(1)
-
 print_dependency_notice()
 
+for input_file in (args[0], args[1], args[2]):
+    if not os.path.isfile(input_file):
+        print(f" Error: file '{input_file}' does not exist.")
+        sys.exit(1)
+
 # Load data
-sampledata = read(sys.argv[1], ':')
-traindata = read(sys.argv[2], ':')
+sampledata = read(args[0], ':')
+traindata = read(args[1], ':')
 
 # Initialize NEP calculator
-calc = NEP(sys.argv[3])
+calc = NEP(args[2])
 print(calc)
 
 # Interactive selection method
 print(" Choose selection method:")
 print(" 1) Select structures based on minimum distance")
 print(" 2) Select structures based on number of structures")
-choice = input(" ------------>>\n ").strip()
+choice = read_prompt(" ------------>>\n ")
 
 sampler = FarthestPointSample()
 if choice == '1':
-    min_dist = float(input(" Enter min_dist (e.g., 0.01): ").strip())
+    min_dist = float(read_prompt(" Enter min_dist (e.g., 0.01): "))
     des_sample, des_train = calculate_descriptors()
     selected = sampler.select(des_sample, des_train, min_distance=min_dist, max_select=None)
 elif choice == '2':
     try:
-        min_max_input = input(" Enter min_select and max_select (e.g., '50 100'): ").strip()
+        min_max_input = read_prompt(" Enter min_select and max_select (e.g., '50 100'): ")
         min_select, max_select = map(int, min_max_input.split())
         if min_select < 1 or max_select < min_select:
             print(" Error: min_select must be >= 1 and max_select must be >= min_select.")

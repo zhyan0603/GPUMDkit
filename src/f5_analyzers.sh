@@ -18,7 +18,7 @@ echo " Example: train.xyz"
 echo " ------------>>"
 read_menu_choice input_extxyz || return 1
 echo " ---------------------------------------------------"
-python ${GPUMDkit_path}/Scripts/analyzer/analyze_composition.py ${input_extxyz}
+python "${GPUMDkit_path}/Scripts/analyzer/analyze_composition.py" "${input_extxyz}"
 echo " Code path: ${GPUMDkit_path}/Scripts/analyzer/analyze_composition.py"
 echo " ---------------------------------------------------"
 }
@@ -51,7 +51,7 @@ echo " Example: train.xyz"
 echo " ------------>>"
 read_menu_choice input_extxyz || return 1
 echo " ---------------------------------------------------"
-python ${GPUMDkit_path}/Scripts/analyzer/analyze_chem_species.py ${input_extxyz}
+python "${GPUMDkit_path}/Scripts/analyzer/analyze_chem_species.py" "${input_extxyz}"
 echo " Code path: ${GPUMDkit_path}/Scripts/analyzer/analyze_chem_species.py"
 echo " ---------------------------------------------------"
 }
@@ -68,7 +68,7 @@ echo " Example: train.xyz"
 echo " ------------>>"
 read_menu_choice input_extxyz || return 1
 echo " ---------------------------------------------------"
-python ${GPUMDkit_path}/Scripts/analyzer/charge_balance_check.py ${input_extxyz}
+python "${GPUMDkit_path}/Scripts/analyzer/charge_balance_check.py" "${input_extxyz}"
 echo " Code path: ${GPUMDkit_path}/Scripts/analyzer/charge_balance_check.py"
 echo " ---------------------------------------------------"
 }
@@ -83,16 +83,15 @@ echo " >-------------------------------------------------<"
 echo " Input <input.xyz> and property (energy/force/virial)"
 echo " Example: train.xyz force"
 echo " ------------>>"
-read_menu_choice analyzer_args || return 1
-read -r input_extxyz property_name <<< "${analyzer_args}"
+read_menu_array analyzer_args || return 1
 echo " Plot histogram? (y/n)"
 echo " ------------>>"
 read_menu_choice if_hist || return 1
 echo " ---------------------------------------------------"
 if [ "$if_hist" == "y" ] || [ "$if_hist" == "Y" ]; then
-  python ${GPUMDkit_path}/Scripts/analyzer/energy_force_virial_analyzer.py ${input_extxyz} ${property_name} hist
+  python "${GPUMDkit_path}/Scripts/analyzer/energy_force_virial_analyzer.py" "${analyzer_args[@]}" hist
 else
-  python ${GPUMDkit_path}/Scripts/analyzer/energy_force_virial_analyzer.py ${input_extxyz} ${property_name}
+  python "${GPUMDkit_path}/Scripts/analyzer/energy_force_virial_analyzer.py" "${analyzer_args[@]}"
 fi
 echo " Code path: ${GPUMDkit_path}/Scripts/analyzer/energy_force_virial_analyzer.py"
 echo " ---------------------------------------------------"
@@ -108,10 +107,9 @@ echo " >-------------------------------------------------<"
 echo " Input <input.xyz> and <min_dist>"
 echo " Example: dump.xyz 1.5"
 echo " ------------>>"
-read_menu_choice filter_args || return 1
-read -r input_extxyz min_dist <<< "${filter_args}"
+read_menu_array filter_args || return 1
 echo " ---------------------------------------------------"
-python ${GPUMDkit_path}/Scripts/analyzer/filter_structures_by_distance.py ${input_extxyz} ${min_dist}
+python "${GPUMDkit_path}/Scripts/analyzer/filter_structures_by_distance.py" "${filter_args[@]}"
 echo " Code path: ${GPUMDkit_path}/Scripts/analyzer/filter_structures_by_distance.py"
 echo " ---------------------------------------------------"
 }
@@ -132,10 +130,10 @@ echo " ------------>>"
 read_menu_choice consider_pbc || return 1
 echo " ---------------------------------------------------"
 if [ "$consider_pbc" == "y" ] || [ "$consider_pbc" == "Y" ]; then
-  python ${GPUMDkit_path}/Scripts/analyzer/get_min_dist_pbc.py ${input_extxyz}
+  python "${GPUMDkit_path}/Scripts/analyzer/get_min_dist_pbc.py" ${input_extxyz}
   echo " Code path: ${GPUMDkit_path}/Scripts/analyzer/get_min_dist_pbc.py"
 else
-  python ${GPUMDkit_path}/Scripts/analyzer/get_min_dist.py ${input_extxyz}
+  python "${GPUMDkit_path}/Scripts/analyzer/get_min_dist.py" ${input_extxyz}
   echo " Code path: ${GPUMDkit_path}/Scripts/analyzer/get_min_dist.py"
 fi
 echo " ---------------------------------------------------"
@@ -151,21 +149,21 @@ echo " >-------------------------------------------------<"
 echo " Input <ref_struct> <trajectory_file> <species> <interval>"
 echo " Example: LLZO.vasp dump.xyz Li 0.25"
 echo " ------------>>"
-read_menu_choice pda_args || return 1
-read -r ref_struct trajectory_file species interval <<< "${pda_args}"
+read_menu_array pda_args || return 1
 echo " ---------------------------------------------------"
-python ${GPUMDkit_path}/Scripts/analyzer/probability_density_analysis.py ${ref_struct} ${trajectory_file} ${species} ${interval}
+python "${GPUMDkit_path}/Scripts/analyzer/probability_density_analysis.py" "${pda_args[@]}"
 echo " Code path: ${GPUMDkit_path}/Scripts/analyzer/probability_density_analysis.py"
 echo " ---------------------------------------------------"
 }
 
 # Shift atomic energy references interactively
 function f509_shift_energy(){
-echo " >-----------------------------------------------------<"
-echo " | This function calls the script in analyzer          |"
-echo " | Script: align_energy_reference.py                   |"
-echo " | Developer: Zherui CHEN (chenzherui0124@foxmail.com) |"
-echo " >-----------------------------------------------------<"
+echo " >-------------------------------------------------<"
+echo " | This function calls the script in analyzer      |"
+echo " | Script: align_energy_reference.py               |"
+echo " | Developer: Zherui CHEN                          |"
+echo " | (chenzherui0124@foxmail.com)                    |"
+echo " >-------------------------------------------------<"
 echo " The Python script will open the interactive page."
 echo " ---------------------------------------------------"
 python "${GPUMDkit_path}/Scripts/analyzer/align_energy_reference.py"

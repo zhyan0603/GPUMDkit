@@ -37,8 +37,8 @@ function f302_md_sample_batch_pretreatment_gpumd(){
 		for file in $(ls -v *.vasp); do
 		    new_vasp_name="POSCAR_${rename_seq}.vasp"
 		    new_xyz_name="model_${rename_seq}.xyz"
-		    mv ${file} ./struct_md/${new_vasp_name}
-		    python ${GPUMDkit_path}/Scripts/format_conversion/pos2exyz.py ./struct_md/${new_vasp_name} ./struct_md/${new_xyz_name}
+		    mv "${file}" "./struct_md/${new_vasp_name}"
+		    python "${GPUMDkit_path}/Scripts/format_conversion/pos2exyz.py" "./struct_md/${new_vasp_name}" "./struct_md/${new_xyz_name}"
 		    progress=$((rename_seq * 100 / total_vasp_num))
 		    echo -ne " Progress: ["
 		    for ((p=0; p<progress/2; p++)); do echo -ne "#"; done
@@ -92,8 +92,8 @@ function f302_md_sample_batch_pretreatment_gpumd(){
     # Create individual directories for each .vasp file and set up the links
     for i in $(seq 1 $num_xyz_files); do
         dir_name="sample_${i}"
-        mkdir -p ${dir_name}
-        cd ${dir_name}
+        mkdir -p "${dir_name}"
+        cd "${dir_name}"
         ln -s ../struct_md/model_${i}.xyz ./model.xyz
         ln -s ../md/nep.txt ./
 		ln -s ../md/run_${i}.in ./run.in

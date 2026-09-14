@@ -12,7 +12,7 @@
         <meta name="author" content="Zihan YAN">
       
       
-        <link rel="canonical" href="https://gpumdkit.cn/en/command_reference.html">
+        <link rel="canonical" href="https://gpumdkit.cn/htmls/en/command_reference.html">
       
       
         <link rel="prev" href="simulation_and_postprocessing.html">
@@ -1624,7 +1624,7 @@ The <code>-h</code> form is available only for commands that expose their own op
 otherwise use <code>gpumdkit.sh -h</code>, the relevant module help, or interactive mode.</p>
 <h2 id="gpumdkitsh-h-output"><code>gpumdkit.sh -h</code> Output</h2>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>+-------------------------------------------------------------------------------------------------------+
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>|                          GPUMDkit 1.5.7 (2026-09-05)       Command Help                               |
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>|                          GPUMDkit 1.5.7 (2026-09-14)       Command Help                               |
 <a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>+-------------------------------------------------------------------------------------------------------+
 <a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>|                                          MAIN FUNCTIONS                                               |
 <a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>+-------------------------------------------------------------------------------------------------------+
@@ -1632,7 +1632,7 @@ otherwise use <code>gpumdkit.sh -h</code>, the relevant module help, or interact
 <a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>| -calc &lt;type&gt;  Calculator tools                | -time &lt;gpumd|nep&gt;  Time-consuming analyzer            |
 <a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>| -update       Update GPUMDkit                 | -clean             Clean extra files in current dir   |
 <a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>| -skill        Show GPUMDkit agent skill info  | -doctor            Check Python environment           |
-<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>| -prediction   Write NEP prediction .out files |                                                       |
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>| -prediction   Write NEP prediction .out files | -prediction_dpa    Write DPA prediction .out files    |
 <a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>+-------------------------------------------------------------------------------------------------------+
 <a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>|                                         FORMAT CONVERSION                                             |
 <a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>+-------------------------------------------------------------------------------------------------------+
@@ -1694,6 +1694,11 @@ otherwise use <code>gpumdkit.sh -h</code>, the relevant module help, or interact
 <td><code>-prediction</code></td>
 <td><code>gpumdkit.sh -prediction &lt;input.xyz&gt; &lt;nep.txt&gt; [workers]</code></td>
 <td>Write NEP-compatible energy, force, stress, and virial prediction files</td>
+</tr>
+<tr>
+<td><code>-prediction_dpa</code></td>
+<td><code>gpumdkit.sh -prediction_dpa &lt;input.xyz&gt; &lt;dpa_model&gt;</code></td>
+<td>Write DPA training-set prediction files in the current directory</td>
 </tr>
 </tbody>
 </table>
@@ -1838,6 +1843,11 @@ otherwise use <code>gpumdkit.sh -h</code>, the relevant module help, or interact
 <td><code>-prediction</code></td>
 <td><code>gpumdkit.sh -prediction &lt;input.xyz&gt; &lt;nep.txt&gt; [workers]</code></td>
 <td>NEP-compatible prediction output files</td>
+</tr>
+<tr>
+<td><code>-prediction_dpa</code></td>
+<td><code>gpumdkit.sh -prediction_dpa &lt;input.xyz&gt; &lt;dpa_model&gt;</code></td>
+<td>DPA training-set prediction output files</td>
 </tr>
 <tr>
 <td><code>-calc des</code></td>

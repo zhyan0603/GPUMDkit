@@ -126,7 +126,7 @@ We welcome feature suggestions! To propose a new feature:
 Create a new branch for your changes:
 
 ```bash
-# Create and checkout a new branch from main
+# Create and checkout a new branch from dev
 git checkout -b your-branch-name
 ```
 

@@ -114,9 +114,10 @@ DeepMD `type_map.raw` 的元素顺序。
 **用法：**
 ```
 gpumdkit.sh -xyz2dp
+gpumdkit.sh -xyz2dp train.xyz Li P S
 ```
 
-也可以直接运行 Python 脚本：
+不带参数时进入交互提示；带参数时输入文件和元素顺序会直接传给脚本。也可以直接运行 Python 脚本：
 
 ```
 python3 ${GPUMDkit_path}/Scripts/format_conversion/xyz2dp.py train.xyz Li P S
@@ -165,7 +166,7 @@ gpumdkit.sh -clean_xyz input.xyz clean.xyz
 | `-xdat2exyz` | XDATCAR -> extxyz | `gpumdkit.sh -xdat2exyz XDATCAR dump.xyz` |
 | `-traj2exyz` | ASE traj -> extxyz | `gpumdkit.sh -traj2exyz <traj> <xyz>` |
 | `-dp2xyz` | DeepMD npy -> extxyz（通过 dpdata） | `gpumdkit.sh -dp2xyz <input_dir/> [output.xyz]` |
-| `-xyz2dp` | extxyz -> DeepMD npy（通过 dpdata） | `gpumdkit.sh -xyz2dp`（交互式） |
+| `-xyz2dp` | extxyz -> DeepMD npy（通过 dpdata） | `gpumdkit.sh -xyz2dp`（交互式）或 `gpumdkit.sh -xyz2dp <in.xyz> <type1> ...` |
 | `-addgroup` | 添加分组标签 | `gpumdkit.sh -addgroup <poscar> <elem...>` |
 | `-addweight` | 添加权重 | `gpumdkit.sh -addweight <in> <out> <weight>` |
 | `-replicate` | 复制结构 | `gpumdkit.sh -replicate <in> <out> a b c` |

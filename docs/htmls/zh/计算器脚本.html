@@ -12,7 +12,7 @@
         <meta name="author" content="Zihan YAN">
       
       
-        <link rel="canonical" href="https://gpumdkit.cn/zh/%E8%AE%A1%E7%AE%97%E5%99%A8%E8%84%9A%E6%9C%AC.html">
+        <link rel="canonical" href="https://gpumdkit.cn/htmls/zh/%E8%AE%A1%E7%AE%97%E5%99%A8%E8%84%9A%E6%9C%AC.html">
       
       
         <link rel="prev" href="%E5%B7%A5%E4%BD%9C%E6%B5%81%E8%84%9A%E6%9C%AC.html">
@@ -1152,6 +1152,17 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#dpa" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        DPA 预测输出文件
+      
+    </span>
+  </a>
+  
+</li>
+        
       </ul>
     </nav>
   
@@ -1498,6 +1509,17 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#dpa" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        DPA 预测输出文件
+      
+    </span>
+  </a>
+  
+</li>
+        
       </ul>
     </nav>
   
@@ -1631,6 +1653,11 @@
 <td>NEP 预测输出</td>
 <td><code>gpumdkit.sh -prediction &lt;input.xyz&gt; &lt;nep.txt&gt; [workers]</code></td>
 <td>带标签 extxyz + NEP 模型</td>
+</tr>
+<tr>
+<td>DPA 预测输出</td>
+<td><code>gpumdkit.sh -prediction_dpa &lt;input.xyz&gt; &lt;dpa_model&gt;</code></td>
+<td>带标签 extxyz + DeepMD DPA 模型</td>
 </tr>
 <tr>
 <td>NEP 描述符</td>
@@ -1965,8 +1992,17 @@ GPa，virial 为 eV/atom。应力和 virial 张量使用 NEP 顺序
 <p>该命令需要 <code>calorine</code>、<code>ase</code> 和 <code>tqdm</code>：</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-18-1" name="__codelineno-18-1" href="#__codelineno-18-1"></a>pip<span class="w"> </span>install<span class="w"> </span>ase<span class="w"> </span>calorine<span class="w"> </span>tqdm
 </code></pre></div>
+<h3 id="dpa">DPA 预测输出文件</h3>
+<p><code>prediction_dpa.py</code> 使用 DeepMD DPA 模型计算带标签的 extended XYZ 训练集，
+并将 <code>energy_train.out</code>、<code>force_train.out</code>、<code>virial_train.out</code> 和
+<code>stress_train.out</code> 写入当前目录。</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-19-1" name="__codelineno-19-1" href="#__codelineno-19-1"></a>gpumdkit.sh<span class="w"> </span>-prediction_dpa<span class="w"> </span>train.xyz<span class="w"> </span>model.ckpt.pt
+</code></pre></div>
+<p>输出格式遵循 NEP 训练 prediction 约定：每行先写预测值，再写目标值。能量单位为
+eV/atom，力为 eV/Angstrom，应力为 GPa，virial 为 eV/atom。该命令需要
+<code>deepmd-kit</code> 和 <code>numpy</code>。</p>
 <h2 id="nep_2">NEP 描述符</h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-19-1" name="__codelineno-19-1" href="#__codelineno-19-1"></a>gpumdkit.sh<span class="w"> </span>-calc<span class="w"> </span>des<span class="w"> </span>train.xyz<span class="w"> </span>descriptors.npy<span class="w"> </span>nep.txt<span class="w"> </span>Li
+<div class="highlight"><pre><span></span><code><a id="__codelineno-20-1" name="__codelineno-20-1" href="#__codelineno-20-1"></a>gpumdkit.sh<span class="w"> </span>-calc<span class="w"> </span>des<span class="w"> </span>train.xyz<span class="w"> </span>descriptors.npy<span class="w"> </span>nep.txt<span class="w"> </span>Li
 </code></pre></div>
 <p>用途包括：</p>
 <ul>
@@ -1975,8 +2011,8 @@ GPa，virial 为 eV/atom。应力和 virial 张量使用 NEP 顺序
 <li>判断新数据是否扩展了描述符空间。</li>
 </ul>
 <p>绘图：</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-20-1" name="__codelineno-20-1" href="#__codelineno-20-1"></a>gpumdkit.sh<span class="w"> </span>-plt<span class="w"> </span>des<span class="w"> </span>pca<span class="w"> </span>descriptors.npy
-<a id="__codelineno-20-2" name="__codelineno-20-2" href="#__codelineno-20-2"></a>gpumdkit.sh<span class="w"> </span>-plt<span class="w"> </span>des<span class="w"> </span>umap<span class="w"> </span>descriptors.npy
+<div class="highlight"><pre><span></span><code><a id="__codelineno-21-1" name="__codelineno-21-1" href="#__codelineno-21-1"></a>gpumdkit.sh<span class="w"> </span>-plt<span class="w"> </span>des<span class="w"> </span>pca<span class="w"> </span>descriptors.npy
+<a id="__codelineno-21-2" name="__codelineno-21-2" href="#__codelineno-21-2"></a>gpumdkit.sh<span class="w"> </span>-plt<span class="w"> </span>des<span class="w"> </span>umap<span class="w"> </span>descriptors.npy
 </code></pre></div>
 <div align="center">
   <img src="../../Gallery/des_umap.png" alt="Descriptor UMAP" width="52%" />
@@ -1984,8 +2020,8 @@ GPa，virial 为 eV/atom。应力和 virial 张量使用 NEP 顺序
 
 <h2 id="doas">DOAS</h2>
 <p><code>calc_doas.py</code> 用于计算 <a href="https://doi.org/10.1002/anie.202215544">Wang et al.</a> 提出的 density of atomistic states。</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-21-1" name="__codelineno-21-1" href="#__codelineno-21-1"></a>gpumdkit.sh<span class="w"> </span>-calc<span class="w"> </span>doas<span class="w"> </span>structures.xyz<span class="w"> </span>nep.txt<span class="w"> </span>doas.out
-<a id="__codelineno-21-2" name="__codelineno-21-2" href="#__codelineno-21-2"></a>gpumdkit.sh<span class="w"> </span>-plt<span class="w"> </span>doas<span class="w"> </span>doas.out<span class="w"> </span>Li
+<div class="highlight"><pre><span></span><code><a id="__codelineno-22-1" name="__codelineno-22-1" href="#__codelineno-22-1"></a>gpumdkit.sh<span class="w"> </span>-calc<span class="w"> </span>doas<span class="w"> </span>structures.xyz<span class="w"> </span>nep.txt<span class="w"> </span>doas.out
+<a id="__codelineno-22-2" name="__codelineno-22-2" href="#__codelineno-22-2"></a>gpumdkit.sh<span class="w"> </span>-plt<span class="w"> </span>doas<span class="w"> </span>doas.out<span class="w"> </span>Li
 </code></pre></div>
 <p>脚本会：</p>
 <ol>
@@ -2002,7 +2038,7 @@ GPa，virial 为 eV/atom。应力和 virial 张量使用 NEP 顺序
 
 <h2 id="neb">NEB 和结构优化</h2>
 <p>NEB：</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-22-1" name="__codelineno-22-1" href="#__codelineno-22-1"></a>gpumdkit.sh<span class="w"> </span>-calc<span class="w"> </span>neb<span class="w"> </span>initial.xyz<span class="w"> </span>final.xyz<span class="w"> </span><span class="m">9</span><span class="w"> </span>nep.txt
+<div class="highlight"><pre><span></span><code><a id="__codelineno-23-1" name="__codelineno-23-1" href="#__codelineno-23-1"></a>gpumdkit.sh<span class="w"> </span>-calc<span class="w"> </span>neb<span class="w"> </span>initial.xyz<span class="w"> </span>final.xyz<span class="w"> </span><span class="m">9</span><span class="w"> </span>nep.txt
 </code></pre></div>
 <p>这会使用 NEP 模型运行含 <code>9</code> 个中间像的 NEB 计算。运行过程中脚本会询问原子固定方式：</p>
 <ul>
@@ -2013,9 +2049,9 @@ GPa，virial 为 eV/atom。应力和 virial 张量使用 NEP 顺序
 </ul>
 <p>结构优化（通过 <code>calorine</code>）：</p>
 <p><strong>依赖：</strong> <code>calorine</code></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-23-1" name="__codelineno-23-1" href="#__codelineno-23-1"></a>pip<span class="w"> </span>install<span class="w"> </span>calorine
+<div class="highlight"><pre><span></span><code><a id="__codelineno-24-1" name="__codelineno-24-1" href="#__codelineno-24-1"></a>pip<span class="w"> </span>install<span class="w"> </span>calorine
 </code></pre></div>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-24-1" name="__codelineno-24-1" href="#__codelineno-24-1"></a>gpumdkit.sh<span class="w"> </span>-calc<span class="w"> </span>minimize<span class="w"> </span>POSCAR<span class="w"> </span>nep.txt<span class="w"> </span><span class="m">0</span>.01<span class="w"> </span><span class="m">1000</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-25-1" name="__codelineno-25-1" href="#__codelineno-25-1"></a>gpumdkit.sh<span class="w"> </span>-calc<span class="w"> </span>minimize<span class="w"> </span>POSCAR<span class="w"> </span>nep.txt<span class="w"> </span><span class="m">0</span>.01<span class="w"> </span><span class="m">1000</span>
 </code></pre></div>
 <p>输出包括：</p>
 <ul>
@@ -2025,10 +2061,10 @@ GPa，virial 为 eV/atom。应力和 virial 张量使用 NEP 顺序
 <h2 id="ovito-rdf">使用 OVITO 计算 RDF</h2>
 <p><code>rdf_calculator_ovito.py</code> 使用 OVITO 的分析工具计算径向分布函数。</p>
 <p><strong>依赖：</strong> OVITO</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-25-1" name="__codelineno-25-1" href="#__codelineno-25-1"></a>pip<span class="w"> </span>install<span class="w"> </span>ovito
+<div class="highlight"><pre><span></span><code><a id="__codelineno-26-1" name="__codelineno-26-1" href="#__codelineno-26-1"></a>pip<span class="w"> </span>install<span class="w"> </span>ovito
 </code></pre></div>
 <p><strong>输入文件：</strong> 结构文件（单帧或轨迹）</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-26-1" name="__codelineno-26-1" href="#__codelineno-26-1"></a>python<span class="w"> </span>Scripts/calculators/rdf_calculator_ovito.py<span class="w"> </span>trajectory.xyz<span class="w"> </span><span class="m">6</span>.0<span class="w"> </span><span class="m">400</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-27-1" name="__codelineno-27-1" href="#__codelineno-27-1"></a>python<span class="w"> </span>Scripts/calculators/rdf_calculator_ovito.py<span class="w"> </span>trajectory.xyz<span class="w"> </span><span class="m">6</span>.0<span class="w"> </span><span class="m">400</span>
 </code></pre></div>
 <p><strong>参数：</strong></p>
 <table>
@@ -2054,7 +2090,7 @@ GPa，virial 为 eV/atom。应力和 virial 张量使用 NEP 顺序
 </tbody>
 </table>
 <p><strong>可视化：</strong></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-27-1" name="__codelineno-27-1" href="#__codelineno-27-1"></a>gpumdkit.sh<span class="w"> </span>-plt<span class="w"> </span>rdf
+<div class="highlight"><pre><span></span><code><a id="__codelineno-28-1" name="__codelineno-28-1" href="#__codelineno-28-1"></a>gpumdkit.sh<span class="w"> </span>-plt<span class="w"> </span>rdf
 </code></pre></div>
 <p><strong>注意：</strong> 建议优先使用 GPUMD 中的 <code>compute_rdf</code> 命令。</p>
 <h2 id="_4">铁电和极性材料工具</h2>
@@ -2103,7 +2139,7 @@ GPa，virial 为 eV/atom。应力和 virial 张量使用 NEP 顺序
 </tbody>
 </table>
 <p>部分脚本需要安装 <code>ferrodispcalc</code>：</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-28-1" name="__codelineno-28-1" href="#__codelineno-28-1"></a>pip3<span class="w"> </span>install<span class="w"> </span>git+https://github.com/MoseyQAQ/ferrodispcalc.git
+<div class="highlight"><pre><span></span><code><a id="__codelineno-29-1" name="__codelineno-29-1" href="#__codelineno-29-1"></a>pip3<span class="w"> </span>install<span class="w"> </span>git+https://github.com/MoseyQAQ/ferrodispcalc.git
 </code></pre></div>
 <p>一个典型顺序是先用 <code>nlist</code> 建立近邻列表，再用该近邻列表计算位移、倾转或极化。对于平均结构，可以直接从轨迹出发，用长度容差控制哪些帧参与平均。</p>
 

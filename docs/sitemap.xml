@@ -1,43 +1,27 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
     <url>
-         <loc>https://gpumdkit.cn/htmls/analyzer.html</loc>
-         <lastmod>2025-12-28</lastmod>
+         <loc>https://gpumdkit.cn/</loc>
+         <lastmod>2026-09-14</lastmod>
     </url>
     <url>
-         <loc>https://gpumdkit.cn/htmls/calculators.html</loc>
-         <lastmod>2025-12-28</lastmod>
+         <loc>https://gpumdkit.cn/index_zh.html</loc>
+         <lastmod>2026-09-14</lastmod>
     </url>
     <url>
-         <loc>https://gpumdkit.cn/htmls/contributing.html</loc>
-         <lastmod>2025-12-28</lastmod>
+         <loc>https://gpumdkit.cn/gallery.html</loc>
+         <lastmod>2026-09-14</lastmod>
     </url>
     <url>
-         <loc>https://gpumdkit.cn/htmls/custom_commands.html</loc>
-         <lastmod>2025-12-28</lastmod>
+         <loc>https://gpumdkit.cn/publications.html</loc>
+         <lastmod>2026-09-14</lastmod>
     </url>
     <url>
-         <loc>https://gpumdkit.cn/htmls/format_conversion.html</loc>
-         <lastmod>2025-12-28</lastmod>
+         <loc>https://gpumdkit.cn/htmls/en/</loc>
+         <lastmod>2026-09-14</lastmod>
     </url>
     <url>
-         <loc>https://gpumdkit.cn/htmls/plot_scripts.html</loc>
-         <lastmod>2025-12-28</lastmod>
+         <loc>https://gpumdkit.cn/htmls/zh/</loc>
+         <lastmod>2026-09-14</lastmod>
     </url>
-    <url>
-         <loc>https://gpumdkit.cn/htmls/sample_structures.html</loc>
-         <lastmod>2025-12-28</lastmod>
-    </url>
-    <url>
-         <loc>https://gpumdkit.cn/htmls/index.html</loc>
-         <lastmod>2025-12-28</lastmod>
-    </url>
-    <url>
-         <loc>https://gpumdkit.cn/htmls/workflow.html</loc>
-         <lastmod>2025-12-28</lastmod>
-    </url>
-    <url>
-         <loc>https://gpumdkit.cn/htmls/workflow_active_learning.html</loc>
-         <lastmod>2025-12-28</lastmod>
-    </url>  
 </urlset>

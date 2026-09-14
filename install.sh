@@ -13,8 +13,17 @@ echo "       ${INSTALL_DIR}"
 RC_FILE="$HOME/.bashrc"
 if [[ "$SHELL" == *"zsh"* ]]; then
     RC_FILE="$HOME/.zshrc"
+elif [[ "$SHELL" != *bash* ]]; then
+    echo " [2/4] Detecting shell configuration..."
+    echo "       Warning: unsupported shell '${SHELL}' detected."
+    echo "       GPUMDkit scripts run under bash; the configuration will be"
+    echo "       written to ${RC_FILE}. If you use another shell (e.g. fish),"
+    echo "       add the settings to its config manually."
 fi
-touch "$RC_FILE"
+if ! touch "$RC_FILE" 2>/dev/null; then
+    echo " Error: cannot write to ${RC_FILE}. Please check the file permissions."
+    exit 1
+fi
 echo " [2/4] Detecting shell configuration..."
 echo "       Target: ${RC_FILE}"
 
@@ -36,7 +45,7 @@ remove_old_gpumdkit_config() {
     ' "$RC_FILE" > "$tmp_file"
 
     # Remove older single-line GPUMDkit entries if they were not inside the block.
-    grep -v -E '(^export GPUMDkit_path=|^export PATH=\$\{GPUMDkit_path\}:\$\{PATH\}$|^source \$\{GPUMDkit_path\}/Scripts/utils/completion\.sh$)' "$tmp_file" > "${tmp_file}.clean"
+    grep -v -E '(^export GPUMDkit_path=|^export PATH="?[$]\{GPUMDkit_path\}:[$]\{PATH\}"?$|^source [$]\{GPUMDkit_path\}/Scripts/utils/completion\.sh$)' "$tmp_file" > "${tmp_file}.clean"
     mv "${tmp_file}.clean" "$RC_FILE"
     rm -f "$tmp_file"
 }
@@ -46,8 +55,8 @@ write_gpumdkit_config() {
     {
         echo ""
         echo "########### GPUMDkit Configuration ###########"
-        echo "export GPUMDkit_path=${INSTALL_DIR}"
-        echo "export PATH=\${GPUMDkit_path}:\${PATH}"
+        echo "export GPUMDkit_path=\"${INSTALL_DIR}\""
+        echo "export PATH=\"\${GPUMDkit_path}:\${PATH}\""
 
         # Add tab completion support if the script exists
         if [ -f "${INSTALL_DIR}/Scripts/utils/completion.sh" ]; then
@@ -56,6 +65,10 @@ write_gpumdkit_config() {
         echo "##############################################"
     } >> "$RC_FILE"
 
+    if [ $? -ne 0 ]; then
+        echo " Error: failed to write the configuration to ${RC_FILE}."
+        exit 1
+    fi
     echo "       Success: Environment variables added."
 }
 

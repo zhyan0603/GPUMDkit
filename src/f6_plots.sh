@@ -114,7 +114,7 @@ function f6_plots_two_column(){
     echo " +-----------------------------------------------------------------------------------------------+"
     echo " |                                          Phonons                                              |"
     echo " +-----------------------------------------------------------------------------------------------+"
-    echo " |  pdos           - VAC and PDOS                 phonon         - Phonon band structure         |"
+    echo " |  pdos           - VAC and PDOS                   phonon       - Phonon band structure         |"
     echo " |  phonon_comp    - Compare phonon band structures                                              |"
     echo " +-----------------------------------------------------------------------------------------------+"
     # echo " |                                       Miscellaneous Tools                                     |"

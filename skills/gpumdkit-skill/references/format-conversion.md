@@ -113,9 +113,12 @@ element order used by the DeepMD `type_map.raw` file.
 **Usage:**
 ```
 gpumdkit.sh -xyz2dp
+gpumdkit.sh -xyz2dp train.xyz Li P S
 ```
 
-The same conversion can be called directly with Python:
+Running without arguments starts the interactive prompts; with arguments the
+input file and type-map order are forwarded to the script directly. The same
+conversion can be called directly with Python:
 
 ```
 python3 ${GPUMDkit_path}/Scripts/format_conversion/xyz2dp.py train.xyz Li P S
@@ -165,7 +168,7 @@ gpumdkit.sh -clean_xyz input.xyz clean.xyz
 | `-xdat2exyz` | XDATCAR -> extxyz | `gpumdkit.sh -xdat2exyz XDATCAR dump.xyz` |
 | `-traj2exyz` | ASE traj -> extxyz | `gpumdkit.sh -traj2exyz <traj> <xyz>` |
 | `-dp2xyz` | DeepMD npy → extxyz (via dpdata) | `gpumdkit.sh -dp2xyz <input_dir/> [output.xyz]` |
-| `-xyz2dp` | extxyz → DeepMD npy (via dpdata) | `gpumdkit.sh -xyz2dp` (interactive) |
+| `-xyz2dp` | extxyz → DeepMD npy (via dpdata) | `gpumdkit.sh -xyz2dp` (interactive) or `gpumdkit.sh -xyz2dp <in.xyz> <type1> ...` |
 | `-addgroup` | Add group labels | `gpumdkit.sh -addgroup <poscar> <elem...>` |
 | `-addweight` | Add weight | `gpumdkit.sh -addweight <in> <out> <weight>` |
 | `-replicate` | Replicate structure | `gpumdkit.sh -replicate <in> <out> a b c` |

@@ -12,7 +12,7 @@
         <meta name="author" content="Zihan YAN">
       
       
-        <link rel="canonical" href="https://gpumdkit.cn/en/analyzer_scripts.html">
+        <link rel="canonical" href="https://gpumdkit.cn/htmls/en/analyzer_scripts.html">
       
       
         <link rel="prev" href="calculator_scripts.html">
@@ -2356,14 +2356,14 @@ inside the Python interface when needed. The DFT-to-NEP mode requires the
 <a id="__codelineno-24-11" name="__codelineno-24-11" href="#__codelineno-24-11"></a><span class="c1"># Interactive: 5) Analyzer → 502</span>
 </code></pre></div>
 <h3 id="structure-filtering-pipeline">Structure Filtering Pipeline</h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-25-1" name="__codelineno-25-1" href="#__codelineno-25-1"></a><span class="c1"># 1. Filter by minimum distance</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-25-1" name="__codelineno-25-1" href="#__codelineno-25-1"></a><span class="c1"># 1. Filter by minimum distance (writes filtered_dump.xyz)</span>
 <a id="__codelineno-25-2" name="__codelineno-25-2" href="#__codelineno-25-2"></a>gpumdkit.sh<span class="w"> </span>-filter_dist_pbc<span class="w"> </span>dump.xyz<span class="w"> </span><span class="m">1</span>.0
 <a id="__codelineno-25-3" name="__codelineno-25-3" href="#__codelineno-25-3"></a>
-<a id="__codelineno-25-4" name="__codelineno-25-4" href="#__codelineno-25-4"></a><span class="c1"># 2. Filter by box size</span>
-<a id="__codelineno-25-5" name="__codelineno-25-5" href="#__codelineno-25-5"></a>gpumdkit.sh<span class="w"> </span>-filter_box<span class="w"> </span>filtered_dist_pbc.xyz<span class="w"> </span><span class="m">13</span>
+<a id="__codelineno-25-4" name="__codelineno-25-4" href="#__codelineno-25-4"></a><span class="c1"># 2. Filter by box size (writes filtered_by_box.xyz)</span>
+<a id="__codelineno-25-5" name="__codelineno-25-5" href="#__codelineno-25-5"></a>gpumdkit.sh<span class="w"> </span>-filter_box<span class="w"> </span>filtered_dump.xyz<span class="w"> </span><span class="m">13</span>
 <a id="__codelineno-25-6" name="__codelineno-25-6" href="#__codelineno-25-6"></a>
-<a id="__codelineno-25-7" name="__codelineno-25-7" href="#__codelineno-25-7"></a><span class="c1"># 3. Filter by force threshold</span>
-<a id="__codelineno-25-8" name="__codelineno-25-8" href="#__codelineno-25-8"></a>gpumdkit.sh<span class="w"> </span>-filter_value<span class="w"> </span>filtered_box.xyz<span class="w"> </span>force<span class="w"> </span><span class="m">20</span>
+<a id="__codelineno-25-7" name="__codelineno-25-7" href="#__codelineno-25-7"></a><span class="c1"># 3. Filter by force threshold (writes filtered.xyz)</span>
+<a id="__codelineno-25-8" name="__codelineno-25-8" href="#__codelineno-25-8"></a>gpumdkit.sh<span class="w"> </span>-filter_value<span class="w"> </span>filtered_by_box.xyz<span class="w"> </span>force<span class="w"> </span><span class="m">20</span>
 </code></pre></div>
 <h3 id="diffusion-channel-analysis">Diffusion Channel Analysis</h3>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-26-1" name="__codelineno-26-1" href="#__codelineno-26-1"></a><span class="c1"># 1. Calculate probability density</span>

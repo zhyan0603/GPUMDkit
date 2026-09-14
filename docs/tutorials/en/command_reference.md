@@ -14,7 +14,7 @@ otherwise use `gpumdkit.sh -h`, the relevant module help, or interactive mode.
 
 ```text
 +-------------------------------------------------------------------------------------------------------+
-|                          GPUMDkit 1.5.7 (2026-09-05)       Command Help                               |
+|                          GPUMDkit 1.5.7 (2026-09-14)       Command Help                               |
 +-------------------------------------------------------------------------------------------------------+
 |                                          MAIN FUNCTIONS                                               |
 +-------------------------------------------------------------------------------------------------------+
@@ -22,7 +22,7 @@ otherwise use `gpumdkit.sh -h`, the relevant module help, or interactive mode.
 | -calc <type>  Calculator tools                | -time <gpumd|nep>  Time-consuming analyzer            |
 | -update       Update GPUMDkit                 | -clean             Clean extra files in current dir   |
 | -skill        Show GPUMDkit agent skill info  | -doctor            Check Python environment           |
-| -prediction   Write NEP prediction .out files |                                                       |
+| -prediction   Write NEP prediction .out files | -prediction_dpa    Write DPA prediction .out files    |
 +-------------------------------------------------------------------------------------------------------+
 |                                         FORMAT CONVERSION                                             |
 +-------------------------------------------------------------------------------------------------------+

@@ -23,7 +23,7 @@ if [ -f "nep.in" ]; then
 elif [ -f "gnep.in" ]; then
     total_steps=$(grep 'epoch' "gnep.in" | awk '{print $2}')
 else
-    echo "Error: Neither nep.in nor gnep.in found"
+    echo " Error: Neither nep.in nor gnep.in found"
     exit 1
 fi
 

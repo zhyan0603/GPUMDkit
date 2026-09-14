@@ -22,6 +22,7 @@ Last-modified: 2026-05-16
 =============================================================================
 """
 
+import os
 import sys
 
 args = sys.argv[1:]
@@ -45,6 +46,10 @@ from scipy.spatial.distance import pdist, squareform
 
 # Read the file name from command line arguments
 file_name = sys.argv[1]
+
+if not os.path.isfile(file_name):
+    print(f" Error: file '{file_name}' does not exist.")
+    sys.exit(1)
 
 # Read all frames from the extxyz file
 frames = read(file_name, index=':')

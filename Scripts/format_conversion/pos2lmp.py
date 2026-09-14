@@ -37,6 +37,10 @@ if len(args) < 2 or args[0] in ("-h", "--help"):
 
 from ovito.io import import_file, export_file
 
+print(" This function requires the ovito package.")
+print(" If you use this function, please cite:")
+print("   A. Stukowski, Model. Simul. Mater. Sci. Eng. 18, 015012 (2010)")
+
 def convert_poscar_to_lammps(poscar_path, lammps_data_path):
     pipeline = import_file(poscar_path)
     

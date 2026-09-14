@@ -15,7 +15,7 @@
 # Output:
 #   NEPdataset/train.xyz  (converted dataset in extxyz format)
 # Author:     Yuwen Zhang, Shunda Chen, Zihan YAN (yanzihan@westlake.edu.cn)
-# Last-modified: 2026-05-16
+# Last-modified: 2026-09-14
 # =============================================================================
 
 #--- DEFAULT ASSIGNMENTS ---------------------------------------------------------------------
@@ -46,15 +46,17 @@ non_converged_files=()
 
 echo " Checking the convergence of OUTCARs ..."
 
-for file in $(find "$read_dire" -name "OUTCAR"); do
+for file in $(find -L "$read_dire" -name "OUTCAR"); do
     NSW=$(grep "number of steps for IOM" "$file" | awk '{print $3}')
-    
+    NSW=${NSW:-0}
+
     if [ "$NSW" -ne 0 ]; then
         converged_files+=("$file")
         continue
     fi
-    
+
     NELM=$(grep "of ELM steps" "$file" | awk '{print $3}' | tr -d ';')
+    NELM=${NELM:-0}
     actual_steps=$(grep -c "Iteration" "$file")
 
     if grep -q "aborting loop because EDIFF is reached" "$file"; then

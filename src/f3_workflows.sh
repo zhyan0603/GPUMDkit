@@ -32,9 +32,9 @@ echo " ---------------------------------------------------"
 echo " Input <extxyz_file> <template.inp> <prefix_name>"
 echo " Example: dump.xyz template.inp H2O"
 echo " ------------>>"
-read_menu_choice input_results || return 1
+read_menu_array input_results || return 1
 echo " ---------------------------------------------------"
-python ${GPUMDkit_path}/Scripts/workflow/scf_batch_pretreatment_cp2k.py ${input_results}
+python "${GPUMDkit_path}/Scripts/workflow/scf_batch_pretreatment_cp2k.py" "${input_results[@]}"
 echo " Code path: ${GPUMDkit_path}/Scripts/workflow/scf_batch_pretreatment_cp2k.py"
 echo " ---------------------------------------------------"
 }

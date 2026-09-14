@@ -456,14 +456,14 @@ gpumdkit.sh -min_dist_pbc train.xyz
 ### Structure Filtering Pipeline
 
 ```bash
-# 1. Filter by minimum distance
+# 1. Filter by minimum distance (writes filtered_dump.xyz)
 gpumdkit.sh -filter_dist_pbc dump.xyz 1.0
 
-# 2. Filter by box size
-gpumdkit.sh -filter_box filtered_dist_pbc.xyz 13
+# 2. Filter by box size (writes filtered_by_box.xyz)
+gpumdkit.sh -filter_box filtered_dump.xyz 13
 
-# 3. Filter by force threshold
-gpumdkit.sh -filter_value filtered_box.xyz force 20
+# 3. Filter by force threshold (writes filtered.xyz)
+gpumdkit.sh -filter_value filtered_by_box.xyz force 20
 ```
 
 ### Diffusion Channel Analysis

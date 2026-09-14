@@ -31,18 +31,23 @@ if len(args) < 2 or args[0] in ("-h", "--help"):
     print("")
     sys.exit(0 if args and args[0] in ("-h", "--help") else 1)
 
+import os
 from tqdm import tqdm
 
 input_file = sys.argv[1]
 output_file = sys.argv[2]
 
+if not os.path.isfile(input_file):
+    print(f" Error: file '{input_file}' does not exist.")
+    sys.exit(1)
+
 # Count total lines for progress bar
-print("Counting lines in input file...")
+print(" Counting lines in input file...")
 with open(input_file, 'r') as f:
     total_lines = sum(1 for _ in f)
 
 # Process the file
-print("Processing file...")
+print(" Processing file...")
 with open(input_file, "r") as in_f, open(output_file, "w") as out_f:
     pbar = tqdm(total=total_lines, desc="Processing", unit="lines")
     in_atoms_section = False

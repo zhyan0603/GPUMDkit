@@ -9,7 +9,8 @@
 function f701_time_consuming_analyzer(){
 echo " >-------------------------------------------------<"
 echo " | Calling scripts in Scripts/analyzer             |"
-echo " | Script: time_consuming_gpumd.sh/nep.sh          |"
+echo " | Script: time_consuming_gpumd.sh                 |"
+echo " |         time_consuming_nep.sh                   |"
 echo " | Developer: Zihan YAN (yanzihan@westlake.edu.cn) |"
 echo " >-------------------------------------------------<"
 echo " Input mode: gpumd, nep or gnep"

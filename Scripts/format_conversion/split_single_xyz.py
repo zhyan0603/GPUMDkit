@@ -19,8 +19,8 @@ Last-modified: 2026-05-16
 =============================================================================
 """
 
+import os
 import sys
-from ase.io import read, write
 
 def split_xyz_to_individual_models(input_xyz_filename):
     """
@@ -44,12 +44,21 @@ def split_xyz_to_individual_models(input_xyz_filename):
 
 if __name__ == '__main__':
     # Check if the number of arguments is correct
-    if len(sys.argv) < 2:
+    args = sys.argv[1:]
+    if len(args) < 1 or args[0] in ("-h", "--help"):
         print(" Usage: python split_single_xyz.py <input.xyz>")
+        print("")
+        print(" Arguments:")
+        print("   input.xyz   Input extended XYZ file with multiple frames")
+        print("")
+        print(" Example: python split_single_xyz.py train.xyz")
+        print("")
+        sys.exit(0 if args and args[0] in ("-h", "--help") else 1)
+    if not os.path.isfile(args[0]):
+        print(f" Error: file '{args[0]}' does not exist.")
         sys.exit(1)
 
-    # Get input XYZ filename from command line argument
-    input_xyz_filename = sys.argv[1]
+    from ase.io import read, write
 
     # Call function to split XYZ file into individual models
-    split_xyz_to_individual_models(input_xyz_filename)
+    split_xyz_to_individual_models(args[0])

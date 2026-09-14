@@ -186,6 +186,21 @@ gpumdkit.sh -plt parity_density
 
 ---
 
+### plt_train_density.py
+
+Generates density-based parity plots for NEP training results (energy, forces, stress or virial).
+Stress is preferred when both tensor files exist. Useful for large datasets where
+scatter plots become unreadable.
+
+**Input Files:** `energy_train.out`, `force_train.out`, and either
+`stress_train.out` (preferred) or `virial_train.out`
+
+```bash
+gpumdkit.sh -plt train_density
+```
+
+---
+
 ### plt_force_errors.py
 
 Plots force error evaluation metrics as proposed by [Liu et al.](https://doi.org/10.1038/s41524-023-01123-3).
@@ -431,6 +446,22 @@ The legend reports the activation energy of each branch as `HighT (xx eV)` and `
 
 ---
 
+### plt_arrhenius_d_xyz.py
+
+Calculates diffusion coefficients from `msd.out` in temperature folders for the
+x/y/z directions, generates a directional Arrhenius plot, and extracts the
+activation energy of each component.
+
+**Input Files:** `*K/msd.out` files
+
+```bash
+gpumdkit.sh -plt D_xyz
+```
+
+The output reports `Ea_x`, `Ea_y`, and `Ea_z` from the linear fits.
+
+---
+
 ### plt_arrhenius_sigma.py
 
 Creates Arrhenius plot for ionic conductivity (ln(σ·T) vs 1000/T).
@@ -468,6 +499,22 @@ The legend reports the activation energy of each branch as `HighT (xx eV)` and `
 <div align="center">
   <img src="../../Gallery/Arrhenius_sigma_PT.png" alt="Phase-transition Arrhenius ionic conductivity" width="58%" />
 </div>
+
+---
+
+### plt_arrhenius_sigma_xyz.py
+
+Calculates the ionic conductivity from MSD and thermo data in temperature
+folders for the x/y/z directions, plots the directional Arrhenius relationship,
+and extracts the activation energy of each direction using the Nernst-Einstein
+relation.
+
+**Input Files:** `thermo.out` and `msd.out` in each `*K/` directory;
+`model.xyz` in the first temperature directory
+
+```bash
+gpumdkit.sh -plt sigma_xyz
+```
 
 ---
 
@@ -582,6 +629,19 @@ gpumdkit.sh -plt hnemd 1 60 --save --save-data # save the figure and data
 <div align="center">
   <img src="../../Gallery/hnemd.png" alt="HNEMD results" width="70%" />
 </div>
+
+---
+
+### plt_viscosity.py
+
+Plots the stress autocorrelation and viscosity components from `viscosity.out`,
+including diagonal and off-diagonal components.
+
+**Input Files:** `viscosity.out` from the GPUMD viscosity calculation
+
+```bash
+gpumdkit.sh -plt viscosity
+```
 
 ---
 
@@ -927,11 +987,13 @@ gpumdkit.sh -plt plane-grid -i averaged_structure.xyz -d displacements.dat -e Pb
 | `prediction` / `test` | `*_train.out` | NEP prediction-mode parity plots for `train.xyz` |
 | `train_test` | `*_train.out`, `*_test.out` | Combined parity plots |
 | `parity_density` | `*_train.out` | Density-based parity plots |
+| `train_density` | `*_train.out` | Density-based training parity plots (stress preferred over virial) |
 | `force_errors` | `force_train.out` | Force error metrics |
 | `restart` | `nep.restart` | Restart file parameters |
 | `charge` | `train.xyz`, `charge_train.out` | Charge distribution |
 | `born_charge` / `bec` | `bec_train.out`, optional `bec_test.out` | Born effective charges |
 | `thermo` | `thermo.out` | Thermodynamic properties |
+| `thermo2` / `thermo3` | `thermo.out` | Thermodynamic plots in alternative styles |
 | `msd` | four-column `msd.out` from `-calc msd`, or first four columns of GPUMD `compute_msd` output | Mean square displacement |
 | `msd_all` | `msd.out` (all_groups) | MSD for all species |
 | `msd_conv` | `msd_step*.out` | MSD convergence check |
@@ -941,6 +1003,8 @@ gpumdkit.sh -plt plane-grid -i averaged_structure.xyz -d displacements.dat -e Pb
 | `arrhenius_sigma` / `sigma` | `*K/{thermo.out, msd.out}` plus first-directory `model.xyz` and optional `run.in` | Arrhenius ionic conductivity |
 | `D_PT` | `*K/msd.out` plus a transition temperature | Piecewise Arrhenius diffusivity around a phase transition |
 | `sigma_PT` | `*K/{thermo.out, msd.out}` plus first-directory `model.xyz`, optional `run.in`, and a transition temperature | Piecewise Arrhenius ionic conductivity around a phase transition |
+| `D_xyz` | `*K/msd.out` | Directional Arrhenius diffusivity (x/y/z) |
+| `sigma_xyz` | `*K/{thermo.out, msd.out}` plus first-directory `model.xyz` | Directional Arrhenius ionic conductivity (x/y/z) |
 | `rdf` | `rdf.out` | Radial distribution function |
 | `rdf_pmf` | `rdf.out` | RDF + potential of mean force |
 | `xrd` | `xrd.out` | X-ray diffraction intensity |
@@ -952,8 +1016,11 @@ gpumdkit.sh -plt plane-grid -i averaged_structure.xyz -d displacements.dat -e Pb
 | `des` | `descriptors.npy` | Descriptor PCA/UMAP |
 | `dimer` | `nep.txt` | Dimer energy/force curve |
 | `pdos` | `model.xyz`, `run.in`, `dos.out`, `mvac.out` | VAC and PDOS |
+| `phonon` | phonopy band-structure data | Phonon band structure |
+| `phonon_comp` | phonopy band-structure data | Compare phonon band structures |
 | `emd` | EMD outputs | EMD thermal conductivity in one direction |
 | `emd2` | EMD outputs | EMD thermal conductivity in all directions |
 | `nemd` | NEMD outputs | NEMD thermal transport |
 | `hnemd` | HNEMD outputs | HNEMD thermal transport |
-| `viscosity` | Viscosity outputs | Viscosity |
+| `viscosity` | `viscosity.out` | Stress autocorrelation and viscosity components |
+| `plane-grid` | `model.xyz`, `displacements.dat` | Displacement plane grid profiles |

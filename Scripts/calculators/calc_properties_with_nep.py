@@ -22,6 +22,7 @@ Last-modified: 2026-05-16
 =============================================================================
 """
 
+import os
 import sys
 
 # Check command-line arguments before importing optional heavy dependencies.
@@ -62,6 +63,11 @@ def print_progress_bar(iteration, total, prefix='', suffix='', decimals=1, lengt
 # Specify input and output files
 input_file = sys.argv[1]  # Input file
 output_file = sys.argv[2]  # Output file
+
+for required in (input_file, sys.argv[3]):
+    if not os.path.isfile(required):
+        print(f" Error: file '{required}' does not exist.")
+        sys.exit(1)
 
 print_dependency_notice()
 
