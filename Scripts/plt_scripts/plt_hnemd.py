@@ -27,6 +27,7 @@ import pandas as pd
 from pylab import *
 import numpy as np
 import os
+import sys
 from scipy.integrate import cumulative_trapezoid
 from ase.io import read
 
@@ -47,7 +48,7 @@ trap = np.trapezoid if hasattr(np, "trapezoid") else getattr(np, "trapz")
 
 def print_usage():
     """Print usage instructions"""
-    print("Usage: gpumdkit -plt hnemd [scale_eff_size] [cutoff_freq] [save]")
+    print("Usage: gpumdkit -plt hnemd [scale_eff_size] [cutoff_freq] [--save] [--save-data]")
     print("Params:")
     print("  scale_eff_size: Optional, Scale factor for effective cross-sectional area (default: 1)")
     print("                   • For 3D bulk systems: use 1")
@@ -55,11 +56,15 @@ def print_usage():
     print("                     - S_box: box area perpendicular to heat transfer direction")
     print("                     - S_eff: real or effective area of the system")
     print("  cutoff_freq   : Optional, Cutoff frequency for SHC calculation in THz (default: 60)")
-    print("  save          : Optional, save the plot as 'hnemd.png'")
-    print("  !!! Note !!!  : If no SHC data, set [scale_eff_size] and [cutoff_freq] to any number as placeholders when using 'save'.")
+    print("  --save        : Optional, save the plot as 'hnemd.png' (default: show it interactively)")
+    print("  --save-data   : Optional, also save the processed data as 'data_hnemd.npz'/'data_shc.npz'")
+    print("                  and their .txt equivalents (independent of --save; can be used on its own)")
+    print("  --save/--save-data may appear anywhere on the command line, e.g.:")
+    print("    gpumdkit -plt hnemd --save-data              (defaults for everything else)")
+    print("    gpumdkit -plt hnemd 1 60 --save --save-data")
 
 class HNEMD_Processor:
-    def __init__(self, _directory, _scale_eff_size=1, _cutoff_freq=60):
+    def __init__(self, _directory, _scale_eff_size=1, _cutoff_freq=60, _save=False, _save_data=False):
         """
         Initialize HNEMD processor
 
@@ -68,15 +73,23 @@ class HNEMD_Processor:
         directory : str
         scale_eff_size : float
         cutoff_freq : float
+        save : bool
+            Save the plot as 'hnemd.png' instead of showing it interactively
+        save_data : bool
+            Also save the processed data as 'data_hnemd.npz'/'data_shc.npz' (and their .txt equivalents)
         """
         self.directory = _directory
         self.scale_eff_size = _scale_eff_size
         self.cutoff_freq = _cutoff_freq
+        self.save = _save
+        self.save_data = _save_data
         self.path = {
-            'run': self.directory + '/run.in',
-            'kappa': self.directory + '/kappa.out'
+            'run': os.path.join(self.directory, 'run.in'),
+            'kappa': os.path.join(self.directory, 'kappa.out'),
+            'shc': os.path.join(self.directory, 'shc.out'),
+            'model': os.path.join(self.directory, 'model.xyz')
         }
-        self.has_shc = os.path.exists(self.directory + '/shc.out')
+        self.has_shc = os.path.exists(self.path['shc'])
 
     def process_SHC(self, Fe):
         """
@@ -92,8 +105,6 @@ class HNEMD_Processor:
         dict : Reformed SHC data including spectral thermal conductivity
         """
         Reformed_SHC_data = {}
-        self.path['shc'] = self.directory + "/shc.out"
-        self.path['model'] = self.directory + "/model.xyz"
 
         col_shc_name = ['t_omega', 'Ki_jwi', 'Ko_jwo']
         raw_shc_data = np.loadtxt(self.path['shc'])
@@ -141,7 +152,7 @@ class HNEMD_Processor:
             part_ratio = np.sum(group == group_shc_th) / group.size
 
         vol = model.get_volume() * part_ratio / self.scale_eff_size
-        convert = 1.602176634e3  # ev*A/ps/THz * 1/A^3 *1/K * A ==> W/m/K/THz
+        convert = 1.602176634e3  # ev*A/ps/THz * 1/A^3 *1/K * A ==> W/(m·K·THz)
         denom = Fe * Temp * vol
 
         Reformed_SHC_data["k_g_wi"] = Reformed_SHC_data["jwi"] * convert / denom
@@ -164,8 +175,9 @@ class HNEMD_Processor:
             Reformed_SHC_data['Results'][f"{key}_ave"] = np.mean(values)
             Reformed_SHC_data['Results'][f"{key}_std"] = np.std(values) / np.sqrt(N_repeat)
 
-        if len(sys.argv) > 4 and sys.argv[4] == 'save_data':
-            np.savez(f'{self.directory}/data_shc.npz', **Reformed_SHC_data)
+        if self.save_data:
+            np.savez(os.path.join(self.directory, 'data_shc.npz'), **Reformed_SHC_data)
+            self._export_shc_txt(Reformed_SHC_data)
         return Reformed_SHC_data
 
     def process(self):
@@ -230,8 +242,9 @@ class HNEMD_Processor:
         Reformed_HNEMD_data['Results'] = compute_mean_std(Reformed_HNEMD_data, keys, N_repeat)
         res_h = Reformed_HNEMD_data['Results']
 
-        if len(sys.argv) > 4 and sys.argv[4] == 'save_data':
-            np.savez(f'{self.directory}/data_hnemd.npz', **Reformed_HNEMD_data)
+        if self.save_data:
+            np.savez(os.path.join(self.directory, 'data_hnemd.npz'), **Reformed_HNEMD_data)
+            self._export_txt(Reformed_HNEMD_data, t)
 
         # Print HNEMD results
         self._print_hnemd_results(res_h, HNEMD_direction)
@@ -248,7 +261,7 @@ class HNEMD_Processor:
             res_s = None
 
         # Visualization
-        self._plot_results(Reformed_HNEMD_data, Reformed_SHC_data, res_h, res_s,
+        self._plot_results(Reformed_HNEMD_data, Reformed_SHC_data, res_h,
                            HNEMD_direction, Time_upper, N_repeat, t)
 
     def _print_hnemd_results(self, results, direction):
@@ -261,11 +274,11 @@ class HNEMD_Processor:
 
         if direction in ['x', 'y']:
             key_prefix = f'k{direction}'
-            print(f"\nκ_in  = {results[key_prefix + '_in_ave']:.4f} ± {results[key_prefix + '_in_std']:.4f} W/mK")
-            print(f"κ_out = {results[key_prefix + '_out_ave']:.4f} ± {results[key_prefix + '_out_std']:.4f} W/mK")
-            print(f"κ_tot = {results[key_prefix + '_tot_ave']:.4f} ± {results[key_prefix + '_tot_std']:.4f} W/mK")
+            print(f"\nκ_in  = {results[key_prefix + '_in_ave']:.4f} ± {results[key_prefix + '_in_std']:.4f} W/(m·K)")
+            print(f"κ_out = {results[key_prefix + '_out_ave']:.4f} ± {results[key_prefix + '_out_std']:.4f} W/(m·K)")
+            print(f"κ_tot = {results[key_prefix + '_tot_ave']:.4f} ± {results[key_prefix + '_tot_std']:.4f} W/(m·K)")
         elif direction == 'z':
-            print(f"\nκ = {results['kz_tot_ave']:.4f} ± {results['kz_tot_std']:.4f} W/mK")
+            print(f"\nκ = {results['kz_tot_ave']:.4f} ± {results['kz_tot_std']:.4f} W/(m·K)")
 
         print("=" * 70)
 
@@ -275,12 +288,126 @@ class HNEMD_Processor:
         print("SHC Spectral Thermal Conductivity Results")
         print("=" * 70)
         print(f"\nCutoff frequency: {self.cutoff_freq} THz\n")
-        print(f"κ_in  (integrated) = {results['in_ave']:.4f} ± {results['in_std']:.4f} W/mK")
-        print(f"κ_out (integrated) = {results['out_ave']:.4f} ± {results['out_std']:.4f} W/mK")
-        print(f"κ_tot (integrated) = {results['tot_ave']:.4f} ± {results['tot_std']:.4f} W/mK")
+        print(f"κ_in  (integrated) = {results['in_ave']:.4f} ± {results['in_std']:.4f} W/(m·K)")
+        print(f"κ_out (integrated) = {results['out_ave']:.4f} ± {results['out_std']:.4f} W/(m·K)")
+        print(f"κ_tot (integrated) = {results['tot_ave']:.4f} ± {results['tot_std']:.4f} W/(m·K)")
         print("=" * 70 + "\n")
 
-    def _plot_results(self, Reformed_HNEMD_data, Reformed_SHC_data, res_h, res_s,
+    @staticmethod
+    def _txt_block(name, unit, x_name, x_unit, x, arr, trailing_labels=("average",)):
+        """Format one 2D array as a TAB-separated text block: x-column + repeat columns + trailing_labels"""
+        n_repeat = arr.shape[1] - len(trailing_labels)
+        header = [f"{x_name}({x_unit})"] + [f"repeat_{i + 1}" for i in range(n_repeat)] + list(trailing_labels)
+        lines = [f"# ---- {name} ({unit}) ----", "# " + "\t".join(header)]
+        for row in np.column_stack((x, arr)):
+            lines.append("\t".join(f"{v:.6g}" for v in row))
+        lines.append("")
+        return lines
+
+    def _export_txt(self, Reformed_HNEMD_data, t):
+        """Export HNEMD data as a compact, Excel/Origin-friendly TAB-separated .txt file"""
+        res = Reformed_HNEMD_data['Results']
+        lines = [
+            "# ==== plt_hnemd.py HNEMD data export ====",
+            f"# Directory: {self.directory}",
+            f"# Scale_eff_size: {self.scale_eff_size}",
+            f"# N_repeat: {Reformed_HNEMD_data['kz_tot'].shape[1] - 1}",
+            "# Columns are TAB-separated; lines starting with '#' are comments/headers.",
+            "",
+        ]
+
+        for key in ["kx_in", "kx_out", "kx_tot", "ky_in", "ky_out", "ky_tot", "kz_tot"]:
+            lines += self._txt_block(key, "W/(m·K)", "t", "ns", t, Reformed_HNEMD_data[key])
+
+        lines.append("# ==== Summary results ====")
+        lines.append("# quantity\taverage\tstd\tunit")
+        for key in ["kx_in", "kx_out", "kx_tot", "ky_in", "ky_out", "ky_tot", "kz_tot"]:
+            lines.append(f"{key}\t{res[key + '_ave']:.6g}\t{res[key + '_std']:.6g}\tW/(m·K)")
+
+        with open(os.path.join(self.directory, 'data_hnemd.txt'), 'w') as f:
+            f.write("\n".join(lines) + "\n")
+
+    def _export_shc_txt(self, Reformed_SHC_data):
+        """Export HNEMD's SHC data as a compact, Excel/Origin-friendly TAB-separated .txt file"""
+        lines = [
+            "# ==== plt_hnemd.py SHC data export ====",
+            f"# Directory: {self.directory}",
+            f"# Cutoff frequency: {self.cutoff_freq} THz",
+            "# Columns are TAB-separated; lines starting with '#' are comments/headers.",
+            "",
+        ]
+
+        lines += self._txt_block("Kt", "eV/ps", "t_corr", "ps", Reformed_SHC_data['t'][:, -2],
+                                 Reformed_SHC_data['Kt'], trailing_labels=("average", "std"))
+        for key in ("k_g_wi", "k_g_wo", "k_g_wt"):
+            lines += self._txt_block(key, "W/(m·K·THz)", "nu", "THz", Reformed_SHC_data['nu'][:, -2],
+                                     Reformed_SHC_data[key], trailing_labels=("average", "std"))
+
+        res = Reformed_SHC_data["Results"]
+        lines.append("# ==== Summary results (frequency-integrated) ====")
+        lines.append("# quantity\taverage\tstd\tunit")
+        for key in ["in", "out", "tot"]:
+            lines.append(f"kappa_{key}\t{res[key + '_ave']:.6g}\t{res[key + '_std']:.6g}\tW/(m·K)")
+
+        with open(os.path.join(self.directory, 'data_shc.txt'), 'w') as f:
+            f.write("\n".join(lines) + "\n")
+
+    @staticmethod
+    def _plot_running_kappa_panel(t, N_repeat, Time_upper, curves, annotations, direction):
+        """(a) Running-average thermal conductivity.
+
+        curves: list of (data, color, lw) — each drawn as N_repeat faint gray traces
+            plus one highlighted average trace.
+        annotations: list of (y, text, color) result labels, color may be None for default.
+        """
+        set_fig_properties([gca()])
+        for i in range(N_repeat):
+            for data, _, _ in curves:
+                plot(t, data[:, i], color='k', alpha=0.3)
+        for data, color, lw in curves:
+            plot(t, data[:, -1], color=color, lw=lw)
+
+        for y, txt, color in annotations:
+            kwargs = dict(ha='right', va='top', transform=plt.gca().transAxes)
+            if color is not None:
+                kwargs['color'] = color
+            text(0.95, y, txt, **kwargs)
+
+        xlim(0, Time_upper)
+        xlabel('time (ns)')
+        ylabel(r'$\kappa$ (W/(m·K))')
+        title(f"(a) Running average thermal conductivity: along {direction}")
+
+    @staticmethod
+    def _plot_kt_panel(Reformed_SHC_data):
+        """(b) Force-virial correlation function K_tot(t)"""
+        set_fig_properties([gca()])
+        plot(Reformed_SHC_data['t'][:, -2], Reformed_SHC_data['Kt'][:, -2] / Reformed_SHC_data['L'], lw=2)
+        ylabel('K (eV/ps)')
+        xlabel('Correlation time (ps)')
+        title('(b) K$_{tot}$(t)')
+
+    def _plot_shc_spectral_panel(self, Reformed_SHC_data, series):
+        """(c) SHC spectral thermal conductivity.
+
+        series: list of (col, color, lw, label) — label may be None to omit the legend entry.
+        """
+        set_fig_properties([gca()])
+        for col, color, lw, label in series:
+            plot(Reformed_SHC_data['nu'][:, -2], Reformed_SHC_data[col][:, -2], linewidth=lw, color=color, label=label)
+            fill_between(Reformed_SHC_data['nu'][:, -2],
+                         Reformed_SHC_data[col][:, -2] - Reformed_SHC_data[col][:, -1],
+                         Reformed_SHC_data[col][:, -2] + Reformed_SHC_data[col][:, -1],
+                         facecolor=color, alpha=0.3)
+        if [label for *_, label in series if label]:
+            legend(frameon=False, fontsize=fs)
+        xlim(0, self.cutoff_freq)
+        axhline(y=0, color='k', linestyle='--')
+        ylabel(r'$\kappa$($\omega$) (W/(m·K·THz))')
+        xlabel(r'$\nu$ (THz)')
+        title('(c) Spectral thermal conductivity')
+
+    def _plot_results(self, Reformed_HNEMD_data, Reformed_SHC_data, res_h,
                       HNEMD_direction, Time_upper, N_repeat, t):
         """Visualize HNEMD and SHC results"""
 
@@ -295,65 +422,26 @@ class HNEMD_Processor:
                 figure(figsize=(8, 4))
                 subplot(1, 1, 1)
 
-            set_fig_properties([gca()])
-            for i in range(N_repeat):
-                plot(t, Reformed_HNEMD_data[f"{key}_in"][:, i], color='k', alpha=0.3)
-                plot(t, Reformed_HNEMD_data[f"{key}_out"][:, i], color='k', alpha=0.3)
-                plot(t, Reformed_HNEMD_data[f"{key}_tot"][:, i], color='k', alpha=0.3)
-            plot(t, Reformed_HNEMD_data[f"{key}_in"][:, -1], color='C1', lw=3)
-            plot(t, Reformed_HNEMD_data[f"{key}_out"][:, -1], color='C2', lw=3)
-            plot(t, Reformed_HNEMD_data[f"{key}_tot"][:, -1], color='C0', lw=3)
-
-            text(0.95, 0.93, f"$\\kappa_{{\\mathrm{{in}}}}$ = {res_h[f'{key}_in_ave']:.3f} ± {res_h[f'{key}_in_std']:.2f} W/mK",
-                 ha='right', va='top', transform=plt.gca().transAxes, color='C1')
-            text(0.95, 0.83, f"$\\kappa_{{\\mathrm{{out}}}}$ = {res_h[f'{key}_out_ave']:.3f} ± {res_h[f'{key}_out_std']:.2f} W/mK",
-                 ha='right', va='top', transform=plt.gca().transAxes, color='C2')
-            text(0.95, 0.73, f"$\\kappa_{{\\mathrm{{tot}}}}$ = {res_h[f'{key}_tot_ave']:.3f} ± {res_h[f'{key}_tot_std']:.2f} W/mK",
-                 ha='right', va='top', transform=plt.gca().transAxes, color='C0')
-            xlim(0, Time_upper)
-            xlabel('time (ns)')
-            ylabel(r'$\kappa$ (W/mK)')
-            title(f"(a) Running average thermal conductivity: along {HNEMD_direction}")
+            curves = [(Reformed_HNEMD_data[f"{key}_in"], 'C1', 3),
+                      (Reformed_HNEMD_data[f"{key}_out"], 'C2', 3),
+                      (Reformed_HNEMD_data[f"{key}_tot"], 'C0', 3)]
+            annotations = [
+                (0.93, f"$\\kappa_{{\\mathrm{{in}}}}$ = {res_h[f'{key}_in_ave']:.3f} ± {res_h[f'{key}_in_std']:.2f} W/(m·K)", 'C1'),
+                (0.83, f"$\\kappa_{{\\mathrm{{out}}}}$ = {res_h[f'{key}_out_ave']:.3f} ± {res_h[f'{key}_out_std']:.2f} W/(m·K)", 'C2'),
+                (0.73, f"$\\kappa_{{\\mathrm{{tot}}}}$ = {res_h[f'{key}_tot_ave']:.3f} ± {res_h[f'{key}_tot_std']:.2f} W/(m·K)", 'C0'),
+            ]
+            self._plot_running_kappa_panel(t, N_repeat, Time_upper, curves, annotations, HNEMD_direction)
 
             if self.has_shc:
-                # (b) Force-virial Correlation function
                 subplot(2, 4, 5)
-                set_fig_properties([gca()])
-                plot(Reformed_SHC_data['t'][:, -2], Reformed_SHC_data['Kt'][:, -2] / Reformed_SHC_data['L'], lw=2)
-                ylabel('K (eV/ps)')
-                xlabel('Correlation time (ps)')
-                title('(b) K$_{tot}$(t)')
+                self._plot_kt_panel(Reformed_SHC_data)
 
-                # (c) SHC
                 subplot2grid((2, 4), (1, 1), colspan=3)
-                set_fig_properties([gca()])
-                plot(Reformed_SHC_data['nu'][:, -2], Reformed_SHC_data['k_g_wi'][:, -2], linewidth=2, color='C1', label='In-plane component')
-                fill_between(Reformed_SHC_data['nu'][:, -2],
-                             Reformed_SHC_data['k_g_wi'][:, -2] - Reformed_SHC_data['k_g_wi'][:, -1],
-                             Reformed_SHC_data['k_g_wi'][:, -2] + Reformed_SHC_data['k_g_wi'][:, -1],
-                             facecolor='C1', alpha=0.3)
-                plot(Reformed_SHC_data['nu'][:, -2], Reformed_SHC_data['k_g_wo'][:, -2], linewidth=2, color='C2', label='Out-of-plane component')
-                fill_between(Reformed_SHC_data['nu'][:, -2],
-                             Reformed_SHC_data['k_g_wo'][:, -2] - Reformed_SHC_data['k_g_wo'][:, -1],
-                             Reformed_SHC_data['k_g_wo'][:, -2] + Reformed_SHC_data['k_g_wo'][:, -1],
-                             facecolor='C2', alpha=0.3)
-                plot(Reformed_SHC_data['nu'][:, -2], Reformed_SHC_data['k_g_wt'][:, -2], linewidth=2, color='C0', label='Total')
-                fill_between(Reformed_SHC_data['nu'][:, -2],
-                             Reformed_SHC_data['k_g_wt'][:, -2] - Reformed_SHC_data['k_g_wt'][:, -1],
-                             Reformed_SHC_data['k_g_wt'][:, -2] + Reformed_SHC_data['k_g_wt'][:, -1],
-                             facecolor='C0', alpha=0.3)
-                # text(0.6, 0.9, f"$\\kappa_{{in}}$ = {res_s['in_ave']:.2f} ± {res_s['in_std']:.2f} W/mK",
-                #      ha='left', va='top', transform=gca().transAxes, color='C1')
-                # text(0.6, 0.8, f"$\\kappa_{{out}}$ = {res_s['out_ave']:.2f} ± {res_s['out_std']:.2f} W/mK",
-                #      ha='left', va='top', transform=gca().transAxes, color='C2')
-                # text(0.6, 0.7, f"$\\kappa_{{tot}}$ = {res_s['tot_ave']:.2f} ± {res_s['tot_std']:.2f} W/mK",
-                #      ha='left', va='top', transform=gca().transAxes, color='C0')
-                legend(frameon=False, fontsize=fs)
-                xlim(0, self.cutoff_freq)
-                axhline(y=0, color='k', linestyle='--')
-                ylabel(r'$\kappa$($\omega$) (W/m/K/THz)')
-                xlabel(r'$\nu$ (THz)')
-                title('(c) Spectral thermal conductivity')
+                self._plot_shc_spectral_panel(Reformed_SHC_data, [
+                    ('k_g_wi', 'C1', 2, 'In-plane component'),
+                    ('k_g_wo', 'C2', 2, 'Out-of-plane component'),
+                    ('k_g_wt', 'C0', 2, 'Total'),
+                ])
 
         elif HNEMD_direction == "z":
             if self.has_shc:
@@ -363,47 +451,21 @@ class HNEMD_Processor:
                 figure(figsize=(8, 4))
                 subplot(1, 1, 1)
 
-            set_fig_properties([gca()])
-            for i in range(N_repeat):
-                plot(t, Reformed_HNEMD_data["kz_tot"][:, i], color='k', alpha=0.3)
-            plot(t, Reformed_HNEMD_data["kz_tot"][:, -1], color='C0', lw=5)
-
-            text(0.95, 0.9, fr"$\kappa_{{tot}}$ = {res_h['kz_tot_ave']:.3f} ± {res_h['kz_tot_std']:.2f} W/mK",
-                 ha='right', va='top', transform=plt.gca().transAxes)
-            xlim(0, Time_upper)
-            xlabel('time (ns)')
-            ylabel(r'$\kappa$ (W/mK)')
-            title(f"(a) Running average thermal conductivity: along {HNEMD_direction}")
+            curves = [(Reformed_HNEMD_data["kz_tot"], 'C0', 5)]
+            annotations = [(0.9, fr"$\kappa_{{tot}}$ = {res_h['kz_tot_ave']:.3f} ± {res_h['kz_tot_std']:.2f} W/(m·K)", None)]
+            self._plot_running_kappa_panel(t, N_repeat, Time_upper, curves, annotations, HNEMD_direction)
 
             if self.has_shc:
-                # (b) Force-virial Correlation function
                 subplot(2, 4, 5)
-                set_fig_properties([gca()])
-                plot(Reformed_SHC_data['t'][:, -2], Reformed_SHC_data['Kt'][:, -2] / Reformed_SHC_data['L'], lw=2)
-                ylabel('K (eV/ps)')
-                xlabel('Correlation time (ps)')
-                title('(b) K$_{tot}$(t)')
+                self._plot_kt_panel(Reformed_SHC_data)
 
-                # (c) SHC
                 subplot2grid((2, 4), (1, 1), colspan=3)
-                set_fig_properties([gca()])
-                plot(Reformed_SHC_data['nu'][:, -2], Reformed_SHC_data['k_g_wt'][:, -2], linewidth=3, color='C0')
-                fill_between(Reformed_SHC_data['nu'][:, -2],
-                             Reformed_SHC_data['k_g_wt'][:, -2] - Reformed_SHC_data['k_g_wt'][:, -1],
-                             Reformed_SHC_data['k_g_wt'][:, -2] + Reformed_SHC_data['k_g_wt'][:, -1],
-                             facecolor='C0', alpha=0.3)
-                # text(0.6, 0.7, f"$\\kappa_{{tot}}$ = {res_s['tot_ave']:.2f} ± {res_s['tot_std']:.2f} W/mK",
-                #      ha='left', va='top', transform=gca().transAxes)
-                xlim(0, self.cutoff_freq)
-                axhline(y=0, color='k', linestyle='--')
-                ylabel(r'$\kappa$($\omega$) (W/m/K/THz)')
-                xlabel(r'$\nu$ (THz)')
-                title('(c) Spectral thermal conductivity')
+                self._plot_shc_spectral_panel(Reformed_SHC_data, [('k_g_wt', 'C0', 3, None)])
 
         tight_layout()
 
-        if len(sys.argv) > 3 and sys.argv[3] == 'save':
-            savefig(f'hnemd.png', dpi=300, bbox_inches='tight')
+        if self.save:
+            savefig('hnemd.png', dpi=300, bbox_inches='tight')
         else:
             show()
 
@@ -411,16 +473,22 @@ class HNEMD_Processor:
 
 if __name__ == "__main__":
 
-    if len(sys.argv) > 1 and sys.argv[1] in ['-h', '--help', 'help']:
+    argv = sys.argv[1:]
+
+    if argv and argv[0] in ('-h', '--help', 'help'):
         print_usage()
         sys.exit(0)
 
+    # --save/--save-data are independent flags: they can appear anywhere,
+    # in any combination, without disturbing the positional numeric arguments below.
+    save = '--save' in argv or 'save' in argv
+    save_data = '--save-data' in argv or 'save_data' in argv
+    positional = [a for a in argv if a not in ('--save', 'save', '--save-data', 'save_data')]
+
     try:
-        scale_eff_size = float(sys.argv[1]) if len(sys.argv) > 1 else 1
-        cutoff_freq = float(sys.argv[2]) if len(sys.argv) > 2 else 60
-        if len(sys.argv) > 3 and sys.argv[3] != 'save':
-            raise ValueError
-        if len(sys.argv) > 4 and sys.argv[4] != 'save_data':
+        scale_eff_size = float(positional[0]) if len(positional) > 0 else 1
+        cutoff_freq = float(positional[1]) if len(positional) > 1 else 60
+        if len(positional) > 2:
             raise ValueError
 
     except (ValueError, IndexError):
@@ -429,6 +497,6 @@ if __name__ == "__main__":
 
     directory = os.getcwd()
 
-    processor = HNEMD_Processor(directory, scale_eff_size, cutoff_freq)
+    processor = HNEMD_Processor(directory, scale_eff_size, cutoff_freq, _save=save, _save_data=save_data)
     processor.process()
-    # python plt_hnemd.py [scale_eff_size] [cutoff_freq] [save]
+    # python plt_hnemd.py [scale_eff_size] [cutoff_freq] [--save] [--save-data]
