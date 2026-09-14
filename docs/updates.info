@@ -1,25 +1,25 @@
 # === User Configuration Section: Only modify these variables ===
 VERSION="1.5.7"
-RELEASE_DATE="2026-08-23"
+RELEASE_DATE="2026-09-14"
 HOME_PAGE="https://gpumdkit.cn"
 CONTACT="yanzihan@westlake.edu.cn"
 
 # New features (one per line, in an array; keep at most the five newest entries)
 NEW_FEATURES=(
+    "add --save-data TAB-separated export for EMD, NEMD, and HNEMD plot data"
     "add -prediction_dpa for DeepMD DPA training-set .out predictions"
     "add -out2xyz_bec for VASP OUTCAR to extxyz conversion with BEC labels"
     "add perturb.txt report for structure perturbation"
     "add -plt emd2 for EMD thermal conductivity in all directions"
-    "add -plt D_PT and -plt sigma_PT for phase-transition piecewise Arrhenius fits"
 )
 
 # Bug fixes (one per line, in an array; keep at most the five newest entries)
 BUG_FIXES=(
+    "ignore commented-out run.in directives in EMD, NEMD, and HNEMD plot parsing"
+    "show phonon plot examples and align compatible disconnected q-path offsets"
     "remove the obsolete -plt lr learning-rate plotting route"
     "include elements from all frames in minimum-distance analysis"
     "exclude missing-stress sentinel rows from outlier analysis and handle empty valid sets"
-    "include bilingual agent skills in the conda package"
-    "fix exyz2pos numbering and element grouping, and remove ineffective output and velocity options"
 )
 
 # === Formatted Output Logic ===

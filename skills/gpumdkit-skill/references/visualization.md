@@ -148,37 +148,54 @@ gpumdkit.sh -plt plane-grid -i model.xyz -d displacements.dat -e Pb Sr
 gpumdkit.sh -plt emd x
 gpumdkit.sh -plt emd2 save
 
+# EMD data export (the plot and data options are independent)
+gpumdkit.sh -plt emd x --save-data
+gpumdkit.sh -plt emd x --save --save-data
+
 # NEMD thermal transport
 # Parameters: real_length scale_eff_size cutoff_freq
-gpumdkit.sh -plt nemd <real_length> <scale_eff_size> <cutoff_freq> save
+gpumdkit.sh -plt nemd <real_length> <scale_eff_size> <cutoff_freq> --save --save-data
 
 # HNEMD thermal transport
-gpumdkit.sh -plt hnemd <scale_eff_size> <cutoff_freq> save
+gpumdkit.sh -plt hnemd <scale_eff_size> <cutoff_freq> --save --save-data
 
 # Viscosity
 gpumdkit.sh -plt viscosity save
 ```
+
+`--save-data` exports tab-separated text files for EMD, NEMD, and HNEMD. It
+also writes the corresponding `.npz` arrays for EMD and HNEMD. NEMD keeps its
+historical `data_nemd.npz` (and `data_shc.npz` when SHC data exist) output and
+adds `data_nemd.txt`/`data_shc.txt` when requested. `--save` and `--save-data`
+are independent; the legacy bare tokens `save` and `save_data` remain accepted.
 
 ### Phonons (3 plot types)
 
 | Command | Input Files | Description |
 |---------|-------------|-------------|
 | `pdos` | `model.xyz`, `run.in`, `dos.out`, `mvac.out` | Phonon DOS and heat capacity |
-| `phonon` | `phonon_NEP.dat`, `QPOINTS` | Phonon band structure from calculator 414 |
+| `phonon` | Optional phonon data file (default `phonon_NEP.dat`), `QPOINTS` | Phonon band structure from calculator 414 |
 | `phonon_comp` | Two or more phonon data files, `QPOINTS` | Compare phonon band structures; labels come from filenames |
 
 ```bash
 gpumdkit.sh -plt pdos save
 gpumdkit.sh -plt phonon
+gpumdkit.sh -plt phonon phonon_DFT.dat
 gpumdkit.sh -plt phonon phonon_NEP.dat QPOINTS save
 gpumdkit.sh -plt phonon_comp phonon_DFT.dat phonon_NEP.dat save
 ```
 
+The `phonon` data-file argument is optional. When it is omitted, the plotter
+reads `phonon_NEP.dat`; when only one data file is supplied, the path file
+defaults to `QPOINTS`.
+
 `phonon_comp` accepts two or more compatible phonon data files. For conventional
 names such as `phonon_NEP.dat`, `phonon_DFT.dat`, and `phonon_MACE.dat`, the text
 after `phonon_` is used as the legend label. The plotters validate the phonon
-rows and the supplied `QPOINTS` path before drawing. Comparison files must use
-matching q-point distances, not only the same number of rows.
+rows and the supplied `QPOINTS` path before drawing. Disconnected path segments
+are normalized independently before comparison, so files may use different
+offsets across a path jump. They must still use the same q-point sampling and
+number of bands, not only the same number of rows.
 
 ## Common Workflows
 
@@ -245,6 +262,15 @@ gpumdkit.sh -plt nemd 10 1 60 save
 | `hnemd` | `hnemd.png` |
 | `viscosity` | `viscosity.png` |
 | `cohesive` | `cohesive.png` |
+
+With `--save-data`, heat-transport plots also write the following TAB-separated
+files (comment/header lines begin with `#`):
+
+| Plot Type | Data Files |
+|-----------|------------|
+| `emd` | `data_emd.npz`, `data_emd.txt` |
+| `nemd` | `data_nemd.txt`; `data_shc.txt` when SHC data exist; historical `.npz` files remain available |
+| `hnemd` | `data_hnemd.npz`, `data_hnemd.txt`; `data_shc.npz`, `data_shc.txt` when SHC data exist |
 
 ## Dependencies
 

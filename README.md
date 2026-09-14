@@ -305,12 +305,18 @@ After calculating phonons through `gpumdkit.sh -> 4) Calculators -> 414) Calc ph
 
 ```
 gpumdkit.sh -plt phonon phonon_NEP.dat QPOINTS save
+gpumdkit.sh -plt phonon phonon_DFT.dat
 gpumdkit.sh -plt phonon_comp phonon_DFT.dat phonon_NEP.dat save
 ```
+
+`phonon` accepts an optional data-file argument and uses `phonon_NEP.dat` by
+default; when only the data file is supplied, it uses the default `QPOINTS`.
 
 Comparison labels are read from filenames such as `phonon_NEP.dat` and
 `phonon_DFT.dat`. Two or more phonon files can be supplied to
 `phonon_comp`; use `--qpoints FILE` when the path file is not named `QPOINTS`.
+Comparison files may use different q-path offsets at disconnected segments, but
+must otherwise have the same q-point sampling and number of bands.
 
 <div align="center">
   <img src="./docs/Gallery/phonon.png" alt="Phonon band structure" width="42%" />

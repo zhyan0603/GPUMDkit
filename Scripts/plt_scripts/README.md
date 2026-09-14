@@ -437,9 +437,14 @@ Analyzes and plots thermal conductivity from equilibrium molecular dynamics (EMD
 **Usage:**
 
 ```bash
-gpumdkit.sh -plt emd <direction>
-gpumdkit.sh -plt emd x # for x direction
+gpumdkit.sh -plt emd <direction> [--save] [--save-data]
+gpumdkit.sh -plt emd x --save-data       # export processed data
+gpumdkit.sh -plt emd x --save --save-data # save the figure and data
 ```
+
+`--save` saves the figure as `emd.png`. `--save-data` saves the processed
+arrays as `data_emd.npz` and tab-separated `data_emd.txt`; the two options are
+independent. The legacy bare tokens `save` and `save_data` remain accepted.
 
 <div align="center">
     <img src="../../docs/Gallery/emd.png" alt="EMD thermal conductivity" width="70%" />
@@ -477,7 +482,7 @@ Visualizes non-equilibrium molecular dynamics (NEMD) thermal transport propertie
 **Usage:**
 
 ```bash
-gpumdkit.sh -plt nemd [real_length] [scale_eff_size] [cutoff_freq] [save]
+gpumdkit.sh -plt nemd [real_length] [scale_eff_size] [cutoff_freq] [--save] [--save-data]
 ```
 
 **Params:**
@@ -490,9 +495,15 @@ scale_eff_size: Optional, Scale factor for effective cross-sectional area (defau
                  - S_box: box area perpendicular to heat transfer direction
                  - S_eff: real or effective area of the system
 cutoff_freq   : Optional, Cutoff frequency for SHC calculation in THz (default: 60)
-save          : Optional, save the plot as 'nemd.png'
-!!! Note !!!  : If no SHC data, set [scale_eff_size] and [cutoff_freq] to any number as placeholders when using 'save'.
+--save        : Optional, save the plot as 'nemd.png'
+--save-data   : Optional, additionally export tab-separated 'data_nemd.txt'
+                and, when SHC data exist, 'data_shc.txt'
+!!! Note !!!  : If no SHC data, set [scale_eff_size] and [cutoff_freq] to any number as placeholders when using '--save'.
 ```
+
+The historical `data_nemd.npz` (and `data_shc.npz` when SHC data exist) are
+still written as before. `--save` and `--save-data` are independent; the
+legacy bare tokens `save` and `save_data` remain accepted.
 
 <div align="center">
     <img src="../../docs/Gallery/nemd.png" alt="NEMD results" width="70%" />
@@ -507,7 +518,7 @@ Plots homogeneous non-equilibrium molecular dynamics (HNEMD) results.
 **Usage:**
 
 ```bash
-gpumdkit.sh -plt hnemd [scale_eff_size] [cutoff_freq] [save]
+gpumdkit.sh -plt hnemd [scale_eff_size] [cutoff_freq] [--save] [--save-data]
 ```
 
 **Params:**
@@ -519,9 +530,15 @@ scale_eff_size: Optional, Scale factor for effective cross-sectional area (defau
                  - S_box: box area perpendicular to heat transfer direction
                  - S_eff: real or effective area of the system
 cutoff_freq   : Optional, Cutoff frequency for SHC calculation in THz (default: 60)
-save          : Optional, save the plot as 'hnemd.png'
-!!! Note !!!  : If no SHC data, set [scale_eff_size] and [cutoff_freq] to any number as placeholders when using 'save'.
+--save        : Optional, save the plot as 'hnemd.png'
+--save-data   : Optional, save processed arrays as 'data_hnemd.npz' and
+                tab-separated 'data_hnemd.txt'; when SHC data exist, also
+                save 'data_shc.npz' and 'data_shc.txt'
+!!! Note !!!  : If no SHC data, set [scale_eff_size] and [cutoff_freq] to any number as placeholders when using '--save'.
 ```
+
+`--save` and `--save-data` are independent. The legacy bare tokens `save` and
+`save_data` remain accepted.
 
 <div align="center">
     <img src="../../docs/Gallery/hnemd.png" alt="HNEMD results" width="70%" />
@@ -560,14 +577,19 @@ and high-symmetry labels are read directly from a line-mode `QPOINTS` file.
 Disconnected path segments are drawn separately, and boundary labels such as
 `S|S₀` are combined at the same horizontal position.
 
-**Input Files:** `phonon_NEP.dat` and `QPOINTS`
+**Input Files:** A phonon data file (default `phonon_NEP.dat`) and `QPOINTS`
 
 **Usage:**
 
 ```bash
 gpumdkit.sh -plt phonon
+gpumdkit.sh -plt phonon phonon_DFT.dat
 gpumdkit.sh -plt phonon phonon_NEP.dat QPOINTS save
 ```
+
+The phonon data file is optional. If it is omitted, the plotter reads
+`phonon_NEP.dat`; when only one file is supplied, the path file defaults to
+`QPOINTS`.
 
 <div align="center">
     <img src="../../docs/Gallery/phonon.png" alt="Phonon band structure" width="70%" />
@@ -580,9 +602,10 @@ gpumdkit.sh -plt phonon phonon_NEP.dat QPOINTS save
 Compares phonon band structures from two or more data files. The legend label
 is derived from each filename, so `phonon_DFT.dat` is shown as `DFT` and
 `phonon_MACE.dat` as `MACE`. For a two-file DFT/NEP comparison, the plot uses
-solid gray lines for DFT and dashed red lines for NEP.
-All comparison files must contain the same q-point distances, not only the same
-number of rows.
+solid gray lines for DFT and dashed red lines for NEP. Disconnected path
+segments are normalized independently before comparison, so files may use
+different offsets across a path jump. They must still contain the same q-point
+sampling and number of bands, not only the same number of rows.
 
 **Input Files:** Two or more `phonon_<label>.dat` files and `QPOINTS`
 

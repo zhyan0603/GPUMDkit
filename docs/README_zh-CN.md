@@ -304,12 +304,17 @@ gpumdkit.sh -plt thermo save
 
 ```
 gpumdkit.sh -plt phonon phonon_NEP.dat QPOINTS save
+gpumdkit.sh -plt phonon phonon_DFT.dat
 gpumdkit.sh -plt phonon_comp phonon_DFT.dat phonon_NEP.dat save
 ```
 
+`phonon` 可选地接收一个数据文件；如果省略，则默认读取
+`phonon_NEP.dat`。如果只提供数据文件，则路径文件默认使用 `QPOINTS`。
+
 对比图会从文件名中自动读取图例，例如 `phonon_NEP.dat` 对应 `NEP`，
 `phonon_DFT.dat` 对应 `DFT`。`phonon_comp` 支持两个或更多声子文件；如果
-路径文件不是 `QPOINTS`，可以使用 `--qpoints FILE` 指定。
+路径文件不是 `QPOINTS`，可以使用 `--qpoints FILE` 指定。断开路径段之间的
+q-path 偏移会在比较前分别归一化，但对比文件仍必须使用相同的 q 点采样和声子支数。
 
 <div align="center">
   <img src="./Gallery/phonon.png" alt="Phonon band structure" width="42%" />

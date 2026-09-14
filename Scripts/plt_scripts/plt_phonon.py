@@ -19,7 +19,7 @@ Output:
   phonon.png   Phonon band-structure figure when saving is requested or the
                selected Matplotlib backend cannot display figures.
 Author:     Zihan YAN (yanzihan@westlake.edu.cn)
-Last-modified: 2026-08-01
+Last-modified: 2026-09-14
 =============================================================================
 """
 
@@ -39,6 +39,11 @@ def print_help() -> None:
     print(" phonon_file  Phonon data file; defaults to 'phonon_NEP.dat'")
     print(" QPOINTS      Line-mode q-point path; defaults to 'QPOINTS'")
     print(" save         Save the figure as 'phonon.png'")
+    print("")
+    print(" Examples:")
+    print("   gpumdkit.sh -plt phonon")
+    print("   gpumdkit.sh -plt phonon phonon_DFT.dat")
+    print("   gpumdkit.sh -plt phonon phonon_DFT.dat QPOINTS save")
 
 
 def parse_arguments() -> Optional[Tuple[Path, Path, bool]]:

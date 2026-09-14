@@ -9,9 +9,10 @@ Citation: Z. Yan et al., GPUMDkit: A User-Friendly Toolkit for GPUMD and NEP,
 Script:     plt_phonon_comp.py
 Category:   Plot Scripts
 Purpose:    Compare two or more phonon band-structure data files.
-Usage:      gpumdkit.sh -plt phonon_comp <file1> <file2> [file3 ...] [save]
-            python plt_phonon_comp.py <file1> <file2> [file3 ...] [save]
-            ... [--qpoints FILE]
+Usage:      gpumdkit.sh -plt phonon_comp <file1> <file2> [file3 ...]
+            ... [--qpoints FILE] [save]
+            python plt_phonon_comp.py <file1> <file2> [file3 ...]
+            ... [--qpoints FILE] [save]
 Arguments:
   file1...   Two or more phonon data files, normally named phonon_<label>.dat
   save       Save the figure as 'phonon_comp.png' instead of displaying it
@@ -21,7 +22,7 @@ Output:
   phonon_comp.png  Comparison figure when saving is requested or the selected
                    Matplotlib backend cannot display figures.
 Author:     Zihan YAN (yanzihan@westlake.edu.cn)
-Last-modified: 2026-08-23
+Last-modified: 2026-09-14
 =============================================================================
 """
 
@@ -43,12 +44,19 @@ from plt_phonon import (
 
 def print_help() -> None:
     """Print command-line usage without importing plotting dependencies."""
-    print(" Usage: gpumdkit.sh -plt phonon_comp <file1> <file2> [file3 ...] [save]")
-    print("    or: python plt_phonon_comp.py <file1> <file2> [file3 ...] [save]")
+    print(" Usage: gpumdkit.sh -plt phonon_comp <file1> <file2> [file3 ...]")
+    print("    ... [--qpoints FILE] [save]")
+    print("    or: python plt_phonon_comp.py <file1> <file2> [file3 ...]")
+    print("    ... [--qpoints FILE] [save]")
     print("")
     print(" file1...       Two or more phonon data files")
     print(" save           Save the figure as 'phonon_comp.png'")
     print(" --qpoints FILE Use FILE instead of the default 'QPOINTS'")
+    print("")
+    print(" Examples:")
+    print("   gpumdkit.sh -plt phonon_comp phonon_DFT.dat phonon_NEP.dat save")
+    print("   gpumdkit.sh -plt phonon_comp phonon_DFT.dat phonon_NEP.dat \\")
+    print("       --qpoints QPOINTS save")
     print("")
     print(" Labels are read from filenames: phonon_NEP.dat -> NEP")
 
@@ -82,6 +90,7 @@ def parse_arguments() -> Optional[Tuple[List[Path], Path, bool]]:
         index += 1
 
     if len(files) < 2:
+        print_help()
         raise ValueError("phonon_comp requires at least two phonon data files")
     return files, qpoints_file, save
 
@@ -204,22 +213,41 @@ def main() -> int:
         npoints, endpoint_labels = parse_qpoints(qpoints_file)
         datasets = []
         reference_q_lengths = None
+        reference_plot_q_lengths = None
         reference_rows = None
+        reference_band_count = None
         for filename in files:
             q_lengths, frequencies = parse_phonon_data(filename)
-            if reference_q_lengths is None:
-                reference_q_lengths = q_lengths
-                reference_rows = len(q_lengths)
-            elif len(q_lengths) != reference_rows:
+            if reference_rows is not None and len(q_lengths) != reference_rows:
                 raise ValueError(
                     f"'{filename}' has {len(q_lengths)} q-points; all comparison files "
                     f"must have {reference_rows}"
                 )
-            elif not np.allclose(q_lengths, reference_q_lengths):
+            if (
+                reference_band_count is not None
+                and frequencies.shape[1] != reference_band_count
+            ):
                 raise ValueError(
-                    f"'{filename}' uses a different q-point path; all comparison "
-                    "files must have matching q-point distances"
+                    f"'{filename}' has {frequencies.shape[1]} bands; all comparison files "
+                    f"must have {reference_band_count}"
                 )
+
+            plot_q_lengths, _, _ = _tick_positions(
+                q_lengths, npoints, endpoint_labels
+            )
+            if reference_plot_q_lengths is not None and not np.allclose(
+                plot_q_lengths, reference_plot_q_lengths
+            ):
+                raise ValueError(
+                    f"'{filename}' uses a different q-point sampling after "
+                    "normalizing disconnected path segments; all comparison "
+                    "files must use the same q-point path"
+                )
+            if reference_q_lengths is None:
+                reference_q_lengths = q_lengths
+                reference_plot_q_lengths = plot_q_lengths
+                reference_rows = len(q_lengths)
+                reference_band_count = frequencies.shape[1]
             datasets.append((filename, frequencies))
 
         plot_q_lengths, tick_positions, path_labels = _tick_positions(

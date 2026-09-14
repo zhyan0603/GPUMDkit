@@ -147,36 +147,52 @@ gpumdkit.sh -plt plane-grid -i model.xyz -d displacements.dat -e Pb Sr
 gpumdkit.sh -plt emd x
 gpumdkit.sh -plt emd2 save
 
+# 导出 EMD 数据（图片和数据选项相互独立）
+gpumdkit.sh -plt emd x --save-data
+gpumdkit.sh -plt emd x --save --save-data
+
 # NEMD 热输运
 # 参数：real_length scale_eff_size cutoff_freq
-gpumdkit.sh -plt nemd <real_length> <scale_eff_size> <cutoff_freq> save
+gpumdkit.sh -plt nemd <real_length> <scale_eff_size> <cutoff_freq> --save --save-data
 
 # HNEMD 热输运
-gpumdkit.sh -plt hnemd <scale_eff_size> <cutoff_freq> save
+gpumdkit.sh -plt hnemd <scale_eff_size> <cutoff_freq> --save --save-data
 
 # 粘度
 gpumdkit.sh -plt viscosity save
 ```
+
+`--save-data` 会为 EMD、NEMD 和 HNEMD 导出制表符分隔的文本文件，同时为
+EMD 和 HNEMD 写出对应的 `.npz` 数组。NEMD 保留历史版本的
+`data_nemd.npz`（存在 SHC 数据时还有 `data_shc.npz`）输出，并在请求时
+额外生成 `data_nemd.txt`/`data_shc.txt`。`--save` 和 `--save-data` 相互独立；
+为兼容旧用法，仍接受不带连字符的 `save` 和 `save_data`。
 
 ### 声子（3 种绘图类型）
 
 | 命令 | 输入文件 | 描述 |
 |---------|-------------|-------------|
 | `pdos` | `model.xyz`、`run.in`、`dos.out`、`mvac.out` | 声子态密度和热容 |
-| `phonon` | `phonon_NEP.dat`、`QPOINTS` | 绘制计算器 414 生成的声子谱 |
+| `phonon` | 可选声子数据文件（默认 `phonon_NEP.dat`）、`QPOINTS` | 绘制计算器 414 生成的声子谱 |
 | `phonon_comp` | 两个或更多声子数据文件、`QPOINTS` | 比较声子谱，图例从文件名读取 |
 
 ```bash
 gpumdkit.sh -plt pdos save
 gpumdkit.sh -plt phonon
+gpumdkit.sh -plt phonon phonon_DFT.dat
 gpumdkit.sh -plt phonon phonon_NEP.dat QPOINTS save
 gpumdkit.sh -plt phonon_comp phonon_DFT.dat phonon_NEP.dat save
 ```
 
+`phonon` 的数据文件参数可以省略；省略时绘图脚本读取 `phonon_NEP.dat`，如果只
+提供一个数据文件，路径文件默认使用 `QPOINTS`。
+
 `phonon_comp` 接受两个或更多兼容的声子数据文件。对于
 `phonon_NEP.dat`、`phonon_DFT.dat`、`phonon_MACE.dat` 等常规命名，图例使用
 `phonon_` 后面的文本。绘图脚本会在绘图前检查声子数据行和提供的 `QPOINTS`
-路径。比较文件必须具有一致的 q 点距离，而不仅是相同的行数。
+路径。比较前会分别对断开路径段的横坐标进行归一化，因此不同文件可以在路径
+跳跃处使用不同偏移；但它们仍必须使用相同的 q 点采样和声子支数，而不仅是相同
+的行数。
 
 ## 常用工作流
 
@@ -242,6 +258,15 @@ gpumdkit.sh -plt nemd 10 1 60 save
 | `hnemd` | `hnemd.png` |
 | `viscosity` | `viscosity.png` |
 | `cohesive` | `cohesive.png` |
+
+使用 `--save-data` 时，热输运绘图还会写出以下制表符分隔文件（注释和表头行以
+`#` 开头）：
+
+| 绘图类型 | 数据文件 |
+|-----------|----------|
+| `emd` | `data_emd.npz`、`data_emd.txt` |
+| `nemd` | `data_nemd.txt`；存在 SHC 数据时还有 `data_shc.txt`；历史 `.npz` 文件仍可用 |
+| `hnemd` | `data_hnemd.npz`、`data_hnemd.txt`；存在 SHC 数据时还有 `data_shc.npz`、`data_shc.txt` |
 
 ## 依赖
 
