@@ -90,6 +90,8 @@ class EMD_Processor:
         # Get how many repeats you did
         with open(self.path['run'], 'r') as file:
             for line in file:
+                if line.lstrip().startswith('#'):
+                    continue
                 if 'time_step' in line:
                     time_step = float(line.split()[1])
                 if 'compute_hac' in line:

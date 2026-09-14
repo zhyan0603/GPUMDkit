@@ -112,6 +112,8 @@ class HNEMD_Processor:
 
         with open(self.path['run'], 'r') as file:
             for line in file:
+                if line.lstrip().startswith('#'):
+                    continue
                 if 'compute_shc' in line:
                     Max_cor_step = int(line.split()[2])
                     N_omega = int(line.split()[4])
@@ -192,6 +194,8 @@ class HNEMD_Processor:
         with open(self.path['run'], 'r') as file:
             found_hnemd = False
             for line in file:
+                if line.lstrip().startswith('#'):
+                    continue
                 if 'time_step' in line:
                     time_step = float(line.split()[1])
                 if 'compute_hnemd' in line:

@@ -126,6 +126,8 @@ class NEMD_Processor:
 
         with open(self.path['run'], 'r') as file:
             for line in file:
+                if line.lstrip().startswith('#'):
+                    continue
                 if 'compute_shc' in line:
                     Max_cor_step = int(line.split()[2])
                     N_omega = int(line.split()[4])
@@ -204,6 +206,8 @@ class NEMD_Processor:
         with open(self.path['run'], 'r') as file:
             found_nemd = False
             for line in file:
+                if line.lstrip().startswith('#'):
+                    continue
                 if 'time_step' in line:
                     time_step = int(line.split()[1])
                 if 'heat_lan' in line:
