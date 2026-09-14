@@ -67,7 +67,7 @@ After execution:
 
 ## Known version-sensitive points
 
-- This snapshot follows the GPUMD 5.7+ output syntax. Before generating or translating `run.in`, identify the user's GPUMD version. For GPUMD 5.7 and later, use `dump_xyz` only for these per-atom outputs; the removed pre-5.7 keywords are collected in `gpumd-outputs.md` as migration notes.
+- This snapshot follows the GPUMD 5.8.1 output syntax. Before generating or translating `run.in`, identify the user's GPUMD version. For GPUMD 5.7 and later, use `dump_xyz` only for these per-atom outputs; the removed pre-5.7 keywords are collected in `gpumd-outputs.md` as migration notes.
 - Current `dump_xyz` starts with `<interval> <filename>`, followed by optional `group <grouping_method> <group_id>`, `precision`, and property keywords. Do not use the obsolete positional grouping form.
 - `compute_phonon` currently takes only `<displacement>` and requires `kpoints.in`; older guides may show a cutoff argument.
 - HNEMD requires temperature control; use Nose-Hoover chain and do not use Langevin for this purpose.

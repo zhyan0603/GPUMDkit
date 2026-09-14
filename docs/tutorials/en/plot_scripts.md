@@ -655,7 +655,7 @@ Plots radial distribution function (RDF) showing pair correlations.
 
 ```bash
 gpumdkit.sh -plt rdf               # Plot all RDF pairs
-gpumdkit.sh -plt rdf <column>      # Plot specific pair
+gpumdkit.sh -plt rdf save          # Save the figure as rdf.png
 ```
 
 **Full RDF output:**

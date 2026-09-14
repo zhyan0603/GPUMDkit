@@ -1602,7 +1602,7 @@
 
 <div align="center">
   <h1>📦 结构采样</h1>
-  <p style="text-align: justify;">结构采样用于从轨迹中选择候选结构、生成扰动结构，或根据模型偏差挑选值得进一步计算的结构。</p>
+  <p style="text-align: justify;">结构采样用于为 NEP 训练和分子动力学流程选择、生成或筛选候选构型。</p>
 </div>
 
 <p><strong>脚本位置：</strong> <code>Scripts/sample_structures/</code></p>
@@ -1916,7 +1916,7 @@
 仅用于描述生成结构；GPUMDkit 不会自行应用结构合格阈值。</p>
 <p>该功能需要 <code>dpdata</code>。使用此功能时建议引用 dpdata 包。</p>
 <h2 id="_5">最大力偏差结构选择</h2>
-<p>该功能需要配合 GPUMD 的 <code>active</code> 命令使用。<code>active</code> 通过委员会评审机制，让多条势函数对同一结构进行预测，并记录每个结构的最大力偏差。<code>select_max_modev.py</code> 会从 <code>active.out</code> 和 <code>active.xyz</code> 中选择力偏差较大的结构，写入 <code>selected.xyz</code>。</p>
+<p>该功能需要配合 GPUMD 的 <code>active</code> 命令使用。<code>active</code> 采用委员会模型（committee）机制：多个势函数对同一结构预测力，并记录每个结构的最大力偏差。<code>select_max_modev.py</code> 会从 <code>active.out</code> 和 <code>active.xyz</code> 中选择力偏差较大的结构，写入 <code>selected.xyz</code>。</p>
 <p>交互模式选择 <code>205</code>；也可以直接运行脚本：</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-19-1" name="__codelineno-19-1" href="#__codelineno-19-1"></a>python<span class="w"> </span>Scripts/sample_structures/select_max_modev.py<span class="w"> </span><span class="m">200</span><span class="w"> </span><span class="m">0</span>.15
 </code></pre></div>

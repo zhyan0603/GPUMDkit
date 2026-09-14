@@ -1641,10 +1641,10 @@
 </code></pre></div>
 <h2 id="_10">使用建议</h2>
 <ul>
-<li>命令名尽量清楚，例如 <code>custom_analyze_training</code> 比 <code>custom_at</code> 更容易维护。</li>
-<li>对需要参数的命令，建议在参数为空时打印用法提示。</li>
-<li>调用外部脚本时，尽量用 <code>"$@"</code> 保留参数中的空格和特殊字符。</li>
-<li>批处理目录时，注意使用 <code>cd "$dir"</code>，避免路径中有空格时出错。</li>
+<li><strong>命名清晰</strong>：<code>custom_analyze_nep_training</code> 比 <code>custom_ant</code> 更容易维护。</li>
+<li><strong>添加帮助信息</strong>：参数为空时打印用法提示。</li>
+<li><strong>错误处理</strong>：调用前先检查必需文件是否存在。</li>
+<li><strong>安全转发参数</strong>：尽量用 <code>"$@"</code> 保留参数中的空格和特殊字符。</li>
 </ul>
 <hr />
 <p>感谢你使用 <code>GPUMDkit</code>！如有任何问题或需要进一步帮助，欢迎在我们的 GitHub 仓库提 issue 或联系 Zihan YAN (yanzihan@westlake.edu.cn)。</p>

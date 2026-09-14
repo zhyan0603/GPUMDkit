@@ -1680,7 +1680,7 @@
 <td>结构 + NEP 模型</td>
 </tr>
 <tr>
-<td>邻居列表</td>
+<td>近邻列表</td>
 <td><code>gpumdkit.sh -calc nlist ...</code></td>
 <td>参见 <a href="%E6%9E%81%E6%80%A7%E6%9D%90%E6%96%99%E5%88%86%E6%9E%90.html">极性材料分析</a></td>
 </tr>
@@ -2019,7 +2019,7 @@ eV/atom，力为 eV/Angstrom，应力为 GPa，virial 为 eV/atom。该命令需
 </div>
 
 <h2 id="doas">DOAS</h2>
-<p><code>calc_doas.py</code> 用于计算 <a href="https://doi.org/10.1002/anie.202215544">Wang et al.</a> 提出的 density of atomistic states。</p>
+<p><code>calc_doas.py</code> 用于计算 <a href="https://doi.org/10.1002/anie.202215544">Wang et al.</a> 提出的原子态密度（density of atomistic states，DOAS）。</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-22-1" name="__codelineno-22-1" href="#__codelineno-22-1"></a>gpumdkit.sh<span class="w"> </span>-calc<span class="w"> </span>doas<span class="w"> </span>structures.xyz<span class="w"> </span>nep.txt<span class="w"> </span>doas.out
 <a id="__codelineno-22-2" name="__codelineno-22-2" href="#__codelineno-22-2"></a>gpumdkit.sh<span class="w"> </span>-plt<span class="w"> </span>doas<span class="w"> </span>doas.out<span class="w"> </span>Li
 </code></pre></div>
@@ -2029,7 +2029,7 @@ eV/atom，力为 eV/Angstrom，应力为 GPa，virial 为 eV/atom。该命令需
 <li>使用 NEP 进行结构优化；</li>
 <li>提取每个原子的能量；</li>
 <li>按元素分组输出；</li>
-<li>用绘图脚本可视化分布。</li>
+<li>将分组结果写入输出文件（可用 <code>-plt doas</code> 可视化）。</li>
 </ol>
 <p>对于很大的体系，如果主要目的是获得优化后的结构和原子能量分布，直接在 GPUMD 中完成最小化和原子能量输出通常会更高效。</p>
 <div align="center">
@@ -2040,10 +2040,10 @@ eV/atom，力为 eV/Angstrom，应力为 GPa，virial 为 eV/atom。该命令需
 <p>NEB：</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-23-1" name="__codelineno-23-1" href="#__codelineno-23-1"></a>gpumdkit.sh<span class="w"> </span>-calc<span class="w"> </span>neb<span class="w"> </span>initial.xyz<span class="w"> </span>final.xyz<span class="w"> </span><span class="m">9</span><span class="w"> </span>nep.txt
 </code></pre></div>
-<p>这会使用 NEP 模型运行含 <code>9</code> 个中间像的 NEB 计算。运行过程中脚本会询问原子固定方式：</p>
+<p>这会使用 NEP 模型运行包含 <code>9</code> 个中间构型（image）的 NEB 计算。运行过程中脚本会询问原子固定方式：</p>
 <ul>
 <li><code>none</code>：不固定原子；</li>
-<li><code>index</code>：按原子序号固定；</li>
+<li><code>index</code>：按原子索引（编号）固定；</li>
 <li><code>element</code>：固定某一种元素的所有原子；</li>
 <li><code>position</code>：固定坐标范围内的原子。</li>
 </ul>
@@ -2053,6 +2053,33 @@ eV/atom，力为 eV/Angstrom，应力为 GPa，virial 为 eV/atom。该命令需
 </code></pre></div>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-25-1" name="__codelineno-25-1" href="#__codelineno-25-1"></a>gpumdkit.sh<span class="w"> </span>-calc<span class="w"> </span>minimize<span class="w"> </span>POSCAR<span class="w"> </span>nep.txt<span class="w"> </span><span class="m">0</span>.01<span class="w"> </span><span class="m">1000</span>
 </code></pre></div>
+<p>参数说明：</p>
+<table>
+<thead>
+<tr>
+<th>参数</th>
+<th>含义</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>POSCAR</code></td>
+<td>输入结构，POSCAR/CONTCAR 或 extxyz</td>
+</tr>
+<tr>
+<td><code>nep.txt</code></td>
+<td>NEP 模型</td>
+</tr>
+<tr>
+<td><code>0.01</code></td>
+<td>可选的力收敛阈值（eV/Ang）</td>
+</tr>
+<tr>
+<td><code>1000</code></td>
+<td>可选的最大优化步数</td>
+</tr>
+</tbody>
+</table>
 <p>输出包括：</p>
 <ul>
 <li><code>minimize.xyz</code></li>

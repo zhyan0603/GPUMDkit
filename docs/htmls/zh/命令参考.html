@@ -1877,7 +1877,7 @@
 <tr>
 <td><code>-calc nlist</code></td>
 <td><code>gpumdkit.sh -calc nlist [args...]</code></td>
-<td>邻居列表</td>
+<td>近邻列表</td>
 </tr>
 <tr>
 <td><code>-calc disp</code></td>
@@ -1892,7 +1892,7 @@
 <tr>
 <td><code>-calc oct-tilt</code></td>
 <td><code>gpumdkit.sh -calc oct-tilt [args...]</code></td>
-<td>八面体倾斜</td>
+<td>八面体倾转</td>
 </tr>
 <tr>
 <td><code>-calc pol-abo3</code></td>
@@ -2068,7 +2068,7 @@
 </tr>
 <tr>
 <td><strong>Export model package</strong></td>
-<td>为模型、可选 restart、更新后的输入及来源摘要选择统一且不冲突的文件后缀。</td>
+<td>使用统一且不冲突的文件后缀写出模型、可选 restart、更新后的输入及来源摘要。</td>
 </tr>
 </tbody>
 </table>
@@ -2096,10 +2096,10 @@
 <p>导出文件包括 <code>*_modified.txt</code>、载入 restart 时的 <code>*_modified.restart</code>、<code>*_modified.in</code> 和 <code>*_modified.changes.txt</code>。后续训练前，应使用准备执行训练的同一 NEP 版本检查生成的输入，并使用有代表性的参考数据重新训练和验证修改后的模型，再将其用于生产模拟。</p>
 <h4 id="calorine">必须引用 calorine</h4>
 <p>该 GPUMDkit 功能直接调用 calorine 的模型修改实现。科研工作中使用此功能时，应按照 calorine 开发者的要求引用：</p>
-<p>E. Lindgren, J. M. Rahm, E. Fransson, F. Eriksson, N. Österbacka, Z. Fan 和
-P. Erhart，“calorine: A Python package for constructing and sampling
-neuroevolution potential models”，<em>Journal of Open Source Software</em> <strong>9</strong>(95)，
-6264 (2024)，<a href="https://doi.org/10.21105/joss.06264">https://doi.org/10.21105/joss.06264</a>。</p>
+<p>E. Lindgren, J. M. Rahm, E. Fransson, F. Eriksson, N. Österbacka, Z. Fan, and
+P. Erhart, "calorine: A Python package for constructing and sampling
+neuroevolution potential models", <em>Journal of Open Source Software</em> <strong>9</strong>(95),
+6264 (2024), <a href="https://doi.org/10.21105/joss.06264">https://doi.org/10.21105/joss.06264</a>.</p>
 <p>更完整的说明见
 <a href="https://github.com/zhyan0603/GPUMDkit/tree/main/Scripts/utils/nep_modifier">NEP modifier README</a>
 和 <a href="https://calorine.materialsmodeling.org/dev/get_started/modifying_models.html">calorine 官方模型修改教程</a>。</p>

@@ -118,8 +118,8 @@ gpumdkit.sh -plt thermo
 
 # RDF analysis
 gpumdkit.sh -plt rdf
-gpumdkit.sh -plt rdf 2              # Specific column
-gpumdkit.sh -plt rdf_pmf 300        # With PMF at 300K
+gpumdkit.sh -plt rdf save
+gpumdkit.sh -plt rdf_pmf 300 2      # PMF at 300 K, column 2
 
 # XRD output: column 2 is angle, column 4 is intensity
 gpumdkit.sh -plt xrd

@@ -192,7 +192,7 @@ gpumdkit.sh  # Select: 5) Analyzer -> 502
 gpumdkit.sh -filter_dist_pbc dump.xyz 1.5
 
 # 2. Filter by box size
-gpumdkit.sh -filter_box filtered.xyz 20
+gpumdkit.sh -filter_box filtered_dump.xyz 20
 
 # 3. Filter by force value
 gpumdkit.sh -filter_value filtered_by_box.xyz force 15

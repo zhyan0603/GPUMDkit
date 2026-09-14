@@ -29,7 +29,7 @@ Line 2 contains header fields. `lattice`, `energy`, and `properties` are parser-
 | `lattice="ax ay az bx by bz cx cy cz"` | Mandatory cell vectors, Angstrom |
 | `energy=<total_energy>` | Mandatory total-energy field, eV; ignored for dipole/polarizability training |
 | `virial="9 components"` | Optional total-cell virial tensor, eV |
-| `stress="9 components"` | Optional NEP stress tensor, eV/Angstrom^3; same sign convention as virial and ignored if virial is present |
+| `stress="9 components"` | Optional NEP stress tensor, eV/Angstrom^3; opposite sign convention to virial (positive stress = stretched, positive virial = compressed) and ignored if virial is present |
 | `weight=<relative_weight>` | Optional configuration weight |
 | `properties=...` | Mandatory per-atom column schema |
 
@@ -73,9 +73,10 @@ For dipole and polarizability, confirm whether targets are global or per-atom an
 | BEC | elementary charge |
 | Dipole/polarizability | User-selected consistent unit; record it |
 
-Virial and stress use the same NEP sign convention. Stress is obtained from virial
-by dividing by the cell volume, `stress = virial / volume`; if both are present,
-virial is used.
+Virial and stress use opposite sign conventions: positive virial means a compressed
+state, while positive stress means a stretched state. They are related by
+`stress = -virial / volume`; if both are present, virial is used (and a
+consistency check is applied).
 
 NEP training assumes periodic boundaries in all directions. For slabs, clusters, or vacuum systems, ask the user how the periodic cell and reference calculation are intended to represent the system.
 

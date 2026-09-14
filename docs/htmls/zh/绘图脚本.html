@@ -2643,7 +2643,7 @@
 输出能量、力和应力的 R^2、MAE 与 RMSE 表格。若没有有效的应力数据，
 应力项显示为 <code>N/A</code>。</p>
 <h3 id="plt_trainpy">plt_train.py</h3>
-<p>可视化 NEP 训练过程，包括 loss 曲线、RMSE 演化，以及能量/力/virial 的 DFT vs NEP parity plot。</p>
+<p>可视化 NEP 训练过程，包括 loss 曲线、RMSE 演化，以及能量/力/应力的 DFT vs NEP parity 图。</p>
 <p><strong>输入文件：</strong> <code>loss.out</code>、<code>energy_train.out</code>、<code>force_train.out</code>，以及优先读取的
 <code>stress_train.out</code> 或回退使用的 <code>virial_train.out</code></p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>gpumdkit.sh<span class="w"> </span>-plt<span class="w"> </span>train
@@ -3019,7 +3019,7 @@ HAC 重复次数的平方根；它不是独立轨迹之间的标准误差。</p>
 <p>绘制径向分布函数 (RDF)，展示原子对关联。</p>
 <p><strong>输入文件：</strong> <code>rdf.out</code></p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-31-1" name="__codelineno-31-1" href="#__codelineno-31-1"></a>gpumdkit.sh<span class="w"> </span>-plt<span class="w"> </span>rdf<span class="w">               </span><span class="c1"># 显示所有 RDF 对</span>
-<a id="__codelineno-31-2" name="__codelineno-31-2" href="#__codelineno-31-2"></a>gpumdkit.sh<span class="w"> </span>-plt<span class="w"> </span>rdf<span class="w"> </span>&lt;column&gt;<span class="w">      </span><span class="c1"># 显示特定对</span>
+<a id="__codelineno-31-2" name="__codelineno-31-2" href="#__codelineno-31-2"></a>gpumdkit.sh<span class="w"> </span>-plt<span class="w"> </span>rdf<span class="w"> </span>save<span class="w">          </span><span class="c1"># 将图保存为 rdf.png</span>
 </code></pre></div>
 <p><strong>完整 RDF 输出：</strong></p>
 <div align="center">

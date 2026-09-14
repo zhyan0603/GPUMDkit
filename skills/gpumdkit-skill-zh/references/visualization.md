@@ -117,8 +117,8 @@ gpumdkit.sh -plt thermo
 
 # RDF 分析
 gpumdkit.sh -plt rdf
-gpumdkit.sh -plt rdf 2              # 特定列
-gpumdkit.sh -plt rdf_pmf 300        # 300K 下的 PMF
+gpumdkit.sh -plt rdf save
+gpumdkit.sh -plt rdf_pmf 300 2      # 300 K 的 PMF，第 2 列
 
 # XRD 输出：第 2 列是角度，第 4 列是强度
 gpumdkit.sh -plt xrd

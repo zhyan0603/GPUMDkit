@@ -44,9 +44,9 @@ For trajectory-based GPUMDkit MSD, request unwrapped positions or verify that do
 | Keyword | Current signature | Output | Constraint |
 |---|---|---|---|
 | `dump_thermo` | `dump_thermo <interval>` | `thermo.out` | Positive interval in MD steps |
-| `dump_dipole` | `dump_dipole <interval>` | `dipole.out` | Requires a dipole-capable NEP setup |
-| `dump_polarizability` | `dump_polarizability <interval>` | `polarizability.out` | Requires a polarizability model |
-| `dump_shock_nemd` | `dump_shock_nemd interval <n> [bin_size <Angstrom>]` | shock spatial thermo output | Bin-size default is 10 Angstrom |
+| `dump_dipole` | `dump_dipole <interval> <nep_file>` | `dipole.out` | `nep_file` is the `nep4_dipole` potential used to predict the dipole; it is read by this keyword and is independent of the potential driving the MD |
+| `dump_polarizability` | `dump_polarizability <interval> <nep_file>` | `polarizability.out` | `nep_file` is the `nep4_polarizability` potential used to predict the polarizability; it is read by this keyword and is independent of the potential driving the MD |
+| `dump_shock_nemd` | `dump_shock_nemd interval <n> [bin_size <Angstrom>]` | `temperature_hist.txt`, `pxx_hist.txt`, `pyy_hist.txt`, `pzz_hist.txt`, `density_hist.txt`, `vp_hist.txt` | Bin-size default is 10 Angstrom; each row is one output instant with bins ordered along x; density is g/cm^3 and particle velocity is km/s |
 
 In the bundled GPUMD snapshot, `thermo.out` has 18 columns: `T K U Pxx Pyy Pzz Pyz Pxz Pxy ax ay az bx by bz cx cy cz`. Temperature is K, energies are eV, pressure components are GPa, and cell-vector components are Angstrom. Older executables can differ; resolve their version before interpreting a different layout.
 
@@ -77,6 +77,8 @@ dump_observer <observe|average> <interval_thermo> <interval_exyz> <has_velocity>
 | `rdf.out`, `adf.out`, `angular_rdf.out` | structure computes | Append |
 | `mcmd.out` | `mc` | Append |
 | `elastic.out`, `cohesive.out`, `D.out`, `omega2.out` | immediate/static computes | Check matching page; commonly overwrite |
+| `extrapolation_dump.xyz` | `compute_extrapolation` | Append |
+| `spring_gm<m>_g<g>_s<id>.out` / `.restart` | `add_spring` | Append / overwrite |
 
 `ttm_electron_temperature.out` begins with grid/active-range/source metadata. Each snapshot starts with a step marker followed by one `ix iy iz T_e` row per cell; indices are 1-based, temperature is K, and ordering is x-fastest, then y, then z. `mcmd.out` columns are MD step, MC acceptance ratio, then species concentrations in command order.
 

@@ -100,7 +100,7 @@ wget https://github.com/zhyan0603/GPUMDkit/archive/refs/heads/main.zip
 
 ## 使用方法
 
-如果需要按步骤完成首次安装，请阅读[快速入门](./tutorials/zh/快速入门.md)；
+如果需要按步骤引导式完成首次运行，请阅读[快速入门](./tutorials/zh/快速入门.md)；
 如果已经知道任务，只需查阅[命令参考](./tutorials/zh/命令参考.md)中的准确语法。
 
 提供两种模式：<u>*交互模式*</u> 和 <u>*命令行模式*</u>

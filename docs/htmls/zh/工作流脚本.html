@@ -1773,7 +1773,8 @@ BEC 标签，可以使用：</p>
 </code></pre></div>
 <p>VASP 的 <code>-out2xyz</code>/菜单 101 和带 BEC 的 <code>-out2xyz_bec</code> 会在当前目录生成
 <code>NEPdataset/train.xyz</code>；Python 版 <code>-out2exyz</code> 会在当前目录写入 <code>train.xyz</code>。
-请根据转换入口继续使用实际生成的文件，并保留原始 DFT 输出。</p>
+请根据转换入口继续使用实际生成的文件，并保留原始 DFT 输出。随后可用分析和采样工具
+检查生成的 extxyz，并记录被排除的目录。</p>
 <h2 id="_2">主动学习式流程</h2>
 <p>需要开展 NEP 数据迭代时，按“MD 轨迹 → 几何筛选 → NepTrain FPS → DFT →
 转换 → 数据集检查”的顺序操作，各阶段的检查要点见
@@ -1801,7 +1802,7 @@ CLI 命令。遇到解析错误、缺少文件、NaN/Inf、失败输出或未解
 <li><code>skills/gpumdkit-skill/references/nep-data.md</code></li>
 <li><code>skills/gpumdkit-skill/references/nep-parameters.md</code></li>
 </ul>
-<p>正式迭代应记录模型和数据的版本记录、已确认的方案、完整命令、工作目录、版本、退出
+<p>为保证可复现性，应记录模型和数据的版本、已确认的方案、完整命令、工作目录、版本、退出
 状态、警告、生成文件、排除项、验证结果和已知限制。</p>
 
 

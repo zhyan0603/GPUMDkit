@@ -44,9 +44,9 @@ dump_exyz <i> <v> <f> <p> <s>       -> dump_xyz <i> dump.xyz[*] velocity force p
 | 关键字 | 当前参数格式 | 输出 | 约束 |
 |---|---|---|---|
 | `dump_thermo` | `dump_thermo <interval>` | `thermo.out` | 正间隔，单位为 MD 步 |
-| `dump_dipole` | `dump_dipole <interval>` | `dipole.out` | 需要支持偶极的 NEP 设置 |
-| `dump_polarizability` | `dump_polarizability <interval>` | `polarizability.out` | 需要极化率模型 |
-| `dump_shock_nemd` | `dump_shock_nemd interval <n> [bin_size <Angstrom>]` | 冲击空间热力学输出 | 分箱大小默认为 10 Angstrom |
+| `dump_dipole` | `dump_dipole <interval> <nep_file>` | `dipole.out` | `nep_file` 是用于预测偶极的 `nep4_dipole` 势函数；由本关键字读取，独立于驱动 MD 的势函数 |
+| `dump_polarizability` | `dump_polarizability <interval> <nep_file>` | `polarizability.out` | `nep_file` 是用于预测极化率的 `nep4_polarizability` 势函数；由本关键字读取，独立于驱动 MD 的势函数 |
+| `dump_shock_nemd` | `dump_shock_nemd interval <n> [bin_size <Angstrom>]` | `temperature_hist.txt`、`pxx_hist.txt`、`pyy_hist.txt`、`pzz_hist.txt`、`density_hist.txt`、`vp_hist.txt` | 分箱大小默认为 10 Angstrom；每行对应一个输出时刻，按 x 方向连续分箱排列；密度单位 g/cm^3，粒子速度单位 km/s |
 
 在本技能内置的 GPUMD 版本快照中，`thermo.out` 有 18 列：`T K U Pxx Pyy Pzz Pyz Pxz Pxy ax ay az bx by bz cx cy cz`。温度单位为 K，能量单位为 eV，压力分量单位为 GPa，模拟盒矢量分量单位为 Angstrom。较旧的可执行文件可能不同；在解释不同布局之前确认其版本。
 
@@ -77,6 +77,8 @@ dump_observer <observe|average> <interval_thermo> <interval_exyz> <has_velocity>
 | `rdf.out`、`adf.out`、`angular_rdf.out` | 结构计算 | 追加 |
 | `mcmd.out` | `mc` | 追加 |
 | `elastic.out`、`cohesive.out`、`D.out`、`omega2.out` | 即时/静态计算 | 查看匹配页面；通常覆盖 |
+| `extrapolation_dump.xyz` | `compute_extrapolation` | 追加 |
+| `spring_gm<m>_g<g>_s<id>.out` / `.restart` | `add_spring` | 追加 / 覆盖 |
 
 `ttm_electron_temperature.out` 以网格/活动范围/源元数据开头。每个快照以步长标记开头，后跟每个单元一个 `ix iy iz T_e` 行；索引从 1 开始，温度单位为 K，排序为 x 最快，然后 y，然后 z。`mcmd.out` 列为 MD 步、MC 接受率，然后是命令顺序的元素浓度。
 
