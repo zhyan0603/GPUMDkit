@@ -19,7 +19,7 @@ if [ -z "$GPUMDkit_path" ]; then
     exit 1
 fi
 
-VERSION="1.5.7 (2026-09-14)"
+VERSION="1.5.7 (2026-09-15)"
 
 plt_path="${GPUMDkit_path}/Scripts/plt_scripts"
 analyzer_path="${GPUMDkit_path}/Scripts/analyzer"
@@ -309,43 +309,43 @@ if [ ! -z "$1" ]; then
         -plt)
             if [ ! -z "$2" ] && [ "$2" != "-h" ]; then
                 case $2 in
-                    "thermo") python "${plt_path}/plt_thermo.py" "$3" ;;
-                    "thermo2") python "${plt_path}/plt_thermo2.py" "$3" ;;
-                    "thermo3") python "${plt_path}/plt_thermo3.py" "$3" ;;
-                    "train") python "${plt_path}/plt_train.py" "$3" ;;
-                    "train_density") python "${plt_path}/plt_train_density.py" "$3" ;;
-                    "prediction"|"test") python "${plt_path}/plt_prediction.py" "$3" ;;
-                    "parity_density") python "${plt_path}/plt_parity_density.py" "$3" ;;
-                    "train_test") python "${plt_path}/plt_train_test.py" "$3" ;;
-                    "born_charge"|"bec") python "${plt_path}/plt_born_charge.py" "$3" ;;
-                    "msd") python "${plt_path}/plt_msd.py" "$3" ;;
-                    "msd_all") python "${plt_path}/plt_msd_all.py" "$3" "${@:4}" ;;
-                    "msd_conv") python "${plt_path}/plt_msd_convergence_check.py" "$3" ;;
-                    "msd_sdc") python "${plt_path}/plt_msd_sdc.py" "$3" ;;
-                    "sdc") python "${plt_path}/plt_sdc.py" "$3" ;;
+                    "thermo") python "${plt_path}/plt_thermo.py" "${@:3}" ;;
+                    "thermo2") python "${plt_path}/plt_thermo2.py" "${@:3}" ;;
+                    "thermo3") python "${plt_path}/plt_thermo3.py" "${@:3}" ;;
+                    "train") python "${plt_path}/plt_train.py" "${@:3}" ;;
+                    "train_density") python "${plt_path}/plt_train_density.py" "${@:3}" ;;
+                    "prediction"|"test") python "${plt_path}/plt_prediction.py" "${@:3}" ;;
+                    "parity_density") python "${plt_path}/plt_parity_density.py" "${@:3}" ;;
+                    "train_test") python "${plt_path}/plt_train_test.py" "${@:3}" ;;
+                    "born_charge"|"bec") python "${plt_path}/plt_born_charge.py" "${@:3}" ;;
+                    "msd") python "${plt_path}/plt_msd.py" "${@:3}" ;;
+                    "msd_all") python "${plt_path}/plt_msd_all.py" "${@:3}" ;;
+                    "msd_conv") python "${plt_path}/plt_msd_convergence_check.py" "${@:3}" ;;
+                    "msd_sdc") python "${plt_path}/plt_msd_sdc.py" "${@:3}" ;;
+                    "sdc") python "${plt_path}/plt_sdc.py" "${@:3}" ;;
                     "rdf") python "${plt_path}/plt_rdf.py" "${@:3}" ;;
                     "xrd") python "${plt_path}/plt_xrd.py" "${@:3}" ;;
                     "xrd_comp") python "${plt_path}/plt_xrd_comp.py" "${@:3}" ;;
                     "phonon") python "${plt_path}/plt_phonon.py" "${@:3}" ;;
                     "phonon_comp") python "${plt_path}/plt_phonon_comp.py" "${@:3}" ;;
-                    "vac") python "${plt_path}/plt_vac.py" "$3" ;;
-                    "restart") python "${plt_path}/plt_nep_restart.py" "$3" ;;
-                    "dimer") python "${plt_path}/plt_dimer.py" "$3" "$4" "$5" "$6" ;;
-                    "force_errors") python "${plt_path}/plt_force_errors.py" "$3" ;;
-                    "des") python "${plt_path}/plt_descriptors.py" "$3" "${@:4}" ;;
-                    "doas") python "${plt_path}/plt_doas.py" "$3" "$4" ;;
-                    "arrhenius_d"|"D") python "${plt_path}/plt_arrhenius_d.py" "$3" ;;
+                    "vac") python "${plt_path}/plt_vac.py" "${@:3}" ;;
+                    "restart") python "${plt_path}/plt_nep_restart.py" "${@:3}" ;;
+                    "dimer") python "${plt_path}/plt_dimer.py" "${@:3}" ;;
+                    "force_errors") python "${plt_path}/plt_force_errors.py" "${@:3}" ;;
+                    "des") python "${plt_path}/plt_descriptors.py" "${@:3}" ;;
+                    "doas") python "${plt_path}/plt_doas.py" "${@:3}" ;;
+                    "arrhenius_d"|"D") python "${plt_path}/plt_arrhenius_d.py" "${@:3}" ;;
                     "D_PT") python "${plt_path}/plt_arrhenius_d_PT.py" "${@:3}" ;;
-                    "D_xyz") python "${plt_path}/plt_arrhenius_d_xyz.py" "$3" ;;
-                    "arrhenius_sigma"|"sigma") python "${plt_path}/plt_arrhenius_sigma.py" "$3" ;;
+                    "D_xyz") python "${plt_path}/plt_arrhenius_d_xyz.py" "${@:3}" ;;
+                    "arrhenius_sigma"|"sigma") python "${plt_path}/plt_arrhenius_sigma.py" "${@:3}" ;;
                     "sigma_PT") python "${plt_path}/plt_arrhenius_sigma_PT.py" "${@:3}" ;;
-                    "sigma_xyz") python "${plt_path}/plt_arrhenius_sigma_xyz.py" "$3" ;;
+                    "sigma_xyz") python "${plt_path}/plt_arrhenius_sigma_xyz.py" "${@:3}" ;;
                     "net_force") python "${plt_path}/plt_net_force.py" "${@:3}" ;;
                     "emd") python "${plt_path}/plt_emd.py" "${@:3}" ;;
                     "emd2") python "${plt_path}/plt_emd2.py" "${@:3}" ;;
                     "nemd") python "${plt_path}/plt_nemd.py" "${@:3}" ;;
                     "hnemd") python "${plt_path}/plt_hnemd.py" "${@:3}" ;;
-                    "pdos") python "${plt_path}/plt_pdos.py" "$3" ;;
+                    "pdos") python "${plt_path}/plt_pdos.py" "${@:3}" ;;
                     "plane-grid") python "${plt_path}/plt_plane_grid.py" "${@:3}" ;;
                     "cohesive") python "${plt_path}/plt_cohesive.py" "${@:3}" ;;
                     "viscosity") python "${plt_path}/plt_viscosity.py" "${@:3}" ;;
@@ -357,7 +357,7 @@ if [ ! -z "$1" ]; then
                         echo " | inconsistencies in the atomic order between the training |"
                         echo " | set and charge_train.out.                                |"
                         echo " +----------------------------------------------------------+"
-                        python "${plt_path}/plt_charge.py" "$3" ;;
+                        python "${plt_path}/plt_charge.py" "${@:3}" ;;
                     *)
                         echo " Unknown plot type: $2"
                         echo " Available types are listed below."

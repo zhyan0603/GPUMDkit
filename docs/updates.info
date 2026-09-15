@@ -1,6 +1,6 @@
 # === User Configuration Section: Only modify these variables ===
 VERSION="1.5.7"
-RELEASE_DATE="2026-09-14"
+RELEASE_DATE="2026-09-15"
 HOME_PAGE="https://gpumdkit.cn"
 CONTACT="yanzihan@westlake.edu.cn"
 
@@ -15,11 +15,11 @@ NEW_FEATURES=(
 
 # Bug fixes (one per line, in an array; keep at most the five newest entries)
 BUG_FIXES=(
+    "preserve optional plot arguments in the CLI router and reject unsupported rdf column arguments"
+    "make install.sh safe to source from zsh (portable prompt and script path) and commit its executable bit"
     "fix abacus2xyz_md.sh ignoring its directory argument and silently reading the current directory"
     "fix out2xyz.sh integer-expression error when an OUTCAR has no NSW line and follow symlinks consistently"
-    "fix the UTF-8 BOM in plt_rdf_pmf.py that broke Python syntax checks"
-    "quote install.sh rc-file exports so paths with spaces work, and report rc-file write failures"
-    "replace raw tracebacks with friendly missing-file errors, -h help, and EOF-safe prompts across scripts"
+    "remove the UTF-8 BOM in plt_rdf_pmf.py for broader tooling compatibility"
 )
 
 # === Formatted Output Logic ===

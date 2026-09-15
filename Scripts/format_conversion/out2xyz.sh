@@ -46,7 +46,7 @@ non_converged_files=()
 
 echo " Checking the convergence of OUTCARs ..."
 
-for file in $(find -L "$read_dire" -name "OUTCAR"); do
+while IFS= read -r -d '' file; do
     NSW=$(grep "number of steps for IOM" "$file" | awk '{print $3}')
     NSW=${NSW:-0}
 
@@ -68,7 +68,7 @@ for file in $(find -L "$read_dire" -name "OUTCAR"); do
     else
         non_converged_files+=("$file")
     fi
-done
+done < <(find -L "$read_dire" -name "OUTCAR" -print0)
 
 total_converged=${#converged_files[@]}
 total_non_converged=${#non_converged_files[@]}

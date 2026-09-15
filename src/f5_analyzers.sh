@@ -130,10 +130,10 @@ echo " ------------>>"
 read_menu_choice consider_pbc || return 1
 echo " ---------------------------------------------------"
 if [ "$consider_pbc" == "y" ] || [ "$consider_pbc" == "Y" ]; then
-  python "${GPUMDkit_path}/Scripts/analyzer/get_min_dist_pbc.py" ${input_extxyz}
+  python "${GPUMDkit_path}/Scripts/analyzer/get_min_dist_pbc.py" "$input_extxyz"
   echo " Code path: ${GPUMDkit_path}/Scripts/analyzer/get_min_dist_pbc.py"
 else
-  python "${GPUMDkit_path}/Scripts/analyzer/get_min_dist.py" ${input_extxyz}
+  python "${GPUMDkit_path}/Scripts/analyzer/get_min_dist.py" "$input_extxyz"
   echo " Code path: ${GPUMDkit_path}/Scripts/analyzer/get_min_dist.py"
 fi
 echo " ---------------------------------------------------"

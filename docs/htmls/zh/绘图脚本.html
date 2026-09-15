@@ -2570,12 +2570,12 @@
 <tr>
 <td><code>rdf.out</code></td>
 <td><code>gpumdkit.sh -plt rdf</code></td>
-<td>所选原子对列和峰位置</td>
+<td>所有可用的 RDF 数值列</td>
 </tr>
 <tr>
 <td><code>xrd.out</code></td>
 <td><code>gpumdkit.sh -plt xrd</code></td>
-<td>第 2 列角度和第 4 列强度</td>
+<td>XRD 强度曲线</td>
 </tr>
 </tbody>
 </table>
@@ -3016,29 +3016,23 @@ HAC 重复次数的平方根；它不是独立轨迹之间的标准误差。</p>
 <hr />
 <h2 id="_6">结构分析</h2>
 <h3 id="plt_rdfpy">plt_rdf.py</h3>
-<p>绘制径向分布函数 (RDF)，展示原子对关联。</p>
+<p>绘制 <code>rdf.out</code> 中的所有 RDF 数值列（第 1 列半径用作横坐标）。</p>
 <p><strong>输入文件：</strong> <code>rdf.out</code></p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-31-1" name="__codelineno-31-1" href="#__codelineno-31-1"></a>gpumdkit.sh<span class="w"> </span>-plt<span class="w"> </span>rdf<span class="w">               </span><span class="c1"># 显示所有 RDF 对</span>
 <a id="__codelineno-31-2" name="__codelineno-31-2" href="#__codelineno-31-2"></a>gpumdkit.sh<span class="w"> </span>-plt<span class="w"> </span>rdf<span class="w"> </span>save<span class="w">          </span><span class="c1"># 将图保存为 rdf.png</span>
 </code></pre></div>
-<p><strong>完整 RDF 输出：</strong></p>
+<p><code>rdf</code> 绘图不提供单列选择。若需要选定一列进行 PMF 分析，请使用
+<code>rdf_pmf</code>。</p>
+<p><strong>RDF 输出：</strong></p>
 <div align="center">
   <img src="../../Gallery/rdf1.png" alt="Complete RDF" width="90%" />
-</div>
-
-<p><strong>单对 RDF：</strong></p>
-<div align="center">
-  <img src="../../Gallery/rdf2.png" alt="Single RDF" width="55%" />
 </div>
 
 <hr />
 <h3 id="plt_xrdpy">plt_xrd.py</h3>
 <p>绘制计算器 413 生成的 X 射线衍射（XRD）输出。</p>
 <p><strong>输入文件：</strong> 默认读取 <code>xrd.out</code>；也可以将其他 XRD 输出文件路径作为第一个参数传入。</p>
-<p>绘图脚本直接读取数值数据的第 2 列（索引 1）作为角度，第 4 列（索引 3）作为强度。
-以 <code>#</code> 开头的说明行会被忽略，不进行平滑或重新归一化。</p>
-<p>绘图脚本会检查计算器 413 写出的文件头和四列数据格式。如果格式无法识别，
-程序会停止并提示使用 <code>gpumdkit.sh -&gt; 4 -&gt; 413</code> 重新生成 XRD 文件。</p>
+<p>输入文件必须由计算器 413 生成。</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-32-1" name="__codelineno-32-1" href="#__codelineno-32-1"></a>gpumdkit.sh<span class="w"> </span>-plt<span class="w"> </span>xrd
 <a id="__codelineno-32-2" name="__codelineno-32-2" href="#__codelineno-32-2"></a>gpumdkit.sh<span class="w"> </span>-plt<span class="w"> </span>xrd<span class="w"> </span>path/to/xrd.out<span class="w"> </span>save
 </code></pre></div>
@@ -3048,30 +3042,27 @@ HAC 重复次数的平方根；它不是独立轨迹之间的标准误差。</p>
   <img src="../../Gallery/xrd.png" alt="XRD 绘图示例" width="75%" />
 </div>
 
-<p>Gallery 中的示例图使用独立流程以 100 DPI 生成；正式脚本显示时使用 150 DPI，
-保存图片时使用不低于 300 DPI。</p>
 <hr />
 <h3 id="plt_xrd_comppy">plt_xrd_comp.py</h3>
 <p>比较当前工作目录下多个温度目录中的 XRD 曲线。每个目录必须命名为
 <code>&lt;temperature&gt;K</code>，并包含由计算器 413 写出的 <code>xrd.out</code>。图像按照高温在上、
 低温在下的顺序堆叠显示。</p>
-<p><code>gpumdkit.sh -plt xrd</code> 读取并绘制已有的 <code>xrd.out</code>，不会生成该文件。请先使用
-计算器 413 生成各温度目录中的 <code>xrd.out</code>；如果需要检查单个温度的曲线，可以
-先在对应的温度目录中执行 <code>-plt xrd</code>，再进行温度对比。</p>
+<p>请先使用计算器 413 生成各温度目录中的 <code>xrd.out</code>，再运行温度对比。</p>
 <p>请在包含多个 <code>*K</code> 子目录的目录中执行以下命令；该命令不接受目录参数：</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-33-1" name="__codelineno-33-1" href="#__codelineno-33-1"></a><span class="nb">cd</span><span class="w"> </span>/path/to/xrd_series
 <a id="__codelineno-33-2" name="__codelineno-33-2" href="#__codelineno-33-2"></a>gpumdkit.sh<span class="w"> </span>-plt<span class="w"> </span>xrd_comp
 <a id="__codelineno-33-3" name="__codelineno-33-3" href="#__codelineno-33-3"></a>gpumdkit.sh<span class="w"> </span>-plt<span class="w"> </span>xrd_comp<span class="w"> </span>save
 </code></pre></div>
-<p>使用 <code>save</code> 时，图片保存为当前工作目录下的 <code>xrd_comp.png</code>。脚本会按照计算器
-413 的输出格式检查发现的每个 <code>xrd.out</code>；如果文件格式错误，程序会停止。该对比
-图不添加 Gallery 示例。</p>
+<p>使用 <code>save</code> 时，图片保存为当前工作目录下的 <code>xrd_comp.png</code>。</p>
 <hr />
 <h3 id="plt_rdf_pmfpy">plt_rdf_pmf.py</h3>
 <p>绘制 RDF 与平均力势 (PMF) 的组合图。</p>
 <p><strong>输入文件：</strong> <code>rdf.out</code></p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-34-1" name="__codelineno-34-1" href="#__codelineno-34-1"></a>gpumdkit.sh<span class="w"> </span>-plt<span class="w"> </span>rdf_pmf
+<a id="__codelineno-34-2" name="__codelineno-34-2" href="#__codelineno-34-2"></a>gpumdkit.sh<span class="w"> </span>-plt<span class="w"> </span>rdf_pmf<span class="w"> </span><span class="m">300</span><span class="w"> </span><span class="m">2</span><span class="w"> </span>save
 </code></pre></div>
+<p><code>column_index</code> 选择 <code>rdf.out</code> 中的输出列：第 2 列是总 RDF，第 3 列及以后是原子对
+RDF。</p>
 <hr />
 <h3 id="plt_vacpy">plt_vac.py</h3>
 <p>绘制速度自相关函数 (VAC)。可用于分析声子性质和原子动力学。</p>

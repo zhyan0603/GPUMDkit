@@ -21,8 +21,6 @@ Last-modified: 2026-09-14
 """
 
 import os, sys, json
-import numpy as np
-from ase.io import read, write
 
 def main():
     args = sys.argv[1:]
@@ -40,6 +38,10 @@ def main():
         sys.exit(1)
 if __name__ == "__main__":
     main()
+
+# Keep optional conversion dependencies after the lightweight help and argument gate.
+import numpy as np
+from ase.io import read, write
 
 def get_scf_info(root):
     scf_nmax = None

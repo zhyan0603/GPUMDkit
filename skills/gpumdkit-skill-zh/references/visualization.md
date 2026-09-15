@@ -103,7 +103,7 @@ gpumdkit.sh -plt doas doas.out Li
 | `thermo` | `thermo.out` | 热力学性质 |
 | `thermo2` | `thermo.out` | 替代热力学样式 |
 | `thermo3` | `thermo.out` | 第三种热力学样式 |
-| `rdf` | `rdf.out` | 径向分布函数 |
+| `rdf` | `rdf.out` | 所有可用的 RDF 数值列 |
 | `rdf_pmf` | `rdf.out` | RDF + 平均力势 |
 | `xrd` | `xrd.out` 或指定的 XRD 输出 | XRD 强度曲线 |
 | `xrd_comp` | 当前目录下的 `<temperature>K/xrd.out` | 对比不同温度目录中的 XRD 曲线 |
@@ -118,7 +118,9 @@ gpumdkit.sh -plt thermo
 # RDF 分析
 gpumdkit.sh -plt rdf
 gpumdkit.sh -plt rdf save
-gpumdkit.sh -plt rdf_pmf 300 2      # 300 K 的 PMF，第 2 列
+gpumdkit.sh -plt rdf_pmf 300 2      # 300 K 的 PMF，输出第 2 列
+
+# `rdf` 绘制全部 RDF 数值列；`rdf_pmf` 接受输出列号。
 
 # XRD 输出：第 2 列是角度，第 4 列是强度
 gpumdkit.sh -plt xrd

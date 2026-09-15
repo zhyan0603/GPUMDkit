@@ -47,7 +47,7 @@ scf_lines=($(grep -n 'STEP OF MOLECULAR DYNAMICS' "$md_log_file" | awk -F: '{pri
 scf_last=$(wc -l < "$md_log_file")
 scf_lines+=($scf_last)
 scf_nmax=$(grep 'scf_nmax' "$input_file" | awk '{print $2}')
-mdstep_lines=($(grep -n 'MDSTEP' "$md_dump_file" | awk -F: '{print $1}']))
+mdstep_lines=($(grep -n 'MDSTEP' "$md_dump_file" | awk -F: '{print $1}'))
 mdstep_last=$(wc -l < "$md_dump_file")
 mdstep_lines+=($mdstep_last)
 N_counts=$(( ${#mdstep_lines[@]} - 2 ))
@@ -86,5 +86,4 @@ done
 echo
 dos2unix "$writ_dire/$writ_file"
 echo " All done."
-
 

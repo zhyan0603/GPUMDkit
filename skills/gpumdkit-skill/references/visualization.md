@@ -104,7 +104,7 @@ plotters.
 | `thermo` | `thermo.out` | Thermodynamic properties |
 | `thermo2` | `thermo.out` | Alternative thermo style |
 | `thermo3` | `thermo.out` | Third thermo style |
-| `rdf` | `rdf.out` | Radial distribution function |
+| `rdf` | `rdf.out` | All available RDF value columns |
 | `rdf_pmf` | `rdf.out` | RDF + potential of mean force |
 | `xrd` | `xrd.out` or specified XRD output | X-ray diffraction intensity |
 | `xrd_comp` | `<temperature>K/xrd.out` in the current directory | Compare XRD curves across temperature folders |
@@ -119,7 +119,9 @@ gpumdkit.sh -plt thermo
 # RDF analysis
 gpumdkit.sh -plt rdf
 gpumdkit.sh -plt rdf save
-gpumdkit.sh -plt rdf_pmf 300 2      # PMF at 300 K, column 2
+gpumdkit.sh -plt rdf_pmf 300 2      # PMF at 300 K, output column 2
+
+# `rdf` plots every RDF value column; `rdf_pmf` accepts an output column number.
 
 # XRD output: column 2 is angle, column 4 is intensity
 gpumdkit.sh -plt xrd

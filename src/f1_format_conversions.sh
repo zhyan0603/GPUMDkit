@@ -244,7 +244,7 @@ echo " Example: ./ "
 echo " ------------>>"
 read_menu_choice dir_outcars || return 1
 echo " ---------------------------------------------------"
-python "${GPUMDkit_path}/Scripts/format_conversion/out2exyz.py" ""${dir_outcars}""
+python "${GPUMDkit_path}/Scripts/format_conversion/out2exyz.py" "$dir_outcars"
 echo " Code path: ${GPUMDkit_path}/Scripts/format_conversion/out2exyz.py"
 echo " ---------------------------------------------------"
 }
