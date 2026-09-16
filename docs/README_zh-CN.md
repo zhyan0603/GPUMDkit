@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="./Gallery/gpumdkit_logo_lateral.png" width="55%" alt="GPUMDkit Logo">
+  <img src="./Gallery/gpumdkit_logo.png" width="25%" alt="GPUMDkit Logo">
 </p>
 <p align="center">
   <a href="../README.md">English</a>
@@ -13,12 +13,12 @@
   &nbsp;
 </p>
 <p align="center">
-  <a href="https://github.com/zhyan0603/GPUMDkit/releases"><img src="https://img.shields.io/github/v/tag/zhyan0603/GPUMDkit?label=version&style=flat-square&color=brightgreen" alt="Version"></a>
+  <a href="https://github.com/zhyan0603/GPUMDkit/releases"><img src="https://img.shields.io/github/v/tag/zhyan0603/GPUMDkit?label=Version&style=flat-square&color=brightgreen" alt="Version"></a>
+  <a href="https://github.com/zhyan0603/GPUMDkit/blob/main/LICENCE"><img src="https://img.shields.io/badge/License-GPL--3.0-blue?style=flat-square" alt="License"></a>
+  <a href="https://anaconda.org/channels/gpumdkit/packages/gpumdkit/overview"><img src="https://img.shields.io/conda/dn/gpumdkit/gpumdkit?style=flat-square&color=red&label=Conda&logo=anaconda" alt="Conda Downloads"></a>
   <a href="https://badge.dimensions.ai/details/doi/10.1002/mgea.70074"><img src="https://citations.njzjz.win/10.1002/mgea.70074" alt="Citations"></a>
-  <a href="https://github.com/zhyan0603/GPUMDkit/blob/main/LICENCE"><img src="https://img.shields.io/badge/license-GPL--3.0-blue" alt="License"></a>
-  <a href="https://github.com/zhyan0603/GPUMDkit/stargazers"><img src="https://img.shields.io/github/stars/zhyan0603/GPUMDkit?style=social" alt="Stars"></a>
-  <img src="https://img.shields.io/github/languages/code-size/zhyan0603/GPUMDkit" alt="Code Size">
-  <a href="https://github.com/zhyan0603/GPUMDkit/graphs/contributors"><img src="https://img.shields.io/github/contributors/zhyan0603/GPUMDkit?style=flat-square&color=brightgreen" alt="Contributors"></a>
+  <a href="https://github.com/zhyan0603/GPUMDkit/stargazers"><img src="https://img.shields.io/github/stars/zhyan0603/GPUMDkit?style=flat-square&color=yellow&label=Stars" alt="Stars"></a>
+  <a href="https://github.com/zhyan0603/GPUMDkit/graphs/contributors"><img src="https://img.shields.io/github/contributors/zhyan0603/GPUMDkit?style=flat-square&color=brightgreen&label=Contributors" alt="Contributors"></a>
 </p>
 <p style="text-align: justify;"><strong>GPUMDkit</strong> 是面向 GPUMD（<em>Graphics Processing Units Molecular Dynamics</em>）和 NEP（<em>neuroevolution potential</em>）程序的工具包。它提供统一的命令行入口，用于调用常用脚本、完成格式转换、结构采样、NEP 数据准备、分析和可视化。</p>
 
