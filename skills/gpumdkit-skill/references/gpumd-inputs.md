@@ -59,7 +59,7 @@ Do not copy this cell, species, or grouping into a real calculation. Build them 
 
 ## Grouping
 
-`group:I:N` appends `N` integer labels to each atom row. Grouping method indices run from `0` to `N-1`. A group-aware command normally takes both `<grouping_method>` and `<group_id>`; a few legacy forms default to grouping method 0.
+`group:I:N` appends `N` integer labels to each atom row. Grouping method indices run from `0` to `N-1`. Grouping syntax is command-specific; load the reference for each command instead of inferring positional arguments. In current `dump_xyz` and `dump_netcdf` syntax, use the optional `group <grouping_method> <group_id>` clause.
 
 Group labels do not define chemical species. Add them only when a command or downstream tool needs a subset, region, molecule, or per-species group. Verify every referenced group contains the intended atoms.
 

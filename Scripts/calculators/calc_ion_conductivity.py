@@ -26,7 +26,7 @@ Input files (auto-detected):
 Output:
   Calculated diffusivity and ionic conductivity (printed to terminal)
 Author:     Zihan YAN (yanzihan@westlake.edu.cn), Shengjie Tang (tangshengjie@westlake.edu.cn)
-Last-modified: 2026-05-16
+Last-modified: 2026-09-14
 =============================================================================
 """
 
@@ -34,6 +34,27 @@ import os
 import sys
 import numpy as np
 import scipy.constants as consts
+
+
+def read_prompt_number(message, cast=float):
+    """
+    Read a number from stdin with EOF and invalid-input handling.
+
+    Parameters:
+        message (str): Prompt shown to the user.
+        cast (type): float or int, the expected numeric type.
+
+    Returns:
+        The parsed number.
+    """
+    try:
+        return cast(input(message))
+    except (EOFError, KeyboardInterrupt):
+        print("\n Input closed. Exiting.")
+        sys.exit(1)
+    except ValueError:
+        print(" Error: please enter a valid number.")
+        sys.exit(1)
 
 
 # Function to calculate the volume of a triclinic box
@@ -78,6 +99,10 @@ def read_msd_file(msd_file):
     Returns:
         tuple: Time steps (dts) and MSD values for x, y, z, and total.
     """
+    if not os.path.isfile(msd_file):
+        print(f" Error: file '{msd_file}' does not exist.")
+        print(" Please run the MSD calculation first or check the working directory.")
+        sys.exit(1)
     data = np.loadtxt(msd_file)
     dts = data[:, 0]  # Time steps
     msd_x = data[:, 1]  # MSD in x-direction
@@ -134,7 +159,8 @@ def calculate_diffusivity_and_conductivity(filepath, structure_volume, species_c
 # Function to extract volume and temperature from thermo.out
 def extract_thermo_data():
     if not os.path.exists('./thermo.out'):
-        raise FileNotFoundError(" The file 'thermo.out' does not exist.")
+        print(" Error: the file 'thermo.out' does not exist.")
+        sys.exit(1)
 
     data = np.loadtxt('./thermo.out')
     num_columns = data.shape[1]
@@ -159,7 +185,8 @@ def extract_thermo_data():
 
         volume = calculate_volume(a_vectors, b_vectors, c_vectors)
     else:
-        raise ValueError(" Unsupported number of columns in thermo.out. Expected 12 or 18.")
+        print(" Error: unsupported number of columns in thermo.out. Expected 12 or 18.")
+        sys.exit(1)
 
     # Calculate averages after 50% of simulation time
     start_index = int(len(temperature) * 0.5)  # Can adjust this threshold
@@ -173,7 +200,8 @@ def extract_thermo_data():
 def count_ions(atom_type="Li"):
     # Check if model.xyz exists
     if not os.path.exists("model.xyz"):
-        raise FileNotFoundError("The file 'model.xyz' does not exist.")
+        print(" Error: the file 'model.xyz' does not exist.")
+        sys.exit(1)
 
     # Count ions from model.xyz
     num_ions = 0
@@ -231,11 +259,11 @@ def main():
         # If files don't exist, prompt the user to enter values manually
         print(" Files 'thermo.out' and 'model.xyz' are not found.")
         print(" Please provide the following values:")
-        print(" --------------------------->")
-        avg_temperature = float(input(" Enter average temperature (in K): "))
-        avg_volume = float(input(" Enter system volume (in Å^3): "))
+        print(" ------------>>")
+        avg_temperature = read_prompt_number(" Enter average temperature (in K): ")
+        avg_volume = read_prompt_number(" Enter system volume (in Å^3): ")
         atom_type = sys.argv[1]
-        num_ions = int(input(" Enter number of ions: "))
+        num_ions = read_prompt_number(" Enter number of ions: ", cast=int)
 
     # Output the calculated or inputted values
     print(f" Number of ions: {num_ions}")

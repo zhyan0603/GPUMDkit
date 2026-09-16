@@ -101,21 +101,35 @@ gpumdkit.sh -min_dist_pbc train.xyz
 ```
 
 ### Workflow 2: Ionic Conductivity Calculation
+
+Choose one path based on the data source, working in a single temperature directory.
+
+**Path A: derive MSD from a trajectory.** Replace the example frame interval `10` (fs) with the interval between your saved frames.
+
 ```bash
-# Path A: calculate MSD from a stored extxyz trajectory
 gpumdkit.sh -calc msd trajectory.xyz Li 10
+gpumdkit.sh -plt msd
+```
 
-# Path B: use GPUMD compute_msd to generate msd.out directly
-# Do not run both paths unless comparing implementations.
+**Path B: use existing GPUMD `compute_msd` output.** For one selected group, `msd.out` contains time, three MSD columns, and three SDC columns, allowing the SDC plots:
 
-# Calculate ionic conductivity from the validated msd.out/model.xyz/run.in inputs
-gpumdkit.sh -calc ionic-cond Li 1
-
-# Plot results
+```bash
 gpumdkit.sh -plt msd
 gpumdkit.sh -plt sdc
+gpumdkit.sh -plt msd_sdc
+```
 
-# Arrhenius analysis (multiple temperatures)
+Choose one path; when comparing implementations, keep separate results so `-calc msd` does not overwrite an existing `msd.out`. With `all_groups` or multiple GPUMD groups, additional group data are appended, so do not treat every `msd.out` as a seven-column file. The separate `compute_sdc` command writes `sdc.out`, used by `gpumdkit.sh -plt vac`.
+
+After validating `msd.out`, `thermo.out`, `model.xyz`, and optional `run.in`, calculate conductivity in the same temperature directory:
+
+```bash
+gpumdkit.sh -calc ionic-cond Li 1
+```
+
+After checking every temperature, enter the parent containing temperature subdirectories such as `500K/` and `600K/` for cross-temperature analysis:
+
+```bash
 gpumdkit.sh -plt sigma
 gpumdkit.sh -plt D
 ```
@@ -143,11 +157,11 @@ gpumdkit.sh -range train.xyz energy
 | `model.xyz` | Structure file in extxyz format |
 | `train.xyz` | Training dataset |
 | `nep.txt` | NEP model file |
-| `msd.out` | Mean square displacement data |
+| `msd.out` | GPUMDkit four-column trajectory MSD, or GPUMD `compute_msd` MSD/SDC data; columns depend on the producer and grouping |
 | `thermo.out` | Thermodynamic properties |
 | `loss.out` | Training loss history |
 | `rdf.out` | Radial distribution function |
-| `sdc.out` | Self-diffusion coefficient data |
+| `sdc.out` | `compute_sdc` output used by the VAC plot |
 
 ## Troubleshooting
 

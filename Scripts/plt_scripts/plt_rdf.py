@@ -32,7 +32,13 @@ plt.rcParams.update({
 
 # Parse command-line arguments
 parser = argparse.ArgumentParser(description='Plot RDF data from rdf.out file.')
-parser.add_argument('action', nargs='?', default=None, help='If "save", save the plot as PNG; otherwise, show the plot.')
+parser.add_argument(
+    'action',
+    nargs='?',
+    choices=['save'],
+    default=None,
+    help='Use "save" to write rdf.png; otherwise, show the plot.',
+)
 args = parser.parse_args()
 
 # Read the rdf.out file

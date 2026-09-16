@@ -32,6 +32,14 @@ import argparse
 import os
 
 
+def read_prompt(message):
+    """Read one line from stdin with EOF-safe handling."""
+    try:
+        return input(message).strip()
+    except (EOFError, KeyboardInterrupt):
+        print("\n Input closed. Exiting.")
+        sys.exit(1)
+
 def print_dependency_notice():
     print(" This function requires the pynep package.")
     print(" This PyNEP sampling entry is deprecated. We recommend using NepTrain sampling instead.")
@@ -184,17 +192,17 @@ print(calc)
 print(" Choose selection method:")
 print(" 1) Select structures based on minimum distance")
 print(" 2) Select structures based on number of structures")
-choice = input(" ------------>>\n ").strip()
+choice = read_prompt(" ------------>>\n ")
 
 sampler = FarthestPointSample()
 if choice == '1':
-    min_dist = float(input(" Enter min_dist (e.g., 0.01): ").strip())
+    min_dist = float(read_prompt(" Enter min_dist (e.g., 0.01): "))
     des_sample = calculate_descriptors(sampledata, 'sampledata', max_workers=args.threads)
     des_train = calculate_descriptors(traindata, 'traindata', max_workers=args.threads)
     selected = sampler.select(des_sample, des_train, min_distance=min_dist, max_select=None)
 elif choice == '2':
     try:
-        min_max_input = input(" Enter min_select and max_select (e.g., '50 100'): ").strip()
+        min_max_input = read_prompt(" Enter min_select and max_select (e.g., '50 100'): ")
         min_select, max_select = map(int, min_max_input.split())
         if min_select < 1 or max_select < min_select:
             print(" Error: min_select must be >= 1 and max_select must be >= min_select.")

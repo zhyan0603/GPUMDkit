@@ -74,11 +74,12 @@ file_name = sys.argv[1]
 # Read all frames from the extxyz file
 frames = read(file_name, index=':')
 
-# Get the original order of atom types from the first frame
-first_frame_symbols = frames[0].get_chemical_symbols()
-# Get unique symbols while preserving order
+# Get unique symbols across all frames while preserving first appearance order.
 unique_symbols = []
-[unique_symbols.append(s) for s in first_frame_symbols if s not in unique_symbols]
+for frame in frames:
+    for symbol in frame.get_chemical_symbols():
+        if symbol not in unique_symbols:
+            unique_symbols.append(symbol)
 
 # Dictionary to store minimum distances between atom pairs
 min_distances = {}
@@ -110,7 +111,7 @@ for frame in frames:
                 pair_distances = pair_distances[pair_distances > 0]
             
             # Update minimum distance if we have valid distances
-            if len(pair_distances) > 0:
+            if pair_distances.size > 0:
                 min_dist = np.min(pair_distances)
                 pair_key = f"{sym1}-{sym2}"
                 if pair_key not in min_distances or min_dist < min_distances[pair_key]:

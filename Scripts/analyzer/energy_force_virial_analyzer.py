@@ -22,6 +22,7 @@ Last-modified: 2026-05-16
 =============================================================================
 """
 
+import os
 import sys
 
 args = sys.argv[1:]
@@ -53,7 +54,8 @@ def calculate_range(frames, property_name):
             if 'energy' in info_lower:
                 values.append(info_lower['energy'])
             else:
-                raise ValueError("Energy information not found in frame info.")
+                print(" Error: energy information not found in frame info.")
+                sys.exit(1)
         elif property_name in ["force", "forces"]:
             forces = frame.get_forces()
             values.extend(np.linalg.norm(forces, axis=1))
@@ -62,9 +64,11 @@ def calculate_range(frames, property_name):
                 virial = info_lower['virial']
                 values.extend(virial)  
             else:
-                raise ValueError("Virial information not found in frame info.")
+                print(" Error: virial information not found in frame info.")
+                sys.exit(1)
         else:
-            raise ValueError("Invalid property. Choose from 'energy', 'force', or 'virial'.")
+            print(" Error: invalid property. Choose from 'energy', 'force', or 'virial'.")
+            sys.exit(1)
     
     return np.min(values), np.max(values), values
 
@@ -81,6 +85,9 @@ def plot_histogram(values, property_name):
 if __name__ == "__main__":
     filename = sys.argv[1]
     property_name = sys.argv[2]
+    if not os.path.isfile(filename):
+        print(f" Error: file '{filename}' does not exist.")
+        sys.exit(1)
     plot_hist = len(sys.argv) > 3 and sys.argv[3] == 'hist'
     
     # Read the extxyz file
@@ -90,7 +97,7 @@ if __name__ == "__main__":
     min_val, max_val, values = calculate_range(frames, property_name)
     
     # Print the range
-    print(f"{property_name.capitalize()} range: {min_val:.3f} to {max_val:.3f}")
+    print(f" {property_name.capitalize()} range: {min_val:.3f} to {max_val:.3f}")
     
     # Plot histogram if requested
     if plot_hist:

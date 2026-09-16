@@ -26,12 +26,17 @@
 
 ### VASP Conversions
 
+`-out2xyz` (also menu `101`) writes `NEPdataset/train.xyz` in the terminal's current directory and deletes/recreates any existing `NEPdataset/`. `-out2xyz_bec` follows the same output convention, writes one final configuration per OUTCAR, and includes `bec:R:9` when a complete VASP `BORN EFFECTIVE CHARGES` block is present. `-out2exyz` writes and overwrites `train.xyz` in the current directory. The input-directory argument does not change the output location; back up previous results or use a new working directory before repeating a conversion. Choose one converter route.
+
 ```bash
 # OUTCAR to extxyz (directory, shell version)
 gpumdkit.sh -out2xyz <directory>
 
 # OUTCAR to extxyz (Python version)
 gpumdkit.sh -out2exyz <directory>
+
+# OUTCAR to extxyz with Born effective charges
+gpumdkit.sh -out2xyz_bec <directory>
 
 # XDATCAR to extxyz
 gpumdkit.sh -xdat2exyz XDATCAR output.xyz
@@ -42,6 +47,10 @@ gpumdkit.sh -pos2exyz POSCAR model.xyz
 # extxyz to POSCAR (all frames)
 gpumdkit.sh -exyz2pos structures.xyz
 ```
+
+`exyz2pos` writes `POSCAR_1.vasp`, `POSCAR_2.vasp`, and so on in the current
+directory. It groups atoms by element using the first-seen element order in the
+input trajectory, and does not export velocities. Do not pass `-o` or `-v`.
 
 ### LAMMPS Conversions
 
@@ -77,7 +86,8 @@ gpumdkit.sh -traj2exyz input.traj output.xyz
 # MTP cfg to extxyz
 python3 ${GPUMDkit_path}/Scripts/format_conversion/mtp2xyz.py train.cfg Pd Ag
 
-# CP2K conversion through CLI menu helper
+# Run in the CP2K results root: recursively read logs and structure files
+# Outputs in the current directory: cp2k_exyz.xyz and Logfile.txt
 gpumdkit.sh -cp2k2xyz
 
 # ABACUS conversion is available through the interactive menu:
@@ -103,9 +113,12 @@ element order used by the DeepMD `type_map.raw` file.
 **Usage:**
 ```
 gpumdkit.sh -xyz2dp
+gpumdkit.sh -xyz2dp train.xyz Li P S
 ```
 
-The same conversion can be called directly with Python:
+Running without arguments starts the interactive prompts; with arguments the
+input file and type-map order are forwarded to the script directly. The same
+conversion can be called directly with Python:
 
 ```
 python3 ${GPUMDkit_path}/Scripts/format_conversion/xyz2dp.py train.xyz Li P S
@@ -144,6 +157,7 @@ gpumdkit.sh -clean_xyz input.xyz clean.xyz
 | CLI Flag | Conversion | Syntax |
 |----------|-----------|--------|
 | `-out2xyz` | OUTCAR -> extxyz (shell) | `gpumdkit.sh -out2xyz <dir>` |
+| `-out2xyz_bec` | OUTCAR -> extxyz with BEC labels (shell) | `gpumdkit.sh -out2xyz_bec <dir>` |
 | `-out2exyz` | OUTCAR -> extxyz (python) | `gpumdkit.sh -out2exyz <dir>` |
 | `-pos2exyz` | POSCAR -> extxyz | `gpumdkit.sh -pos2exyz <poscar> <xyz>` |
 | `-exyz2pos` | extxyz -> POSCAR | `gpumdkit.sh -exyz2pos <xyz>` |
@@ -154,7 +168,7 @@ gpumdkit.sh -clean_xyz input.xyz clean.xyz
 | `-xdat2exyz` | XDATCAR -> extxyz | `gpumdkit.sh -xdat2exyz XDATCAR dump.xyz` |
 | `-traj2exyz` | ASE traj -> extxyz | `gpumdkit.sh -traj2exyz <traj> <xyz>` |
 | `-dp2xyz` | DeepMD npy → extxyz (via dpdata) | `gpumdkit.sh -dp2xyz <input_dir/> [output.xyz]` |
-| `-xyz2dp` | extxyz → DeepMD npy (via dpdata) | `gpumdkit.sh -xyz2dp` (interactive) |
+| `-xyz2dp` | extxyz → DeepMD npy (via dpdata) | `gpumdkit.sh -xyz2dp` (interactive) or `gpumdkit.sh -xyz2dp <in.xyz> <type1> ...` |
 | `-addgroup` | Add group labels | `gpumdkit.sh -addgroup <poscar> <elem...>` |
 | `-addweight` | Add weight | `gpumdkit.sh -addweight <in> <out> <weight>` |
 | `-replicate` | Replicate structure | `gpumdkit.sh -replicate <in> <out> a b c` |
@@ -168,10 +182,8 @@ gpumdkit.sh -clean_xyz input.xyz clean.xyz
 # Convert all OUTCAR files in current directory
 gpumdkit.sh -out2xyz .
 
-# Add group labels only if a later workflow needs them
-gpumdkit.sh -addgroup POSCAR Pb Ti O
-
-# Result: model.xyz ready for NEP training
+# Inspect the output atom count and extxyz metadata
+head -n 2 NEPdataset/train.xyz
 ```
 
 ### Example 2: Prepare LAMMPS Simulation
@@ -185,11 +197,9 @@ gpumdkit.sh -lmp2exyz dump.lammpstrj Li P S
 
 ### Example 3: Batch Conversion
 ```bash
-# Convert multiple OUTCAR files
-for dir in run_*; do
-    gpumdkit.sh -out2xyz "$dir"
-    mv "$dir"/model.xyz "$dir"/trajectory.xyz
-done
+# vasp_results/ contains multiple calculation subdirectories; convert recursively once
+gpumdkit.sh -out2xyz ./vasp_results/
+# Combined output: NEPdataset/train.xyz in the current directory
 ```
 
 ### Example 4: Structure Replication

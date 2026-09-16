@@ -5,22 +5,29 @@
 
 The source table is maintained in `docs/command_reference.tsv`.
 
+If you are new to GPUMDkit, start with [Quick Start](quick_start.md). For
+agent-assisted work, use the [GPUMDkit Agent Skill](simulation_and_postprocessing.md).
+The `-h` form is available only for commands that expose their own option help;
+otherwise use `gpumdkit.sh -h`, the relevant module help, or interactive mode.
+
 ## `gpumdkit.sh -h` Output
 
 ```text
 +-------------------------------------------------------------------------------------------------------+
-|                          GPUMDkit 1.5.7 (2026-08-23)       Command Help                               |
+|                          GPUMDkit 1.5.7 (2026-09-14)       Command Help                               |
 +-------------------------------------------------------------------------------------------------------+
 |                                          MAIN FUNCTIONS                                               |
 +-------------------------------------------------------------------------------------------------------+
 | -h            Show this help table            | -plt <type>        Plot and visualization tools       |
 | -calc <type>  Calculator tools                | -time <gpumd|nep>  Time-consuming analyzer            |
 | -update       Update GPUMDkit                 | -clean             Clean extra files in current dir   |
-| -skill        Show GPUMDkit agent skill info  | -doctor           Check Python environment          |
+| -skill        Show GPUMDkit agent skill info  | -doctor            Check Python environment           |
+| -prediction   Write NEP prediction .out files | -prediction_dpa    Write DPA prediction .out files    |
 +-------------------------------------------------------------------------------------------------------+
 |                                         FORMAT CONVERSION                                             |
 +-------------------------------------------------------------------------------------------------------+
-| -out2xyz      OUTCAR -> extxyz (shell)        | -out2exyz          OUTCAR -> extxyz (python)          |
+| -out2xyz      OUTCAR -> extxyz (shell)        | -out2xyz_bec       OUTCAR -> extxyz with BEC          |
+| -out2exyz     OUTCAR -> extxyz (python)       | -xyz2dp            extxyz -> DeepMD npy               |
 | -cp2k2xyz     CP2K log -> xyz                 | -xdat2exyz         XDATCAR -> extxyz                  |
 | -cif2pos      cif -> POSCAR                   | -cif2exyz          cif -> extxyz                      |
 | -pos2exyz     POSCAR -> extxyz                | -exyz2pos          extxyz -> POSCAR                   |
@@ -29,7 +36,6 @@ The source table is maintained in `docs/command_reference.tsv`.
 | -addgroup     Add group labels                | -addweight         Add structure weight in extxyz     |
 | -clean_xyz    Clean extra info in extxyz      | -get_frame         Extract specific frame             |
 | -frame_range  Extract frames by range         | -dp2xyz            DeepMD npy -> extxyz               |
-| -xyz2dp       extxyz -> DeepMD npy            |                                                       |
 +-------------------------------------------------------------------------------------------------------+
 |                                            ANALYSIS                                                   |
 +-------------------------------------------------------------------------------------------------------+
@@ -39,7 +45,7 @@ The source table is maintained in `docs/command_reference.tsv`.
 | -filter_dist  Filter by min_dist (no PBC)     | -filter_dist_pbc   Filter by min_dist (PBC)           |
 | -pda          Probability density analysis    | -filter_box        Filter by box-edge length          |
 | -pynep        Deprecated PyNEP sampling       | -nep_modifier      Modify NEP model interactively     |
-| -shift_energy  Interactive energy shift       |                                                       |
+| -shift_energy Interactive energy shift        |                                                       |
 +-------------------------------------------------------------------------------------------------------+
 | Python option help: gpumdkit.sh -<option> -h    Plot list: gpumdkit.sh -plt -h                        |
 +-------------------------------------------------------------------------------------------------------+
@@ -53,12 +59,15 @@ The source table is maintained in `docs/command_reference.tsv`.
 | `-doctor` | `gpumdkit.sh -doctor` | Check Python and GPUMDkit package availability |
 | `-update` | `gpumdkit.sh -update` | Update GPUMDkit |
 | `-clean` | `gpumdkit.sh -clean` | Clean extra files in the current directory |
+| `-prediction` | `gpumdkit.sh -prediction <input.xyz> <nep.txt> [workers]` | Write NEP-compatible energy, force, stress, and virial prediction files |
+| `-prediction_dpa` | `gpumdkit.sh -prediction_dpa <input.xyz> <dpa_model>` | Write DPA training-set prediction files in the current directory |
 
 ## Format Conversion
 
 | Command | Syntax | Description |
 |---|---|---|
 | `-out2xyz` | `gpumdkit.sh -out2xyz <dir>` | OUTCAR to extxyz, shell version |
+| `-out2xyz_bec` | `gpumdkit.sh -out2xyz_bec <dir>` | OUTCAR to extxyz with BEC labels |
 | `-out2exyz` | `gpumdkit.sh -out2exyz <dir>` | OUTCAR to extxyz, Python version |
 | `-cp2k2xyz` | `gpumdkit.sh -cp2k2xyz` | CP2K output to xyz/extxyz |
 | `-xdat2exyz` | `gpumdkit.sh -xdat2exyz <XDATCAR> <output.xyz>` | XDATCAR to extxyz |
@@ -73,7 +82,7 @@ The source table is maintained in `docs/command_reference.tsv`.
 | `-replicate` | `gpumdkit.sh -replicate <input> <output> <target_num>` | Replicate toward a target atom count |
 | `-addgroup` | `gpumdkit.sh -addgroup <POSCAR> <element...>` | Add GPUMD group labels |
 | `-addweight` | `gpumdkit.sh -addweight <input.xyz> <output.xyz> <weight>` | Add structure weights |
-| `-get_frame` | `gpumdkit.sh -get_frame <input.xyz> <frame_index>` | Extract one frame |
+| `-get_frame` | `gpumdkit.sh -get_frame <input.xyz> <frame_index>` | Extract one frame (1-based index) |
 | `-clean_xyz` | `gpumdkit.sh -clean_xyz <input.xyz> <output.xyz>` | Remove extra extxyz properties |
 | `-frame_range` | `gpumdkit.sh -frame_range <input.xyz> <start_frac> <end_frac>` | Extract frames by fractional range |
 | `-dp2xyz` | `gpumdkit.sh -dp2xyz <input_dir/> [output.xyz]` | DeepMD npy datasets to extxyz |
@@ -85,6 +94,8 @@ The source table is maintained in `docs/command_reference.tsv`.
 |---|---|---|
 | `-calc ionic-cond` | `gpumdkit.sh -calc ionic-cond <element> <charge>` | Ionic conductivity |
 | `-calc nep` | `gpumdkit.sh -calc nep <input.xyz> <output.xyz> <nep.txt>` | NEP property prediction |
+| `-prediction` | `gpumdkit.sh -prediction <input.xyz> <nep.txt> [workers]` | NEP-compatible prediction output files |
+| `-prediction_dpa` | `gpumdkit.sh -prediction_dpa <input.xyz> <dpa_model>` | DPA training-set prediction output files |
 | `-calc des` | `gpumdkit.sh -calc des <input.xyz> <output.npy> <nep.txt> <element>` | NEP descriptors |
 | `-calc doas` | `gpumdkit.sh -calc doas <input.xyz> <nep.txt> <output.txt>` | Density of atomistic states |
 | `-calc neb` | `gpumdkit.sh -calc neb <initial.xyz> <final.xyz> <n_images> <nep.txt>` | NEB with a NEP model |
@@ -95,6 +106,10 @@ The source table is maintained in `docs/command_reference.tsv`.
 | `-calc avg-struct` | `gpumdkit.sh -calc avg-struct [args...]` | Averaged structure |
 | `-calc oct-tilt` | `gpumdkit.sh -calc oct-tilt [args...]` | Octahedral tilt |
 | `-calc pol-abo3` | `gpumdkit.sh -calc pol-abo3 [args...]` | ABO3 local polarization |
+
+`-calc nep` writes an output extxyz containing properties predicted by a NEP
+model. `-prediction` writes the separate NEP prediction files used by training
+and validation workflows.
 
 ## Analyzers
 

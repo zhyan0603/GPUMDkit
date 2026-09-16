@@ -70,6 +70,11 @@
 - 教程文档位于 `docs/tutorials/en/`（英文）和 `docs/tutorials/zh/`（中文）。如果你添加了新功能，请考虑更新相关教程页面。
 - 编辑教程 Markdown 文件后，使用 `mkdocs build -f docs/mkdocs.yml` 重新构建 HTML。
 
+### 更新记录
+
+- `docs/updates.info` 只用于记录近期的用户可见功能新增，以及代码、脚本或 CLI 的 bug 修复。纯文档修改，包括教程、README、skill、reference、措辞修正和生成的文档，不得写入该文件。
+- `NEW_FEATURES` 和 `BUG_FIXES` 数组各自最多保留最新的 5 条记录；添加新记录时删除更早的条目。如果一次修改同时包含代码和文档，只记录代码/行为变化，不记录文档同步本身。
+
 ---
 
 ## 报告问题
@@ -120,7 +125,7 @@
 为你的修改创建新分支：
 
 ```bash
-# 从 main 创建并切换到新分支
+# 从 dev 创建并切换到新分支
 git checkout -b your-branch-name
 ```
 
@@ -195,8 +200,8 @@ git checkout -b your-branch-name
 4. **在 `gpumdkit.sh` 中更新菜单显示**：
    ```bash
    # 找到 menu() 函数并按需更新
-   # 找到 array_choice 数组并添加你的新选择编号
-   array_choice=(
+   # 找到 valid_menu_choices 数组并添加你的新选择编号
+   valid_menu_choices=(
        "0" "1" "101" "102" "103" "104" "105" "106" "107" "108" "109" "110" "111"  # 添加 "111"
        # ... 其余选择
    )

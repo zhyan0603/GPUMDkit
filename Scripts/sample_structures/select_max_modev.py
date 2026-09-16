@@ -25,9 +25,8 @@ Last-modified: 2026-05-16
 =============================================================================
 """
 
+import os
 import sys
-import numpy as np
-from ase.io import read, write
 
 
 def print_usage():
@@ -65,6 +64,9 @@ except ValueError:
     print_usage()
     sys.exit(1)
 
+import numpy as np
+from ase.io import read, write
+
 # Define file paths
 input_file = 'active.out'  # Input file for max force deviation
 #output_file = 'filtered_max_force_deviations.txt'  # Output file for filtered max force deviations
@@ -74,6 +76,11 @@ output_xyz_file = 'selected.xyz'  # Output file for extracted structures
 # Lists to store filtered max force deviations and corresponding indices
 filtered_deviations = []
 filtered_indices = []
+
+for required in (input_file, xyz_file):
+    if not os.path.isfile(required):
+        print(f" Error: file '{required}' does not exist in the current directory.")
+        sys.exit(1)
 
 # Read and filter data based on max force deviation
 with open(input_file, 'r') as f:

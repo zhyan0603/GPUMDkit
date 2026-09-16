@@ -38,7 +38,7 @@ GPUMDkit/
 │   ├── tutorials/en/        # English tutorials
 │   ├── tutorials/zh/        # Chinese tutorials
 │   ├── mkdocs.yml           # MkDocs config
-│   ├── updates.info         # Recent feature and bug-fix records
+│   ├── updates.info         # Latest feature and code/CLI bug-fix records only
 │   └── htmls/               # Generated HTML
 ```
 
@@ -57,7 +57,9 @@ GPUMDkit/
 
 ## Update and Version Bookkeeping
 
-- When adding a feature or fixing a bug, update `docs/updates.info` in the same change. Add a concise entry to `NEW_FEATURES` or `BUG_FIXES`; keep the other list as `"None"` only when it has no entries.
+- Use `docs/updates.info` only for recent user-visible feature additions and code, script, or CLI bug fixes. Documentation-only changes, including tutorials, README files, skills, references, wording corrections, and generated documentation, must not be added there.
+- Keep at most the five newest entries in each of `NEW_FEATURES` and `BUG_FIXES`; remove older entries when adding a new one. If a change includes both code and documentation, record only the code/behavior change, not the documentation synchronization.
+- Keep the other list as `"None"` only when it has no entries.
 - If `gpumdkit.sh` is modified, update the date in its `VERSION="..."` declaration to the current date using `YYYY-MM-DD` format.
 - Preserve the existing version string. Do not change any version number in `gpumdkit.sh` or `docs/updates.info` unless the user explicitly requests a version update.
 
@@ -85,7 +87,7 @@ echo " >-------------------------------------------------<"
 echo " Input <param1> <param2> [optional_param3]"
 echo " Example: input.xyz nep.txt"
 echo " ------------>>"
-read_menu_choice feature_args || return 1
+read_menu_array feature_args || return 1
 echo " ---------------------------------------------------"
 python ${GPUMDkit_path}/Scripts/calculators/calc_new_feature.py "${feature_args[@]}"
 echo " Code path: ${GPUMDkit_path}/Scripts/calculators/calc_new_feature.py"
@@ -106,7 +108,7 @@ Key conventions:
 
 ### Step 3: Register in `gpumdkit.sh`
 
-1. Add the choice number to `array_choice` (line ~64)
+1. Add the choice number to `valid_menu_choices` (line ~64)
 2. Add the case in the `main()` function's nested case statement:
    ```bash
    "413") f413_new_feature ;;
@@ -365,7 +367,7 @@ echo " >-------------------------------------------------<"
 echo " Input <param1> <param2>"
 echo " Example: input.xyz nep.txt"
 echo " ------------>>"
-read_menu_choice feature_args || return 1   # EOF-safe; see project conventions
+read_menu_array feature_args || return 1   # EOF-safe; see project conventions
 echo " ---------------------------------------------------"
 python ${GPUMDkit_path}/Scripts/calculators/calc_new_feature.py "${feature_args[@]}"
 echo " Code path: ${GPUMDkit_path}/Scripts/calculators/calc_new_feature.py"

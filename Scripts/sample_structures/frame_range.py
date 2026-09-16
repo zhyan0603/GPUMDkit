@@ -22,6 +22,7 @@ Last-modified: 2026-05-16
 =============================================================================
 """
 
+import os
 import sys
 
 args = sys.argv[1:]
@@ -46,6 +47,10 @@ from ase.io import read, write
 input_file = sys.argv[1]
 start_fraction = float(sys.argv[2])
 end_fraction = float(sys.argv[3])
+
+if not os.path.isfile(input_file):
+    print(f" Error: file '{input_file}' does not exist.")
+    sys.exit(1)
 
 # Read the entire trajectory
 images = read(input_file, index=':')

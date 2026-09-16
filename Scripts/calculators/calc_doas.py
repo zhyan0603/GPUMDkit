@@ -22,6 +22,7 @@ Author:     Zihan YAN (yanzihan@westlake.edu.cn)
 Last-modified: 2026-05-16
 =============================================================================
 """
+import os
 import sys
 
 # Check command-line arguments before importing optional heavy dependencies.
@@ -59,6 +60,11 @@ input_file = sys.argv[1]  # Input extxyz file
 model_path = sys.argv[2]  # Path to the model for CPUNEP
 output_file = sys.argv[3]  # Output text file for grouped atomic energies
 
+for required in (input_file, model_path):
+    if not os.path.isfile(required):
+        print(f" Error: file '{required}' does not exist.")
+        sys.exit(1)
+
 print_dependency_notice()
 
 # Read input file containing all structures
@@ -88,7 +94,8 @@ for atoms in tqdm(structures, desc="Optimizing structures", unit="frame"):
     # Verify that the sum of per-atom energies matches the total energy
     total_energy = atoms.get_potential_energy()
     if not np.isclose(atomic_energies.sum(), total_energy, rtol=1e-5):
-        raise ValueError(f"Sum of per-atom energies ({atomic_energies.sum()}) does not match total energy ({total_energy}).")
+        print(f" Error: sum of per-atom energies ({atomic_energies.sum()}) does not match total energy ({total_energy}).")
+        sys.exit(1)
 
     # Group energies by element
     symbols = atoms.get_chemical_symbols()

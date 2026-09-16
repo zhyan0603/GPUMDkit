@@ -3,12 +3,6 @@
   <p style="text-align: justify;">Thank you for your interest in contributing to <strong>GPUMDkit</strong>! We appreciate your time and effort in helping improve this toolkit.</p>
 </div>
 
-<p align="center">
-  <strong>English</strong>
-  &nbsp;·&nbsp;
-  <a href="../zh/贡献指南.md">简体中文</a>
-</p>
-
 `GPUMDkit` is an open-source package, and we welcome contributions from the community, whether you're fixing bugs, adding new features, improving documentation, or suggesting enhancements.
 
 > **Note**: The authoritative version of this document is [`CONTRIBUTING.md`](https://github.com/zhyan0603/GPUMDkit/blob/main/CONTRIBUTING.md) in the repository root. This tutorial page mirrors its content.
@@ -76,6 +70,11 @@ To maintain code quality and consistency across the project, please adhere to th
   If you add a new feature, consider updating the relevant tutorial page.
 - After editing tutorial markdown files, rebuild the HTML with `mkdocs build -f docs/mkdocs.yml`.
 
+### Update Log
+
+- Use `docs/updates.info` only for recent user-visible feature additions and code, script, or CLI bug fixes. Documentation-only changes, including tutorials, README files, skills, references, wording corrections, and generated documentation, must not be added there.
+- Keep at most the five newest entries in each of the `NEW_FEATURES` and `BUG_FIXES` arrays; remove older entries when adding a new one. If a change includes both code and documentation, record only the code/behavior change, not the documentation synchronization.
+
 ---
 
 ## Reporting Bugs
@@ -126,7 +125,7 @@ We welcome feature suggestions! To propose a new feature:
 Create a new branch for your changes:
 
 ```bash
-# Create and checkout a new branch from main
+# Create and checkout a new branch from dev
 git checkout -b your-branch-name
 ```
 
@@ -201,8 +200,8 @@ To add a new feature accessible through the interactive menu:
 4. **Update the menu display** in `gpumdkit.sh`:
    ```bash
    # Find the menu() function and update it if needed
-   # Find the array_choice array and add your new choice number
-   array_choice=(
+   # Find the valid_menu_choices array and add your new choice number
+   valid_menu_choices=(
        "0" "1" "101" "102" "103" "104" "105" "106" "107" "108" "109" "110" "111"  # Added "111"
        # ... rest of choices
    )

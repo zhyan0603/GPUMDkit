@@ -684,6 +684,10 @@ def run_interactive() -> None:
 
 def main() -> int:
     """Parse the help option and launch the interactive interface."""
+    print(" This function requires the calorine package.")
+    print(" If you use this function, we recommend citing:")
+    print(" Lindgren et al., J. Open Source Softw. 9, 6264 (2024).")
+    print(" https://doi.org/10.21105/joss.06264")
     parser = build_parser()
     parser.parse_args()
     try:

@@ -71,6 +71,11 @@ To maintain code quality and consistency across the project, please adhere to th
   If you add a new feature, consider updating the relevant tutorial page.
 - After editing tutorial markdown files, rebuild the HTML with `mkdocs build -f docs/mkdocs.yml`.
 
+### Update Log
+
+- Use `docs/updates.info` only for recent user-visible feature additions and code, script, or CLI bug fixes. Documentation-only changes, including tutorials, README files, skills, references, wording corrections, and generated documentation, must not be added there.
+- Keep at most the five newest entries in each of the `NEW_FEATURES` and `BUG_FIXES` arrays; remove older entries when adding a new one. If a change includes both code and documentation, record only the code/behavior change, not the documentation synchronization.
+
 ---
 
 ## Reporting Bugs
@@ -121,7 +126,7 @@ We welcome feature suggestions! To propose a new feature:
 Create a new branch for your changes:
 
 ```bash
-# Create and checkout a new branch from main
+# Create and checkout a new branch from dev
 git checkout -b your-branch-name
 ```
 
@@ -196,8 +201,8 @@ To add a new feature accessible through the interactive menu:
 4. **Update the menu display** in `gpumdkit.sh`:
    ```bash
    # Find the menu() function and update it if needed
-   # Find the array_choice array and add your new choice number
-   array_choice=(
+   # Find the valid_menu_choices array and add your new choice number
+   valid_menu_choices=(
        "0" "1" "101" "102" "103" "104" "105" "106" "107" "108" "109" "110" "111"  # Added "111"
        # ... rest of choices
    )

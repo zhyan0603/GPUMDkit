@@ -13,11 +13,12 @@ Usage:      python cp2k_log2xyz.py
 Output:
   cp2k_exyz.xyz (extended XYZ trajectory), Logfile.txt (processing summary)
 Author:     Chen HUA (huachen23@mails.ucas.ac.cn)
-Last-modified: 2026-05-16
+Last-modified: 2026-09-14
 =============================================================================
 """
 
 import re
+import sys
 from pathlib import Path
 import numpy as np
 
@@ -204,7 +205,7 @@ def main():
     if not folders:
         with open(cwd / "Logfile.txt", "w") as f:
             f.write("No .log files found.\n")
-        print("No .log files found.")
+        print(" No .log files found.")
         return
 
     all_frames = []
@@ -297,12 +298,20 @@ def main():
 
     if all_frames:
         (cwd / "cp2k_exyz.xyz").write_text(''.join(all_frames))
-        print("\nProcessing complete.")
-        print("Log saved to: Logfile.txt")
-        print("Output written to: cp2k_exyz.xyz")
+        print("\n Processing complete.")
+        print(" Log saved to: Logfile.txt")
+        print(" Output written to: cp2k_exyz.xyz")
     else:
-        print("\nProcessing complete. No valid structures converted.")
-        print("Log saved to: Logfile.txt")
+        print("\n Processing complete. No valid structures converted.")
+        print(" Log saved to: Logfile.txt")
 
 if __name__ == '__main__':
+    if sys.argv[1:] and sys.argv[1] in ("-h", "--help"):
+        print(" Usage: gpumdkit.sh -cp2k2xyz")
+        print("    or: python cp2k_log2xyz.py")
+        print("")
+        print(" Scans the current directory (recursively) for CP2K .log files")
+        print(" and converts them to cp2k_exyz.xyz with Logfile.txt as summary.")
+        print("")
+        sys.exit(0)
     main()

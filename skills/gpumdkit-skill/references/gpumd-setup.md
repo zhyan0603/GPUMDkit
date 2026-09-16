@@ -19,7 +19,7 @@ Use this self-contained catalog for non-ensemble setup commands, external contro
 | `velocity` | `velocity <initial_temperature> [seed <seed_number>]` | Temperature in K; seed is optional. If velocities are absent and this command is omitted, GPUMD initializes at 300 K; prefer an explicit user-approved value |
 | `correct_velocity` | `correct_velocity <interval> [<group_method>]` | Removes translational/rotational drift periodically; interval must be at least 10 steps |
 | `time_step` | `time_step <dt_in_fs> [<max_distance_per_step>]` | Step in fs; documented default is 1 fs; optional positive displacement limiter is in Angstrom |
-| `compute_extrapolation` | `compute_extrapolation asi_file <file> gamma_low <v> gamma_high <v> check_interval <n> dump_interval <n>` | ASI monitoring. Defaults: `gamma_low=0`, effectively unbounded `gamma_high`, and both intervals 1; user approval is required before relying on them in production |
+| `compute_extrapolation` | `compute_extrapolation nep_file <nep_file> asi_file <asi_file> gamma_low <v> gamma_high <v> check_interval <n> dump_interval <n>` | ASI extrapolation-grade monitoring for active learning. `nep_file` is the NEP model used to compute the grade and is independent of the potential driving the MD; `asi_file` comes from the ASI tool. Defaults: `gamma_low=0`, effectively unbounded `gamma_high`, and both intervals 1; selected structures are appended to `extrapolation_dump.xyz`. User approval is required before relying on them in production |
 | `dftd3` | `dftd3 <functional> <potential_cutoff> <coordination_number_cutoff>` | Cutoffs are in Angstrom; functional and cutoffs must match the intended D3 parameterization |
 | `kspace` | `kspace <ewald|pppm>` | Reciprocal-space electrostatics method; default is `pppm`; use only for a compatible charge model |
 
@@ -30,25 +30,28 @@ Recognized potential families include Tersoff-1988/1989/mini, EAM, FCP, LJ, NEP,
 | Keyword | Current signature | Important meaning/constraint |
 |---|---|---|
 | `change_box` | `change_box <delta>`; `change_box <delta_xx> <delta_yy> <delta_zz>`; or the 6-parameter form followed by `<epsilon_yz> <epsilon_xz> <epsilon_xy>` | Immediate box change. Length increments are in Angstrom; shear terms are dimensionless; the 6-parameter form requires a triclinic box |
-| `deform` | `deform <A_per_step> <deform_x> <deform_y> <deform_z>` or component-wise rates followed by three flags | Run-scoped deformation; if the parser rejects the chosen form, resolve the executable version |
+| `deform` | General form: `deform <component> <A_per_step> [<component> <A_per_step> ...]` with components `xx`/`yy`/`zz`/`xy`/`xz`/`yz`; legacy forms: `deform <A_per_step> <deform_x> <deform_y> <deform_z>` or component-wise rates followed by three flags | Run-scoped deformation in Angstrom/step; only the general form can be combined with 6-component NPT stress control. If the parser rejects the chosen form, resolve the executable version |
 | `add_force` | `add_force <group_method> <group_id> <Fx> <Fy> <Fz>` or `add_force <group_method> <group_id> <add_force_file>` | Adds force in eV/Angstrom to every atom in the selected group; file form supplies a periodic force series |
 | `add_efield` | `add_efield <method> <group> <Ex> <Ey> <Ez> [charge|bec]` or `add_efield <method> <group> <field_file> [charge|bec]` | Field is in V/Angstrom. Default force uses qNEP BEC or `model.xyz` charge; explicit `charge` uses predicted/supplied charge, while `bec` requires qNEP |
-| `add_spring` | `add_spring ghost_com|ghost_atom|com_com ... couple|decouple ...` | Use one of the six complete signatures below; spring constants and references are user inputs |
+| `add_spring` | `add_spring ghost_com|ghost_atom|com_com ... couple|decouple ... [continue <spring_id>]` | Use one of the six complete signatures below; spring constants and references are user inputs |
+| `deposit` | `deposit <interval> <direction> <height_min> [<height_max>] atom ...` or `deposit <interval> <direction> <height_min> file <add_atom_file> [velocity]` | Adds atoms during a run; it can appear only once and modifies the run/model files, so inspect the current documentation before use |
 | `electron_stop` | `electron_stop <file>` | Loads an electronic stopping-power table; validate table units/schema before use |
 | `plumed` | `plumed <plumed_file> <interval> <if_restart>` | Requires a PLUMED-enabled GPUMD build; interval is in MD steps and restart flag is 0/1 |
 
 `add_spring` signatures:
 
 ```text
-add_spring ghost_com  <method> <group> <gvx> <gvy> <gvz> couple   <k> <R0> <ox> <oy> <oz>
-add_spring ghost_com  <method> <group> <gvx> <gvy> <gvz> decouple <kx> <ky> <kz> <ox> <oy> <oz>
-add_spring ghost_atom <method> <group> <gvx> <gvy> <gvz> couple   <k> <R0> <ox> <oy> <oz>
-add_spring ghost_atom <method> <group> <gvx> <gvy> <gvz> decouple <kx> <ky> <kz> <ox> <oy> <oz>
+add_spring ghost_com  <method> <group> <gvx> <gvy> <gvz> couple   <k> <R0> <ox> <oy> <oz> [continue <spring_id>]
+add_spring ghost_com  <method> <group> <gvx> <gvy> <gvz> decouple <kx> <ky> <kz> <ox> <oy> <oz> [continue <spring_id>]
+add_spring ghost_atom <method> <group> <gvx> <gvy> <gvz> couple   <k> <R0> <ox> <oy> <oz> [continue <spring_id>]
+add_spring ghost_atom <method> <group> <gvx> <gvy> <gvz> decouple <kx> <ky> <kz> <ox> <oy> <oz> [continue <spring_id>]
 add_spring com_com <method> <group1> <group2> couple   <k> <R0>
 add_spring com_com <method> <group1> <group2> decouple <kx> <ky> <kz>
 ```
 
-An `electron_stop` table starts with `N E_min E_max`, followed by `N` evenly spaced energy rows. Each row has one stopping-power column per potential species, in the same species order as the potential file.
+The optional `continue <spring_id>` clause (ghost forms only) reattaches a spring from its saved state instead of starting fresh. Spring forces are written to `spring_gm<method>_g<group>_s<spring_id>.out` (columns: step, mode, Fx, Fy, Fz, Ftotal, energy); the ghost state is saved to `spring_gm<method>_g<group>_s<spring_id>.restart` at the end of each run. `com_com` does not support `continue`.
+
+An `electron_stop` table starts with `N E_min E_max`, followed by `N` evenly spaced energy rows. Each row has one stopping-power column per species: for a compacted multi-element NEP potential, the columns follow the active atom type order printed at initialization; for other potentials, they follow the species order in the potential file.
 
 ## Constraints and hybrid MD/MC
 
@@ -67,7 +70,7 @@ An `electron_stop` table starts with `N E_min E_max`, followed by `N` evenly spa
 | `minimize` | `minimize <sd|fire> <force_tolerance> <max_steps> [<box_change> [<hydrostatic_strain>]]` | Tolerance in eV/Angstrom; box optimization currently requires FIRE |
 | `run` | `run <number_of_steps>` | Positive step count; executes current run-scoped settings |
 
-To output a minimized structure, use a zero-time-step, one-step NVE block with `dump_xyz -1 0 1 relaxed.xyz`. Load `gpumd-outputs.md` before using it.
+To output a minimized structure, use a zero-time-step, one-step NVE block with `dump_xyz 1 relaxed.xyz`. Load `gpumd-outputs.md` before using it.
 
 ## Version handling
 

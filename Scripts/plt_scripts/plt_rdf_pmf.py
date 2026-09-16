@@ -1,4 +1,4 @@
-﻿"""
+"""
 =============================================================================
 GPUMDkit: A User-Friendly Toolkit for GPUMD and NEP
 Repository: https://github.com/zhyan0603/GPUMDkit

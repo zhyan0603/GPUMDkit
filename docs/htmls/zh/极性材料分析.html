@@ -12,7 +12,7 @@
         <meta name="author" content="Zihan YAN">
       
       
-        <link rel="canonical" href="https://gpumdkit.cn/zh/%E6%9E%81%E6%80%A7%E6%9D%90%E6%96%99%E5%88%86%E6%9E%90.html">
+        <link rel="canonical" href="https://gpumdkit.cn/htmls/zh/%E6%9E%81%E6%80%A7%E6%9D%90%E6%96%99%E5%88%86%E6%9E%90.html">
       
       
         <link rel="prev" href="%E4%B8%BB%E5%8A%A8%E5%AD%A6%E4%B9%A0%E5%B7%A5%E4%BD%9C%E6%B5%81.html">
@@ -438,7 +438,7 @@
   <span class="md-ellipsis">
     
   
-    Simulation and Post-processing
+    GPUMDkit Agent Skill
   
 
     
@@ -886,7 +886,7 @@
   <span class="md-ellipsis">
     
   
-    模拟与后处理
+    GPUMDkit Agent Skill
   
 
     
@@ -2310,10 +2310,10 @@
 <td>平均结构 extxyz</td>
 </tr>
 <tr>
-<td>八面体倾斜</td>
+<td>八面体倾转</td>
 <td><code>gpumdkit.sh -calc oct-tilt ...</code></td>
 <td>轨迹 + B-O 近邻列表</td>
-<td>倾斜角数据表</td>
+<td>倾转角数据表</td>
 </tr>
 <tr>
 <td>ABO3 极化</td>
@@ -2330,9 +2330,12 @@
 </tbody>
 </table>
 <h2 id="_2">依赖</h2>
-<p>这些脚本需要 <code>ferrodispcalc</code>：</p>
+<p>构建近邻列表、计算位移、计算八面体倾转、计算 ABO3 极化以及绘制
+<code>plane-grid</code> 平面剖面的命令需要 <code>ferrodispcalc</code>：</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>pip3<span class="w"> </span>install<span class="w"> </span>git+https://github.com/MoseyQAQ/ferrodispcalc.git
 </code></pre></div>
+<p><code>avg-struct</code> 不依赖 <code>ferrodispcalc</code>，只使用 GPUMDkit 的标准 <code>ASE</code> 和
+<code>NumPy</code> 依赖。</p>
 <h2 id="_3">交互模式入口</h2>
 <p>选项 <code>406-410</code> 是本教程中的核心功能。下面各节会说明每个功能的用途和运行方式。</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>gpumdkit.sh
@@ -2646,13 +2649,13 @@
 </code></pre></div>
 <p>这会写出 <code>300K-avg.xyz</code>、<code>350K-avg.xyz</code>、...、<code>800K-avg.xyz</code>。</p>
 <h4 id="2-modelxyz">第 2 步：基于 <code>model.xyz</code> 构建近邻列表</h4>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a><span class="c1"># B-O list: for each Ti, find the nearest 6 O atoms</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a><span class="c1"># B-O 列表：为每个 Ti 找最近的 6 个 O 原子</span>
 <a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a>gpumdkit.sh<span class="w"> </span>-calc<span class="w"> </span>nlist<span class="w"> </span>-i<span class="w"> </span>model.xyz<span class="w"> </span>-c<span class="w"> </span><span class="m">4</span>.0<span class="w"> </span>-n<span class="w"> </span><span class="m">6</span><span class="w"> </span>-C<span class="w"> </span>Ti<span class="w"> </span>-E<span class="w"> </span>O<span class="w"> </span>-o<span class="w"> </span>nl-Ti-O.dat
 <a id="__codelineno-12-3" name="__codelineno-12-3" href="#__codelineno-12-3"></a>
-<a id="__codelineno-12-4" name="__codelineno-12-4" href="#__codelineno-12-4"></a><span class="c1"># A-O list: for each Pb, find the nearest 12 O atoms</span>
+<a id="__codelineno-12-4" name="__codelineno-12-4" href="#__codelineno-12-4"></a><span class="c1"># A-O 列表：为每个 Pb 找最近的 12 个 O 原子</span>
 <a id="__codelineno-12-5" name="__codelineno-12-5" href="#__codelineno-12-5"></a>gpumdkit.sh<span class="w"> </span>-calc<span class="w"> </span>nlist<span class="w"> </span>-i<span class="w"> </span>model.xyz<span class="w"> </span>-c<span class="w"> </span><span class="m">4</span>.0<span class="w"> </span>-n<span class="w"> </span><span class="m">12</span><span class="w"> </span>-C<span class="w"> </span>Pb<span class="w"> </span>-E<span class="w"> </span>O<span class="w"> </span>-o<span class="w"> </span>nl-Pb-O.dat
 <a id="__codelineno-12-6" name="__codelineno-12-6" href="#__codelineno-12-6"></a>
-<a id="__codelineno-12-7" name="__codelineno-12-7" href="#__codelineno-12-7"></a><span class="c1"># B-A list required by pol-abo3: for each Ti, find the nearest 8 Pb atoms</span>
+<a id="__codelineno-12-7" name="__codelineno-12-7" href="#__codelineno-12-7"></a><span class="c1"># pol-abo3 需要的 B-A 列表：为每个 Ti 找最近的 8 个 Pb 原子</span>
 <a id="__codelineno-12-8" name="__codelineno-12-8" href="#__codelineno-12-8"></a>gpumdkit.sh<span class="w"> </span>-calc<span class="w"> </span>nlist<span class="w"> </span>-i<span class="w"> </span>model.xyz<span class="w"> </span>-c<span class="w"> </span><span class="m">5</span>.0<span class="w"> </span>-n<span class="w"> </span><span class="m">8</span><span class="w"> </span>-C<span class="w"> </span>Ti<span class="w"> </span>-E<span class="w"> </span>Pb<span class="w"> </span>-o<span class="w"> </span>nl-Ti-Pb.dat
 </code></pre></div>
 <h4 id="3">第 3 步：为每个温度计算位移和极化</h4>
@@ -2707,10 +2710,10 @@
 <h4 id="-">有机-无机杂化铁电体</h4>
 <p>在许多有机-无机铁电体中，极化与各向异性的分子单元密切相关。跟踪分子取向的一种实用方法是使用键矢量。</p>
 <p>对于 TMCM-CdCl3，可以使用 TMCM 分子中的 C-Cl 键方向作为取向代理，并据此估计极化态：</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-19-1" name="__codelineno-19-1" href="#__codelineno-19-1"></a><span class="c1"># Find the nearest Cl around each C (tune cutoff if needed)</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-19-1" name="__codelineno-19-1" href="#__codelineno-19-1"></a><span class="c1"># 为每个 C 找最近的 Cl（必要时调整截断距离）</span>
 <a id="__codelineno-19-2" name="__codelineno-19-2" href="#__codelineno-19-2"></a>gpumdkit.sh<span class="w"> </span>-calc<span class="w"> </span>nlist<span class="w"> </span>-i<span class="w"> </span>model.xyz<span class="w"> </span>-c<span class="w"> </span><span class="m">3</span><span class="w"> </span>-n<span class="w"> </span><span class="m">1</span><span class="w"> </span>-C<span class="w"> </span>C<span class="w"> </span>-E<span class="w"> </span>Cl<span class="w"> </span>-o<span class="w"> </span>nl-C-Cl.dat
 <a id="__codelineno-19-3" name="__codelineno-19-3" href="#__codelineno-19-3"></a>
-<a id="__codelineno-19-4" name="__codelineno-19-4" href="#__codelineno-19-4"></a><span class="c1"># Compute C-Cl bond vectors from the trajectory</span>
+<a id="__codelineno-19-4" name="__codelineno-19-4" href="#__codelineno-19-4"></a><span class="c1"># 从轨迹计算 C-Cl 键向量</span>
 <a id="__codelineno-19-5" name="__codelineno-19-5" href="#__codelineno-19-5"></a>gpumdkit.sh<span class="w"> </span>-calc<span class="w"> </span>disp<span class="w"> </span>-i<span class="w"> </span>movie.xyz<span class="w"> </span>-n<span class="w"> </span>nl-C-Cl.dat<span class="w"> </span>-o<span class="w"> </span>ccl_vectors.dat
 </code></pre></div>
 <p>随后可以把 <code>ccl_vectors.dat</code> 作为取向序参量进行分析。更多细节可参考：Phys. Rev. Lett. 136, 016801。</p>

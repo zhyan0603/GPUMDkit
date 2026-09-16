@@ -20,6 +20,7 @@ Last-modified: 2026-05-16
 =============================================================================
 """
 
+import os
 import sys
 
 
@@ -90,5 +91,8 @@ if __name__ == '__main__':
     
     extxyz_file = args[0]
     lammps_data_file = args[1]
-    
+    if not os.path.isfile(extxyz_file):
+        print(f" Error: file '{extxyz_file}' does not exist.")
+        sys.exit(1)
+
     convert_extxyz_to_lammps_data(extxyz_file, lammps_data_file)

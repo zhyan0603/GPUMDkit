@@ -80,6 +80,7 @@ def fps_indices(frames, number, model_file, np):
         print(f" Error: NEP model file '{model_file}' does not exist.")
         sys.exit(1)
 
+    print(" This function requires the NepTrain package.")
     try:
         from NepTrain.core.nep import Nep3Calculator
         from scipy.spatial.distance import cdist

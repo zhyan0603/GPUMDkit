@@ -30,7 +30,7 @@ For `compute_cohesive`, direction values 0-6 mean x, y, z, xy, yz, zx, and xyz s
 Common sampling rules:
 
 - `sample_interval` is the number of MD steps between samples. `output_interval` is the number of samples averaged per write, so one block is written every `sample_interval * output_interval` steps.
-- `compute` accepts one or more distinct quantities: `temperature`, `potential`, `force`, `virial`, `jp` (potential heat current), `jk` (kinetic heat current), and `momentum`. Output order follows command order and is resolved per group in the selected grouping method.
+- `compute` accepts one or more distinct quantities: `temperature`, `potential`, `force`, `virial`, `jp` (potential heat current), `jk` (kinetic heat current), and `momentum`. Regardless of the order in which quantities are written in the keyword, the output column order is fixed as temperature, potential, force, virial, jp, jk, momentum, resolved per group in the selected grouping method.
 - `compute_chunk` bins atoms from their current positions. For each axis use `<dim> lower <delta>`, where dimension is `x`, `y`, or `z`, origin is currently only `lower`, and positive `delta` is the bin width in Angstrom. Axes must be distinct in 2D/3D.
 - `compute_chunk` quantities are `temperature` (K), `density/number` (Angstrom^-3), `density/mass` (amu/Angstrom^3), `vx vy vz` (Angstrom/fs), and `fx fy fz` (eV/Angstrom). Each output block has one line per chunk: zero-based ID, bin center coordinate(s), average atom count, then requested values.
 - Structural cutoffs, bin counts, strain amplitudes, phonon displacements, and element/type selections alter resolution or physics. Ask the user instead of copying example values.
@@ -56,7 +56,7 @@ Interpretation rules:
 - `compute_ic` uses a zero-based potential type index and an ionic charge supplied by the user; verify species/type order and state the ionic-conductivity definition used in the analysis.
 - `compute_hac` runs during an EMD production trajectory, normally NVE after equilibration.
 - `compute_hnemd` requires temperature control; use one nonzero driving-force component unless the method explicitly requires otherwise.
-- HNEMD/HNEMA driving-force components are in Angstrom^-1. For `compute_hnemdec`, `drive_type=0` selects thermal driving with Angstrom^-1 force; a positive integer `i` selects diffusive driving for the i-th species in the `nep.txt` header with force in eV/Angstrom. Langevin thermostats are incompatible with both HNEMD and HNEMDEC dynamics.
+- HNEMD/HNEMA driving-force components are in Angstrom^-1. For `compute_hnemdec`, `drive_type=0` selects thermal driving with Angstrom^-1 force; a positive integer `i` selects diffusive driving for the i-th species (for a compacted multi-element NEP potential, the order is the active atom type list printed at initialization; otherwise it is the order in the first line of `nep.txt`) with force in eV/Angstrom. Langevin thermostats are incompatible with both HNEMD and HNEMDEC dynamics.
 - `compute_shc` requires `1 <= sample_interval <= 10`, `100 <= Nc <= 1000`, and direction 0/1/2 for x/y/z. `max_omega` is THz. `group <method> -1` calculates every nonzero group and can be expensive.
 - Driving force, correlation length, and production duration require convergence tests chosen with the user.
 

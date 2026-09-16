@@ -68,7 +68,8 @@ def main():
             if 'virial' in atoms.info and all(v <= threshold for v in atoms.info['virial'].flatten()):
                 filtered_images.append(atoms)
         else:
-            raise ValueError("Unsupported property. Please use 'energy', 'force', or 'virial'.")
+            print(" Error: unsupported property. Please use 'energy', 'force', or 'virial'.")
+            sys.exit(1)
 
     # Write the filtered structures back to a new .extxyz file
     output_filename = f"filtered.xyz"

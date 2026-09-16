@@ -19,7 +19,7 @@ gpumdkit.sh -plt -h                  # 列出绘图类型
 
 ## 绘图类别
 
-### NEP 训练与评估（13 种绘图类型）
+### NEP 训练与评估（12 种绘图类型）
 
 | 命令 | 输入文件 | 描述 |
 |---------|-------------|-------------|
@@ -34,7 +34,6 @@ gpumdkit.sh -plt -h                  # 列出绘图类型
 | `born_charge` / `bec` | `bec_train.out`、可选的 `bec_test.out` | Born 有效电荷 |
 | `dimer` | NEP 模型 | 二聚体相互作用曲线 |
 | `des` | `descriptors.npy` | 描述符 PCA/UMAP 可视化 |
-| `lr` | `loss.out`（gnep） | 学习率衰减 |
 | `net_force` | extxyz 文件 | 净力分布 |
 
 ```bash
@@ -45,31 +44,34 @@ gpumdkit.sh -plt force_errors
 
 # 描述符可视化（需先计算）
 gpumdkit.sh -calc des train.xyz descriptors.npy nep.txt Li
-gpumdkit.sh -plt des pca
-gpumdkit.sh -plt des umap
+gpumdkit.sh -plt des pca descriptors.npy
+gpumdkit.sh -plt des umap descriptors.npy
 
 # 二聚体绘图
 gpumdkit.sh -plt dimer Li Li nep.txt
 ```
 
-### 输运性质（10 种绘图类型）
+### 输运性质（12 种绘图类型）
 
 | 命令 | 输入文件 | 描述 |
 |---------|-------------|-------------|
-| `msd` | `msd.out` | 均方位移 |
+| `msd` | `-calc msd` 生成的四列 `msd.out`，或 GPUMD `compute_msd` 输出的前四列 | 均方位移 |
 | `msd_conv` | `msd_step*.out` | MSD 收敛检查 |
 | `msd_all` | `msd.out`（all_groups） | 各物种的 MSD |
-| `sdc` | `msd.out` | 自扩散系数 |
-| `msd_sdc` | `msd.out` | MSD 和 SDC 合并 |
+| `sdc` | GPUMD `compute_msd` 单分组七列 `msd.out` | 自扩散系数 |
+| `msd_sdc` | GPUMD `compute_msd` 单分组七列 `msd.out` | MSD 和 SDC 合并 |
 | `sigma` / `arrhenius_sigma` | 每个 `*K/` 中的 `thermo.out` 和 `msd.out`；首个 `*K/` 还需 `model.xyz`，`run.in` 可选 | Arrhenius 离子电导率 |
 | `D` / `arrhenius_d` | `*K/` 目录 | Arrhenius 扩散系数 |
+| `sigma_PT` | 每个 `*K/` 中的 `thermo.out` 和 `msd.out`，首个 `*K/` 还需 `model.xyz`、可选 `run.in`，以及相变温度 | 相变温度两侧的分段 Arrhenius 离子电导率 |
+| `D_PT` | `*K/` 目录以及相变温度 | 相变温度两侧的分段 Arrhenius 扩散系数 |
 | `sigma_xyz` | `*K/` 目录 | 方向性 Arrhenius 电导率 |
 | `D_xyz` | `*K/` 目录 | 方向性 Arrhenius 扩散系数 |
 | `doas` | `doas.out` | 原子态密度 |
 
 ```bash
-# MSD 和扩散
+# 四列轨迹 MSD
 gpumdkit.sh -plt msd
+# SDC 列要求单分组 compute_msd 输出
 gpumdkit.sh -plt sdc
 gpumdkit.sh -plt msd_sdc
 
@@ -82,22 +84,30 @@ gpumdkit.sh -plt msd_all msd.out Li P S
 # 并可用 run.in 检测 replicate
 gpumdkit.sh -plt arrhenius_sigma
 gpumdkit.sh -plt arrhenius_d
+gpumdkit.sh -plt sigma_PT 380
+gpumdkit.sh -plt D_PT 380
 
 # DOAS 可视化（需先计算）
 gpumdkit.sh -plt doas doas.out Li
 ```
 
-### 结构分析（9 种绘图类型）
+多个分组的 `compute_msd` 输出会追加其他分组的数据。请检查分组布局，并在
+适用时使用 `msd_all`，不要把每个 `msd.out` 都当作七列文件。独立的
+`compute_sdc` 命令写入 `sdc.out`，供 `gpumdkit.sh -plt vac` 使用；它不是 SDC
+绘图脚本的输入。
+
+### 结构分析（10 种绘图类型）
 
 | 命令 | 输入文件 | 描述 |
 |---------|-------------|-------------|
 | `thermo` | `thermo.out` | 热力学性质 |
 | `thermo2` | `thermo.out` | 替代热力学样式 |
 | `thermo3` | `thermo.out` | 第三种热力学样式 |
-| `rdf` | `rdf.out` | 径向分布函数 |
+| `rdf` | `rdf.out` | 所有可用的 RDF 数值列 |
 | `rdf_pmf` | `rdf.out` | RDF + 平均力势 |
 | `xrd` | `xrd.out` 或指定的 XRD 输出 | XRD 强度曲线 |
-| `vac` | `sdc.out` | 速度自相关 |
+| `xrd_comp` | 当前目录下的 `<temperature>K/xrd.out` | 对比不同温度目录中的 XRD 曲线 |
+| `vac` | GPUMD `compute_sdc` 生成的 `sdc.out` | 速度自相关 |
 | `cohesive` | `cohesive.out` | 内聚能曲线 |
 | `plane-grid` | `model.xyz`、`displacements.dat` | 位移网格可视化 |
 
@@ -107,12 +117,18 @@ gpumdkit.sh -plt thermo
 
 # RDF 分析
 gpumdkit.sh -plt rdf
-gpumdkit.sh -plt rdf 2              # 特定列
-gpumdkit.sh -plt rdf_pmf 300        # 300K 下的 PMF
+gpumdkit.sh -plt rdf save
+gpumdkit.sh -plt rdf_pmf 300 2      # 300 K 的 PMF，输出第 2 列
+
+# `rdf` 绘制全部 RDF 数值列；`rdf_pmf` 接受输出列号。
 
 # XRD 输出：第 2 列是角度，第 4 列是强度
 gpumdkit.sh -plt xrd
 gpumdkit.sh -plt xrd path/to/xrd.out save
+
+# XRD 温度对比：在包含 *K 子目录的目录中执行
+gpumdkit.sh -plt xrd_comp
+gpumdkit.sh -plt xrd_comp save
 
 # 平面网格位移
 gpumdkit.sh -plt plane-grid -i model.xyz -d displacements.dat -e Pb Sr
@@ -133,36 +149,52 @@ gpumdkit.sh -plt plane-grid -i model.xyz -d displacements.dat -e Pb Sr
 gpumdkit.sh -plt emd x
 gpumdkit.sh -plt emd2 save
 
+# 导出 EMD 数据（图片和数据选项相互独立）
+gpumdkit.sh -plt emd x --save-data
+gpumdkit.sh -plt emd x --save --save-data
+
 # NEMD 热输运
 # 参数：real_length scale_eff_size cutoff_freq
-gpumdkit.sh -plt nemd <real_length> <scale_eff_size> <cutoff_freq> save
+gpumdkit.sh -plt nemd <real_length> <scale_eff_size> <cutoff_freq> --save --save-data
 
 # HNEMD 热输运
-gpumdkit.sh -plt hnemd <scale_eff_size> <cutoff_freq> save
+gpumdkit.sh -plt hnemd <scale_eff_size> <cutoff_freq> --save --save-data
 
 # 粘度
 gpumdkit.sh -plt viscosity save
 ```
+
+`--save-data` 会为 EMD、NEMD 和 HNEMD 导出制表符分隔的文本文件，同时为
+EMD 和 HNEMD 写出对应的 `.npz` 数组。NEMD 保留历史版本的
+`data_nemd.npz`（存在 SHC 数据时还有 `data_shc.npz`）输出，并在请求时
+额外生成 `data_nemd.txt`/`data_shc.txt`。`--save` 和 `--save-data` 相互独立；
+为兼容旧用法，仍接受不带连字符的 `save` 和 `save_data`。
 
 ### 声子（3 种绘图类型）
 
 | 命令 | 输入文件 | 描述 |
 |---------|-------------|-------------|
 | `pdos` | `model.xyz`、`run.in`、`dos.out`、`mvac.out` | 声子态密度和热容 |
-| `phonon` | `phonon_NEP.dat`、`QPOINTS` | 绘制计算器 414 生成的声子谱 |
+| `phonon` | 可选声子数据文件（默认 `phonon_NEP.dat`）、`QPOINTS` | 绘制计算器 414 生成的声子谱 |
 | `phonon_comp` | 两个或更多声子数据文件、`QPOINTS` | 比较声子谱，图例从文件名读取 |
 
 ```bash
 gpumdkit.sh -plt pdos save
 gpumdkit.sh -plt phonon
+gpumdkit.sh -plt phonon phonon_DFT.dat
 gpumdkit.sh -plt phonon phonon_NEP.dat QPOINTS save
 gpumdkit.sh -plt phonon_comp phonon_DFT.dat phonon_NEP.dat save
 ```
 
+`phonon` 的数据文件参数可以省略；省略时绘图脚本读取 `phonon_NEP.dat`，如果只
+提供一个数据文件，路径文件默认使用 `QPOINTS`。
+
 `phonon_comp` 接受两个或更多兼容的声子数据文件。对于
 `phonon_NEP.dat`、`phonon_DFT.dat`、`phonon_MACE.dat` 等常规命名，图例使用
 `phonon_` 后面的文本。绘图脚本会在绘图前检查声子数据行和提供的 `QPOINTS`
-路径。比较文件必须具有一致的 q 点距离，而不仅是相同的行数。
+路径。比较前会分别对断开路径段的横坐标进行归一化，因此不同文件可以在路径
+跳跃处使用不同偏移；但它们仍必须使用相同的 q 点采样和声子支数，而不仅是相同
+的行数。
 
 ## 常用工作流
 
@@ -175,20 +207,22 @@ gpumdkit.sh -plt prediction
 # 3. 分析力误差
 gpumdkit.sh -plt force_errors
 # 4. 可视化描述符
-gpumdkit.sh -plt des pca
+gpumdkit.sh -plt des pca descriptors.npy
 ```
 
 ### 扩散分析
 ```bash
-# 1. 绘制 MSD
+# 1. 绘制四列轨迹 MSD 或 compute_msd 的 MSD 列
 gpumdkit.sh -plt msd
-# 2. 绘制自扩散系数
+# 2. 绘制单分组 compute_msd 输出中的自扩散系数
 gpumdkit.sh -plt sdc
-# 3. 合并 MSD-SDC 绘图
+# 3. 使用单分组 compute_msd 输出合并绘制 MSD-SDC
 gpumdkit.sh -plt msd_sdc
 # 4. Arrhenius 分析（多温度）
 gpumdkit.sh -plt arrhenius_d
 ```
+
+`-plt msd` 和 `-plt msd_sdc` 中的斜率均使用 MSD 数据中间 40%–80% 的区间拟合。
 
 ### 热输运
 ```bash
@@ -215,14 +249,26 @@ gpumdkit.sh -plt nemd 10 1 60 save
 | `thermo` | `thermo.png` |
 | `rdf` | `rdf.png` |
 | `xrd` | `xrd.png` |
+| `xrd_comp` | `xrd_comp.png` |
 | `arrhenius_sigma` | `Arrhenius_sigma.png` |
 | `arrhenius_d` | `Arrhenius_D.png` |
+| `sigma_PT` | `Arrhenius_sigma_PT.png` |
+| `D_PT` | `Arrhenius_D_PT.png` |
 | `emd` | `emd.png` |
 | `emd2` | `emd2.png` |
 | `nemd` | `nemd.png` |
 | `hnemd` | `hnemd.png` |
 | `viscosity` | `viscosity.png` |
 | `cohesive` | `cohesive.png` |
+
+使用 `--save-data` 时，热输运绘图还会写出以下制表符分隔文件（注释和表头行以
+`#` 开头）：
+
+| 绘图类型 | 数据文件 |
+|-----------|----------|
+| `emd` | `data_emd.npz`、`data_emd.txt` |
+| `nemd` | `data_nemd.txt`；存在 SHC 数据时还有 `data_shc.txt`；历史 `.npz` 文件仍可用 |
+| `hnemd` | `data_hnemd.npz`、`data_hnemd.txt`；存在 SHC 数据时还有 `data_shc.npz`、`data_shc.txt` |
 
 ## 依赖
 

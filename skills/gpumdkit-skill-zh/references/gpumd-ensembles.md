@@ -85,7 +85,7 @@ HNEMD 不是系综关键字。使用温度控制系综配合 `compute_hnemd`；�
 
 | 族 | 当前参数格式 | 参数含义 |
 |---|---|---|
-| PIMD | `ensemble pimd <num_beads> <T_1> <T_2> <T_coup> [{pressure parameters}]` | 珠子数必须是不超过 128 的正偶数；在第一个 PIMD 相关运行中设置，之后不要更改 |
+| PIMD | `ensemble pimd <num_beads> <T_1> <T_2> <T_coup> [{pressure parameters}] [eco <omega_max>]`；另有 `ensemble pimd_scr <num_beads> <T_1> <T_2> <T_coup> {pressure parameters}`，选项相同 | `pimd` 使用 Berendsen 压浴，`pimd_scr` 使用随机胞格缩放 `npt_scr` 压浴；珠子数必须是不超过 128 的正偶数，在第一个 PIMD 相关运行中设置，之后不要更改。可选 `eco <omega_max>`（单位 cm^-1，仅 `pimd`/`pimd_scr` 支持，`rpmd`/`trpmd` 不支持）选择经济化路径积分内部模式频率，`omega_max` 是需要重现的最高物理振动波数 |
 | RPMD | `ensemble rpmd <num_beads>` | 使用请求的珠子数进行实时环聚合物动力学 |
 | TRPMD | `ensemble trpmd <num_beads>` | 使用请求的珠子数进行恒温环聚合物动力学 |
 | 液体 TI | `ensemble ti_liquid temp <T> [tperiod <tau_T>] [tequil <n>] [tswitch <n>] [press <p>] sigmasqrd <v> <v>` | 恒温器周期默认为 100；省略的平衡/切换长度按 1:4 比例分配；实现的最终 `p` 值为 1、25、50、75、100 |

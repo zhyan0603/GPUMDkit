@@ -146,7 +146,8 @@ gpumdkit.sh  # Select: 2) Sample Structures -> 203) FPS by NepTrain
 `-min_dist_pbc` reports distances but does not filter. Use
 `-filter_dist_pbc` when structures must actually be removed. The box filter is
 optional; skip it unless a box-edge criterion is meaningful and approved for
-the dataset. Record every rejected structure and filter threshold. NepTrain FPS
+the dataset. When used, it writes `filtered_by_box.xyz`; pass that file to the
+FPS prompt. Record every rejected structure and filter threshold. NepTrain FPS
 then selects structures that add descriptor-space diversity relative to the
 current training set. Record the FPS stopping rule and selected frame mapping.
 

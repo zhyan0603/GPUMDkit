@@ -105,7 +105,7 @@ printf "%-15s %-12s %-15s %-15s %-20s\n" \
 
 # Check if neighbor.out exists
 if [ ! -f "neighbor.out" ]; then
-    echo "Error: neighbor.out does not exist. Waiting for file to appear..."
+    echo " Error: neighbor.out does not exist. Waiting for file to appear..."
     until [ -f "neighbor.out" ]; do
         sleep 1
     done
@@ -119,7 +119,7 @@ tail -f -n 1 neighbor.out | while read -r line; do
 
     # Validate current_frame
     if [[ ! "$current_frame" =~ ^[0-9]+$ ]]; then
-        echo "Error reading current frame from neighbor.out"
+        echo " Error reading current frame from neighbor.out"
         continue
     fi
 

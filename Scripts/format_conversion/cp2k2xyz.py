@@ -18,7 +18,7 @@ Arguments:
 Output:
   Converted XYZ file with forces and cell information
 Author:     Ke XU (kickhsu@gmail.com)
-Last-modified: 2026-05-16
+Last-modified: 2026-09-14
 =============================================================================
 """
 
@@ -119,12 +119,22 @@ def find_file(pattern):
     """Find a file with a given pattern."""
     files = glob.glob(pattern)
     if len(files) != 1:
-        raise SystemError(f"Expected one file matching {pattern}, found {len(files)}.")
+        print(f" Error: expected one file matching {pattern}, found {len(files)}.")
+        sys.exit(1)
     return files[0]
 
 # Parse command line arguments
 args = sys.argv[1:]  # Skip the script name
 shifted = "no"  # Default behavior is no energy shifting
+
+if args and args[0] in ("-h", "--help"):
+    print(" Usage: gpumdkit.sh -> 1 -> 103 -> 2 (interactive)")
+    print("    or: python cp2k2xyz.py [pos.xyz] [frc.xyz] [cell.cell] [-shifted yes/no]")
+    print("")
+    print(" Without file arguments, the CP2K outputs in the current directory")
+    print(" are detected automatically (*-pos-1*, *-frc-1*, *.cell).")
+    print("")
+    sys.exit(0)
 
 # Check for the -shifted argument
 if "-shifted" in args:
@@ -142,7 +152,8 @@ else:
     cell_file = find_file("*.cell")
 
 if not all(os.path.exists(f) for f in [pos_file, frc_file, cell_file]):
-    raise SystemError("One or more input files do not exist.")
+    print(" Error: one or more input files do not exist.")
+    sys.exit(1)
 
 # Read data from files
 pos_data = list(extract_xyz_data(pos_file))

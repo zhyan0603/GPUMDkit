@@ -50,8 +50,8 @@ fi
 
 # Ask user for confirmation or additional files to keep
 echo " +------------------------------------------------------+"
-echo " | Do you want to delete all these files?              |"
-echo " |   y / yes : delete all                              |"
+echo " | Do you want to delete all these files?               |"
+echo " |   y / yes : delete all                               |"
 echo " |   n / no  : cancel                                   |"
 echo " |   or input filenames to keep (space-separated)       |"
 echo " +------------------------------------------------------+"

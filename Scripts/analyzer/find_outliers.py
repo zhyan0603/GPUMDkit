@@ -163,13 +163,21 @@ for f in required_files:
 import matplotlib.pyplot as plt
 import numpy as np
 
-energy_train = np.loadtxt('energy_train.out')
-force_train = np.loadtxt('force_train.out')
-stress_train = np.loadtxt('stress_train.out')
+energy_train = np.loadtxt('energy_train.out', ndmin=2)
+force_train = np.loadtxt('force_train.out', ndmin=2)
+stress_train = np.loadtxt('stress_train.out', ndmin=2)
 natoms_list, frames = parse_xyz('train.xyz')
 
-# Filter out rows with invalid stress data
-valid_struct = ~np.any(np.abs(stress_train[:, :12]) > 1e6, axis=1)
+# Filter out rows with invalid stress data.  The prediction command uses the
+# exact -1e6 sentinel when both stress and virial targets are missing.
+invalid_stress = (
+    np.any(np.abs(stress_train[:, :12]) > 1e6, axis=1)
+    | np.any(stress_train[:, :12] == -1e6, axis=1)
+)
+valid_struct = ~invalid_stress
+if not np.any(valid_struct):
+    print(" Error: no structures with valid stress data remain.")
+    sys.exit(1)
 
 # Filter energy and stress
 energy_train = energy_train[valid_struct]

@@ -19,7 +19,7 @@ if [ -z "$GPUMDkit_path" ]; then
     exit 1
 fi
 
-VERSION="1.5.7 (2026-08-23)"
+VERSION="1.5.7 (2026-09-15)"
 
 plt_path="${GPUMDkit_path}/Scripts/plt_scripts"
 analyzer_path="${GPUMDkit_path}/Scripts/analyzer"
@@ -85,7 +85,7 @@ function main(){
             exit 0
             ;;
         "1")
-            source ${GPUMDkit_path}/src/f1_format_conversions.sh
+            source "${GPUMDkit_path}/src/f1_format_conversions.sh"
             case $choice in
                 "1") f1_format_conversion ;;
                 "101") f101_out2xyz ;;
@@ -100,7 +100,7 @@ function main(){
                 "110") f110_replicate_structure ;;
             esac ;;
         "2")
-            source ${GPUMDkit_path}/src/f2_sample_structures.sh
+            source "${GPUMDkit_path}/src/f2_sample_structures.sh"
             case $choice in
                 "2") f2_sample_structures ;;
                 "201") f201_sample_structures ;; 
@@ -111,20 +111,20 @@ function main(){
                 "206") f206_split_train_test ;;
             esac ;;
         "3")
-            source ${GPUMDkit_path}/src/f3_workflows.sh
+            source "${GPUMDkit_path}/src/f3_workflows.sh"
             case $choice in
                 "3") f3_workflow_dev ;;
                 "301") 
                     f301_scf_batch_pretreatment ;;
                 "302") 
-                    source ${workflow_path}/md_sample_batch_pretreatment_gpumd.sh
+                    source "${workflow_path}/md_sample_batch_pretreatment_gpumd.sh"
                     f302_md_sample_batch_pretreatment_gpumd ;;
                 "303") 
-                    source ${workflow_path}/md_sample_batch_pretreatment_lmp.sh
+                    source "${workflow_path}/md_sample_batch_pretreatment_lmp.sh"
                     f303_md_sample_batch_pretreatment_lmp ;;
             esac ;;
         "4")
-            source ${GPUMDkit_path}/src/f4_calculators.sh
+            source "${GPUMDkit_path}/src/f4_calculators.sh"
             case $choice in
                 "4") f4_calculators ;;
                 "401") f401_calc_ionic_conductivity ;;
@@ -143,7 +143,7 @@ function main(){
                 "414") f414_calc_phonon ;;
             esac ;;           
         "5")
-            source ${GPUMDkit_path}/src/f5_analyzers.sh
+            source "${GPUMDkit_path}/src/f5_analyzers.sh"
             case $choice in
                 "5") f5_analyzers ;;
                 "501") f501_analyze_composition ;;
@@ -157,7 +157,7 @@ function main(){
                 "509") f509_shift_energy ;;
             esac ;;  
         "6")
-            source ${GPUMDkit_path}/src/f6_plots.sh
+            source "${GPUMDkit_path}/src/f6_plots.sh"
             terminal_width=$(tput cols 2>/dev/null || echo 80)
             if [ "$terminal_width" -ge 98 ]; then
                 f6_plots_two_column
@@ -165,7 +165,7 @@ function main(){
                 f6_plots_one_column
             fi ;;
         "7")
-            source ${GPUMDkit_path}/src/f7_utilities.sh
+            source "${GPUMDkit_path}/src/f7_utilities.sh"
             case $choice in
                 "7") f7_utilities ;;
                 "701") f701_time_consuming_analyzer ;;
@@ -197,10 +197,12 @@ function help_info_table(){
     echo " | -calc <type>  Calculator tools                | -time <gpumd|nep>  Time-consuming analyzer            |"
     echo " | -update       Update GPUMDkit                 | -clean             Clean extra files in current dir   |"
     echo " | -skill        Show GPUMDkit agent skill info  | -doctor            Check Python environment           |"
+    echo " | -prediction   Write NEP prediction .out files | -prediction_dpa    Write DPA prediction .out files    |"
     echo " +-------------------------------------------------------------------------------------------------------+"
     echo " |                                         FORMAT CONVERSION                                             |"
     echo " +-------------------------------------------------------------------------------------------------------+"
-    echo " | -out2xyz      OUTCAR -> extxyz (shell)        | -out2exyz          OUTCAR -> extxyz (python)          |"
+    echo " | -out2xyz      OUTCAR -> extxyz (shell)        | -out2xyz_bec       OUTCAR -> extxyz with BEC          |"
+    echo " | -out2exyz     OUTCAR -> extxyz (python)       | -xyz2dp            extxyz -> DeepMD npy               |"
     echo " | -cp2k2xyz     CP2K log -> xyz                 | -xdat2exyz         XDATCAR -> extxyz                  |"
     echo " | -cif2pos      cif -> POSCAR                   | -cif2exyz          cif -> extxyz                      |"
     echo " | -pos2exyz     POSCAR -> extxyz                | -exyz2pos          extxyz -> POSCAR                   |"
@@ -209,7 +211,6 @@ function help_info_table(){
     echo " | -addgroup     Add group labels                | -addweight         Add structure weight in extxyz     |"
     echo " | -clean_xyz    Clean extra info in extxyz      | -get_frame         Extract specific frame             |"
     echo " | -frame_range  Extract frames by range         | -dp2xyz            DeepMD npy -> extxyz               |"
-    echo " | -xyz2dp       extxyz -> DeepMD npy            |                                                       |"
     echo " +-------------------------------------------------------------------------------------------------------+"
     echo " |                                            ANALYSIS                                                   |"
     echo " +-------------------------------------------------------------------------------------------------------+"
@@ -219,7 +220,7 @@ function help_info_table(){
     echo " | -filter_dist  Filter by min_dist (no PBC)     | -filter_dist_pbc   Filter by min_dist (PBC)           |"
     echo " | -pda          Probability density analysis    | -filter_box        Filter by box-edge length          |"
     echo " | -pynep        Deprecated PyNEP sampling       | -nep_modifier      Modify NEP model interactively     |"
-    echo " | -shift_energy  Interactive energy shift       |                                                       |"
+    echo " | -shift_energy Interactive energy shift        |                                                       |"
     echo " +-------------------------------------------------------------------------------------------------------+"
     echo " | Python option help: gpumdkit.sh -<option> -h    Plot list: gpumdkit.sh -plt -h                        |"
     echo " +-------------------------------------------------------------------------------------------------------+"
@@ -235,7 +236,7 @@ function calculator_help_table(){
     echo " | nep <input.xyz> <output.xyz> <nep_model>      Calculate energy/force/virial with a NEP model          |"
     echo " | des <input.xyz> <output.npy> <nep_model> <el> Calculate NEP descriptors for one element               |"
     echo " | doas <input.xyz> <nep_model> <output.txt>     Calculate density of atomistic states                   |"
-    echo " | neb <initial.xyz> <final.xyz> <n_images> <nep> Run NEB calculation with a NEP model                   |"
+    echo " | neb <init.xyz> <final.xyz> <n_images> <nep>   Run NEB calculation with a NEP model                    |"
     echo " | minimize <structure> <nep_model> [fmax] [n]   Minimize a structure with a NEP model                   |"
     echo " | msd <trajectory.xyz> <element> <dt_fs> [n]    Calculate MSD from an extxyz trajectory                 |"
     echo " | nlist [script args...]                        Build neighbor lists                                    |"
@@ -280,68 +281,75 @@ if [ ! -z "$1" ]; then
     case $1 in
         -h|-help) help_info_table ;;
         -skill)
-            source ${utils_path}/skill_info.sh
+            source "${utils_path}/skill_info.sh"
             skill_info_table ;;
         -doctor)
             GPUMDKIT_BASH_VERSION="${BASH_VERSION}" python "${utils_path}/doctor.py" "${@:2}" ;;
-        -clean) 
-            source ${utils_path}/clean_extra_files.sh
+        -clean)
+            source "${utils_path}/clean_extra_files.sh"
             clean_extra_files ;;
         -update|-U)
-            source ${utils_path}/update_gpumdkit.sh
+            source "${utils_path}/update_gpumdkit.sh"
             update_gpumdkit
-            source $GPUMDkit_path/docs/updates.info ;;            
+            source "${GPUMDkit_path}/docs/updates.info" ;;
         -time)
             case $2 in
-                gpumd) bash ${analyzer_path}/time_consuming_gpumd.sh ;;
-                nep|gnep) bash ${analyzer_path}/time_consuming_nep.sh ;;                
+                gpumd) bash "${analyzer_path}/time_consuming_gpumd.sh" ;;
+                nep|gnep) bash "${analyzer_path}/time_consuming_nep.sh" ;;
                 *)
                     echo " See the codes in analyzer folder for more details"
                     echo " Code path: ${analyzer_path}/time_consuming_*.sh"
                     exit 1 ;;
             esac ;;
+        -prediction)
+            run_python_script "Zihan YAN (yanzihan@westlake.edu.cn)" "${calc_path}/prediction.py" "${@:2}" ;;
+        -prediction_dpa)
+            run_python_script "Zihan YAN (yanzihan@westlake.edu.cn)" "${calc_path}/prediction_dpa.py" "${@:2}" ;;
+
         -plt)
             if [ ! -z "$2" ] && [ "$2" != "-h" ]; then
                 case $2 in
-                    "thermo") python ${plt_path}/plt_thermo.py $3 ;;
-                    "thermo2") python ${plt_path}/plt_thermo2.py $3 ;;
-                    "thermo3") python ${plt_path}/plt_thermo3.py $3 ;;                        
-                    "train") python ${plt_path}/plt_train.py $3 ;;
-                    "train_density") python ${plt_path}/plt_train_density.py $3 ;;                 
-                    "prediction"|"test") python ${plt_path}/plt_prediction.py $3 ;; 
-                    "parity_density") python ${plt_path}/plt_parity_density.py $3 ;;
-                    "train_test") python ${plt_path}/plt_train_test.py $3 ;;
-                    "born_charge"|"bec") python ${plt_path}/plt_born_charge.py $3 ;;
-                    "msd") python ${plt_path}/plt_msd.py $3 ;;
-                    "msd_all") python ${plt_path}/plt_msd_all.py $3 ${@:4} ;;
-                    "msd_conv") python ${plt_path}/plt_msd_convergence_check.py $3 ;;
-                    "msd_sdc") python ${plt_path}/plt_msd_sdc.py $3 ;;
-                    "sdc") python ${plt_path}/plt_sdc.py $3 ;;
-                    "rdf") python ${plt_path}/plt_rdf.py ${@:3} ;;
-                    "xrd") python ${plt_path}/plt_xrd.py ${@:3} ;;
+                    "thermo") python "${plt_path}/plt_thermo.py" "${@:3}" ;;
+                    "thermo2") python "${plt_path}/plt_thermo2.py" "${@:3}" ;;
+                    "thermo3") python "${plt_path}/plt_thermo3.py" "${@:3}" ;;
+                    "train") python "${plt_path}/plt_train.py" "${@:3}" ;;
+                    "train_density") python "${plt_path}/plt_train_density.py" "${@:3}" ;;
+                    "prediction"|"test") python "${plt_path}/plt_prediction.py" "${@:3}" ;;
+                    "parity_density") python "${plt_path}/plt_parity_density.py" "${@:3}" ;;
+                    "train_test") python "${plt_path}/plt_train_test.py" "${@:3}" ;;
+                    "born_charge"|"bec") python "${plt_path}/plt_born_charge.py" "${@:3}" ;;
+                    "msd") python "${plt_path}/plt_msd.py" "${@:3}" ;;
+                    "msd_all") python "${plt_path}/plt_msd_all.py" "${@:3}" ;;
+                    "msd_conv") python "${plt_path}/plt_msd_convergence_check.py" "${@:3}" ;;
+                    "msd_sdc") python "${plt_path}/plt_msd_sdc.py" "${@:3}" ;;
+                    "sdc") python "${plt_path}/plt_sdc.py" "${@:3}" ;;
+                    "rdf") python "${plt_path}/plt_rdf.py" "${@:3}" ;;
+                    "xrd") python "${plt_path}/plt_xrd.py" "${@:3}" ;;
+                    "xrd_comp") python "${plt_path}/plt_xrd_comp.py" "${@:3}" ;;
                     "phonon") python "${plt_path}/plt_phonon.py" "${@:3}" ;;
                     "phonon_comp") python "${plt_path}/plt_phonon_comp.py" "${@:3}" ;;
-                    "vac") python ${plt_path}/plt_vac.py $3 ;;
-                    "restart") python ${plt_path}/plt_nep_restart.py $3 ;;
-                    "dimer") python ${plt_path}/plt_dimer.py $3 $4 $5 $6 ;;
-                    "force_errors") python ${plt_path}/plt_force_errors.py $3 ;;
-                    "des") python ${plt_path}/plt_descriptors.py $3 ${@:4} ;;
-                    "lr") python ${plt_path}/plt_learning_rate.py $3 ;;
-                    "doas") python ${plt_path}/plt_doas.py $3 $4 ;;
-                    "arrhenius_d"|"D") python ${plt_path}/plt_arrhenius_d.py $3 ;;
-                    "D_xyz") python ${plt_path}/plt_arrhenius_d_xyz.py $3 ;;
-                    "arrhenius_sigma"|"sigma") python ${plt_path}/plt_arrhenius_sigma.py $3 ;;
-                    "sigma_xyz") python ${plt_path}/plt_arrhenius_sigma_xyz.py $3 ;;
-                    "net_force") python ${plt_path}/plt_net_force.py ${@:3} ;;
-                    "emd") python ${plt_path}/plt_emd.py ${@:3} ;;
-                    "emd2") python ${plt_path}/plt_emd2.py ${@:3} ;;
-                    "nemd") python ${plt_path}/plt_nemd.py ${@:3} ;;
-                    "hnemd") python ${plt_path}/plt_hnemd.py ${@:3} ;;
-                    "pdos") python ${plt_path}/plt_pdos.py $3 ;;
-                    "plane-grid") python ${plt_path}/plt_plane_grid.py ${@:3} ;;
-                    "cohesive") python ${plt_path}/plt_cohesive.py ${@:3} ;;
-                    "viscosity") python ${plt_path}/plt_viscosity.py ${@:3} ;;
-                    "rdf_pmf") python ${plt_path}/plt_rdf_pmf.py ${@:3} ;;
+                    "vac") python "${plt_path}/plt_vac.py" "${@:3}" ;;
+                    "restart") python "${plt_path}/plt_nep_restart.py" "${@:3}" ;;
+                    "dimer") python "${plt_path}/plt_dimer.py" "${@:3}" ;;
+                    "force_errors") python "${plt_path}/plt_force_errors.py" "${@:3}" ;;
+                    "des") python "${plt_path}/plt_descriptors.py" "${@:3}" ;;
+                    "doas") python "${plt_path}/plt_doas.py" "${@:3}" ;;
+                    "arrhenius_d"|"D") python "${plt_path}/plt_arrhenius_d.py" "${@:3}" ;;
+                    "D_PT") python "${plt_path}/plt_arrhenius_d_PT.py" "${@:3}" ;;
+                    "D_xyz") python "${plt_path}/plt_arrhenius_d_xyz.py" "${@:3}" ;;
+                    "arrhenius_sigma"|"sigma") python "${plt_path}/plt_arrhenius_sigma.py" "${@:3}" ;;
+                    "sigma_PT") python "${plt_path}/plt_arrhenius_sigma_PT.py" "${@:3}" ;;
+                    "sigma_xyz") python "${plt_path}/plt_arrhenius_sigma_xyz.py" "${@:3}" ;;
+                    "net_force") python "${plt_path}/plt_net_force.py" "${@:3}" ;;
+                    "emd") python "${plt_path}/plt_emd.py" "${@:3}" ;;
+                    "emd2") python "${plt_path}/plt_emd2.py" "${@:3}" ;;
+                    "nemd") python "${plt_path}/plt_nemd.py" "${@:3}" ;;
+                    "hnemd") python "${plt_path}/plt_hnemd.py" "${@:3}" ;;
+                    "pdos") python "${plt_path}/plt_pdos.py" "${@:3}" ;;
+                    "plane-grid") python "${plt_path}/plt_plane_grid.py" "${@:3}" ;;
+                    "cohesive") python "${plt_path}/plt_cohesive.py" "${@:3}" ;;
+                    "viscosity") python "${plt_path}/plt_viscosity.py" "${@:3}" ;;
+                    "rdf_pmf") python "${plt_path}/plt_rdf_pmf.py" "${@:3}" ;;
                     "charge")
                         echo " +----------------------------------------------------------+"
                         echo " | Please ensure you are using full batch training process. |"
@@ -349,14 +357,14 @@ if [ ! -z "$1" ]; then
                         echo " | inconsistencies in the atomic order between the training |"
                         echo " | set and charge_train.out.                                |"
                         echo " +----------------------------------------------------------+"
-                        python ${plt_path}/plt_charge.py $3 ;;
+                        python "${plt_path}/plt_charge.py" "${@:3}" ;;
                     *)
                         echo " Unknown plot type: $2"
                         echo " Available types are listed below."
-                        source ${GPUMDkit_path}/src/f6_plots.sh; f6_plots_two_column; exit 1 ;;
+                        source "${GPUMDkit_path}/src/f6_plots.sh"; f6_plots_two_column; exit 1 ;;
                 esac
             else
-                source ${GPUMDkit_path}/src/f6_plots.sh
+                source "${GPUMDkit_path}/src/f6_plots.sh"
                 f6_plots_two_column
                 echo " See the codes in plt_scripts for more details"
                 echo " Code path: ${GPUMDkit_path}/Scripts/plt_scripts"
@@ -409,7 +417,7 @@ if [ ! -z "$1" ]; then
         -out2xyz)
             if [ ! -z "$2" ] && [ "$2" != "-h" ]; then
                 echo " Calling script by Yanzhou WANG et al. "
-                bash ${format_conv_path}/out2xyz.sh $2
+                bash "${format_conv_path}/out2xyz.sh" "$2"
                 echo " Code path: ${format_conv_path}/out2xyz.sh"
             else
                 echo " Usage: -out2xyz dir_name (eg. gpumdkit.sh -out2xyz .)"
@@ -417,12 +425,19 @@ if [ ! -z "$1" ]; then
                 echo " Code path: ${format_conv_path}/out2xyz.sh"
             fi ;;
 
+        -out2xyz_bec)
+            echo " Calling script by Yanzhou WANG and Shunda Chen. "
+            bash "${format_conv_path}/out2xyz_bec.sh" "${@:2}"
+            status=$?
+            echo " Code path: ${format_conv_path}/out2xyz_bec.sh"
+            exit "$status" ;;
+
         -out2exyz)
             run_python_script "Zihan YAN (yanzihan@westlake.edu.cn)" "${format_conv_path}/out2exyz.py" "${@:2}" ;;
 
         -cp2k2xyz)
             echo " Calling script by Chen HUA "
-            python ${format_conv_path}/cp2k_log2xyz.py
+            python "${format_conv_path}/cp2k_log2xyz.py"
             echo " Code path: ${format_conv_path}/cp2k_log2xyz.py" ;;
 
         -pos2exyz)
@@ -453,10 +468,10 @@ if [ ! -z "$1" ]; then
             run_python_script "Denan LI (lidenan@westlake.edu.cn)" "${format_conv_path}/dp2xyz.py" "${@:2}" ;;
 
         -xyz2dp)
-            if [ "$2" = "-h" ] || [ "$2" = "--help" ]; then
-                python3 "${format_conv_path}/xyz2dp.py" "$2"
+            if [ ! -z "$2" ]; then
+                run_python_script "Zihan YAN (yanzihan@westlake.edu.cn)" "${format_conv_path}/xyz2dp.py" "${@:2}"
             else
-                source ${GPUMDkit_path}/src/f1_format_conversions.sh
+                source "${GPUMDkit_path}/src/f1_format_conversions.sh"
                 xyz2dp
             fi ;;
 
@@ -497,17 +512,17 @@ if [ ! -z "$1" ]; then
             run_python_script "Zihan YAN (yanzihan@westlake.edu.cn)" "${analyzer_path}/analyze_composition.py" "${@:2}" ;;
 
         -get_volume)
-            python ${analyzer_path}/get_volume.py ;;
+            python "${analyzer_path}/get_volume.py" ;;
 
         -chem_species)
             run_python_script "Zihan YAN (yanzihan@westlake.edu.cn)" "${analyzer_path}/analyze_chem_species.py" "${@:2}" ;;
 
         -pynep)
-            source ${GPUMDkit_path}/src/f2_sample_structures.sh
+            source "${GPUMDkit_path}/src/f2_sample_structures.sh"
             parallel_pynep_sample_structures ;;
 
         -nep_modifier)
-            python ${GPUMDkit_path}/Scripts/utils/nep_modifier/nep_modifier.py "${@:2}" ;;
+            python "${GPUMDkit_path}/Scripts/utils/nep_modifier/nep_modifier.py" "${@:2}" ;;
 
         -frame_range)
             run_python_script "Zihan YAN (yanzihan@westlake.edu.cn)" "${sample_path}/frame_range.py" "${@:2}" ;;
@@ -526,15 +541,15 @@ if [ ! -z "$1" ]; then
             alias_key="${1#-}"
             CUSTOM_CONFIG="$HOME/.gpumdkit.in"
             if [ ! -f "$CUSTOM_CONFIG" ]; then
-                echo "Unknown: $1"
-                echo "Use -h for help, or create $CUSTOM_CONFIG to define custom commands"
+                echo " Unknown: $1"
+                echo " Use -h for help, or create $CUSTOM_CONFIG to define custom commands"
                 exit 1
             fi
             func_name="custom_${alias_key}"
             source "$CUSTOM_CONFIG"
             if ! type "$func_name" >/dev/null 2>&1; then
-                echo "Unknown: $1"
-                echo "Tip: Define the function $func_name() { ... } in $CUSTOM_CONFIG to use this alias."
+                echo " Unknown: $1"
+                echo " Tip: Define the function $func_name() { ... } in $CUSTOM_CONFIG to use this alias."
                 help_info_table; exit 1
             fi
             shift

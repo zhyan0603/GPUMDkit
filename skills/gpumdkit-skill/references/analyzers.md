@@ -73,6 +73,8 @@ gpumdkit.sh -min_dist_pbc dump.xyz
 # Output: Table of minimum distances for all element pairs
 ```
 
+Both variants collect elements across all frames in first-appearance order and skip pairs absent from a frame.
+
 ### Charge Balance Check
 ```bash
 # Check charge balance
@@ -150,6 +152,8 @@ python3 ${GPUMDkit_path}/Scripts/analyzer/find_outliers.py 20 100 1.0
 # Output: selected.xyz (high-error), remained.xyz (low-error)
 ```
 
+Structures with a `-1e6` missing-stress marker or a stress component whose absolute value exceeds `1e6` are excluded from RMSE calculation and both output datasets. If none remain, the script reports an error without writing outputs.
+
 ### Probability Density Analysis
 ```bash
 # Calculate 3D probability density of mobile ions
@@ -188,7 +192,7 @@ gpumdkit.sh  # Select: 5) Analyzer -> 502
 gpumdkit.sh -filter_dist_pbc dump.xyz 1.5
 
 # 2. Filter by box size
-gpumdkit.sh -filter_box filtered.xyz 20
+gpumdkit.sh -filter_box filtered_dump.xyz 20
 
 # 3. Filter by force value
 gpumdkit.sh -filter_value filtered_by_box.xyz force 15
