@@ -7,6 +7,7 @@ function esc(s) {
     .replace(/"/g, "&quot;");
 }
 function joinRel(base, name) { return base ? base + "/" + name : name; }
+function parentRel(path) { return path ? path.split("/").slice(0, -1).join("/") : ""; }
 function fmtSize(n) {
   if (n == null || n < 0) return "-";
   if (n < 1024) return n + " B";
@@ -16,10 +17,10 @@ function fmtSize(n) {
 function fmtAgo(sec) {
   if (sec == null) return "";
   if (sec < 5) return "now";
-  if (sec < 60) return Math.floor(sec) + "s";
-  if (sec < 3600) return Math.floor(sec / 60) + "m";
-  if (sec < 86400) return Math.floor(sec / 3600) + "h";
-  return Math.floor(sec / 86400) + "d";
+  if (sec < 60) return Math.floor(sec) + "s ago";
+  if (sec < 3600) return Math.floor(sec / 60) + "m ago";
+  if (sec < 86400) return Math.floor(sec / 3600) + "h ago";
+  return Math.floor(sec / 86400) + "d ago";
 }
 function fmtDur(sec) {
   if (sec == null || !isFinite(sec)) return "--";
@@ -40,29 +41,157 @@ function fmtGenRate(gps) {
   if (gps * 60 >= 1) return (gps * 60).toFixed(1) + " gen/min";
   return (gps * 3600).toFixed(1) + " gen/h";
 }
-
-var curPath = "";
-var rootDir = "";
-var running = false;
-var cmdHistory = [];
-var lastFiles = null;
-var lastSubdirs = null;
-var lastNep = null;
-var lastPollTs = 0;
-var viewer = { name: "", rel: "", text: null, mode: "text" };
-var lossText = null;
-var toastTimer = null;
-var pollTimer = null;
-var pollActive = false;
-var scanSeq = 0;
-var termBusy = false;
-
+function fmtNum(v) {
+  if (Math.abs(v) >= 1e5 || (Math.abs(v) < 1e-3 && v !== 0)) return v.toExponential(1);
+  return String(Math.round(v * 1000) / 1000);
+}
+function fmtAxis(v) {
+  if (v === 0) return "0";
+  var e = Math.round(Math.log10(Math.abs(v)));
+  if (Math.abs(v / Math.pow(10, e) - 1) < 1e-9) return "1e" + e;
+  if (Math.abs(v) >= 1e4 || Math.abs(v) < 1e-2) return v.toExponential(1).replace("e+", "e");
+  return String(Math.round(v * 100) / 100);
+}
+function hexToRgba(hex, alpha) {
+  var m = /^#?([0-9a-f]{6})$/i.exec(hex);
+  if (!m) return "rgba(31,119,180," + alpha + ")";
+  var v = parseInt(m[1], 16);
+  return "rgba(" + ((v >> 16) & 255) + "," + ((v >> 8) & 255) + "," + (v & 255) + "," + alpha + ")";
+}
+function arrMinMax(a) {
+  var mn = a[0], mx = a[0];
+  for (var i = 1; i < a.length; i++) {
+    if (a[i] < mn) mn = a[i];
+    if (a[i] > mx) mx = a[i];
+  }
+  return [mn, mx];
+}
+function median(a) {
+  if (!a.length) return null;
+  var s = a.slice().sort(function(x, y) { return x - y; });
+  var mid = Math.floor(s.length / 2);
+  return s.length % 2 ? s[mid] : (s[mid - 1] + s[mid]) / 2;
+}
+function copyText(text) {
+  if (navigator.clipboard && navigator.clipboard.writeText) {
+    navigator.clipboard.writeText(text).then(function() {
+      toast("Copied to clipboard");
+    }, function() {
+      toast(fallbackCopy(text) ? "Copied to clipboard" : "Copy failed");
+    });
+  } else {
+    toast(fallbackCopy(text) ? "Copied to clipboard" : "Copy failed");
+  }
+}
+function fallbackCopy(text) {
+  var ta = document.createElement("textarea");
+  ta.value = text;
+  ta.style.position = "fixed";
+  ta.style.opacity = "0";
+  document.body.appendChild(ta);
+  ta.select();
+  var ok = false;
+  try { ok = document.execCommand("copy"); } catch (e) {}
+  document.body.removeChild(ta);
+  return ok;
+}
 function toast(msg) {
   var t = el("toast");
   t.textContent = msg;
   t.classList.add("show");
   if (toastTimer) clearTimeout(toastTimer);
-  toastTimer = setTimeout(function() { t.classList.remove("show"); }, 2500);
+  toastTimer = setTimeout(function() { t.classList.remove("show"); }, 2400);
+}
+
+var ICON_SUN = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>';
+var ICON_MOON = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>';
+var ICON_CHEV = '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>';
+
+var PREVIEW_MAX_CLIENT = 512 * 1024;
+var LOSS_COLORS = ["#1f77b4", "#ff7f0e", "#2ca02c", "#d62728", "#9467bd", "#8c564b"];
+var KNOWN_COLS = {
+  "msd.out": {4: ["t", "msd_x", "msd_y", "msd_z"], 7: ["t", "msd_x", "msd_y", "msd_z", "sdc_x", "sdc_y", "sdc_z"]},
+  "sdc.out": {4: ["t", "vac_x", "vac_y", "vac_z"]},
+  "loss.out": {6: ["gen", "Loss", "E_tr", "F_tr", "V_tr"], 10: ["gen", "L_total", "L1", "L2", "E_tr", "F_tr", "V_tr", "E_te", "F_te", "V_te"]},
+};
+var REC_CATEGORIES = {
+  plt_msd: "Diffusion and transport",
+  plt_sdc: "Diffusion and transport",
+  plt_msd_sdc: "Diffusion and transport",
+  plt_vac: "Diffusion and transport",
+  plt_msd_conv: "Diffusion and transport",
+  plt_thermo: "Thermodynamics",
+  plt_train: "NEP training",
+  plt_train_density: "NEP training",
+  plt_train_test: "NEP training",
+  plt_prediction: "NEP training",
+  plt_sigma: "Arrhenius analysis",
+  plt_D: "Arrhenius analysis",
+};
+var REC_CAT_ORDER = [
+  "Diffusion and transport",
+  "NEP training",
+  "Thermodynamics",
+  "Arrhenius analysis",
+];
+
+var curPath = "";
+var rootDir = "";
+var viewMode = "overview";
+var running = false;
+var termBusy = false;
+var busyFlag = false;
+var scanSeq = 0;
+var pollActive = false;
+var pollTimer = null;
+var toastTimer = null;
+var ageTimer = null;
+var themeManual = null;
+var connOk = null;
+var lastGoodAt = null;
+var lastScanServerNow = null;
+var lastFiles = null;
+var lastSubdirs = null;
+var lastPath = null;
+var nepSamples = [];
+var lossData = null;
+var cmdHistory = [];
+var figRendered = {};
+var panelTab = "output";
+var viewer = null;
+var pendingOpen = null;
+var drawerOpen = false;
+
+try { themeManual = localStorage.getItem("gk_theme"); } catch (e) {}
+
+function setConn(ok) {
+  if (connOk !== ok) {
+    connOk = ok;
+    el("connWrap").classList.toggle("bad", !ok);
+  }
+  if (ok) lastGoodAt = Date.now();
+  updateConnText();
+}
+function updateConnText() {
+  if (connOk === null) { el("connText").textContent = "connecting..."; return; }
+  if (!connOk) {
+    var age = lastGoodAt ? fmtAgo((Date.now() - lastGoodAt) / 1000) : "never";
+    el("connText").textContent = "connection problem · last update " + age;
+    return;
+  }
+  el("connText").textContent = "updated " + fmtAgo((Date.now() - lastGoodAt) / 1000);
+}
+
+async function api(url, opts) {
+  var resp;
+  try {
+    resp = await fetch(url, opts);
+  } catch (e) {
+    setConn(false);
+    throw e;
+  }
+  if (resp.status === 401) showLogin("Please sign in to continue.");
+  return resp;
 }
 
 function showLogin(msg) {
@@ -74,12 +203,6 @@ function hideLogin() {
   el("loginView").classList.add("hidden");
   el("appView").classList.remove("hidden");
   el("loginMsg").textContent = "";
-}
-
-async function api(url, opts) {
-  var resp = await fetch(url, opts);
-  if (resp.status === 401) showLogin("Please sign in to continue.");
-  return resp;
 }
 
 async function doLogin() {
@@ -122,58 +245,80 @@ async function loadScan(path, silent) {
   try { data = await resp.json(); } catch (e) {}
   if (seq !== scanSeq) return false;
   if (!resp.ok || !data) {
+    setConn(false);
     if (!silent) el("sbErr").textContent = (data && data.error) || "scan failed";
     return false;
   }
+  setConn(true);
   hideLogin();
+  var pathChanged = data.path !== lastPath;
   curPath = data.path || "";
   rootDir = data.root || "";
-  var nowS = Math.floor(Date.now() / 1000);
+  lastPath = curPath;
+  lastScanServerNow = data.now;
+  busyFlag = !!data.busy;
+  el("sbErr").textContent = "";
+  var nowS = data.now || Math.floor(Date.now() / 1000);
   var pollGap = lastPollTs ? (Date.now() / 1000 - lastPollTs) : 0;
   var prevF = {}, prevS = {};
-  if (lastFiles) lastFiles.forEach(function(f) { prevF[f.name] = f; });
-  if (lastSubdirs) lastSubdirs.forEach(function(s) { prevS[s.name] = s; });
-  var prevNepDone = lastNep ? lastNep.done : null;
+  if (!pathChanged) {
+    if (lastFiles) lastFiles.forEach(function(f) { prevF[f.name] = f; });
+    if (lastSubdirs) lastSubdirs.forEach(function(s) { prevS[s.name] = s; });
+  } else {
+    nepSamples = [];
+    lossData = null;
+  }
+  var prevNepDone = lastNepDone;
+  var training = data.training;
+  lastNepDone = training && !training.finished && training.read_ok !== false ? training.done : null;
+  if (training && training.done != null && prevNepDone != null && training.done < prevNepDone) {
+    nepSamples = [];
+  }
+  if (training && !training.finished) {
+    nepSamples.push({done: training.done, ts: Date.now() / 1000, count: training.count});
+    if (nepSamples.length > 8) nepSamples.shift();
+  }
+  lastPollTs = Date.now() / 1000;
   lastFiles = data.files || [];
   lastSubdirs = data.subdirs || [];
-  lastNep = data.training ? {done: data.training.done} : null;
-  lastPollTs = Date.now() / 1000;
   var liveFiles = (data.files || []).filter(function(f) {
     return prevF[f.name] && f.size > prevF[f.name].size;
   }).map(function(f) {
     var grew = f.size - prevF[f.name].size;
-    return {name: f.name, grew: grew, rate: pollGap > 0 ? grew / pollGap : null};
+    return {name: f.name, grew: grew, rate: pollGap > 0 ? grew / pollGap : null, age: f.mtime != null ? nowS - f.mtime : null};
   });
-  renderCrumb(curPath);
-  renderDirList(data.subdirs || [], prevS, nowS);
-  renderFileList(data.files || [], prevF);
-  var liveCount = liveFiles.length;
-  el("sbErr").textContent = "";
-  el("sbRoot").textContent = rootDir;
-  el("sbRoot").title = rootDir;
-  el("sbCwd").textContent = "/" + curPath;
-  el("sbLive").textContent = liveCount ? liveCount + " live" : "";
-  el("sbEntries").textContent = ((data.dirs || []).length + (data.files || []).length) + " entries";
-  var srvNow = data.now || nowS;
+  liveFiles = liveFiles.filter(function(f) { return f.age != null && f.age < 180; });
   var fresh = false;
   var filesArr = data.files || [];
   for (var fi = 0; fi < filesArr.length; fi++) {
-    if (filesArr[fi].mtime != null && srvNow - filesArr[fi].mtime < 180) { fresh = true; break; }
+    if (filesArr[fi].mtime != null && nowS - filesArr[fi].mtime < 180) { fresh = true; break; }
   }
   if (!fresh) {
     var subsArr = data.subdirs || [];
     for (var si = 0; si < subsArr.length; si++) {
-      if (subsArr[si].newest != null && srvNow - subsArr[si].newest < 180) { fresh = true; break; }
+      if (subsArr[si].newest != null && nowS - subsArr[si].newest < 180) { fresh = true; break; }
     }
   }
   pollActive = fresh || (data.training && !data.training.finished);
-  renderMonitor(data, {liveFiles: liveFiles, pollGap: pollGap, prevNepDone: prevNepDone});
-  if (!running) renderRecs(data.recommendations || []);
-  renderFigures(data.files || []);
-  el("termCwdLabel").textContent = "/" + curPath;
-  el("termPathLabel").textContent = "/" + curPath;
+  renderCrumb(curPath);
+  renderBrowser(data, nowS, prevS, prevF);
+  el("sbRoot").textContent = rootDir;
+  el("sbRoot").title = rootDir;
+  el("sbCwd").textContent = "/" + curPath;
+  el("sbLive").textContent = liveFiles.length ? liveFiles.length + " live" : "";
+  el("sbEntries").textContent = ((data.dirs || []).length + (data.files || []).length) + " entries";
+  el("panelBusy").textContent = busyFlag ? "server busy: a command is running" : "";
+  if (viewMode === "overview") {
+    renderMonitor(data, liveFiles, nowS);
+    renderRecs(data.recommendations || [], data.files || [], nowS);
+  } else if (viewMode === "figures") {
+    renderFigures(data.files || []);
+  }
+  schedule();
   return true;
 }
+var lastNepDone = null;
+var lastPollTs = 0;
 
 function renderCrumb(path) {
   var c = el("crumb");
@@ -185,20 +330,19 @@ function renderCrumb(path) {
   for (var i = 0; i < parts.length; i++) {
     acc = acc ? acc + "/" + parts[i] : parts[i];
     var sep = document.createElement("span");
-    sep.className = "sep";
-    sep.textContent = " / ";
+    sep.textContent = "/";
+    sep.className = "crumbsep";
     c.appendChild(sep);
     if (i === parts.length - 1) {
       var here = document.createElement("span");
-      here.className = "here";
       here.textContent = parts[i];
+      here.className = "crumbhere";
       c.appendChild(here);
     } else {
       c.appendChild(crumbLink(parts[i], acc));
     }
   }
 }
-
 function crumbLink(label, rel) {
   var a = document.createElement("a");
   a.href = "#";
@@ -207,323 +351,306 @@ function crumbLink(label, rel) {
   return a;
 }
 
-function renderDirList(subs, prevS, nowS) {
-  var dl = el("dirList");
-  dl.innerHTML = "";
-  if (!subs.length) {
-    dl.innerHTML = '<p class="muted" style="padding:4px 8px;margin:0">(none)</p>';
-    return;
-  }
-  subs.forEach(function(s) {
+function renderBrowser(data, nowS, prevS, prevF) {
+  el("curPathLabel").textContent = (rootDir || "") + "/" + curPath;
+  el("curPathLabel").title = (rootDir || "") + "/" + curPath;
+  var up = el("upBtn");
+  up.disabled = !curPath;
+  var fl = el("fileList");
+  fl.innerHTML = "";
+  var filter = el("fileFilter").value.trim().toLowerCase();
+  var sortMode = el("sortSel").value;
+  var dirs = (data.subdirs || []).slice();
+  var files = (data.files || []).slice();
+  files.sort(function(a, b) {
+    if (sortMode === "mtime") return (b.mtime || 0) - (a.mtime || 0) || a.name.localeCompare(b.name);
+    if (sortMode === "size") return (b.size || 0) - (a.size || 0) || a.name.localeCompare(b.name);
+    return a.name.localeCompare(b.name);
+  });
+  var shown = 0;
+  dirs.forEach(function(s) {
+    if (filter && s.name.toLowerCase().indexOf(filter) < 0) return;
+    shown++;
     var row = document.createElement("div");
-    row.className = "drow";
+    row.className = "brow dirrow";
     var dot = document.createElement("span");
     dot.className = "dot";
     var prev = prevS[s.name];
-    if (prev && s.newest != null && prev.newest != null && s.newest > prev.newest) dot.classList.add("live");
+    if (prev && s.newest != null && prev.newest != null && s.newest > prev.newest) {
+      dot.classList.add("live");
+      row.title = "recently written";
+    }
     row.appendChild(dot);
     var nm = document.createElement("span");
-    nm.className = "dname";
+    nm.className = "bname";
     nm.textContent = s.name + "/";
     row.appendChild(nm);
     var meta = document.createElement("span");
-    meta.className = "dmeta";
+    meta.className = "bmeta";
     var bits = [s.count + " items"];
     if (s.newest != null) bits.push(fmtAgo(nowS - s.newest));
     if (s.loss) bits.push("NEP");
     meta.textContent = bits.join(" · ");
     row.appendChild(meta);
     row.onclick = function() { loadScan(joinRel(curPath, s.name)); };
-    dl.appendChild(row);
+    fl.appendChild(row);
   });
-}
-
-function renderFileList(files, prevF) {
-  var fl = el("fileList");
-  fl.innerHTML = "";
-  var filter = el("fileFilter").value.trim().toLowerCase();
-  var shown = 0;
   files.forEach(function(f) {
     if (filter && f.name.toLowerCase().indexOf(filter) < 0) return;
     shown++;
     var row = document.createElement("div");
-    row.className = "frow";
+    row.className = "brow";
     var dot = document.createElement("span");
     dot.className = "dot";
     var prev = prevF[f.name];
-    if (prev && f.size > prev.size) dot.classList.add("live");
+    if (prev && f.size > prev.size && f.mtime != null && nowS - f.mtime < 180) {
+      dot.classList.add("live");
+      row.title = "recently written";
+    }
     row.appendChild(dot);
     var a = document.createElement("a");
     a.href = "#";
     a.textContent = f.name;
-    a.onclick = function(ev) { ev.preventDefault(); fileClicked(f.name); };
+    a.onclick = function(ev) { ev.preventDefault(); fileClicked(f); };
     row.appendChild(a);
-    var sz = document.createElement("span");
-    sz.className = "fsize";
-    sz.textContent = fmtSize(f.size);
-    row.appendChild(sz);
+    var meta = document.createElement("span");
+    meta.className = "bmeta";
+    var bits = [];
+    if (f.mtime != null) bits.push(fmtAgo(nowS - f.mtime));
+    bits.push(fmtSize(f.size));
+    meta.textContent = bits.join(" · ");
+    row.appendChild(meta);
     fl.appendChild(row);
   });
-  if (!shown) fl.innerHTML = '<p class="muted" style="padding:4px 8px;margin:0">(no files)</p>';
+  el("browserCount").textContent = shown ? shown + " shown" : "";
+  if (!shown) {
+    var empty = document.createElement("div");
+    empty.className = "empty";
+    empty.textContent = filter ? "no files match the filter" : "empty directory";
+    fl.appendChild(empty);
+  }
 }
 
-function renderMonitor(data, ctx) {
+function fileClicked(f) {
+  var ext = f.name.substring(f.name.lastIndexOf(".") + 1).toLowerCase();
+  if (ext === "png" || ext === "jpg" || ext === "jpeg") {
+    setView("figures");
+    openLightbox(joinRel(curPath, f.name), f.name);
+  } else {
+    setView("data");
+    viewFile(f);
+  }
+}
+
+function setView(mode) {
+  viewMode = mode;
+  var tabs = document.querySelectorAll(".viewtab");
+  for (var i = 0; i < tabs.length; i++) {
+    var active = tabs[i].getAttribute("data-view") === mode;
+    tabs[i].classList.toggle("active", active);
+    tabs[i].setAttribute("aria-pressed", active ? "true" : "false");
+  }
+  el("viewOverview").classList.toggle("hidden", mode !== "overview");
+  el("viewData").classList.toggle("hidden", mode !== "data");
+  el("viewFigures").classList.toggle("hidden", mode !== "figures");
+  if (drawerOpen) toggleDrawer(false);
+}
+function toggleDrawer(open) {
+  drawerOpen = open == null ? !drawerOpen : open;
+  el("browserPanel").classList.toggle("open", drawerOpen);
+}
+
+function trainingRate() {
+  var deltas = [];
+  for (var i = 1; i < nepSamples.length; i++) {
+    var d = nepSamples[i].done - nepSamples[i - 1].done;
+    var t = nepSamples[i].ts - nepSamples[i - 1].ts;
+    if (d > 0 && t > 1) deltas.push(d / t);
+  }
+  if (deltas.length < 2) return {rate: null, estimating: true};
+  return {rate: median(deltas), estimating: false};
+}
+
+function statTile(value, label, done) {
+  return '<div class="stat' + (done ? " done" : "") + '"><div class="stat-v">' + value + '</div><div class="stat-l">' + label + '</div></div>';
+}
+
+function renderMonitor(data, liveFiles, nowS) {
   var body = el("monBody");
-  var card = el("monCard");
   body.innerHTML = "";
-  var training = data.training;
-  if (!training) lossText = null;
-  var parts = [];
-  if (training) {
-    var pct = training.total > 0 ? (100 * training.done / training.total) : 0;
-    var rate = null;
-    if (ctx.prevNepDone != null && ctx.pollGap > 2) {
-      var dr = training.done - ctx.prevNepDone;
-      if (dr > 0) rate = dr / ctx.pollGap;
-    }
-    var eta = rate ? (training.total - training.done) / rate : null;
-    var div = document.createElement("div");
-    div.innerHTML =
-      '<div class="stat-row">' +
-      '<div class="stat' + (training.finished ? " done" : "") + '"><div class="stat-v">' + pct.toFixed(1) + '%</div><div class="stat-l">progress</div></div>' +
-      '<div class="stat"><div class="stat-v">' + training.done.toLocaleString() + ' / ' + training.total.toLocaleString() + '</div><div class="stat-l">generation</div></div>' +
-      '<div class="stat"><div class="stat-v">' + fmtGenRate(rate) + '</div><div class="stat-l">rate</div></div>' +
-      '<div class="stat"><div class="stat-v">' + (eta != null ? fmtDur(eta) : "--") + '</div><div class="stat-l">eta</div></div>' +
-      '</div>' +
-      '<div class="nep-bar-track"><div class="nep-bar-fill" style="width:' + Math.min(100, pct) + '%"></div></div>' +
-      '<div class="chart-wrap"><canvas class="chart" id="lossCanvas" height="220"></canvas><span class="pulse-dot hidden" id="lossDot"></span></div>' +
-      '<div class="lg-row" id="lossLegend"></div>' +
-      '<p class="muted" style="margin:6px 0 0">loss.out loss functions, log-log scale; the pulsing dot marks the latest record</p>';
-    parts.push(div);
-  }
-  if (ctx.liveFiles.length) {
-    var lf = document.createElement("div");
-    var rows = ctx.liveFiles.map(function(f) {
-      return '<div class="row" style="justify-content:space-between;padding:3px 0">' +
-        '<span class="mono" style="font-size:12.5px">' + esc(f.name) + "</span>" +
-        '<span class="muted mono">+' + fmtSize(f.grew) + (f.rate ? " · " + fmtRate(f.rate) : "") + "</span></div>";
-    }).join("");
-    lf.innerHTML = '<div style="font-weight:600;font-size:13px;margin:6px 0 4px">Growing files</div>' + rows;
-    parts.push(lf);
-  }
-  if (!parts.length) {
-    card.classList.add("hidden");
+  var monMeta = el("monMeta");
+  var t = data.training;
+  if (!t) {
+    monMeta.textContent = "";
+    body.innerHTML = '<div class="empty">No training records in this directory (nep.in and loss.out not both found).</div>';
     return;
   }
-  card.classList.remove("hidden");
-  el("monMeta").textContent = training ? (training.finished ? "training done" : "training") : ctx.liveFiles.length + " growing";
-  parts.forEach(function(p) { body.appendChild(p); });
-  if (training) {
-    fetchLoss().then(drawLoss).catch(function() {});
+  var parts = [];
+  var evidence = [];
+  var notes = [];
+  if (t.loss_mtime == null) {
+    monMeta.textContent = "read failure";
+    body.innerHTML = '<div class="empty">loss.out could not be read.</div>';
+    return;
   }
-}
-
-function renderRecs(recs) {
-  var card = el("recCard");
-  var box = el("recBox");
-  box.innerHTML = "";
-  if (!recs.length) { card.classList.add("hidden"); return; }
-  card.classList.remove("hidden");
-  el("recCount").textContent = recs.length + " actions";
-  var list = document.createElement("div");
-  list.className = "rec-list";
-  recs.forEach(function(rec) {
-    var row = document.createElement("div");
-    row.className = "rec";
-    var icon = document.createElement("span");
-    icon.className = "ric";
-    icon.innerHTML = ICON_SVG;
-    var c = document.createElement("code");
-    c.className = "rcmd";
-    c.textContent = rec.command.replace(/^gpumdkit\.sh\s+/, "");
-    c.title = (rec.description || "") + "  |  click to copy: " + rec.command;
-    c.onclick = function() { copyText(rec.command); };
-    var ev = document.createElement("span");
-    ev.className = "rev";
-    (rec.evidence || []).forEach(function(e) {
-      var b = document.createElement("span");
-      b.className = "badge ok";
-      b.textContent = e;
-      ev.appendChild(b);
-    });
-    var btn = document.createElement("button");
-    btn.textContent = "Run";
-    btn.onclick = function() { runAction(rec, btn); };
-    row.appendChild(icon);
-    row.appendChild(c);
-    row.appendChild(ev);
-    row.appendChild(btn);
-    list.appendChild(row);
-  });
-  box.appendChild(list);
-}
-
-var ICON_SVG = '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 17 9 11 13 15 21 7"/><polyline points="15 7 21 7 21 13"/></svg>';
-var ICON_SUN = '<svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>';
-var ICON_MOON = '<svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>';
-
-var themeManual = null;
-try { themeManual = localStorage.getItem("gk_theme"); } catch (e) {}
-function applyTheme() {
-  var dark = themeManual === "dark" ||
-    (themeManual !== "light" && window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches);
-  document.body.classList.toggle("dark", dark);
-  var btn = el("themeBtn");
-  if (btn) btn.innerHTML = dark ? ICON_SUN : ICON_MOON;
-  drawLoss();
-}
-function toggleTheme() {
-  var dark = document.body.classList.contains("dark");
-  themeManual = dark ? "light" : "dark";
-  try { localStorage.setItem("gk_theme", themeManual); } catch (e) {}
-  applyTheme();
-}
-
-function setRailActive(btn) {
-  var nodes = document.querySelectorAll(".rail-btn");
-  for (var i = 0; i < nodes.length; i++) nodes[i].classList.remove("active");
-  btn.classList.add("active");
-}
-function railScroll(targetId, fallbackMsg) {
-  var target = el(targetId);
-  if (target && !target.classList.contains("hidden")) {
-    target.scrollIntoView({behavior: "smooth", block: "start"});
+  if (t.loss_empty) {
+    monMeta.textContent = "no records";
+    body.innerHTML = '<div class="empty">loss.out is empty or contains no valid records yet.</div>';
+    return;
+  }
+  var writeAge = nowS - t.loss_mtime;
+  var stateText;
+  if (t.finished) {
+    stateText = "finished · reached the target generation count";
+    monMeta.textContent = "finished";
+  } else if (writeAge < 180) {
+    stateText = "updating · last write " + fmtAgo(writeAge);
+    monMeta.textContent = "updating";
   } else {
-    toast(fallbackMsg);
+    stateText = "no update for " + fmtAgo(writeAge) + " · the job may have ended, or it writes sparsely";
+    monMeta.textContent = "no recent update";
   }
-}
-
-function copyText(text) {
-  if (navigator.clipboard && navigator.clipboard.writeText) {
-    navigator.clipboard.writeText(text).then(function() {
-      toast("Copied to clipboard");
-    }, function() {
-      toast(fallbackCopy(text) ? "Copied to clipboard" : "Copy failed");
-    });
+  var rateInfo = trainingRate();
+  var eta = null;
+  if (!t.finished && t.has_target && rateInfo.rate) {
+    eta = (t.total - t.done) / rateInfo.rate;
+  }
+  var useBar = !t.multi_run && t.has_target;
+  var tiles = '<div class="stat-row">';
+  if (useBar) {
+    var pct = t.total > 0 ? 100 * t.done / t.total : 0;
+    tiles += statTile(pct.toFixed(1) + "%", "progress", t.finished);
   } else {
-    toast(fallbackCopy(text) ? "Copied to clipboard" : "Copy failed");
+    tiles += statTile(t.count.toLocaleString(), "records", t.finished);
   }
-}
-function fallbackCopy(text) {
-  var ta = document.createElement("textarea");
-  ta.value = text;
-  ta.style.position = "fixed";
-  ta.style.opacity = "0";
-  document.body.appendChild(ta);
-  ta.select();
-  var ok = false;
-  try { ok = document.execCommand("copy"); } catch (e) {}
-  document.body.removeChild(ta);
-  return ok;
-}
-
-function fileClicked(name) {
-  var dot = name.lastIndexOf(".");
-  var ext = dot >= 0 ? name.substring(dot + 1).toLowerCase() : "";
-  if (ext === "png" || ext === "jpg" || ext === "jpeg") openLightbox(name);
-  else viewFile(name);
-}
-
-function pollTick() {
-  if (document.hidden) { schedule(); return; }
-  loadScan(curPath, true).then(schedule);
-}
-function schedule() {
-  if (pollTimer) clearTimeout(pollTimer);
-  pollTimer = null;
-  var sel = parseInt(el("refreshSel").value, 10);
-  if (sel <= 0) { el("sbRefresh").textContent = "auto off"; return; }
-  var delay = pollActive ? sel * 1000 : 60000;
-  el("sbRefresh").textContent = pollActive ? "auto " + sel + "s" : "idle · 60s check";
-  pollTimer = setTimeout(pollTick, delay);
-}
-function startPolling() {
-  schedule();
-}
-async function runAction(rec, btn) {
-  if (running) return;
-  running = true;
-  btn.disabled = true;
-  btn.textContent = "Running...";
-  el("outCard").classList.remove("hidden");
-  el("output").textContent = "$ " + rec.command + "\n\n(running, please wait...)";
-  el("outCard").scrollIntoView({behavior: "smooth", block: "nearest"});
-  var t0 = Date.now();
-  try {
-    var resp = await api("/api/run", {
-      method: "POST",
-      headers: {"Content-Type": "application/json"},
-      body: JSON.stringify({action: rec.action, path: curPath})
-    });
-    var data = null;
-    try { data = await resp.json(); } catch (e) {}
-    if (!resp.ok || !data) {
-      el("output").textContent = (data && data.error) || "The command could not be started.";
-      addHistory(rec.command, -1, 0);
-    } else {
-      var text = "$ " + data.command + "\n\n" + (data.output || "");
-      if (data.returncode !== 0) text += "\n[exit code " + data.returncode + "]";
-      el("output").textContent = text;
-      addHistory(data.command, data.returncode, (Date.now() - t0) / 1000);
-      if (data.image) openLightbox(data.image);
-      if (data.returncode === 0) toast(data.image ? "Done: " + data.image : "Done");
-    }
-  } catch (e) {
-    el("output").textContent = "Network error: " + e;
+  tiles += statTile(t.done.toLocaleString() + " / " + t.total.toLocaleString(), "generation");
+  tiles += statTile(t.finished ? "--" : fmtGenRate(rateInfo.rate), "rate");
+  if (!t.has_target) {
+    tiles += statTile("--", "eta");
+    notes.push("nep.in has no generation line; the target defaults to " + t.total.toLocaleString() + ", so no exact ETA is shown");
+  } else if (t.finished) {
+    tiles += statTile("--", "eta");
+  } else {
+    tiles += statTile(rateInfo.estimating ? "estimating" : (eta != null ? fmtDur(eta) : "--"), "eta");
+    if (rateInfo.estimating) notes.push("ETA needs a few more refresh samples");
   }
-  btn.disabled = false;
-  btn.textContent = "Run";
-  running = false;
-  loadScan(curPath, true);
-}
-
-function addHistory(cmd, rc, dur) {
-  cmdHistory.unshift({cmd: cmd, rc: rc, dur: dur, at: new Date()});
-  if (cmdHistory.length > 30) cmdHistory.pop();
-  renderHistory();
-}
-function renderHistory() {
-  var card = el("histCard");
-  var list = el("histList");
-  if (!cmdHistory.length) { card.classList.add("hidden"); return; }
-  card.classList.remove("hidden");
-  list.innerHTML = "";
-  cmdHistory.forEach(function(h) {
+  tiles += "</div>";
+  evidence.push("loss.out · " + t.count.toLocaleString() + " records · last write " + fmtAgo(writeAge));
+  evidence.push("target: " + (t.has_target ? "nep.in generation " + t.total.toLocaleString() : "default (no generation line in nep.in)"));
+  if (t.multi_run) {
+    notes.push("loss.out contains records from more than one run (generations restart at " + t.seg_start_gen + "); the chart shows the whole history and progress uses the latest run");
+  }
+  if (t.skipped > 0) {
+    notes.push(t.skipped + " invalid or incomplete lines were skipped while parsing");
+  }
+  parts.push(
+    '<div class="stat-row">' + tiles.replace('<div class="stat-row">', "").replace("</div>", "") + "</div>"
+  );
+  var barHtml = "";
+  if (useBar) {
+    var pct2 = Math.min(100, 100 * t.done / t.total);
+    barHtml = '<div class="bar-track"><div class="bar-fill' + (t.finished ? " done" : "") + '" style="width:' + pct2 + '%"></div></div>';
+  }
+  parts.push(barHtml);
+  parts.push('<div class="evidence">' + evidence.join(" · ") + "</div>");
+  parts.push('<div class="muted" style="margin-top:4px">' + stateText + "</div>");
+  parts.push('<div class="chart-wrap"><canvas class="chart" id="lossCanvas" height="230"></canvas><span class="pulse-dot hidden" id="lossDot"></span></div>');
+  parts.push('<div class="lg-row" id="lossLegend"></div>');
+  parts.push('<div id="lossNotes"></div>');
+  if (liveFiles.length) {
+    var rows = liveFiles.map(function(f) {
+      return '<div class="row" style="justify-content:space-between;padding:2px 0">' +
+        '<span class="mono" style="font-size:12px">' + esc(f.name) + "</span>" +
+        '<span class="muted mono">+' + fmtSize(f.grew) + (f.rate ? " · " + fmtRate(f.rate) : "") + "</span></div>";
+    }).join("");
+    parts.push('<div style="font-weight:600;font-size:12.5px;margin:10px 0 3px">Growing files</div>' + rows);
+  }
+  body.innerHTML = parts.join("");
+  var notesEl = el("lossNotes");
+  notes.forEach(function(n) {
     var d = document.createElement("div");
-    d.className = "hist-item";
-    var rc = h.rc === 0
-      ? '<span class="badge ok">ok</span>'
-      : '<span class="badge" style="background:#fdeaea;color:#b03030">' + (h.rc < 0 ? "err" : "exit " + h.rc) + "</span>";
-    d.innerHTML = rc + '<span class="hcmd">' + esc(h.cmd) + "</span>" +
-      '<span class="hmeta">' + fmtDur(h.dur) + " · " + h.at.toLocaleTimeString() + "</span>";
-    list.appendChild(d);
+    d.className = "chart-note";
+    d.textContent = n;
+    notesEl.appendChild(d);
   });
+  fetchLoss().then(function() {
+    if (curPath !== lossFetchPath) return;
+    drawLossChart();
+  }).catch(function() {});
+}
+var lossFetchPath = null;
+async function fetchLoss() {
+  lossFetchPath = curPath;
+  var resp = await api("/api/loss?path=" + encodeURIComponent(curPath));
+  if (resp.status === 401) return;
+  if (curPath !== lossFetchPath) return;
+  if (resp.ok) {
+    lossData = await resp.json();
+    if (curPath !== lossFetchPath) { lossData = null; return; }
+  } else {
+    lossData = null;
+  }
 }
 
-function arrMinMax(a) {
-  var mn = a[0], mx = a[0];
-  for (var i = 1; i < a.length; i++) {
-    if (a[i] < mn) mn = a[i];
-    if (a[i] > mx) mx = a[i];
+function drawLossChart() {
+  var canvas = el("lossCanvas");
+  if (!canvas || !lossData || lossData.empty) {
+    var dot = el("lossDot");
+    if (dot) dot.classList.add("hidden");
+    return;
   }
-  return [mn, mx];
+  var xs = lossData.xs || [];
+  var series = (lossData.series || []).map(function(s, i) {
+    return {xs: xs, ys: s.values, color: LOSS_COLORS[i % LOSS_COLORS.length], label: s.label};
+  });
+  var xLabel = lossData.x_mode === "generation" ? "generation" : "record #";
+  var last = drawSeries(canvas, series, {logX: true, logY: true, xLabel: xLabel, yLabel: "Loss functions"});
+  var legend = el("lossLegend");
+  if (legend) {
+    legend.innerHTML = "";
+    series.forEach(function(s) {
+      var item = document.createElement("span");
+      item.className = "lg-item";
+      var d = document.createElement("span");
+      d.className = "lg-dot";
+      d.style.background = s.color;
+      item.appendChild(d);
+      item.appendChild(document.createTextNode(s.label));
+      legend.appendChild(item);
+    });
+  }
+  var dot = el("lossDot");
+  if (dot) {
+    if (last && last.length) {
+      var p = last[0];
+      dot.style.left = p.px + "px";
+      dot.style.top = p.py + "px";
+      dot.style.background = p.color;
+      dot.style.setProperty("--pc", hexToRgba(p.color, 0.55));
+      dot.classList.remove("hidden");
+    } else {
+      dot.classList.add("hidden");
+    }
+  }
+  var notesEl = el("lossNotes");
+  if (notesEl && lossData.sampled) {
+    var d = document.createElement("div");
+    d.className = "chart-note";
+    d.textContent = "chart downsampled to " + lossData.points + " of " + lossData.count + " records";
+    notesEl.appendChild(d);
+  }
 }
-function fmtNum(v) {
-  if (Math.abs(v) >= 1e5 || (Math.abs(v) < 1e-3 && v !== 0)) return v.toExponential(1);
-  return String(Math.round(v * 1000) / 1000);
-}
-function fmtAxis(v) {
-  if (v === 0) return "0";
-  var e = Math.round(Math.log10(Math.abs(v)));
-  if (Math.abs(v / Math.pow(10, e) - 1) < 1e-9) return "1e" + e;
-  if (Math.abs(v) >= 1e4 || Math.abs(v) < 1e-2) return v.toExponential(1).replace("e+", "e");
-  return String(Math.round(v * 100) / 100);
-}
-function hexToRgba(hex, alpha) {
-  var m = /^#?([0-9a-f]{6})$/i.exec(hex);
-  if (!m) return "rgba(31,119,180," + alpha + ")";
-  var v = parseInt(m[1], 16);
-  return "rgba(" + ((v >> 16) & 255) + "," + ((v >> 8) & 255) + "," + (v & 255) + "," + alpha + ")";
+
+function themeColors() {
+  var grid = "#e6ebef", axis = "#8a97a8";
+  try {
+    var cs = getComputedStyle(document.body);
+    var g = cs.getPropertyValue("--grid").trim();
+    var a = cs.getPropertyValue("--axis").trim();
+    if (g) grid = g;
+    if (a) axis = a;
+  } catch (e) {}
+  return {grid: grid, axis: axis};
 }
 function axisTicks(lo, hi, isLog, count) {
   var ticks = [];
@@ -542,23 +669,12 @@ function axisTicks(lo, hi, isLog, count) {
   }
   return ticks;
 }
-function themeColors() {
-  var grid = "#e6ebef", axis = "#8a97a8";
-  try {
-    var cs = getComputedStyle(document.body);
-    var g = cs.getPropertyValue("--grid").trim();
-    var a = cs.getPropertyValue("--axis").trim();
-    if (g) grid = g;
-    if (a) axis = a;
-  } catch (e) {}
-  return {grid: grid, axis: axis};
-}
 function drawSeries(canvas, series, opts) {
   opts = opts || {};
   var theme = themeColors();
   var dpr = window.devicePixelRatio || 1;
   var w = canvas.clientWidth || 600;
-  var h = canvas.clientHeight || 220;
+  var h = canvas.clientHeight || 230;
   canvas.width = w * dpr;
   canvas.height = h * dpr;
   var ctx = canvas.getContext("2d");
@@ -588,7 +704,7 @@ function drawSeries(canvas, series, opts) {
   var xmin = xr[0], xmax = xr[1], ymin = yr[0], ymax = yr[1];
   if (xmax === xmin) xmax = xmin + 1;
   if (ymax === ymin) ymax = ymin + Math.abs(ymin) * 0.1 + 1;
-  var pad = {l: 62, r: 14, t: 14, b: 42};
+  var pad = {l: 60, r: 14, t: 12, b: 40};
   var pw = w - pad.l - pad.r, ph = h - pad.t - pad.b;
   function X(x) { return pad.l + pw * (x - xmin) / (xmax - xmin); }
   function Y(y) { return pad.t + ph * (1 - (y - ymin) / (ymax - ymin)); }
@@ -596,9 +712,7 @@ function drawSeries(canvas, series, opts) {
   ctx.lineWidth = 1;
   ctx.font = "10px monospace";
   ctx.fillStyle = theme.axis;
-  var xTicks = axisTicks(xmin, xmax, opts.logX, 4);
-  var yTicks = axisTicks(ymin, ymax, opts.logY, 4);
-  yTicks.forEach(function(t) {
+  axisTicks(ymin, ymax, opts.logY, 4).forEach(function(t) {
     var yy = Y(t.pos);
     ctx.beginPath();
     ctx.moveTo(pad.l, yy);
@@ -606,7 +720,7 @@ function drawSeries(canvas, series, opts) {
     ctx.stroke();
     ctx.fillText(t.label, 6, yy + 3);
   });
-  xTicks.forEach(function(t) {
+  axisTicks(xmin, xmax, opts.logX, 4).forEach(function(t) {
     var xx = X(t.pos);
     ctx.beginPath();
     ctx.moveTo(xx, pad.t);
@@ -614,9 +728,7 @@ function drawSeries(canvas, series, opts) {
     ctx.stroke();
     ctx.fillText(t.label, xx - 14, h - pad.b + 16);
   });
-  if (opts.xLabel) {
-    ctx.fillText(opts.xLabel, pad.l + pw / 2 - ctx.measureText(opts.xLabel).width / 2, h - 8);
-  }
+  if (opts.xLabel) ctx.fillText(opts.xLabel, pad.l + pw / 2 - ctx.measureText(opts.xLabel).width / 2, h - 8);
   if (opts.yLabel) {
     ctx.save();
     ctx.translate(12, pad.t + ph / 2);
@@ -644,85 +756,469 @@ function drawSeries(canvas, series, opts) {
     var lp = s._pts[s._pts.length - 1];
     lastPoints.push({px: X(lp[0]), py: Y(lp[1]), color: s.color || "rgb(24, 103, 174)"});
   });
+  canvas._plot = {X: X, xmin: xmin, xmax: xmax, series: series, opts: opts};
   return lastPoints;
 }
 
-async function fetchLoss() {
-  var rel = joinRel(curPath, "loss.out");
-  var resp = await api("/api/file?path=" + encodeURIComponent(rel));
-  if (resp.ok) {
-    lossText = await resp.text();
-  } else {
-    lossText = null;
-  }
-}
-var LOSS_COLORS = ["#1f77b4", "#ff7f0e", "#2ca02c", "#d62728", "#9467bd", "#8c564b"];
-
-function drawLoss() {
-  var canvas = el("lossCanvas");
-  if (!canvas || !lossText) return;
-  var parsed = parseNumeric(lossText);
-  if (!parsed) return;
-  var rows = parsed.rows;
-  var nSeries, labels;
-  if (parsed.cols >= 7) {
-    nSeries = 6;
-    labels = ["Total", "L1-Reg", "L2-Reg", "Energy-train", "Force-train", "Virial-train"];
-  } else if (parsed.cols === 6) {
-    nSeries = 4;
-    labels = ["Loss", "Energy-train", "Force-train", "Virial-train"];
-  } else {
-    nSeries = parsed.cols - 1;
-    labels = [];
-    for (var ci = 1; ci <= nSeries; ci++) labels.push("c" + ci);
-  }
-  var series = [];
-  for (var c = 1; c <= nSeries; c++) {
-    var xs = [], ys = [];
-    for (var r = 0; r < rows.length; r++) {
-      xs.push(r + 1);
-      ys.push(rows[r][c]);
-    }
-    series.push({xs: xs, ys: ys, color: LOSS_COLORS[(c - 1) % LOSS_COLORS.length], label: labels[c - 1]});
-  }
-  var step = rows.length > 1 ? (rows[1][0] - rows[0][0]) : null;
-  var xlabel = step === 100 ? "Generation/100" : (step === 1 ? "Epoch" : "record #");
-  var last = drawSeries(canvas, series, {logX: true, logY: true, xLabel: xlabel, yLabel: "Loss functions"});
-  renderLossLegend(labels);
-  placePulseDot(last);
+function attachHover(canvas, readoutEl, labelsFn) {
+  canvas.onmousemove = function(ev) {
+    var rect = canvas.getBoundingClientRect();
+    var px = ev.clientX - rect.left;
+    var plot = canvas._plot;
+    if (!plot || !plot.series.length || !readoutEl) return;
+    var xs = plot.series[0].xs;
+    if (!xs || !xs.length) return;
+    var frac = (px - 60) / (canvas.clientWidth - 74);
+    if (frac < 0) frac = 0;
+    if (frac > 1) frac = 1;
+    var idx = Math.round(frac * (xs.length - 1));
+    readoutEl.textContent = labelsFn(idx, plot.series);
+  };
+  canvas.onmouseleave = function() {
+    if (readoutEl) readoutEl.textContent = "";
+  };
 }
 
-function renderLossLegend(labels) {
-  var legend = el("lossLegend");
-  if (!legend) return;
-  legend.innerHTML = "";
-  labels.forEach(function(lb, i) {
-    var item = document.createElement("span");
-    item.className = "lg-item";
-    var dot = document.createElement("span");
-    dot.className = "lg-dot";
-    dot.style.background = LOSS_COLORS[i % LOSS_COLORS.length];
-    var tx = document.createElement("span");
-    tx.textContent = lb;
-    item.appendChild(dot);
-    item.appendChild(tx);
-    legend.appendChild(item);
+function renderRecs(recs, files, nowS) {
+  var box = el("recBox");
+  box.innerHTML = "";
+  el("recCount").textContent = recs.length ? recs.length + " actions" : "";
+  if (!recs.length) {
+    box.innerHTML = '<div class="empty">No recognized GPUMDkit output files. Run a simulation, or open a directory that contains results.</div>';
+    return;
+  }
+  var fileMap = {};
+  files.forEach(function(f) { fileMap[f.name] = f; });
+  var groups = {};
+  recs.forEach(function(rec) {
+    var cat = REC_CATEGORIES[rec.action] || "Other";
+    if (!groups[cat]) groups[cat] = [];
+    groups[cat].push(rec);
+  });
+  REC_CAT_ORDER.concat(Object.keys(groups).filter(function(c) { return REC_CAT_ORDER.indexOf(c) < 0; })).forEach(function(cat) {
+    var list = groups[cat];
+    if (!list) return;
+    var grp = document.createElement("div");
+    grp.className = "recgroup";
+    var head = document.createElement("div");
+    head.className = "recgroup-head";
+    head.innerHTML = '<span class="chev">' + ICON_CHEV + "</span>" + esc(cat) + ' <span class="muted">' + list.length + "</span>";
+    head.onclick = function() { grp.classList.toggle("closed"); };
+    grp.appendChild(head);
+    var body = document.createElement("div");
+    body.className = "recgroup-body";
+    list.forEach(function(rec) {
+      body.appendChild(buildRecCard(rec, fileMap, nowS));
+    });
+    grp.appendChild(body);
+    box.appendChild(grp);
   });
 }
 
-function placePulseDot(lastPoints) {
-  var dot = el("lossDot");
-  if (!dot) return;
-  if (!lastPoints || !lastPoints.length) {
-    dot.classList.add("hidden");
+function buildRecCard(rec, fileMap, nowS) {
+  var div = document.createElement("div");
+  div.className = "rec";
+  var head = document.createElement("div");
+  head.className = "rec-title";
+  head.textContent = rec.description;
+  if (rec.stale) {
+    var badge = document.createElement("span");
+    badge.className = "badge warn";
+    badge.textContent = "result older than inputs";
+    badge.style.marginLeft = "8px";
+    head.appendChild(badge);
+  }
+  var io = document.createElement("div");
+  io.className = "rec-io";
+  io.textContent = "input: " + rec.evidence.join(", ") + "  ->  output: " + rec.produces;
+  var result = document.createElement("div");
+  result.className = "rec-result";
+  var outFile = fileMap[rec.produces];
+  if (outFile && outFile.mtime != null) {
+    result.textContent = "result: " + rec.produces + " · " + fmtAgo(nowS - outFile.mtime);
+  } else {
+    result.textContent = "result: not generated yet";
+    result.className += " muted";
+  }
+  var actions = document.createElement("div");
+  actions.className = "rec-actions";
+  var run = document.createElement("button");
+  run.textContent = "Generate figure";
+  run.disabled = busyFlag || running;
+  run.title = busyFlag ? "server busy: another command is running" : "";
+  run.onclick = function() { runAction(rec, run); };
+  actions.appendChild(run);
+  if (outFile) {
+    var open = document.createElement("button");
+    open.className = "ghost small";
+    open.textContent = "Open result";
+    open.onclick = function() {
+      setView("figures");
+      openLightbox(joinRel(curPath, rec.produces), rec.produces);
+    };
+    actions.appendChild(open);
+  }
+  var cmdToggle = document.createElement("button");
+  cmdToggle.className = "ghost small";
+  cmdToggle.textContent = "View command";
+  var cmdrow = document.createElement("div");
+  cmdrow.className = "rec-cmdrow hidden";
+  cmdrow.innerHTML = '<code class="rec-cmd">' + esc(rec.command) + "</code>";
+  var copyBtn = document.createElement("button");
+  copyBtn.className = "ghost small";
+  copyBtn.textContent = "Copy";
+  copyBtn.onclick = function() { copyText(rec.command); };
+  cmdrow.appendChild(copyBtn);
+  cmdToggle.onclick = function() {
+    var hidden = cmdrow.classList.contains("hidden");
+    cmdrow.classList.toggle("hidden", !hidden);
+    cmdToggle.textContent = hidden ? "Hide command" : "View command";
+  };
+  actions.appendChild(cmdToggle);
+  div.appendChild(head);
+  div.appendChild(io);
+  div.appendChild(result);
+  div.appendChild(actions);
+  div.appendChild(cmdrow);
+  return div;
+}
+
+function viewerDirty() {
+  return !!(viewer && viewer.draft != null && viewer.draft !== viewer.text);
+}
+
+function viewFile(f) {
+  if (viewerDirty()) {
+    pendingOpen = f;
+    el("viewerConfirm").classList.remove("hidden");
     return;
   }
-  var p = lastPoints[0];
-  dot.style.left = p.px + "px";
-  dot.style.top = p.py + "px";
-  dot.style.background = p.color;
-  dot.style.setProperty("--pc", hexToRgba(p.color, 0.55));
-  dot.classList.remove("hidden");
+  openViewer(f);
+}
+
+function openViewer(f) {
+  var rel = joinRel(curPath, f.name);
+  var card = el("viewerBody");
+  card.innerHTML = '<div class="empty">(loading...)</div>';
+  viewer = {
+    rel: rel, name: f.name, size: f.size, baseMtime: null,
+    truncated: false, text: null, draft: null, mode: "text"
+  };
+  el("viewerConfirm").classList.add("hidden");
+  el("viewerConflict").classList.add("hidden");
+  var oversized = f.size != null && f.size > PREVIEW_MAX_CLIENT;
+  var url = "/api/file?path=" + encodeURIComponent(rel) + (oversized ? "&partial=1" : "");
+  api(url).then(function(resp) {
+    if (resp.status === 401) { openViewerReset(); return; }
+    if (viewer === null || viewer.rel !== rel) return;
+    if (resp.ok) {
+      var ct = resp.headers.get("Content-Type") || "";
+      if (ct.indexOf("application/json") >= 0) {
+        return resp.json().then(function(j) {
+          if (viewer === null || viewer.rel !== rel) return;
+          viewer.truncated = true;
+          viewer.baseMtime = j.mtime;
+          viewer.text = j.head + "\n[... " + (j.size - j.head_bytes - j.tail_bytes).toLocaleString() + " bytes omitted ...]\n" + j.tail;
+          viewer.size = j.size;
+          renderViewer();
+        });
+      }
+      return resp.text().then(function(text) {
+        if (viewer === null || viewer.rel !== rel) return;
+        viewer.baseMtime = parseInt(resp.headers.get("X-File-Mtime") || "0", 10) || null;
+        viewer.text = text;
+        renderViewer();
+      });
+    }
+    if (resp.status === 413) {
+      return fetchPartial(rel).then(function(j) {
+        if (viewer === null || viewer.rel !== rel) return;
+        if (!j) {
+          openViewerReset();
+          el("viewerMsg").textContent = " file too large to preview";
+          return;
+        }
+        viewer.truncated = true;
+        viewer.baseMtime = j.mtime;
+        viewer.text = j.head + "\n[... " + (j.size - j.head_bytes - j.tail_bytes).toLocaleString() + " bytes omitted ...]\n" + j.tail;
+        viewer.size = j.size;
+        renderViewer();
+      });
+    }
+    var ct2 = resp.headers.get("Content-Type") || "";
+    if (ct2.indexOf("application/json") >= 0) {
+      return resp.json().then(function(j) {
+        if (viewer === null || viewer.rel !== rel) return;
+        openViewerReset();
+        el("viewerMsg").textContent = " " + (j.error || "preview failed");
+      });
+    }
+    openViewerReset();
+    el("viewerMsg").textContent = " preview failed";
+  }).catch(function() {
+    if (viewer !== null && viewer.rel === rel) {
+      openViewerReset();
+      el("viewerMsg").textContent = " network error";
+    }
+  });
+}
+
+function fetchPartial(rel) {
+  return api("/api/file?path=" + encodeURIComponent(rel) + "&partial=1").then(function(resp) {
+    if (resp.ok) return resp.json();
+    return null;
+  }).catch(function() { return null; });
+}
+
+function openViewerReset() {
+  el("viewerBody").innerHTML = '<div class="empty">Select a file from the browser to preview, plot, or edit.</div><p class="err" id="viewerMsg"></p>';
+}
+
+function renderViewer() {
+  if (!viewer) return;
+  var card = el("viewerBody");
+  card.innerHTML = "";
+  el("viewerMsg").textContent = "";
+  var head = document.createElement("div");
+  head.className = "viewer-head";
+  var title = document.createElement("strong");
+  title.textContent = viewer.name + " · " + fmtSize(viewer.size);
+  head.appendChild(title);
+  if (viewerDirty()) {
+    var dirty = document.createElement("span");
+    dirty.className = "badge warn";
+    dirty.textContent = "unsaved changes";
+    head.appendChild(dirty);
+  }
+  var tabs = document.createElement("div");
+  tabs.className = "tabs";
+  tabs.id = "viewTabs";
+  head.appendChild(tabs);
+  card.appendChild(head);
+  var banner = document.createElement("div");
+  if (viewer.truncated) {
+    banner.className = "chart-note";
+    banner.textContent = "bounded preview: first 128 KB and last 64 KB shown; editing is disabled because the full content is not loaded";
+    card.appendChild(banner);
+  }
+  var msg = document.createElement("p");
+  msg.className = "err";
+  msg.id = "viewerMsg";
+  card.appendChild(msg);
+  var confirmBar = document.createElement("div");
+  confirmBar.className = "confbar warn hidden";
+  confirmBar.id = "viewerConfirm";
+  confirmBar.innerHTML = "This file has unsaved changes.";
+  var keepBtn = document.createElement("button");
+  keepBtn.textContent = "Keep editing";
+  var discardBtn = document.createElement("button");
+  discardBtn.className = "danger";
+  discardBtn.textContent = "Discard and open the new file";
+  confirmBar.appendChild(keepBtn);
+  confirmBar.appendChild(discardBtn);
+  card.appendChild(confirmBar);
+  keepBtn.onclick = function() {
+    confirmBar.classList.add("hidden");
+    pendingOpen = null;
+  };
+  discardBtn.onclick = function() {
+    confirmBar.classList.add("hidden");
+    var target = pendingOpen;
+    pendingOpen = null;
+    viewer.draft = null;
+    if (target) openViewer(target);
+  };
+  var conflictBar = document.createElement("div");
+  conflictBar.className = "confbar conflict hidden";
+  conflictBar.id = "viewerConflict";
+  conflictBar.textContent = "The file changed on disk while you were editing.";
+  var rereadBtn = document.createElement("button");
+  rereadBtn.textContent = "Reload from disk";
+  var keepDraftBtn = document.createElement("button");
+  keepDraftBtn.textContent = "Keep my draft";
+  var overBtn = document.createElement("button");
+  overBtn.className = "danger";
+  overBtn.textContent = "Overwrite disk anyway";
+  conflictBar.appendChild(rereadBtn);
+  conflictBar.appendChild(keepDraftBtn);
+  conflictBar.appendChild(overBtn);
+  card.appendChild(conflictBar);
+  rereadBtn.onclick = function() {
+    conflictBar.classList.add("hidden");
+    var f = {name: viewer.name, size: null};
+    viewer.draft = null;
+    openViewer(f);
+  };
+  keepDraftBtn.onclick = function() { conflictBar.classList.add("hidden"); };
+  overBtn.onclick = function() { conflictBar.classList.add("hidden"); saveDraft(true); };
+  var body = document.createElement("div");
+  body.id = "viewBody";
+  card.appendChild(body);
+  var text = viewer.draft != null ? viewer.draft : viewer.text;
+  var numeric = viewer.truncated ? null : parseNumeric(text || "");
+  var kv = viewer.truncated ? [] : parseKV(text || "");
+  var kvCount = kv.filter(function(it) { return it.type === "kv"; }).length;
+  var nonBlank = kv.filter(function(it) { return it.type !== "blank"; }).length;
+  var isForm = !viewer.truncated && kvCount >= 2 && kvCount * 2 >= nonBlank;
+  var tabList = [];
+  if (numeric) tabList.push(["data", "Data"]);
+  if (isForm) tabList.push(["form", "Form"]);
+  tabList.push(["text", "Text"]);
+  if (!viewer.truncated) tabList.push(["edit", "Edit"]);
+  if (viewer.mode !== "text" && viewer.mode !== "edit" && viewer.mode !== "form" && viewer.mode !== "data") viewer.mode = "text";
+  if (viewer.mode === "data" && !numeric) viewer.mode = isForm ? "form" : "text";
+  if (viewer.mode === "form" && !isForm) viewer.mode = "text";
+  if (viewer.mode === "edit" && viewer.truncated) viewer.mode = "text";
+  tabList.forEach(function(t) {
+    var b = document.createElement("button");
+    b.className = "tab";
+    b.textContent = t[1];
+    b.setAttribute("data-mode", t[0]);
+    b.onclick = function() { setViewerMode(t[0]); };
+    tabs.appendChild(b);
+  });
+  setViewerMode(viewer.mode);
+}
+
+function setViewerMode(mode) {
+  if (!viewer) return;
+  viewer.mode = mode;
+  var tabs = el("viewTabs");
+  if (tabs) {
+    for (var i = 0; i < tabs.children.length; i++) {
+      tabs.children[i].classList.toggle("active", tabs.children[i].getAttribute("data-mode") === mode);
+    }
+  }
+  var body = el("viewBody");
+  if (!body) return;
+  body.innerHTML = "";
+  if (mode === "data") renderDataMode(body);
+  else if (mode === "form") renderFormMode(body);
+  else if (mode === "text") renderTextMode(body);
+  else if (mode === "edit") renderEditMode(body);
+}
+
+function colNames(name, cols) {
+  var known = KNOWN_COLS[name];
+  if (known && known[cols]) return known[cols];
+  var names = [];
+  for (var i = 0; i < cols; i++) names.push("c" + i);
+  return names;
+}
+
+function renderDataMode(body) {
+  var text = viewer.draft != null ? viewer.draft : viewer.text;
+  var numeric = parseNumeric(text || "");
+  if (!numeric) { body.innerHTML = '<div class="empty">not a numeric table</div>'; return; }
+  var names = colNames(viewer.name, numeric.cols);
+  var state = viewer._plotState || {x: 0, ys: [1], logX: false, logY: false};
+  if (state.ys.length > 1 || numeric.cols <= state.ys[0]) state.ys = state.ys.filter(function(c) { return c < numeric.cols; });
+  if (!state.ys.length) state.ys = [Math.min(1, numeric.cols - 1)];
+  viewer._plotState = state;
+  var ctl = document.createElement("div");
+  ctl.className = "chartctl";
+  var xSel = document.createElement("select");
+  xSel.setAttribute("aria-label", "X column");
+  for (var c = 0; c < numeric.cols; c++) {
+    var o = document.createElement("option");
+    o.value = c;
+    o.textContent = names[c];
+    if (c === state.x) o.selected = true;
+    xSel.appendChild(o);
+  }
+  xSel.onchange = function() { state.x = parseInt(xSel.value, 10); renderDataMode(body); };
+  ctl.appendChild(document.createTextNode("X "));
+  ctl.appendChild(xSel);
+  ctl.appendChild(document.createTextNode(" Y "));
+  for (var c2 = 0; c2 < numeric.cols; c2++) {
+    (function(ci) {
+      var lab = document.createElement("label");
+      lab.className = "chk";
+      var cb = document.createElement("input");
+      cb.type = "checkbox";
+      cb.checked = state.ys.indexOf(ci) >= 0;
+      cb.onchange = function() {
+        if (cb.checked) { if (state.ys.indexOf(ci) < 0) state.ys.push(ci); }
+        else state.ys = state.ys.filter(function(v) { return v !== ci; });
+        renderDataMode(body);
+      };
+      lab.appendChild(cb);
+      lab.appendChild(document.createTextNode(names[ci]));
+      ctl.appendChild(lab);
+    })(c2);
+  }
+  var scaleX = document.createElement("label");
+  scaleX.className = "chk";
+  var cbX = document.createElement("input");
+  cbX.type = "checkbox";
+  cbX.checked = state.logX;
+  cbX.onchange = function() { state.logX = cbX.checked; renderDataMode(body); };
+  scaleX.appendChild(cbX);
+  scaleX.appendChild(document.createTextNode("log X"));
+  ctl.appendChild(scaleX);
+  var scaleY = document.createElement("label");
+  scaleY.className = "chk";
+  var cbY = document.createElement("input");
+  cbY.type = "checkbox";
+  cbY.checked = state.logY;
+  cbY.onchange = function() { state.logY = cbY.checked; renderDataMode(body); };
+  scaleY.appendChild(cbY);
+  scaleY.appendChild(document.createTextNode("log Y"));
+  ctl.appendChild(scaleY);
+  body.appendChild(ctl);
+  var canvas = document.createElement("canvas");
+  canvas.className = "chart";
+  canvas.id = "colCanvas";
+  canvas.height = 230;
+  body.appendChild(canvas);
+  var readout = document.createElement("div");
+  readout.className = "hoverread";
+  body.appendChild(readout);
+  var xs = numeric.rows.map(function(r) { return r[state.x]; });
+  var series = state.ys.map(function(ci, i) {
+    return {xs: xs, ys: numeric.rows.map(function(r) { return r[ci]; }), color: LOSS_COLORS[i % LOSS_COLORS.length], label: names[ci]};
+  });
+  drawSeries(canvas, series, {logX: state.logX, logY: state.logY, xLabel: names[state.x], yLabel: "value"});
+  attachHover(canvas, readout, function(idx, sers) {
+    var parts = [names[state.x] + "=" + fmtNum(numeric.rows[idx][state.x])];
+    state.ys.forEach(function(ci) {
+      parts.push(names[ci] + "=" + fmtNum(numeric.rows[idx][ci]));
+    });
+    return "row " + (idx + 1) + " · " + parts.join(" · ");
+  });
+  var wrap = document.createElement("div");
+  wrap.className = "table-scroll";
+  var table = document.createElement("table");
+  table.className = "data";
+  var thead = document.createElement("thead");
+  var htr = document.createElement("tr");
+  for (var c3 = 0; c3 < numeric.cols; c3++) {
+    var th = document.createElement("th");
+    th.textContent = names[c3];
+    htr.appendChild(th);
+  }
+  thead.appendChild(htr);
+  table.appendChild(thead);
+  var tbody = document.createElement("tbody");
+  var maxRows = Math.min(numeric.rows.length, 200);
+  for (var r = 0; r < maxRows; r++) {
+    var tr = document.createElement("tr");
+    for (var c4 = 0; c4 < numeric.cols; c4++) {
+      var td = document.createElement("td");
+      td.textContent = fmtNum(numeric.rows[r][c4]);
+      tr.appendChild(td);
+    }
+    tbody.appendChild(tr);
+  }
+  table.appendChild(tbody);
+  wrap.appendChild(table);
+  body.appendChild(wrap);
+  if (numeric.rows.length > maxRows) {
+    var note = document.createElement("p");
+    note.className = "muted";
+    note.textContent = "showing first 200 of " + numeric.rows.length + " rows";
+    body.appendChild(note);
+  }
 }
 
 function parseNumeric(text) {
@@ -768,158 +1264,9 @@ function parseKV(text) {
   return items;
 }
 
-function viewFile(name) {
-  var rel = joinRel(curPath, name);
-  el("viewerOverlay").classList.remove("hidden");
-  el("viewerTitle").textContent = name;
-  el("viewMsg").textContent = "";
-  el("viewTabs").innerHTML = "";
-  el("viewBody").innerHTML = '<p class="muted">(loading...)</p>';
-  viewer = { name: name, rel: rel, text: null, mode: "text" };
-  modalOpened("viewer");
-  api("/api/file?path=" + encodeURIComponent(rel)).then(function(resp) {
-    if (resp.status === 401) { closeViewer(); return; }
-    if (resp.ok) {
-      return resp.text().then(function(text) {
-        if (viewer.rel !== rel) return;
-        renderView(text);
-      });
-    }
-    var ct = resp.headers.get("Content-Type") || "";
-    if (ct.indexOf("application/json") >= 0) {
-      return resp.json().then(function(j) {
-        el("viewBody").innerHTML = "";
-        el("viewMsg").textContent = " " + (j.error || "preview failed");
-      });
-    }
-    el("viewBody").innerHTML = "";
-    el("viewMsg").textContent = " preview failed";
-  }).catch(function() {
-    el("viewMsg").textContent = " network error";
-  });
-}
-
-function closeViewer() {
-  el("viewerOverlay").classList.add("hidden");
-  modalClosed("viewer");
-}
-
-var openModals = {};
-function modalOpened(id) {
-  openModals[id] = true;
-  document.body.style.overflow = "hidden";
-}
-function modalClosed(id) {
-  delete openModals[id];
-  if (!Object.keys(openModals).length) document.body.style.overflow = "";
-}
-
-function renderView(text) {
-  viewer.text = text;
-  var numeric = parseNumeric(text);
-  var kv = parseKV(text);
-  var kvCount = kv.filter(function(it) { return it.type === "kv"; }).length;
-  var nonBlank = kv.filter(function(it) { return it.type !== "blank"; }).length;
-  var isForm = kvCount >= 2 && kvCount * 2 >= nonBlank;
-  var tabs = [];
-  if (numeric) tabs.push(["data", "Data"]);
-  if (isForm) tabs.push(["form", "Form"]);
-  tabs.push(["text", "Text"]);
-  tabs.push(["edit", "Edit"]);
-  renderTabs(tabs);
-  setMode(numeric ? "data" : (isForm ? "form" : "text"));
-}
-
-function renderTabs(tabs) {
-  var bar = el("viewTabs");
-  bar.innerHTML = "";
-  tabs.forEach(function(t) {
-    var b = document.createElement("button");
-    b.className = "tab";
-    b.textContent = t[1];
-    b.setAttribute("data-mode", t[0]);
-    b.onclick = function() { setMode(t[0]); };
-    bar.appendChild(b);
-  });
-}
-
-function setMode(mode) {
-  viewer.mode = mode;
-  var tabs = el("viewTabs").children;
-  for (var i = 0; i < tabs.length; i++) {
-    tabs[i].classList.toggle("active", tabs[i].getAttribute("data-mode") === mode);
-  }
-  var body = el("viewBody");
-  body.innerHTML = "";
-  el("viewMsg").textContent = "";
-  if (mode === "data") renderDataMode(body);
-  else if (mode === "form") renderFormMode(body);
-  else if (mode === "text") renderTextMode(body);
-  else if (mode === "edit") renderEditMode(body);
-}
-
-function renderDataMode(body) {
-  var numeric = parseNumeric(viewer.text);
-  if (!numeric) { body.innerHTML = '<p class="muted">not a numeric table</p>'; return; }
-  var wrap = document.createElement("div");
-  wrap.className = "table-scroll";
-  var table = document.createElement("table");
-  table.className = "data";
-  var thead = document.createElement("thead");
-  var htr = document.createElement("tr");
-  for (var c = 0; c < numeric.cols; c++) {
-    var th = document.createElement("th");
-    th.textContent = "c" + c;
-    (function(k) { th.onclick = function() { drawCol(k); }; })(c);
-    htr.appendChild(th);
-  }
-  thead.appendChild(htr);
-  table.appendChild(thead);
-  var tbody = document.createElement("tbody");
-  var maxRows = Math.min(numeric.rows.length, 200);
-  for (var r = 0; r < maxRows; r++) {
-    var tr = document.createElement("tr");
-    for (var c2 = 0; c2 < numeric.cols; c2++) {
-      var td = document.createElement("td");
-      td.textContent = fmtNum(numeric.rows[r][c2]);
-      tr.appendChild(td);
-    }
-    tbody.appendChild(tr);
-  }
-  table.appendChild(tbody);
-  wrap.appendChild(table);
-  body.appendChild(wrap);
-  if (numeric.rows.length > maxRows) {
-    var note = document.createElement("p");
-    note.className = "muted";
-    note.textContent = "showing first 200 of " + numeric.rows.length + " rows";
-    body.appendChild(note);
-  }
-  var canvas = document.createElement("canvas");
-  canvas.className = "chart";
-  canvas.id = "colCanvas";
-  canvas.height = 220;
-  body.appendChild(canvas);
-  var hint = document.createElement("p");
-  hint.className = "muted";
-  hint.textContent = "click a column header to plot it against the first column";
-  body.appendChild(hint);
-  drawCol(1);
-}
-
-function drawCol(k) {
-  var numeric = parseNumeric(viewer.text);
-  var canvas = el("colCanvas");
-  if (!numeric || !canvas) return;
-  drawSeries(canvas,
-    [{xs: numeric.rows.map(function(r) { return r[0]; }),
-      ys: numeric.rows.map(function(r) { return r[k]; }),
-      color: "rgb(24, 103, 174)"}],
-    {logY: false, xLabel: "c0", yLabel: "c" + k});
-}
-
 function renderFormMode(body) {
-  var items = parseKV(viewer.text);
+  var text = viewer.draft != null ? viewer.draft : viewer.text;
+  var items = parseKV(text || "");
   var form = document.createElement("div");
   items.forEach(function(it, idx) {
     if (it.type === "kv") {
@@ -943,30 +1290,38 @@ function renderFormMode(body) {
     }
   });
   body.appendChild(form);
+  var inputs = form.querySelectorAll("input[data-idx]");
+  for (var i = 0; i < inputs.length; i++) {
+    inputs[i].addEventListener("input", function() {
+      var byIdx = {};
+      for (var k = 0; k < inputs.length; k++) byIdx[inputs[k].getAttribute("data-idx")] = inputs[k].value;
+      var lines = items.map(function(it, idx2) {
+        if (it.type === "kv" && byIdx[String(idx2)] !== undefined) return it.kw + " " + byIdx[String(idx2)];
+        return it.raw;
+      });
+      setDraft(joinEol(lines));
+    });
+  }
   var saveRow = document.createElement("div");
   saveRow.className = "row";
-  saveRow.style.marginTop = "12px";
+  saveRow.style.marginTop = "10px";
   var btn = document.createElement("button");
   btn.textContent = "Save";
-  btn.onclick = function() {
-    var inputs = el("viewBody").querySelectorAll("input[data-idx]");
-    var byIdx = {};
-    for (var i = 0; i < inputs.length; i++) byIdx[inputs[i].getAttribute("data-idx")] = inputs[i].value;
-    var lines = items.map(function(it, idx) {
-      if (it.type === "kv" && byIdx[String(idx)] !== undefined) return it.kw + " " + byIdx[String(idx)];
-      return it.raw;
-    });
-    var eol = viewer.text && viewer.text.indexOf("\r\n") >= 0 ? "\r\n" : "\n";
-    saveText(lines.join(eol));
-  };
+  btn.onclick = function() { saveDraft(false); };
   saveRow.appendChild(btn);
   body.appendChild(saveRow);
+}
+
+function joinEol(lines) {
+  var base = viewer.text || "";
+  var eol = base.indexOf("\r\n") >= 0 ? "\r\n" : "\n";
+  return lines.join(eol);
 }
 
 function renderTextMode(body) {
   var pre = document.createElement("pre");
   pre.className = "preview";
-  pre.textContent = viewer.text || "";
+  pre.textContent = viewer.draft != null ? viewer.draft : (viewer.text || "");
   body.appendChild(pre);
 }
 
@@ -974,73 +1329,111 @@ function renderEditMode(body) {
   var ta = document.createElement("textarea");
   ta.className = "editor";
   ta.id = "editArea";
-  ta.value = viewer.text || "";
+  ta.value = viewer.draft != null ? viewer.draft : (viewer.text || "");
+  ta.addEventListener("input", function() { setDraft(ta.value); });
   body.appendChild(ta);
   var row = document.createElement("div");
   row.className = "row";
-  row.style.marginTop = "10px";
+  row.style.marginTop = "8px";
   var save = document.createElement("button");
   save.textContent = "Save";
-  save.onclick = function() { saveText(el("editArea").value); };
+  save.onclick = function() { saveDraft(false); };
   var revert = document.createElement("button");
   revert.className = "ghost";
-  revert.textContent = "Revert";
-  revert.onclick = function() { el("editArea").value = viewer.text || ""; };
+  revert.textContent = "Revert to saved";
+  revert.onclick = function() {
+    viewer.draft = null;
+    renderViewer();
+  };
   row.appendChild(save);
   row.appendChild(revert);
   body.appendChild(row);
 }
 
-async function saveText(text) {
-  var bytes = new Blob([text]).size;
+function setDraft(text) {
+  if (!viewer) return;
+  viewer.draft = text;
+  if (viewer.draft === viewer.text) viewer.draft = null;
+  var head = el("viewerBody").querySelector(".viewer-head");
+  if (head) {
+    var existing = head.querySelector(".badge.warn");
+    if (viewerDirty() && !existing) {
+      var dirty = document.createElement("span");
+      dirty.className = "badge warn";
+      dirty.textContent = "unsaved changes";
+      head.insertBefore(dirty, head.querySelector(".tabs"));
+    } else if (!viewerDirty() && existing) {
+      existing.remove();
+    }
+  }
+}
+
+async function saveDraft(force) {
+  if (!viewer || viewer.draft == null) return;
+  var content = viewer.draft;
+  var saveRel = viewer.rel;
+  var bytes = new Blob([content]).size;
   if (bytes > 200 * 1024) {
-    el("viewMsg").textContent = " content exceeds the 200 KB edit limit";
+    el("viewerMsg").textContent = " content exceeds the 200 KB edit limit";
     return;
   }
   try {
     var resp = await api("/api/save", {
       method: "POST",
       headers: {"Content-Type": "application/json"},
-      body: JSON.stringify({path: viewer.rel, content: text})
+      body: JSON.stringify({path: saveRel, content: content, base_mtime: force ? undefined : viewer.baseMtime})
     });
     var data = {};
     try { data = await resp.json(); } catch (e) {}
+    if (resp.status === 409 && data.error === "conflict") {
+      viewer.baseMtime = data.mtime;
+      el("viewerConflict").classList.remove("hidden");
+      return;
+    }
     if (resp.ok) {
-      viewer.text = text;
+      if (viewer && viewer.rel === saveRel) {
+        viewer.text = content;
+        viewer.draft = null;
+        viewer.baseMtime = data.mtime || viewer.baseMtime;
+        renderViewer();
+      }
       toast("Saved " + viewer.name);
       loadScan(curPath, true);
     } else {
-      el("viewMsg").textContent = " " + (data.error || "save failed");
+      el("viewerMsg").textContent = " " + (data.error || "save failed");
     }
   } catch (e) {
-    el("viewMsg").textContent = " network error: " + e;
+    el("viewerMsg").textContent = " network error: " + e;
   }
 }
 
-function openLightbox(name) {
-  var rel = joinRel(curPath, name);
-  el("lightboxTitle").textContent = name;
-  el("lightboxImg").src = "/api/image?path=" + encodeURIComponent(rel);
-  el("lightboxOverlay").classList.remove("hidden");
-  modalOpened("lightbox");
-}
-function closeLightbox() {
-  el("lightboxOverlay").classList.add("hidden");
-  el("lightboxImg").src = "";
-  modalClosed("lightbox");
-}
-
 function renderFigures(files) {
-  var card = el("figCard");
-  var grid = el("figGrid");
-  grid.innerHTML = "";
+  var box = el("figBox");
   var imgs = files.filter(function(f) { return /\.(png|jpe?g)$/i.test(f.name); });
   el("figCount").textContent = imgs.length ? imgs.length + " figures" : "";
-  if (!imgs.length) { card.classList.add("hidden"); return; }
-  card.classList.remove("hidden");
+  if (!imgs.length) {
+    box.innerHTML = '<div class="empty">No PNG or JPEG images in this directory.</div>';
+    figRendered = {};
+    return;
+  }
+  var keep = {};
+  imgs.forEach(function(f) { keep[f.name + ":" + f.size] = true; });
+  var existing = box.querySelectorAll(".fig-thumb");
+  for (var i = existing.length - 1; i >= 0; i--) {
+    var node = existing[i];
+    var key = node.getAttribute("data-key");
+    if (!keep[key]) {
+      node.remove();
+      delete figRendered[key];
+    }
+  }
+  if (box.querySelector(".empty")) box.querySelector(".empty").remove();
   imgs.forEach(function(f) {
+    var key = f.name + ":" + f.size;
+    if (figRendered[key]) return;
     var cell = document.createElement("div");
     cell.className = "fig-thumb";
+    cell.setAttribute("data-key", key);
     var img = document.createElement("img");
     img.src = "/api/image?path=" + encodeURIComponent(joinRel(curPath, f.name));
     img.alt = f.name;
@@ -1050,8 +1443,144 @@ function renderFigures(files) {
     cap.textContent = f.name;
     cell.appendChild(img);
     cell.appendChild(cap);
-    cell.onclick = function() { openLightbox(f.name); };
-    grid.appendChild(cell);
+    cell.onclick = function() { openLightbox(joinRel(curPath, f.name), f.name); };
+    box.appendChild(cell);
+    figRendered[key] = true;
+  });
+}
+
+function openLightbox(rel, name) {
+  el("lightboxTitle").textContent = name;
+  el("lightboxImg").src = "/api/image?path=" + encodeURIComponent(rel);
+  el("lightboxOverlay").classList.remove("hidden");
+  el("lightboxClose").focus();
+}
+function closeLightbox() {
+  el("lightboxOverlay").classList.add("hidden");
+  el("lightboxImg").src = "";
+}
+
+function setPanelTab(tab) {
+  panelTab = tab;
+  var tabs = document.querySelectorAll(".ptab");
+  for (var i = 0; i < tabs.length; i++) {
+    var active = tabs[i].getAttribute("data-tab") === tab;
+    tabs[i].classList.toggle("active", active);
+    tabs[i].setAttribute("aria-pressed", active ? "true" : "false");
+  }
+  el("pOutput").classList.toggle("hidden", tab !== "output");
+  el("pHistory").classList.toggle("hidden", tab !== "history");
+  el("pTerminal").classList.toggle("hidden", tab !== "terminal");
+  expandPanel(true);
+}
+function expandPanel(open) {
+  el("bottomPanel").classList.toggle("closed", open === false);
+}
+
+function showOutput(text, truncated) {
+  el("output").textContent = text;
+  el("outTruncNote").classList.toggle("hidden", !truncated);
+  setPanelTab("output");
+}
+
+async function runAction(rec, btn) {
+  if (running) return;
+  var runDir = curPath;
+  var runDirLabel = "/" + runDir;
+  running = true;
+  btn.disabled = true;
+  btn.textContent = "Running...";
+  showOutput("$ " + rec.command + "\n\ndirectory: " + (runDir ? runDir : "(root)") + "\n(running, please wait...)", false);
+  var t0 = Date.now();
+  var record = {
+    cmd: rec.command, dir: runDir, start: new Date(), dur: null,
+    status: "running", rc: null, output: "", truncated: false, image: null
+  };
+  try {
+    var resp = await api("/api/run", {
+      method: "POST",
+      headers: {"Content-Type": "application/json"},
+      body: JSON.stringify({action: rec.action, path: runDir})
+    });
+    var data = null;
+    try { data = await resp.json(); } catch (e) {}
+    if (!resp.ok || !data) {
+      record.status = data && data.error && data.error.indexOf("timed out") >= 0 ? "timeout" : "failed";
+      record.output = (data && data.error) || "The command could not be started.";
+      showOutput("$ " + rec.command + "\n\ndirectory: " + (runDir ? runDir : "(root)") + "\n\n" + record.output, false);
+    } else {
+      record.status = data.returncode === 0 ? "ok" : "exit " + data.returncode;
+      record.rc = data.returncode;
+      record.output = data.output || "";
+      record.truncated = !!data.truncated;
+      record.image = data.image || null;
+      var text = "$ " + data.command + "\n\ndirectory: " + (runDir ? runDir : "(root)") + "\n\n" + (data.output || "");
+      if (data.returncode !== 0) text += "\n[exit code " + data.returncode + "]";
+      if (data.truncated) text += "\n[output truncated at 64 KB]";
+      if (data.image) text += "\n[result: " + data.image + "]";
+      showOutput(text, data.truncated);
+      if (data.returncode === 0) toast(data.image ? "Done: " + data.image : "Done");
+    }
+  } catch (e) {
+    record.status = "network";
+    record.output = "";
+    showOutput("$ " + rec.command + "\n\nNetwork error: " + e + "\nThe server may still be running the command; its state is unknown.", false);
+  }
+  record.dur = (Date.now() - t0) / 1000;
+  addRecord(record);
+  btn.disabled = false;
+  btn.textContent = "Generate figure";
+  running = false;
+  loadScan(curPath, true);
+}
+
+function addRecord(record) {
+  cmdHistory.unshift(record);
+  if (cmdHistory.length > 40) cmdHistory.pop();
+  renderHistory();
+}
+function renderHistory() {
+  var list = el("histList");
+  list.innerHTML = "";
+  el("histCount").textContent = cmdHistory.length ? "(" + cmdHistory.length + ")" : "";
+  if (!cmdHistory.length) {
+    list.innerHTML = '<div class="empty">No commands have been run in this session. History is kept for this browser session only.</div>';
+    return;
+  }
+  cmdHistory.forEach(function(h) {
+    var d = document.createElement("div");
+    d.className = "hist-item";
+    var badge = h.status === "ok"
+      ? '<span class="badge ok">ok</span>'
+      : '<span class="badge">' + esc(h.status) + "</span>";
+    var meta = (h.dir ? "in /" + esc(h.dir) : "in (root)") + " · " + h.start.toLocaleTimeString() + " · " + fmtDur(h.dur);
+    d.innerHTML = badge + '<span class="hcmd">' + esc(h.cmd) + "</span>" +
+      '<span class="hmeta">' + meta + "</span>";
+    var acts = document.createElement("span");
+    acts.className = "hacts";
+    var outBtn = document.createElement("button");
+    outBtn.className = "ghost small";
+    outBtn.textContent = "output";
+    outBtn.onclick = function() { showOutput("$ " + h.cmd + "\n\n" + h.output + (h.rc ? "\n[exit code " + h.rc + "]" : ""), h.truncated); };
+    acts.appendChild(outBtn);
+    var copyBtn = document.createElement("button");
+    copyBtn.className = "ghost small";
+    copyBtn.textContent = "copy";
+    copyBtn.onclick = function() { copyText(h.cmd); };
+    acts.appendChild(copyBtn);
+    if (h.image) {
+      var resBtn = document.createElement("button");
+      resBtn.className = "ghost small";
+      resBtn.textContent = "result";
+      resBtn.title = "open " + h.image + " generated in " + (h.dir ? h.dir : "the root directory");
+      resBtn.onclick = function() {
+        setView("figures");
+        openLightbox(joinRel(h.dir, h.image), h.image);
+      };
+      acts.appendChild(resBtn);
+    }
+    d.appendChild(acts);
+    list.appendChild(d);
   });
 }
 
@@ -1076,7 +1605,7 @@ async function termExec(raw) {
     var arg = cmd.substring(3).trim().replace(/^["']|["']$/g, "");
     var dest;
     if (arg === "..") {
-      dest = curPath ? curPath.split("/").slice(0, -1).join("/") : "";
+      dest = parentRel(curPath);
     } else if (arg === "/") {
       dest = "";
     } else if (arg.charAt(0) === "/") {
@@ -1090,6 +1619,7 @@ async function termExec(raw) {
     return;
   }
   if (termBusy) { termAppend("(busy: the previous command is still running)\n"); return; }
+  if (busyFlag) termAppend("(note: the server reports another command is already running)\n");
   termBusy = true;
   var input = el("termInput");
   input.disabled = true;
@@ -1103,18 +1633,49 @@ async function termExec(raw) {
     try { data = await resp.json(); } catch (e) {}
     if (resp.ok) {
       if (data.output) termAppend(data.output + "\n");
+      if (data.truncated) termAppend("[output truncated at 64 KB]\n");
       if (data.returncode !== 0) termAppend("[exit code " + data.returncode + "]\n");
       loadScan(curPath, true);
     } else {
       termAppend(" Error: " + (data.error || "command failed") + "\n");
     }
   } catch (e) {
-    termAppend(" Network error: " + e + "\n");
+    termAppend(" Network error: " + e + "\n The server may still be running the command; its state is unknown.\n");
   } finally {
     termBusy = false;
     input.disabled = false;
     input.focus();
   }
+}
+
+function pollTick() {
+  if (document.hidden) { schedule(); return; }
+  loadScan(curPath, true).then(schedule, schedule);
+}
+function schedule() {
+  if (pollTimer) clearTimeout(pollTimer);
+  pollTimer = null;
+  var sel = parseInt(el("refreshSel").value, 10);
+  if (sel <= 0) { el("sbRefresh").textContent = "auto off"; return; }
+  var delay = pollActive ? sel * 1000 : 60000;
+  el("sbRefresh").textContent = pollActive ? "active · auto " + sel + "s" : "idle · 60s check";
+  pollTimer = setTimeout(pollTick, delay);
+}
+
+function applyTheme() {
+  var dark = themeManual === "dark" ||
+    (themeManual !== "light" && window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches);
+  document.body.classList.toggle("dark", dark);
+  var btn = el("themeBtn");
+  if (btn) btn.innerHTML = dark ? ICON_SUN : ICON_MOON;
+  if (viewMode === "overview" && lossData && !lossData.empty) drawLossChart();
+  if (viewer && viewer.mode === "data") setViewerMode("data");
+}
+function toggleTheme() {
+  var dark = document.body.classList.contains("dark");
+  themeManual = dark ? "light" : "dark";
+  try { localStorage.setItem("gk_theme", themeManual); } catch (e) {}
+  applyTheme();
 }
 
 document.addEventListener("DOMContentLoaded", function() {
@@ -1131,12 +1692,33 @@ document.addEventListener("DOMContentLoaded", function() {
     if (ev.key === "Enter") doLogin();
   });
   el("fileFilter").addEventListener("input", function() {
-    renderFileList(lastFiles || [], {});
+    renderBrowser({subdirs: lastSubdirs || [], files: lastFiles || []}, lastScanServerNow || Math.floor(Date.now() / 1000), {}, {});
   });
-  el("viewerClose").onclick = closeViewer;
-  el("viewerOverlay").onclick = function(ev) {
-    if (ev.target === el("viewerOverlay")) closeViewer();
+  el("sortSel").onchange = function() {
+    renderBrowser({subdirs: lastSubdirs || [], files: lastFiles || []}, lastScanServerNow || Math.floor(Date.now() / 1000), {}, {});
   };
+  el("upBtn").onclick = function() { loadScan(parentRel(curPath)); };
+  el("copyPathBtn").onclick = function() {
+    copyText((rootDir || "") + "/" + curPath);
+  };
+  el("curPathLabel").onclick = function() { copyText((rootDir || "") + "/" + curPath); };
+  el("drawerBtn").onclick = function() { toggleDrawer(); };
+  var viewtabs = document.querySelectorAll(".viewtab");
+  for (var i = 0; i < viewtabs.length; i++) {
+    (function(btn) {
+      btn.onclick = function() { setView(btn.getAttribute("data-view")); };
+    })(viewtabs[i]);
+  }
+  var ptabs = document.querySelectorAll(".ptab");
+  for (var j = 0; j < ptabs.length; j++) {
+    (function(btn) {
+      btn.onclick = function() { setPanelTab(btn.getAttribute("data-tab")); };
+    })(ptabs[j]);
+  }
+  el("panelToggle").onclick = function() {
+    expandPanel(el("bottomPanel").classList.contains("closed"));
+  };
+  expandPanel(false);
   el("lightboxClose").onclick = closeLightbox;
   el("lightboxOverlay").onclick = function(ev) {
     if (ev.target === el("lightboxOverlay")) closeLightbox();
@@ -1144,9 +1726,8 @@ document.addEventListener("DOMContentLoaded", function() {
   document.addEventListener("keydown", function(ev) {
     if (ev.key !== "Escape") return;
     var t = ev.target;
-    if (t && t.closest && t.closest("input, textarea")) return;
+    if (t && t.closest && t.closest("input, textarea, select")) return;
     if (!el("lightboxOverlay").classList.contains("hidden")) closeLightbox();
-    else if (!el("viewerOverlay").classList.contains("hidden")) closeViewer();
   });
   el("termInput").addEventListener("keydown", function(ev) {
     if (ev.key === "Enter") {
@@ -1155,41 +1736,21 @@ document.addEventListener("DOMContentLoaded", function() {
       termExec(value);
     }
   });
-  el("termBody").addEventListener("click", function() {
+  el("termBody") && el("termBody").addEventListener("click", function() {
     var sel = window.getSelection ? String(window.getSelection()) : "";
     if (sel) return;
     if (!termBusy) el("termInput").focus();
   });
   el("themeBtn").onclick = toggleTheme;
-  el("refreshSel").onchange = startPolling;
-  el("railFiles").onclick = function() {
-    setRailActive(el("railFiles"));
-    window.scrollTo({top: 0, behavior: "smooth"});
-  };
-  el("railMon").onclick = function() {
-    setRailActive(el("railMon"));
-    var mon = el("monCard");
-    if (mon && !mon.classList.contains("hidden")) mon.scrollIntoView({behavior: "smooth", block: "start"});
-    else railScroll("recCard", "Nothing to monitor in this directory");
-  };
-  el("railTerm").onclick = function() {
-    setRailActive(el("railTerm"));
-    railScroll("termCard", "Terminal unavailable");
-    setTimeout(function() {
-      if (!termBusy) el("termInput").focus();
-    }, 400);
-  };
-  el("railHist").onclick = function() {
-    setRailActive(el("railHist"));
-    railScroll("histCard", "No command history yet");
-  };
+  el("refreshSel").onchange = schedule;
   var mq = window.matchMedia ? window.matchMedia("(prefers-color-scheme: dark)") : null;
   if (mq && mq.addEventListener) {
     mq.addEventListener("change", function() {
       if (!themeManual) applyTheme();
     });
   }
+  ageTimer = setInterval(updateConnText, 5000);
   applyTheme();
   loadScan("");
-  startPolling();
+  schedule();
 });
