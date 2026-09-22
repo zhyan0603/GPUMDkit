@@ -6,7 +6,7 @@ CONTACT="yanzihan@westlake.edu.cn"
 
 # New features (one per line, in an array; keep at most the five newest entries)
 NEW_FEATURES=(
-    "add -server web UI with password login, command recommendations, live job and NEP-training monitoring, modal file viewer and editing, figure lightbox, and a web terminal"
+    "add -server web console: password login, command recommendations with result context, adaptive training/job monitoring, web terminal, conflict-safe file editing"
     "let -xyz2dp forward the input file and type-map order as command-line arguments"
     "add --save-data TAB-separated export for EMD, NEMD, and HNEMD plot data"
     "add -prediction_dpa for DeepMD DPA training-set .out predictions"
