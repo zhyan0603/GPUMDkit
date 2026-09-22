@@ -34,6 +34,7 @@ Last-modified: 2026-09-22
 =============================================================================
 """
 
+import array
 import getpass
 import glob
 import hashlib
@@ -57,10 +58,14 @@ SESSION_TTL = 12 * 3600
 PBKDF2_ROUNDS = 200000
 POST_MAX_BYTES = 512 * 1024
 PREVIEW_MAX_BYTES = 512 * 1024
+PARTIAL_HEAD_BYTES = 128 * 1024
+PARTIAL_TAIL_BYTES = 64 * 1024
 EDIT_MAX_BYTES = 200 * 1024
 EXEC_TIMEOUT = 120
 EXEC_MAX_CHARS = 4096
 EXEC_OUTPUT_CHARS = 65536
+LOSS_POINT_CAP = 600
+LOSS_SERIES_MAX = 6
 IMAGE_MAX_BYTES = 20 * 1024 * 1024
 LISTING_LIMIT = 2000
 SUBDIR_LIMIT = 100
@@ -201,6 +206,8 @@ AUTH_LOCK = threading.Lock()
 LOGIN_FAILURES = 0
 LOCKOUT_UNTIL = 0.0
 EXEC_LOCK = threading.Lock()
+LOSS_CACHE = {}
+LOSS_LOCK = threading.Lock()
 
 
 def parse_args(argv):
@@ -306,8 +313,183 @@ def is_temp_dir(name):
     return name.endswith("K") and name[:-1].isdigit()
 
 
+def _loss_parse_append(path, entry):
+    """Parse complete lines beyond entry["offset"] into the loss cache."""
+    try:
+        with open(path, "rb") as handle:
+            handle.seek(entry["offset"])
+            chunk = handle.read()
+    except OSError:
+        return False
+    if not chunk:
+        return True
+    ends_newline = chunk.endswith(b"\n")
+    lines = chunk.split(b"\n")
+    complete = lines[:-1]
+    consumed = entry["offset"]
+    cols = entry["cols"]
+    arrays = entry["arrays"]
+    for raw in complete:
+        consumed += len(raw) + 1
+        text = raw.decode("utf-8", errors="replace").strip()
+        if not text or text.startswith("#"):
+            continue
+        parts = text.split()
+        if cols == 0:
+            cols = len(parts)
+            arrays = [array.array("d") for _ in range(cols)]
+        if arrays is None or len(parts) != cols:
+            entry["skipped"] += 1
+            continue
+        values = []
+        valid = True
+        for token in parts:
+            try:
+                value = float(token)
+            except ValueError:
+                valid = False
+                break
+            if value != value or value in (float("inf"), float("-inf")):
+                valid = False
+                break
+            values.append(value)
+        if not valid:
+            entry["skipped"] += 1
+            continue
+        gen = values[0]
+        if entry["last_gen"] is not None and gen < entry["last_gen"]:
+            entry["multi_run"] = True
+            entry["seg_start_gen"] = gen
+        if entry["first_gen"] is None:
+            entry["first_gen"] = gen
+        entry["last_gen"] = gen
+        for i in range(cols):
+            arrays[i].append(values[i])
+        entry["count"] += 1
+    if arrays:
+        entry["arrays"] = arrays
+    entry["cols"] = cols
+    if ends_newline:
+        entry["offset"] = entry["offset"] + len(chunk)
+    else:
+        entry["offset"] = consumed
+    return True
+
+
+def loss_entry(path):
+    """Return the cached loss record for a file, reparsing on change.
+
+    Appends are parsed incrementally from the stored offset; a shrinking
+    file (truncation or rewrite) triggers a full reparse. Rewrites that
+    keep the file at least as large are treated as appends; the README
+    documents this boundary.
+    """
+    try:
+        info = os.stat(path)
+        size = info.st_size
+        mtime = info.st_mtime
+    except OSError:
+        with LOSS_LOCK:
+            LOSS_CACHE.pop(path, None)
+        return None
+    with LOSS_LOCK:
+        entry = LOSS_CACHE.get(path)
+        if entry and entry["size"] == size and entry["mtime"] == mtime:
+            return entry
+        if entry is None or size < entry["offset"]:
+            entry = {
+                "size": 0,
+                "mtime": 0.0,
+                "offset": 0,
+                "count": 0,
+                "skipped": 0,
+                "cols": 0,
+                "arrays": None,
+                "first_gen": None,
+                "last_gen": None,
+                "seg_start_gen": None,
+                "multi_run": False,
+            }
+        if not _loss_parse_append(path, entry):
+            return None
+        entry["size"] = size
+        entry["mtime"] = mtime
+        LOSS_CACHE[path] = entry
+        return entry
+
+
+def loss_series_labels(cols, count):
+    """Return loss series labels matching plt_train.py conventions."""
+    if cols >= 7:
+        return ["Total", "L1-Reg", "L2-Reg", "Energy-train", "Force-train", "Virial-train"][:count]
+    if cols == 6:
+        return ["Loss", "Energy-train", "Force-train", "Virial-train"][:count]
+    return ["c" + str(i) for i in range(1, count + 1)]
+
+
+def loss_payload(target):
+    """Build the bounded loss chart payload for a directory."""
+    path = os.path.join(target, "loss.out")
+    entry = loss_entry(path)
+    payload = {"path": "loss.out", "now": int(time.time())}
+    if entry is None:
+        payload["empty"] = True
+        payload["reason"] = "unreadable"
+        return payload
+    payload["mtime"] = int(entry["mtime"])
+    payload["size"] = entry["size"]
+    payload["skipped"] = entry["skipped"]
+    if entry["count"] == 0 or not entry["arrays"]:
+        payload["empty"] = True
+        payload["reason"] = "no valid records" if entry["cols"] else "empty"
+        payload["count"] = entry["count"]
+        return payload
+    n = entry["count"]
+    cols = entry["cols"]
+    if n <= LOSS_POINT_CAP:
+        idxs = list(range(n))
+        payload["sampled"] = False
+    else:
+        step = n / LOSS_POINT_CAP
+        idxs = []
+        last = -1
+        for i in range(LOSS_POINT_CAP):
+            k = int(i * step)
+            if k != last:
+                idxs.append(k)
+                last = k
+        if idxs[-1] != n - 1:
+            idxs.append(n - 1)
+        payload["sampled"] = True
+    payload["empty"] = False
+    payload["count"] = n
+    payload["points"] = len(idxs)
+    payload["cols"] = cols
+    payload["first_gen"] = entry["first_gen"]
+    payload["last_gen"] = entry["last_gen"]
+    payload["multi_run"] = entry["multi_run"]
+    payload["seg_start_gen"] = entry["seg_start_gen"]
+    arrays = entry["arrays"]
+    if entry["multi_run"] or entry["first_gen"] is None:
+        payload["x_mode"] = "index"
+        payload["xs"] = [i + 1 for i in idxs]
+    else:
+        payload["x_mode"] = "generation"
+        payload["xs"] = [arrays[0][i] for i in idxs]
+    n_series = 6 if cols >= 7 else (4 if cols == 6 else cols - 1)
+    n_series = min(n_series, cols - 1, LOSS_SERIES_MAX)
+    labels = loss_series_labels(cols, n_series)
+    series = []
+    for c in range(1, n_series + 1):
+        series.append(
+            {"label": labels[c - 1], "values": [arrays[c][i] for i in idxs]}
+        )
+    payload["series"] = series
+    return payload
+
+
 def training_status(target):
-    """Return NEP training progress from nep.in and loss.out, or None."""
+    """Summarize NEP training state from nep.in and the loss cache."""
     nep_in = os.path.join(target, "nep.in")
     loss_file = os.path.join(target, "loss.out")
     if not os.path.isfile(nep_in) or not os.path.isfile(loss_file):
@@ -325,29 +507,84 @@ def training_status(target):
                     break
     except OSError:
         return None
-    if total is None:
+    has_target = total is not None
+    if not has_target:
         total = 100000
-    last_gen = None
-    try:
-        with open(loss_file, "r", errors="replace") as handle:
-            for line in handle:
-                stripped = line.strip()
-                if stripped and not stripped.startswith("#"):
-                    parts = stripped.split()
-                    try:
-                        last_gen = int(float(parts[0]))
-                    except (ValueError, IndexError):
-                        continue
-    except OSError:
-        return None
-    if last_gen is None:
-        return None
+    entry = loss_entry(loss_file)
+    if entry is None:
+        return {
+            "total": total,
+            "has_target": has_target,
+            "done": 0,
+            "count": 0,
+            "skipped": 0,
+            "multi_run": False,
+            "first_gen": None,
+            "last_gen": None,
+            "seg_start_gen": None,
+            "loss_mtime": None,
+            "loss_size": None,
+            "loss_empty": True,
+            "finished": False,
+        }
+    last_gen = entry["last_gen"]
+    done = last_gen if last_gen is not None else 0
     return {
         "total": total,
-        "done": min(last_gen, total),
-        "loss_file": "loss.out",
-        "finished": last_gen >= total,
+        "has_target": has_target,
+        "done": min(done, total),
+        "count": entry["count"],
+        "skipped": entry["skipped"],
+        "multi_run": entry["multi_run"],
+        "first_gen": entry["first_gen"],
+        "last_gen": last_gen,
+        "seg_start_gen": entry["seg_start_gen"],
+        "loss_mtime": int(entry["mtime"]) if entry["mtime"] else None,
+        "loss_size": entry["size"],
+        "loss_empty": entry["count"] == 0,
+        "finished": has_target and last_gen is not None and last_gen >= total,
     }
+
+
+def newest_mtime(paths):
+    """Return the newest existing mtime among paths, or None."""
+    newest = None
+    for path in paths[:100]:
+        try:
+            mtime = os.path.getmtime(path)
+        except OSError:
+            continue
+        if newest is None or mtime > newest:
+            newest = mtime
+    return newest
+
+
+def recommendation_stale(target, spec):
+    """True when an existing result file is older than its newest input."""
+    output = os.path.join(target, spec["produces"])
+    if not os.path.isfile(output):
+        return False
+    try:
+        output_mtime = os.path.getmtime(output)
+    except OSError:
+        return False
+    inputs = [os.path.join(target, name) for name in spec.get("requires", [])]
+    for pattern in spec.get("requires_glob", []):
+        inputs.extend(glob.glob(os.path.join(target, pattern))[:100])
+    batch = spec.get("batch")
+    if batch:
+        try:
+            names = [
+                name
+                for name in os.listdir(target)
+                if is_temp_dir(name) and os.path.isdir(os.path.join(target, name))
+            ]
+        except OSError:
+            names = []
+        for name in names[:100]:
+            inputs.extend(os.path.join(target, name, req) for req in batch["requires"])
+    newest = newest_mtime(inputs)
+    return newest is not None and output_mtime < newest
 
 
 def build_recommendations(target):
@@ -366,6 +603,7 @@ def build_recommendations(target):
                 "description": DESCRIPTIONS[action],
                 "evidence": evidence,
                 "produces": spec["produces"],
+                "stale": recommendation_stale(target, spec),
             }
         )
 
@@ -549,7 +787,8 @@ def execute_action(action, target_dir):
         "ok": proc.returncode == 0,
         "returncode": proc.returncode,
         "command": "gpumdkit.sh " + " ".join(spec["argv"]),
-        "output": output,
+        "output": output[:EXEC_OUTPUT_CHARS],
+        "truncated": len(output) > EXEC_OUTPUT_CHARS,
         "image": image,
     }
     return payload, 200
@@ -644,6 +883,8 @@ class KitHandler(BaseHTTPRequestHandler):
                     self._serve_logo(LOGO_LATERAL)
                 elif path == "/api/scan":
                     self._api_scan(query)
+                elif path == "/api/loss":
+                    self._api_loss(query)
                 elif path == "/api/file":
                     self._api_file(query)
                 elif path == "/api/image":
@@ -788,7 +1029,22 @@ class KitHandler(BaseHTTPRequestHandler):
         data["path"] = "" if rel_norm == "." else rel_norm
         data["root"] = ROOT
         data["now"] = int(time.time())
+        data["busy"] = EXEC_LOCK.locked()
         self._send_json(data)
+
+    def _api_loss(self, query):
+        if not self._authorized():
+            self._send_json({"error": "unauthorized"}, 401)
+            return
+        rel = (query.get("path") or [""])[0]
+        target = resolve_in_root(rel)
+        if target is None or not os.path.isdir(target):
+            self._send_json({"error": "invalid directory"}, 400)
+            return
+        payload = loss_payload(target)
+        rel_norm = os.path.relpath(target, ROOT)
+        payload["dir"] = "" if rel_norm == "." else rel_norm
+        self._send_json(payload)
 
     def _api_file(self, query):
         if not self._authorized():
@@ -800,15 +1056,21 @@ class KitHandler(BaseHTTPRequestHandler):
             self._send_json({"error": "file not found"}, 400)
             return
         try:
-            size = os.path.getsize(target)
+            info = os.stat(target)
+            size = info.st_size
+            mtime = int(info.st_mtime)
         except OSError:
             self._send_json({"error": "cannot stat the file"}, 400)
             return
         if size > PREVIEW_MAX_BYTES:
+            if (query.get("partial") or [""])[0] == "1":
+                self._api_file_partial(target, size)
+                return
             self._send_json(
                 {
                     "error": "file too large to preview (limit "
-                    f"{PREVIEW_MAX_BYTES // 1024} KB, size {size} bytes)"
+                    f"{PREVIEW_MAX_BYTES // 1024} KB, size {size} bytes); "
+                    "a bounded head/tail preview is available"
                 },
                 413,
             )
@@ -823,7 +1085,41 @@ class KitHandler(BaseHTTPRequestHandler):
             self._send_json({"error": "binary file, no text preview"}, 400)
             return
         text = data.decode("utf-8", errors="replace")
-        self._send_body(200, text.encode("utf-8"), "text/plain; charset=utf-8")
+        self._send_body(
+            200,
+            text.encode("utf-8"),
+            "text/plain; charset=utf-8",
+            extra_headers=[("X-File-Mtime", str(mtime))],
+        )
+
+    def _api_file_partial(self, target, size):
+        try:
+            with open(target, "rb") as handle:
+                head = handle.read(PARTIAL_HEAD_BYTES)
+        except OSError:
+            self._send_json({"error": "cannot read the file"}, 400)
+            return
+        if b"\x00" in head:
+            self._send_json({"error": "binary file, no text preview"}, 400)
+            return
+        tail = b""
+        if size > PARTIAL_HEAD_BYTES:
+            try:
+                with open(target, "rb") as handle:
+                    handle.seek(max(0, size - PARTIAL_TAIL_BYTES))
+                    tail = handle.read()
+            except OSError:
+                tail = b""
+        payload = {
+            "truncated": True,
+            "size": size,
+            "head_bytes": len(head),
+            "tail_bytes": len(tail),
+            "head": head.decode("utf-8", errors="replace"),
+            "tail": tail.decode("utf-8", errors="replace"),
+            "mtime": int(os.stat(target).st_mtime),
+        }
+        self._send_json(payload)
 
     def _api_image(self, query):
         if not self._authorized():
@@ -978,6 +1274,7 @@ class KitHandler(BaseHTTPRequestHandler):
                 "ok": proc.returncode == 0,
                 "returncode": proc.returncode,
                 "output": output[:EXEC_OUTPUT_CHARS],
+                "truncated": len(output) > EXEC_OUTPUT_CHARS,
             }
         )
 
@@ -997,6 +1294,22 @@ class KitHandler(BaseHTTPRequestHandler):
         if target is None or not os.path.isfile(target):
             self._send_json({"error": "file not found"}, 400)
             return
+        base_mtime = body.get("base_mtime")
+        if base_mtime is not None:
+            if not isinstance(base_mtime, int):
+                self._send_json({"error": "invalid base_mtime"}, 400)
+                return
+            try:
+                current_mtime = int(os.stat(target).st_mtime)
+            except OSError:
+                self._send_json({"error": "cannot stat the file"}, 400)
+                return
+            if current_mtime != base_mtime:
+                self._send_json(
+                    {"error": "conflict", "mtime": current_mtime},
+                    409,
+                )
+                return
         data = content.encode("utf-8")
         if len(data) > EDIT_MAX_BYTES:
             self._send_json(
@@ -1017,7 +1330,11 @@ class KitHandler(BaseHTTPRequestHandler):
                 pass
             self._send_json({"error": f"failed to save the file: {exc}"}, 500)
             return
-        self._send_json({"ok": True, "size": len(data)})
+        try:
+            saved_mtime = int(os.stat(target).st_mtime)
+        except OSError:
+            saved_mtime = None
+        self._send_json({"ok": True, "size": len(data), "mtime": saved_mtime})
 
 
 def main():
