@@ -45,12 +45,6 @@ function fmtAxis(v) {
   if (Math.abs(v) >= 1e4 || Math.abs(v) < 1e-2) return v.toExponential(1).replace("e+", "e");
   return String(Number(v.toPrecision(3)));
 }
-function hexToRgba(hex, alpha) {
-  var m = /^#?([0-9a-f]{6})$/i.exec(hex);
-  if (!m) return "rgba(31,119,180," + alpha + ")";
-  var v = parseInt(m[1], 16);
-  return "rgba(" + ((v >> 16) & 255) + "," + ((v >> 8) & 255) + "," + (v & 255) + "," + alpha + ")";
-}
 function arrMinMax(a) {
   var mn = a[0], mx = a[0];
   for (var i = 1; i < a.length; i++) {
@@ -107,21 +101,20 @@ var KNOWN_COLS = {
   "sdc.out": {4: ["t", "vac_x", "vac_y", "vac_z"]},
   "loss.out": {6: ["gen", "Loss", "E_tr", "F_tr", "V_tr"], 10: ["gen", "L_total", "L1", "L2", "E_tr", "F_tr", "V_tr", "E_te", "F_te", "V_te"]},
 };
-var REC_CATEGORIES = {
-  plt_msd: "扩散与输运",
-  plt_sdc: "扩散与输运",
-  plt_msd_sdc: "扩散与输运",
-  plt_vac: "扩散与输运",
-  plt_msd_conv: "扩散与输运",
-  plt_thermo: "热力学",
-  plt_train: "NEP 训练",
-  plt_train_density: "NEP 训练",
-  plt_train_test: "NEP 训练",
-  plt_prediction: "NEP 训练",
-  plt_sigma: "Arrhenius 分析",
-  plt_D: "Arrhenius 分析",
+var REC_GROUPS = {
+  plt_msd: "扩散与输运", plt_sdc: "扩散与输运", plt_msd_sdc: "扩散与输运",
+  plt_vac: "扩散与输运", plt_msd_conv: "扩散与输运",
+  plt_train: "NEP 训练", plt_train_density: "NEP 训练",
+  plt_train_test: "NEP 训练", plt_prediction: "NEP 训练",
+  plt_thermo: "热力学", plt_sigma: "Arrhenius 分析", plt_D: "Arrhenius 分析",
 };
-var REC_CAT_ORDER = ["扩散与输运", "NEP 训练", "热力学", "Arrhenius 分析"];
+var REC_NAMES = {
+  plt_msd: "MSD 曲线", plt_sdc: "SDC 曲线", plt_msd_sdc: "MSD 与 SDC",
+  plt_vac: "VAC 曲线", plt_thermo: "热力学量曲线",
+  plt_train: "训练损失与 parity", plt_train_density: "训练 parity 密度图",
+  plt_train_test: "训练/测试对比", plt_prediction: "预测 parity 图",
+  plt_msd_conv: "MSD 收敛性检查", plt_sigma: "电导率 Arrhenius 图", plt_D: "扩散系数 Arrhenius 图",
+};
 var FIG_PAGE = 12;
 
 var curPath = "";
@@ -137,16 +130,19 @@ var ageTimer = null;
 var themeManual = null;
 var connOk = null;
 var lastGoodAt = null;
+var firstScanDone = false;
 var lastScanServerNow = null;
 var lastFiles = null;
 var lastSubdirs = null;
 var lastPath = null;
+var lastRecs = null;
+var lastTraining = null;
 var lastPollTs = 0;
 var lastNepDone = null;
 var nepSamples = [];
 var cmdHistory = [];
 var drawerTab = "output";
-var sidebarOpen = true;
+var railFilter = "all";
 var pendingOpen = null;
 var figShown = FIG_PAGE;
 var lbList = [];
@@ -155,7 +151,6 @@ var lbReturnFocus = null;
 var viewer = null;
 var lossView = { data: null, pending: false, reason: null, logX: true, logY: true, hidden: {}, fetchedAt: 0 };
 var plotState = null;
-var lastRecs = null;
 
 try {
   themeManual = localStorage.getItem("gk_theme");
@@ -172,10 +167,10 @@ function setConn(ok) {
   updateConnText();
 }
 function updateConnText() {
-  if (connOk === null) { el("connText").textContent = "连接中..."; return; }
+  if (connOk === null) { el("connText").textContent = "连接中…"; return; }
   if (!connOk) {
     var age = lastGoodAt ? fmtAgo((Date.now() - lastGoodAt) / 1000) : "从未";
-    el("connText").textContent = "连接异常 · 上次更新 " + age;
+    el("connText").textContent = "连接异常 · 更新于 " + age;
     return;
   }
   el("connText").textContent = "更新于 " + fmtAgo((Date.now() - lastGoodAt) / 1000);
@@ -196,6 +191,7 @@ async function api(url, opts) {
 function showLogin(msg) {
   el("loginView").classList.remove("hidden");
   el("appView").classList.add("hidden");
+  el("loading-overlay").classList.add("hidden");
   if (msg) el("loginMsg").textContent = msg;
 }
 function hideLogin() {
@@ -249,6 +245,10 @@ async function loadScan(path, silent) {
     return false;
   }
   setConn(true);
+  if (!firstScanDone) {
+    firstScanDone = true;
+    el("loading-overlay").classList.add("hidden");
+  }
   el("errorBanner").classList.add("hidden");
   hideLogin();
   var pathChanged = data.path !== lastPath;
@@ -268,6 +268,7 @@ async function loadScan(path, silent) {
     lossView = { data: null, pending: false, reason: null, logX: true, logY: true, hidden: {}, fetchedAt: 0 };
     figShown = FIG_PAGE;
     plotState = null;
+    railFilter = "all";
   }
   var prevNepDone = lastNepDone;
   var training = data.training;
@@ -305,10 +306,10 @@ async function loadScan(path, silent) {
     }
   }
   pollActive = fresh || (data.training && !data.training.finished);
-  renderCrumb(curPath);
-  renderSidebar(data, nowS, prevS, prevF);
-  renderCanvas(data, liveFiles, nowS);
-  el("runningChip").classList.toggle("hidden", !(running || busyFlag));
+  renderHero(data, liveFiles, nowS);
+  renderStats(data);
+  renderRail(data, nowS, prevS, prevF);
+  renderCards();
   schedule();
   if (hasLossFile(data) && !lossView.data) fetchLoss(seq);
   return true;
@@ -346,36 +347,93 @@ async function fetchLoss(seq) {
       lossView.reason = "error";
     }
   }
-  if (seq === scanSeq && path === curPath) renderCanvasRoot();
+  if (seq === scanSeq && path === curPath) renderCards();
 }
 
 function showBanner(msg) {
-  el("errorText").textContent = msg + " · 显示的可能是旧数据";
+  el("errorText").textContent = msg;
   el("errorBanner").classList.remove("hidden");
 }
 
-function renderCrumb(path) {
-  var c = el("crumb");
-  c.innerHTML = "";
-  c.appendChild(crumbLink("root", ""));
-  if (!path) return;
-  var parts = path.split("/");
-  var acc = "";
-  for (var i = 0; i < parts.length; i++) {
-    acc = acc ? acc + "/" + parts[i] : parts[i];
-    var sep = document.createElement("span");
-    sep.textContent = "/";
-    sep.className = "crumbsep";
-    c.appendChild(sep);
-    if (i === parts.length - 1) {
-      var here = document.createElement("span");
-      here.textContent = parts[i];
-      here.className = "crumbhere";
-      c.appendChild(here);
-    } else {
-      c.appendChild(crumbLink(parts[i], acc));
+function trainingRate() {
+  var deltas = [];
+  for (var i = 1; i < nepSamples.length; i++) {
+    var d = nepSamples[i].done - nepSamples[i - 1].done;
+    var t = nepSamples[i].ts - nepSamples[i - 1].ts;
+    if (d > 0 && t > 1) deltas.push(d / t);
+  }
+  if (deltas.length < 2) return {rate: null, estimating: true};
+  return {rate: median(deltas), estimating: false};
+}
+
+function renderHero(data, liveFiles, nowS) {
+  var title = curPath ? curPath.split("/").pop() : (rootDir ? rootDir.split("/").pop() : "工作区");
+  el("dirTitle").textContent = title;
+  el("dirTitle").title = (rootDir || "") + "/" + curPath;
+  var crumbs = el("crumb");
+  crumbs.innerHTML = "";
+  crumbs.appendChild(crumbLink("root", ""));
+  if (curPath) {
+    var parts = curPath.split("/");
+    var acc = "";
+    for (var i = 0; i < parts.length; i++) {
+      acc = acc ? acc + "/" + parts[i] : parts[i];
+      var sep = document.createElement("span");
+      sep.textContent = "/";
+      sep.className = "crumbsep";
+      crumbs.appendChild(sep);
+      if (i === parts.length - 1) {
+        var here = document.createElement("span");
+        here.textContent = parts[i];
+        here.className = "crumbhere";
+        crumbs.appendChild(here);
+      } else {
+        crumbs.appendChild(crumbLink(parts[i], acc));
+      }
     }
   }
+  var bits = [((data.dirs || []).length + (data.files || []).length) + " 项内容"];
+  bits.push("更新于 " + fmtAgo(0));
+  if (liveFiles.length) bits.push(liveFiles.length + " 个文件正在增长");
+  el("statusLine").textContent = bits.join(" · ");
+  var hs = el("heroStatus");
+  hs.innerHTML = "";
+  var t = lastTraining;
+  var badge = document.createElement("span");
+  if (t && !t.loss_empty) {
+    if (t.finished) {
+      badge.className = "availability-badge";
+      badge.textContent = "训练已完成 · 达到目标代数";
+    } else if (t.loss_mtime != null && nowS - t.loss_mtime < 180) {
+      badge.className = "availability-badge";
+      badge.textContent = "训练进行中 · " + fmtAgo(nowS - t.loss_mtime) + "有写入";
+    } else {
+      badge.className = "availability-badge stale";
+      badge.textContent = "无近期写入 · " + (t.loss_mtime != null ? fmtAgo(nowS - t.loss_mtime) : "--");
+    }
+  } else if (hasLossFile(data)) {
+    badge.className = "availability-badge idle";
+    badge.textContent = "发现 loss.out · " + (lossView.pending ? "读取中" : "无有效记录");
+  } else {
+    badge.className = "availability-badge idle";
+    badge.textContent = "未发现训练记录";
+  }
+  hs.appendChild(badge);
+  var imgs = (data.files || []).filter(function(f) { return /\.(png|jpe?g)$/i.test(f.name); }).length;
+  hsRows(hs, "图片", imgs ? imgs + " 张" : "—");
+  hsRows(hs, "可用分析", (data.recommendations || []).length ? (data.recommendations || []).length + " 项" : "—");
+  hsRows(hs, "根目录", rootDir || "—", true);
+}
+function hsRows(parent, label, value, accent) {
+  var row = document.createElement("div");
+  row.className = "hs-row";
+  row.innerHTML = "<span>" + esc(label) + "</span>";
+  var v = document.createElement("strong");
+  if (accent) v.className = "accent";
+  v.textContent = value;
+  v.title = value;
+  row.appendChild(v);
+  parent.appendChild(row);
 }
 function crumbLink(label, rel) {
   var a = document.createElement("a");
@@ -385,17 +443,69 @@ function crumbLink(label, rel) {
   return a;
 }
 
-function renderSidebar(data, nowS, prevS, prevF) {
+function renderStats(data) {
+  var grid = el("statsGrid");
+  grid.innerHTML = "";
+  var files = data.files || [];
+  var imgs = files.filter(function(f) { return /\.(png|jpe?g)$/i.test(f.name); }).length;
+  var t = lastTraining;
+  var cards = [];
+  if (t && !t.loss_empty && lossView.data) {
+    var d = lossView.data;
+    var pct = t.has_target && !t.multi_run && t.total > 0 ? 100 * t.done / t.total : null;
+    cards.push({primary: true, label: "训练进度", value: pct != null ? pct.toFixed(1) + "%" : d.count.toLocaleString(), small: pct != null ? "代数 " + t.done.toLocaleString() + " / " + t.total.toLocaleString() : d.count.toLocaleString() + " 条记录"});
+    cards.push({label: "记录数", value: d.count.toLocaleString(), small: "loss.out 完整有效记录"});
+    var rate = trainingRate();
+    cards.push({label: "训练速率", value: t.finished ? "—" : fmtGenRate(rate.rate), small: rate.estimating ? "估算中（需更多样本）" : "按最近刷新采样的中值"});
+    cards.push({label: "预计剩余", value: t.finished ? "—" : (rate.rate && t.has_target ? fmtDur((t.total - t.done) / rate.rate) : "--"), small: t.has_target ? "目标来自 nep.in" : "nep.in 未指定目标"});
+  } else {
+    cards.push({primary: true, label: "目录内容", value: String(files.length), small: (data.subdirs || []).length + " 个子目录"});
+    cards.push({label: "图片", value: imgs ? String(imgs) : "—", small: imgs ? "点击可直接放大" : "当前目录无图片"});
+    cards.push({label: "可用分析", value: (data.recommendations || []).length ? String((data.recommendations || []).length) : "—", small: "基于检测到的输出文件"});
+    cards.push({label: "数据文件", value: String(files.filter(function(f) { return /\.out$/.test(f.name); }).length), small: ".out 输出"});
+  }
+  cards.forEach(function(c) {
+    var card = document.createElement("article");
+    card.className = "stat-card" + (c.primary ? " stat-card-primary" : "");
+    card.innerHTML = '<span class="stat-label">' + esc(c.label) + "</span><strong>" + esc(c.value) + "</strong><small>" + esc(c.small) + "</small>";
+    grid.appendChild(card);
+  });
+}
+
+function fileType(f) {
+  var name = f.name;
+  if (/\.(png|jpe?g)$/i.test(name)) return "images";
+  if (/\.out$/.test(name)) return "data";
+  if (/\.in$/.test(name)) return "inputs";
+  return "all";
+}
+
+function renderRail(data, nowS, prevS, prevF) {
+  var files = data.files || [];
+  var counts = {all: files.length, images: 0, data: 0, inputs: 0};
+  files.forEach(function(f) {
+    var t = fileType(f);
+    if (t !== "all") counts[t]++;
+  });
+  var qf = el("quickFilters");
+  qf.innerHTML = "";
+  [["all", "全部"], ["images", "图片"], ["data", "数据"], ["inputs", "输入"]].forEach(function(pair) {
+    var b = document.createElement("button");
+    b.type = "button";
+    b.className = "quick-filter" + (railFilter === pair[0] ? " active" : "");
+    b.innerHTML = esc(pair[1]) + " <span>" + counts[pair[0]] + "</span>";
+    b.onclick = function() {
+      railFilter = pair[0];
+      renderRail({subdirs: lastSubdirs || [], files: lastFiles || []}, lastScanServerNow || 0, {}, {});
+    };
+    qf.appendChild(b);
+  });
   var fl = el("fileList");
   fl.innerHTML = "";
-  var filter = el("fileFilter").value.trim().toLowerCase();
-  var dirs = (data.subdirs || []).slice();
-  var files = (data.files || []).slice().sort(function(a, b) {
-    return a.name.localeCompare(b.name);
-  });
+  var filterText = el("fileFilter").value.trim().toLowerCase();
   var shown = 0;
-  dirs.forEach(function(s) {
-    if (filter && s.name.toLowerCase().indexOf(filter) < 0) return;
+  (data.subdirs || []).forEach(function(s) {
+    if (filterText && s.name.toLowerCase().indexOf(filterText) < 0) return;
     shown++;
     var row = document.createElement("div");
     row.className = "brow dirrow";
@@ -422,7 +532,8 @@ function renderSidebar(data, nowS, prevS, prevF) {
     fl.appendChild(row);
   });
   files.forEach(function(f) {
-    if (filter && f.name.toLowerCase().indexOf(filter) < 0) return;
+    if (filterText && f.name.toLowerCase().indexOf(filterText) < 0) return;
+    if (railFilter !== "all" && fileType(f) !== railFilter) return;
     shown++;
     var row = document.createElement("div");
     row.className = "brow";
@@ -436,6 +547,7 @@ function renderSidebar(data, nowS, prevS, prevF) {
     row.appendChild(dot);
     var a = document.createElement("a");
     a.href = "#";
+    a.className = "bname";
     a.textContent = f.name;
     a.onclick = function(ev) { ev.preventDefault(); fileClicked(f, a); };
     row.appendChild(a);
@@ -443,15 +555,14 @@ function renderSidebar(data, nowS, prevS, prevF) {
     meta.className = "bmeta";
     var bits = [];
     if (f.mtime != null) bits.push(fmtAgo(nowS - f.mtime));
-    meta.textContent = bits.join(" · ");
     row.appendChild(meta);
     fl.appendChild(row);
   });
   if (!shown) {
     var empty = document.createElement("div");
     empty.className = "muted";
-    empty.style.padding = "8px";
-    empty.textContent = filter ? "无匹配文件" : "空目录";
+    empty.style.padding = "10px 9px";
+    empty.textContent = filterText ? "无匹配文件" : "空目录";
     fl.appendChild(empty);
   }
 }
@@ -465,39 +576,89 @@ function fileClicked(f, source) {
   }
 }
 
-function renderCanvas(data, liveFiles, nowS) {
-  var title = curPath ? curPath.split("/").pop() : (rootDir ? rootDir.split("/").pop() : "root");
-  el("dirTitle").textContent = title;
-  el("dirTitle").title = (rootDir || "") + "/" + curPath;
-  var bits = [((data.dirs || []).length + (data.files || []).length) + " 项"];
-  bits.push("更新于 " + fmtAgo(0));
-  if (liveFiles.length) bits.push(liveFiles.length + " 个文件在增长");
-  el("statusLine").textContent = bits.join(" · ");
-  renderCanvasRoot();
+function makeCard(eyebrow, title, meta) {
+  var card = document.createElement("article");
+  card.className = "card-surface";
+  var head = document.createElement("div");
+  head.className = "card-header";
+  var left = document.createElement("div");
+  left.innerHTML = '<span class="eyebrow">' + esc(eyebrow) + "</span><h2>" + esc(title) + "</h2>";
+  head.appendChild(left);
+  if (meta) {
+    var m = document.createElement("span");
+    m.className = "card-meta";
+    m.textContent = meta;
+    head.appendChild(m);
+  }
+  card.appendChild(head);
+  return card;
 }
 
-function buildLossSection() {
-  var sec = document.createElement("section");
-  sec.className = "sec";
-  var head = document.createElement("div");
-  head.className = "sec-head";
-  head.innerHTML = "<h2>训练曲线</h2><span class='sec-meta'>loss.out</span>";
-  sec.appendChild(head);
+function renderCards() {
+  var root = el("canvasRoot");
+  root.innerHTML = "";
+  var files = lastFiles || [];
+  var subdirs = lastSubdirs || [];
+  var imgs = files.filter(function(f) { return /\.(png|jpe?g)$/i.test(f.name); });
+  var hasLoss = files.some(function(f) { return f.name === "loss.out"; });
+  var recs = lastRecs || [];
+  var hasAny = files.length + subdirs.length;
+  var nowS = lastScanServerNow || 0;
+
+  var hasLossSection = hasLoss && lossView.data;
+  el("scaleSwitcher").classList.toggle("hidden", !hasLossSection);
+  el("zoomBtn").classList.toggle("hidden", !hasLossSection);
+  el("resultsTitle").textContent = hasLossSection ? "训练与结果" : "目录内容";
+  var metaBits = [];
+  if (hasLossSection) metaBits.push("曲线 " + lossView.data.points + " 点");
+  if (imgs.length) metaBits.push(imgs.length + " 张图片");
+  if (recs.length) metaBits.push(recs.length + " 项分析");
+  el("resultsMeta").innerHTML = metaBits.length
+    ? "<p><strong>" + files.length + "</strong> 个文件 · " + metaBits.join(" · ") + "</p><span>" + (curPath || "根目录") + "</span>"
+    : "<p><strong>" + files.length + "</strong> 个文件</p><span>" + (curPath || "根目录") + "</span>";
+
+  if (!hasAny) {
+    var empty = document.createElement("div");
+    empty.className = "empty-state";
+    empty.innerHTML = "<h3>此目录为空</h3><p>从左侧选择其他目录，或在此目录运行模拟后刷新。</p>";
+    if (curPath) {
+      var up = document.createElement("button");
+      up.type = "button";
+      up.className = "btn btn-soft";
+      up.style.marginTop = "12px";
+      up.textContent = "返回上级";
+      up.onclick = function() { loadScan(parentRel(curPath)); };
+      empty.appendChild(up);
+    }
+    root.appendChild(empty);
+    return;
+  }
+  if (hasLoss) root.appendChild(buildLossCard(nowS));
+  if (imgs.length) root.appendChild(buildFiguresCard(imgs));
+  if (recs.length) root.appendChild(buildAnalysesCard(recs, files, nowS));
+  var plainFiles = !hasLoss && !imgs.length;
+  if (plainFiles && files.length) root.appendChild(buildFilesCard(files, nowS));
+  if (!hasLoss && !imgs.length && subdirs.length && !files.length) root.appendChild(buildSubdirsCard(subdirs, nowS));
+  if (hasLossSection) sizeAndDrawLoss();
+}
+
+function buildLossCard(nowS) {
+  var card = makeCard("NEP 训练", "训练曲线", "loss.out");
+  var body = document.createElement("div");
+  body.className = "card-body";
   if (lossView.pending) {
-    var loading = document.createElement("div");
-    loading.className = "muted";
-    loading.style.marginTop = "10px";
-    loading.textContent = "正在读取 loss.out...";
-    sec.appendChild(loading);
-    return sec;
+    body.innerHTML = '<div class="muted">正在读取 loss.out…</div>';
+    card.appendChild(body);
+    return card;
   }
   if (!lossView.data) {
     var reason = lossView.reason === "unreadable" ? "无法读取" : (lossView.reason === "empty" ? "文件为空" : "无有效记录");
-    var note = document.createElement("div");
-    note.className = "chart-note";
-    note.style.marginTop = "10px";
-    note.innerHTML = "loss.out " + reason + " · ";
+    var note = document.createElement("p");
+    note.className = "muted";
+    note.style.margin = "0";
+    note.textContent = "loss.out " + reason + " · ";
     var openBtn = document.createElement("button");
+    openBtn.type = "button";
     openBtn.className = "note-link";
     openBtn.textContent = "打开文件";
     openBtn.onclick = function() {
@@ -505,47 +666,30 @@ function buildLossSection() {
       if (f) openPreview(f);
     };
     note.appendChild(openBtn);
-    sec.appendChild(note);
-    return sec;
+    body.appendChild(note);
+    card.appendChild(body);
+    return card;
   }
-  var wrap = document.createElement("div");
-  wrap.className = "losswrap";
-  wrap.id = "lossWrap";
+  var layout = document.createElement("div");
+  layout.className = "loss-layout";
+  layout.id = "lossLayout";
   var chartCol = document.createElement("div");
-  chartCol.className = "losschart";
   var canvas = document.createElement("canvas");
   canvas.className = "chart";
   canvas.id = "lossCanvas";
+  canvas.style.height = "340px";
   chartCol.appendChild(canvas);
   var bar = document.createElement("div");
   bar.className = "chartbar";
   var summary = document.createElement("span");
-  summary.className = "scale-summary";
+  summary.className = "chart-summary";
   summary.id = "scaleSummary";
   bar.appendChild(summary);
-  var scaleBtn = document.createElement("button");
-  scaleBtn.className = "linkbtn";
-  scaleBtn.textContent = "坐标";
-  scaleBtn.setAttribute("aria-label", "展开坐标设置");
-  scaleBtn.onclick = function() {
-    panel.classList.toggle("hidden");
-  };
-  bar.appendChild(scaleBtn);
-  var spacer = document.createElement("span");
-  spacer.className = "grow";
-  bar.appendChild(spacer);
-  var zoomBtn = document.createElement("button");
-  zoomBtn.className = "linkbtn";
-  zoomBtn.textContent = "放大查看";
-  zoomBtn.onclick = openChartZoom;
-  bar.appendChild(zoomBtn);
+  var noteHolder = document.createElement("span");
+  noteHolder.className = "muted";
+  noteHolder.textContent = "悬停查看采样值 · 图例可隐藏系列";
+  bar.appendChild(noteHolder);
   chartCol.appendChild(bar);
-  var panel = document.createElement("div");
-  panel.className = "scalepanel hidden";
-  panel.id = "scalePanel";
-  panel.appendChild(scaleControl("X", "logX"));
-  panel.appendChild(scaleControl("Y", "logY"));
-  chartCol.appendChild(panel);
   var legend = document.createElement("div");
   legend.className = "lg-row";
   legend.id = "lossLegend";
@@ -557,74 +701,27 @@ function buildLossSection() {
   var notes = document.createElement("div");
   notes.id = "lossNotes";
   chartCol.appendChild(notes);
-  wrap.appendChild(chartCol);
+  layout.appendChild(chartCol);
   var sumBox = document.createElement("div");
-  sumBox.className = "losssummary";
+  sumBox.className = "loss-summary";
   sumBox.id = "lossSummary";
-  wrap.appendChild(sumBox);
-  sec.appendChild(wrap);
-  return sec;
-}
-
-function scaleControl(axis, key) {
-  var wrap = document.createElement("span");
-  wrap.className = "row";
-  wrap.style.gap = "6px";
-  var lab = document.createElement("span");
-  lab.textContent = axis;
-  wrap.appendChild(lab);
-  var seg = document.createElement("span");
-  seg.className = "seg";
-  ["Linear", "Log"].forEach(function(mode) {
-    var b = document.createElement("button");
-    b.className = "segbtn" + ((mode === "Log") === !!lossView[key] ? " on" : "");
-    b.textContent = mode;
-    b.setAttribute("data-mode", mode);
-    b.onclick = function() {
-      lossView[key] = mode === "Log";
-      updateScaleSummary();
-      seg.querySelectorAll(".segbtn").forEach(function(x) {
-        x.classList.toggle("on", (x.getAttribute("data-mode") === "Log") === !!lossView[key]);
-      });
-      sizeAndDrawLoss();
-    };
-    seg.appendChild(b);
-  });
-  wrap.appendChild(seg);
-  return wrap;
+  layout.appendChild(sumBox);
+  body.appendChild(layout);
+  card.appendChild(body);
+  return card;
 }
 
 function updateScaleSummary() {
   var s = el("scaleSummary");
   if (s) s.textContent = "X " + (lossView.logX ? "Log" : "Linear") + " · Y " + (lossView.logY ? "Log" : "Linear");
-}
-
-function lossChartSize(availW) {
-  if (availW >= 860) {
-    var w = Math.min(availW - 230, 760);
-    var h = Math.max(300, Math.min(420, Math.round(w / 1.85)));
-    return {w: w, h: h, stacked: false};
-  }
-  var w2 = Math.min(availW, 760);
-  var h2 = Math.max(280, Math.min(460, Math.round(w2 / 1.5)));
-  return {w: w2, h: h2, stacked: true};
-}
-
-function sizeAndDrawLoss() {
-  var canvas = el("lossCanvas");
-  var wrap = el("lossWrap");
-  if (!canvas || !wrap) return;
-  var avail = (el("contentCol") || document.body).clientWidth - 64;
-  if (avail < 80) return;
-  var geo = lossChartSize(avail);
-  wrap.classList.toggle("stacked", geo.stacked);
-  canvas.style.width = geo.w + "px";
-  canvas.style.height = geo.h + "px";
-  drawLossTo(canvas, geo.w, geo.h);
-  renderLossSummary();
-  renderLossLegend("lossLegend");
-  renderLossNotes();
-  updateScaleSummary();
+  var z = el("zoomScale");
+  if (z) z.textContent = "X " + (lossView.logX ? "Log" : "Linear") + " · Y " + (lossView.logY ? "Log" : "Linear");
+  document.querySelectorAll("#scaleSwitcher .view-switch").forEach(function(b) {
+    var axis = b.getAttribute("data-axis");
+    var on = axis === "logX" ? lossView.logX : lossView.logY;
+    b.classList.toggle("active", on);
+    b.textContent = (axis === "logX" ? "X " : "Y ") + (on ? "Log" : "Lin");
+  });
 }
 
 function visibleLossSeries() {
@@ -638,7 +735,21 @@ function visibleLossSeries() {
   return out;
 }
 
-function drawLossTo(canvas, w, h) {
+function sizeAndDrawLoss() {
+  var canvas = el("lossCanvas");
+  if (!canvas || !lossView.data) return;
+  var w = canvas.clientWidth;
+  if (w < 60) return;
+  var h = Math.max(260, Math.min(400, Math.round(w / 1.9)));
+  canvas.style.height = h + "px";
+  drawLossTo(canvas);
+  renderLossSummary();
+  renderLossLegend("lossLegend");
+  renderLossNotes();
+  updateScaleSummary();
+}
+
+function drawLossTo(canvas) {
   var series = visibleLossSeries();
   var d = lossView.data;
   drawSeries(canvas, series, {
@@ -646,7 +757,7 @@ function drawLossTo(canvas, w, h) {
     xLabel: d && d.x_mode === "generation" ? "generation" : "record #",
     yLabel: "Loss functions"
   });
-  attachHover(canvas, el("lossHover"), function(idx) {
+  attachHover(canvas, el(canvas.id === "zoomCanvas" ? "zoomScale" : "lossHover"), function(idx) {
     var parts = ["x=" + fmtNum(d.xs[idx])];
     series.forEach(function(s) {
       parts.push(s.label + "=" + fmtNum(s.ys[idx]));
@@ -659,55 +770,47 @@ function renderLossSummary() {
   var box = el("lossSummary");
   if (!box || !lossView.data) return;
   var d = lossView.data;
-  var t = null;
-  if (lastTraining) t = lastTraining;
+  var t = lastTraining;
   box.innerHTML = "";
   function line(label, value) {
     var l = document.createElement("div");
-    l.className = "sline";
-    l.innerHTML = "<span class='slabel'>" + label + "</span><span class='sval'>" + value + "</span>";
+    l.className = "hs-line";
+    l.innerHTML = "<span>" + esc(label) + "</span>";
+    var v = document.createElement("strong");
+    v.textContent = value;
+    l.appendChild(v);
     box.appendChild(l);
   }
   line("记录", d.count.toLocaleString() + " 条");
-  line("最新", "代数 " + (d.last_gen != null ? d.last_gen.toLocaleString() : "--"));
+  line("最新代数", d.last_gen != null ? d.last_gen.toLocaleString() : "--");
   if (d.multi_run) {
-    line("范围", "多次训练记录（最新段自 " + d.seg_start_gen + " 起）");
+    line("范围", "多轮训练记录");
+    line("最新段", "自 " + d.seg_start_gen + " 起");
   }
   if (t && t.has_target) {
     line("目标", t.total.toLocaleString());
     if (!t.multi_run) {
-      var pct = Math.min(100, 100 * t.done / t.total);
       var track = document.createElement("div");
       track.className = "bar-track";
       var fill = document.createElement("div");
       fill.className = "bar-fill" + (t.finished ? " done" : "");
-      fill.style.width = pct + "%";
+      fill.style.width = Math.min(100, 100 * t.done / t.total) + "%";
       track.appendChild(fill);
       box.appendChild(track);
       var rate = trainingRate();
       if (t.finished) {
-        line("状态", "已完成 · 达到目标代数");
+        line("状态", "已完成");
       } else {
         line("速率", fmtGenRate(rate.rate));
-        if (rate.estimating) {
-          line("预计", "估算中（需更多刷新样本）");
-        } else if (rate.rate) {
-          line("预计剩余", fmtDur((t.total - t.done) / rate.rate));
-        }
-        line("状态", t.loss_mtime != null ? "最后写入 " + fmtAgo(lastScanServerNow - t.loss_mtime) : "--");
+        line("预计剩余", rate.estimating ? "估算中" : (rate.rate ? fmtDur((t.total - t.done) / rate.rate) : "--"));
+        line("最后写入", t.loss_mtime != null ? fmtAgo(lastScanServerNow - t.loss_mtime) : "--");
       }
-    } else {
-      line("状态", "多次训练记录，进度按最新段");
     }
-  } else if (t) {
-    line("目标", "未指定（nep.in 无 generation 行）");
-    line("状态", t.loss_mtime != null ? "最后写入 " + fmtAgo(lastScanServerNow - t.loss_mtime) : "--");
   } else {
-    line("目标", "未发现 nep.in，不显示进度");
-    line("状态", d.mtime != null ? "最后写入 " + fmtAgo(lastScanServerNow - d.mtime) : "--");
+    line("目标", t ? "nep.in 未指定" : "未发现 nep.in");
+    line("最后写入", d.mtime != null ? fmtAgo(lastScanServerNow - d.mtime) : "--");
   }
 }
-var lastTraining = null;
 
 function renderLossLegend(legendId) {
   var legend = el(legendId);
@@ -715,6 +818,7 @@ function renderLossLegend(legendId) {
   legend.innerHTML = "";
   (lossView.data.series || []).forEach(function(s, i) {
     var item = document.createElement("button");
+    item.type = "button";
     item.className = "lg-item" + (lossView.hidden[s.label] ? " off" : "");
     var dot = document.createElement("span");
     dot.className = "lg-dot";
@@ -737,15 +841,9 @@ function renderLossNotes() {
   if (!notes || !lossView.data) return;
   notes.innerHTML = "";
   var d = lossView.data;
-  if (d.sampled) {
-    notes.appendChild(noteLine("曲线降采样至 " + d.points + " / " + d.count + " 条记录"));
-  }
-  if (d.skipped > 0) {
-    notes.appendChild(noteLine(d.skipped + " 行无效或不完整记录被跳过"));
-  }
-  if (d.multi_run) {
-    notes.appendChild(noteLine("loss.out 包含多轮训练（代数回退），进度按最新一段"));
-  }
+  if (d.sampled) notes.appendChild(noteLine("曲线降采样至 " + d.points + " / " + d.count + " 条记录"));
+  if (d.skipped > 0) notes.appendChild(noteLine(d.skipped + " 行无效或不完整记录被跳过"));
+  if (d.multi_run) notes.appendChild(noteLine("loss.out 包含多轮训练（代数回退），进度按最新一段"));
   if (lossView.logY) {
     var nonpos = 0;
     (d.series || []).forEach(function(s) {
@@ -755,9 +853,10 @@ function renderLossNotes() {
     if (nonpos > 0) {
       var line = noteLine(nonpos + " 个非正值未在 Log 纵轴下显示");
       var sw = document.createElement("button");
+      sw.type = "button";
       sw.className = "note-link";
       sw.textContent = "切换 Y 为 Linear";
-      sw.onclick = function() { lossView.logY = false; sizeAndDrawLoss(); };
+      sw.onclick = function() { lossView.logY = false; updateScaleSummary(); sizeAndDrawLoss(); };
       line.appendChild(sw);
       notes.appendChild(line);
     }
@@ -777,60 +876,196 @@ function openChartZoom() {
 function drawZoomChart() {
   var canvas = el("zoomCanvas");
   if (!canvas || !lossView.data) return;
-  var w = Math.min(window.innerWidth * 0.92, 1150);
-  var h = Math.min(window.innerHeight * 0.72, 620);
+  var w = Math.min(window.innerWidth * 0.9, 1120);
+  var h = Math.min(window.innerHeight * 0.7, 600);
   canvas.style.width = w + "px";
   canvas.style.height = h + "px";
-  drawLossTo(canvas, w, h);
+  drawLossTo(canvas);
   renderLossLegend("zoomLegend");
-  el("zoomScale").textContent = "X " + (lossView.logX ? "Log" : "Linear") + " · Y " + (lossView.logY ? "Log" : "Linear");
+  updateScaleSummary();
 }
 
-function buildFiguresSection(imgs) {
-  var sec = document.createElement("section");
-  sec.className = "sec";
-  var head = document.createElement("div");
-  head.className = "sec-head";
-  head.innerHTML = "<h2>图片</h2><span class='sec-meta'>" + imgs.length + " 张</span>";
-  sec.appendChild(head);
+function buildFiguresCard(imgs) {
+  var card = makeCard("结果可视化", "图片", imgs.length + " 张");
+  var body = document.createElement("div");
+  body.className = "card-body";
   var grid = document.createElement("div");
-  grid.className = "figgrid" + (imgs.length === 1 ? " single" : "");
-  grid.id = "figGrid";
-  var show = imgs.slice(0, figShown);
-  show.forEach(function(f) {
-    grid.appendChild(figThumb(f));
+  grid.className = "fig-grid";
+  imgs.slice(0, figShown).forEach(function(f) {
+    var cell = document.createElement("button");
+    cell.type = "button";
+    cell.className = "fig-thumb";
+    var img = document.createElement("img");
+    img.src = "/api/image?path=" + encodeURIComponent(joinRel(curPath, f.name));
+    img.alt = f.name;
+    img.loading = "lazy";
+    var cap = document.createElement("div");
+    cap.className = "fig-cap";
+    cap.textContent = f.name;
+    cap.title = f.name;
+    cell.appendChild(img);
+    cell.appendChild(cap);
+    cell.onclick = function() { openLightbox(f, cell); };
+    grid.appendChild(cell);
   });
-  sec.appendChild(grid);
+  body.appendChild(grid);
   if (imgs.length > figShown) {
     var more = document.createElement("div");
     more.className = "figmores";
     var btn = document.createElement("button");
-    btn.className = "ghost";
+    btn.type = "button";
+    btn.className = "btn btn-soft";
     btn.textContent = "显示更多（" + (imgs.length - figShown) + "）";
     btn.onclick = function() {
       figShown += FIG_PAGE;
-      renderCanvasRoot();
+      renderCards();
     };
     more.appendChild(btn);
-    sec.appendChild(more);
+    body.appendChild(more);
   }
-  return sec;
+  card.appendChild(body);
+  return card;
 }
-function figThumb(f) {
-  var cell = document.createElement("button");
-  cell.className = "fig-thumb";
-  var img = document.createElement("img");
-  img.src = "/api/image?path=" + encodeURIComponent(joinRel(curPath, f.name));
-  img.alt = f.name;
-  img.loading = "lazy";
-  var cap = document.createElement("div");
-  cap.className = "fig-cap";
-  cap.textContent = f.name;
-  cap.title = f.name;
-  cell.appendChild(img);
-  cell.appendChild(cap);
-  cell.onclick = function() { openLightbox(f, cell); };
-  return cell;
+
+function buildAnalysesCard(recs, files, nowS) {
+  var fileMap = {};
+  files.forEach(function(f) { fileMap[f.name] = f; });
+  var card = makeCard("一键分析", "可用分析", recs.length + " 项");
+  var body = document.createElement("div");
+  body.className = "card-body";
+  var list = document.createElement("div");
+  list.className = "act-list";
+  recs.forEach(function(rec) {
+    list.appendChild(actRow(rec, fileMap, nowS));
+  });
+  body.appendChild(list);
+  card.appendChild(body);
+  return card;
+}
+
+function actRow(rec, fileMap, nowS) {
+  var row = document.createElement("div");
+  row.className = "act-row";
+  var head = document.createElement("div");
+  head.className = "act-head";
+  var desc = document.createElement("span");
+  desc.className = "adesc";
+  desc.textContent = REC_NAMES[rec.action] || rec.action;
+  head.appendChild(desc);
+  var inp = document.createElement("span");
+  inp.className = "ain";
+  inp.textContent = rec.evidence.join(", ");
+  head.appendChild(inp);
+  var res = document.createElement("span");
+  res.className = "ares";
+  var outFile = fileMap[rec.produces];
+  if (outFile && outFile.mtime != null) {
+    res.textContent = "结果 " + fmtAgo(nowS - outFile.mtime);
+    if (rec.stale) res.classList.add("stale");
+    res.title = rec.stale ? "结果早于输入文件，可能需要重新生成" : rec.produces;
+  } else {
+    res.textContent = "未生成";
+  }
+  head.appendChild(res);
+  var chev = document.createElement("span");
+  chev.className = "achev";
+  chev.innerHTML = ICON_CHEV;
+  head.appendChild(chev);
+  head.onclick = function() { row.classList.toggle("open"); };
+  row.appendChild(head);
+  var body = document.createElement("div");
+  body.className = "act-body";
+  var cmdRow = document.createElement("div");
+  cmdRow.className = "cmd-row";
+  var code = document.createElement("code");
+  code.className = "rec-cmd";
+  code.textContent = rec.command;
+  cmdRow.appendChild(code);
+  var copyBtn = document.createElement("button");
+  copyBtn.type = "button";
+  copyBtn.className = "btn btn-soft small";
+  copyBtn.textContent = "复制";
+  copyBtn.onclick = function(ev) { ev.stopPropagation(); copyText(rec.command); };
+  cmdRow.appendChild(copyBtn);
+  body.appendChild(cmdRow);
+  var bar = document.createElement("div");
+  bar.className = "act-bar";
+  var run = document.createElement("button");
+  run.type = "button";
+  run.className = "btn btn-primary small";
+  run.textContent = "生成图像";
+  run.disabled = busyFlag || running;
+  run.title = busyFlag ? "服务器正在执行其他命令" : "在当前目录运行 " + rec.command;
+  run.onclick = function(ev) { ev.stopPropagation(); runAction(rec, run); };
+  bar.appendChild(run);
+  if (outFile) {
+    var open = document.createElement("button");
+    open.type = "button";
+    open.className = "btn btn-ghost small";
+    open.textContent = "查看结果";
+    open.onclick = function(ev) { ev.stopPropagation(); openLightbox(outFile, open); };
+    bar.appendChild(open);
+  }
+  body.appendChild(bar);
+  row.appendChild(body);
+  return row;
+}
+
+function buildFilesCard(files, nowS) {
+  var card = makeCard("目录文件", "文件", files.length + " 个");
+  var body = document.createElement("div");
+  body.className = "card-body";
+  var list = document.createElement("dl");
+  list.className = "detail-definition-list";
+  files.slice(0, 12).forEach(function(f) {
+    var row = document.createElement("div");
+    var dt = document.createElement("dt");
+    dt.textContent = f.name;
+    dt.title = f.name;
+    dt.style.cursor = "pointer";
+    dt.onclick = function() { openPreview(f); };
+    var dd = document.createElement("dd");
+    dd.textContent = [fmtSize(f.size), f.mtime != null ? fmtAgo(nowS - f.mtime) : ""].filter(Boolean).join(" · ");
+    row.appendChild(dt);
+    row.appendChild(dd);
+    list.appendChild(row);
+  });
+  body.appendChild(list);
+  if (files.length > 12) {
+    var more = document.createElement("p");
+    more.className = "muted";
+    more.style.margin = "12px 0 0";
+    more.textContent = "以及另外 " + (files.length - 12) + " 个文件，见左侧文件栏";
+    body.appendChild(more);
+  }
+  card.appendChild(body);
+  return card;
+}
+
+function buildSubdirsCard(subdirs, nowS) {
+  var card = makeCard("导航", "子目录", subdirs.length + " 个");
+  var body = document.createElement("div");
+  body.className = "card-body";
+  body.style.display = "grid";
+  body.style.gap = "8px";
+  subdirs.forEach(function(s) {
+    var row = document.createElement("div");
+    row.className = "sub-row";
+    var nm = document.createElement("span");
+    nm.className = "sname";
+    nm.textContent = s.name + "/";
+    row.appendChild(nm);
+    var meta = document.createElement("span");
+    meta.className = "smeta";
+    var bits = [s.count + " 项"];
+    if (s.newest != null) bits.push(fmtAgo(nowS - s.newest));
+    meta.textContent = bits.join(" · ");
+    row.appendChild(meta);
+    row.onclick = function() { loadScan(joinRel(curPath, s.name)); };
+    body.appendChild(row);
+  });
+  card.appendChild(body);
+  return card;
 }
 
 function openLightbox(f, source) {
@@ -862,226 +1097,6 @@ function closeLightbox() {
   lbReturnFocus = null;
 }
 
-function buildAnalysesSection(recs, files, nowS) {
-  var fileMap = {};
-  files.forEach(function(f) { fileMap[f.name] = f; });
-  var sec = document.createElement("section");
-  sec.className = "sec";
-  var head = document.createElement("div");
-  head.className = "sec-head";
-  head.innerHTML = "<h2>可用分析</h2><span class='sec-meta'>" + recs.length + " 项</span>";
-  sec.appendChild(head);
-  var groups = {};
-  recs.forEach(function(rec) {
-    var cat = REC_CATEGORIES[rec.action] || "其他";
-    if (!groups[cat]) groups[cat] = [];
-    groups[cat].push(rec);
-  });
-  var cats = REC_CAT_ORDER.concat(Object.keys(groups).filter(function(c) { return REC_CAT_ORDER.indexOf(c) < 0 && c !== "其他"; }));
-  if (groups["其他"]) cats.push("其他");
-  cats.forEach(function(cat) {
-    var list = groups[cat];
-    if (!list) return;
-    var box = document.createElement("div");
-    box.className = "actrows";
-    if (cat !== "扩散与输运" || list.length > 2) {
-      var lab = document.createElement("div");
-      lab.className = "chart-note";
-      lab.style.margin = "10px 2px 4px";
-      lab.textContent = cat;
-      box.appendChild(lab);
-    }
-    list.forEach(function(rec) {
-      box.appendChild(actRow(rec, fileMap, nowS));
-    });
-    sec.appendChild(box);
-  });
-  return sec;
-}
-
-function actRow(rec, fileMap, nowS) {
-  var row = document.createElement("div");
-  row.className = "actrow";
-  var head = document.createElement("div");
-  head.className = "actrow-head";
-  var desc = document.createElement("span");
-  desc.className = "adesc";
-  desc.textContent = descOf(rec.action);
-  head.appendChild(desc);
-  var inp = document.createElement("span");
-  inp.className = "ain";
-  inp.textContent = rec.evidence.join(", ");
-  head.appendChild(inp);
-  var res = document.createElement("span");
-  res.className = "ares";
-  var outFile = fileMap[rec.produces];
-  if (outFile && outFile.mtime != null) {
-    res.textContent = "结果 " + fmtAgo(nowS - outFile.mtime);
-    if (rec.stale) res.classList.add("stale");
-    res.title = rec.stale ? "结果早于输入文件，可能需要重新生成" : rec.produces;
-  } else {
-    res.textContent = "未生成";
-  }
-  head.appendChild(res);
-  var chev = document.createElement("span");
-  chev.className = "achev";
-  chev.innerHTML = ICON_CHEV;
-  head.appendChild(chev);
-  head.onclick = function() { row.classList.toggle("open"); };
-  row.appendChild(head);
-  var body = document.createElement("div");
-  body.className = "actrow-body";
-  var cmdrow = document.createElement("div");
-  cmdrow.className = "cmdrow";
-  var code = document.createElement("code");
-  code.className = "rec-cmd";
-  code.textContent = rec.command;
-  cmdrow.appendChild(code);
-  var copyBtn = document.createElement("button");
-  copyBtn.className = "ghost small";
-  copyBtn.textContent = "复制";
-  copyBtn.onclick = function(ev) { ev.stopPropagation(); copyText(rec.command); };
-  cmdrow.appendChild(copyBtn);
-  body.appendChild(cmdrow);
-  var actbar = document.createElement("div");
-  actbar.className = "actbar";
-  var run = document.createElement("button");
-  run.className = "ghost small";
-  run.textContent = "生成图像";
-  run.disabled = busyFlag || running;
-  run.title = busyFlag ? "服务器正在执行其他命令" : "在当前目录运行 " + rec.command;
-  run.onclick = function(ev) { ev.stopPropagation(); runAction(rec, run); };
-  actbar.appendChild(run);
-  if (outFile) {
-    var open = document.createElement("button");
-    open.className = "ghost small";
-    open.textContent = "查看结果";
-    open.onclick = function(ev) {
-      ev.stopPropagation();
-      openLightbox(outFile, open);
-    };
-    actbar.appendChild(open);
-  }
-  body.appendChild(actbar);
-  row.appendChild(body);
-  return row;
-}
-
-function descOf(action) {
-  var map = {
-    plt_msd: "MSD 曲线",
-    plt_sdc: "SDC 曲线",
-    plt_msd_sdc: "MSD 与 SDC",
-    plt_vac: "VAC 曲线",
-    plt_thermo: "热力学量曲线",
-    plt_train: "训练损失与 parity",
-    plt_train_density: "训练 parity 密度图",
-    plt_train_test: "训练/测试对比",
-    plt_prediction: "预测 parity 图",
-    plt_msd_conv: "MSD 收敛性检查",
-    plt_sigma: "电导率 Arrhenius 图",
-    plt_D: "扩散系数 Arrhenius 图",
-  };
-  return map[action] || action;
-}
-
-function buildFilesSection(files) {
-  var sec = document.createElement("section");
-  sec.className = "sec";
-  var head = document.createElement("div");
-  head.className = "sec-head";
-  head.innerHTML = "<h2>文件</h2><span class='sec-meta'>" + files.length + " 个</span>";
-  sec.appendChild(head);
-  var box = document.createElement("div");
-  var nowS = lastScanServerNow || 0;
-  var show = files.slice(0, 12);
-  show.forEach(function(f) {
-    var row = document.createElement("div");
-    row.className = "filerow";
-    var a = document.createElement("a");
-    a.href = "#";
-    a.className = "fname";
-    a.textContent = f.name;
-    a.onclick = function(ev) { ev.preventDefault(); openPreview(f); };
-    row.appendChild(a);
-    var meta = document.createElement("span");
-    meta.className = "fmeta";
-    meta.textContent = [fmtSize(f.size), f.mtime != null ? fmtAgo(nowS - f.mtime) : ""].filter(Boolean).join(" · ");
-    row.appendChild(meta);
-    box.appendChild(row);
-  });
-  if (files.length > 12) {
-    var more = document.createElement("div");
-    more.className = "muted";
-    more.style.padding = "6px 10px";
-    more.textContent = "以及另外 " + (files.length - 12) + " 个文件，见左侧文件栏";
-    box.appendChild(more);
-  }
-  sec.appendChild(box);
-  return sec;
-}
-
-function buildSubdirsSection(subdirs) {
-  var sec = document.createElement("section");
-  sec.className = "sec";
-  var head = document.createElement("div");
-  head.className = "sec-head";
-  head.innerHTML = "<h2>子目录</h2><span class='sec-meta'>" + subdirs.length + " 个</span>";
-  sec.appendChild(head);
-  var nowS = lastScanServerNow || 0;
-  subdirs.forEach(function(s) {
-    var row = document.createElement("div");
-    row.className = "subrow";
-    var nm = document.createElement("span");
-    nm.className = "sname";
-    nm.textContent = s.name + "/";
-    row.appendChild(nm);
-    var meta = document.createElement("span");
-    meta.className = "smeta";
-    var bits = [s.count + " 项"];
-    if (s.newest != null) bits.push(fmtAgo(nowS - s.newest));
-    meta.textContent = bits.join(" · ");
-    row.appendChild(meta);
-    row.onclick = function() { loadScan(joinRel(curPath, s.name)); };
-    sec.appendChild(row);
-  });
-  return sec;
-}
-
-function renderCanvasRoot() {
-  var root = el("canvasRoot");
-  root.innerHTML = "";
-  var data = { files: lastFiles || [], subdirs: lastSubdirs || [] };
-  var imgs = (data.files || []).filter(function(f) { return /\.(png|jpe?g)$/i.test(f.name); });
-  var hasLoss = hasLossFile(data);
-  var recs = lastRecs || [];
-  var hasAny = (data.files || []).length + (data.subdirs || []).length;
-
-  if (!hasAny) {
-    var empty = document.createElement("div");
-    empty.className = "bigempty";
-    empty.innerHTML = "<p>此目录为空</p>";
-    if (curPath) {
-      var up = document.createElement("button");
-      up.className = "ghost";
-      up.textContent = "返回上级";
-      up.onclick = function() { loadScan(parentRel(curPath)); };
-      empty.appendChild(up);
-    }
-    root.appendChild(empty);
-    return;
-  }
-  if (hasLoss) root.appendChild(buildLossSection());
-  if (imgs.length) root.appendChild(buildFiguresSection(imgs));
-  if (recs.length) root.appendChild(buildAnalysesSection(recs, data.files || [], lastScanServerNow || 0));
-  var plainFiles = !hasLoss && !imgs.length;
-  if (plainFiles && (data.files || []).length) root.appendChild(buildFilesSection(data.files || []));
-  if (!hasLoss && !imgs.length && (data.subdirs || []).length && !(data.files || []).length) {
-    root.appendChild(buildSubdirsSection(data.subdirs || []));
-  }
-  if (hasLoss) sizeAndDrawLoss();
-}
-
 function viewerDirty() {
   return !!(viewer && viewer.draft != null && viewer.draft !== viewer.text);
 }
@@ -1104,7 +1119,7 @@ function loadPreview(f) {
   el("pvConfirm").classList.add("hidden");
   el("pvConflict").classList.add("hidden");
   el("pvMsg").textContent = "";
-  el("pvBody").innerHTML = '<div class="muted">读取中...</div>';
+  el("pvBody").innerHTML = '<div class="muted">读取中…</div>';
   el("pvTitle").textContent = f.name;
   el("pvMeta").textContent = fmtSize(f.size);
   el("previewLayer").classList.remove("hidden");
@@ -1173,7 +1188,7 @@ function closePreview() {
   }
   el("previewLayer").classList.add("hidden");
   viewer = null;
-  lbReturnFocus && lbReturnFocus.focus && lbReturnFocus.focus();
+  if (lbReturnFocus && lbReturnFocus.focus) lbReturnFocus.focus();
 }
 
 function renderPreview() {
@@ -1189,26 +1204,25 @@ function renderPreview() {
   var nonBlank = kv.filter(function(it) { return it.type !== "blank"; }).length;
   var isForm = !viewer.truncated && kvCount >= 2 && kvCount * 2 >= nonBlank;
   var modes = [];
-  if (numeric) modes.push(["preview", numeric ? "预览" : "预览"]);
+  if (numeric) modes.push(["preview", "预览"]);
   modes.push(["text", "文本"]);
   if (isForm) modes.push(["form", "表单"]);
-  if (!viewer.truncated) el("pvEditBtn").classList.remove("hidden");
-  else el("pvEditBtn").classList.add("hidden");
+  el("pvEditBtn").classList.toggle("hidden", viewer.truncated);
   var modeBar = el("pvModes");
   modeBar.innerHTML = "";
-  modeBar.classList.toggle("hidden", modes.length <= 1 && !numeric);
+  modeBar.classList.toggle("hidden", modes.length <= 1);
   modes.forEach(function(m) {
     var b = document.createElement("button");
+    b.type = "button";
     b.className = "segbtn";
     b.textContent = m[1];
     b.setAttribute("data-mode", m[0]);
-    b.onclick = function() { viewer.mode = m[0]; renderPreview(); };
+    b.onclick = function() { viewer.mode = m[0]; viewer.editing = false; el("pvEditBtn").textContent = "编辑"; renderPreview(); };
     modeBar.appendChild(b);
   });
-  if (viewer.mode === "plot") viewer.mode = numeric ? "plot" : "preview";
   if (viewer.mode === "form" && !isForm) viewer.mode = "preview";
   modeBar.querySelectorAll(".segbtn").forEach(function(b) {
-    b.classList.toggle("on", b.getAttribute("data-mode") === viewer.mode);
+    b.classList.toggle("on", b.getAttribute("data-mode") === viewer.mode && !viewer.editing);
   });
   if (viewer.mode === "form") renderFormMode(body);
   else if (viewer.editing) renderEditMode(body);
@@ -1253,10 +1267,9 @@ function renderTableMode(body, numeric) {
   }
   var opts = document.createElement("div");
   opts.className = "plotopts";
-  opts.id = "plotOpts";
   var head = document.createElement("div");
   head.className = "plotopts-head";
-  head.innerHTML = "<span class='achev'>" + ICON_CHEV + "</span> 绘图";
+  head.innerHTML = "<span class='achev'>" + ICON_CHEV + "</span> 绘图选项";
   head.onclick = function() { opts.classList.toggle("open"); };
   opts.appendChild(head);
   var optsBody = document.createElement("div");
@@ -1268,7 +1281,7 @@ function renderTableMode(body, numeric) {
 
 function buildFilePlot(numeric, names) {
   var holder = document.createElement("div");
-  var state = plotState && plotState.rel === viewer.rel ? plotState : {rel: viewer.rel, x: 0, ys: [1], logX: false, logY: false, open: false};
+  var state = plotState && plotState.rel === viewer.rel ? plotState : {rel: viewer.rel, x: 0, ys: [1], logX: false, logY: false};
   plotState = state;
   var ctl = document.createElement("div");
   ctl.className = "chartctl";
@@ -1359,13 +1372,15 @@ function renderEditMode(body) {
   body.appendChild(ta);
   var row = document.createElement("div");
   row.className = "row";
-  row.style.marginTop = "8px";
+  row.style.marginTop = "10px";
   var save = document.createElement("button");
-  save.className = "primary small";
+  save.type = "button";
+  save.className = "btn btn-primary small";
   save.textContent = "保存";
   save.onclick = function() { saveDraft(false); };
   var revert = document.createElement("button");
-  revert.className = "ghost small";
+  revert.type = "button";
+  revert.className = "btn btn-ghost small";
   revert.textContent = "放弃修改";
   revert.onclick = function() { viewer.draft = null; renderPreview(); };
   row.appendChild(save);
@@ -1415,7 +1430,8 @@ function renderFormMode(body) {
   row.className = "row";
   row.style.marginTop = "10px";
   var btn = document.createElement("button");
-  btn.className = "primary small";
+  btn.type = "button";
+  btn.className = "btn btn-primary small";
   btn.textContent = "保存";
   btn.onclick = function() { saveDraft(false); };
   row.appendChild(btn);
@@ -1528,7 +1544,7 @@ function parseKV(text) {
 }
 
 function themeColors() {
-  var grid = "#e8e8ed", axis = "#8a8a8f";
+  var grid = "#e8ebef", axis = "#8994a0";
   try {
     var cs = getComputedStyle(document.body);
     var g = cs.getPropertyValue("--grid").trim();
@@ -1580,7 +1596,7 @@ function drawSeries(canvas, series, opts) {
   });
   if (!flat.length) {
     ctx.fillStyle = theme.axis;
-    ctx.font = "12px " + "ui-monospace, monospace";
+    ctx.font = "12px ui-monospace, monospace";
     ctx.fillText("无数据", 14, 26);
     return null;
   }
@@ -1625,7 +1641,7 @@ function drawSeries(canvas, series, opts) {
   var lastPoints = [];
   series.forEach(function(s) {
     if (!s._pts.length) return;
-    ctx.strokeStyle = s.color || "rgb(24, 103, 174)";
+    ctx.strokeStyle = s.color || "#1f77b4";
     ctx.lineWidth = 1.8;
     ctx.beginPath();
     var started = false;
@@ -1643,12 +1659,12 @@ function drawSeries(canvas, series, opts) {
     }
     if (started) ctx.stroke();
     if (lastValid && s._pts.length < 4) {
-      ctx.fillStyle = s.color || "rgb(24, 103, 174)";
+      ctx.fillStyle = s.color || "#1f77b4";
       ctx.beginPath();
       ctx.arc(lastValid[0], lastValid[1], 2.6, 0, 2 * Math.PI);
       ctx.fill();
     }
-    if (lastValid) lastPoints.push({px: lastValid[0], py: lastValid[1], color: s.color || "rgb(24, 103, 174)"});
+    if (lastValid) lastPoints.push({px: lastValid[0], py: lastValid[1], color: s.color || "#1f77b4"});
   });
   canvas._xs = series.length ? series[0].xs : [];
   return lastPoints;
@@ -1656,12 +1672,11 @@ function drawSeries(canvas, series, opts) {
 
 function attachHover(canvas, readoutEl, labelsFn) {
   canvas.onmousemove = function(ev) {
-    var plot = {l: 58, r: 14};
     var xs = canvas._xs;
     if (!xs || !xs.length || !readoutEl) return;
     var rect = canvas.getBoundingClientRect();
     var px = ev.clientX - rect.left;
-    var frac = (px - plot.l) / (canvas.clientWidth - plot.l - plot.r);
+    var frac = (px - 58) / (canvas.clientWidth - 72);
     if (frac < 0) frac = 0;
     if (frac > 1) frac = 1;
     var idx = Math.round(frac * (xs.length - 1));
@@ -1674,8 +1689,8 @@ function attachHover(canvas, readoutEl, labelsFn) {
 
 function setDrawerTab(tab) {
   drawerTab = tab;
-  document.querySelectorAll("#drawerTabs .segbtn").forEach(function(b) {
-    b.classList.toggle("on", b.getAttribute("data-tab") === tab);
+  document.querySelectorAll(".drawer-head .view-switch").forEach(function(b) {
+    b.classList.toggle("active", b.getAttribute("data-tab") === tab);
   });
   el("dOutput").classList.toggle("hidden", tab !== "output");
   el("dHistory").classList.toggle("hidden", tab !== "history");
@@ -1702,9 +1717,8 @@ async function runAction(rec, btn) {
   var runDir = curPath;
   running = true;
   btn.disabled = true;
-  btn.textContent = "运行中...";
-  el("runningChip").classList.remove("hidden");
-  showOutput("$ " + rec.command + "\n\n目录: " + (runDir ? runDir : "（根目录）") + "\n（运行中，请稍候...）", false);
+  btn.textContent = "运行中…";
+  showOutput("$ " + rec.command + "\n\n目录: " + (runDir ? runDir : "（根目录）") + "\n（运行中，请稍候…）", false);
   var t0 = Date.now();
   var record = {
     cmd: rec.command, dir: runDir, start: new Date(), dur: null,
@@ -1763,32 +1777,32 @@ function renderHistory() {
     var d = document.createElement("div");
     d.className = "hist-item";
     var badge = h.status === "成功"
-      ? '<span class="badge">' + h.status + "</span>"
-      : '<span class="badge warn">' + esc(h.status) + "</span>";
+      ? '<span class="coverage-badge"><i aria-hidden="true"></i>' + h.status + "</span>"
+      : '<span class="availability-badge stale">' + esc(h.status) + "</span>";
     var meta = (h.dir ? "/" + esc(h.dir) : "根目录") + " · " + h.start.toLocaleTimeString() + " · " + fmtDur(h.dur);
     d.innerHTML = badge + '<span class="hcmd">' + esc(h.cmd) + "</span>" +
       '<span class="hmeta">' + meta + "</span>";
     var acts = document.createElement("span");
     acts.className = "hacts";
     var outBtn = document.createElement("button");
-    outBtn.className = "ghost small";
+    outBtn.type = "button";
+    outBtn.className = "btn btn-ghost small";
     outBtn.textContent = "输出";
     outBtn.onclick = function() { showOutput("$ " + h.cmd + "\n\n" + h.output + (h.rc ? "\n[退出码 " + h.rc + "]" : ""), h.truncated); };
     acts.appendChild(outBtn);
     var copyBtn = document.createElement("button");
-    copyBtn.className = "ghost small";
+    copyBtn.type = "button";
+    copyBtn.className = "btn btn-ghost small";
     copyBtn.textContent = "复制";
     copyBtn.onclick = function() { copyText(h.cmd); };
     acts.appendChild(copyBtn);
     if (h.image) {
       var resBtn = document.createElement("button");
-      resBtn.className = "ghost small";
+      resBtn.type = "button";
+      resBtn.className = "btn btn-soft small";
       resBtn.textContent = "结果";
       resBtn.title = "查看 " + h.image + "（来自 " + (h.dir || "根目录") + "）";
       resBtn.onclick = function() {
-        var f = {name: h.image};
-        lbList = [f];
-        lbIndex = 0;
         el("lbImg").src = "/api/image?path=" + encodeURIComponent(joinRel(h.dir, h.image));
         el("lbTitle").textContent = h.image;
         el("lbCount").textContent = h.dir || "根目录";
@@ -1859,17 +1873,6 @@ async function termExec(raw) {
   }
 }
 
-function trainingRate() {
-  var deltas = [];
-  for (var i = 1; i < nepSamples.length; i++) {
-    var d = nepSamples[i].done - nepSamples[i - 1].done;
-    var t = nepSamples[i].ts - nepSamples[i - 1].ts;
-    if (d > 0 && t > 1) deltas.push(d / t);
-  }
-  if (deltas.length < 2) return {rate: null, estimating: true};
-  return {rate: median(deltas), estimating: false};
-}
-
 function pollTick() {
   if (document.hidden) { schedule(); return; }
   loadScan(curPath, true).then(schedule, schedule);
@@ -1899,54 +1902,37 @@ function toggleTheme() {
 }
 
 document.addEventListener("DOMContentLoaded", function() {
-  var logoImg = el("logoImg");
-  if (logoImg) {
-    logoImg.onerror = function() {
-      logoImg.style.display = "none";
-      el("brandText").classList.remove("hidden");
-    };
-  }
   el("loginBtn").onclick = doLogin;
   el("pwInput").addEventListener("keydown", function(ev) {
     if (ev.key === "Enter") doLogin();
   });
   el("retryBtn").onclick = function() { loadScan(curPath); };
+  el("refreshBtn").onclick = function() { loadScan(curPath); };
   el("fileFilter").addEventListener("input", function() {
-    renderSidebar({subdirs: lastSubdirs || [], files: lastFiles || []}, lastScanServerNow || 0, {}, {});
+    renderRail({subdirs: lastSubdirs || [], files: lastFiles || []}, lastScanServerNow || 0, {}, {});
   });
-  el("sidebarBtn").onclick = function() {
-    if (window.innerWidth <= 900) {
-      el("sidebarPanel").classList.toggle("open");
-      return;
-    }
-    sidebarOpen = !sidebarOpen;
-    el("layout").classList.toggle("nosidebar", !sidebarOpen);
-  };
   el("themeBtn").onclick = toggleTheme;
   el("refreshSel").onchange = schedule;
-  el("moreBtn").onclick = function(ev) {
-    ev.stopPropagation();
-    el("moreMenu").classList.toggle("hidden");
-  };
-  document.addEventListener("click", function(ev) {
-    if (!el("moreMenu").classList.contains("hidden") && !el("moreMenu").contains(ev.target) && ev.target !== el("moreBtn")) {
-      el("moreMenu").classList.add("hidden");
-    }
-  });
-  el("menuCommands").onclick = function() {
-    el("moreMenu").classList.add("hidden");
-    openDrawer("output");
-  };
-  el("menuRefresh").onclick = function() {
-    el("moreMenu").classList.add("hidden");
-    loadScan(curPath);
-  };
-  el("runningChip").onclick = function() { openDrawer("output"); };
-  document.querySelectorAll("#drawerTabs .segbtn").forEach(function(b) {
+  el("drawerBtn").onclick = function() { openDrawer("output"); };
+  document.querySelectorAll(".drawer-head .view-switch").forEach(function(b) {
     b.onclick = function() { setDrawerTab(b.getAttribute("data-tab")); };
   });
   el("drawerClose").onclick = closeDrawer;
   el("drawerMask").onclick = closeDrawer;
+  el("zoomBtn").onclick = openChartZoom;
+  el("zoomClose").onclick = function() { el("chartZoom").classList.add("hidden"); };
+  el("chartZoom").onclick = function(ev) {
+    if (ev.target === el("chartZoom")) el("chartZoom").classList.add("hidden");
+  };
+  document.querySelectorAll("#scaleSwitcher .view-switch").forEach(function(b) {
+    b.onclick = function() {
+      var axis = b.getAttribute("data-axis");
+      lossView[axis] = !lossView[axis];
+      updateScaleSummary();
+      sizeAndDrawLoss();
+      if (!el("chartZoom").classList.contains("hidden")) drawZoomChart();
+    };
+  });
   el("lbClose").onclick = closeLightbox;
   el("lightbox").onclick = function(ev) {
     if (ev.target === el("lightbox")) closeLightbox();
@@ -1978,12 +1964,7 @@ document.addEventListener("DOMContentLoaded", function() {
     if (!viewer || viewer.truncated) return;
     viewer.editing = !viewer.editing;
     el("pvEditBtn").textContent = viewer.editing ? "完成编辑" : "编辑";
-    if (!viewer.editing) viewer.mode = "preview";
     renderPreview();
-  };
-  el("zoomClose").onclick = function() { el("chartZoom").classList.add("hidden"); };
-  el("chartZoom").onclick = function(ev) {
-    if (ev.target === el("chartZoom")) el("chartZoom").classList.add("hidden");
   };
   document.addEventListener("keydown", function(ev) {
     if (ev.key !== "Escape") return;
@@ -1993,8 +1974,6 @@ document.addEventListener("DOMContentLoaded", function() {
     if (!el("lightbox").classList.contains("hidden")) { closeLightbox(); return; }
     if (!el("previewLayer").classList.contains("hidden")) { closePreview(); return; }
     if (!el("drawer").classList.contains("hidden")) { closeDrawer(); return; }
-    if (el("sidebarPanel").classList.contains("open")) { el("sidebarPanel").classList.remove("open"); return; }
-    if (!el("moreMenu").classList.contains("hidden")) el("moreMenu").classList.add("hidden");
   });
   document.addEventListener("keydown", function(ev) {
     if (el("lightbox").classList.contains("hidden")) return;
@@ -2023,7 +2002,7 @@ document.addEventListener("DOMContentLoaded", function() {
     var ro = new ResizeObserver(function() {
       if (lossView.data && el("lossCanvas")) sizeAndDrawLoss();
     });
-    ro.observe(el("contentCol") || document.body);
+    ro.observe(document.body);
   }
   ageTimer = setInterval(updateConnText, 5000);
   applyTheme();
