@@ -6,11 +6,11 @@ CONTACT="yanzihan@westlake.edu.cn"
 
 # New features (one per line, in an array; keep at most the five newest entries)
 NEW_FEATURES=(
+    "add -server web UI with password login, command recommendations, live job and NEP-training monitoring, modal file viewer and editing, figure lightbox, and a web terminal"
     "let -xyz2dp forward the input file and type-map order as command-line arguments"
     "add --save-data TAB-separated export for EMD, NEMD, and HNEMD plot data"
     "add -prediction_dpa for DeepMD DPA training-set .out predictions"
     "add -out2xyz_bec for VASP OUTCAR to extxyz conversion with BEC labels"
-    "add perturb.txt report for structure perturbation"
 )
 
 # Bug fixes (one per line, in an array; keep at most the five newest entries)

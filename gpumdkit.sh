@@ -197,6 +197,7 @@ function help_info_table(){
     echo " | -calc <type>  Calculator tools                | -time <gpumd|nep>  Time-consuming analyzer            |"
     echo " | -update       Update GPUMDkit                 | -clean             Clean extra files in current dir   |"
     echo " | -skill        Show GPUMDkit agent skill info  | -doctor            Check Python environment           |"
+    echo " | -server       Start the GPUMDkit web server   |                                                       |"
     echo " | -prediction   Write NEP prediction .out files | -prediction_dpa    Write DPA prediction .out files    |"
     echo " +-------------------------------------------------------------------------------------------------------+"
     echo " |                                         FORMAT CONVERSION                                             |"
@@ -301,6 +302,8 @@ if [ ! -z "$1" ]; then
                     echo " Code path: ${analyzer_path}/time_consuming_*.sh"
                     exit 1 ;;
             esac ;;
+        -server)
+            run_python_script "Zihan YAN (yanzihan@westlake.edu.cn)" "${utils_path}/server/server.py" "${@:2}" ;;
         -prediction)
             run_python_script "Zihan YAN (yanzihan@westlake.edu.cn)" "${calc_path}/prediction.py" "${@:2}" ;;
         -prediction_dpa)
