@@ -129,49 +129,56 @@ behavior first and mirror it here.
 
 ## Frontend architecture (web/app.js)
 
-Layout: topbar (logo, breadcrumb, connection status, refresh interval,
-theme toggle) / left file browser (unified dirs+files, filter, name/
-modified/size sort, path copy) / main view tabs (Overview, Data,
-Figures) / collapsible bottom panel (Output, History, Terminal) /
-status bar. View state is independent of the current directory and
-survives auto refresh. Narrow screens collapse the browser into a
-drawer.
+Layout: one content canvas per directory. Topbar (logo, breadcrumb as the
+only persistent location display, connection status, refresh interval,
+theme, more menu) / left file browser (filter, collapsible) / one
+scrolling content column (max 1120 px) whose sections appear only when
+their data exists: training curve (only when loss.out is present and
+parseable), figures (only when images exist), available analyses (only
+when recommendations exist), plain file listing (only for directories
+without loss or images), subdirectory list, or a single empty state.
+There are no fixed view tabs, no bottom panel, no persistent status
+bar; secondary surfaces are on-demand overlays: a lightbox for images,
+a preview sheet for files, a chart zoom layer, and a command drawer
+opened from the more menu or when a command runs.
 
-State globals: `curPath`, `rootDir`, `viewMode`, `running`, `termBusy`,
-`busyFlag`, `scanSeq`, `pollActive`, `connOk`, `lastGoodAt`,
+State globals: `curPath`, `rootDir`, `connOk`, `lastGoodAt`,
 `lastScanServerNow`, `lastFiles`, `lastSubdirs`, `lastPath`,
-`nepSamples`, `lossData`, `cmdHistory`, `figRendered`, `panelTab`,
-`viewer`, `pendingOpen`, `drawerOpen`.
+`lastRecs`, `lastTraining`, `nepSamples`, `lossView` (chart data plus
+per-directory scale state `logX`/`logY`/`hidden`), `plotState`,
+`cmdHistory`, `viewer`, `drawerTab`, `figShown`, `lbList`/`lbIndex`.
 
-Rendering: `loadScan()` fetches `/api/scan`, discards out-of-order
-responses via `scanSeq`, resets cross-directory baselines (growth
-deltas, ETA samples, loss data) when the path changes, and re-renders
-only the current view. Polling is adaptive: the selected interval while
-jobs are active (any file or subdir written within 180 s, or unfinished
-training), a 60 s idle check otherwise. Connection failures keep the
-old data, mark it stale in the topbar, and recover silently.
+Rendering: `loadScan()` discards out-of-order responses via `scanSeq`,
+resets cross-directory baselines when the path changes, and re-renders
+browser plus canvas. `fetchLoss(seq)` captures its own path and
+sequence; late responses never draw into another directory. Polling is
+adaptive (selected interval while jobs are active, 60 s idle check).
 
-Training monitor: distinguishes updating, no-recent-update, finished,
-read failure, and empty states, with evidence lines from server time.
-ETA is the median of recent positive rate samples; samples reset on
-directory change or generation regression; without an explicit target
-or enough samples no precise ETA is shown.
+Loss chart: geometry is computed from the measured content width
+(`lossChartSize`): side-by-side curve plus summary at >= 860 px
+(curve 600-760 px wide, ratio ~1.85, capped on wide screens), stacked
+with full container width below that; a ResizeObserver redraws on
+layout changes. Scales default to log-log but are switchable per axis
+with a visible summary (`X Log · Y Log`); the legend toggles series;
+hover shows real sampled values; missing values break the line; a zoom
+layer re-renders at viewport size. Non-positive values in log mode are
+counted and reported with a linear-switch link. Training summary
+(target, progress, ETA) appears only when nep.in exists; loss curves
+render without nep.in.
 
-Viewer (Data view): one draft state shared across the Form and Edit
-tabs (switching tabs never restores stale disk content); switching
-files with unsaved changes asks first. Saves carry `base_mtime` from
-open time; a 409 conflict offers reload, keep-draft, or explicit
-overwrite. Files above 512 KB get a bounded head/tail preview with
-editing disabled. The Data tab has X/Y column selection, multi-series
-plotting, linear/log axes, hover value readout, and known column names
-only for reliably identified formats (`msd.out`, `sdc.out`,
-`loss.out`); unknown formats show `c0..cN`.
+Viewer (preview sheet): read-only by default with an explicit edit
+action; one draft state shared across the form and text modes;
+switching files with unsaved changes asks first; saves carry
+`base_mtime` from open time and a 409 conflict offers reload, keep
+draft, or explicit overwrite; files above 512 KB get a bounded
+head/tail preview with editing disabled. Numeric preview is a table
+with an expandable plot options block (X/Y column selection, log
+axes); known column names only for reliably identified formats.
 
 Execution records: command, directory, start time, duration, status
-(ok / exit code / failed / timeout / network), output, truncation flag,
-and result file bound to the directory where the command ran. Network
-errors are reported as unknown state, never as command failure.
-History is session-only by design; do not persist terminal commands.
+(ok / exit code / failed / timeout / network), output, truncation
+flag, and result file bound to the directory where the command ran.
+Network errors are reported as unknown state. History is session-only.
 
 Terminal: each command is an independent `bash -c`; session state such
 as `export` is not kept, `cd`/`clear`/`pwd` are intercepted and sync
@@ -193,11 +200,25 @@ a > 512 KB text file), then start the server, log in, and walk through
 scan, loss, file preview (normal and partial), run, exec, and save
 conflict. Remove every temporary file afterward. Node-based stub tests
 work well for pure functions: stub `document`/`window`, `eval` app.js,
-and call `parseNumeric`, `drawSeries`, `trainingRate`, `schedule`.
+and call `parseNumeric`, `drawSeries`, `lossChartSize`, `trainingRate`.
 
-Browser-only behavior (layout at 1440/1024/390 px, keyboard focus,
-theme switching, reduced motion) should be verified manually when a
-browser is available; mark it as unverified otherwise.
+Browser evidence can be produced with headless Chrome (adjust the path
+per machine):
+
+```bash
+"/Applications/Google Chrome.app/Contents/MacOS/Google Chrome" \
+  --headless=new --disable-gpu --hide-scrollbars \
+  --window-size=1440,900 --virtual-time-budget=5000 \
+  --screenshot=shot.png "http://127.0.0.1:8888/"
+```
+
+Notes: `--window-size` must use a comma (`1440,900`); an `x` separator
+is silently ignored and renders at an unrelated viewport. Use
+`--dump-dom` plus section checks for structural acceptance, and append
+`?theme=dark` to capture the dark theme. The canvas `style` attribute
+in the dumped DOM proves the JS geometry code ran. Interactive flows
+(lightbox keyboard navigation, preview editing) still need a real
+browser session; mark them unverified otherwise.
 
 ## Pitfalls already fixed (do not regress)
 
@@ -210,9 +231,12 @@ browser is available; mark it as unverified otherwise.
   `.hidden { display: none !important; }`.
 - **Clock skew**: compare mtimes against the server `now` only.
 - **Stale async responses**: guard every fetch continuation against
-  current state (`viewer.rel`, `scanSeq`, `lossFetchPath`); capture
-  the working directory when a run starts (`runAction`, `saveDraft`)
-  and bind results to it.
+  current state (`viewer.rel`, `scanSeq`); capture the working
+  directory when a run starts (`runAction`, `saveDraft`) and bind
+  results to it. The loss fetch must capture its own path and sequence
+  per call — an earlier version relied on a shared mutable
+  `lossFetchPath` global, which let a late response from directory A
+  render into directory B.
 - **Cross-directory baselines**: file growth and ETA samples must be
   reset when the directory changes.
 - **ASCII only, no emojis** in code and terminal output; user-facing

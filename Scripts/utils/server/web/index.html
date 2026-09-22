@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="zh-CN">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -9,145 +9,155 @@
 </head>
 <body>
 <div class="topbar">
-  <button class="iconbtn" id="drawerBtn" aria-label="Toggle file browser" title="Toggle file browser">
-    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+  <button class="iconbtn" id="sidebarBtn" aria-label="切换文件栏" title="切换文件栏">
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
   </button>
   <a href="https://gpumdkit.cn" target="_blank" rel="noopener">
     <img class="logo" id="logoImg" src="/logo_lateral.png" alt="GPUMDkit">
   </a>
-  <span class="brand-text hidden" id="brandText"><span class="gpumd">GPUMD</span><span class="kit">kit</span></span>
-  <nav class="crumb" id="crumb" aria-label="Current directory"></nav>
+  <span class="brand hidden" id="brandText"><span class="gpumd">GPUMD</span><span class="kit">kit</span></span>
+  <nav class="crumb" id="crumb" aria-label="当前位置"></nav>
   <span class="grow"></span>
-  <span class="conn" id="connWrap"><span class="conn-dot" id="connDot"></span><span id="connText">connecting...</span></span>
-  <select id="refreshSel" class="sel" title="Refresh interval while jobs are active; drops to a 60s idle check otherwise" aria-label="Refresh interval">
+  <span class="conn" id="connWrap"><span class="conn-dot" id="connDot"></span><span id="connText">连接中...</span></span>
+  <button class="iconbtn running-chip hidden" id="runningChip" aria-label="有命令正在运行，点击查看输出" title="命令运行中">运行中</button>
+  <select id="refreshSel" class="sel" aria-label="刷新间隔" title="任务活跃时按所选间隔刷新；空闲时降为 60 秒检查">
     <option value="5">5s</option>
     <option value="15" selected>15s</option>
     <option value="30">30s</option>
     <option value="60">60s</option>
-    <option value="0">off</option>
+    <option value="0">关闭</option>
   </select>
-  <button class="iconbtn" id="themeBtn" aria-label="Toggle light or dark theme" title="Toggle light or dark theme"></button>
-  <button class="ghost small" id="refreshBtn">Refresh</button>
+  <button class="iconbtn" id="themeBtn" aria-label="切换浅色或深色主题" title="切换浅色或深色主题"></button>
+  <button class="iconbtn" id="moreBtn" aria-label="更多" title="更多" aria-haspopup="menu">
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><circle cx="5" cy="12" r="1.7"/><circle cx="12" cy="12" r="1.7"/><circle cx="19" cy="12" r="1.7"/></svg>
+  </button>
+  <div class="menu hidden" id="moreMenu" role="menu">
+    <button role="menuitem" id="menuCommands">命令与输出</button>
+    <button role="menuitem" id="menuRefresh">刷新目录</button>
+  </div>
 </div>
-<main>
-  <div id="loginView" class="login-wrap hidden">
-    <img class="login-logo" id="loginLogo" src="/logo.png" alt="GPUMDkit" onerror="this.style.display='none'">
-    <div class="card">
-      <h2>Sign in</h2>
-      <input type="password" id="pwInput" placeholder="Password" autocomplete="current-password">
-      <button id="loginBtn">Sign in</button>
-      <p class="err" id="loginMsg"></p>
+
+<div id="loginView" class="loginwrap hidden">
+  <img class="loginlogo" id="loginLogo" src="/logo.png" alt="GPUMDkit" onerror="this.style.display='none'">
+  <div class="logincard">
+    <h2>登录</h2>
+    <input type="password" id="pwInput" placeholder="密码" autocomplete="current-password">
+    <button id="loginBtn" class="primary">登录</button>
+    <p class="err" id="loginMsg"></p>
+  </div>
+</div>
+
+<div id="appView" class="hidden">
+  <div class="layout" id="layout">
+    <aside class="sidebar" id="sidebarPanel" aria-label="文件栏">
+      <input type="search" id="fileFilter" placeholder="搜索文件" aria-label="搜索文件">
+      <div class="filelist" id="fileList"></div>
+    </aside>
+    <div class="content" id="contentCol">
+      <div class="page">
+        <header class="pagehead">
+          <h1 id="dirTitle"></h1>
+          <div class="pagestatus" id="statusLine"></div>
+        </header>
+        <div class="banner hidden" id="errorBanner">
+          <span id="errorText"></span>
+          <button class="ghost small" id="retryBtn">重试</button>
+        </div>
+        <div id="canvasRoot"></div>
+      </div>
     </div>
   </div>
-  <div id="appView" class="hidden">
-    <div class="workbench">
-      <aside class="browser" id="browserPanel" aria-label="File browser">
-        <div class="pathhead">
-          <button class="iconbtn" id="upBtn" aria-label="Go to the parent directory" title="Go to the parent directory">
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="19" x2="12" y2="5"/><polyline points="5 12 12 5 19 12"/></svg>
-          </button>
-          <span class="curpath mono" id="curPathLabel" title=""></span>
-          <button class="iconbtn" id="copyPathBtn" aria-label="Copy the full path" title="Copy the full path">
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
-          </button>
-        </div>
-        <input type="text" id="fileFilter" placeholder="filter files..." aria-label="Filter files">
-        <div class="browser-tools">
-          <label class="sortlabel">sort
-            <select id="sortSel" aria-label="Sort files">
-              <option value="name">name</option>
-              <option value="mtime">modified</option>
-              <option value="size">size</option>
-            </select>
-          </label>
-          <span class="muted" id="browserCount"></span>
-        </div>
-        <div class="filelist" id="fileList"></div>
-      </aside>
-      <div class="content">
-        <div class="viewtabs" role="tablist">
-          <button class="viewtab active" data-view="overview" aria-pressed="true">Overview</button>
-          <button class="viewtab" data-view="data" aria-pressed="false">Data</button>
-          <button class="viewtab" data-view="figures" aria-pressed="false">Figures</button>
-        </div>
-        <section id="viewOverview">
-          <div class="card">
-            <h2>Training monitor <span class="light" id="monMeta"></span></h2>
-            <div id="monBody"><div class="empty">No training records in this directory (nep.in and loss.out not both found).</div></div>
-          </div>
-          <div class="card">
-            <h2>Recommended actions <span class="light" id="recCount"></span></h2>
-            <div id="recBox"><div class="empty">No recognized GPUMDkit output files. Run a simulation, or open a directory that contains results.</div></div>
-          </div>
-        </section>
-        <section id="viewData" class="hidden">
-          <div class="card">
-            <h2>File viewer</h2>
-            <div id="viewerBody"><div class="empty">Select a file from the browser to preview, plot, or edit.</div></div>
-          </div>
-        </section>
-        <section id="viewFigures" class="hidden">
-          <div class="card">
-            <h2>Figures <span class="light" id="figCount"></span></h2>
-            <div id="figBox"><div class="empty">No PNG or JPEG images in this directory.</div></div>
-          </div>
-        </section>
-      </div>
-    </div>
-    <div class="bottompanel" id="bottomPanel">
-      <div class="panelbar">
-        <button class="ptab active" data-tab="output" aria-pressed="true">Output</button>
-        <button class="ptab" data-tab="history" aria-pressed="false">History <span class="muted" id="histCount"></span></button>
-        <button class="ptab" data-tab="terminal" aria-pressed="false">Terminal</button>
-        <span class="grow"></span>
-        <span class="muted mono" id="panelBusy"></span>
-        <button class="iconbtn" id="panelToggle" aria-label="Collapse or expand the panel" title="Collapse or expand the panel">
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
-        </button>
-      </div>
-      <div class="panelbody">
-        <div class="pbody" id="pOutput">
-          <pre class="output" id="output"></pre>
-          <p class="muted hidden" id="outTruncNote">output truncated at 64 KB by the server</p>
-        </div>
-        <div class="pbody hidden" id="pHistory">
-          <div id="histList"><div class="empty">No commands have been run in this session.</div></div>
-        </div>
-        <div class="pbody hidden" id="pTerminal">
-          <div class="term" id="termBody">
-            <div class="termnote">each command runs as an independent <span class="mono">bash -c</span> in the current directory; session state such as <span class="mono">export</span> is not kept; timeout 120 s</div>
-            <pre class="term-out" id="termOut"></pre>
-            <div class="term-in">
-              <span class="tp">$</span>
-              <input id="termInput" type="text" placeholder="type a command and press Enter (cd / clear / pwd built in)" autocomplete="off" spellcheck="false">
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-    <div class="statusbar">
-      <span class="sb-root mono" id="sbRoot" title=""></span>
+</div>
+
+<div class="overlay hidden" id="lightbox">
+  <div class="lbstage">
+    <img id="lbImg" alt="">
+    <div class="lbbar">
+      <span class="mono lbtitle" id="lbTitle"></span>
       <span class="grow"></span>
-      <span id="sbErr" class="mono sb-err"></span>
-      <span id="sbCwd" class="mono"></span>
-      <span id="sbLive" class="mono sb-live"></span>
-      <span id="sbEntries" class="mono"></span>
-      <span id="sbRefresh" class="mono"></span>
-    </div>
-  </div>
-</main>
-<div class="overlay hidden" id="lightboxOverlay">
-  <div class="modal lightbox">
-    <div class="modal-head">
-      <strong id="lightboxTitle">Figure</strong>
-      <button class="ghost small" id="lightboxClose" aria-label="Close the figure">Close</button>
-    </div>
-    <div class="modal-body figcenter">
-      <img id="lightboxImg" class="lightbox-img" alt="figure">
+      <span class="muted" id="lbCount"></span>
+      <span class="lbhint">← → 切换 · Esc 关闭</span>
+      <button class="ghost small" id="lbClose">关闭</button>
     </div>
   </div>
 </div>
+
+<div class="overlay hidden" id="previewLayer">
+  <div class="sheet">
+    <div class="sheet-head">
+      <strong class="mono" id="pvTitle"></strong>
+      <span class="muted" id="pvMeta"></span>
+      <span class="badge warn hidden" id="pvDirty">未保存</span>
+      <span class="grow"></span>
+      <div class="seg hidden" id="pvModes"></div>
+      <button class="ghost small hidden" id="pvEditBtn">编辑</button>
+      <button class="iconbtn" id="pvClose" aria-label="关闭预览" title="关闭 (Esc)">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="5" y1="5" x2="19" y2="19"/><line x1="19" y1="5" x2="5" y2="19"/></svg>
+      </button>
+    </div>
+    <div class="sheet-body" id="pvBody"></div>
+    <p class="err" id="pvMsg"></p>
+    <div class="confbar warn hidden" id="pvConfirm">
+      <span>当前文件有未保存的修改。</span>
+      <button class="ghost small" id="pvKeepBtn">继续编辑</button>
+      <button class="danger small" id="pvDiscardBtn">放弃修改并打开</button>
+    </div>
+    <div class="confbar conflict hidden" id="pvConflict">
+      <span>文件在磁盘上已被外部修改。</span>
+      <button class="small" id="pvRereadBtn">重新读取</button>
+      <button class="ghost small" id="pvKeepDraftBtn">保留我的修改</button>
+      <button class="danger small" id="pvOverwriteBtn">覆盖磁盘</button>
+    </div>
+  </div>
+</div>
+
+<div class="overlay hidden" id="chartZoom">
+  <div class="zoombox">
+    <div class="zoombar">
+      <strong>训练曲线</strong>
+      <span class="grow"></span>
+      <span class="scale-summary mono" id="zoomScale"></span>
+      <button class="ghost small" id="zoomClose">关闭</button>
+    </div>
+    <canvas id="zoomCanvas"></canvas>
+    <div class="lg-row" id="zoomLegend"></div>
+  </div>
+</div>
+
+<aside class="drawer hidden" id="drawer" aria-label="命令与输出">
+  <div class="drawer-head">
+    <strong>命令与输出</strong>
+    <span class="grow"></span>
+    <div class="seg" id="drawerTabs">
+      <button class="segbtn on" data-tab="output">输出</button>
+      <button class="segbtn" data-tab="history">记录</button>
+      <button class="segbtn" data-tab="terminal">命令</button>
+    </div>
+    <button class="iconbtn" id="drawerClose" aria-label="关闭抽屉" title="关闭">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="5" y1="5" x2="19" y2="19"/><line x1="19" y1="5" x2="5" y2="19"/></svg>
+    </button>
+  </div>
+  <div class="drawer-body">
+    <div id="dOutput">
+      <pre class="output" id="output"></pre>
+      <p class="muted hidden" id="outTruncNote">输出在服务端截断至 64 KB</p>
+    </div>
+    <div id="dHistory" class="hidden"><div id="histList"></div></div>
+    <div id="dTerminal" class="hidden">
+      <div class="term">
+        <div class="termnote">每条命令都在当前目录独立执行；export 等会话状态不会被保留；单条限时 120 秒</div>
+        <pre class="term-out" id="termOut"></pre>
+        <div class="term-in">
+          <span class="tp">$</span>
+          <input id="termInput" type="text" placeholder="输入命令后回车（内建 cd / clear / pwd）" autocomplete="off" spellcheck="false">
+        </div>
+      </div>
+    </div>
+  </div>
+</aside>
+
 <div class="toast" id="toast"></div>
+<div class="drawer-mask hidden" id="drawerMask"></div>
 <script src="/app.js"></script>
 </body>
 </html>
