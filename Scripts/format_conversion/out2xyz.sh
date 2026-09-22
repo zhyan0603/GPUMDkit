@@ -15,7 +15,7 @@
 # Output:
 #   NEPdataset/train.xyz  (converted dataset in extxyz format)
 # Author:     Yuwen Zhang, Shunda Chen, Zihan YAN (yanzihan@westlake.edu.cn)
-# Last-modified: 2026-09-14
+# Last-modified: 2026-09-17
 # =============================================================================
 
 #--- DEFAULT ASSIGNMENTS ---------------------------------------------------------------------
@@ -90,6 +90,11 @@ for file in "${converged_files[@]}"; do
     end_lines=($(sed -n '/[^ML] energy  without entropy/=' "$file"))
     ion_numb_arra=($(grep "ions per type" "$file" | tail -n 1 | awk -F"=" '{print $2}'))
     ion_symb_arra=($(grep "TITEL" "$file" | awk '{print $4}' | awk -F"_" '{print $1}' ))
+
+    if [ ${#ion_symb_arra[@]} -eq 0 ]; then
+        # VASP 6.6.0 omits "TITEL" lines.
+        ion_symb_arra=($(grep "^ POSCAR:" "$file" | tail -n 1 | awk -F":" '{print $2}'))
+    fi
     syst_numb_atom=$(grep "number of ions" "$file" | awk '{print $12}')
 
     k=0

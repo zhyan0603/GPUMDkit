@@ -8,18 +8,36 @@
 # Script:     time_consuming_gpumd.sh
 # Category:   Analyzer Scripts
 # Purpose:    Monitor GPUMD simulation progress in real time by tracking
-#            neighbor.out, and display speed, total time, and estimated
-#            completion time.
+#             neighbor.out when available, otherwise thermo.out, and display
+#             speed, total time, and estimated completion time.
 # Usage:      ./time_consuming_gpumd.sh
 # Output:
 #   Real-time table of current frame, speed, total time, time left,
 #   and estimated end time
 # Author:     Zihan YAN (yanzihan@westlake.edu.cn)
-# Last-modified: 2026-05-16
+# Modified by Xiaotu SONG
+# Last-modified: 2026-09-21
 # =============================================================================
 
-# Get the total number of frames from the "run" file
-frames=$(grep run run.in | awk '{sum += $2} END {print sum}')
+# Get the total number of steps from run.in.
+if [ ! -f "run.in" ]; then
+    echo " Error: run.in does not exist."
+    exit 1
+fi
+
+frames=$(awk '
+    $1 == "run" && $2 ~ /^[0-9]+$/ { sum += $2 }
+    END {
+        if (sum > 0) {
+            printf "%.0f\n", sum
+        }
+    }
+' run.in)
+
+if [ -z "$frames" ]; then
+    echo " Error: no valid run command found in run.in."
+    exit 1
+fi
 
 # Initialize variables
 current_frame=0
@@ -103,27 +121,83 @@ printf "%-15s %-12s %-15s %-15s %-20s\n" \
     "$(center_text "-------------" 15)" \
     "$(center_text "-----------------" 20)"
 
-# Check if neighbor.out exists
-if [ ! -f "neighbor.out" ]; then
-    echo " Error: neighbor.out does not exist. Waiting for file to appear..."
-    until [ -f "neighbor.out" ]; do
+# Wait for at least one supported progress file. If neighbor.out exists,
+# it is always preferred and thermo.out is not consulted.
+if [ ! -f "neighbor.out" ] && [ ! -f "thermo.out" ]; then
+    echo " Error: neither neighbor.out nor thermo.out exists. Waiting for a progress file to appear..."
+    until [ -f "neighbor.out" ] || [ -f "thermo.out" ]; do
         sleep 1
     done
 fi
 
-# Monitor neighbor.out for updates
-# echo "Monitoring neighbor.out for real-time updates..."
-tail -f -n 1 neighbor.out | while read -r line; do
-    # Extract current frame from the line (remove trailing colon)
-    current_frame=$(echo "$line" | awk '{print $5}' | sed 's/\:$//')
+if [ -f "neighbor.out" ]; then
+    monitor_file="neighbor.out"
+else
+    monitor_file="thermo.out"
+    thermo_interval=$(awk '
+        $1 == "dump_thermo" && $2 ~ /^[0-9]+$/ && $2 > 0 {
+            print $2
+            exit
+        }
+    ' run.in)
 
-    # Validate current_frame
+    if [ -z "$thermo_interval" ]; then
+        echo " Error: no valid dump_thermo interval found in run.in."
+        exit 1
+    fi
+fi
+
+monitor_progress() {
+    if [ "$monitor_file" = "neighbor.out" ]; then
+        # Extract current steps from the neighbor progress output.
+        tail -f -n 1 neighbor.out
+    else
+        # Count existing thermo rows once, then follow only newly appended rows.
+        # A row is any non-empty, non-comment line, by design.
+        local row_count reported_rows current_time current_time_now line
+        row_count=$(awk '
+            { sub(/\r$/, "") }
+            NF && $1 !~ /^#/ { rows++ }
+            END { print rows + 0 }
+        ' thermo.out)
+        reported_rows=$row_count
+        printf '%s\n' "$((row_count * thermo_interval))"
+        current_time=$(date +%s)
+
+        # read -t lets the loop publish a batched update about once per second
+        # without rescanning the complete thermo.out file.
+        while true; do
+            if IFS= read -r -t 1 line; then
+                if [[ ! "$line" =~ ^[[:space:]]*$ && ! "$line" =~ ^[[:space:]]*# ]]; then
+                    row_count=$((row_count + 1))
+                fi
+            fi
+
+            current_time_now=$(date +%s)
+            if [ "$row_count" -gt "$reported_rows" ] && [ "$current_time_now" -gt "$current_time" ]; then
+                printf '%s\n' "$((row_count * thermo_interval))"
+                reported_rows=$row_count
+                current_time=$current_time_now
+            fi
+        done < <(tail -n 0 -f thermo.out)
+    fi
+}
+
+monitor_progress | while read -r line; do
+    if [ "$monitor_file" = "neighbor.out" ]; then
+        # Extract current frame from the line (remove trailing colon).
+        current_frame=$(echo "$line" | awk '{print $5}' | sed 's/\:$//')
+    else
+        current_frame=$line
+    fi
+
+    # Validate current_frame.
     if [[ ! "$current_frame" =~ ^[0-9]+$ ]]; then
-        echo " Error reading current frame from neighbor.out"
+        echo " Error reading current frame from $monitor_file"
         continue
     fi
 
-    # Calculate time difference and speed (assuming each update is 1000 steps)
+    # Calculate time difference and speed using the actual step increment.
     current_time=$(date +%s.%N)
     time_diff=$(awk -v ct="$current_time" -v lt="$last_time" 'BEGIN {print ct - lt}')
     if [ $(awk "BEGIN {print ($time_diff > 0)}") -eq 1 ]; then
@@ -133,23 +207,23 @@ tail -f -n 1 neighbor.out | while read -r line; do
         fi
     fi
 
-    # Update last frame and time
+    # Update last frame and time.
     last_frame=$current_frame
     last_time=$current_time
 
-    # Calculate times
+    # Calculate times.
     calculate_times
 
-    # Skip the first update
+    # Skip the first update.
     if [ "$first_update" = true ]; then
         first_update=false
         continue
     fi
 
-    # Format speed as a string for centering
+    # Format speed as a string for centering.
     speed_str=$(printf "%.2f" "$speed")
 
-    # Print table row (centered)
+    # Print table row (centered).
     printf "%-15s %-12s %-15s %-15s %-20s\n" \
         "$(center_text "$current_frame" 15)" \
         "$(center_text "$speed_str" 15)" \
