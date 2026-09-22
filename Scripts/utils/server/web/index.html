@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="zh-CN">
+<html lang="en">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -12,105 +12,74 @@
   <div class="loading-card">
     <span class="loading-mark" aria-hidden="true">GK</span>
     <div class="loading-spinner"></div>
-    <p>正在读取工作目录…</p>
+    <p data-i18n="loading">Loading working directory…</p>
   </div>
 </div>
 
-<header id="appHeader" class="site-header page-width">
-  <a class="brand" href="https://gpumdkit.cn" target="_blank" rel="noopener" aria-label="GPUMDkit 主页">
+<header class="topbar">
+  <a class="brand" href="https://gpumdkit.cn" target="_blank" rel="noopener" aria-label="GPUMDkit home">
     <span class="brand-mark" aria-hidden="true">GK</span>
-    <span class="brand-copy">
-      <strong>GPUMDkit · Web Console</strong>
-      <small>计算目录工作台 · 命令推荐 / 监控 / 终端</small>
-    </span>
+    <span class="brand-name">GPUMDkit</span>
   </a>
-  <div class="header-actions">
-    <span class="catalog-status" id="connWrap"><i aria-hidden="true"></i><span id="connText">连接中…</span></span>
-    <select id="refreshSel" class="sort-field-select" aria-label="刷新间隔" title="任务活跃时按所选间隔刷新；空闲时降为 60 秒检查">
-      <option value="5">5s</option>
-      <option value="15" selected>15s</option>
-      <option value="30">30s</option>
-      <option value="60">60s</option>
-      <option value="0">关闭</option>
-    </select>
-    <button type="button" class="icon-button" id="themeBtn" aria-label="切换浅色或深色主题" title="切换浅色或深色主题"></button>
-    <button type="button" class="icon-button" id="drawerBtn" aria-label="命令与输出" title="命令与输出">
-      <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polyline points="4 17 10 11 4 5"/><line x1="12" y1="19" x2="20" y2="19"/></svg>
-    </button>
-    <button type="button" class="icon-button" id="refreshBtn" aria-label="刷新" title="刷新当前目录">
-      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/></svg>
-    </button>
-  </div>
+  <nav class="crumb" id="crumb" aria-label="Current directory"></nav>
+  <span class="grow"></span>
+  <span class="conn" id="connWrap"><i aria-hidden="true"></i><span id="connText">connecting…</span></span>
+  <select id="refreshSel" class="sel" aria-label="Auto refresh interval" title="Auto refresh (off by default)">
+    <option value="0" selected data-i18n-opt="off">off</option>
+    <option value="5">5s</option>
+    <option value="15">15s</option>
+    <option value="30">30s</option>
+    <option value="60">60s</option>
+  </select>
+  <button type="button" class="iconbtn" id="refreshBtn" aria-label="Refresh now" title="Refresh now">
+    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/></svg>
+  </button>
+  <button type="button" class="segbtn lang" id="langBtn" aria-label="Switch language" title="EN / 中文">中文</button>
+  <button type="button" class="iconbtn" id="themeBtn" aria-label="Toggle light or dark theme" title="Theme"></button>
+  <button type="button" class="iconbtn" id="drawerBtn" aria-label="Commands and output" title="Commands / output">
+    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="4 17 10 11 4 5"/><line x1="12" y1="19" x2="20" y2="19"/></svg>
+  </button>
 </header>
 
-<div id="loginView" class="login-stage page-width hidden">
+<div id="loginView" class="loginwrap hidden">
   <div class="logincard">
     <span class="brand-mark big" aria-hidden="true">GK</span>
-    <h2>登录</h2>
-    <p class="login-sub">此服务器需要密码，会话保持 12 小时。</p>
-    <input type="password" id="pwInput" placeholder="密码" autocomplete="current-password">
-    <button id="loginBtn" class="btn btn-primary" type="button">登录</button>
+    <h2 data-i18n="login">Sign in</h2>
+    <p class="login-sub" data-i18n="loginSub">This server requires a password.</p>
+    <input type="password" id="pwInput" placeholder="Password" autocomplete="current-password">
+    <button id="loginBtn" class="btn primary" type="button" data-i18n="loginBtn">Sign in</button>
     <p class="err" id="loginMsg"></p>
   </div>
 </div>
 
-<main id="appView" class="page-width hidden">
-  <section class="workspace-hero" aria-labelledby="dirTitle">
-    <div class="hero-copy">
-      <span class="eyebrow">GPUMDkit 工作区</span>
-      <h1 id="dirTitle">—</h1>
-      <nav class="workspace-breadcrumb" id="crumb" aria-label="当前位置"></nav>
-      <div class="hero-note"><span class="status-dot" aria-hidden="true"></span><span id="statusLine">正在读取目录…</span></div>
-    </div>
-    <aside class="workspace-hero-status" id="heroStatus" aria-label="目录状态"></aside>
-  </section>
-
-  <section class="stats-grid" id="statsGrid" aria-label="目录统计"></section>
-
-  <div id="errorBanner" class="model-notice hidden" role="alert">
-    <strong>目录读取失败</strong>
-    <span><span id="errorText"></span> 下方内容可能是旧数据。</span>
-    <button type="button" class="btn btn-soft" id="retryBtn">重试</button>
+<main id="appView" class="hidden">
+  <div class="statusline" id="statusLine">
+    <strong class="dirname mono" id="dirTitle">—</strong>
+    <span class="sep" aria-hidden="true">·</span>
+    <span id="stFiles">—</span>
+    <span class="sep" aria-hidden="true">·</span>
+    <span id="stTrain">—</span>
+    <span class="grow"></span>
+    <span id="stUpdated" class="muted mono">—</span>
   </div>
 
-  <section class="catalog-layout">
-    <aside class="filter-rail" aria-label="文件栏">
-      <div class="rail-heading">
-        <span class="eyebrow">浏览</span>
-        <h2>文件与子目录</h2>
+  <div id="errorBanner" class="notice hidden" role="alert">
+    <span id="errorText"></span>
+    <button type="button" class="btn soft small" id="retryBtn" data-i18n="retry">Retry</button>
+  </div>
+
+  <div class="layout">
+    <aside class="rail" aria-label="Files">
+      <div class="rail-search">
+        <input type="search" id="fileFilter" placeholder="Filter…" aria-label="Filter files">
       </div>
-      <label class="search-field compact" for="fileFilter">
-        <span class="search-icon" aria-hidden="true">⌕</span>
-        <input type="search" id="fileFilter" placeholder="搜索文件名" autocomplete="off" spellcheck="false">
-      </label>
-      <div class="quick-filters" id="quickFilters" role="group" aria-label="文件类型筛选"></div>
       <div class="filelist" id="fileList"></div>
-      <div class="rail-tip"><span aria-hidden="true">i</span><p>点击文件预览或绘图，点击图片直接放大，点击目录切换工作区。</p></div>
     </aside>
 
-    <section class="results-column" aria-label="目录内容">
-      <div class="results-toolbar">
-        <div>
-          <span class="eyebrow">目录内容</span>
-          <h2 id="resultsTitle">当前目录</h2>
-        </div>
-        <div class="results-toolbar-actions">
-          <div class="view-switcher" id="scaleSwitcher" role="group" aria-label="曲线坐标">
-            <button type="button" class="view-switch" data-axis="logX">X Log</button>
-            <button type="button" class="view-switch" data-axis="logY">Y Log</button>
-          </div>
-          <button type="button" class="btn btn-soft" id="zoomBtn">放大曲线</button>
-        </div>
-      </div>
-      <div class="results-meta" id="resultsMeta"></div>
+    <div class="main">
       <div id="canvasRoot"></div>
-    </section>
-  </section>
-
-  <footer class="site-footer">
-    <span>GPUMDkit Web Console</span>
-    <span>在终端按 Ctrl+C 停止服务器 · 数据来自服务端文件</span>
-  </footer>
+    </div>
+  </div>
 </main>
 
 <div class="overlay hidden" id="lightbox">
@@ -120,8 +89,8 @@
       <span class="mono lbtitle" id="lbTitle"></span>
       <span class="grow"></span>
       <span class="muted" id="lbCount"></span>
-      <span class="lbhint">← → 切换 · Esc 关闭</span>
-      <button type="button" class="btn btn-soft" id="lbClose">关闭</button>
+      <span class="lbhint" data-i18n="lbHint">← → navigate · Esc close</span>
+      <button type="button" class="btn soft small" id="lbClose" data-i18n="close">Close</button>
     </div>
   </div>
 </div>
@@ -131,24 +100,24 @@
     <div class="sheet-head">
       <strong class="mono" id="pvTitle"></strong>
       <span class="muted" id="pvMeta"></span>
-      <span class="coverage-badge hidden" id="pvDirty"><i aria-hidden="true"></i>未保存</span>
+      <span class="badge dirty hidden" id="pvDirty" data-i18n="unsaved">unsaved</span>
       <span class="grow"></span>
       <div class="seg hidden" id="pvModes"></div>
-      <button type="button" class="btn btn-soft small hidden" id="pvEditBtn">编辑</button>
-      <button type="button" class="icon-button" id="pvClose" aria-label="关闭预览" title="关闭 (Esc)">×</button>
+      <button type="button" class="btn soft small hidden" id="pvEditBtn" data-i18n="edit">Edit</button>
+      <button type="button" class="iconbtn" id="pvClose" aria-label="Close preview" title="Esc">×</button>
     </div>
     <div class="sheet-body" id="pvBody"></div>
     <p class="err" id="pvMsg"></p>
     <div class="confbar warn hidden" id="pvConfirm">
-      <span>当前文件有未保存的修改。</span>
-      <button type="button" class="btn btn-soft small" id="pvKeepBtn">继续编辑</button>
-      <button type="button" class="btn btn-danger small" id="pvDiscardBtn">放弃并打开</button>
+      <span data-i18n="dirtyWarn">This file has unsaved changes.</span>
+      <button type="button" class="btn soft small" id="pvKeepBtn" data-i18n="keepEditing">Keep editing</button>
+      <button type="button" class="btn danger small" id="pvDiscardBtn" data-i18n="discardOpen">Discard and open</button>
     </div>
     <div class="confbar conflict hidden" id="pvConflict">
-      <span>文件在磁盘上已被外部修改。</span>
-      <button type="button" class="btn btn-primary small" id="pvRereadBtn">重新读取</button>
-      <button type="button" class="btn btn-soft small" id="pvKeepDraftBtn">保留我的修改</button>
-      <button type="button" class="btn btn-danger small" id="pvOverwriteBtn">覆盖磁盘</button>
+      <span data-i18n="conflictWarn">The file changed on disk while you were editing.</span>
+      <button type="button" class="btn primary small" id="pvRereadBtn" data-i18n="reload">Reload</button>
+      <button type="button" class="btn soft small" id="pvKeepDraftBtn" data-i18n="keepDraft">Keep my draft</button>
+      <button type="button" class="btn danger small" id="pvOverwriteBtn" data-i18n="overwrite">Overwrite</button>
     </div>
   </div>
 </div>
@@ -156,40 +125,40 @@
 <div class="overlay hidden" id="chartZoom">
   <div class="zoombox">
     <div class="zoombar">
-      <strong>训练曲线</strong>
+      <strong data-i18n="lossCurve">Loss curve</strong>
       <span class="grow"></span>
       <span class="mono muted" id="zoomScale"></span>
-      <button type="button" class="btn btn-soft small" id="zoomClose">关闭</button>
+      <button type="button" class="btn soft small" id="zoomClose" data-i18n="close">Close</button>
     </div>
     <canvas id="zoomCanvas"></canvas>
     <div class="lg-row" id="zoomLegend"></div>
   </div>
 </div>
 
-<aside class="drawer hidden" id="drawer" aria-label="命令与输出">
+<aside class="drawer hidden" id="drawer" aria-label="Commands and output">
   <div class="drawer-head">
-    <strong>命令与输出</strong>
+    <strong data-i18n="commands">Commands & output</strong>
     <span class="grow"></span>
-    <div class="view-switcher">
-      <button type="button" class="view-switch active" data-tab="output">输出</button>
-      <button type="button" class="view-switch" data-tab="history">记录</button>
-      <button type="button" class="view-switch" data-tab="terminal">命令</button>
+    <div class="seg">
+      <button type="button" class="segbtn on" data-tab="output" data-i18n="output">Output</button>
+      <button type="button" class="segbtn" data-tab="history" data-i18n="history">History</button>
+      <button type="button" class="segbtn" data-tab="terminal" data-i18n="terminal">Terminal</button>
     </div>
-    <button type="button" class="icon-button" id="drawerClose" aria-label="关闭抽屉" title="关闭">×</button>
+    <button type="button" class="iconbtn" id="drawerClose" aria-label="Close drawer" title="Close">×</button>
   </div>
   <div class="drawer-body">
     <div id="dOutput">
       <pre class="output" id="output"></pre>
-      <p class="muted hidden" id="outTruncNote">输出在服务端截断至 64 KB</p>
+      <p class="muted hidden" id="outTruncNote" data-i18n="truncated">output truncated at 64 KB on the server</p>
     </div>
     <div id="dHistory" class="hidden"><div id="histList"></div></div>
     <div id="dTerminal" class="hidden">
       <div class="term">
-        <div class="termnote">每条命令都在当前目录独立执行；export 等会话状态不会保留；单条限时 120 秒</div>
+        <div class="termnote" data-i18n="termNote">Each command runs independently in the current directory; session state like export is not kept; 120 s limit per command</div>
         <pre class="term-out" id="termOut"></pre>
         <div class="term-in">
           <span class="tp">$</span>
-          <input id="termInput" type="text" placeholder="输入命令后回车（内建 cd / clear / pwd）" autocomplete="off" spellcheck="false">
+          <input id="termInput" type="text" placeholder="command + Enter (cd / clear / pwd built in)" autocomplete="off" spellcheck="false">
         </div>
       </div>
     </div>

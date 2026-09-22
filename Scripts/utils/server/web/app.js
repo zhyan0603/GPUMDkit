@@ -16,11 +16,11 @@ function fmtSize(n) {
 }
 function fmtAgo(sec) {
   if (sec == null) return "";
-  if (sec < 5) return "刚刚";
-  if (sec < 60) return Math.floor(sec) + " 秒前";
-  if (sec < 3600) return Math.floor(sec / 60) + " 分钟前";
-  if (sec < 86400) return Math.floor(sec / 3600) + " 小时前";
-  return Math.floor(sec / 86400) + " 天前";
+  if (sec < 5) return T("justNow");
+  if (sec < 60) return Math.floor(sec) + T("sAgo");
+  if (sec < 3600) return Math.floor(sec / 60) + T("mAgo");
+  if (sec < 86400) return Math.floor(sec / 3600) + T("hAgo");
+  return Math.floor(sec / 86400) + T("dAgo");
 }
 function fmtDur(sec) {
   if (sec == null || !isFinite(sec)) return "--";
@@ -62,12 +62,12 @@ function median(a) {
 function copyText(text) {
   if (navigator.clipboard && navigator.clipboard.writeText) {
     navigator.clipboard.writeText(text).then(function() {
-      toast("已复制");
+      toast(T("copied"));
     }, function() {
-      toast(fallbackCopy(text) ? "已复制" : "复制失败");
+      toast(fallbackCopy(text) ? T("copied") : T("copyFail"));
     });
   } else {
-    toast(fallbackCopy(text) ? "已复制" : "复制失败");
+    toast(fallbackCopy(text) ? T("copied") : T("copyFail"));
   }
 }
 function fallbackCopy(text) {
@@ -90,32 +90,153 @@ function toast(msg) {
   toastTimer = setTimeout(function() { t.classList.remove("show"); }, 2400);
 }
 
-var ICON_SUN = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="12" cy="12" r="4.5"/><line x1="12" y1="2" x2="12" y2="4.5"/><line x1="12" y1="19.5" x2="12" y2="22"/><line x1="2" y1="12" x2="4.5" y2="12"/><line x1="19.5" y1="12" x2="22" y2="12"/><line x1="4.6" y1="4.6" x2="6.4" y2="6.4"/><line x1="17.6" y1="17.6" x2="19.4" y2="19.4"/><line x1="4.6" y1="19.4" x2="6.4" y2="17.6"/><line x1="17.6" y1="6.4" x2="19.4" y2="4.6"/></svg>';
-var ICON_MOON = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>';
-var ICON_CHEV = '<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>';
+/* ---- i18n ---- */
+var LANG = "en";
+var STRINGS = {
+  en: {
+    loading: "Loading working directory…",
+    login: "Sign in", loginSub: "This server requires a password.", loginBtn: "Sign in",
+    retry: "Retry", close: "Close", edit: "Edit", doneEdit: "Done",
+    unsaved: "unsaved", dirtyWarn: "This file has unsaved changes.",
+    keepEditing: "Keep editing", discardOpen: "Discard and open",
+    conflictWarn: "The file changed on disk while you were editing.",
+    reload: "Reload", keepDraft: "Keep my draft", overwrite: "Overwrite",
+    lossCurve: "Loss curve", commands: "Commands & output",
+    output: "Output", history: "History", terminal: "Terminal",
+    truncated: "output truncated at 64 KB on the server",
+    termNote: "Each command runs independently in the current directory; session state like export is not kept; 120 s limit per command",
+    termPlaceholder: "command + Enter (cd / clear / pwd built in)",
+    lbHint: "← → navigate · Esc close",
+    copied: "Copied", copyFail: "Copy failed",
+    justNow: "just now", sAgo: "s ago", mAgo: "m ago", hAgo: "h ago", dAgo: "d ago",
+    files: "files", file: "file", dirs: "dirs", dir: "dir",
+    training: "training", finished: "finished", updated: "updated",
+    lossTitle: "Loss curve", figTitle: "Figures", actTitle: "Actions",
+    filesTitle: "Files", subdirsTitle: "Subdirectories", emptyTitle: "Empty",
+    genFigure: "Figure", viewResult: "View", copy: "Copy", run: "Run", running: "Running…",
+    showMore: "Show more", filter: "Filter…",
+    emptyDir: "This directory is empty.", goUp: "Go up",
+    noRecords: "no valid records", unreadable: "unreadable", emptyFile: "empty",
+    readingLoss: "Reading loss.out…", openFile: "open file",
+    records: "records", latestGen: "latest gen", target: "target",
+    rate: "rate", eta: "ETA", estimating: "estimating", lastWrite: "last write",
+    status: "status", multiRun: "multi-run log", latestSeg: "latest seg",
+    progress: "progress", done: "done", noTarget: "no target in nep.in",
+    noNepIn: "no nep.in found", notGenerated: "not generated",
+    resultAt: "result", stale: "stale", showNMore: "Show N more",
+    trainDone: "Training finished (target reached)",
+    trainActive: "Training active · written",
+    trainIdle: "No recent write",
+    trainNoNep: "loss.out found · no nep.in",
+    trainNone: "No training records",
+    noCmdYet: "No commands run in this session.",
+    saved: "Saved", netErr: "network error", saveFail: "save failed",
+    overLimit: "content exceeds the 200 KB edit limit",
+    preview: "Table", textMode: "Text", formMode: "Form",
+    plotOpts: "Plot options", showFirst: "showing first 100 of",
+    rowsLabel: "rows", truncatedNote: "Bounded preview: first 128 KB and last 64 KB shown; editing disabled",
+    errDirRead: "Directory read failed. Content below may be stale.",
+    connBad: "connection problem · updated",
+    updatedAt: "updated", itemsLabel: "items",
+    langBtn: "中文",
+  },
+  zh: {
+    loading: "正在读取工作目录…",
+    login: "登录", loginSub: "此服务器需要密码。", loginBtn: "登录",
+    retry: "重试", close: "关闭", edit: "编辑", doneEdit: "完成",
+    unsaved: "未保存", dirtyWarn: "当前文件有未保存的修改。",
+    keepEditing: "继续编辑", discardOpen: "放弃并打开",
+    conflictWarn: "文件在磁盘上已被外部修改。",
+    reload: "重新读取", keepDraft: "保留我的修改", overwrite: "覆盖",
+    lossCurve: "训练曲线", commands: "命令与输出",
+    output: "输出", history: "记录", terminal: "命令",
+    truncated: "输出在服务端截断至 64 KB",
+    termNote: "每条命令都在当前目录独立执行；export 等会话状态不会保留；单条限时 120 秒",
+    termPlaceholder: "输入命令后回车（内建 cd / clear / pwd）",
+    lbHint: "← → 切换 · Esc 关闭",
+    copied: "已复制", copyFail: "复制失败",
+    justNow: "刚刚", sAgo: " 秒前", mAgo: " 分钟前", hAgo: " 小时前", dAgo: " 天前",
+    files: "个文件", file: "个文件", dirs: "个子目录", dir: "个子目录",
+    training: "训练", finished: "已完成", updated: "更新于",
+    lossTitle: "训练曲线", figTitle: "图片", actTitle: "可用操作",
+    filesTitle: "文件", subdirsTitle: "子目录", emptyTitle: "空目录",
+    genFigure: "生成图像", viewResult: "查看", copy: "复制", run: "运行", running: "运行中…",
+    showMore: "显示更多", filter: "筛选…",
+    emptyDir: "此目录为空。", goUp: "返回上级",
+    noRecords: "无有效记录", unreadable: "无法读取", emptyFile: "文件为空",
+    readingLoss: "正在读取 loss.out…", openFile: "打开文件",
+    records: "记录", latestGen: "最新代数", target: "目标",
+    rate: "速率", eta: "预计剩余", estimating: "估算中", lastWrite: "最后写入",
+    status: "状态", multiRun: "多轮训练记录", latestSeg: "最新段",
+    progress: "进度", done: "已完成", noTarget: "nep.in 未指定目标",
+    noNepIn: "未发现 nep.in", notGenerated: "未生成",
+    resultAt: "结果", stale: "已过期", showNMore: "再显示 N 张",
+    trainDone: "训练已完成（达到目标代数）",
+    trainActive: "训练进行中 · 有写入",
+    trainIdle: "近期无写入",
+    trainNoNep: "发现 loss.out · 无 nep.in",
+    trainNone: "未发现训练记录",
+    noCmdYet: "本次会话尚未运行命令。",
+    saved: "已保存", netErr: "网络错误", saveFail: "保存失败",
+    overLimit: "内容超过 200 KB 编辑上限",
+    preview: "表格", textMode: "文本", formMode: "表单",
+    plotOpts: "绘图选项", showFirst: "显示前 100 行（共",
+    rowsLabel: "行）", truncatedNote: "有界预览：仅显示开头 128 KB 与结尾 64 KB；编辑已禁用",
+    errDirRead: "目录读取失败，下方内容可能是旧数据。",
+    connBad: "连接异常 · 更新于",
+    updatedAt: "更新于", itemsLabel: "项",
+    langBtn: "EN",
+  },
+};
+function T(key) {
+  var dict = STRINGS[LANG] || STRINGS.en;
+  return dict[key] != null ? dict[key] : (STRINGS.en[key] != null ? STRINGS.en[key] : key);
+}
+function applyLang() {
+  document.querySelectorAll("[data-i18n]").forEach(function(node) {
+    node.textContent = T(node.getAttribute("data-i18n"));
+  });
+  document.querySelectorAll("[data-i18n-opt]").forEach(function(node) {
+    node.textContent = T(node.getAttribute("data-i18n-opt"));
+  });
+  var ph = el("termInput");
+  if (ph) ph.placeholder = T("termPlaceholder");
+  var fl = el("fileFilter");
+  if (fl) fl.placeholder = T("filter");
+  el("langBtn").textContent = T("langBtn");
+  document.documentElement.lang = LANG;
+  renderAll();
+}
+function setLang(lang) {
+  LANG = lang;
+  try { localStorage.setItem("gk_lang", lang); } catch (e) {}
+  applyLang();
+}
+
+var ICON_SUN = '<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="12" cy="12" r="4.5"/><line x1="12" y1="2" x2="12" y2="4.5"/><line x1="12" y1="19.5" x2="12" y2="22"/><line x1="2" y1="12" x2="4.5" y2="12"/><line x1="19.5" y1="12" x2="22" y2="12"/><line x1="4.6" y1="4.6" x2="6.4" y2="6.4"/><line x1="17.6" y1="17.6" x2="19.4" y2="19.4"/><line x1="4.6" y1="19.4" x2="6.4" y2="17.6"/><line x1="17.6" y1="6.4" x2="19.4" y2="4.6"/></svg>';
+var ICON_MOON = '<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>';
+var ICON_FOLDER = '<svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M10 4H4a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V8a2 2 0 0 0-2-2h-8l-2-2z"/></svg>';
+var ICON_CHART = '<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>';
+var ICON_IMG = '<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>';
+var ICON_GEAR = '<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 1 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 1 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 1 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 1 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>';
+var ICON_DOC = '<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>';
+var ICON_CHEV = '<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>';
 
 var PREVIEW_MAX_CLIENT = 512 * 1024;
-var LOSS_COLORS = ["#1f77b4", "#ff7f0e", "#2ca02c", "#d62728", "#9467bd", "#8c564b"];
+var LOSS_COLORS = ["#1867ae", "#c18852", "#3fa06a", "#a64747", "#7b5ea7", "#8c564b"];
 var KNOWN_COLS = {
   "msd.out": {4: ["t", "msd_x", "msd_y", "msd_z"], 7: ["t", "msd_x", "msd_y", "msd_z", "sdc_x", "sdc_y", "sdc_z"]},
   "sdc.out": {4: ["t", "vac_x", "vac_y", "vac_z"]},
   "loss.out": {6: ["gen", "Loss", "E_tr", "F_tr", "V_tr"], 10: ["gen", "L_total", "L1", "L2", "E_tr", "F_tr", "V_tr", "E_te", "F_te", "V_te"]},
 };
-var REC_GROUPS = {
-  plt_msd: "扩散与输运", plt_sdc: "扩散与输运", plt_msd_sdc: "扩散与输运",
-  plt_vac: "扩散与输运", plt_msd_conv: "扩散与输运",
-  plt_train: "NEP 训练", plt_train_density: "NEP 训练",
-  plt_train_test: "NEP 训练", plt_prediction: "NEP 训练",
-  plt_thermo: "热力学", plt_sigma: "Arrhenius 分析", plt_D: "Arrhenius 分析",
-};
 var REC_NAMES = {
-  plt_msd: "MSD 曲线", plt_sdc: "SDC 曲线", plt_msd_sdc: "MSD 与 SDC",
-  plt_vac: "VAC 曲线", plt_thermo: "热力学量曲线",
-  plt_train: "训练损失与 parity", plt_train_density: "训练 parity 密度图",
-  plt_train_test: "训练/测试对比", plt_prediction: "预测 parity 图",
-  plt_msd_conv: "MSD 收敛性检查", plt_sigma: "电导率 Arrhenius 图", plt_D: "扩散系数 Arrhenius 图",
+  plt_msd: "MSD curve", plt_sdc: "SDC curve", plt_msd_sdc: "MSD & SDC",
+  plt_vac: "VAC curve", plt_thermo: "Thermo curves",
+  plt_train: "Training loss & parity", plt_train_density: "Parity density",
+  plt_train_test: "Train/test compare", plt_prediction: "Prediction parity",
+  plt_msd_conv: "MSD convergence", plt_sigma: "Arrhenius sigma", plt_D: "Arrhenius D",
 };
-var FIG_PAGE = 12;
+var FIG_PAGE = 10;
 
 var curPath = "";
 var rootDir = "";
@@ -123,10 +244,8 @@ var running = false;
 var termBusy = false;
 var busyFlag = false;
 var scanSeq = 0;
-var pollActive = false;
 var pollTimer = null;
 var toastTimer = null;
-var ageTimer = null;
 var themeManual = null;
 var connOk = null;
 var lastGoodAt = null;
@@ -142,7 +261,6 @@ var lastNepDone = null;
 var nepSamples = [];
 var cmdHistory = [];
 var drawerTab = "output";
-var railFilter = "all";
 var pendingOpen = null;
 var figShown = FIG_PAGE;
 var lbList = [];
@@ -154,8 +272,12 @@ var plotState = null;
 
 try {
   themeManual = localStorage.getItem("gk_theme");
+  var savedLang = localStorage.getItem("gk_lang");
+  if (savedLang === "zh" || savedLang === "en") LANG = savedLang;
   var qp = new URLSearchParams(location.search).get("theme");
   if (qp === "dark" || qp === "light") themeManual = qp;
+  var ql = new URLSearchParams(location.search).get("lang");
+  if (ql === "zh" || ql === "en") LANG = ql;
 } catch (e) {}
 
 function setConn(ok) {
@@ -167,13 +289,12 @@ function setConn(ok) {
   updateConnText();
 }
 function updateConnText() {
-  if (connOk === null) { el("connText").textContent = "连接中…"; return; }
+  if (connOk === null) { el("connText").textContent = "…"; return; }
   if (!connOk) {
-    var age = lastGoodAt ? fmtAgo((Date.now() - lastGoodAt) / 1000) : "从未";
-    el("connText").textContent = "连接异常 · 更新于 " + age;
+    el("connText").textContent = T("connBad") + " " + (lastGoodAt ? fmtAgo((Date.now() - lastGoodAt) / 1000) : "—");
     return;
   }
-  el("connText").textContent = "更新于 " + fmtAgo((Date.now() - lastGoodAt) / 1000);
+  el("connText").textContent = T("updatedAt") + " " + fmtAgo((Date.now() - lastGoodAt) / 1000);
 }
 
 async function api(url, opts) {
@@ -184,7 +305,7 @@ async function api(url, opts) {
     setConn(false);
     throw e;
   }
-  if (resp.status === 401) showLogin("请先登录。");
+  if (resp.status === 401) showLogin(T("loginSub"));
   return resp;
 }
 
@@ -217,10 +338,10 @@ async function doLogin() {
       hideLogin();
       loadScan(curPath);
     } else {
-      el("loginMsg").textContent = data.error || "登录失败。";
+      el("loginMsg").textContent = data.error || T("saveFail");
     }
   } catch (e) {
-    el("loginMsg").textContent = "网络错误: " + e;
+    el("loginMsg").textContent = T("netErr") + ": " + e;
   }
   el("loginBtn").disabled = false;
 }
@@ -231,7 +352,7 @@ async function loadScan(path, silent) {
   try {
     resp = await api("/api/scan?path=" + encodeURIComponent(path));
   } catch (e) {
-    if (!silent) showBanner("网络错误");
+    if (!silent) showBanner(T("netErr"));
     return false;
   }
   if (seq !== scanSeq) return false;
@@ -241,7 +362,7 @@ async function loadScan(path, silent) {
   if (seq !== scanSeq) return false;
   if (!resp.ok || !data) {
     setConn(false);
-    showBanner((data && data.error) || "读取目录失败");
+    showBanner((data && data.error) || T("errDirRead"));
     return false;
   }
   setConn(true);
@@ -268,7 +389,6 @@ async function loadScan(path, silent) {
     lossView = { data: null, pending: false, reason: null, logX: true, logY: true, hidden: {}, fetchedAt: 0 };
     figShown = FIG_PAGE;
     plotState = null;
-    railFilter = "all";
   }
   var prevNepDone = lastNepDone;
   var training = data.training;
@@ -285,35 +405,14 @@ async function loadScan(path, silent) {
   lastSubdirs = data.subdirs || [];
   lastRecs = data.recommendations || [];
   lastTraining = data.training || null;
-  var liveFiles = (data.files || []).filter(function(f) {
-    return prevF[f.name] && f.size > prevF[f.name].size;
-  }).map(function(f) {
-    var grew = f.size - prevF[f.name].size;
-    return {name: f.name, grew: grew, rate: pollGap > 0 ? grew / pollGap : null, age: f.mtime != null ? nowS - f.mtime : null};
-  });
-  liveFiles = liveFiles.filter(function(f) { return f.age != null && f.age < 180; });
-  var fresh = liveFiles.length > 0;
-  if (!fresh) {
-    var filesArr = data.files || [];
-    for (var fi = 0; fi < filesArr.length; fi++) {
-      if (filesArr[fi].mtime != null && nowS - filesArr[fi].mtime < 180) { fresh = true; break; }
-    }
-  }
-  if (!fresh) {
-    var subsArr = data.subdirs || [];
-    for (var si = 0; si < subsArr.length; si++) {
-      if (subsArr[si].newest != null && nowS - subsArr[si].newest < 180) { fresh = true; break; }
-    }
-  }
-  pollActive = fresh || (data.training && !data.training.finished);
-  renderHero(data, liveFiles, nowS);
-  renderStats(data);
-  renderRail(data, nowS, prevS, prevF);
-  renderCards();
-  schedule();
+  _prevF = prevF; _prevS = prevS; _nowS = nowS;
+  renderAll();
   if (hasLossFile(data) && !lossView.data) fetchLoss(seq);
   return true;
 }
+var _prevF = {};
+var _prevS = {};
+var _nowS = 0;
 
 function hasLossFile(data) {
   return (data.files || []).some(function(f) { return f.name === "loss.out"; });
@@ -347,7 +446,7 @@ async function fetchLoss(seq) {
       lossView.reason = "error";
     }
   }
-  if (seq === scanSeq && path === curPath) renderCards();
+  if (seq === scanSeq && path === curPath) renderAll();
 }
 
 function showBanner(msg) {
@@ -366,13 +465,48 @@ function trainingRate() {
   return {rate: median(deltas), estimating: false};
 }
 
-function renderHero(data, liveFiles, nowS) {
-  var title = curPath ? curPath.split("/").pop() : (rootDir ? rootDir.split("/").pop() : "工作区");
+function fileIcon(name, isDir) {
+  if (isDir) return ICON_FOLDER;
+  if (/\.(png|jpe?g)$/i.test(name)) return ICON_IMG;
+  if (/\.out$/.test(name)) return ICON_CHART;
+  if (/\.(in|txt|xyz|sh|py)$/.test(name)) return ICON_GEAR;
+  return ICON_DOC;
+}
+
+function renderAll() {
+  if (!firstScanDone) return;
+  renderStatusLine();
+  renderCrumb();
+  renderRail();
+  renderMain();
+}
+
+function renderStatusLine() {
+  var files = lastFiles || [];
+  var subdirs = lastSubdirs || [];
+  var title = curPath ? curPath.split("/").pop() : (rootDir ? rootDir.replace(/\/+$/, "").split("/").pop() : "root");
   el("dirTitle").textContent = title;
   el("dirTitle").title = (rootDir || "") + "/" + curPath;
-  var crumbs = el("crumb");
-  crumbs.innerHTML = "";
-  crumbs.appendChild(crumbLink("root", ""));
+  el("stFiles").textContent = files.length + " " + T(files.length === 1 ? "file" : "files") + (subdirs.length ? " · " + subdirs.length + " " + T(subdirs.length === 1 ? "dir" : "dirs") : "");
+  var t = lastTraining;
+  var trainTxt;
+  if (t && !t.loss_empty) {
+    if (t.finished) trainTxt = T("training") + " " + T("finished");
+    else if (t.has_target) trainTxt = T("training") + " " + Math.round(100 * t.done / t.total) + "%";
+    else trainTxt = T("training");
+  } else if (hasLossFile({files: files})) {
+    trainTxt = T("trainNoNep");
+  } else {
+    trainTxt = T("trainNone");
+  }
+  el("stTrain").textContent = trainTxt;
+  el("stUpdated").textContent = T("updated") + " " + fmtAgo(0);
+}
+
+function renderCrumb() {
+  var c = el("crumb");
+  c.innerHTML = "";
+  c.appendChild(crumbLink("root", ""));
   if (curPath) {
     var parts = curPath.split("/");
     var acc = "";
@@ -381,59 +515,17 @@ function renderHero(data, liveFiles, nowS) {
       var sep = document.createElement("span");
       sep.textContent = "/";
       sep.className = "crumbsep";
-      crumbs.appendChild(sep);
+      c.appendChild(sep);
       if (i === parts.length - 1) {
         var here = document.createElement("span");
         here.textContent = parts[i];
         here.className = "crumbhere";
-        crumbs.appendChild(here);
+        c.appendChild(here);
       } else {
-        crumbs.appendChild(crumbLink(parts[i], acc));
+        c.appendChild(crumbLink(parts[i], acc));
       }
     }
   }
-  var bits = [((data.dirs || []).length + (data.files || []).length) + " 项内容"];
-  bits.push("更新于 " + fmtAgo(0));
-  if (liveFiles.length) bits.push(liveFiles.length + " 个文件正在增长");
-  el("statusLine").textContent = bits.join(" · ");
-  var hs = el("heroStatus");
-  hs.innerHTML = "";
-  var t = lastTraining;
-  var badge = document.createElement("span");
-  if (t && !t.loss_empty) {
-    if (t.finished) {
-      badge.className = "availability-badge";
-      badge.textContent = "训练已完成 · 达到目标代数";
-    } else if (t.loss_mtime != null && nowS - t.loss_mtime < 180) {
-      badge.className = "availability-badge";
-      badge.textContent = "训练进行中 · " + fmtAgo(nowS - t.loss_mtime) + "有写入";
-    } else {
-      badge.className = "availability-badge stale";
-      badge.textContent = "无近期写入 · " + (t.loss_mtime != null ? fmtAgo(nowS - t.loss_mtime) : "--");
-    }
-  } else if (hasLossFile(data)) {
-    badge.className = "availability-badge idle";
-    badge.textContent = "发现 loss.out · " + (lossView.pending ? "读取中" : "无有效记录");
-  } else {
-    badge.className = "availability-badge idle";
-    badge.textContent = "未发现训练记录";
-  }
-  hs.appendChild(badge);
-  var imgs = (data.files || []).filter(function(f) { return /\.(png|jpe?g)$/i.test(f.name); }).length;
-  hsRows(hs, "图片", imgs ? imgs + " 张" : "—");
-  hsRows(hs, "可用分析", (data.recommendations || []).length ? (data.recommendations || []).length + " 项" : "—");
-  hsRows(hs, "根目录", rootDir || "—", true);
-}
-function hsRows(parent, label, value, accent) {
-  var row = document.createElement("div");
-  row.className = "hs-row";
-  row.innerHTML = "<span>" + esc(label) + "</span>";
-  var v = document.createElement("strong");
-  if (accent) v.className = "accent";
-  v.textContent = value;
-  v.title = value;
-  row.appendChild(v);
-  parent.appendChild(row);
 }
 function crumbLink(label, rel) {
   var a = document.createElement("a");
@@ -443,126 +535,61 @@ function crumbLink(label, rel) {
   return a;
 }
 
-function renderStats(data) {
-  var grid = el("statsGrid");
-  grid.innerHTML = "";
-  var files = data.files || [];
-  var imgs = files.filter(function(f) { return /\.(png|jpe?g)$/i.test(f.name); }).length;
-  var t = lastTraining;
-  var cards = [];
-  if (t && !t.loss_empty && lossView.data) {
-    var d = lossView.data;
-    var pct = t.has_target && !t.multi_run && t.total > 0 ? 100 * t.done / t.total : null;
-    cards.push({primary: true, label: "训练进度", value: pct != null ? pct.toFixed(1) + "%" : d.count.toLocaleString(), small: pct != null ? "代数 " + t.done.toLocaleString() + " / " + t.total.toLocaleString() : d.count.toLocaleString() + " 条记录"});
-    cards.push({label: "记录数", value: d.count.toLocaleString(), small: "loss.out 完整有效记录"});
-    var rate = trainingRate();
-    cards.push({label: "训练速率", value: t.finished ? "—" : fmtGenRate(rate.rate), small: rate.estimating ? "估算中（需更多样本）" : "按最近刷新采样的中值"});
-    cards.push({label: "预计剩余", value: t.finished ? "—" : (rate.rate && t.has_target ? fmtDur((t.total - t.done) / rate.rate) : "--"), small: t.has_target ? "目标来自 nep.in" : "nep.in 未指定目标"});
-  } else {
-    cards.push({primary: true, label: "目录内容", value: String(files.length), small: (data.subdirs || []).length + " 个子目录"});
-    cards.push({label: "图片", value: imgs ? String(imgs) : "—", small: imgs ? "点击可直接放大" : "当前目录无图片"});
-    cards.push({label: "可用分析", value: (data.recommendations || []).length ? String((data.recommendations || []).length) : "—", small: "基于检测到的输出文件"});
-    cards.push({label: "数据文件", value: String(files.filter(function(f) { return /\.out$/.test(f.name); }).length), small: ".out 输出"});
-  }
-  cards.forEach(function(c) {
-    var card = document.createElement("article");
-    card.className = "stat-card" + (c.primary ? " stat-card-primary" : "");
-    card.innerHTML = '<span class="stat-label">' + esc(c.label) + "</span><strong>" + esc(c.value) + "</strong><small>" + esc(c.small) + "</small>";
-    grid.appendChild(card);
-  });
-}
-
-function fileType(f) {
-  var name = f.name;
-  if (/\.(png|jpe?g)$/i.test(name)) return "images";
-  if (/\.out$/.test(name)) return "data";
-  if (/\.in$/.test(name)) return "inputs";
-  return "all";
-}
-
-function renderRail(data, nowS, prevS, prevF) {
-  var files = data.files || [];
-  var counts = {all: files.length, images: 0, data: 0, inputs: 0};
-  files.forEach(function(f) {
-    var t = fileType(f);
-    if (t !== "all") counts[t]++;
-  });
-  var qf = el("quickFilters");
-  qf.innerHTML = "";
-  [["all", "全部"], ["images", "图片"], ["data", "数据"], ["inputs", "输入"]].forEach(function(pair) {
-    var b = document.createElement("button");
-    b.type = "button";
-    b.className = "quick-filter" + (railFilter === pair[0] ? " active" : "");
-    b.innerHTML = esc(pair[1]) + " <span>" + counts[pair[0]] + "</span>";
-    b.onclick = function() {
-      railFilter = pair[0];
-      renderRail({subdirs: lastSubdirs || [], files: lastFiles || []}, lastScanServerNow || 0, {}, {});
-    };
-    qf.appendChild(b);
-  });
+function renderRail() {
   var fl = el("fileList");
   fl.innerHTML = "";
   var filterText = el("fileFilter").value.trim().toLowerCase();
+  var nowS = _nowS;
   var shown = 0;
-  (data.subdirs || []).forEach(function(s) {
+  (lastSubdirs || []).forEach(function(s) {
     if (filterText && s.name.toLowerCase().indexOf(filterText) < 0) return;
     shown++;
     var row = document.createElement("div");
-    row.className = "brow dirrow";
-    var dot = document.createElement("span");
-    dot.className = "dot";
-    var prev = prevS[s.name];
-    if (prev && s.newest != null && prev.newest != null && s.newest > prev.newest) {
-      dot.classList.add("live");
-      row.title = "最近有写入";
-    }
-    row.appendChild(dot);
+    row.className = "frow dir";
+    var prev = _prevS[s.name];
+    var live = prev && s.newest != null && prev.newest != null && s.newest > prev.newest;
+    row.innerHTML = '<span class="fic">' + ICON_FOLDER + "</span>";
+    if (live) row.innerHTML += '<span class="live" title="' + T("updatedAt") + '"></span>';
     var nm = document.createElement("span");
-    nm.className = "bname";
+    nm.className = "fname";
     nm.textContent = s.name + "/";
     row.appendChild(nm);
     var meta = document.createElement("span");
-    meta.className = "bmeta";
+    meta.className = "fmeta";
     var bits = [];
     if (s.newest != null) bits.push(fmtAgo(nowS - s.newest));
-    if (s.loss) bits.push("NEP");
-    meta.textContent = bits.join(" · ");
+    meta.textContent = bits.join(" ");
     row.appendChild(meta);
     row.onclick = function() { loadScan(joinRel(curPath, s.name)); };
     fl.appendChild(row);
   });
-  files.forEach(function(f) {
+  (lastFiles || []).forEach(function(f) {
     if (filterText && f.name.toLowerCase().indexOf(filterText) < 0) return;
-    if (railFilter !== "all" && fileType(f) !== railFilter) return;
     shown++;
     var row = document.createElement("div");
-    row.className = "brow";
-    var dot = document.createElement("span");
-    dot.className = "dot";
-    var prev = prevF[f.name];
-    if (prev && f.size > prev.size && f.mtime != null && nowS - f.mtime < 180) {
-      dot.classList.add("live");
-      row.title = "最近有写入";
-    }
-    row.appendChild(dot);
+    row.className = "frow";
+    var prev = _prevF[f.name];
+    var live = prev && f.size > prev.size && f.mtime != null && nowS - f.mtime < 180;
+    row.innerHTML = '<span class="fic">' + fileIcon(f.name, false) + "</span>";
+    if (live) row.innerHTML += '<span class="live"></span>';
     var a = document.createElement("a");
     a.href = "#";
-    a.className = "bname";
+    a.className = "fname";
     a.textContent = f.name;
     a.onclick = function(ev) { ev.preventDefault(); fileClicked(f, a); };
     row.appendChild(a);
     var meta = document.createElement("span");
-    meta.className = "bmeta";
-    var bits = [];
+    meta.className = "fmeta";
+    var bits = [fmtSize(f.size)];
     if (f.mtime != null) bits.push(fmtAgo(nowS - f.mtime));
+    meta.textContent = bits.join(" ");
     row.appendChild(meta);
     fl.appendChild(row);
   });
   if (!shown) {
     var empty = document.createElement("div");
-    empty.className = "muted";
-    empty.style.padding = "10px 9px";
-    empty.textContent = filterText ? "无匹配文件" : "空目录";
+    empty.className = "rail-empty";
+    empty.textContent = filterText ? "—" : T("emptyDir");
     fl.appendChild(empty);
   }
 }
@@ -576,25 +603,29 @@ function fileClicked(f, source) {
   }
 }
 
-function makeCard(eyebrow, title, meta) {
-  var card = document.createElement("article");
-  card.className = "card-surface";
+function makePanel(title, metaText) {
+  var panel = document.createElement("section");
+  panel.className = "panel";
   var head = document.createElement("div");
-  head.className = "card-header";
-  var left = document.createElement("div");
-  left.innerHTML = '<span class="eyebrow">' + esc(eyebrow) + "</span><h2>" + esc(title) + "</h2>";
-  head.appendChild(left);
-  if (meta) {
+  head.className = "panel-head";
+  var h = document.createElement("h2");
+  h.textContent = title;
+  head.appendChild(h);
+  if (metaText) {
     var m = document.createElement("span");
-    m.className = "card-meta";
-    m.textContent = meta;
+    m.className = "pmeta";
+    m.textContent = metaText;
     head.appendChild(m);
   }
-  card.appendChild(head);
-  return card;
+  var acts = document.createElement("span");
+  acts.className = "pacts";
+  head.appendChild(acts);
+  panel.appendChild(head);
+  panel._acts = acts;
+  return panel;
 }
 
-function renderCards() {
+function renderMain() {
   var root = el("canvasRoot");
   root.innerHTML = "";
   var files = lastFiles || [];
@@ -603,56 +634,45 @@ function renderCards() {
   var hasLoss = files.some(function(f) { return f.name === "loss.out"; });
   var recs = lastRecs || [];
   var hasAny = files.length + subdirs.length;
-  var nowS = lastScanServerNow || 0;
-
-  var hasLossSection = hasLoss && lossView.data;
-  el("scaleSwitcher").classList.toggle("hidden", !hasLossSection);
-  el("zoomBtn").classList.toggle("hidden", !hasLossSection);
-  el("resultsTitle").textContent = hasLossSection ? "训练与结果" : "目录内容";
-  var metaBits = [];
-  if (hasLossSection) metaBits.push("曲线 " + lossView.data.points + " 点");
-  if (imgs.length) metaBits.push(imgs.length + " 张图片");
-  if (recs.length) metaBits.push(recs.length + " 项分析");
-  el("resultsMeta").innerHTML = metaBits.length
-    ? "<p><strong>" + files.length + "</strong> 个文件 · " + metaBits.join(" · ") + "</p><span>" + (curPath || "根目录") + "</span>"
-    : "<p><strong>" + files.length + "</strong> 个文件</p><span>" + (curPath || "根目录") + "</span>";
+  var nowS = _nowS || lastScanServerNow || 0;
 
   if (!hasAny) {
     var empty = document.createElement("div");
-    empty.className = "empty-state";
-    empty.innerHTML = "<h3>此目录为空</h3><p>从左侧选择其他目录，或在此目录运行模拟后刷新。</p>";
+    empty.className = "emptybox";
+    empty.textContent = T("emptyDir");
     if (curPath) {
-      var up = document.createElement("button");
-      up.type = "button";
-      up.className = "btn btn-soft";
-      up.style.marginTop = "12px";
-      up.textContent = "返回上级";
-      up.onclick = function() { loadScan(parentRel(curPath)); };
+      var up = document.createElement("br");
       empty.appendChild(up);
+      var upBtn = document.createElement("button");
+      upBtn.type = "button";
+      upBtn.className = "btn soft";
+      upBtn.textContent = T("goUp");
+      upBtn.onclick = function() { loadScan(parentRel(curPath)); };
+      empty.appendChild(upBtn);
     }
     root.appendChild(empty);
     return;
   }
-  if (hasLoss) root.appendChild(buildLossCard(nowS));
-  if (imgs.length) root.appendChild(buildFiguresCard(imgs));
-  if (recs.length) root.appendChild(buildAnalysesCard(recs, files, nowS));
-  var plainFiles = !hasLoss && !imgs.length;
-  if (plainFiles && files.length) root.appendChild(buildFilesCard(files, nowS));
-  if (!hasLoss && !imgs.length && subdirs.length && !files.length) root.appendChild(buildSubdirsCard(subdirs, nowS));
-  if (hasLossSection) sizeAndDrawLoss();
+  if (hasLoss) root.appendChild(buildLossPanel(nowS));
+  if (imgs.length) root.appendChild(buildFigPanel(imgs));
+  if (recs.length) root.appendChild(buildActPanel(recs, files, nowS));
+  if (!hasLoss && !imgs.length && files.length) root.appendChild(buildFilesPanel(files, nowS));
+  if (!hasLoss && !imgs.length && subdirs.length && !files.length) root.appendChild(buildSubdirsPanel(subdirs, nowS));
+  if (hasLoss && lossView.data) sizeAndDrawLoss();
 }
 
-function buildLossCard(nowS) {
-  var card = makeCard("NEP 训练", "训练曲线", "loss.out");
+/* ---- panels ---- */
+function buildLossPanel(nowS) {
+  var panel = makePanel(T("lossTitle"), "loss.out");
   var body = document.createElement("div");
-  body.className = "card-body";
+  body.className = "panel-body";
   if (lossView.pending) {
-    body.innerHTML = '<div class="muted">正在读取 loss.out…</div>';
-    card.appendChild(body);
-    return card;
+    body.innerHTML = '<div class="muted">' + esc(T("readingLoss")) + "</div>";
+    panel.appendChild(body);
+    return panel;
   }
   if (!lossView.data) {
-    var reason = lossView.reason === "unreadable" ? "无法读取" : (lossView.reason === "empty" ? "文件为空" : "无有效记录");
+    var reason = lossView.reason === "unreadable" ? T("unreadable") : (lossView.reason === "empty" ? T("emptyFile") : T("noRecords"));
     var note = document.createElement("p");
     note.className = "muted";
     note.style.margin = "0";
@@ -660,16 +680,42 @@ function buildLossCard(nowS) {
     var openBtn = document.createElement("button");
     openBtn.type = "button";
     openBtn.className = "note-link";
-    openBtn.textContent = "打开文件";
+    openBtn.textContent = T("openFile");
     openBtn.onclick = function() {
       var f = (lastFiles || []).find(function(x) { return x.name === "loss.out"; });
       if (f) openPreview(f);
     };
     note.appendChild(openBtn);
     body.appendChild(note);
-    card.appendChild(body);
-    return card;
+    panel.appendChild(body);
+    return panel;
   }
+  var scaleSeg = document.createElement("span");
+  scaleSeg.className = "seg";
+  ["logX", "logY"].forEach(function(axis) {
+    var b = document.createElement("button");
+    b.type = "button";
+    b.className = "segbtn" + (lossView[axis] ? " on" : "");
+    b.setAttribute("data-axis", axis);
+    b.textContent = (axis === "logX" ? "X " : "Y ") + (lossView[axis] ? "Log" : "Lin");
+    b.onclick = function() {
+      lossView[axis] = !lossView[axis];
+      b.classList.toggle("on", lossView[axis]);
+      b.textContent = (axis === "logX" ? "X " : "Y ") + (lossView[axis] ? "Log" : "Lin");
+      sizeAndDrawLoss();
+      if (!el("chartZoom").classList.contains("hidden")) drawZoomChart();
+    };
+    scaleSeg.appendChild(b);
+  });
+  panel._acts.appendChild(scaleSeg);
+  var zoomBtn = document.createElement("button");
+  zoomBtn.type = "button";
+  zoomBtn.className = "btn ghost small";
+  zoomBtn.textContent = "⤢";
+  zoomBtn.title = "zoom";
+  zoomBtn.onclick = openChartZoom;
+  panel._acts.appendChild(zoomBtn);
+
   var layout = document.createElement("div");
   layout.className = "loss-layout";
   layout.id = "lossLayout";
@@ -677,19 +723,8 @@ function buildLossCard(nowS) {
   var canvas = document.createElement("canvas");
   canvas.className = "chart";
   canvas.id = "lossCanvas";
-  canvas.style.height = "340px";
+  canvas.style.height = "270px";
   chartCol.appendChild(canvas);
-  var bar = document.createElement("div");
-  bar.className = "chartbar";
-  var summary = document.createElement("span");
-  summary.className = "chart-summary";
-  summary.id = "scaleSummary";
-  bar.appendChild(summary);
-  var noteHolder = document.createElement("span");
-  noteHolder.className = "muted";
-  noteHolder.textContent = "悬停查看采样值 · 图例可隐藏系列";
-  bar.appendChild(noteHolder);
-  chartCol.appendChild(bar);
   var legend = document.createElement("div");
   legend.className = "lg-row";
   legend.id = "lossLegend";
@@ -707,21 +742,8 @@ function buildLossCard(nowS) {
   sumBox.id = "lossSummary";
   layout.appendChild(sumBox);
   body.appendChild(layout);
-  card.appendChild(body);
-  return card;
-}
-
-function updateScaleSummary() {
-  var s = el("scaleSummary");
-  if (s) s.textContent = "X " + (lossView.logX ? "Log" : "Linear") + " · Y " + (lossView.logY ? "Log" : "Linear");
-  var z = el("zoomScale");
-  if (z) z.textContent = "X " + (lossView.logX ? "Log" : "Linear") + " · Y " + (lossView.logY ? "Log" : "Linear");
-  document.querySelectorAll("#scaleSwitcher .view-switch").forEach(function(b) {
-    var axis = b.getAttribute("data-axis");
-    var on = axis === "logX" ? lossView.logX : lossView.logY;
-    b.classList.toggle("active", on);
-    b.textContent = (axis === "logX" ? "X " : "Y ") + (on ? "Log" : "Lin");
-  });
+  panel.appendChild(body);
+  return panel;
 }
 
 function visibleLossSeries() {
@@ -740,13 +762,10 @@ function sizeAndDrawLoss() {
   if (!canvas || !lossView.data) return;
   var w = canvas.clientWidth;
   if (w < 60) return;
-  var h = Math.max(260, Math.min(400, Math.round(w / 1.9)));
-  canvas.style.height = h + "px";
   drawLossTo(canvas);
   renderLossSummary();
   renderLossLegend("lossLegend");
   renderLossNotes();
-  updateScaleSummary();
 }
 
 function drawLossTo(canvas) {
@@ -757,12 +776,12 @@ function drawLossTo(canvas) {
     xLabel: d && d.x_mode === "generation" ? "generation" : "record #",
     yLabel: "Loss functions"
   });
-  attachHover(canvas, el(canvas.id === "zoomCanvas" ? "zoomScale" : "lossHover"), function(idx) {
+  attachHover(canvas, canvas.id === "zoomCanvas" ? null : el("lossHover"), function(idx) {
     var parts = ["x=" + fmtNum(d.xs[idx])];
     series.forEach(function(s) {
       parts.push(s.label + "=" + fmtNum(s.ys[idx]));
     });
-    return "第 " + (idx + 1) + " 个采样点 · " + parts.join(" · ");
+    return "# " + (idx + 1) + " · " + parts.join(" · ");
   });
 }
 
@@ -774,21 +793,21 @@ function renderLossSummary() {
   box.innerHTML = "";
   function line(label, value) {
     var l = document.createElement("div");
-    l.className = "hs-line";
+    l.className = "ls-line";
     l.innerHTML = "<span>" + esc(label) + "</span>";
     var v = document.createElement("strong");
     v.textContent = value;
     l.appendChild(v);
     box.appendChild(l);
   }
-  line("记录", d.count.toLocaleString() + " 条");
-  line("最新代数", d.last_gen != null ? d.last_gen.toLocaleString() : "--");
+  line(T("records"), d.count.toLocaleString());
+  line(T("latestGen"), d.last_gen != null ? d.last_gen.toLocaleString() : "--");
   if (d.multi_run) {
-    line("范围", "多轮训练记录");
-    line("最新段", "自 " + d.seg_start_gen + " 起");
+    line(T("status"), T("multiRun"));
+    line(T("latestSeg"), "≥ " + d.seg_start_gen);
   }
   if (t && t.has_target) {
-    line("目标", t.total.toLocaleString());
+    line(T("target"), t.total.toLocaleString());
     if (!t.multi_run) {
       var track = document.createElement("div");
       track.className = "bar-track";
@@ -799,16 +818,16 @@ function renderLossSummary() {
       box.appendChild(track);
       var rate = trainingRate();
       if (t.finished) {
-        line("状态", "已完成");
+        line(T("status"), T("done"));
       } else {
-        line("速率", fmtGenRate(rate.rate));
-        line("预计剩余", rate.estimating ? "估算中" : (rate.rate ? fmtDur((t.total - t.done) / rate.rate) : "--"));
-        line("最后写入", t.loss_mtime != null ? fmtAgo(lastScanServerNow - t.loss_mtime) : "--");
+        line(T("rate"), fmtGenRate(rate.rate));
+        line(T("eta"), rate.estimating ? T("estimating") : (rate.rate ? fmtDur((t.total - t.done) / rate.rate) : "--"));
+        line(T("lastWrite"), t.loss_mtime != null ? fmtAgo(lastScanServerNow - t.loss_mtime) : "--");
       }
     }
   } else {
-    line("目标", t ? "nep.in 未指定" : "未发现 nep.in");
-    line("最后写入", d.mtime != null ? fmtAgo(lastScanServerNow - d.mtime) : "--");
+    line(T("target"), t ? T("noTarget") : T("noNepIn"));
+    line(T("lastWrite"), d.mtime != null ? fmtAgo(lastScanServerNow - d.mtime) : "--");
   }
 }
 
@@ -825,7 +844,6 @@ function renderLossLegend(legendId) {
     dot.style.background = LOSS_COLORS[i % LOSS_COLORS.length];
     item.appendChild(dot);
     item.appendChild(document.createTextNode(s.label));
-    item.title = lossView.hidden[s.label] ? "点击显示该系列" : "点击隐藏该系列";
     item.onclick = function() {
       lossView.hidden[s.label] = !lossView.hidden[s.label];
       renderLossLegend(legendId);
@@ -841,9 +859,9 @@ function renderLossNotes() {
   if (!notes || !lossView.data) return;
   notes.innerHTML = "";
   var d = lossView.data;
-  if (d.sampled) notes.appendChild(noteLine("曲线降采样至 " + d.points + " / " + d.count + " 条记录"));
-  if (d.skipped > 0) notes.appendChild(noteLine(d.skipped + " 行无效或不完整记录被跳过"));
-  if (d.multi_run) notes.appendChild(noteLine("loss.out 包含多轮训练（代数回退），进度按最新一段"));
+  if (d.sampled) notes.appendChild(noteLine(d.points + " / " + d.count + " pts"));
+  if (d.skipped > 0) notes.appendChild(noteLine(d.skipped + " skipped"));
+  if (d.multi_run) notes.appendChild(noteLine("multi-run log"));
   if (lossView.logY) {
     var nonpos = 0;
     (d.series || []).forEach(function(s) {
@@ -851,12 +869,17 @@ function renderLossNotes() {
       s.values.forEach(function(v) { if (v <= 0) nonpos++; });
     });
     if (nonpos > 0) {
-      var line = noteLine(nonpos + " 个非正值未在 Log 纵轴下显示");
+      var line = noteLine(nonpos + " non-positive values hidden (log Y)");
       var sw = document.createElement("button");
       sw.type = "button";
       sw.className = "note-link";
-      sw.textContent = "切换 Y 为 Linear";
-      sw.onclick = function() { lossView.logY = false; updateScaleSummary(); sizeAndDrawLoss(); };
+      sw.textContent = "Y → Linear";
+      sw.onclick = function() {
+        lossView.logY = false;
+        sizeAndDrawLoss();
+        var b = document.querySelector('#lossLayout .seg [data-axis="logY"]');
+        if (b) { b.classList.remove("on"); b.textContent = "Y Lin"; }
+      };
       line.appendChild(sw);
       notes.appendChild(line);
     }
@@ -882,15 +905,15 @@ function drawZoomChart() {
   canvas.style.height = h + "px";
   drawLossTo(canvas);
   renderLossLegend("zoomLegend");
-  updateScaleSummary();
+  el("zoomScale").textContent = "X " + (lossView.logX ? "Log" : "Linear") + " · Y " + (lossView.logY ? "Log" : "Linear");
 }
 
-function buildFiguresCard(imgs) {
-  var card = makeCard("结果可视化", "图片", imgs.length + " 张");
+function buildFigPanel(imgs) {
+  var panel = makePanel(T("figTitle"), imgs.length + "");
   var body = document.createElement("div");
-  body.className = "card-body";
-  var grid = document.createElement("div");
-  grid.className = "fig-grid";
+  body.className = "panel-body";
+  var strip = document.createElement("div");
+  strip.className = "fig-strip";
   imgs.slice(0, figShown).forEach(function(f) {
     var cell = document.createElement("button");
     cell.type = "button";
@@ -906,166 +929,143 @@ function buildFiguresCard(imgs) {
     cell.appendChild(img);
     cell.appendChild(cap);
     cell.onclick = function() { openLightbox(f, cell); };
-    grid.appendChild(cell);
+    strip.appendChild(cell);
   });
-  body.appendChild(grid);
   if (imgs.length > figShown) {
-    var more = document.createElement("div");
-    more.className = "figmores";
-    var btn = document.createElement("button");
-    btn.type = "button";
-    btn.className = "btn btn-soft";
-    btn.textContent = "显示更多（" + (imgs.length - figShown) + "）";
-    btn.onclick = function() {
+    var more = document.createElement("button");
+    more.type = "button";
+    more.className = "fig-more";
+    more.textContent = "+ " + (imgs.length - figShown);
+    more.onclick = function() {
       figShown += FIG_PAGE;
-      renderCards();
+      renderMain();
     };
-    more.appendChild(btn);
-    body.appendChild(more);
+    strip.appendChild(more);
   }
-  card.appendChild(body);
-  return card;
+  body.appendChild(strip);
+  panel.appendChild(body);
+  return panel;
 }
 
-function buildAnalysesCard(recs, files, nowS) {
+function buildActPanel(recs, files, nowS) {
+  var panel = makePanel(T("actTitle"), recs.length + "");
+  var body = document.createElement("div");
+  body.className = "panel-body";
   var fileMap = {};
   files.forEach(function(f) { fileMap[f.name] = f; });
-  var card = makeCard("一键分析", "可用分析", recs.length + " 项");
-  var body = document.createElement("div");
-  body.className = "card-body";
-  var list = document.createElement("div");
-  list.className = "act-list";
   recs.forEach(function(rec) {
-    list.appendChild(actRow(rec, fileMap, nowS));
-  });
-  body.appendChild(list);
-  card.appendChild(body);
-  return card;
-}
-
-function actRow(rec, fileMap, nowS) {
-  var row = document.createElement("div");
-  row.className = "act-row";
-  var head = document.createElement("div");
-  head.className = "act-head";
-  var desc = document.createElement("span");
-  desc.className = "adesc";
-  desc.textContent = REC_NAMES[rec.action] || rec.action;
-  head.appendChild(desc);
-  var inp = document.createElement("span");
-  inp.className = "ain";
-  inp.textContent = rec.evidence.join(", ");
-  head.appendChild(inp);
-  var res = document.createElement("span");
-  res.className = "ares";
-  var outFile = fileMap[rec.produces];
-  if (outFile && outFile.mtime != null) {
-    res.textContent = "结果 " + fmtAgo(nowS - outFile.mtime);
-    if (rec.stale) res.classList.add("stale");
-    res.title = rec.stale ? "结果早于输入文件，可能需要重新生成" : rec.produces;
-  } else {
-    res.textContent = "未生成";
-  }
-  head.appendChild(res);
-  var chev = document.createElement("span");
-  chev.className = "achev";
-  chev.innerHTML = ICON_CHEV;
-  head.appendChild(chev);
-  head.onclick = function() { row.classList.toggle("open"); };
-  row.appendChild(head);
-  var body = document.createElement("div");
-  body.className = "act-body";
-  var cmdRow = document.createElement("div");
-  cmdRow.className = "cmd-row";
-  var code = document.createElement("code");
-  code.className = "rec-cmd";
-  code.textContent = rec.command;
-  cmdRow.appendChild(code);
-  var copyBtn = document.createElement("button");
-  copyBtn.type = "button";
-  copyBtn.className = "btn btn-soft small";
-  copyBtn.textContent = "复制";
-  copyBtn.onclick = function(ev) { ev.stopPropagation(); copyText(rec.command); };
-  cmdRow.appendChild(copyBtn);
-  body.appendChild(cmdRow);
-  var bar = document.createElement("div");
-  bar.className = "act-bar";
-  var run = document.createElement("button");
-  run.type = "button";
-  run.className = "btn btn-primary small";
-  run.textContent = "生成图像";
-  run.disabled = busyFlag || running;
-  run.title = busyFlag ? "服务器正在执行其他命令" : "在当前目录运行 " + rec.command;
-  run.onclick = function(ev) { ev.stopPropagation(); runAction(rec, run); };
-  bar.appendChild(run);
-  if (outFile) {
-    var open = document.createElement("button");
-    open.type = "button";
-    open.className = "btn btn-ghost small";
-    open.textContent = "查看结果";
-    open.onclick = function(ev) { ev.stopPropagation(); openLightbox(outFile, open); };
-    bar.appendChild(open);
-  }
-  body.appendChild(bar);
-  row.appendChild(body);
-  return row;
-}
-
-function buildFilesCard(files, nowS) {
-  var card = makeCard("目录文件", "文件", files.length + " 个");
-  var body = document.createElement("div");
-  body.className = "card-body";
-  var list = document.createElement("dl");
-  list.className = "detail-definition-list";
-  files.slice(0, 12).forEach(function(f) {
     var row = document.createElement("div");
-    var dt = document.createElement("dt");
-    dt.textContent = f.name;
-    dt.title = f.name;
-    dt.style.cursor = "pointer";
-    dt.onclick = function() { openPreview(f); };
-    var dd = document.createElement("dd");
-    dd.textContent = [fmtSize(f.size), f.mtime != null ? fmtAgo(nowS - f.mtime) : ""].filter(Boolean).join(" · ");
-    row.appendChild(dt);
-    row.appendChild(dd);
-    list.appendChild(row);
+    row.className = "act-line";
+    var nm = document.createElement("span");
+    nm.className = "aname";
+    nm.textContent = REC_NAMES[rec.action] || rec.action;
+    nm.title = rec.command;
+    row.appendChild(nm);
+    var inp = document.createElement("span");
+    inp.className = "ain";
+    inp.textContent = rec.evidence.join(", ");
+    inp.title = rec.command;
+    row.appendChild(inp);
+    var res = document.createElement("span");
+    res.className = "ares";
+    var outFile = fileMap[rec.produces];
+    if (outFile && outFile.mtime != null) {
+      res.textContent = T("resultAt") + " " + fmtAgo(nowS - outFile.mtime) + (rec.stale ? " · " + T("stale") : "");
+      if (rec.stale) res.classList.add("stale");
+      res.title = rec.produces;
+    } else {
+      res.textContent = T("notGenerated");
+    }
+    row.appendChild(res);
+    var acts = document.createElement("span");
+    acts.className = "acts";
+    var run = document.createElement("button");
+    run.type = "button";
+    run.className = "btn primary small";
+    run.textContent = T("genFigure");
+    run.disabled = busyFlag || running;
+    run.title = busyFlag ? "busy" : rec.command;
+    run.onclick = function() { runAction(rec, run); };
+    acts.appendChild(run);
+    if (outFile) {
+      var open = document.createElement("button");
+      open.type = "button";
+      open.className = "btn ghost small";
+      open.textContent = T("viewResult");
+      open.onclick = function() { openLightbox(outFile, open); };
+      acts.appendChild(open);
+    }
+    var copyBtn = document.createElement("button");
+    copyBtn.type = "button";
+    copyBtn.className = "btn ghost small";
+    copyBtn.textContent = T("copy");
+    copyBtn.onclick = function() { copyText(rec.command); };
+    acts.appendChild(copyBtn);
+    row.appendChild(acts);
+    body.appendChild(row);
   });
-  body.appendChild(list);
-  if (files.length > 12) {
+  panel.appendChild(body);
+  return panel;
+}
+
+function buildFilesPanel(files, nowS) {
+  var panel = makePanel(T("filesTitle"), files.length + "");
+  var body = document.createElement("div");
+  body.className = "panel-body";
+  var table = document.createElement("table");
+  table.className = "filetable";
+  files.slice(0, 14).forEach(function(f) {
+    var tr = document.createElement("tr");
+    var td1 = document.createElement("td");
+    td1.innerHTML = '<span class="fic" style="display:inline-flex;color:var(--ink-faint)">' + fileIcon(f.name, false) + "</span> ";
+    var a = document.createElement("span");
+    a.className = "fname";
+    a.textContent = f.name;
+    a.style.cursor = "pointer";
+    a.onclick = function() { openPreview(f); };
+    td1.appendChild(a);
+    var td2 = document.createElement("td");
+    td2.className = "fmeta";
+    td2.textContent = [fmtSize(f.size), f.mtime != null ? fmtAgo(nowS - f.mtime) : ""].filter(Boolean).join(" · ");
+    tr.appendChild(td1);
+    tr.appendChild(td2);
+    table.appendChild(tr);
+  });
+  body.appendChild(table);
+  if (files.length > 14) {
     var more = document.createElement("p");
     more.className = "muted";
-    more.style.margin = "12px 0 0";
-    more.textContent = "以及另外 " + (files.length - 12) + " 个文件，见左侧文件栏";
+    more.style.margin = "8px 0 0";
+    more.textContent = "+" + (files.length - 14);
     body.appendChild(more);
   }
-  card.appendChild(body);
-  return card;
+  panel.appendChild(body);
+  return panel;
 }
 
-function buildSubdirsCard(subdirs, nowS) {
-  var card = makeCard("导航", "子目录", subdirs.length + " 个");
+function buildSubdirsPanel(subdirs, nowS) {
+  var panel = makePanel(T("subdirsTitle"), subdirs.length + "");
   var body = document.createElement("div");
-  body.className = "card-body";
-  body.style.display = "grid";
-  body.style.gap = "8px";
+  body.className = "panel-body";
   subdirs.forEach(function(s) {
     var row = document.createElement("div");
-    row.className = "sub-row";
+    row.className = "subline";
+    row.innerHTML = '<span class="fic">' + ICON_FOLDER + "</span>";
     var nm = document.createElement("span");
     nm.className = "sname";
     nm.textContent = s.name + "/";
     row.appendChild(nm);
     var meta = document.createElement("span");
     meta.className = "smeta";
-    var bits = [s.count + " 项"];
+    var bits = [s.count + " " + T("itemsLabel")];
     if (s.newest != null) bits.push(fmtAgo(nowS - s.newest));
     meta.textContent = bits.join(" · ");
     row.appendChild(meta);
     row.onclick = function() { loadScan(joinRel(curPath, s.name)); };
     body.appendChild(row);
   });
-  card.appendChild(body);
-  return card;
+  panel.appendChild(body);
+  return panel;
 }
 
 function openLightbox(f, source) {
@@ -1097,10 +1097,10 @@ function closeLightbox() {
   lbReturnFocus = null;
 }
 
+/* ---- preview ---- */
 function viewerDirty() {
   return !!(viewer && viewer.draft != null && viewer.draft !== viewer.text);
 }
-
 function openPreview(f) {
   if (viewerDirty()) {
     pendingOpen = f;
@@ -1109,7 +1109,6 @@ function openPreview(f) {
   }
   loadPreview(f);
 }
-
 function loadPreview(f) {
   var rel = joinRel(curPath, f.name);
   viewer = {
@@ -1119,7 +1118,7 @@ function loadPreview(f) {
   el("pvConfirm").classList.add("hidden");
   el("pvConflict").classList.add("hidden");
   el("pvMsg").textContent = "";
-  el("pvBody").innerHTML = '<div class="muted">读取中…</div>';
+  el("pvBody").innerHTML = '<div class="muted">…</div>';
   el("pvTitle").textContent = f.name;
   el("pvMeta").textContent = fmtSize(f.size);
   el("previewLayer").classList.remove("hidden");
@@ -1144,25 +1143,20 @@ function loadPreview(f) {
     if (resp.status === 413) {
       return fetchPartial(rel).then(function(j) {
         if (viewer === null || viewer.rel !== rel) return;
-        if (!j) { previewError(rel, "文件过大，无法预览"); return; }
+        if (!j) { previewError(rel, "too large"); return; }
         applyPartial(rel, j);
       });
     }
-    var ct2 = resp.headers.get("Content-Type") || "";
-    if (ct2.indexOf("application/json") >= 0) {
-      return resp.json().then(function(j) { previewError(rel, (j && j.error) || "预览失败"); });
-    }
-    previewError(rel, "预览失败");
+    previewError(rel, "preview failed");
   }).catch(function() {
-    if (viewer !== null && viewer.rel === rel) previewError(rel, "网络错误");
+    if (viewer !== null && viewer.rel === rel) previewError(rel, T("netErr"));
   });
 }
-
 function applyPartial(rel, j) {
   if (viewer === null || viewer.rel !== rel) return;
   viewer.truncated = true;
   viewer.baseMtime = j.mtime;
-  viewer.text = j.head + "\n[... 已省略 " + (j.size - j.head_bytes - j.tail_bytes).toLocaleString() + " 字节 ...]\n" + j.tail;
+  viewer.text = j.head + "\n[... " + (j.size - j.head_bytes - j.tail_bytes).toLocaleString() + " bytes omitted ...]\n" + j.tail;
   viewer.size = j.size;
   el("pvMeta").textContent = fmtSize(j.size);
   renderPreview();
@@ -1178,9 +1172,8 @@ function fetchPartial(rel) {
   }).catch(function() { return null; });
 }
 function closePreviewReset() {
-  el("pvBody").innerHTML = '<div class="muted">选择左侧文件以预览。</div>';
+  el("pvBody").innerHTML = "";
 }
-
 function closePreview() {
   if (viewerDirty()) {
     el("pvConfirm").classList.remove("hidden");
@@ -1188,9 +1181,7 @@ function closePreview() {
   }
   el("previewLayer").classList.add("hidden");
   viewer = null;
-  if (lbReturnFocus && lbReturnFocus.focus) lbReturnFocus.focus();
 }
-
 function renderPreview() {
   if (!viewer) return;
   var body = el("pvBody");
@@ -1204,9 +1195,9 @@ function renderPreview() {
   var nonBlank = kv.filter(function(it) { return it.type !== "blank"; }).length;
   var isForm = !viewer.truncated && kvCount >= 2 && kvCount * 2 >= nonBlank;
   var modes = [];
-  if (numeric) modes.push(["preview", "预览"]);
-  modes.push(["text", "文本"]);
-  if (isForm) modes.push(["form", "表单"]);
+  if (numeric) modes.push(["preview", T("preview")]);
+  modes.push(["text", T("textMode")]);
+  if (isForm) modes.push(["form", T("formMode")]);
   el("pvEditBtn").classList.toggle("hidden", viewer.truncated);
   var modeBar = el("pvModes");
   modeBar.innerHTML = "";
@@ -1217,7 +1208,7 @@ function renderPreview() {
     b.className = "segbtn";
     b.textContent = m[1];
     b.setAttribute("data-mode", m[0]);
-    b.onclick = function() { viewer.mode = m[0]; viewer.editing = false; el("pvEditBtn").textContent = "编辑"; renderPreview(); };
+    b.onclick = function() { viewer.mode = m[0]; viewer.editing = false; el("pvEditBtn").textContent = T("edit"); renderPreview(); };
     modeBar.appendChild(b);
   });
   if (viewer.mode === "form" && !isForm) viewer.mode = "preview";
@@ -1229,7 +1220,6 @@ function renderPreview() {
   else if (viewer.mode === "preview" && numeric) renderTableMode(body, numeric);
   else renderTextMode(body);
 }
-
 function renderTableMode(body, numeric) {
   var names = colNames(viewer.name, numeric.cols);
   var wrap = document.createElement("div");
@@ -1262,14 +1252,14 @@ function renderTableMode(body, numeric) {
   if (numeric.rows.length > maxRows) {
     var note = document.createElement("p");
     note.className = "muted";
-    note.textContent = "显示前 100 行（共 " + numeric.rows.length + " 行）";
+    note.textContent = T("showFirst") + " " + numeric.rows.length + " " + T("rowsLabel");
     body.appendChild(note);
   }
   var opts = document.createElement("div");
   opts.className = "plotopts";
   var head = document.createElement("div");
   head.className = "plotopts-head";
-  head.innerHTML = "<span class='achev'>" + ICON_CHEV + "</span> 绘图选项";
+  head.innerHTML = "<span class='achev'>" + ICON_CHEV + "</span> " + T("plotOpts");
   head.onclick = function() { opts.classList.toggle("open"); };
   opts.appendChild(head);
   var optsBody = document.createElement("div");
@@ -1278,7 +1268,6 @@ function renderTableMode(body, numeric) {
   body.appendChild(opts);
   optsBody.appendChild(buildFilePlot(numeric, names));
 }
-
 function buildFilePlot(numeric, names) {
   var holder = document.createElement("div");
   var state = plotState && plotState.rel === viewer.rel ? plotState : {rel: viewer.rel, x: 0, ys: [1], logX: false, logY: false};
@@ -1286,7 +1275,6 @@ function buildFilePlot(numeric, names) {
   var ctl = document.createElement("div");
   ctl.className = "chartctl";
   var xSel = document.createElement("select");
-  xSel.setAttribute("aria-label", "X 列");
   for (var c = 0; c < numeric.cols; c++) {
     var o = document.createElement("option");
     o.value = c;
@@ -1330,7 +1318,7 @@ function buildFilePlot(numeric, names) {
   var canvas = document.createElement("canvas");
   canvas.className = "chart";
   canvas.style.width = "100%";
-  canvas.style.height = "300px";
+  canvas.style.height = "280px";
   holder.appendChild(canvas);
   var readout = document.createElement("div");
   readout.className = "hoverread";
@@ -1344,13 +1332,12 @@ function buildFilePlot(numeric, names) {
     attachHover(canvas, readout, function(idx) {
       var parts = [names[state.x] + "=" + fmtNum(numeric.rows[idx][state.x])];
       state.ys.forEach(function(ci) { parts.push(names[ci] + "=" + fmtNum(numeric.rows[idx][ci])); });
-      return "第 " + (idx + 1) + " 行 · " + parts.join(" · ");
+      return "# " + (idx + 1) + " · " + parts.join(" · ");
     });
   }
   redraw();
   return holder;
 }
-
 function renderTextMode(body) {
   var pre = document.createElement("pre");
   pre.className = "preview";
@@ -1359,11 +1346,10 @@ function renderTextMode(body) {
   if (viewer.truncated) {
     var note = document.createElement("p");
     note.className = "chart-note";
-    note.textContent = "有界预览：仅显示开头 128 KB 与结尾 64 KB；编辑已禁用";
+    note.textContent = T("truncatedNote");
     body.appendChild(note);
   }
 }
-
 function renderEditMode(body) {
   var ta = document.createElement("textarea");
   ta.className = "editor";
@@ -1372,22 +1358,21 @@ function renderEditMode(body) {
   body.appendChild(ta);
   var row = document.createElement("div");
   row.className = "row";
-  row.style.marginTop = "10px";
+  row.style.marginTop = "8px";
   var save = document.createElement("button");
   save.type = "button";
-  save.className = "btn btn-primary small";
-  save.textContent = "保存";
+  save.className = "btn primary small";
+  save.textContent = T("saved") === "已保存" ? "保存" : "Save";
   save.onclick = function() { saveDraft(false); };
   var revert = document.createElement("button");
   revert.type = "button";
-  revert.className = "btn btn-ghost small";
-  revert.textContent = "放弃修改";
+  revert.className = "btn ghost small";
+  revert.textContent = LANG === "zh" ? "放弃修改" : "Revert";
   revert.onclick = function() { viewer.draft = null; renderPreview(); };
   row.appendChild(save);
   row.appendChild(revert);
   body.appendChild(row);
 }
-
 function renderFormMode(body) {
   var text = viewer.draft != null ? viewer.draft : viewer.text;
   var items = parseKV(text || "");
@@ -1428,16 +1413,15 @@ function renderFormMode(body) {
   }
   var row = document.createElement("div");
   row.className = "row";
-  row.style.marginTop = "10px";
+  row.style.marginTop = "8px";
   var btn = document.createElement("button");
   btn.type = "button";
-  btn.className = "btn btn-primary small";
-  btn.textContent = "保存";
+  btn.className = "btn primary small";
+  btn.textContent = LANG === "zh" ? "保存" : "Save";
   btn.onclick = function() { saveDraft(false); };
   row.appendChild(btn);
   body.appendChild(row);
 }
-
 function colNames(name, cols) {
   var known = KNOWN_COLS[name];
   if (known && known[cols]) return known[cols];
@@ -1445,27 +1429,24 @@ function colNames(name, cols) {
   for (var i = 0; i < cols; i++) names.push("c" + i);
   return names;
 }
-
 function setDraft(text) {
   if (!viewer) return;
   viewer.draft = text;
   if (viewer.draft === viewer.text) viewer.draft = null;
   el("pvDirty").classList.toggle("hidden", !viewerDirty());
 }
-
 function joinEol(lines) {
   var base = viewer.text || "";
   var eol = base.indexOf("\r\n") >= 0 ? "\r\n" : "\n";
   return lines.join(eol);
 }
-
 async function saveDraft(force) {
   if (!viewer || viewer.draft == null) return;
   var content = viewer.draft;
   var saveRel = viewer.rel;
   var bytes = new Blob([content]).size;
   if (bytes > 200 * 1024) {
-    el("pvMsg").textContent = " 内容超过 200 KB 编辑上限";
+    el("pvMsg").textContent = T("overLimit");
     return;
   }
   try {
@@ -1487,19 +1468,18 @@ async function saveDraft(force) {
         viewer.draft = null;
         viewer.baseMtime = data.mtime || viewer.baseMtime;
         viewer.editing = false;
-        el("pvEditBtn").textContent = "编辑";
+        el("pvEditBtn").textContent = T("edit");
         renderPreview();
       }
-      toast("已保存 " + viewer.name);
+      toast(T("saved") + " " + viewer.name);
       loadScan(curPath, true);
     } else {
-      el("pvMsg").textContent = " " + (data.error || "保存失败");
+      el("pvMsg").textContent = " " + (data.error || T("saveFail"));
     }
   } catch (e) {
-    el("pvMsg").textContent = " 网络错误: " + e;
+    el("pvMsg").textContent = " " + T("netErr") + ": " + e;
   }
 }
-
 function parseNumeric(text) {
   var rows = [];
   var cols = 0;
@@ -1526,7 +1506,6 @@ function parseNumeric(text) {
   }
   return {rows: rows, cols: cols};
 }
-
 function parseKV(text) {
   var items = [];
   text.split(/\r?\n/).forEach(function(line) {
@@ -1543,6 +1522,7 @@ function parseKV(text) {
   return items;
 }
 
+/* ---- chart engine ---- */
 function themeColors() {
   var grid = "#e8ebef", axis = "#8994a0";
   try {
@@ -1576,7 +1556,7 @@ function drawSeries(canvas, series, opts) {
   var theme = themeColors();
   var dpr = window.devicePixelRatio || 1;
   var w = canvas.clientWidth || 600;
-  var h = canvas.clientHeight || 300;
+  var h = canvas.clientHeight || 280;
   if (w < 40 || h < 40) return null;
   canvas.width = Math.round(w * dpr);
   canvas.height = Math.round(h * dpr);
@@ -1596,23 +1576,22 @@ function drawSeries(canvas, series, opts) {
   });
   if (!flat.length) {
     ctx.fillStyle = theme.axis;
-    ctx.font = "12px ui-monospace, monospace";
-    ctx.fillText("无数据", 14, 26);
+    ctx.font = "11px ui-monospace, monospace";
+    ctx.fillText("no data", 14, 24);
     return null;
   }
-  var xsAll = flat.map(function(p) { return p[0]; });
-  var ysAll = flat.map(function(p) { return p[1]; });
-  var xr = arrMinMax(xsAll), yr = arrMinMax(ysAll);
+  var xr = arrMinMax(flat.map(function(p) { return p[0]; }));
+  var yr = arrMinMax(flat.map(function(p) { return p[1]; }));
   var xmin = xr[0], xmax = xr[1], ymin = yr[0], ymax = yr[1];
   if (xmax === xmin) xmax = xmin + 1;
   if (ymax === ymin) ymax = ymin + Math.abs(ymin) * 0.1 + 1;
-  var pad = {l: 58, r: 14, t: 12, b: 42};
+  var pad = {l: 54, r: 12, t: 10, b: 38};
   var pw = w - pad.l - pad.r, ph = h - pad.t - pad.b;
   function X(x) { return pad.l + pw * (x - xmin) / (xmax - xmin); }
   function Y(y) { return pad.t + ph * (1 - (y - ymin) / (ymax - ymin)); }
   ctx.strokeStyle = theme.grid;
   ctx.lineWidth = 1;
-  ctx.font = "10px ui-monospace, monospace";
+  ctx.font = "9.5px ui-monospace, monospace";
   ctx.fillStyle = theme.axis;
   axisTicks(ymin, ymax, opts.logY).forEach(function(t) {
     var yy = Y(t.pos);
@@ -1620,7 +1599,7 @@ function drawSeries(canvas, series, opts) {
     ctx.moveTo(pad.l, yy);
     ctx.lineTo(w - pad.r, yy);
     ctx.stroke();
-    ctx.fillText(t.label, 6, yy + 3);
+    ctx.fillText(t.label, 5, yy + 3);
   });
   axisTicks(xmin, xmax, opts.logX).forEach(function(t) {
     var xx = X(t.pos);
@@ -1628,12 +1607,12 @@ function drawSeries(canvas, series, opts) {
     ctx.moveTo(xx, pad.t);
     ctx.lineTo(xx, h - pad.b);
     ctx.stroke();
-    ctx.fillText(t.label, xx - 14, h - pad.b + 16);
+    ctx.fillText(t.label, xx - 13, h - pad.b + 15);
   });
-  if (opts.xLabel) ctx.fillText(opts.xLabel, pad.l + pw / 2 - ctx.measureText(opts.xLabel).width / 2, h - 8);
+  if (opts.xLabel) ctx.fillText(opts.xLabel, pad.l + pw / 2 - ctx.measureText(opts.xLabel).width / 2, h - 6);
   if (opts.yLabel) {
     ctx.save();
-    ctx.translate(12, pad.t + ph / 2);
+    ctx.translate(11, pad.t + ph / 2);
     ctx.rotate(-Math.PI / 2);
     ctx.fillText(opts.yLabel, -ctx.measureText(opts.yLabel).width / 2, 0);
     ctx.restore();
@@ -1641,8 +1620,8 @@ function drawSeries(canvas, series, opts) {
   var lastPoints = [];
   series.forEach(function(s) {
     if (!s._pts.length) return;
-    ctx.strokeStyle = s.color || "#1f77b4";
-    ctx.lineWidth = 1.8;
+    ctx.strokeStyle = s.color || "#1867ae";
+    ctx.lineWidth = 1.7;
     ctx.beginPath();
     var started = false;
     var lastValid = null;
@@ -1659,38 +1638,38 @@ function drawSeries(canvas, series, opts) {
     }
     if (started) ctx.stroke();
     if (lastValid && s._pts.length < 4) {
-      ctx.fillStyle = s.color || "#1f77b4";
+      ctx.fillStyle = s.color || "#1867ae";
       ctx.beginPath();
-      ctx.arc(lastValid[0], lastValid[1], 2.6, 0, 2 * Math.PI);
+      ctx.arc(lastValid[0], lastValid[1], 2.4, 0, 2 * Math.PI);
       ctx.fill();
     }
-    if (lastValid) lastPoints.push({px: lastValid[0], py: lastValid[1], color: s.color || "#1f77b4"});
+    if (lastValid) lastPoints.push({px: lastValid[0], py: lastValid[1], color: s.color || "#1867ae"});
   });
   canvas._xs = series.length ? series[0].xs : [];
   return lastPoints;
 }
-
 function attachHover(canvas, readoutEl, labelsFn) {
   canvas.onmousemove = function(ev) {
     var xs = canvas._xs;
-    if (!xs || !xs.length || !readoutEl) return;
+    if (!xs || !xs.length) return;
     var rect = canvas.getBoundingClientRect();
     var px = ev.clientX - rect.left;
-    var frac = (px - 58) / (canvas.clientWidth - 72);
+    var frac = (px - 54) / (canvas.clientWidth - 66);
     if (frac < 0) frac = 0;
     if (frac > 1) frac = 1;
     var idx = Math.round(frac * (xs.length - 1));
-    readoutEl.textContent = labelsFn(idx);
+    if (readoutEl) readoutEl.textContent = labelsFn(idx);
   };
   canvas.onmouseleave = function() {
     if (readoutEl) readoutEl.textContent = "";
   };
 }
 
+/* ---- drawer & exec ---- */
 function setDrawerTab(tab) {
   drawerTab = tab;
-  document.querySelectorAll(".drawer-head .view-switch").forEach(function(b) {
-    b.classList.toggle("active", b.getAttribute("data-tab") === tab);
+  document.querySelectorAll(".drawer-head .segbtn[data-tab]").forEach(function(b) {
+    b.classList.toggle("on", b.getAttribute("data-tab") === tab);
   });
   el("dOutput").classList.toggle("hidden", tab !== "output");
   el("dHistory").classList.toggle("hidden", tab !== "history");
@@ -1705,20 +1684,18 @@ function closeDrawer() {
   el("drawer").classList.add("hidden");
   el("drawerMask").classList.add("hidden");
 }
-
 function showOutput(text, truncated) {
   el("output").textContent = text;
   el("outTruncNote").classList.toggle("hidden", !truncated);
   openDrawer("output");
 }
-
 async function runAction(rec, btn) {
   if (running) return;
   var runDir = curPath;
   running = true;
   btn.disabled = true;
-  btn.textContent = "运行中…";
-  showOutput("$ " + rec.command + "\n\n目录: " + (runDir ? runDir : "（根目录）") + "\n（运行中，请稍候…）", false);
+  btn.textContent = T("running");
+  showOutput("$ " + rec.command + "\n\ndir: " + (runDir || "(root)") + "\n…", false);
   var t0 = Date.now();
   var record = {
     cmd: rec.command, dir: runDir, start: new Date(), dur: null,
@@ -1733,95 +1710,84 @@ async function runAction(rec, btn) {
     var data = null;
     try { data = await resp.json(); } catch (e) {}
     if (!resp.ok || !data) {
-      record.status = data && data.error && data.error.indexOf("timed out") >= 0 ? "超时" : "失败";
-      record.output = (data && data.error) || "命令未能启动。";
+      record.status = "failed";
+      record.output = (data && data.error) || "failed to start";
       showOutput("$ " + rec.command + "\n\n" + record.output, false);
     } else {
-      record.status = data.returncode === 0 ? "成功" : "退出码 " + data.returncode;
+      record.status = data.returncode === 0 ? "ok" : "exit " + data.returncode;
       record.rc = data.returncode;
       record.output = data.output || "";
       record.truncated = !!data.truncated;
       record.image = data.image || null;
-      var text = "$ " + data.command + "\n\n目录: " + (runDir ? runDir : "（根目录）") + "\n\n" + (data.output || "");
-      if (data.returncode !== 0) text += "\n[退出码 " + data.returncode + "]";
-      if (data.truncated) text += "\n[输出已截断至 64 KB]";
+      var text = "$ " + data.command + "\n\ndir: " + (runDir || "(root)") + "\n\n" + (data.output || "");
+      if (data.returncode !== 0) text += "\n[exit " + data.returncode + "]";
+      if (data.truncated) text += "\n[truncated]";
       showOutput(text, data.truncated);
-      if (curPath === runDir) {
-        if (data.returncode === 0) toast(data.image ? "已生成 " + data.image : "完成");
-      } else {
-        toast("原目录已完成: " + (data.image || rec.command));
-      }
+      if (data.returncode === 0) toast(data.image ? data.image : "done");
     }
   } catch (e) {
-    record.status = "网络中断";
-    showOutput("$ " + rec.command + "\n\n网络错误: " + e + "\n命令可能仍在服务器上运行，状态未知。", false);
+    record.status = "network";
+    showOutput("$ " + rec.command + "\n\n" + T("netErr") + ": " + e, false);
   }
   record.dur = (Date.now() - t0) / 1000;
   cmdHistory.unshift(record);
   if (cmdHistory.length > 40) cmdHistory.pop();
   renderHistory();
   btn.disabled = false;
-  btn.textContent = "生成图像";
+  btn.textContent = T("genFigure");
   running = false;
-  loadScan(curPath, true);
+  loadScan(runDir, true);
 }
-
 function renderHistory() {
   var list = el("histList");
   list.innerHTML = "";
   if (!cmdHistory.length) {
-    list.innerHTML = '<div class="muted">本次会话尚未运行命令。</div>';
+    list.innerHTML = '<div class="muted">' + esc(T("noCmdYet")) + "</div>";
     return;
   }
   cmdHistory.forEach(function(h) {
     var d = document.createElement("div");
     d.className = "hist-item";
-    var badge = h.status === "成功"
-      ? '<span class="coverage-badge"><i aria-hidden="true"></i>' + h.status + "</span>"
-      : '<span class="availability-badge stale">' + esc(h.status) + "</span>";
-    var meta = (h.dir ? "/" + esc(h.dir) : "根目录") + " · " + h.start.toLocaleTimeString() + " · " + fmtDur(h.dur);
-    d.innerHTML = badge + '<span class="hcmd">' + esc(h.cmd) + "</span>" +
-      '<span class="hmeta">' + meta + "</span>";
+    var badge = h.status === "ok" ? '<span class="badge">' + h.status + "</span>" : '<span class="badge dirty">' + esc(h.status) + "</span>";
+    var meta = (h.dir ? "/" + esc(h.dir) : "root") + " · " + h.start.toLocaleTimeString() + " · " + fmtDur(h.dur);
+    d.innerHTML = badge + '<span class="hcmd">' + esc(h.cmd) + "</span>" + '<span class="hmeta">' + meta + "</span>";
     var acts = document.createElement("span");
     acts.className = "hacts";
     var outBtn = document.createElement("button");
     outBtn.type = "button";
-    outBtn.className = "btn btn-ghost small";
-    outBtn.textContent = "输出";
-    outBtn.onclick = function() { showOutput("$ " + h.cmd + "\n\n" + h.output + (h.rc ? "\n[退出码 " + h.rc + "]" : ""), h.truncated); };
+    outBtn.className = "btn ghost small";
+    outBtn.textContent = T("output");
+    outBtn.onclick = function() { showOutput("$ " + h.cmd + "\n\n" + h.output + (h.rc ? "\n[exit " + h.rc + "]" : ""), h.truncated); };
     acts.appendChild(outBtn);
-    var copyBtn = document.createElement("button");
-    copyBtn.type = "button";
-    copyBtn.className = "btn btn-ghost small";
-    copyBtn.textContent = "复制";
-    copyBtn.onclick = function() { copyText(h.cmd); };
-    acts.appendChild(copyBtn);
     if (h.image) {
       var resBtn = document.createElement("button");
       resBtn.type = "button";
-      resBtn.className = "btn btn-soft small";
-      resBtn.textContent = "结果";
-      resBtn.title = "查看 " + h.image + "（来自 " + (h.dir || "根目录") + "）";
+      resBtn.className = "btn ghost small";
+      resBtn.textContent = T("viewResult");
       resBtn.onclick = function() {
         el("lbImg").src = "/api/image?path=" + encodeURIComponent(joinRel(h.dir, h.image));
         el("lbTitle").textContent = h.image;
-        el("lbCount").textContent = h.dir || "根目录";
+        el("lbCount").textContent = h.dir || "root";
         el("lightbox").classList.remove("hidden");
         el("lbClose").focus();
       };
       acts.appendChild(resBtn);
     }
+    var copyBtn = document.createElement("button");
+    copyBtn.type = "button";
+    copyBtn.className = "btn ghost small";
+    copyBtn.textContent = T("copy");
+    copyBtn.onclick = function() { copyText(h.cmd); };
+    acts.appendChild(copyBtn);
     d.appendChild(acts);
     list.appendChild(d);
   });
 }
-
 function termAppend(text) {
   var out = el("termOut");
   out.textContent += text;
   out.scrollTop = out.scrollHeight;
 }
-
 async function termExec(raw) {
   var cmd = raw.trim();
   if (!cmd) return;
@@ -1830,7 +1796,7 @@ async function termExec(raw) {
   if (cmd === "pwd") { termAppend((rootDir || "") + "/" + curPath + "\n"); return; }
   if (cmd === "cd" || cmd === "cd ~") {
     var ok0 = await loadScan("");
-    termAppend(ok0 ? "-> " + (rootDir || "") + "\n" : "无法前往\n");
+    termAppend(ok0 ? "-> " + (rootDir || "") + "\n" : "cannot go\n");
     return;
   }
   if (cmd.indexOf("cd ") === 0 && cmd.indexOf("&&") < 0 && cmd.indexOf(";") < 0) {
@@ -1838,13 +1804,13 @@ async function termExec(raw) {
     var dest;
     if (arg === "..") dest = parentRel(curPath);
     else if (arg === "/") dest = "";
-    else if (arg.charAt(0) === "/") { termAppend(" 错误: 请使用相对路径或直接 cd 返回根目录。\n"); return; }
+    else if (arg.charAt(0) === "/") { termAppend(" use relative paths or plain cd\n"); return; }
     else dest = joinRel(curPath, arg);
     var ok = await loadScan(dest);
-    termAppend(ok ? "-> " + dest + "\n" : "没有这个目录: " + arg + "\n");
+    termAppend(ok ? "-> " + dest + "\n" : "no such directory: " + arg + "\n");
     return;
   }
-  if (termBusy) { termAppend("（上一条命令仍在运行）\n"); return; }
+  if (termBusy) { termAppend("(busy)\n"); return; }
   termBusy = true;
   var input = el("termInput");
   input.disabled = true;
@@ -1858,14 +1824,14 @@ async function termExec(raw) {
     try { data = await resp.json(); } catch (e) {}
     if (resp.ok) {
       if (data.output) termAppend(data.output + "\n");
-      if (data.truncated) termAppend("[输出已截断至 64 KB]\n");
-      if (data.returncode !== 0) termAppend("[退出码 " + data.returncode + "]\n");
+      if (data.truncated) termAppend("[truncated]\n");
+      if (data.returncode !== 0) termAppend("[exit " + data.returncode + "]\n");
       loadScan(curPath, true);
     } else {
-      termAppend(" 错误: " + (data.error || "命令失败") + "\n");
+      termAppend(" error: " + (data.error || "failed") + "\n");
     }
   } catch (e) {
-    termAppend(" 网络错误: " + e + "\n 命令可能仍在运行，状态未知。\n");
+    termAppend(" network error: " + e + "\n");
   } finally {
     termBusy = false;
     input.disabled = false;
@@ -1873,19 +1839,20 @@ async function termExec(raw) {
   }
 }
 
+/* ---- polling: manual by default ---- */
 function pollTick() {
-  if (document.hidden) { schedule(); return; }
-  loadScan(curPath, true).then(schedule, schedule);
+  if (document.hidden) { schedulePoll(); return; }
+  loadScan(curPath, true).then(schedulePoll, schedulePoll);
 }
-function schedule() {
+function schedulePoll() {
   if (pollTimer) clearTimeout(pollTimer);
   pollTimer = null;
-  var sel = parseInt(el("refreshSel").value, 10);
-  if (sel <= 0) return;
-  var delay = pollActive ? sel * 1000 : 60000;
-  pollTimer = setTimeout(pollTick, delay);
+  var secs = parseInt(el("refreshSel").value, 10);
+  if (secs <= 0) return;
+  pollTimer = setTimeout(pollTick, secs * 1000);
 }
 
+/* ---- theme ---- */
 function applyTheme() {
   var dark = themeManual === "dark" ||
     (themeManual !== "light" && window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches);
@@ -1902,37 +1869,26 @@ function toggleTheme() {
 }
 
 document.addEventListener("DOMContentLoaded", function() {
+  el("langBtn").onclick = function() { setLang(LANG === "en" ? "zh" : "en"); };
   el("loginBtn").onclick = doLogin;
   el("pwInput").addEventListener("keydown", function(ev) {
     if (ev.key === "Enter") doLogin();
   });
   el("retryBtn").onclick = function() { loadScan(curPath); };
   el("refreshBtn").onclick = function() { loadScan(curPath); };
-  el("fileFilter").addEventListener("input", function() {
-    renderRail({subdirs: lastSubdirs || [], files: lastFiles || []}, lastScanServerNow || 0, {}, {});
-  });
+  el("refreshSel").onchange = schedulePoll;
+  el("fileFilter").addEventListener("input", renderRail);
   el("themeBtn").onclick = toggleTheme;
-  el("refreshSel").onchange = schedule;
   el("drawerBtn").onclick = function() { openDrawer("output"); };
-  document.querySelectorAll(".drawer-head .view-switch").forEach(function(b) {
+  document.querySelectorAll(".drawer-head .segbtn[data-tab]").forEach(function(b) {
     b.onclick = function() { setDrawerTab(b.getAttribute("data-tab")); };
   });
   el("drawerClose").onclick = closeDrawer;
   el("drawerMask").onclick = closeDrawer;
-  el("zoomBtn").onclick = openChartZoom;
   el("zoomClose").onclick = function() { el("chartZoom").classList.add("hidden"); };
   el("chartZoom").onclick = function(ev) {
     if (ev.target === el("chartZoom")) el("chartZoom").classList.add("hidden");
   };
-  document.querySelectorAll("#scaleSwitcher .view-switch").forEach(function(b) {
-    b.onclick = function() {
-      var axis = b.getAttribute("data-axis");
-      lossView[axis] = !lossView[axis];
-      updateScaleSummary();
-      sizeAndDrawLoss();
-      if (!el("chartZoom").classList.contains("hidden")) drawZoomChart();
-    };
-  });
   el("lbClose").onclick = closeLightbox;
   el("lightbox").onclick = function(ev) {
     if (ev.target === el("lightbox")) closeLightbox();
@@ -1941,10 +1897,7 @@ document.addEventListener("DOMContentLoaded", function() {
   el("previewLayer").onclick = function(ev) {
     if (ev.target === el("previewLayer")) closePreview();
   };
-  el("pvKeepBtn").onclick = function() {
-    el("pvConfirm").classList.add("hidden");
-    pendingOpen = null;
-  };
+  el("pvKeepBtn").onclick = function() { el("pvConfirm").classList.add("hidden"); pendingOpen = null; };
   el("pvDiscardBtn").onclick = function() {
     el("pvConfirm").classList.add("hidden");
     var target = pendingOpen;
@@ -1963,7 +1916,7 @@ document.addEventListener("DOMContentLoaded", function() {
   el("pvEditBtn").onclick = function() {
     if (!viewer || viewer.truncated) return;
     viewer.editing = !viewer.editing;
-    el("pvEditBtn").textContent = viewer.editing ? "完成编辑" : "编辑";
+    el("pvEditBtn").textContent = viewer.editing ? T("doneEdit") : T("edit");
     renderPreview();
   };
   document.addEventListener("keydown", function(ev) {
@@ -1987,11 +1940,6 @@ document.addEventListener("DOMContentLoaded", function() {
       termExec(value);
     }
   });
-  el("termOut").addEventListener("click", function() {
-    var sel = window.getSelection ? String(window.getSelection()) : "";
-    if (sel) return;
-    if (!termBusy) el("termInput").focus();
-  });
   var mq = window.matchMedia ? window.matchMedia("(prefers-color-scheme: dark)") : null;
   if (mq && mq.addEventListener) {
     mq.addEventListener("change", function() {
@@ -2004,8 +1952,7 @@ document.addEventListener("DOMContentLoaded", function() {
     });
     ro.observe(document.body);
   }
-  ageTimer = setInterval(updateConnText, 5000);
+  applyLang();
   applyTheme();
   loadScan("");
-  schedule();
 });
