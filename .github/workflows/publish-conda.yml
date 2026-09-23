@@ -5,6 +5,25 @@ on:
     tags:
       - 'v*'
   workflow_dispatch:
+    inputs:
+      version:
+        description: Conda package version to build
+        required: true
+        type: string
+        default: '1.5.8'
+      os:
+        description: Runner platform to build
+        required: true
+        type: choice
+        options:
+          - ubuntu-latest
+          - macos-latest
+        default: ubuntu-latest
+      publish:
+        description: Upload the manual build to Anaconda.org
+        required: true
+        type: boolean
+        default: false
 
 jobs:
   build:
@@ -12,7 +31,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        os: [ubuntu-latest, macos-latest]
+        os: ${{ fromJSON(github.event_name == 'workflow_dispatch' && format('["{0}"]', inputs.os) || '["ubuntu-latest","macos-latest"]') }}
 
     runs-on: ${{ matrix.os }}
 
@@ -26,11 +45,20 @@ jobs:
           channels: conda-forge
           python-version: '3.11'
 
-      - name: Set package version from tag
+      - name: Set package version from tag or manual input
+        env:
+          MANUAL_VERSION: ${{ inputs.version }}
         run: |
-          TAG="${{ github.ref_name }}"
-          VERSION="${TAG#v}"
-          echo "VERSION=${VERSION}" >> $GITHUB_ENV
+          if [[ "$GITHUB_REF" == refs/tags/v* ]]; then
+            VERSION="${GITHUB_REF_NAME#v}"
+          else
+            VERSION="$MANUAL_VERSION"
+            if [[ ! "$VERSION" =~ ^[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
+              echo "Expected version in X.Y.Z format, got: $VERSION"
+              exit 1
+            fi
+          fi
+          echo "VERSION=${VERSION}" >> "$GITHUB_ENV"
           echo "Building gpumdkit ${VERSION}"
 
       - name: Build conda package
@@ -40,7 +68,7 @@ jobs:
           conda build conda/ -c conda-forge --output-folder ${{ github.workspace }}/dist
 
       - name: Upload to Anaconda.org
-        if: startsWith(github.ref, 'refs/tags/v')
+        if: startsWith(github.ref, 'refs/tags/v') || (github.event_name == 'workflow_dispatch' && inputs.publish)
         env:
           ANACONDA_API_TOKEN: ${{ secrets.ANACONDA_TOKEN }}
         run: |
