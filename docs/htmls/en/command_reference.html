@@ -18,7 +18,7 @@
         <link rel="prev" href="simulation_and_postprocessing.html">
       
       
-        <link rel="next" href="format_conversion.html">
+        <link rel="next" href="remote_web_console.html">
       
       
         
@@ -687,6 +687,34 @@
   
   
     <li class="md-nav__item">
+      <a href="remote_web_console.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Remote Web Console
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
       <a href="format_conversion.html" class="md-nav__link">
         
   
@@ -1113,6 +1141,34 @@
     
   
     命令参考
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../zh/%E8%BF%9C%E7%A8%8B%E7%BD%91%E9%A1%B5%E6%8E%A7%E5%88%B6%E5%8F%B0.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    远程 Web 控制台
   
 
     
@@ -1620,11 +1676,12 @@
 <p>The source table is maintained in <code>docs/command_reference.tsv</code>.</p>
 <p>If you are new to GPUMDkit, start with <a href="quick_start.html">Quick Start</a>. For
 agent-assisted work, use the <a href="simulation_and_postprocessing.html">GPUMDkit Agent Skill</a>.
+For remote browser access, see <a href="remote_web_console.html">Remote Web Console</a>.
 The <code>-h</code> form is available only for commands that expose their own option help;
 otherwise use <code>gpumdkit.sh -h</code>, the relevant module help, or interactive mode.</p>
 <h2 id="gpumdkitsh-h-output"><code>gpumdkit.sh -h</code> Output</h2>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>+-------------------------------------------------------------------------------------------------------+
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>|                          GPUMDkit 1.5.7 (2026-09-14)       Command Help                               |
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>|                          GPUMDkit 1.5.8 (2026-09-23)       Command Help                               |
 <a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>+-------------------------------------------------------------------------------------------------------+
 <a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>|                                          MAIN FUNCTIONS                                               |
 <a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>+-------------------------------------------------------------------------------------------------------+
@@ -1632,33 +1689,34 @@ otherwise use <code>gpumdkit.sh -h</code>, the relevant module help, or interact
 <a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>| -calc &lt;type&gt;  Calculator tools                | -time &lt;gpumd|nep&gt;  Time-consuming analyzer            |
 <a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>| -update       Update GPUMDkit                 | -clean             Clean extra files in current dir   |
 <a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>| -skill        Show GPUMDkit agent skill info  | -doctor            Check Python environment           |
-<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>| -prediction   Write NEP prediction .out files | -prediction_dpa    Write DPA prediction .out files    |
-<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>+-------------------------------------------------------------------------------------------------------+
-<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>|                                         FORMAT CONVERSION                                             |
-<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>+-------------------------------------------------------------------------------------------------------+
-<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>| -out2xyz      OUTCAR -&gt; extxyz (shell)        | -out2xyz_bec       OUTCAR -&gt; extxyz with BEC          |
-<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>| -out2exyz     OUTCAR -&gt; extxyz (python)       | -xyz2dp            extxyz -&gt; DeepMD npy               |
-<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>| -cp2k2xyz     CP2K log -&gt; xyz                 | -xdat2exyz         XDATCAR -&gt; extxyz                  |
-<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>| -cif2pos      cif -&gt; POSCAR                   | -cif2exyz          cif -&gt; extxyz                      |
-<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>| -pos2exyz     POSCAR -&gt; extxyz                | -exyz2pos          extxyz -&gt; POSCAR                   |
-<a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a>| -pos2lmp      POSCAR -&gt; LAMMPS data           | -lmp2exyz          LAMMPS dump -&gt; extxyz              |
-<a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a>| -traj2exyz    ASE traj -&gt; extxyz              | -replicate         Replicate structure                |
-<a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a>| -addgroup     Add group labels                | -addweight         Add structure weight in extxyz     |
-<a id="__codelineno-0-22" name="__codelineno-0-22" href="#__codelineno-0-22"></a>| -clean_xyz    Clean extra info in extxyz      | -get_frame         Extract specific frame             |
-<a id="__codelineno-0-23" name="__codelineno-0-23" href="#__codelineno-0-23"></a>| -frame_range  Extract frames by range         | -dp2xyz            DeepMD npy -&gt; extxyz               |
-<a id="__codelineno-0-24" name="__codelineno-0-24" href="#__codelineno-0-24"></a>+-------------------------------------------------------------------------------------------------------+
-<a id="__codelineno-0-25" name="__codelineno-0-25" href="#__codelineno-0-25"></a>|                                            ANALYSIS                                                   |
-<a id="__codelineno-0-26" name="__codelineno-0-26" href="#__codelineno-0-26"></a>+-------------------------------------------------------------------------------------------------------+
-<a id="__codelineno-0-27" name="__codelineno-0-27" href="#__codelineno-0-27"></a>| -range        Energy/force/virial statistics  | -analyze_comp      Analyze composition                |
-<a id="__codelineno-0-28" name="__codelineno-0-28" href="#__codelineno-0-28"></a>| -chem_species Analyze chemical species        | -cbc               Charge balance check               |
-<a id="__codelineno-0-29" name="__codelineno-0-29" href="#__codelineno-0-29"></a>| -min_dist     Min distance (no PBC)           | -min_dist_pbc      Min distance with PBC              |
-<a id="__codelineno-0-30" name="__codelineno-0-30" href="#__codelineno-0-30"></a>| -filter_dist  Filter by min_dist (no PBC)     | -filter_dist_pbc   Filter by min_dist (PBC)           |
-<a id="__codelineno-0-31" name="__codelineno-0-31" href="#__codelineno-0-31"></a>| -pda          Probability density analysis    | -filter_box        Filter by box-edge length          |
-<a id="__codelineno-0-32" name="__codelineno-0-32" href="#__codelineno-0-32"></a>| -pynep        Deprecated PyNEP sampling       | -nep_modifier      Modify NEP model interactively     |
-<a id="__codelineno-0-33" name="__codelineno-0-33" href="#__codelineno-0-33"></a>| -shift_energy Interactive energy shift        |                                                       |
-<a id="__codelineno-0-34" name="__codelineno-0-34" href="#__codelineno-0-34"></a>+-------------------------------------------------------------------------------------------------------+
-<a id="__codelineno-0-35" name="__codelineno-0-35" href="#__codelineno-0-35"></a>| Python option help: gpumdkit.sh -&lt;option&gt; -h    Plot list: gpumdkit.sh -plt -h                        |
-<a id="__codelineno-0-36" name="__codelineno-0-36" href="#__codelineno-0-36"></a>+-------------------------------------------------------------------------------------------------------+
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>| -server       Start the GPUMDkit web server   |                                                       |
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>| -prediction   Write NEP prediction .out files | -prediction_dpa    Write DPA prediction .out files    |
+<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>+-------------------------------------------------------------------------------------------------------+
+<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>|                                         FORMAT CONVERSION                                             |
+<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>+-------------------------------------------------------------------------------------------------------+
+<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>| -out2xyz      OUTCAR -&gt; extxyz (shell)        | -out2xyz_bec       OUTCAR -&gt; extxyz with BEC          |
+<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>| -out2exyz     OUTCAR -&gt; extxyz (python)       | -xyz2dp            extxyz -&gt; DeepMD npy               |
+<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>| -cp2k2xyz     CP2K log -&gt; xyz                 | -xdat2exyz         XDATCAR -&gt; extxyz                  |
+<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>| -cif2pos      cif -&gt; POSCAR                   | -cif2exyz          cif -&gt; extxyz                      |
+<a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a>| -pos2exyz     POSCAR -&gt; extxyz                | -exyz2pos          extxyz -&gt; POSCAR                   |
+<a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a>| -pos2lmp      POSCAR -&gt; LAMMPS data           | -lmp2exyz          LAMMPS dump -&gt; extxyz              |
+<a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a>| -traj2exyz    ASE traj -&gt; extxyz              | -replicate         Replicate structure                |
+<a id="__codelineno-0-22" name="__codelineno-0-22" href="#__codelineno-0-22"></a>| -addgroup     Add group labels                | -addweight         Add structure weight in extxyz     |
+<a id="__codelineno-0-23" name="__codelineno-0-23" href="#__codelineno-0-23"></a>| -clean_xyz    Clean extra info in extxyz      | -get_frame         Extract specific frame             |
+<a id="__codelineno-0-24" name="__codelineno-0-24" href="#__codelineno-0-24"></a>| -frame_range  Extract frames by range         | -dp2xyz            DeepMD npy -&gt; extxyz               |
+<a id="__codelineno-0-25" name="__codelineno-0-25" href="#__codelineno-0-25"></a>+-------------------------------------------------------------------------------------------------------+
+<a id="__codelineno-0-26" name="__codelineno-0-26" href="#__codelineno-0-26"></a>|                                            ANALYSIS                                                   |
+<a id="__codelineno-0-27" name="__codelineno-0-27" href="#__codelineno-0-27"></a>+-------------------------------------------------------------------------------------------------------+
+<a id="__codelineno-0-28" name="__codelineno-0-28" href="#__codelineno-0-28"></a>| -range        Energy/force/virial statistics  | -analyze_comp      Analyze composition                |
+<a id="__codelineno-0-29" name="__codelineno-0-29" href="#__codelineno-0-29"></a>| -chem_species Analyze chemical species        | -cbc               Charge balance check               |
+<a id="__codelineno-0-30" name="__codelineno-0-30" href="#__codelineno-0-30"></a>| -min_dist     Min distance (no PBC)           | -min_dist_pbc      Min distance with PBC              |
+<a id="__codelineno-0-31" name="__codelineno-0-31" href="#__codelineno-0-31"></a>| -filter_dist  Filter by min_dist (no PBC)     | -filter_dist_pbc   Filter by min_dist (PBC)           |
+<a id="__codelineno-0-32" name="__codelineno-0-32" href="#__codelineno-0-32"></a>| -pda          Probability density analysis    | -filter_box        Filter by box-edge length          |
+<a id="__codelineno-0-33" name="__codelineno-0-33" href="#__codelineno-0-33"></a>| -pynep        Deprecated PyNEP sampling       | -nep_modifier      Modify NEP model interactively     |
+<a id="__codelineno-0-34" name="__codelineno-0-34" href="#__codelineno-0-34"></a>| -shift_energy Interactive energy shift        |                                                       |
+<a id="__codelineno-0-35" name="__codelineno-0-35" href="#__codelineno-0-35"></a>+-------------------------------------------------------------------------------------------------------+
+<a id="__codelineno-0-36" name="__codelineno-0-36" href="#__codelineno-0-36"></a>| Python option help: gpumdkit.sh -&lt;option&gt; -h    Plot list: gpumdkit.sh -plt -h                        |
+<a id="__codelineno-0-37" name="__codelineno-0-37" href="#__codelineno-0-37"></a>+-------------------------------------------------------------------------------------------------------+
 </code></pre></div>
 <h2 id="main">Main</h2>
 <table>
@@ -1689,6 +1747,11 @@ otherwise use <code>gpumdkit.sh -h</code>, the relevant module help, or interact
 <td><code>-clean</code></td>
 <td><code>gpumdkit.sh -clean</code></td>
 <td>Clean extra files in the current directory</td>
+</tr>
+<tr>
+<td><code>-server</code></td>
+<td><code>gpumdkit.sh -server [port] [-b &lt;address&gt;] [-pw &lt;password&gt;]</code></td>
+<td>Start the Web Console for the current directory; use an SSH tunnel for remote access.</td>
 </tr>
 <tr>
 <td><code>-prediction</code></td>

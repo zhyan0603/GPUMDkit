@@ -59,6 +59,7 @@ nav:
     - Quick Start: en/quick_start.md
     - GPUMDkit Agent Skill: en/simulation_and_postprocessing.md
     - Command Reference: en/command_reference.md
+    - Remote Web Console: en/remote_web_console.md
     - Format Conversion: en/format_conversion.md
     - Structure Sampling: en/structure_sampling.md
     - Workflow Scripts: en/workflow_scripts.md
@@ -74,6 +75,7 @@ nav:
     - 快速入门: zh/快速入门.md
     - GPUMDkit Agent Skill: zh/模拟与后处理.md
     - 命令参考: zh/命令参考.md
+    - 远程 Web 控制台: zh/远程网页控制台.md
     - 格式转换: zh/格式转换.md
     - 结构采样: zh/结构采样.md
     - 工作流脚本: zh/工作流脚本.md

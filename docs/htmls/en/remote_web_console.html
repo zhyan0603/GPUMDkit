@@ -12,13 +12,13 @@
         <meta name="author" content="Zihan YAN">
       
       
-        <link rel="canonical" href="https://gpumdkit.cn/htmls/en/structure_sampling.html">
+        <link rel="canonical" href="https://gpumdkit.cn/htmls/en/remote_web_console.html">
       
       
-        <link rel="prev" href="format_conversion.html">
+        <link rel="prev" href="command_reference.html">
       
       
-        <link rel="next" href="workflow_scripts.html">
+        <link rel="next" href="format_conversion.html">
       
       
         
@@ -29,7 +29,7 @@
     
     
       
-        <title>Structure Sampling - GPUMDkit Tutorial</title>
+        <title>Remote Web Console - GPUMDkit Tutorial</title>
       
     
     
@@ -143,7 +143,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#interactive-mode" class="md-skip">
+        <a href="#what-it-is" class="md-skip">
           Skip to content
         </a>
       
@@ -179,7 +179,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Structure Sampling
+              Remote Web Console
             
           </span>
         </div>
@@ -486,10 +486,35 @@
                 
   
   
+    
   
   
-    <li class="md-nav__item">
-      <a href="remote_web_console.html" class="md-nav__link">
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Remote Web Console
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="remote_web_console.html" class="md-nav__link md-nav__link--active">
         
   
   
@@ -505,6 +530,90 @@
   
 
       </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#what-it-is" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What it is
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#start-the-server-on-the-remote-host" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Start the server on the remote host
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#create-the-ssh-tunnel-from-your-workstation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Create the SSH tunnel from your workstation
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#server-options" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Server options
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#what-you-can-do-in-the-browser" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What you can do in the browser
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#troubleshooting" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Troubleshooting
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
     </li>
   
 
@@ -542,35 +651,10 @@
                 
   
   
-    
   
   
-  
-    <li class="md-nav__item md-nav__item--active">
-      
-      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
-      
-      
-      
-        <label class="md-nav__link md-nav__link--active" for="__toc">
-          
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Structure Sampling
-  
-
-    
-  </span>
-  
-  
-
-          <span class="md-nav__icon md-icon"></span>
-        </label>
-      
-      <a href="structure_sampling.html" class="md-nav__link md-nav__link--active">
+    <li class="md-nav__item">
+      <a href="structure_sampling.html" class="md-nav__link">
         
   
   
@@ -586,173 +670,6 @@
   
 
       </a>
-      
-        
-
-<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
-  
-  
-  
-  
-    <label class="md-nav__title" for="__toc">
-      <span class="md-nav__icon md-icon"></span>
-      Table of contents
-    </label>
-    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
-      
-        <li class="md-nav__item">
-  <a href="#interactive-mode" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Interactive Mode
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#uniform-and-random-sampling" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Uniform and Random Sampling
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#farthest-point-sampling-with-neptrain" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Farthest Point Sampling with NepTrain
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#deprecated-pynep-fps" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Deprecated PyNEP FPS
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Deprecated PyNEP FPS">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#serial-pynep" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Serial PyNEP
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#parallel-pynep" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Parallel PyNEP
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#gpumdkit-entry" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        GPUMDkit Entry
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#structure-perturbation" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Structure Perturbation
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#force-deviation-selection" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Force-Deviation Selection
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#training-and-test-set-split" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Training and Test Set Split
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#frame-range-extraction" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Frame Range Extraction
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#example-commands" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Example Commands
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#common-mistakes" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Common Mistakes
-      
-    </span>
-  </a>
-  
-</li>
-      
-    </ul>
-  
-</nav>
-      
     </li>
   
 
@@ -1488,10 +1405,10 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#interactive-mode" class="md-nav__link">
+  <a href="#what-it-is" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Interactive Mode
+        What it is
       
     </span>
   </a>
@@ -1499,10 +1416,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#uniform-and-random-sampling" class="md-nav__link">
+  <a href="#start-the-server-on-the-remote-host" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Uniform and Random Sampling
+        Start the server on the remote host
       
     </span>
   </a>
@@ -1510,10 +1427,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#farthest-point-sampling-with-neptrain" class="md-nav__link">
+  <a href="#create-the-ssh-tunnel-from-your-workstation" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Farthest Point Sampling with NepTrain
+        Create the SSH tunnel from your workstation
       
     </span>
   </a>
@@ -1521,60 +1438,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#deprecated-pynep-fps" class="md-nav__link">
+  <a href="#server-options" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Deprecated PyNEP FPS
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Deprecated PyNEP FPS">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#serial-pynep" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Serial PyNEP
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#parallel-pynep" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Parallel PyNEP
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#gpumdkit-entry" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        GPUMDkit Entry
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#structure-perturbation" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Structure Perturbation
+        Server options
       
     </span>
   </a>
@@ -1582,10 +1449,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#force-deviation-selection" class="md-nav__link">
+  <a href="#what-you-can-do-in-the-browser" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Force-Deviation Selection
+        What you can do in the browser
       
     </span>
   </a>
@@ -1593,43 +1460,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#training-and-test-set-split" class="md-nav__link">
+  <a href="#troubleshooting" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Training and Test Set Split
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#frame-range-extraction" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Frame Range Extraction
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#example-commands" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Example Commands
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#common-mistakes" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Common Mistakes
+        Troubleshooting
       
     </span>
   </a>
@@ -1657,430 +1491,127 @@
 
 
 <div align="center">
-  <h1>📦 Structure Sampling</h1>
-  <p style="text-align: justify;">Structure sampling is used to select, generate, or filter candidate configurations for NEP training and molecular dynamics workflows.</p>
+  <h1>Remote Web Console</h1>
+  <p style="text-align: justify;">Browse and work with files on a remote GPUMDkit host from your local browser through an SSH tunnel.</p>
 </div>
 
-<p><strong>Script Location:</strong> <code>Scripts/sample_structures/</code></p>
-<p>Run <code>gpumdkit.sh</code> in the working directory containing your candidate trajectory, reference data, and model, then enter filenames at the menu prompts. Use actual paths for files elsewhere. Relative paths start from the terminal's current directory; check each function's output location and any existing files with the same names before running.</p>
-<p>The <code>python Scripts/...</code> examples below are optional source invocations: run them from the GPUMDkit checkout root with adjusted data paths, or use the script's absolute path from your data directory. Conda users can use the menus without locating <code>Scripts/</code>.</p>
-<h2 id="interactive-mode">Interactive Mode</h2>
-<p>Sampling tasks are usually easier to run from the interactive menu:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>gpumdkit.sh
+<h2 id="what-it-is">What it is</h2>
+<p><code>gpumdkit.sh -server</code> starts a browser-based console rooted at the directory
+from which it is launched. The browser displays files that remain on that
+machine; it does not copy the working directory to your workstation. Use this
+when you want to inspect remote simulation/training outputs, run supported
+plot actions, or perform small file operations without transferring the whole
+project.</p>
+<h2 id="start-the-server-on-the-remote-host">Start the server on the remote host</h2>
+<p>Connect to the host with SSH, activate the environment containing GPUMDkit,
+change to the directory you want to expose in the console, and start the
+server:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>ssh<span class="w"> </span>&lt;user&gt;@&lt;host&gt;
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>conda<span class="w"> </span>activate<span class="w"> </span>gpumdkit
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="nb">cd</span><span class="w"> </span>/path/to/working-directory
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>gpumdkit.sh<span class="w"> </span>-server
 </code></pre></div>
-<p>Choose:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>2) Sample Structures
+<p>Replace the placeholders with your SSH account, host, and actual working
+directory. If you do not use Conda, activate or load the environment that
+provides <code>gpumdkit.sh</code> and the Python packages required by the plot actions.
+Keep this remote terminal open while using the console.</p>
+<p>By default, the server listens on <code>127.0.0.1:8888</code> on the remote host. The
+starting directory is the file-browser root; the UI can navigate its
+subdirectories, but the file APIs cannot browse above it.</p>
+<h2 id="create-the-ssh-tunnel-from-your-workstation">Create the SSH tunnel from your workstation</h2>
+<p>Open another terminal on your local workstation and run:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>ssh<span class="w"> </span>-N<span class="w"> </span>-L<span class="w"> </span><span class="m">8888</span>:127.0.0.1:8888<span class="w"> </span>&lt;user&gt;@&lt;host&gt;
 </code></pre></div>
-<p>The menu is:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>+------------------------------------------------------+
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>|                 SAMPLE STRUCTURE TOOLS               |
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>+------------------------------------------------------+
-<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>| 201) Sample structures from extxyz                   |
-<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>| 202) PyNEP sampling [deprecated]                     |
-<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>| 203) FPS sampling by NepTrain [preferred]            |
-<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a>| 204) Perturb structure                               |
-<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>| 205) Select max force deviation structs              |
-<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a>| 206) Split training and test sets                    |
-<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a>+------------------------------------------------------+
-<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a>| 000) Return to the main menu                         |
-<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a>+------------------------------------------------------+
-<a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a>Input the function number:
+<p>Use the same account and host as for the remote login. Leave this tunnel
+terminal running, then open this address in your local browser:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>http://127.0.0.1:8888
 </code></pre></div>
-<p>Available entries:</p>
+<p>The first <code>8888</code> is the local port; the last <code>8888</code> is the remote server port.
+If local port <code>8888</code> is busy, choose another local port, such as <code>8890</code>:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>ssh<span class="w"> </span>-N<span class="w"> </span>-L<span class="w"> </span><span class="m">8890</span>:127.0.0.1:8888<span class="w"> </span>&lt;user&gt;@&lt;host&gt;
+</code></pre></div>
+<p>Then open <code>http://127.0.0.1:8890</code>. If the server uses a different remote port,
+for example <code>9000</code>, start it with <code>gpumdkit.sh -server 9000</code> and forward that
+port with <code>ssh -N -L 8888:127.0.0.1:9000 &lt;user&gt;@&lt;host&gt;</code>.</p>
+<p>Stop the tunnel with <code>Ctrl+C</code> in the local terminal. Stop the web server with
+<code>Ctrl+C</code> in its remote terminal.</p>
+<h2 id="server-options">Server options</h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>gpumdkit.sh -server [port] [-b &lt;address&gt;] [-pw &lt;password&gt;]
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>gpumdkit.sh -server -h
+</code></pre></div>
 <table>
 <thead>
 <tr>
-<th>Menu</th>
-<th>Method</th>
-<th>Use Case</th>
+<th>Option</th>
+<th>Default</th>
+<th>Description</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td>201</td>
-<td>Uniform/random sampling</td>
-<td>quick frame selection from a trajectory</td>
+<td><code>port</code></td>
+<td><code>8888</code></td>
+<td>Port used by the web server</td>
 </tr>
 <tr>
-<td>202</td>
-<td>PyNEP notice</td>
-<td>prints a notice; use <code>gpumdkit.sh -pynep</code> to run PyNEP</td>
+<td><code>-b &lt;address&gt;</code></td>
+<td><code>127.0.0.1</code></td>
+<td>Network address to listen on</td>
 </tr>
 <tr>
-<td>203</td>
-<td>NepTrain FPS</td>
-<td>descriptor-based FPS with NepTrain</td>
-</tr>
-<tr>
-<td>204</td>
-<td>Perturb structure</td>
-<td>generate perturbed structures from POSCAR/CONTCAR</td>
-</tr>
-<tr>
-<td>205</td>
-<td>Force-deviation selection</td>
-<td>select structures with high model deviation</td>
-</tr>
-<tr>
-<td>206</td>
-<td>Train/test split</td>
-<td>inspect and split an extxyz dataset using uniform, random, or FPS selection</td>
+<td><code>-pw &lt;password&gt;</code></td>
+<td>Disabled on loopback</td>
+<td>Require a password to sign in</td>
 </tr>
 </tbody>
 </table>
-<h2 id="uniform-and-random-sampling">Uniform and Random Sampling</h2>
-<p>From interactive mode, choose <code>201</code>. You will see:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>Input &lt;extxyz_file&gt; &lt;sampling_method&gt; &lt;num_samples&gt; [skip_num]
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>[skip_num]: number of initial frames to skip, default value is 0
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>Sampling_method: &#39;uniform&#39; or &#39;random&#39;
-<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>Example: train.xyz uniform 50
-<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>------------&gt;&gt;
-</code></pre></div>
-<p>Example input:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>dump.xyz uniform 50
-</code></pre></div>
-<p>or:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>dump.xyz random 100 500
-</code></pre></div>
-<p>Arguments:</p>
-<table>
-<thead>
-<tr>
-<th>Argument</th>
-<th>Meaning</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><code>dump.xyz</code></td>
-<td>input trajectory</td>
-</tr>
-<tr>
-<td><code>uniform</code> / <code>random</code></td>
-<td>sampling method</td>
-</tr>
-<tr>
-<td><code>50</code> / <code>100</code></td>
-<td>number of selected structures</td>
-</tr>
-<tr>
-<td><code>500</code></td>
-<td>optional number of initial frames to skip</td>
-</tr>
-</tbody>
-</table>
-<p>Output:</p>
+<p>For an SSH tunnel, keep the default loopback bind. Do not bind to <code>0.0.0.0</code>
+unless direct network access is intentional and permitted by the host's
+security policy. A non-loopback bind requires a password; the web server does
+not provide HTTPS. When binding beyond loopback, omitting <code>-pw</code> prompts for a
+password interactively. Do not put passwords in shared scripts or shell
+history.</p>
+<h2 id="what-you-can-do-in-the-browser">What you can do in the browser</h2>
 <ul>
-<li><code>sampled_structures.xyz</code></li>
+<li>Navigate the current directory, filter its files, and open supported text
+  and image previews.</li>
+<li>Create files/folders, upload files from the workstation, and download
+  selected remote files.</li>
+<li>Run the available GPUMDkit plot actions and view their output figures.</li>
+<li>Inspect NEP training or MD progress when the corresponding output files are
+  present. The console reads output files; it does not launch GPUMD, submit
+  scheduler jobs, or determine process liveness from file timestamps.</li>
+<li>Use the terminal drawer for quick commands. Commands run on the remote host;
+  this terminal is not restricted to the file-browser root.</li>
 </ul>
-<h2 id="farthest-point-sampling-with-neptrain">Farthest Point Sampling with NepTrain</h2>
-<p>This entry uses NepTrain descriptors for FPS. Choose <code>203</code> in interactive mode, or run the script directly:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>python<span class="w"> </span>Scripts/sample_structures/parallel_neptrain_select_structs.py<span class="w"> </span>dump.xyz<span class="w"> </span>train.xyz<span class="w"> </span>nep.txt<span class="w"> </span><span class="o">[</span>threads<span class="o">]</span>
-</code></pre></div>
-<p>Descriptor calculation uses one CPU worker by default. Set the optional fourth
-argument to a positive integer to enable parallel calculation, for example
-<code>4</code>. Each worker loads its own copy of the NEP model and uses one native OpenMP
-thread, so the requested worker count is the total descriptor parallelism.</p>
-<p>From interactive mode, choose <code>203</code>. You will see:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>Input &lt;sample.xyz&gt; &lt;train.xyz&gt; &lt;nep_model&gt; [threads]
-<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>[threads]: descriptor threads, default value is 1
-<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>Example: dump.xyz train.xyz nep.txt 4
-<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a>------------&gt;&gt;
-</code></pre></div>
-<p>Inputs:</p>
+<p>Start the server from the Conda environment you intend to use. This ensures
+that allowlisted plot actions inherit the expected GPUMDkit installation and
+Python dependencies. The browser's upload/download controls are the explicit
+ways to transfer files between your workstation and the remote host.</p>
+<h2 id="troubleshooting">Troubleshooting</h2>
 <table>
 <thead>
 <tr>
-<th>File</th>
-<th>Meaning</th>
+<th>Symptom</th>
+<th>Check</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td><code>dump.xyz</code></td>
-<td>candidate structures</td>
+<td>Browser cannot connect</td>
+<td>Confirm the remote server and local SSH tunnel are both still running, and that the forwarded ports match.</td>
 </tr>
 <tr>
-<td><code>train.xyz</code></td>
-<td>existing training set</td>
+<td>The wrong files appear</td>
+<td>The server root is the directory where <code>gpumdkit.sh -server</code> was started. Stop it and relaunch from the intended directory.</td>
 </tr>
 <tr>
-<td><code>nep.txt</code></td>
-<td>current NEP model used to compute descriptors</td>
+<td>Plot actions fail</td>
+<td>Start the server from the environment containing GPUMDkit and the plot dependencies; inspect the action output in the console.</td>
 </tr>
 <tr>
-<td><code>threads</code></td>
-<td>optional number of descriptor workers; default: <code>1</code></td>
-</tr>
-</tbody>
-</table>
-<p>Outputs:</p>
-<ul>
-<li><code>selected.xyz</code></li>
-<li><code>select.png</code></li>
-<li><code>pca_sample.txt</code></li>
-<li><code>pca_train.txt</code></li>
-<li><code>pca_selected.txt</code></li>
-</ul>
-<p>During execution, choose one of two selection modes:</p>
-<ol>
-<li>select until the descriptor distance is below a threshold;</li>
-<li>select a specified number of structures.</li>
-</ol>
-<p>The script then prints a selection prompt:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>Choose selection method:
-<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>1) Select structures based on minimum distance
-<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a>2) Select structures based on number of structures
-<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a>------------&gt;&gt;
-</code></pre></div>
-<p>This function requires the <code>NepTrain</code> package. If you use this function, we recommend citing the NepTrain paper printed by the script.</p>
-<h2 id="deprecated-pynep-fps">Deprecated PyNEP FPS</h2>
-<p>PyNEP FPS is kept for compatibility, but it is only exposed through the direct <code>-pynep</code> entry.</p>
-<p>If you choose <code>202</code> from the interactive menu, it prints:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>+-------------------------------------------------+
-<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>| Function 202 is no longer supported here.       |
-<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a>| PyNEP package is no longer actively maintained. |
-<a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a>| Please use 203) NepTrain sampling instead.      |
-<a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a>| If you still need PyNEP compatibility, run:     |
-<a id="__codelineno-9-6" name="__codelineno-9-6" href="#__codelineno-9-6"></a>|                 gpumdkit.sh -pynep              |
-<a id="__codelineno-9-7" name="__codelineno-9-7" href="#__codelineno-9-7"></a>+-------------------------------------------------+
-</code></pre></div>
-<h3 id="serial-pynep">Serial PyNEP</h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a>python<span class="w"> </span>Scripts/sample_structures/pynep_select_structs.py<span class="w"> </span>dump.xyz<span class="w"> </span>train.xyz<span class="w"> </span>nep.txt
-</code></pre></div>
-<h3 id="parallel-pynep">Parallel PyNEP</h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a>python<span class="w"> </span>Scripts/sample_structures/parallel_pynep_select_structs.py<span class="w"> </span>dump.xyz<span class="w"> </span>train.xyz<span class="w"> </span>nep.txt<span class="w"> </span><span class="m">8</span>
-</code></pre></div>
-<p>The last argument is the number of CPU threads.</p>
-<h3 id="gpumdkit-entry">GPUMDkit Entry</h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a>gpumdkit.sh<span class="w"> </span>-pynep
-</code></pre></div>
-<p>Then input:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a>dump.xyz train.xyz nep.txt 8
-</code></pre></div>
-<p>This entry requires <code>pynep</code> and is kept for compatibility.</p>
-<h2 id="structure-perturbation">Structure Perturbation</h2>
-<p>Use perturbation when you want to generate initial structures around a known configuration. Choose <code>204</code> in interactive mode, or run the script directly:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a>python<span class="w"> </span>Scripts/sample_structures/perturb_structure.py<span class="w"> </span>POSCAR<span class="w"> </span><span class="m">20</span><span class="w"> </span><span class="m">0</span>.03<span class="w"> </span><span class="m">0</span>.2<span class="w"> </span>uniform
-</code></pre></div>
-<p>From interactive mode, choose <code>204</code>. You will see:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a>Input &lt;input.vasp&gt; &lt;pert_num&gt; &lt;cell_pert_fraction&gt; &lt;atom_pert_distance&gt; &lt;atom_pert_style&gt;
-<a id="__codelineno-15-2" name="__codelineno-15-2" href="#__codelineno-15-2"></a>The default parameters for perturb are 20 0.03 0.2 uniform
-<a id="__codelineno-15-3" name="__codelineno-15-3" href="#__codelineno-15-3"></a>Example: POSCAR 20 0.03 0.2 uniform
-<a id="__codelineno-15-4" name="__codelineno-15-4" href="#__codelineno-15-4"></a>------------&gt;&gt;
-</code></pre></div>
-<p>Arguments:</p>
-<table>
-<thead>
-<tr>
-<th>Argument</th>
-<th>Meaning</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><code>POSCAR</code></td>
-<td>input VASP structure</td>
-</tr>
-<tr>
-<td><code>20</code></td>
-<td>number of perturbed structures</td>
-</tr>
-<tr>
-<td><code>0.03</code></td>
-<td>cell perturbation fraction</td>
-</tr>
-<tr>
-<td><code>0.2</code></td>
-<td>atom perturbation distance in Angstrom</td>
-</tr>
-<tr>
-<td><code>uniform</code></td>
-<td>perturbation style: <code>normal</code>, <code>uniform</code>, or <code>const</code></td>
-</tr>
-</tbody>
-</table>
-<p>Output:</p>
-<ul>
-<li><code>POSCAR_01.vasp</code>, <code>POSCAR_02.vasp</code>, ...</li>
-<li><code>perturb.txt</code></li>
-</ul>
-<p><code>perturb.txt</code> gives a concise overview rather than listing every generated
-structure in detail. It reports the minimum, mean, and maximum cell-length,
-angle, and volume changes; an ASCII histogram of non-affine atomic
-displacements after removing affine cell deformation; and the structures with
-the largest contraction, expansion, cell strain, and atomic displacement. If
-ASE is installed, it also reports periodic minimum-distance statistics. These
-values are descriptive only; GPUMDkit does not apply a structural acceptance
-threshold.</p>
-<p>This function requires <code>dpdata</code>. If you use this function, we recommend citing the dpdata package.</p>
-<h2 id="force-deviation-selection">Force-Deviation Selection</h2>
-<p>Use this together with the GPUMD <code>active</code> command. The <code>active</code> command uses a committee model approach: multiple potentials predict forces for the same structure, and GPUMD records the maximum force deviation. <code>select_max_modev.py</code> selects structures with large force deviations from <code>active.out</code> and <code>active.xyz</code>, then writes them to <code>selected.xyz</code>.</p>
-<p>Choose <code>205</code> in interactive mode, or run the script directly:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a>python<span class="w"> </span>Scripts/sample_structures/select_max_modev.py<span class="w"> </span><span class="m">200</span><span class="w"> </span><span class="m">0</span>.15
-</code></pre></div>
-<p>From interactive mode, choose <code>205</code>. You will see:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-17-1" name="__codelineno-17-1" href="#__codelineno-17-1"></a>+----------------------------------------------------+
-<a id="__codelineno-17-2" name="__codelineno-17-2" href="#__codelineno-17-2"></a>| Select max force deviation structs from active.xyz |
-<a id="__codelineno-17-3" name="__codelineno-17-3" href="#__codelineno-17-3"></a>|     generated by the active command in gpumd.      |
-<a id="__codelineno-17-4" name="__codelineno-17-4" href="#__codelineno-17-4"></a>+----------------------------------------------------+
-<a id="__codelineno-17-5" name="__codelineno-17-5" href="#__codelineno-17-5"></a>Input &lt;structs_num&gt; &lt;threshold&gt; (eg. 200 0.15)
-<a id="__codelineno-17-6" name="__codelineno-17-6" href="#__codelineno-17-6"></a>------------&gt;&gt;
-</code></pre></div>
-<p>Arguments:</p>
-<table>
-<thead>
-<tr>
-<th>Argument</th>
-<th>Meaning</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><code>200</code></td>
-<td>maximum number of structures to keep</td>
-</tr>
-<tr>
-<td><code>0.15</code></td>
-<td>minimum force deviation threshold</td>
-</tr>
-</tbody>
-</table>
-<p>Required files:</p>
-<ul>
-<li><code>active.out</code></li>
-<li><code>active.xyz</code></li>
-</ul>
-<p>Output:</p>
-<ul>
-<li><code>selected.xyz</code></li>
-</ul>
-<h2 id="training-and-test-set-split">Training and Test Set Split</h2>
-<p>Choose <code>206</code> to inspect an extxyz dataset and split it into training and test
-sets. The script first reports the element list, total number of frames, and the
-range of atom counts per frame. It then asks for the test-set size and selection
-method.</p>
-<p>From interactive mode:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-18-1" name="__codelineno-18-1" href="#__codelineno-18-1"></a>gpumdkit.sh -&gt; 2) Sample Structures -&gt; 206
-</code></pre></div>
-<p>Enter the input filename when prompted:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-19-1" name="__codelineno-19-1" href="#__codelineno-19-1"></a>Input &lt;extxyz_file&gt;
-<a id="__codelineno-19-2" name="__codelineno-19-2" href="#__codelineno-19-2"></a>Example: data.xyz
-<a id="__codelineno-19-3" name="__codelineno-19-3" href="#__codelineno-19-3"></a>------------&gt;&gt;
-</code></pre></div>
-<p>The test-set size accepts two forms:</p>
-<table>
-<thead>
-<tr>
-<th>Input</th>
-<th>Meaning</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><code>0.1</code></td>
-<td>select approximately 10% of all frames for testing</td>
-</tr>
-<tr>
-<td><code>100</code></td>
-<td>select exactly 100 frames for testing</td>
-</tr>
-</tbody>
-</table>
-<p>For a fractional input, the number of test frames is rounded to the nearest
-integer with halves rounded up, with a minimum of one test frame. The test set
-must remain smaller than the complete dataset so that the training set is not
-empty.</p>
-<p>Three selection methods are available:</p>
-<table>
-<thead>
-<tr>
-<th>Method</th>
-<th>Behavior</th>
-<th>Additional input</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>Uniform</td>
-<td>selects evenly spaced frame indices across the dataset</td>
-<td>none</td>
-</tr>
-<tr>
-<td>Random</td>
-<td>selects without replacement</td>
-<td>optional integer random seed</td>
-</tr>
-<tr>
-<td>FPS</td>
-<td>selects diverse structures using mean atomic NEP descriptors</td>
-<td>a compatible <code>nep.txt</code> model</td>
-</tr>
-</tbody>
-</table>
-<p>A fixed random seed makes a random split reproducible. Leaving the seed empty
-uses a non-fixed seed. FPS follows the NepTrain descriptor approach used by
-function <code>203</code>: it starts from the first frame and repeatedly selects the frame
-farthest from the structures already selected.</p>
-<p>For an input named <code>data.xyz</code>, the outputs are:</p>
-<ul>
-<li><code>data_train.xyz</code>: all frames not selected for testing;</li>
-<li><code>data_test.xyz</code>: the selected test frames.</li>
-</ul>
-<p>Both output files preserve the input order of their retained frames. The script
-can also be launched directly, but the remaining choices are still interactive:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-20-1" name="__codelineno-20-1" href="#__codelineno-20-1"></a>python<span class="w"> </span>Scripts/sample_structures/split_train_test.py<span class="w"> </span>data.xyz
-</code></pre></div>
-<p>Uniform and random splitting require <code>numpy</code> and <code>ase</code>. FPS additionally
-requires <code>NepTrain</code>, <code>scipy</code>, and a NEP model compatible with the elements in the
-dataset.</p>
-<h2 id="frame-range-extraction">Frame Range Extraction</h2>
-<p><code>frame_range.py</code> is an independent CLI tool and is not part of the interactive sampling menu <code>201–206</code>. Use it when you want to keep only a fraction of a trajectory before sampling, for example after equilibration.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-21-1" name="__codelineno-21-1" href="#__codelineno-21-1"></a>gpumdkit.sh<span class="w"> </span>-frame_range<span class="w"> </span>dump.xyz<span class="w"> </span><span class="m">0</span><span class="w"> </span><span class="m">0</span>.8
-</code></pre></div>
-<p>This writes frames from 0% to 80% of the trajectory. The range arguments are trajectory fractions from <code>0</code> to <code>1</code>.</p>
-<h2 id="example-commands">Example Commands</h2>
-<p>An example preprocessing-and-sampling sequence is shown below. The first two commands are analyzer tools; the final step is structure sampling.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-22-1" name="__codelineno-22-1" href="#__codelineno-22-1"></a>gpumdkit.sh<span class="w"> </span>-min_dist_pbc<span class="w"> </span>dump.xyz
-<a id="__codelineno-22-2" name="__codelineno-22-2" href="#__codelineno-22-2"></a>gpumdkit.sh<span class="w"> </span>-filter_box<span class="w"> </span>dump.xyz<span class="w"> </span><span class="m">13</span>
-<a id="__codelineno-22-3" name="__codelineno-22-3" href="#__codelineno-22-3"></a>gpumdkit.sh<span class="w">  </span><span class="c1"># choose 2 → 203</span>
-</code></pre></div>
-<p><code>-filter_box</code> writes the retained structures to <code>filtered_by_box.xyz</code>. At the parameter prompt in menu <code>203</code>, enter:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-23-1" name="__codelineno-23-1" href="#__codelineno-23-1"></a>filtered_by_box.xyz train.xyz nep.txt 4
-</code></pre></div>
-<p>These are the filtered candidates, existing reference dataset, compatible NEP model, and number of parallel workers. Prepare <code>train.xyz</code> and <code>nep.txt</code> before running FPS; use the original trajectory if filtering was not performed. Choose the box-length threshold for your own system; the example value <code>13</code> is not a universal filtering criterion.</p>
-<h2 id="common-mistakes">Common Mistakes</h2>
-<table>
-<thead>
-<tr>
-<th>Problem</th>
-<th>Recommendation</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>FPS selects too many similar structures</td>
-<td>increase the distance threshold or select fewer structures</td>
-</tr>
-<tr>
-<td>Perturbed structures are unphysical</td>
-<td>reduce <code>cell_pert</code> and <code>atom_pert</code>, then check minimum distances</td>
-</tr>
-<tr>
-<td><code>active.out</code> and <code>active.xyz</code> do not match</td>
-<td>regenerate both from the same GPUMD active run</td>
-</tr>
-<tr>
-<td>PCA plot looks strange</td>
-<td>check whether <code>nep.txt</code> matches the chemical species in both datasets</td>
-</tr>
-<tr>
-<td>FPS split cannot load the model</td>
-<td>check that NepTrain is installed and that <code>nep.txt</code> supports every dataset element</td>
-</tr>
-<tr>
-<td>Random split changes between runs</td>
-<td>enter a fixed integer random seed</td>
+<td>Progress does not change</td>
+<td>The page rereads output files, but progress changes only when those files receive new records. The monitor is not a process or scheduler monitor.</td>
 </tr>
 </tbody>
 </table>

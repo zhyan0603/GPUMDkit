@@ -17,6 +17,7 @@ This documentation is organized as a practical tutorial rather than only a comma
 | Topic | What it Covers |
 |-------|----------------|
 | Quick Start | Installation, environment setup, interactive mode, direct command mode |
+| Remote Web Console | Browse and manage remote files through an SSH tunnel |
 | Format Conversion | VASP, LAMMPS, CP2K, ABACUS, CIF, extxyz, group labels, weights |
 | Sampling | Uniform/random sampling, NepTrain FPS, perturbation, force-deviation selection |
 | Calculators | MSD, ionic conductivity, XRD, NEP prediction, descriptors, DOAS, NEB, polarization tools |

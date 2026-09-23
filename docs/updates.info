@@ -1,25 +1,25 @@
 # === User Configuration Section: Only modify these variables ===
-VERSION="1.5.7"
-RELEASE_DATE="2026-09-15"
+VERSION="1.5.8"
+RELEASE_DATE="2026-09-23"
 HOME_PAGE="https://gpumdkit.cn"
 CONTACT="yanzihan@westlake.edu.cn"
 
 # New features (one per line, in an array; keep at most the five newest entries)
 NEW_FEATURES=(
+    "add web MD monitor for neighbor.out radial/angular actual-vs-max traces, run.in step progress, speed, and ETA"
+    "add sandboxed web-console file actions: home and parent navigation, create, upload, and download"
+    "add context-aware web plot actions for RDF, XRD, cohesive energy, viscosity, phonon bands, and force errors"
     "add -server web console: one content canvas per directory, conditional sections, adaptive monitoring, chart scale controls, web terminal, conflict-safe file editing"
-    "let -xyz2dp forward the input file and type-map order as command-line arguments"
     "add --save-data TAB-separated export for EMD, NEMD, and HNEMD plot data"
-    "add -prediction_dpa for DeepMD DPA training-set .out predictions"
-    "add -out2xyz_bec for VASP OUTCAR to extxyz conversion with BEC labels"
 )
 
 # Bug fixes (one per line, in an array; keep at most the five newest entries)
 BUG_FIXES=(
+    "refresh changed server-console images from scan metadata and cache-bust only updated image URLs"
+    "refine the server console UI with a flat, minimal card design and clearer action cards: input-file hints, colored generated/stale/not-generated status pills, and per-action chart icons"
+    "rework the server training workspace with continuous generation axes for resumed loss logs, nep.in parameter context, and compact desktop action cards"
+    "refresh growing loss.out data in the server console and pass GPUMDkit_path to allowlisted plot actions"
     "capture path and sequence per loss request so late responses cannot draw into another directory"
-    "use documented NEP/GNEP defaults when the time estimator input omits generation or epoch"
-    "fix out2xyz.sh element parsing for VASP 6.6 OUTCARs without TITEL lines"
-    "preserve optional plot arguments in the CLI router and reject unsupported rdf column arguments"
-    "make install.sh safe to source from zsh (portable prompt and script path) and commit its executable bit"
 )
 
 # === Formatted Output Logic ===

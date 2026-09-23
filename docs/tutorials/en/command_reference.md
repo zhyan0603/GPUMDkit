@@ -7,6 +7,7 @@ The source table is maintained in `docs/command_reference.tsv`.
 
 If you are new to GPUMDkit, start with [Quick Start](quick_start.md). For
 agent-assisted work, use the [GPUMDkit Agent Skill](simulation_and_postprocessing.md).
+For remote browser access, see [Remote Web Console](remote_web_console.md).
 The `-h` form is available only for commands that expose their own option help;
 otherwise use `gpumdkit.sh -h`, the relevant module help, or interactive mode.
 
@@ -14,7 +15,7 @@ otherwise use `gpumdkit.sh -h`, the relevant module help, or interactive mode.
 
 ```text
 +-------------------------------------------------------------------------------------------------------+
-|                          GPUMDkit 1.5.7 (2026-09-14)       Command Help                               |
+|                          GPUMDkit 1.5.8 (2026-09-23)       Command Help                               |
 +-------------------------------------------------------------------------------------------------------+
 |                                          MAIN FUNCTIONS                                               |
 +-------------------------------------------------------------------------------------------------------+
@@ -22,6 +23,7 @@ otherwise use `gpumdkit.sh -h`, the relevant module help, or interactive mode.
 | -calc <type>  Calculator tools                | -time <gpumd|nep>  Time-consuming analyzer            |
 | -update       Update GPUMDkit                 | -clean             Clean extra files in current dir   |
 | -skill        Show GPUMDkit agent skill info  | -doctor            Check Python environment           |
+| -server       Start the GPUMDkit web server   |                                                       |
 | -prediction   Write NEP prediction .out files | -prediction_dpa    Write DPA prediction .out files    |
 +-------------------------------------------------------------------------------------------------------+
 |                                         FORMAT CONVERSION                                             |
@@ -59,6 +61,7 @@ otherwise use `gpumdkit.sh -h`, the relevant module help, or interactive mode.
 | `-doctor` | `gpumdkit.sh -doctor` | Check Python and GPUMDkit package availability |
 | `-update` | `gpumdkit.sh -update` | Update GPUMDkit |
 | `-clean` | `gpumdkit.sh -clean` | Clean extra files in the current directory |
+| `-server` | `gpumdkit.sh -server [port] [-b <address>] [-pw <password>]` | Start the Web Console for the current directory; use an SSH tunnel for remote access. |
 | `-prediction` | `gpumdkit.sh -prediction <input.xyz> <nep.txt> [workers]` | Write NEP-compatible energy, force, stress, and virial prediction files |
 | `-prediction_dpa` | `gpumdkit.sh -prediction_dpa <input.xyz> <dpa_model>` | Write DPA training-set prediction files in the current directory |
 

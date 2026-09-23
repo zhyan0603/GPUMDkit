@@ -489,6 +489,34 @@
   
   
     <li class="md-nav__item">
+      <a href="remote_web_console.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Remote Web Console
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
       <a href="format_conversion.html" class="md-nav__link">
         
   
@@ -692,6 +720,23 @@
       
     </span>
   </a>
+  
+    <nav class="md-nav" aria-label="Quick Access">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#click-to-run-actions-in-the-web-console" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Click-to-run actions in the web console
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
   
 </li>
       
@@ -1581,6 +1626,34 @@
   
   
     <li class="md-nav__item">
+      <a href="../zh/%E8%BF%9C%E7%A8%8B%E7%BD%91%E9%A1%B5%E6%8E%A7%E5%88%B6%E5%8F%B0.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    远程 Web 控制台
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
       <a href="../zh/%E6%A0%BC%E5%BC%8F%E8%BD%AC%E6%8D%A2.html" class="md-nav__link">
         
   
@@ -1893,6 +1966,23 @@
       
     </span>
   </a>
+  
+    <nav class="md-nav" aria-label="Quick Access">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#click-to-run-actions-in-the-web-console" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Click-to-run actions in the web console
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
   
 </li>
       
@@ -2520,6 +2610,57 @@
 <a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>gpumdkit.sh<span class="w"> </span>-plt<span class="w"> </span>&lt;type&gt;<span class="w"> </span>save<span class="w">  </span><span class="c1"># Save plot as PNG</span>
 <a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>gpumdkit.sh<span class="w"> </span>-plt<span class="w"> </span>-h<span class="w">           </span><span class="c1"># List available plot types</span>
 </code></pre></div>
+<h3 id="click-to-run-actions-in-the-web-console">Click-to-run actions in the web console</h3>
+<p>Run <code>gpumdkit.sh -server</code> and open a working directory in the browser. The
+console offers a plot action only when its expected input files are present;
+it invokes the corresponding <code>gpumdkit.sh -plt ... save</code> command in that
+directory. In addition to the existing actions, it recognizes:</p>
+<table>
+<thead>
+<tr>
+<th>Inputs in the current directory</th>
+<th>Available action</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>force_train.out</code></td>
+<td>Force errors</td>
+</tr>
+<tr>
+<td><code>rdf.out</code></td>
+<td>RDF</td>
+</tr>
+<tr>
+<td><code>xrd.out</code></td>
+<td>XRD</td>
+</tr>
+<tr>
+<td>At least two <code>&lt;integer&gt;K/xrd.out</code> files</td>
+<td>XRD comparison by temperature</td>
+</tr>
+<tr>
+<td><code>cohesive.out</code></td>
+<td>Cohesive energy</td>
+</tr>
+<tr>
+<td><code>viscosity.out</code></td>
+<td>Viscosity</td>
+</tr>
+<tr>
+<td><code>phonon_NEP.dat</code> and <code>QPOINTS</code></td>
+<td>Phonon band structure</td>
+</tr>
+</tbody>
+</table>
+<p>Plots that need a user-selected element, temperature, input-file set, or other
+scientific parameter remain available from the terminal, where those choices
+can be entered explicitly.</p>
+<p>The console's location bar also provides Home, parent-directory, and
+breadcrumb navigation. Its file actions can create an empty file or folder,
+upload files, and download the file currently open in the viewer. Uploads and
+new entries stay inside the server's working-directory sandbox; existing names
+are never overwritten.</p>
 <h2 id="a-reliable-plotting-workflow">A reliable plotting workflow</h2>
 <p>Use the following sequence instead of trying plot names at random:</p>
 <ol>

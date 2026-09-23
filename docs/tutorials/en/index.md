@@ -17,6 +17,7 @@ Choose a tutorial by task. Start with [Quick Start](quick_start.md) for installa
 | I want to... | Tutorial |
 |--------------|----------|
 | Install GPUMDkit and run my first command | [Quick Start](quick_start.md) |
+| Browse and manage files on a remote host through a browser | [Remote Web Console](remote_web_console.md) |
 | Use the GPUMDkit Agent Skill | [GPUMDkit Agent Skill](simulation_and_postprocessing.md) |
 | Convert VASP, LAMMPS, CP2K, or CIF files to extxyz | [Format Conversion](format_conversion.md) |
 | Check structure distances, filter datasets, or find outliers | [Analyzer Scripts](analyzer_scripts.md) |

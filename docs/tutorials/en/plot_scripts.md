@@ -14,6 +14,33 @@ gpumdkit.sh -plt <type> save  # Save plot as PNG
 gpumdkit.sh -plt -h           # List available plot types
 ```
 
+### Click-to-run actions in the web console
+
+Run `gpumdkit.sh -server` and open a working directory in the browser. The
+console offers a plot action only when its expected input files are present;
+it invokes the corresponding `gpumdkit.sh -plt ... save` command in that
+directory. In addition to the existing actions, it recognizes:
+
+| Inputs in the current directory | Available action |
+|---|---|
+| `force_train.out` | Force errors |
+| `rdf.out` | RDF |
+| `xrd.out` | XRD |
+| At least two `<integer>K/xrd.out` files | XRD comparison by temperature |
+| `cohesive.out` | Cohesive energy |
+| `viscosity.out` | Viscosity |
+| `phonon_NEP.dat` and `QPOINTS` | Phonon band structure |
+
+Plots that need a user-selected element, temperature, input-file set, or other
+scientific parameter remain available from the terminal, where those choices
+can be entered explicitly.
+
+The console's location bar also provides Home, parent-directory, and
+breadcrumb navigation. Its file actions can create an empty file or folder,
+upload files, and download the file currently open in the viewer. Uploads and
+new entries stay inside the server's working-directory sandbox; existing names
+are never overwritten.
+
 ## A reliable plotting workflow
 
 Use the following sequence instead of trying plot names at random:

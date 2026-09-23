@@ -126,7 +126,7 @@ wget https://github.com/zhyan0603/GPUMDkit/archive/refs/heads/main.zip
              | |_| |  __/| |_| | |  | | |_| |   <| | |_
               \____|_|    \___/|_|  |_|____/|_|\_\_|\__|
 
-              GPUMDkit Version 1.5.7 (2026-09-12)
+              GPUMDkit Version 1.5.8 (2026-09-23)
         Core Developer: Zihan YAN (yanzihan@westlake.edu.cn)
      Main Contributors: Denan LI, Xin WU, Zhoulin LIU & Chen HUA
 
@@ -144,7 +144,7 @@ wget https://github.com/zhyan0603/GPUMDkit/archive/refs/heads/main.zip
 
 ----
 
-对于熟悉 `GPUMDkit` 的用户，命令行模式可直接向 `gpumdkit.sh` 传递参数，执行更快捷。以下是一些示例：
+对于熟悉 `GPUMDkit` 的用户，命令行模式可直接向 `gpumdkit.sh` 传递参数，执行更快捷。以下是一些示例。需要通过浏览器访问远程工作目录时，请参阅[远程 Web 控制台指南](tutorials/zh/远程网页控制台.md)。
 
 ##### 示例 1：查看帮助信息
 
@@ -156,7 +156,7 @@ gpumdkit.sh -h
 
 ```
 +-------------------------------------------------------------------------------------------------------+
-|                          GPUMDkit 1.5.7 (2026-09-12)       Command Help                               |
+|                          GPUMDkit 1.5.8 (2026-09-23)       Command Help                               |
 +-------------------------------------------------------------------------------------------------------+
 |                                          MAIN FUNCTIONS                                               |
 +-------------------------------------------------------------------------------------------------------+
@@ -164,6 +164,7 @@ gpumdkit.sh -h
 | -calc <type>  Calculator tools                | -time <gpumd|nep>  Time-consuming analyzer            |
 | -update       Update GPUMDkit                 | -clean             Clean extra files in current dir   |
 | -skill        Show GPUMDkit agent skill info  | -doctor            Check Python environment           |
+| -server       Start the GPUMDkit web server   |                                                       |
 | -prediction   Write NEP prediction .out files | -prediction_dpa  Write DPA prediction .out files      |
 +-------------------------------------------------------------------------------------------------------+
 |                                         FORMAT CONVERSION                                             |
@@ -203,7 +204,7 @@ gpumdkit.sh -plt -h
 
 ```
  +-----------------------------------------------------------------------------------------------+
- |                     GPUMDkit 1.5.7 (2026-09-12)       PLOT & VISUALIZATION TOOLS              |
+ |                     GPUMDkit 1.5.8 (2026-09-23)       PLOT & VISUALIZATION TOOLS              |
  +-----------------------------------------------------------------------------------------------+
  |  Usage: gpumdkit.sh -plt <type>                        List: gpumdkit.sh -plt -h              |
  +-----------------------------------------------------------------------------------------------+
