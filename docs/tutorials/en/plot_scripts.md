@@ -14,54 +14,32 @@ gpumdkit.sh -plt <type> save  # Save plot as PNG
 gpumdkit.sh -plt -h           # List available plot types
 ```
 
-Running `gpumdkit.sh -plt` prints the plotting command menu:
+### Click-to-run actions in the web console
 
-```text
-+-----------------------------------------------------------------------------------------------+
-|                     GPUMDkit <version> PLOT & VISUALIZATION TOOLS              |
-+-----------------------------------------------------------------------------------------------+
-|  Usage: gpumdkit.sh -plt <type>                        List: gpumdkit.sh -plt -h              |
-+-----------------------------------------------------------------------------------------------+
-|                                    NEP Training & Evaluation                                  |
-+-----------------------------------------------------------------------------------------------+
-|  train          - NEP training results           prediction     - NEP prediction results      |
-|  train_test     - NEP train and test results     parity_density - Parity density plot         |
-|  train_density  - Training results density plot  restart        - Parameters in nep.restart   |
-|  charge         - Charge distribution            born_charge    - Born effective charges      |
-|  dimer          - Dimer energy/force curve       force_errors   - Force errors                |
-|  des            - Descriptors                    lr             - Learning rate for gnep      |
-|  net_force      Plot net force distribution                                                   |
-+-----------------------------------------------------------------------------------------------+
-|                                     Diffusion & Transport                                     |
-+-----------------------------------------------------------------------------------------------+
-|  msd            - Mean square displacement       msd_conv       - MSD convergence             |
-|  msd_all        - MSD for all species            sdc            - Self diffusion coefficient  |
-|  msd_sdc        - MSD and SDC together           sigma          - Arrhenius ionic conductivity|
-|  D              - Arrhenius diffusivity          sigma_xyz      - Directional Arrhenius sigma |
-|  D_xyz          - Directional Arrhenius D                                                     |
-|  doas           - Density of atomistic states                                                 |
-+-----------------------------------------------------------------------------------------------+
-|                                    MD & Structural Analysis                                   |
-+-----------------------------------------------------------------------------------------------+
-|  thermo         - thermo info in thermo.out      thermo2/3      - Thermo in different styles  |
-|  rdf            - Radial distribution function   rdf_pmf        - Potential of mean force     |
-|  vac            - Velocity autocorrelation       cohesive       - Cohesive energy curve       |
-|  xrd            - X-ray diffraction              plane-grid     - Displacement plane grid     |
-+-----------------------------------------------------------------------------------------------+
-|                                        Heat Transport                                         |
-+-----------------------------------------------------------------------------------------------+
-|  emd            - EMD results                    emd2           - EMD all directions          |
-|  nemd           - NEMD results                   hnemd          - HNEMD results               |
-|  viscosity      - Viscosity                                                                   |
-+-----------------------------------------------------------------------------------------------+
-|                                          Phonons                                              |
-+-----------------------------------------------------------------------------------------------+
-|  pdos           - VAC and PDOS                 phonon         - Phonon band structure         |
-|  phonon_comp    - Compare phonon band structures                                              |
-+-----------------------------------------------------------------------------------------------+
-```
+Run `gpumdkit.sh -server` and open a working directory in the browser. The
+console offers a plot action only when its expected input files are present;
+it invokes the corresponding `gpumdkit.sh -plt ... save` command in that
+directory. In addition to the existing actions, it recognizes:
 
----
+| Inputs in the current directory | Available action |
+|---|---|
+| `force_train.out` | Force errors |
+| `rdf.out` | RDF |
+| `xrd.out` | XRD |
+| At least two `<integer>K/xrd.out` files | XRD comparison by temperature |
+| `cohesive.out` | Cohesive energy |
+| `viscosity.out` | Viscosity |
+| `phonon_NEP.dat` and `QPOINTS` | Phonon band structure |
+
+Plots that need a user-selected element, temperature, input-file set, or other
+scientific parameter remain available from the terminal, where those choices
+can be entered explicitly.
+
+The console's location bar also provides Home, parent-directory, and
+breadcrumb navigation. Its file actions can create an empty file or folder,
+upload files, and download the file currently open in the viewer. Uploads and
+new entries stay inside the server's working-directory sandbox; existing names
+are never overwritten.
 
 ## A reliable plotting workflow
 
@@ -77,9 +55,15 @@ Use the following sequence instead of trying plot names at random:
 | `loss.out`, `energy_train.out`, and `force_train.out` | `gpumdkit.sh -plt train` | loss trend and energy/force parity |
 | `energy_train.out` and `force_train.out` from prediction mode | `gpumdkit.sh -plt prediction` | parity results for structures in `train.xyz` |
 | `thermo.out` | `gpumdkit.sh -plt thermo` | equilibration and thermodynamic evolution |
-| `msd.out` | `gpumdkit.sh -plt msd` or `gpumdkit.sh -plt sdc` | diffusion regime before interpreting a fit |
-| `rdf.out` | `gpumdkit.sh -plt rdf` | selected pair column and peak positions |
-| `xrd.out` | `gpumdkit.sh -plt xrd` | angle in column 2 and intensity in column 4 |
+| four-column `msd.out` from `gpumdkit.sh -calc msd` | `gpumdkit.sh -plt msd` | diffusion regime before interpreting a fit |
+| single-group seven-column `msd.out` from GPUMD `compute_msd` | `gpumdkit.sh -plt sdc` or `gpumdkit.sh -plt msd_sdc` | SDC columns and diffusion regime |
+| `sdc.out` from GPUMD `compute_sdc` | `gpumdkit.sh -plt vac` | velocity autocorrelation |
+| `rdf.out` | `gpumdkit.sh -plt rdf` | all available RDF value columns |
+| `xrd.out` | `gpumdkit.sh -plt xrd` | XRD intensity curve |
+
+`compute_msd` output for multiple groups appends additional group data. Inspect
+the grouping layout and use `msd_all` where appropriate instead of assuming
+that every `msd.out` has seven columns.
 
 For example, a saved training plot is requested as:
 
@@ -95,6 +79,61 @@ scientific conclusion from the image alone.
 > **Why not use `gpumdkit.sh -plt train -h`?** Plot scripts do not share a
 > uniform per-plot `-h` interface. Use `gpumdkit.sh -plt -h` for the list, then
 > use the exact signature and input-file notes in the matching section below.
+
+---
+
+<details markdown="1">
+<summary>Show the full plotting command menu</summary>
+
+Running `gpumdkit.sh -plt` prints the plotting command menu:
+
+```text
++-----------------------------------------------------------------------------------------------+
+|                     GPUMDkit <version> PLOT & VISUALIZATION TOOLS              |
++-----------------------------------------------------------------------------------------------+
+|  Usage: gpumdkit.sh -plt <type>                        List: gpumdkit.sh -plt -h              |
++-----------------------------------------------------------------------------------------------+
+|                                    NEP Training & Evaluation                                  |
++-----------------------------------------------------------------------------------------------+
+|  train          - NEP training results           prediction     - NEP prediction results      |
+|  train_test     - NEP train and test results     parity_density - Parity density plot         |
+|  train_density  - Training results density plot  restart        - Parameters in nep.restart   |
+|  charge         - Charge distribution            born_charge    - Born effective charges      |
+|  dimer          - Dimer energy/force curve       force_errors   - Force errors                |
+|  des            - Descriptors                    net_force      - Net force distribution      |
++-----------------------------------------------------------------------------------------------+
+|                                     Diffusion & Transport                                     |
++-----------------------------------------------------------------------------------------------+
+|  msd            - Mean square displacement       msd_conv       - MSD convergence             |
+|  msd_all        - MSD for all species            sdc            - Self diffusion coefficient  |
+|  msd_sdc        - MSD and SDC together           sigma          - Arrhenius ionic conductivity|
+|  D              - Arrhenius diffusivity          sigma_xyz      - Directional Arrhenius sigma |
+|  D_xyz          - Directional Arrhenius D                                                     |
+|  D_PT           - PT Arrhenius D                 sigma_PT       - PT Arrhenius sigma          |
+|  doas           - Density of atomistic states                                                 |
++-----------------------------------------------------------------------------------------------+
+|                                    MD & Structural Analysis                                   |
++-----------------------------------------------------------------------------------------------+
+|  thermo         - thermo info in thermo.out      thermo2/3      - Thermo in different styles  |
+|  rdf            - Radial distribution function   rdf_pmf        - Potential of mean force     |
+|  vac            - Velocity autocorrelation       cohesive       - Cohesive energy curve       |
+|  xrd            - X-ray diffraction              plane-grid     - Displacement plane grid     |
+|  xrd_comp       - Compare XRD                                                                 |
++-----------------------------------------------------------------------------------------------+
+|                                        Heat Transport                                         |
++-----------------------------------------------------------------------------------------------+
+|  emd            - EMD results                    emd2           - EMD all directions          |
+|  nemd           - NEMD results                   hnemd          - HNEMD results               |
+|  viscosity      - Viscosity                                                                   |
++-----------------------------------------------------------------------------------------------+
+|                                          Phonons                                              |
++-----------------------------------------------------------------------------------------------+
+|  pdos           - VAC and PDOS                 phonon         - Phonon band structure         |
+|  phonon_comp    - Compare phonon band structures                                              |
++-----------------------------------------------------------------------------------------------+
+```
+
+</details>
 
 ---
 
@@ -127,7 +166,7 @@ Visualizes NEP prediction-mode results for the structures in `train.xyz`.
 Prediction mode still writes the parity data to files ending in `_train.out`.
 
 **Input Files:** `energy_train.out`, `force_train.out`, and either
-`stress_train.out` (preferred) or `virial_train.out`
+`stress_train.out` (preferred when it contains valid rows) or `virial_train.out`
 
 ```bash
 gpumdkit.sh -plt prediction
@@ -174,6 +213,21 @@ gpumdkit.sh -plt parity_density
 
 ---
 
+### plt_train_density.py
+
+Generates density-based parity plots for NEP training results (energy, forces, stress or virial).
+Stress is preferred when both tensor files exist. Useful for large datasets where
+scatter plots become unreadable.
+
+**Input Files:** `energy_train.out`, `force_train.out`, and either
+`stress_train.out` (preferred) or `virial_train.out`
+
+```bash
+gpumdkit.sh -plt train_density
+```
+
+---
+
 ### plt_force_errors.py
 
 Plots force error evaluation metrics as proposed by [Liu et al.](https://doi.org/10.1038/s41524-023-01123-3).
@@ -192,20 +246,6 @@ gpumdkit.sh -plt force_errors
 <div align="center">
   <img src="../../Gallery/force_errors.png" alt="Force error analysis" width="70%" />
 </div>
-
----
-
-### plt_learning_rate.py
-
-Visualizes learning rate during `gnep` training.
-
-**Input File:** `loss.out`
-
-**Note:** Only for the `gnep` training process.
-
-```bash
-gpumdkit.sh -plt lr
-```
 
 ---
 
@@ -297,7 +337,11 @@ gpumdkit.sh -plt thermo3
 
 Plots mean square displacement (MSD) for all directions.
 
-**Input File:** `msd.out`
+**Input File:** `msd.out` with time and `MSD_x/y/z` in its first four columns.
+This accepts the four-column output from `gpumdkit.sh -calc msd` and the first
+four columns of GPUMD `compute_msd` output.
+
+The slope annotations use the middle 40%-80% of the MSD series.
 
 ```bash
 gpumdkit.sh -plt msd
@@ -316,6 +360,8 @@ Plots MSD for all atomic species separately when using `all_groups` in GPUMD.
 **Input File:** `msd.out` (computed with `all_groups` option)
 
 **Requirements:** Must use `all_groups` in the `compute_msd` command in `run.in`.
+For multiple groups, GPUMD appends group data; inspect that layout rather than
+assuming the file has the seven columns of a single-group result.
 
 ```bash
 gpumdkit.sh -plt msd_all msd.out Li P S
@@ -351,7 +397,9 @@ gpumdkit.sh -plt msd_conv
 
 Plots self-diffusion coefficient (SDC) vs time.
 
-**Input File:** `msd.out`
+**Input File:** a single-group seven-column `msd.out` from GPUMD `compute_msd`:
+time, `MSD_x/y/z`, and `SDC_x/y/z`. The four-column file from `-calc msd` is
+not sufficient for this plot.
 
 ```bash
 gpumdkit.sh -plt sdc
@@ -360,6 +408,22 @@ gpumdkit.sh -plt sdc
 <div align="center">
   <img src="../../Gallery/sdc.png" alt="Self-diffusion coefficient" width="48%" />
 </div>
+
+---
+
+### plt_msd_sdc.py
+
+Plots MSD and self-diffusion coefficient (SDC) side by side. The slope
+annotations use the middle 40%-80% of the MSD series; the inset shows the
+last 80% of the SDC data with a moving-average overlay.
+
+**Input File:** a single-group seven-column `msd.out` from GPUMD `compute_msd`:
+time, `MSD_x/y/z`, and `SDC_x/y/z`. The four-column file from `-calc msd` is
+not sufficient for this plot.
+
+```bash
+gpumdkit.sh -plt msd_sdc
+```
 
 ---
 
@@ -389,6 +453,42 @@ Ea: 0.230 eV
 
 ---
 
+### plt_arrhenius_d_PT.py
+
+Creates a piecewise Arrhenius diffusivity plot around a user-specified phase-transition temperature.
+The transition-temperature point is included in both the `LowT` (`T <= Tc`) and `HighT` (`T >= Tc`) fits.
+
+**Input Files:** `*K/msd.out` files
+
+```bash
+gpumdkit.sh -plt D_PT 380
+gpumdkit.sh -plt D_PT 380 save
+```
+
+The legend reports the activation energy of each branch as `HighT (xx eV)` and `LowT (xx eV)`.
+
+<div align="center">
+  <img src="../../Gallery/Arrhenius_D_PT.png" alt="Phase-transition Arrhenius diffusivity" width="58%" />
+</div>
+
+---
+
+### plt_arrhenius_d_xyz.py
+
+Calculates diffusion coefficients from `msd.out` in temperature folders for the
+x/y/z directions, generates a directional Arrhenius plot, and extracts the
+activation energy of each component.
+
+**Input Files:** `*K/msd.out` files
+
+```bash
+gpumdkit.sh -plt D_xyz
+```
+
+The output reports `Ea_x`, `Ea_y`, and `Ea_z` from the linear fits.
+
+---
+
 ### plt_arrhenius_sigma.py
 
 Creates Arrhenius plot for ionic conductivity (ln(σ·T) vs 1000/T).
@@ -407,6 +507,44 @@ gpumdkit.sh -plt sigma         # Alternative command
 
 ---
 
+### plt_arrhenius_sigma_PT.py
+
+Creates a piecewise Arrhenius ionic-conductivity plot around a user-specified phase-transition temperature.
+The transition-temperature point is included in both the `LowT` (`T <= Tc`) and `HighT` (`T >= Tc`) fits.
+The 300 K conductivity is extrapolated from the branch on the same side of the transition as 300 K.
+
+**Input Files:** `thermo.out` and `msd.out` in each `*K/` directory;
+`model.xyz` and optional `run.in` in the first temperature directory
+
+```bash
+gpumdkit.sh -plt sigma_PT 380
+gpumdkit.sh -plt sigma_PT 380 save
+```
+
+The legend reports the activation energy of each branch as `HighT (xx eV)` and `LowT (xx eV)`.
+
+<div align="center">
+  <img src="../../Gallery/Arrhenius_sigma_PT.png" alt="Phase-transition Arrhenius ionic conductivity" width="58%" />
+</div>
+
+---
+
+### plt_arrhenius_sigma_xyz.py
+
+Calculates the ionic conductivity from MSD and thermo data in temperature
+folders for the x/y/z directions, plots the directional Arrhenius relationship,
+and extracts the activation energy of each direction using the Nernst-Einstein
+relation.
+
+**Input Files:** `thermo.out` and `msd.out` in each `*K/` directory;
+`model.xyz` in the first temperature directory
+
+```bash
+gpumdkit.sh -plt sigma_xyz
+```
+
+---
+
 ## Heat Transport
 
 ### plt_emd.py
@@ -416,8 +554,13 @@ Analyzes and plots thermal conductivity from equilibrium molecular dynamics (EMD
 **Input Files:** EMD output files from GPUMD
 
 ```bash
-gpumdkit.sh -plt emd x        # for x direction
+gpumdkit.sh -plt emd x --save-data        # export processed data
+gpumdkit.sh -plt emd x --save --save-data # save the figure and data
 ```
+
+`--save` saves the figure as `emd.png`. `--save-data` saves the processed
+arrays as `data_emd.npz` and tab-separated `data_emd.txt`; the two options are
+independent. The legacy bare tokens `save` and `save_data` remain accepted.
 
 <div align="center">
   <img src="../../Gallery/emd.png" alt="EMD thermal conductivity" width="70%" />
@@ -463,13 +606,20 @@ Visualizes non-equilibrium molecular dynamics (NEMD) thermal transport propertie
 | `real_length` | Real length of heat transfer zone in nm (set to `Auto` for auto-calculation) |
 | `scale_eff_size` | Scale factor for effective cross-sectional area (default: 1). For 3D bulk: use 1. For low-dimensional systems with vacuum: S_box / S_eff |
 | `cutoff_freq` | Cutoff frequency for SHC calculation in THz (default: 60) |
-| `save` | Optional, save the plot as `nemd.png` |
+| `--save` | Optional, save the plot as `nemd.png` |
+| `--save-data` | Optional, additionally export tab-separated `data_nemd.txt` and, when SHC data exist, `data_shc.txt` |
 
-**Note:** If no SHC data, set `scale_eff_size` and `cutoff_freq` to any number as placeholders when using `save`.
+**Note:** If no SHC data, set `scale_eff_size` and `cutoff_freq` to any number as placeholders when using `--save`.
 
 ```bash
-gpumdkit.sh -plt nemd [real_length] [scale_eff_size] [cutoff_freq] [save]
+gpumdkit.sh -plt nemd [real_length] [scale_eff_size] [cutoff_freq] [--save] [--save-data]
+gpumdkit.sh -plt nemd --save-data                         # use defaults and export data
+gpumdkit.sh -plt nemd Auto 1 60 --save --save-data       # save the figure and data
 ```
+
+The historical `data_nemd.npz` (and `data_shc.npz` when SHC data exist) are
+still written as before. `--save` and `--save-data` are independent. The
+legacy bare tokens `save` and `save_data` remain accepted.
 
 <div align="center">
   <img src="../../Gallery/nemd.png" alt="NEMD results" width="70%" />
@@ -489,13 +639,19 @@ Plots homogeneous non-equilibrium molecular dynamics (HNEMD) results.
 |-----------|-------------|
 | `scale_eff_size` | Scale factor for effective cross-sectional area (default: 1) |
 | `cutoff_freq` | Cutoff frequency for SHC calculation in THz (default: 60) |
-| `save` | Optional, save the plot as `hnemd.png` |
+| `--save` | Optional, save the plot as `hnemd.png` |
+| `--save-data` | Optional, save processed arrays as `data_hnemd.npz` and tab-separated `data_hnemd.txt`; when SHC data exist, also save `data_shc.npz` and `data_shc.txt` |
 
-**Note:** If no SHC data, set `scale_eff_size` and `cutoff_freq` to any number as placeholders when using `save`.
+**Note:** If no SHC data, set `scale_eff_size` and `cutoff_freq` to any number as placeholders when using `--save`.
 
 ```bash
-gpumdkit.sh -plt hnemd [scale_eff_size] [cutoff_freq] [save]
+gpumdkit.sh -plt hnemd [scale_eff_size] [cutoff_freq] [--save] [--save-data]
+gpumdkit.sh -plt hnemd --save-data             # use defaults and export data
+gpumdkit.sh -plt hnemd 1 60 --save --save-data # save the figure and data
 ```
+
+`--save` and `--save-data` are independent. The legacy bare tokens `save` and
+`save_data` remain accepted.
 
 <div align="center">
   <img src="../../Gallery/hnemd.png" alt="HNEMD results" width="70%" />
@@ -503,29 +659,39 @@ gpumdkit.sh -plt hnemd [scale_eff_size] [cutoff_freq] [save]
 
 ---
 
+### plt_viscosity.py
+
+Plots the stress autocorrelation and viscosity components from `viscosity.out`,
+including diagonal and off-diagonal components.
+
+**Input Files:** `viscosity.out` from the GPUMD viscosity calculation
+
+```bash
+gpumdkit.sh -plt viscosity
+```
+
+---
+
 ## Structural Analysis
 
 ### plt_rdf.py
 
-Plots radial distribution function (RDF) showing pair correlations.
+Plots all RDF value columns in `rdf.out` (the radius column is used as the x-axis).
 
 **Input File:** `rdf.out`
 
 ```bash
 gpumdkit.sh -plt rdf               # Plot all RDF pairs
-gpumdkit.sh -plt rdf <column>      # Plot specific pair
+gpumdkit.sh -plt rdf save          # Save the figure as rdf.png
 ```
 
-**Full RDF output:**
+The `rdf` plotter does not select a single column. Use `rdf_pmf` when a
+specific RDF output column is needed for PMF analysis.
+
+**RDF output:**
 
 <div align="center">
   <img src="../../Gallery/rdf1.png" alt="Complete RDF" width="90%" />
-</div>
-
-**Single pair RDF:**
-
-<div align="center">
-  <img src="../../Gallery/rdf2.png" alt="Single RDF" width="55%" />
 </div>
 
 ---
@@ -537,14 +703,7 @@ Plots the X-ray diffraction (XRD) output generated by calculator 413.
 **Input File:** `xrd.out` by default; an alternative XRD output path can be
 passed as the first argument.
 
-The plotter reads the second numeric column (column index 1) as the angle and
-the fourth numeric column (column index 3) as the intensity. Lines beginning
-with `#` are ignored, and the values are plotted without smoothing or
-renormalization.
-
-The reader validates the calculator 413 header and four-column data layout. If
-the format is not recognized, it stops and asks you to regenerate the file
-with `gpumdkit.sh -> 4 -> 413`.
+The input file must be generated by calculator 413.
 
 ```bash
 gpumdkit.sh -plt xrd
@@ -560,8 +719,28 @@ directory.
   <img src="../../Gallery/xrd.png" alt="X-ray diffraction example" width="75%" />
 </div>
 
-This Gallery example is generated separately at 100 DPI. The production
-script uses 150 DPI for display and at least 300 DPI when saving.
+---
+
+### plt_xrd_comp.py
+
+Compares XRD curves from several temperature folders in the current working
+directory. Each folder must be named `<temperature>K` and contain an
+`xrd.out` file written by calculator 413. Curves are stacked from high
+temperature at the top to low temperature at the bottom.
+
+Generate each `xrd.out` with calculator 413 before running the comparison.
+
+Run the comparison from the directory containing the `*K` subdirectories.
+This command does not take a directory argument:
+
+```bash
+cd /path/to/xrd_series
+gpumdkit.sh -plt xrd_comp
+gpumdkit.sh -plt xrd_comp save
+```
+
+With `save`, the figure is written to `xrd_comp.png` in the current working
+directory.
 
 ---
 
@@ -573,7 +752,11 @@ Plots RDF combined with potential of mean force (PMF).
 
 ```bash
 gpumdkit.sh -plt rdf_pmf
+gpumdkit.sh -plt rdf_pmf 300 2 save
 ```
+
+`column_index` selects an `rdf.out` output column: column 2 is the total RDF,
+and columns 3 and above are pair RDFs.
 
 ---
 
@@ -581,7 +764,9 @@ gpumdkit.sh -plt rdf_pmf
 
 Plots velocity autocorrelation function (VAC). Useful for analyzing phonon properties and atomic dynamics.
 
-**Input File:** `sdc.out` (the VAC columns are read from this file by the plotting script)
+**Input File:** `sdc.out` written by GPUMD `compute_sdc` (the VAC columns are
+read from this file by the plotting script). This is separate from the
+`msd.out` input used by `-plt sdc` and `-plt msd_sdc`.
 
 **Output:** Interactive plot or `vac.png` (with `save` option)
 
@@ -631,7 +816,7 @@ Plots a phonon band structure generated by calculator `414`. The plotter reads
 the q-point path and high-symmetry labels directly from a line-mode `QPOINTS`
 file, so the path does not need to be repeated in the plotting script.
 
-**Input Files:** `phonon_NEP.dat` and `QPOINTS`
+**Input Files:** A phonon data file (default `phonon_NEP.dat`) and `QPOINTS`
 
 The calculation step is interactive:
 
@@ -649,8 +834,13 @@ Plot the result with:
 
 ```bash
 gpumdkit.sh -plt phonon
+gpumdkit.sh -plt phonon phonon_DFT.dat
 gpumdkit.sh -plt phonon phonon_NEP.dat QPOINTS save
 ```
+
+The phonon data file is optional. If it is omitted, the plotter reads
+`phonon_NEP.dat`; if only one file is supplied, the path file defaults to
+`QPOINTS`.
 
 Each disconnected q-path segment is drawn separately. Boundary labels such as
 `S|S₀` are combined at one horizontal position, and labels stay at one height
@@ -677,8 +867,10 @@ gpumdkit.sh -plt phonon_comp phonon_DFT.dat phonon_NEP.dat phonon_MACE.dat \
 The default path file is `QPOINTS`; use `--qpoints FILE` for another path
 definition. For two-file DFT/NEP comparisons, DFT is gray and solid while NEP
 is firebrick and dashed. Additional models use the comparison palette and
-distinct line styles. Every comparison file must contain matching q-point
-distances; matching row counts alone are not sufficient.
+distinct line styles. Disconnected path segments are normalized independently
+before comparison, so files may use different offsets across a path jump. The
+files must still contain the same q-point sampling and number of bands; matching
+row counts alone are not sufficient.
 
 <div align="center">
   <img src="../../Gallery/phonon_comp.png" alt="Phonon band comparison" width="70%" />
@@ -726,8 +918,8 @@ Visualizes high-dimensional NEP descriptors using dimensionality reduction (PCA 
 gpumdkit.sh -calc des train.xyz descriptors.npy nep.txt Li
 
 # Then visualize
-gpumdkit.sh -plt des pca
-gpumdkit.sh -plt des umap
+gpumdkit.sh -plt des pca descriptors.npy
+gpumdkit.sh -plt des umap descriptors.npy
 ```
 
 <div align="center">
@@ -808,21 +1000,28 @@ gpumdkit.sh -plt plane-grid -i averaged_structure.xyz -d displacements.dat -e Pb
 | `prediction` / `test` | `*_train.out` | NEP prediction-mode parity plots for `train.xyz` |
 | `train_test` | `*_train.out`, `*_test.out` | Combined parity plots |
 | `parity_density` | `*_train.out` | Density-based parity plots |
+| `train_density` | `*_train.out` | Density-based training parity plots (stress preferred over virial) |
 | `force_errors` | `force_train.out` | Force error metrics |
-| `lr` | `loss.out` (gnep) | Learning rate |
 | `restart` | `nep.restart` | Restart file parameters |
 | `charge` | `train.xyz`, `charge_train.out` | Charge distribution |
 | `born_charge` / `bec` | `bec_train.out`, optional `bec_test.out` | Born effective charges |
 | `thermo` | `thermo.out` | Thermodynamic properties |
-| `msd` | `msd.out` | Mean square displacement |
+| `thermo2` / `thermo3` | `thermo.out` | Thermodynamic plots in alternative styles |
+| `msd` | four-column `msd.out` from `-calc msd`, or first four columns of GPUMD `compute_msd` output | Mean square displacement |
 | `msd_all` | `msd.out` (all_groups) | MSD for all species |
 | `msd_conv` | `msd_step*.out` | MSD convergence check |
-| `sdc` | `msd.out` | Self-diffusion coefficient |
+| `sdc` | single-group seven-column `msd.out` from GPUMD `compute_msd` | Self-diffusion coefficient |
+| `msd_sdc` | single-group seven-column `msd.out` from GPUMD `compute_msd` | MSD and SDC combined |
 | `arrhenius_d` / `D` | `*K/msd.out` | Arrhenius diffusivity |
 | `arrhenius_sigma` / `sigma` | `*K/{thermo.out, msd.out}` plus first-directory `model.xyz` and optional `run.in` | Arrhenius ionic conductivity |
+| `D_PT` | `*K/msd.out` plus a transition temperature | Piecewise Arrhenius diffusivity around a phase transition |
+| `sigma_PT` | `*K/{thermo.out, msd.out}` plus first-directory `model.xyz`, optional `run.in`, and a transition temperature | Piecewise Arrhenius ionic conductivity around a phase transition |
+| `D_xyz` | `*K/msd.out` | Directional Arrhenius diffusivity (x/y/z) |
+| `sigma_xyz` | `*K/{thermo.out, msd.out}` plus first-directory `model.xyz` | Directional Arrhenius ionic conductivity (x/y/z) |
 | `rdf` | `rdf.out` | Radial distribution function |
 | `rdf_pmf` | `rdf.out` | RDF + potential of mean force |
 | `xrd` | `xrd.out` | X-ray diffraction intensity |
+| `xrd_comp` | `*K/xrd.out` | XRD comparison across temperatures |
 | `vac` | `sdc.out` | Velocity autocorrelation |
 | `cohesive` | `cohesive.out` | Cohesive energy curve |
 | `net_force` | `train.xyz` | Net force distribution |
@@ -830,8 +1029,11 @@ gpumdkit.sh -plt plane-grid -i averaged_structure.xyz -d displacements.dat -e Pb
 | `des` | `descriptors.npy` | Descriptor PCA/UMAP |
 | `dimer` | `nep.txt` | Dimer energy/force curve |
 | `pdos` | `model.xyz`, `run.in`, `dos.out`, `mvac.out` | VAC and PDOS |
+| `phonon` | phonopy band-structure data | Phonon band structure |
+| `phonon_comp` | phonopy band-structure data | Compare phonon band structures |
 | `emd` | EMD outputs | EMD thermal conductivity in one direction |
 | `emd2` | EMD outputs | EMD thermal conductivity in all directions |
 | `nemd` | NEMD outputs | NEMD thermal transport |
 | `hnemd` | HNEMD outputs | HNEMD thermal transport |
-| `viscosity` | Viscosity outputs | Viscosity |
+| `viscosity` | `viscosity.out` | Stress autocorrelation and viscosity components |
+| `plane-grid` | `model.xyz`, `displacements.dat` | Displacement plane grid profiles |

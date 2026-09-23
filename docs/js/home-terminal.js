@@ -8,7 +8,7 @@ const mainContentText = `
         | |_| |  __/| |_| | |  | | |_| |   <| | |_ 
          \\____|_|    \\___/|_|  |_|____/|_|\\_\\_|\\__| 
 
-         GPUMDkit Version 1.5.7 (2026-08-23)
+         GPUMDkit Version 1.5.8 (2026-09-23)
    Core Developer: Zihan YAN (yanzihan@westlake.edu.cn) 
 
  ----------------------- GPUMD ----------------------- 
@@ -41,7 +41,7 @@ const logsCommand2 = `
 `;
 
 const helpContentText = ` +-------------------------------------------------------------------------------------------------------+
- |                          GPUMDkit 1.5.7 (2026-08-23)       Command Help                               |
+ |                          GPUMDkit 1.5.8 (2026-09-23)       Command Help                               |
  +-------------------------------------------------------------------------------------------------------+
  |                                          MAIN FUNCTIONS                                               |
  +-------------------------------------------------------------------------------------------------------+
@@ -49,10 +49,13 @@ const helpContentText = ` +-----------------------------------------------------
  | -calc <type>  Calculator tools                | -time <gpumd|nep>  Time-consuming analyzer            |
  | -update       Update GPUMDkit                 | -clean             Clean extra files in current dir   |
  | -skill        Show GPUMDkit agent skill info  | -doctor            Check Python environment           |
+ | -server       Start the GPUMDkit web server   |                                                       |
+ | -prediction   Write NEP prediction .out files | -prediction_dpa  Write DPA prediction .out files      |
  +-------------------------------------------------------------------------------------------------------+
  |                                         FORMAT CONVERSION                                             |
  +-------------------------------------------------------------------------------------------------------+
- | -out2xyz      OUTCAR -> extxyz (shell)        | -out2exyz          OUTCAR -> extxyz (python)          |
+ | -out2xyz      OUTCAR -> extxyz (shell)        | -out2xyz_bec       OUTCAR -> extxyz with BEC          |
+ | -out2exyz     OUTCAR -> extxyz (python)       | -xyz2dp            extxyz -> DeepMD npy               |
  | -cp2k2xyz     CP2K log -> xyz                 | -xdat2exyz         XDATCAR -> extxyz                  |
  | -cif2pos      cif -> POSCAR                   | -cif2exyz          cif -> extxyz                      |
  | -pos2exyz     POSCAR -> extxyz                | -exyz2pos          extxyz -> POSCAR                   |
@@ -61,7 +64,6 @@ const helpContentText = ` +-----------------------------------------------------
  | -addgroup     Add group labels                | -addweight         Add structure weight in extxyz     |
  | -clean_xyz    Clean extra info in extxyz      | -get_frame         Extract specific frame             |
  | -frame_range  Extract frames by range         | -dp2xyz            DeepMD npy -> extxyz               |
- | -xyz2dp       extxyz -> DeepMD npy            |                                                       |
  +-------------------------------------------------------------------------------------------------------+
  |                                            ANALYSIS                                                   |
  +-------------------------------------------------------------------------------------------------------+
@@ -71,13 +73,13 @@ const helpContentText = ` +-----------------------------------------------------
  | -filter_dist  Filter by min_dist (no PBC)     | -filter_dist_pbc   Filter by min_dist (PBC)           |
  | -pda          Probability density analysis    | -filter_box        Filter by box-edge length          |
  | -pynep        Deprecated PyNEP sampling       | -nep_modifier      Modify NEP model interactively     |
- | -shift_energy  Interactive energy shift       |                                                       |
+ | -shift_energy Interactive energy shift        |                                                       |
  +-------------------------------------------------------------------------------------------------------+
  | Python option help: gpumdkit.sh -<option> -h    Plot list: gpumdkit.sh -plt -h                        |
  +-------------------------------------------------------------------------------------------------------+`;
 
 const plotContentText = ` +-----------------------------------------------------------------------------------------------+
- |                     GPUMDkit 1.5.7 (2026-08-23)       PLOT & VISUALIZATION TOOLS              |
+ |                     GPUMDkit 1.5.8 (2026-09-23)       PLOT & VISUALIZATION TOOLS              |
  +-----------------------------------------------------------------------------------------------+
  |  Usage: gpumdkit.sh -plt <type>                        List: gpumdkit.sh -plt -h              |
  +-----------------------------------------------------------------------------------------------+
@@ -88,8 +90,7 @@ const plotContentText = ` +-----------------------------------------------------
  |  train_density  - Training results density plot  restart        - Parameters in nep.restart   |
  |  charge         - Charge distribution            born_charge    - Born effective charges      |
  |  dimer          - Dimer energy/force curve       force_errors   - Force errors                |
- |  des            - Descriptors                    lr             - Learning rate for gnep      |
- |  net_force      Plot net force distribution                                                   |
+ |  des            - Descriptors                    net_force      - Net force distribution      |
  +-----------------------------------------------------------------------------------------------+
  |                                     Diffusion & Transport                                     |
  +-----------------------------------------------------------------------------------------------+

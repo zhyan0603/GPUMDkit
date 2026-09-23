@@ -23,6 +23,7 @@ Last-modified: 2026-05-16
 =============================================================================
 """
 
+import os
 import sys
 
 args = sys.argv[1:]
@@ -95,6 +96,9 @@ def process_structure(idx_atoms):
 
 def main():
     input_file = sys.argv[1]
+    if not os.path.isfile(input_file):
+        print(f" Error: file '{input_file}' does not exist.")
+        sys.exit(1)
     balanced_file = "balanced.xyz"
     unbalanced_file = "unbalanced.xyz"
     index_file = "indices.txt"

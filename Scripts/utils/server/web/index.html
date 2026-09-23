@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>GPUMDkit Web Console</title>
+<link rel="icon" type="image/png" href="/logo.png">
+<link rel="stylesheet" href="/style.css">
+</head>
+<body>
+<div id="loading-overlay" role="status" aria-live="polite">
+  <div class="loading-card">
+    <span class="loading-mark" aria-hidden="true">GK</span>
+    <div class="loading-spinner"></div>
+    <p data-i18n="loading">Loading working directory…</p>
+  </div>
+</div>
+
+<header class="topbar">
+  <a class="brand" href="https://gpumdkit.cn" target="_blank" rel="noopener" aria-label="GPUMDkit home">
+    <span class="brand-mark" aria-hidden="true">GK</span>
+    <span class="brand-name">GPUMDkit</span>
+  </a>
+  <nav class="crumb" id="crumb" aria-label="Current directory"></nav>
+  <span class="grow"></span>
+  <span class="conn" id="connWrap"><i aria-hidden="true"></i><span id="connText">connecting…</span></span>
+  <select id="refreshSel" class="sel" aria-label="Auto refresh interval" title="Auto refresh (off by default)">
+    <option value="0" selected data-i18n-opt="off">off</option>
+    <option value="5">5s</option>
+    <option value="15">15s</option>
+    <option value="30">30s</option>
+    <option value="60">60s</option>
+  </select>
+  <button type="button" class="iconbtn" id="refreshBtn" aria-label="Refresh now" title="Refresh now">
+    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/></svg>
+  </button>
+  <button type="button" class="segbtn lang" id="langBtn" aria-label="Switch language" title="EN / 中文">中文</button>
+  <button type="button" class="iconbtn" id="themeBtn" aria-label="Toggle light or dark theme" title="Theme"></button>
+  <button type="button" class="iconbtn" id="drawerBtn" aria-label="Commands and output" title="Commands / output">
+    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="4 17 10 11 4 5"/><line x1="12" y1="19" x2="20" y2="19"/></svg>
+  </button>
+</header>
+
+<div id="loginView" class="loginwrap hidden">
+  <div class="logincard">
+    <span class="brand-mark big" aria-hidden="true">GK</span>
+    <h2 data-i18n="login">Sign in</h2>
+    <p class="login-sub" data-i18n="loginSub">This server requires a password.</p>
+    <input type="password" id="pwInput" placeholder="Password" autocomplete="current-password">
+    <button id="loginBtn" class="btn primary" type="button" data-i18n="loginBtn">Sign in</button>
+    <p class="err" id="loginMsg"></p>
+  </div>
+</div>
+
+<main id="appView" class="hidden">
+  <div class="statusline" id="statusLine">
+    <strong class="dirname mono" id="dirTitle">—</strong>
+    <span class="sep" aria-hidden="true">·</span>
+    <span id="stFiles">—</span>
+    <span class="sep" aria-hidden="true">·</span>
+    <span id="stTrain">—</span>
+    <span class="grow"></span>
+    <span id="stUpdated" class="muted mono">—</span>
+  </div>
+
+  <div id="errorBanner" class="notice hidden" role="alert">
+    <span id="errorText"></span>
+    <button type="button" class="btn soft small" id="retryBtn" data-i18n="retry">Retry</button>
+  </div>
+
+  <div class="layout">
+    <aside class="rail" aria-label="Files">
+      <div class="rail-search">
+        <input type="search" id="fileFilter" placeholder="Filter…" aria-label="Filter files">
+      </div>
+      <div class="filelist" id="fileList"></div>
+    </aside>
+
+    <div class="main">
+      <div id="canvasRoot"></div>
+    </div>
+  </div>
+</main>
+
+<div class="overlay hidden" id="lightbox">
+  <div class="lbstage">
+    <img id="lbImg" alt="">
+    <div class="lbbar">
+      <span class="mono lbtitle" id="lbTitle"></span>
+      <span class="grow"></span>
+      <span class="muted" id="lbCount"></span>
+      <span class="lbhint" data-i18n="lbHint">← → navigate · Esc close</span>
+      <button type="button" class="btn soft small" id="lbClose" data-i18n="close">Close</button>
+    </div>
+  </div>
+</div>
+
+<div class="overlay hidden" id="previewLayer">
+  <div class="sheet">
+    <div class="sheet-head">
+      <strong class="mono" id="pvTitle"></strong>
+      <span class="muted" id="pvMeta"></span>
+      <span class="badge dirty hidden" id="pvDirty" data-i18n="unsaved">unsaved</span>
+      <span class="grow"></span>
+      <div class="seg hidden" id="pvModes"></div>
+      <button type="button" class="btn soft small hidden" id="pvEditBtn" data-i18n="edit">Edit</button>
+      <button type="button" class="iconbtn" id="pvClose" aria-label="Close preview" title="Esc">×</button>
+    </div>
+    <div class="sheet-body" id="pvBody"></div>
+    <p class="err" id="pvMsg"></p>
+    <div class="confbar warn hidden" id="pvConfirm">
+      <span data-i18n="dirtyWarn">This file has unsaved changes.</span>
+      <button type="button" class="btn soft small" id="pvKeepBtn" data-i18n="keepEditing">Keep editing</button>
+      <button type="button" class="btn danger small" id="pvDiscardBtn" data-i18n="discardOpen">Discard and open</button>
+    </div>
+    <div class="confbar conflict hidden" id="pvConflict">
+      <span data-i18n="conflictWarn">The file changed on disk while you were editing.</span>
+      <button type="button" class="btn primary small" id="pvRereadBtn" data-i18n="reload">Reload</button>
+      <button type="button" class="btn soft small" id="pvKeepDraftBtn" data-i18n="keepDraft">Keep my draft</button>
+      <button type="button" class="btn danger small" id="pvOverwriteBtn" data-i18n="overwrite">Overwrite</button>
+    </div>
+  </div>
+</div>
+
+<div class="overlay hidden" id="chartZoom">
+  <div class="zoombox">
+    <div class="zoombar">
+      <strong data-i18n="lossCurve">Loss curve</strong>
+      <span class="grow"></span>
+      <span class="mono muted" id="zoomScale"></span>
+      <button type="button" class="btn soft small" id="zoomClose" data-i18n="close">Close</button>
+    </div>
+    <canvas id="zoomCanvas"></canvas>
+    <div class="lg-row" id="zoomLegend"></div>
+  </div>
+</div>
+
+<aside class="drawer hidden" id="drawer" aria-label="Commands and output">
+  <div class="drawer-head">
+    <strong data-i18n="commands">Commands & output</strong>
+    <span class="grow"></span>
+    <div class="seg">
+      <button type="button" class="segbtn on" data-tab="output" data-i18n="output">Output</button>
+      <button type="button" class="segbtn" data-tab="history" data-i18n="history">History</button>
+      <button type="button" class="segbtn" data-tab="terminal" data-i18n="terminal">Terminal</button>
+    </div>
+    <button type="button" class="iconbtn" id="drawerClose" aria-label="Close drawer" title="Close">×</button>
+  </div>
+  <div class="drawer-body">
+    <div id="dOutput">
+      <pre class="output" id="output"></pre>
+      <p class="muted hidden" id="outTruncNote" data-i18n="truncated">output truncated at 64 KB on the server</p>
+    </div>
+    <div id="dHistory" class="hidden"><div id="histList"></div></div>
+    <div id="dTerminal" class="hidden">
+      <div class="term">
+        <div class="termnote" data-i18n="termNote">Each command runs independently in the current directory; session state like export is not kept; 120 s limit per command</div>
+        <pre class="term-out" id="termOut"></pre>
+        <div class="term-in">
+          <span class="tp">$</span>
+          <input id="termInput" type="text" placeholder="command + Enter (cd / clear / pwd built in)" autocomplete="off" spellcheck="false">
+        </div>
+      </div>
+    </div>
+  </div>
+</aside>
+
+<div class="toast" id="toast"></div>
+<div class="drawer-mask hidden" id="drawerMask"></div>
+<script src="/app.js"></script>
+</body>
+</html>

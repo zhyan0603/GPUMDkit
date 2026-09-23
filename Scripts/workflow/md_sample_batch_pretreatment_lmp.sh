@@ -38,9 +38,9 @@ function f303_md_sample_batch_pretreatment_lmp(){
 		    new_vasp_name="POSCAR_${rename_seq}.vasp"
 		    new_xyz_name="model_${rename_seq}.xyz"
 			new_lmp_name="lammps_${rename_seq}.data"
-		    mv ${file} ./struct_md/${new_vasp_name}
-		    python ${GPUMDkit_path}/Scripts/format_conversion/pos2exyz.py ./struct_md/${new_vasp_name} ./struct_md/${new_xyz_name}
-			python ${GPUMDkit_path}/Scripts/format_conversion/exyz2lmp.py ./struct_md/${new_xyz_name} ./struct_md/${new_lmp_name}
+		    mv "${file}" "./struct_md/${new_vasp_name}"
+		    python "${GPUMDkit_path}/Scripts/format_conversion/pos2exyz.py" "./struct_md/${new_vasp_name}" "./struct_md/${new_xyz_name}"
+			python "${GPUMDkit_path}/Scripts/format_conversion/exyz2lmp.py" "./struct_md/${new_xyz_name}" "./struct_md/${new_lmp_name}"
 		    progress=$((rename_seq * 100 / total_vasp_num))
 		    echo -ne " Progress: ["
 		    for ((p=0; p<progress/2; p++)); do echo -ne "#"; done
@@ -105,8 +105,8 @@ function f303_md_sample_batch_pretreatment_lmp(){
     # Create individual directories for each .vasp file and set up the links
     for i in $(seq 1 $num_lmp_files); do
         dir_name="sample_${i}"
-        mkdir -p ${dir_name}
-        cd ${dir_name}
+        mkdir -p "${dir_name}"
+        cd "${dir_name}"
         ln -s ../struct_md/lammps_${i}.data ./lammps.data
         ln -s ../md/{lmprun.in,nep.txt} ./
         cd ..
@@ -130,8 +130,6 @@ function f303_md_sample_batch_pretreatment_lmp(){
     chmod +x presub.sh
 
     echo " >---------------------------------------------------------<"
-    echo " | ATTENTION: Place lmprun.in and nep.txt in 'md' Dir.     |"
-    echo " | ATTENTION: Place lmprun.in and nep.txt in 'md' Dir.     |"
     echo " | ATTENTION: Place lmprun.in and nep.txt in 'md' Dir.     |"
     echo " >---------------------------------------------------------<"
 }

@@ -187,7 +187,7 @@ inside the Python interface when needed. The DFT-to-NEP mode requires the
 
 `get_min_dist.py` calculates minimum interatomic distances without considering periodic boundary conditions. Fast but may be inaccurate for periodic systems.
 
-**What it does:** Reports the minimum distance between each pair of elements in every frame, ignoring periodic boundary conditions.
+**What it does:** Reports the minimum distance for each element pair across all frames, ignoring periodic boundary conditions. Elements are collected from the entire dataset in first-appearance order; pairs absent from a frame are skipped. The PBC version follows the same element-pair coverage.
 
 **CLI mode:**
 
@@ -330,6 +330,8 @@ This is intended for systems where common oxidation states are meaningful.
 
 These files are generated during NEP training. The script compares DFT vs NEP predictions and identifies structures with large errors.
 
+Structures with a `-1e6` missing-stress marker or a stress component whose absolute value exceeds `1e6` are excluded before RMSE calculation and are not written to either output dataset. If no valid structures remain, the script reports an error without writing outputs.
+
 ```bash
 # Interactive mode
 gpumdkit.sh    # Select: 5) Analyzer → 502) Find outliers of extxyz
@@ -454,14 +456,14 @@ gpumdkit.sh -min_dist_pbc train.xyz
 ### Structure Filtering Pipeline
 
 ```bash
-# 1. Filter by minimum distance
+# 1. Filter by minimum distance (writes filtered_dump.xyz)
 gpumdkit.sh -filter_dist_pbc dump.xyz 1.0
 
-# 2. Filter by box size
-gpumdkit.sh -filter_box filtered_dist_pbc.xyz 13
+# 2. Filter by box size (writes filtered_by_box.xyz)
+gpumdkit.sh -filter_box filtered_dump.xyz 13
 
-# 3. Filter by force threshold
-gpumdkit.sh -filter_value filtered_box.xyz force 20
+# 3. Filter by force threshold (writes filtered.xyz)
+gpumdkit.sh -filter_value filtered_by_box.xyz force 20
 ```
 
 ### Diffusion Channel Analysis

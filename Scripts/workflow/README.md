@@ -42,7 +42,7 @@ This entry prepares folders for single-point calculations. For VASP, keep either
 - If both `.vasp` and `.xyz` files are present, the script prints a notice and only processes `.vasp` files.
 - If no `.vasp` file is present and multiple `.xyz` files are detected, the script asks which `.xyz` file to process.
 
-After running, the script creates `struct_fp/`, `fp/`, and `fp_sample_*` directories. Put `INCAR`, `POTCAR`, and `KPOINTS` into the generated `fp/` directory; each calculation folder links to these files.
+After running, the script creates `struct_fp/`, `fp/`, and `<prefix>_*` directories. Put `INCAR`, `POTCAR`, and `KPOINTS` into the generated `fp/` directory; each calculation folder links to these files.
 
 For CP2K, enter `3) Workflow`, then `301) SCF batch pretreatment`, and choose the CP2K branch. The CP2K script asks for:
 

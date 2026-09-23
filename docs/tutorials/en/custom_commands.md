@@ -49,7 +49,7 @@ and you can add an argument, for example: `gpumdkit.sh -greet Zihan`, then you w
 Hello, Zihan!
 ```
 
-**Passing arguments**: Use `"$@"` to forward all arguments safely. Use `${@:1}` when you need to refer to arguments starting from the first one. 
+**Passing arguments**: Use `"$@"` to forward all positional arguments safely; it already refers to arguments starting from the first one.
 
 ### Calling an External Script
 
@@ -71,10 +71,11 @@ Process multiple files:
 ```bash
 custom_batch_plot() {
     for dir in "$@"; do
-        cd "$dir"
-        gpumdkit.sh -plt thermo save
-        gpumdkit.sh -plt msd save
-        cd ..
+        (
+            cd "$dir" || exit 1
+            gpumdkit.sh -plt thermo save
+            gpumdkit.sh -plt msd save
+        ) || return 1
     done
 }
 ```
@@ -113,7 +114,7 @@ custom_prep_training() {
     gpumdkit.sh -filter_value train.xyz force 30
     
     # Check quality
-    gpumdkit.sh -range filtered_force.xyz energy
+    gpumdkit.sh -range filtered.xyz energy
     
     echo "Training data ready!"
 }

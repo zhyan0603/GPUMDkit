@@ -35,9 +35,11 @@ ${GPUMDkit_path}/skills/gpumdkit-skill-zh
 
 ## 为 Agent Skills 兼容客户端安装
 
-跨客户端约定是 `.agents/skills/`。在创建链接之前，询问用户安装应该是全局的还是项目本地的。
+跨客户端约定是 `.agents/skills/`。如果用户希望在多个项目中使用技能，通常
+建议全局安装。如果用户没有说明安装范围，应在创建链接前询问是全局安装还是
+仅安装到当前项目。
 
-全局安装：
+全局安装（正常使用时推荐）：
 
 ```bash
 target_dir="${HOME}/.agents/skills"
@@ -46,7 +48,7 @@ ln -s "${GPUMDkit_path}/skills/gpumdkit-skill" "${target_dir}/gpumdkit-skill"
 ln -s "${GPUMDkit_path}/skills/gpumdkit-skill-zh" "${target_dir}/gpumdkit-skill-zh"
 ```
 
-仅当前项目：
+仅当前项目（用户要求隔离或明确指定时使用）：
 
 ```bash
 target_dir=".agents/skills"

@@ -40,7 +40,7 @@ gpumdkit.sh -calc ionic-cond Li 1
 gpumdkit.sh -calc ionic-cond O -2
 
 # Preferred non-interactive inputs in current directory:
-# - msd.out (from GPUMD compute_msd)
+# - msd.out (from GPUMD compute_msd, or the first four columns from calc_msd.py)
 # - thermo.out (for temperature)
 # - model.xyz (for volume)
 # - run.in (optional; used to detect replicate factors)
@@ -57,6 +57,41 @@ gpumdkit.sh -calc nep structures.xyz predictions.xyz nep.txt
 # Note: Clean input with gpumdkit.sh -clean_xyz first to remove existing properties
 ```
 
+### NEP Prediction Output Files
+```bash
+# Write energy, force, stress, and virial prediction files for every frame.
+# The output suffix comes from the input filename (test.xyz -> *_test.out).
+gpumdkit.sh -prediction <input.xyz> <nep.txt> [workers]
+
+# Single-core default
+gpumdkit.sh -prediction train.xyz nep.txt
+
+# Eight CPU workers
+gpumdkit.sh -prediction train.xyz nep.txt 8
+```
+
+The output files are `energy_<input-stem>.out`, `force_<input-stem>.out`,
+`stress_<input-stem>.out`, and `virial_<input-stem>.out` in the current
+directory. Predicted columns precede target columns. Energy and virial are
+eV/atom, force is eV/Angstrom, and stress is GPa. Tensor columns use NEP's
+`xx yy zz xy yz xz` order and the same sign convention for stress and virial.
+If only one of stress or virial is supplied, the other target is derived using
+`stress = virial / volume` and the appropriate unit conversion. Only frames
+missing both use the `-1e6` sentinel; energy and force targets are required. A
+`tqdm` progress bar is shown during prediction.
+
+### DeepMD DPA Training-Set Prediction
+```bash
+# Write NEP-compatible training prediction files in the current directory.
+gpumdkit.sh -prediction_dpa <input.xyz> <dpa_model>
+```
+
+This command evaluates a labeled extended-XYZ training set with a DeepMD DPA
+model through `deepmd.infer.DeepPot` and writes `energy_train.out`,
+`force_train.out`, `virial_train.out`, and `stress_train.out`. The output
+contains predicted values followed by target values and requires `deepmd-kit`
+and `numpy`.
+
 ### Descriptors
 ```bash
 # Calculate NEP descriptors for specific element
@@ -65,8 +100,8 @@ gpumdkit.sh -calc des <input.xyz> <output.npy> <nep.txt> <element>
 # Example
 gpumdkit.sh -calc des train.xyz descriptors.npy nep.txt Li
 
-# Visualize with: gpumdkit.sh -plt des pca
-# Or: gpumdkit.sh -plt des umap
+# Visualize with: gpumdkit.sh -plt des pca descriptors.npy
+# Or: gpumdkit.sh -plt des umap descriptors.npy
 ```
 
 ### Density of Atomistic States (DOAS)
@@ -88,8 +123,17 @@ gpumdkit.sh -calc msd <trajectory.xyz> <element> <dt_fs> [max_corr_steps]
 # Example: Li with 10 fs timestep
 gpumdkit.sh -calc msd dump.xyz Li 10
 
-# Output: msd.out (Time/ps, MSD_x, MSD_y, MSD_z)
+# Output: msd.out with four columns: Time/ps, MSD_x, MSD_y, MSD_z
+# This output is compatible with: gpumdkit.sh -plt msd
 ```
+
+GPUMD's native `compute_msd` writes a different `msd.out`. For one selected
+group it contains seven columns: time, `MSD_x/y/z`, and `SDC_x/y/z`; this
+single-group layout is required by `gpumdkit.sh -plt sdc` and
+`gpumdkit.sh -plt msd_sdc`. With `all_groups` or multiple groups, GPUMD
+appends additional group data, so do not assume that every `msd.out` has seven
+columns. The separate `compute_sdc` command writes `sdc.out`, which is used by
+`gpumdkit.sh -plt vac`.
 
 ### X-ray Diffraction (interactive only)
 
@@ -217,29 +261,48 @@ python Scripts/calculators/neb_calculation_neptrain.py init.xyz fin.xyz 9 nep.tx
 ## Common Workflows
 
 ### Ionic Transport Analysis
+
+Run each path from the working directory where its `msd.out` is written.
+
+Path A derives a four-column `msd.out` from an extxyz trajectory and supports
+the MSD plot:
+
 ```bash
-# Path A: derive msd.out from an extxyz trajectory
 gpumdkit.sh -calc msd dump.xyz Li 10
+gpumdkit.sh -plt msd
+```
 
-# Path B: generate msd.out directly with GPUMD compute_msd.
-# Do not run both paths unless comparing implementations.
+Path B uses GPUMD `compute_msd`; for one selected group its `msd.out` has seven
+columns (time, `MSD_x/y/z`, `SDC_x/y/z`) and supports the SDC plots:
 
-# Conductivity requires validated msd.out, thermo.out, model.xyz, and run.in
-gpumdkit.sh -calc ionic-cond Li 1
-
-# Visualize
+```bash
+# Use existing GPUMD compute_msd output
 gpumdkit.sh -plt msd
 gpumdkit.sh -plt sdc
+gpumdkit.sh -plt msd_sdc
 ```
+
+Choose one path; when comparing implementations, keep separate results to avoid
+overwriting `msd.out`. From the same working
+directory, either path can supply the validated `msd.out` required for ionic
+conductivity:
+
+```bash
+# Conductivity also needs thermo.out, model.xyz, and optionally run.in
+gpumdkit.sh -calc ionic-cond Li 1
+```
+
+`compute_sdc` writes a separate `sdc.out` for `gpumdkit.sh -plt vac`; it is not
+the `msd.out` consumed by the SDC plotters.
 
 ### Descriptor Analysis
 ```bash
 # 1. Calculate descriptors
 gpumdkit.sh -calc des train.xyz descriptors.npy nep.txt Li
 # 2. Visualize with PCA
-gpumdkit.sh -plt des pca
+gpumdkit.sh -plt des pca descriptors.npy
 # 3. Or visualize with UMAP
-gpumdkit.sh -plt des umap
+gpumdkit.sh -plt des umap descriptors.npy
 ```
 
 ### Perovskite Analysis

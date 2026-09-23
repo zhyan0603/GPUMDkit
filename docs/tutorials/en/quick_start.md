@@ -1,183 +1,42 @@
 <div align="center">
   <h1>🚀 Quick Start</h1>
-  <p style="text-align: justify;">This page helps you install GPUMDkit and run your first commands. You can use GPUMDkit through an interactive menu or direct command-line options.</p>
+  <p style="text-align: justify;">This page takes you through installation, the first checks, and a small isolated exercise before pointing you to the next task for your existing data.</p>
 </div>
 
-## What it does
+## What it does {#what-it-does}
 
-GPUMDkit provides a single entry point for common tasks in computational materials science — format conversion, structure analysis, property calculation, and visualization — without writing custom scripts.
+GPUMDkit brings common computational-materials tasks such as format conversion, structure analysis, property calculation, and visualization into one command-line tool, without requiring custom scripts.
 
-## Before you start
+## Before you start {#before-you-start}
 
-### 1. Install with Conda (Recommended)
+Install GPUMDkit first, then check the command-line entry points. Conda is the recommended route:
+
+### 1. Install with Conda (Recommended) {#install-with-conda-recommended}
 
 ```bash
 conda create -n gpumdkit -c gpumdkit -c conda-forge gpumdkit
 conda activate gpumdkit
 ```
 
-This installs GPUMDkit and its standard dependencies. You do not need to clone the repository or configure environment variables.
+This installs GPUMDkit and its standard dependencies. You do not need to clone the repository or configure environment variables first.
 
-Some features require optional packages:
-
-```bash
-pip install neptrain calorine
-```
-
-### 2. Install from Source (Optional)
-
-To work with the source code, clone the repository and run the installer:
-
-```bash
-git clone https://github.com/zhyan0603/GPUMDkit.git
-cd GPUMDkit
-source ./install.sh
-```
-
-The installer writes `GPUMDkit_path` and `PATH` settings to your shell configuration and loads them for the current shell. It writes to `~/.bashrc` by default; if the current shell is zsh, it writes to `~/.zshrc`. If an existing GPUMDkit path is found, the installer prints the old path and asks whether to replace it. Before changing the rc file, it creates a backup.
-
-Typical installation output:
-
-```text
-======================================================
-  GPUMDkit Installation
-======================================================
- [1/4] Detecting GPUMDkit directory...
-       /path/to/GPUMDkit
- [2/4] Detecting shell configuration...
-       Target: /Users/you/.bashrc
-       Adding environment variables to /Users/you/.bashrc
-       Success: Environment variables added.
- [3/4] Setting executable permissions...
-       Added executable permission to gpumdkit.sh
- [4/4] Loading environment...
-
-======================================================
-  Installation Complete!  GPUMDkit is ready to use.
-======================================================
-```
-
-If GPUMDkit was installed before, you may see:
-
-```text
-Existing GPUMDkit configuration found.
-Existing path(s):
-  - /old/path/to/GPUMDkit
-New path:
-  - /new/path/to/GPUMDkit
-
-Replace the existing GPUMDkit configuration with the new path? [y/N]:
-```
-
-### 3. Verify the installation
+### 2. Check the installation {#verify-the-installation}
 
 ```bash
 gpumdkit.sh -h
-```
-
-This prints a help table listing all available options.
-
-For a more useful first check, run:
-
-```bash
 gpumdkit.sh -doctor
 ```
 
-The terminal groups the result into an **Environment** section and **Common** and
-**Optional packages** sections. `MISS` for an optional package is not an
-installation failure: install it only when you need the feature named beside it.
-For example, `dpdata` is needed for DeepMD conversion, while `calorine` is used
-by NEP-assisted calculations. This makes it easier to diagnose a missing module
-before starting a workflow.
+`-h` lists the available options. `-doctor` checks the Python environment and reports the status of the environment, common packages, and optional packages. `MISS` for an optional package is not an installation failure; install that package only when you need the corresponding feature.
 
-## Read a command before running it
+## First practice: convert a POSCAR {#hello-world-example}
 
-CLI examples use this notation:
-
-| Notation | Meaning | Example |
-|---|---|---|
-| `<required>` | Replace with a value you must provide. Do not type the angle brackets. | `<output.xyz>` → `model.xyz` |
-| `[optional]` | May be omitted; the script then uses its documented behavior. | `[max_corr_steps]` |
-| `...` | One or more values may follow. | `<element...>` |
-
-Before using an unfamiliar Python-backed command, ask the command itself for
-its argument description. For example:
-
-```text
-$ gpumdkit.sh -calc msd -h
- Usage: gpumdkit.sh -calc msd <extxyz_file> <element_symbol> <dt_fs> [max_corr_steps]
-
- Arguments:
-   extxyz_file       Path to the input extxyz trajectory file
-   element_symbol    Chemical symbol (e.g., Li, O, Na)
-   dt_fs             Time step between consecutive frames (fs)
-   max_corr_steps    Max correlation lag steps (optional)
-```
-
-Here `dt_fs` is the interval **between stored trajectory frames**, in fs; it is
-not automatically inferred from an MD input file. Choose it from your own
-trajectory-writing settings. For the plot dispatcher, use `gpumdkit.sh -plt -h`
-to list plot types; plot-specific argument positions are documented on the
-[Plot Scripts](plot_scripts.md) page.
-
-Interactive menus use `------------>>` to mark where input is expected. After
-many CLI commands, the terminal also prints `Code path:`; that path identifies
-the implementation responsible for the result or error.
-
-## Interactive mode
+To avoid overwriting existing files, do the exercise in a new directory. The exercise runs in a subshell; the `mkdir` command intentionally omits `-p`, so an existing directory makes it fail and `exit 1` leaves the subshell before any existing file can be overwritten.
 
 ```bash
-gpumdkit.sh
-```
-
-This opens the main menu:
-
-```text
-           ____ ____  _   _ __  __ ____  _    _ _
-          / ___|  _ \| | | |  \/  |  _ \| | _(_) |_
-         | |  _| |_) | | | | |\/| | | | | |/ / | __|
-         | |_| |  __/| |_| | |  | | |_| |   <| | |_
-          \____|_|    \___/|_|  |_|____/|_|\_\_|\__|
-
-          GPUMDkit Version 1.5.7 (2026-08-23)
-    Core Developer: Zihan YAN (yanzihan@westlake.edu.cn)
- Main Contributors: Denan LI, Xin WU, Zhoulin LIU & Chen HUA
-
- ---------------------- GPUMD ------------------------
- 1) Format Conversion          2) Sample Structures
- 3) Workflow                   4) Calculators
- 5) Analyzer                   6) Visualization
- 7) Utilities                  8) Help                
- 0) Exit
- ------------>>
- Input the function number:
-```
-
-Select a module by number. Each module provides sub-menus with specific functions.
-
-## CLI mode
-
-Direct commands use fixed positional arguments:
-
-```bash
-gpumdkit.sh -<option> [args...]
-```
-
-Examples:
-
-```bash
-gpumdkit.sh -pos2exyz POSCAR model.xyz
-gpumdkit.sh -plt train
-gpumdkit.sh -calc msd trajectory.xyz Li 10
-```
-
-The first example reads `POSCAR` and writes `model.xyz`.
-
-## Hello World Example
-
-A minimal end-to-end check that your install works — create a tiny silicon POSCAR, convert it to extxyz, and inspect the output:
-
-```bash
+(
+set -e
+mkdir gpumdkit-first-check && cd gpumdkit-first-check || exit 1
 cat > POSCAR << 'EOF'
 Si
 1.0
@@ -191,72 +50,74 @@ direct
 EOF
 gpumdkit.sh -pos2exyz POSCAR model.xyz
 head model.xyz
+)
 ```
 
-If `model.xyz` shows a single Si atom with lattice info, your install works.
+If `model.xyz` shows one Si atom and lattice information, this POSCAR-to-extxyz conversion and output check succeeded. It does not verify every calculator, plotter, or simulation feature.
 
-> **What is extxyz?** extxyz is the extended XYZ format: line 1 is the atom count, line 2 contains the lattice and per-structure properties (energy/forces/virial as needed), and lines 3+ list each atom with its per-atom properties. It is the native training-data format for NEP.
+`extxyz` is extended XYZ: the first line gives the atom count, the second stores lattice and structure-level properties, and later lines store each atom's element, coordinates, and per-atom properties. It is the native training-data format used by NEP.
 
-## Common examples
+## Existing data: choose the next task {#common-examples}
 
-### Convert a POSCAR to extxyz
+If you already have structures or trajectories, you can skip the practice above. Return to the [tutorial index](index.md) and use the Common Tasks table to choose format conversion, structure sampling, analysis, calculators, plotting, or workflow preparation; each page documents its inputs, outputs, and scope.
+
+## Optional packages and agent skills {#optional-packages}
+
+Some features require optional packages:
 
 ```bash
-gpumdkit.sh -pos2exyz POSCAR model.xyz
+pip install neptrain calorine
 ```
 
-### Add GPUMD group labels
+The package also includes the English and Chinese agent skills. Run the following command to find their installed paths and the instructions for configuring them in your agent client:
 
 ```bash
-gpumdkit.sh -addgroup POSCAR Li Y Cl
+gpumdkit.sh -skill
 ```
 
-Group labels are used by some GPUMD-related workflows that need atom grouping, such as species-specific MSD or diffusion calculations.
+## Install from Source (Optional) {#install-from-source-optional}
 
-### Plot NEP training results
+If you need to use or modify the source code, clone the repository and run the installer:
 
 ```bash
-gpumdkit.sh -plt train
+git clone https://github.com/zhyan0603/GPUMDkit.git
+cd GPUMDkit
+source ./install.sh
 ```
 
-<div align="center">
-  <img src="../../Gallery/train.png" alt="NEP training results" width="72%" />
-</div>
+The installer chooses a shell configuration file from `$SHELL`, writes the `GPUMDkit_path` and `PATH` settings there, and loads them for the current shell. It uses `~/.bashrc` by default; when `$SHELL` points to zsh, it uses `~/.zshrc`. If an existing GPUMDkit path is found, the installer prints the old path and asks whether to replace it. Before changing the rc file, it creates a backup.
 
-### Plot NEP prediction-mode results
+## Read a command before running it {#read-a-command-before-running-it}
+
+CLI examples use this notation:
+
+| Notation | Meaning | Example |
+|---|---|---|
+| `<required>` | Replace with a value you must provide. Do not type the angle brackets. | `<output.xyz>` → `model.xyz` |
+| `[optional]` | May be omitted; the script then uses its documented behavior. | `[max_corr_steps]` |
+| `...` | One or more values may follow. | `<element...>` |
+
+For an unfamiliar Python-backed command, run its `-h` option first to read the argument description. Choose time parameters such as `dt_fs` from your own trajectory-writing settings; they are not inferred from an MD input file. See [Plot Scripts](plot_scripts.md) for plot types and script-specific argument positions.
+
+## Interactive mode {#interactive-mode}
+
+Run `gpumdkit.sh` and select a module by number. Each module provides its own sub-menu.
+
+## CLI mode {#cli-mode}
+
+Direct commands use fixed positional arguments:
 
 ```bash
-gpumdkit.sh -plt test
+gpumdkit.sh -<option> [args...]
 ```
 
-<div align="center">
-  <img src="../../Gallery/prediction.png" alt="NEP prediction-mode results" width="72%" />
-</div>
-
-### Plot thermodynamic data
+To see the complete option list, run:
 
 ```bash
-gpumdkit.sh -plt thermo
+gpumdkit.sh -h
 ```
 
-<div align="center">
-  <img src="../../Gallery/thermo.png" alt="Thermo plot" width="72%" />
-</div>
+## Notes {#notes}
 
-### Plot MSD and self-diffusion coefficient
-
-```bash
-gpumdkit.sh -plt msd
-gpumdkit.sh -plt sdc
-```
-
-<div align="center">
-  <img src="../../Gallery/msd.png" alt="MSD plot" width="45%" />
-  <img src="../../Gallery/sdc.png" alt="SDC plot" width="45%" />
-</div>
-
-## Notes
-
-- Use `gpumdkit.sh -h` to see all available options.
-- Use `gpumdkit.sh -<option> -h` for Python-backed command help. Use `gpumdkit.sh -plt -h` to list plot types; plot-specific argument positions vary by script.
-- For detailed usage of each module, see the corresponding tutorial pages linked in the [index](index.md).
+- For Python-backed commands that expose option help, use `gpumdkit.sh -<option> -h`; use `gpumdkit.sh -plt -h` to list plot types. Plot-specific argument positions vary by script.
+- For detailed module usage, use the task navigation on the [tutorial index](index.md).

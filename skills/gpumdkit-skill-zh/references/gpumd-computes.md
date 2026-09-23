@@ -30,7 +30,7 @@
 通用采样规则：
 
 - `sample_interval` 是采样之间的 MD 步数。`output_interval` 是每次写入的平均采样数，因此每个 `sample_interval * output_interval` 步写入一个块。
-- `compute` 接受一个或多个不同的量：`temperature`、`potential`、`force`、`virial`、`jp`（势热流）、`jk`（动能热流）和 `momentum`。输出顺序遵循命令顺序，按所选分组方法中的每个分组解析。
+- `compute` 接受一个或多个不同的量：`temperature`、`potential`、`force`、`virial`、`jp`（势热流）、`jk`（动能热流）和 `momentum`。无论关键字中各量的书写顺序如何，输出列的顺序都是固定的：temperature、potential、force、virial、jp、jk、momentum，并按所选分组方法中的每个分组解析。
 - `compute_chunk` 从原子当前位置进行分箱。对于每个轴使用 `<dim> lower <delta>`，其中维度为 `x`、`y` 或 `z`，原点目前仅为 `lower`，正 `delta` 是以 Angstrom 为单位的箱宽。在 2D/3D 中轴必须不同。
 - `compute_chunk` 的量为 `temperature`（K）、`density/number`（Angstrom^-3）、`density/mass`（amu/Angstrom^3）、`vx vy vz`（Angstrom/fs）和 `fx fy fz`（eV/Angstrom）。每个输出块每个分箱一行：从零开始的 ID、分箱中心坐标、平均原子数，然后是请求的值。
 - 结构截断距离、分箱数、应变振幅、声子位移和元素/类型选择会改变分辨率或物理内容。请询问用户而不是复制示例值。
@@ -56,7 +56,7 @@
 - `compute_ic` 使用从零开始的势函数类型索引和用户提供的离子电荷；验证元素/类型顺序并说明分析中使用的离子电导率定义。
 - `compute_hac` 在 EMD 正式采样轨迹中运行，通常是在平衡后进行 NVE。
 - `compute_hnemd` 需要温度控制；使用一个非零驱动力分量，除非方法明确要求其他方式。
-- HNEMD/HNEMDEC 驱动力分量单位为 Angstrom^-1。对于 `compute_hnemdec`，`drive_type=0` 选择热驱动力，力单位为 Angstrom^-1；正整数 `i` 为 `nep.txt` 头中的第 i 个元素选择扩散驱动力，力单位为 eV/Angstrom。Langevin 恒温器与 HNEMD 和 HNEMDEC 动力学都不兼容。
+- HNEMD/HNEMDEC 驱动力分量单位为 Angstrom^-1。对于 `compute_hnemdec`，`drive_type=0` 选择热驱动力，力单位为 Angstrom^-1；正整数 `i` 为第 i 个元素选择扩散驱动力（对于压缩型多元素 NEP 势函数，顺序是初始化时打印的 active atom type 列表；否则是 `nep.txt` 第一行中的顺序），力单位为 eV/Angstrom。Langevin 恒温器与 HNEMD 和 HNEMDEC 动力学都不兼容。
 - `compute_shc` 要求 `1 <= sample_interval <= 10`、`100 <= Nc <= 1000`，方向 0/1/2 对应 x/y/z。`max_omega` 单位为 THz。`group <method> -1` 计算每个非零分组，可能计算量很大。
 - 驱动力、相关长度和正式采样时长需要与用户一起进行收敛测试。
 

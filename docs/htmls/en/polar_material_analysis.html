@@ -12,7 +12,7 @@
         <meta name="author" content="Zihan YAN">
       
       
-        <link rel="canonical" href="https://gpumdkit.cn/en/polar_material_analysis.html">
+        <link rel="canonical" href="https://gpumdkit.cn/htmls/en/polar_material_analysis.html">
       
       
         <link rel="prev" href="active_learning_workflow.html">
@@ -440,7 +440,7 @@
   <span class="md-ellipsis">
     
   
-    Simulation and Post-processing
+    GPUMDkit Agent Skill
   
 
     
@@ -469,6 +469,34 @@
     
   
     Command Reference
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="remote_web_console.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Remote Web Console
   
 
     
@@ -1412,7 +1440,7 @@
   <span class="md-ellipsis">
     
   
-    模拟与后处理
+    GPUMDkit Agent Skill
   
 
     
@@ -1441,6 +1469,34 @@
     
   
     命令参考
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../zh/%E8%BF%9C%E7%A8%8B%E7%BD%91%E9%A1%B5%E6%8E%A7%E5%88%B6%E5%8F%B0.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    远程 Web 控制台
   
 
     
@@ -2330,9 +2386,13 @@
 </tbody>
 </table>
 <h2 id="dependency">Dependency</h2>
-<p>These scripts require <code>ferrodispcalc</code>:</p>
+<p>The commands that build neighbor lists, calculate displacements, calculate
+octahedral tilts, calculate ABO3 polarization, or draw <code>plane-grid</code> profiles
+require <code>ferrodispcalc</code>:</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>pip3<span class="w"> </span>install<span class="w"> </span>git+https://github.com/MoseyQAQ/ferrodispcalc.git
 </code></pre></div>
+<p><code>avg-struct</code> is separate and does not require <code>ferrodispcalc</code>; it uses the
+standard GPUMDkit <code>ASE</code> and <code>NumPy</code> dependencies.</p>
 <h2 id="interactive-mode-entry">Interactive mode entry</h2>
 <p>Options <code>406-410</code> are the core functions for this tutorial. The sections below explain when to use each one and how to run it.</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>gpumdkit.sh

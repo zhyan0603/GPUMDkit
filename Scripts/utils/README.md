@@ -14,6 +14,7 @@
 | `doctor.py` | `gpumdkit.sh -doctor` | Report the configured path, runtime versions, and available Python packages |
 | `skill_info.sh` | `gpumdkit.sh -skill` | Show the English and Chinese Agent Skill directories and installation hints |
 | `nep_modifier/` | `gpumdkit.sh -nep_modifier` | Interactive NEP model editing utilities |
+| `server/` | `gpumdkit.sh -server [port] [-b <address>] [-pw <password>]` | Web console with command recommendations, live monitoring, a terminal, and a file viewer (see `server/README.md`) |
 
 ---
 

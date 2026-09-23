@@ -9,7 +9,7 @@ Script:     plt_prediction.py
 Category:   Plot Scripts
 Purpose:    Visualize NEP prediction results with parity plots for energy,
             forces, and stress or virial data, including marginal
-            distributions and residual histograms. Stress is preferred.
+            distributions and residual histograms. Valid stress is preferred.
 Usage:      gpumdkit.sh -plt prediction [save]
             python plt_prediction.py [save]
 Arguments:
@@ -17,7 +17,7 @@ Arguments:
 Output:
   prediction.png  (if save is used, or if backend is non-interactive)
 Author:     Zihan YAN (yanzihan@westlake.edu.cn)
-Last-modified: 2026-07-11
+Last-modified: 2026-08-28
 =============================================================================
 """
 
@@ -55,24 +55,35 @@ plt.rcParams['text.color'] = 'black'
 # =========================
 energy_data = np.loadtxt('energy_train.out')
 force_data = np.loadtxt('force_train.out')
+
+
+def load_valid_tensor(path):
+    """Load valid NEP tensor rows, excluding sentinel and non-finite values."""
+    if not os.path.isfile(path):
+        return None
+    data = np.atleast_2d(np.loadtxt(path))
+    if data.shape[1] < 12:
+        raise ValueError(f"{path} must contain at least 12 columns.")
+    data = data[:, :12]
+    valid_rows = np.isfinite(data).all(axis=1) & np.all(np.abs(data) < 1e6, axis=1)
+    return data[valid_rows]
+
+
 tensor_name = "Stress"
 tensor_axis_unit = "GPa"
 tensor_metric_unit = "GPa"
 tensor_metric_scale = 1.0
 tensor_data = None
-if os.path.isfile('stress_train.out'):
-    tensor_data = np.atleast_2d(np.loadtxt('stress_train.out'))
-elif os.path.isfile('virial_train.out'):
+stress_data = load_valid_tensor('stress_train.out')
+virial_data = load_valid_tensor('virial_train.out')
+if stress_data is not None and stress_data.shape[0] > 0:
+    tensor_data = stress_data
+elif virial_data is not None and virial_data.shape[0] > 0:
     tensor_name = "Virial"
     tensor_axis_unit = "eV/atom"
     tensor_metric_unit = "meV/atom"
     tensor_metric_scale = 1000.0
-    tensor_data = np.atleast_2d(np.loadtxt('virial_train.out'))
-
-# Filter invalid stress/virial rows
-if tensor_data is not None:
-    valid_rows = ~np.any(np.abs(tensor_data[:, :12]) >= 1e6, axis=1)
-    tensor_data = tensor_data[valid_rows]
+    tensor_data = virial_data
 
 # =========================
 # Utility functions

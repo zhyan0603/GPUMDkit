@@ -90,8 +90,8 @@ function vasp_scf_batch_pretreatment(){
     # Create individual directories for each .vasp file and set up the links
     for i in $(seq 1 $num_vasp_files); do
         dir_name="${prefix}_${i}"
-        mkdir -p ${dir_name}
-        cd ${dir_name}
+        mkdir -p "${dir_name}"
+        cd "${dir_name}"
         ln -s ../struct_fp/POSCAR_${i}.vasp ./POSCAR
         ln -s ../fp/{POTCAR,KPOINTS,INCAR} ./
         cd ..
@@ -115,8 +115,6 @@ function vasp_scf_batch_pretreatment(){
     chmod +x presub.sh
 
     echo " >---------------------------------------------------------<"
-    echo " | ATTENTION: Place POTCAR, KPOINTS and INCAR in 'fp' Dir. |"
-    echo " | ATTENTION: Place POTCAR, KPOINTS and INCAR in 'fp' Dir. |"
     echo " | ATTENTION: Place POTCAR, KPOINTS and INCAR in 'fp' Dir. |"
     echo " >---------------------------------------------------------<"
 }

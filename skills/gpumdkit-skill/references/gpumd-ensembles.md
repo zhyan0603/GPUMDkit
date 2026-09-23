@@ -85,7 +85,7 @@ HNEMD is not an ensemble keyword. Use a temperature-controlling ensemble with `c
 
 | Family | Current signature | Parameter meaning |
 |---|---|---|
-| PIMD | `ensemble pimd <num_beads> <T_1> <T_2> <T_coup> [{pressure parameters}]` | Bead count must be a positive even integer no larger than 128; set it in the first PIMD-related run and do not change it later |
+| PIMD | `ensemble pimd <num_beads> <T_1> <T_2> <T_coup> [{pressure parameters}] [eco <omega_max>]`; also `ensemble pimd_scr <num_beads> <T_1> <T_2> <T_coup> {pressure parameters}` with the same options | Berendsen barostat (`pimd`) or stochastic cell-scaling `npt_scr` barostat (`pimd_scr`); bead count must be a positive even integer no larger than 128, set in the first PIMD-related run and unchanged afterwards. Optional `eco <omega_max>` (cm^-1, `pimd`/`pimd_scr` only, not `rpmd`/`trpmd`) selects economised path-integral internal-mode frequencies, with `omega_max` the highest physical vibrational wavenumber to reproduce |
 | RPMD | `ensemble rpmd <num_beads>` | Real-time ring-polymer dynamics using the requested bead count |
 | TRPMD | `ensemble trpmd <num_beads>` | Thermostatted ring-polymer dynamics using the requested bead count |
 | Liquid TI | `ensemble ti_liquid temp <T> [tperiod <tau_T>] [tequil <n>] [tswitch <n>] [press <p>] sigmasqrd <v> p <v>` | Thermostat period defaults to 100; omitted equilibration/switch lengths are assigned in a 1:4 ratio; implemented final `p` values are 1, 25, 50, 75, 100 |

@@ -23,6 +23,7 @@ gpumdkit.sh -analyze_comp train.xyz     # Analyze composition
 ### 🧮 [calculators/](calculators/README.md)
 Computational tools for property calculations:
 - Ionic conductivity from MSD data
+- X-ray diffraction and phonon band-structure calculations
 - Property predictions using NEP models
 - Descriptor calculations
 - Density of atomistic states (DOAS)
@@ -189,7 +190,7 @@ Check individual subdirectory READMEs for specific requirements.
 
 ## Support
 
-- **Documentation**: [https://gpumdkit.cn/home.html](https://gpumdkit.cn/home.html)
+- **Documentation**: [https://gpumdkit.cn/](https://gpumdkit.cn/)
 - **Issues**: [GitHub Issues](https://github.com/zhyan0603/GPUMDkit/issues)
 - **Contact**: Zihan YAN (yanzihan@westlake.edu.cn)
 

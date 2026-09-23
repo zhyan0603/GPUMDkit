@@ -20,6 +20,7 @@ Last-modified: 2026-05-16
 =============================================================================
 """
 
+import os
 import sys
 
 args = sys.argv[1:]
@@ -36,6 +37,10 @@ if len(args) < 1 or args[0] in ("-h", "--help"):
 
 from ase.io import read
 from ase.data import chemical_symbols, atomic_numbers
+
+if not os.path.isfile(sys.argv[1]):
+    print(f" Error: file '{sys.argv[1]}' does not exist.")
+    sys.exit(1)
 
 atoms_list = read(sys.argv[1], index=':')
 

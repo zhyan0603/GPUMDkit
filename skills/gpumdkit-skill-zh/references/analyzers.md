@@ -72,6 +72,8 @@ gpumdkit.sh -min_dist_pbc dump.xyz
 # 输出：所有元素对的最小距离表
 ```
 
+两个版本都按元素在所有帧中首次出现的顺序收集元素，并跳过某帧中不存在的元素对。
+
 ### 电荷平衡检查
 ```bash
 # 检查电荷平衡
@@ -149,6 +151,8 @@ python3 ${GPUMDkit_path}/Scripts/analyzer/find_outliers.py 20 100 1.0
 # 输出：selected.xyz（高误差）、remained.xyz（低误差）
 ```
 
+含有 `-1e6` 应力缺失标记，或任一应力分量绝对值超过 `1e6` 的结构，会从 RMSE 计算和两个输出数据集中排除。若没有剩余的有效结构，脚本会报错且不写出结果。
+
 ### 概率密度分析
 ```bash
 # 计算移动离子的 3D 概率密度
@@ -187,7 +191,7 @@ gpumdkit.sh  # 选择：5) Analyzer -> 502
 gpumdkit.sh -filter_dist_pbc dump.xyz 1.5
 
 # 2. 按模拟盒尺寸过滤
-gpumdkit.sh -filter_box filtered.xyz 20
+gpumdkit.sh -filter_box filtered_dump.xyz 20
 
 # 3. 按力值过滤
 gpumdkit.sh -filter_value filtered_by_box.xyz force 15

@@ -15,7 +15,7 @@
 # Output:
 #   NEPdataset/train.xyz  (converted dataset in extxyz format)
 # Author:     Yuwen Zhang, Shunda Chen, Zihan YAN (yanzihan@westlake.edu.cn)
-# Last-modified: 2026-05-16
+# Last-modified: 2026-09-17
 # =============================================================================
 
 #--- DEFAULT ASSIGNMENTS ---------------------------------------------------------------------
@@ -46,15 +46,17 @@ non_converged_files=()
 
 echo " Checking the convergence of OUTCARs ..."
 
-for file in $(find "$read_dire" -name "OUTCAR"); do
+while IFS= read -r -d '' file; do
     NSW=$(grep "number of steps for IOM" "$file" | awk '{print $3}')
-    
+    NSW=${NSW:-0}
+
     if [ "$NSW" -ne 0 ]; then
         converged_files+=("$file")
         continue
     fi
-    
+
     NELM=$(grep "of ELM steps" "$file" | awk '{print $3}' | tr -d ';')
+    NELM=${NELM:-0}
     actual_steps=$(grep -c "Iteration" "$file")
 
     if grep -q "aborting loop because EDIFF is reached" "$file"; then
@@ -66,7 +68,7 @@ for file in $(find "$read_dire" -name "OUTCAR"); do
     else
         non_converged_files+=("$file")
     fi
-done
+done < <(find -L "$read_dire" -name "OUTCAR" -print0)
 
 total_converged=${#converged_files[@]}
 total_non_converged=${#non_converged_files[@]}
@@ -88,6 +90,11 @@ for file in "${converged_files[@]}"; do
     end_lines=($(sed -n '/[^ML] energy  without entropy/=' "$file"))
     ion_numb_arra=($(grep "ions per type" "$file" | tail -n 1 | awk -F"=" '{print $2}'))
     ion_symb_arra=($(grep "TITEL" "$file" | awk '{print $4}' | awk -F"_" '{print $1}' ))
+
+    if [ ${#ion_symb_arra[@]} -eq 0 ]; then
+        # VASP 6.6.0 omits "TITEL" lines.
+        ion_symb_arra=($(grep "^ POSCAR:" "$file" | tail -n 1 | awk -F":" '{print $2}'))
+    fi
     syst_numb_atom=$(grep "number of ions" "$file" | awk '{print $12}')
 
     k=0

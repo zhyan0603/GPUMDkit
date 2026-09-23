@@ -41,6 +41,8 @@ if len(args) < 1 or args[0] in ("-h", "--help"):
 import dpdata
 from ase.io import write
 
+print(" This function requires the 'dpdata' package.")
+
 
 def is_deepmd_npy_dataset(path):
     return (

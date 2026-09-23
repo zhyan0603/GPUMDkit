@@ -26,12 +26,17 @@
 
 ### VASP 转换
 
+`-out2xyz`（以及菜单 `101`）将结果写入终端当前目录的 `NEPdataset/train.xyz`，并会删除重建已有的 `NEPdataset/`。`-out2xyz_bec` 使用相同的输出约定，每个 OUTCAR 写出一个最终构型；当 VASP 文件包含完整的 `BORN EFFECTIVE CHARGES` 数据块时，逐原子追加 `bec:R:9`。`-out2exyz` 则写入并覆盖当前目录的 `train.xyz`。输入目录参数不会改变输出位置；重复转换前先备份结果，或换用新的工作目录。两种入口选择其一即可。
+
 ```bash
 # OUTCAR 转 extxyz（目录，Shell 版本）
 gpumdkit.sh -out2xyz <directory>
 
 # OUTCAR 转 extxyz（Python 版本）
 gpumdkit.sh -out2exyz <directory>
+
+# OUTCAR 转带 Born 有效电荷的 extxyz
+gpumdkit.sh -out2xyz_bec <directory>
 
 # XDATCAR 转 extxyz
 gpumdkit.sh -xdat2exyz XDATCAR output.xyz
@@ -42,6 +47,11 @@ gpumdkit.sh -pos2exyz POSCAR model.xyz
 # extxyz 转 POSCAR（所有帧）
 gpumdkit.sh -exyz2pos structures.xyz
 ```
+
+`exyz2pos` 会在当前目录生成 `POSCAR_1.vasp`、`POSCAR_2.vasp` 等文件。
+程序按照输入轨迹中元素首次出现的顺序对每帧原子分组；例如
+`Li La Zr O Li O La Zr O` 会使用 `Li La Zr O`。速度信息不会导出，
+不再使用 `-o` 或 `-v` 选项。
 
 ### LAMMPS 转换
 
@@ -77,7 +87,8 @@ gpumdkit.sh -traj2exyz input.traj output.xyz
 # MTP cfg 转 extxyz
 python3 ${GPUMDkit_path}/Scripts/format_conversion/mtp2xyz.py train.cfg Pd Ag
 
-# 通过 CLI 菜单助手进行 CP2K 转换
+# 在 CP2K 结果根目录运行：递归读取日志和结构文件
+# 输出：当前目录的 cp2k_exyz.xyz 和 Logfile.txt
 gpumdkit.sh -cp2k2xyz
 
 # ABACUS 转换可通过交互菜单使用：
@@ -103,9 +114,10 @@ DeepMD `type_map.raw` 的元素顺序。
 **用法：**
 ```
 gpumdkit.sh -xyz2dp
+gpumdkit.sh -xyz2dp train.xyz Li P S
 ```
 
-也可以直接运行 Python 脚本：
+不带参数时进入交互提示；带参数时输入文件和元素顺序会直接传给脚本。也可以直接运行 Python 脚本：
 
 ```
 python3 ${GPUMDkit_path}/Scripts/format_conversion/xyz2dp.py train.xyz Li P S
@@ -143,6 +155,7 @@ gpumdkit.sh -clean_xyz input.xyz clean.xyz
 | CLI 标志 | 转换 | 语法 |
 |----------|-----------|--------|
 | `-out2xyz` | OUTCAR -> extxyz（Shell） | `gpumdkit.sh -out2xyz <dir>` |
+| `-out2xyz_bec` | OUTCAR -> 带 BEC 标签的 extxyz（Shell） | `gpumdkit.sh -out2xyz_bec <dir>` |
 | `-out2exyz` | OUTCAR -> extxyz（Python） | `gpumdkit.sh -out2exyz <dir>` |
 | `-pos2exyz` | POSCAR -> extxyz | `gpumdkit.sh -pos2exyz <poscar> <xyz>` |
 | `-exyz2pos` | extxyz -> POSCAR | `gpumdkit.sh -exyz2pos <xyz>` |
@@ -153,7 +166,7 @@ gpumdkit.sh -clean_xyz input.xyz clean.xyz
 | `-xdat2exyz` | XDATCAR -> extxyz | `gpumdkit.sh -xdat2exyz XDATCAR dump.xyz` |
 | `-traj2exyz` | ASE traj -> extxyz | `gpumdkit.sh -traj2exyz <traj> <xyz>` |
 | `-dp2xyz` | DeepMD npy -> extxyz（通过 dpdata） | `gpumdkit.sh -dp2xyz <input_dir/> [output.xyz]` |
-| `-xyz2dp` | extxyz -> DeepMD npy（通过 dpdata） | `gpumdkit.sh -xyz2dp`（交互式） |
+| `-xyz2dp` | extxyz -> DeepMD npy（通过 dpdata） | `gpumdkit.sh -xyz2dp`（交互式）或 `gpumdkit.sh -xyz2dp <in.xyz> <type1> ...` |
 | `-addgroup` | 添加分组标签 | `gpumdkit.sh -addgroup <poscar> <elem...>` |
 | `-addweight` | 添加权重 | `gpumdkit.sh -addweight <in> <out> <weight>` |
 | `-replicate` | 复制结构 | `gpumdkit.sh -replicate <in> <out> a b c` |
@@ -167,10 +180,8 @@ gpumdkit.sh -clean_xyz input.xyz clean.xyz
 # 转换当前目录中的所有 OUTCAR 文件
 gpumdkit.sh -out2xyz .
 
-# 仅在后续工作流需要时添加分组标签
-gpumdkit.sh -addgroup POSCAR Pb Ti O
-
-# 结果：model.xyz 可用于 NEP 训练
+# 查看输出的原子数与 extxyz 元数据
+head -n 2 NEPdataset/train.xyz
 ```
 
 ### 示例 2：准备 LAMMPS 模拟
@@ -184,11 +195,9 @@ gpumdkit.sh -lmp2exyz dump.lammpstrj Li P S
 
 ### 示例 3：批量转换
 ```bash
-# 转换多个 OUTCAR 文件
-for dir in run_*; do
-    gpumdkit.sh -out2xyz "$dir"
-    mv "$dir"/model.xyz "$dir"/trajectory.xyz
-done
+# 假定 vasp_results/ 下包含多个计算子目录，递归转换一次即可
+gpumdkit.sh -out2xyz ./vasp_results/
+# 合并结果位于当前目录的 NEPdataset/train.xyz
 ```
 
 ### 示例 4：结构复制

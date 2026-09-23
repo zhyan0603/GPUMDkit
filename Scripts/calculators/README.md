@@ -132,6 +132,63 @@ pip install calorine
 
 ---
 
+### prediction.py
+
+Evaluates all frames in an extended XYZ file with Calorine's `CPUNEP`
+calculator and writes NEP-compatible prediction/target files. The output
+suffix is derived from the input filename: `test.xyz` produces
+`energy_test.out`, `force_test.out`, `stress_test.out`, and `virial_test.out`.
+
+#### Usage
+
+```bash
+# Single-core prediction (default)
+gpumdkit.sh -prediction train.xyz nep.txt
+
+# Eight CPU workers
+gpumdkit.sh -prediction train.xyz nep.txt 8
+```
+
+The output files contain predicted columns followed by target columns. Energy
+is written in eV/atom, forces in eV/Angstrom, stress in GPa, and virial in
+eV/atom, using the NEP tensor order `xx yy zz xy yz xz` and the same sign
+convention for stress and virial. If only one of stress or virial is supplied,
+the other target is derived from `stress = virial / volume` with the appropriate
+unit conversion. Only frames missing both use the `-1e6` NEP sentinel; energy
+and force targets are required. A `tqdm` progress bar is shown during prediction.
+
+The command requires `ase`, `calorine`, and `tqdm`.
+
+---
+
+### prediction_dpa.py
+
+Evaluates every frame in a labeled extended XYZ training set with a DeepMD
+DPA model through `deepmd.infer.DeepPot` and writes the four NEP-compatible
+training prediction files in the current directory:
+`energy_train.out`, `force_train.out`, `virial_train.out`, and
+`stress_train.out`.
+
+#### Usage
+
+```bash
+gpumdkit.sh -prediction_dpa train.xyz model.ckpt.pt
+```
+
+Direct execution is also supported:
+
+```bash
+python prediction_dpa.py train.xyz model.ckpt.pt
+```
+
+The output files contain predicted values followed by target values. Energy
+is written in eV/atom, forces in eV/Angstrom, stress in GPa, and virial in
+eV/atom, using the existing DPA prediction tensor and sign conventions.
+
+The command requires `deepmd-kit` and `numpy`.
+
+---
+
 ### calc_descriptors.py
 
 Calculates descriptors for the specific species, which can be used for dimensionality reduction and structure analysis.
@@ -353,11 +410,11 @@ gpumdkit.sh -calc neb init.xyz fin.xyz 9 nep.txt
  | 408) Calc averaged structure                             |
  | 409) Calc octahedral tilt                                |
  | 410) Calc polarization for ABO3                          |
-| 411) Minimize structure by nep                           |
-| 412) Calc mean square displacement (MSD) from trajectory |
-| 413) Calc XRD from extxyz trajectory                     |
-| 414) Calc phonon band structure                          |
-+----------------------------------------------------------+
+ | 411) Minimize structure by nep                           |
+ | 412) Calc mean square displacement (MSD) from trajectory |
+ | 413) Calc XRD from extxyz trajectory                     |
+ | 414) Calc phonon band structure                          |
+ +----------------------------------------------------------+
  | 000) Return to the main menu                             |
  +----------------------------------------------------------+
  Input the function number:
@@ -422,7 +479,13 @@ python calc_msd.py <extxyz_file> <element_symbol> <dt_fs> [max_corr_steps]
 gpumdkit.sh -calc msd dump.xyz Li 10
 ```
 
-The output file is `msd.out`.
+The output file is `msd.out` with four columns: `Time(ps)`, `MSD_x`, `MSD_y`,
+and `MSD_z`. Use `gpumdkit.sh -plt msd` to plot it.
+
+GPUMD's native `compute_msd` writes a seven-column `msd.out` for one selected
+group (`time`, `MSD_x/y/z`, `SDC_x/y/z`), which is the input for `-plt sdc` and
+`-plt msd_sdc`. Multi-group output appends group data. `compute_sdc` writes a
+separate `sdc.out` for `-plt vac`.
 
 ---
 

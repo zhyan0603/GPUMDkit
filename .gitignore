@@ -19,6 +19,9 @@ Thumbs.db
 # Opencode
 .opencode
 
+# Zcode
+.zcode
+
 # Temporary / generated files
 *.log
 temp_*.xyz

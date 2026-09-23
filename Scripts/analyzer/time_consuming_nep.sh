@@ -8,22 +8,29 @@
 # Script:     time_consuming_nep.sh
 # Category:   Analyzer Scripts
 # Purpose:    Monitor NEP training progress in real time by tracking
-#            loss.out, and display time difference, time left, and
-#            estimated completion time.
+#             loss.out, and display time difference, time left, and
+#             estimated completion time.
 # Usage:      ./time_consuming_nep.sh
 # Output:
 #   Real-time table of current step, time diff, time left, and finish time
 # Author:     Zihan YAN (yanzihan@westlake.edu.cn)
-# Last-modified: 2026-05-16
+# Last-modified: 2026-09-21
 # =============================================================================
 
-# Get total steps from nep.in
+# Get total steps from nep.in or gnep.in.
+
 if [ -f "nep.in" ]; then
-    total_steps=$(grep 'generation' "nep.in" | awk '{print $2}')
+    total_steps=$(awk '$1 == "generation" && $2 ~ /^[0-9]+$/ {print $2; exit}' "nep.in")
+    if [ -z "$total_steps" ]; then
+        total_steps=100000
+    fi
 elif [ -f "gnep.in" ]; then
-    total_steps=$(grep 'epoch' "gnep.in" | awk '{print $2}')
+    total_steps=$(awk '$1 == "epoch" && $2 ~ /^[0-9]+$/ {print $2; exit}' "gnep.in")
+    if [ -z "$total_steps" ]; then
+        total_steps=50
+    fi
 else
-    echo "Error: Neither nep.in nor gnep.in found"
+    echo " Error: Neither nep.in nor gnep.in found"
     exit 1
 fi
 

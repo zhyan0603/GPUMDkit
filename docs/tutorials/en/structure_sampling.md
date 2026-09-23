@@ -5,6 +5,10 @@
 
 **Script Location:** `Scripts/sample_structures/`
 
+Run `gpumdkit.sh` in the working directory containing your candidate trajectory, reference data, and model, then enter filenames at the menu prompts. Use actual paths for files elsewhere. Relative paths start from the terminal's current directory; check each function's output location and any existing files with the same names before running.
+
+The `python Scripts/...` examples below are optional source invocations: run them from the GPUMDkit checkout root with adjusted data paths, or use the script's absolute path from your data directory. Conda users can use the menus without locating `Scripts/`.
+
 ## Interactive Mode
 
 Sampling tasks are usually easier to run from the interactive menu:
@@ -332,7 +336,6 @@ dataset.
 
 ```bash
 gpumdkit.sh -frame_range dump.xyz 0 0.8
-python Scripts/sample_structures/frame_range.py dump.xyz 0 0.8
 ```
 
 This writes frames from 0% to 80% of the trajectory. The range arguments are trajectory fractions from `0` to `1`.
@@ -344,10 +347,16 @@ An example preprocessing-and-sampling sequence is shown below. The first two com
 ```bash
 gpumdkit.sh -min_dist_pbc dump.xyz
 gpumdkit.sh -filter_box dump.xyz 13
-python Scripts/sample_structures/parallel_neptrain_select_structs.py dump.xyz train.xyz nep.txt 4
+gpumdkit.sh  # choose 2 → 203
 ```
 
-The final step can also be run from interactive mode by choosing `2) Sample Structures -> 203`.
+`-filter_box` writes the retained structures to `filtered_by_box.xyz`. At the parameter prompt in menu `203`, enter:
+
+```text
+filtered_by_box.xyz train.xyz nep.txt 4
+```
+
+These are the filtered candidates, existing reference dataset, compatible NEP model, and number of parallel workers. Prepare `train.xyz` and `nep.txt` before running FPS; use the original trajectory if filtering was not performed. Choose the box-length threshold for your own system; the example value `13` is not a universal filtering criterion.
 
 ## Common Mistakes
 

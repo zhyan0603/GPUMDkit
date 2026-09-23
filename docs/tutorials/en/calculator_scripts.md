@@ -23,6 +23,8 @@ If you are not sure about the required arguments, start from the interactive men
 | X-ray diffraction | `4 → 413` (interactive only) | extxyz trajectory with `Lattice`/`pbc` |
 | Phonon band structure | `4 → 414` (interactive only) | `PRIMCELL.vasp`, `nep.txt`, `QPOINTS` |
 | NEP prediction | `gpumdkit.sh -calc nep <input.xyz> <output.xyz> <nep.txt>` | extxyz + NEP model |
+| NEP prediction outputs | `gpumdkit.sh -prediction <input.xyz> <nep.txt> [workers]` | labeled extxyz + NEP model |
+| DPA prediction outputs | `gpumdkit.sh -prediction_dpa <input.xyz> <dpa_model>` | labeled extxyz + DeepMD DPA model |
 | NEP descriptors | `gpumdkit.sh -calc des <input.xyz> <output.npy> <nep.txt> <element>` | extxyz + NEP model |
 | DOAS | `gpumdkit.sh -calc doas <input.xyz> <nep.txt> <output.txt>` | extxyz + NEP model |
 | NEB | `gpumdkit.sh -calc neb <initial.xyz> <final.xyz> <n_images> <nep.txt>` | initial/final structures |
@@ -194,18 +196,25 @@ Output:
 
 - `msd.out`
 
-The beginning of `msd.out` is a text table with time and MSD columns. After generating it, use the plot commands below.
+`calc_msd.py` writes exactly four numeric columns to `msd.out`: `Time(ps)`,
+`MSD_x`, `MSD_y`, and `MSD_z`. This output can be plotted with `-plt msd`.
+
+For comparison, GPUMD's native `compute_msd` writes a different `msd.out`. For
+one selected group it contains seven columns: time, `MSD_x/y/z`, and
+`SDC_x/y/z`; this layout is required by `-plt sdc` and `-plt msd_sdc`. When
+`all_groups` or multiple groups are requested, GPUMD appends additional group
+data, so do not assume that every `msd.out` has seven columns. The separate
+GPUMD `compute_sdc` command writes `sdc.out`, which is used by `-plt vac` and
+is not the input for the `-plt sdc` or `-plt msd_sdc` plotters.
 
 You can then plot:
 
 ```bash
 gpumdkit.sh -plt msd
-gpumdkit.sh -plt sdc
 ```
 
 <div align="center">
   <img src="../../Gallery/msd.png" alt="MSD plot" width="45%" />
-  <img src="../../Gallery/sdc.png" alt="SDC plot" width="45%" />
 </div>
 
 ## X-ray Diffraction (XRD)
@@ -304,6 +313,52 @@ Use this function to run predictions with a trained NEP model. For best results,
 gpumdkit.sh -clean_xyz train.xyz clean_train.xyz
 ```
 
+### NEP Prediction Output Files
+
+`prediction.py` evaluates every frame with Calorine's `CPUNEP` calculator and
+writes the four prediction files used by NEP parity tools. The command derives
+the output suffix from the input filename, so `test.xyz` produces
+`energy_test.out`, `force_test.out`, `stress_test.out`, and `virial_test.out` in
+the current directory.
+
+```bash
+# Single-core prediction (default)
+gpumdkit.sh -prediction train.xyz nep.txt
+
+# Use eight independent CPU workers
+gpumdkit.sh -prediction train.xyz nep.txt 8
+```
+
+Each row stores predicted values first and target values second. Energy is in
+eV/atom, force in eV/Angstrom, stress in GPa, and virial in eV/atom. Stress and
+virial tensors use the NEP order `xx yy zz xy yz xz` and the same NEP sign
+convention. When only one of stress or virial is present in a frame, the other
+is derived using `stress = virial / volume` and the corresponding unit
+conversion. If neither target is present, both target columns contain NEP's
+`-1e6` sentinel. Energy and force targets are required. A `tqdm` progress bar
+is shown during prediction.
+
+The command requires `calorine`, `ase`, and `tqdm`:
+
+```bash
+pip install ase calorine tqdm
+```
+
+### DPA Prediction Output Files
+
+`prediction_dpa.py` evaluates every frame in a labeled extended XYZ training
+set with a DeepMD DPA model and writes `energy_train.out`, `force_train.out`,
+`virial_train.out`, and `stress_train.out` in the current directory.
+
+```bash
+gpumdkit.sh -prediction_dpa train.xyz model.ckpt.pt
+```
+
+The output layout follows the NEP training prediction convention: predicted
+values precede target values. Energy is in eV/atom, force is in eV/Angstrom,
+stress is in GPa, and virial is in eV/atom. The command requires `deepmd-kit`
+and `numpy`.
+
 ## NEP Descriptors
 
 `calc_descriptors.py` extracts NEP descriptors for a selected element.
@@ -321,8 +376,8 @@ Use cases:
 Plot descriptors with:
 
 ```bash
-gpumdkit.sh -plt des pca
-gpumdkit.sh -plt des umap
+gpumdkit.sh -plt des pca descriptors.npy
+gpumdkit.sh -plt des umap descriptors.npy
 ```
 
 <div align="center">

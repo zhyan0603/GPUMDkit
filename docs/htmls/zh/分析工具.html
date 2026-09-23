@@ -12,7 +12,7 @@
         <meta name="author" content="Zihan YAN">
       
       
-        <link rel="canonical" href="https://gpumdkit.cn/zh/%E5%88%86%E6%9E%90%E5%B7%A5%E5%85%B7.html">
+        <link rel="canonical" href="https://gpumdkit.cn/htmls/zh/%E5%88%86%E6%9E%90%E5%B7%A5%E5%85%B7.html">
       
       
         <link rel="prev" href="%E8%AE%A1%E7%AE%97%E5%99%A8%E8%84%9A%E6%9C%AC.html">
@@ -438,7 +438,7 @@
   <span class="md-ellipsis">
     
   
-    Simulation and Post-processing
+    GPUMDkit Agent Skill
   
 
     
@@ -467,6 +467,34 @@
     
   
     Command Reference
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../en/remote_web_console.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Remote Web Console
   
 
     
@@ -886,7 +914,7 @@
   <span class="md-ellipsis">
     
   
-    模拟与后处理
+    GPUMDkit Agent Skill
   
 
     
@@ -915,6 +943,34 @@
     
   
     命令参考
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="%E8%BF%9C%E7%A8%8B%E7%BD%91%E9%A1%B5%E6%8E%A7%E5%88%B6%E5%8F%B0.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    远程 Web 控制台
   
 
     
@@ -1950,7 +2006,7 @@
 </div>
 
 <h2 id="_1">功能简介</h2>
-<p>本模块帮助你检查、过滤和验证结构数据集。可以检查成分、分析性质范围、检测短距离接触、按各种条件过滤结构、查找 NEP 训练数据中的异常值，以及估算剩余模拟时间。</p>
+<p>本模块用于检查、过滤和验证结构数据集，包括成分和性质范围分析、短距离接触检测、条件过滤、NEP 训练数据异常检测，以及剩余模拟时间估算。</p>
 <h2 id="_2">准备工作</h2>
 <p><strong>脚本位置：</strong> <code>Scripts/analyzer/</code></p>
 <p>确保已安装 GPUMDkit。安装说明请参见<a href="%E5%BF%AB%E9%80%9F%E5%85%A5%E9%97%A8.html">快速入门</a>。</p>
@@ -1992,7 +2048,7 @@
 <tr>
 <td>最短距离（PBC）</td>
 <td><code>gpumdkit.sh -min_dist_pbc dump.xyz</code></td>
-<td>准确距离检查（含 PBC）</td>
+<td>考虑周期边界的距离检查</td>
 </tr>
 <tr>
 <td>电荷平衡</td>
@@ -2027,7 +2083,7 @@
 <tr>
 <td>概率密度</td>
 <td><code>gpumdkit.sh -pda &lt;参考结构&gt; &lt;轨迹&gt; &lt;元素&gt; &lt;网格间距&gt;</code></td>
-<td>3D 概率密度分析扩散通道</td>
+<td>用于扩散通道分析的 3D 概率密度</td>
 </tr>
 <tr>
 <td>GPUMD 时间</td>
@@ -2159,7 +2215,7 @@ NES 设置。DFT 到 NEP 模式需要 <code>calorine</code> 和兼容的 NEP 模
 <h2 id="_10">最短距离检查</h2>
 <h3 id="pbc">无 PBC（快速）</h3>
 <p><code>get_min_dist.py</code> 计算不考虑周期性边界条件的最短原子间距。速度快，但对周期性体系可能不准确。</p>
-<p><strong>功能：</strong> 报告每帧中每对元素之间的最短距离，忽略周期性边界条件。</p>
+<p><strong>功能：</strong> 汇总所有帧中各元素对的最短距离，忽略周期性边界条件。元素按其在整个数据集中首次出现的顺序收集；某帧中不存在的元素对会跳过。含 PBC 的版本也覆盖整个数据集中的元素对。</p>
 <p><strong>命令行模式：</strong></p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>gpumdkit.sh<span class="w"> </span>-min_dist<span class="w"> </span>dump.xyz
 </code></pre></div>
@@ -2244,6 +2300,7 @@ NES 设置。DFT 到 NEP 模式需要 <code>calorine</code> 和兼容的 NEP 模
 <p><code>find_outliers.py</code> 基于能量、力和应力的 RMSE 阈值查找 NEP 训练数据中的异常结构。</p>
 <p><strong>输入文件：</strong> <code>energy_train.out</code>、<code>force_train.out</code>、<code>stress_train.out</code>、<code>train.xyz</code></p>
 <p>这些文件在 NEP 训练过程中生成。脚本比较 DFT 与 NEP 的预测，识别误差较大的结构。</p>
+<p>含有 <code>-1e6</code> 应力缺失标记，或任一应力分量绝对值超过 <code>1e6</code> 的结构，会在计算 RMSE 前排除，也不会写入两个输出数据集。若没有剩余的有效结构，脚本会报错且不写出结果。</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-17-1" name="__codelineno-17-1" href="#__codelineno-17-1"></a><span class="c1"># 交互模式</span>
 <a id="__codelineno-17-2" name="__codelineno-17-2" href="#__codelineno-17-2"></a>gpumdkit.sh<span class="w">    </span><span class="c1"># 选择：5) 分析工具 → 502) 查找异常结构</span>
 </code></pre></div>
@@ -2347,14 +2404,14 @@ NES 设置。DFT 到 NEP 模式需要 <code>calorine</code> 和兼容的 NEP 模
 <a id="__codelineno-24-11" name="__codelineno-24-11" href="#__codelineno-24-11"></a><span class="c1"># 交互：5) 分析工具 → 502</span>
 </code></pre></div>
 <h3 id="_22">结构过滤流水线</h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-25-1" name="__codelineno-25-1" href="#__codelineno-25-1"></a><span class="c1"># 1. 按最短距离过滤</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-25-1" name="__codelineno-25-1" href="#__codelineno-25-1"></a><span class="c1"># 1. 按最短距离过滤（输出 filtered_dump.xyz）</span>
 <a id="__codelineno-25-2" name="__codelineno-25-2" href="#__codelineno-25-2"></a>gpumdkit.sh<span class="w"> </span>-filter_dist_pbc<span class="w"> </span>dump.xyz<span class="w"> </span><span class="m">1</span>.0
 <a id="__codelineno-25-3" name="__codelineno-25-3" href="#__codelineno-25-3"></a>
-<a id="__codelineno-25-4" name="__codelineno-25-4" href="#__codelineno-25-4"></a><span class="c1"># 2. 按盒子大小过滤</span>
-<a id="__codelineno-25-5" name="__codelineno-25-5" href="#__codelineno-25-5"></a>gpumdkit.sh<span class="w"> </span>-filter_box<span class="w"> </span>filtered_dist_pbc.xyz<span class="w"> </span><span class="m">13</span>
+<a id="__codelineno-25-4" name="__codelineno-25-4" href="#__codelineno-25-4"></a><span class="c1"># 2. 按盒子大小过滤（输出 filtered_by_box.xyz）</span>
+<a id="__codelineno-25-5" name="__codelineno-25-5" href="#__codelineno-25-5"></a>gpumdkit.sh<span class="w"> </span>-filter_box<span class="w"> </span>filtered_dump.xyz<span class="w"> </span><span class="m">13</span>
 <a id="__codelineno-25-6" name="__codelineno-25-6" href="#__codelineno-25-6"></a>
-<a id="__codelineno-25-7" name="__codelineno-25-7" href="#__codelineno-25-7"></a><span class="c1"># 3. 按力阈值过滤</span>
-<a id="__codelineno-25-8" name="__codelineno-25-8" href="#__codelineno-25-8"></a>gpumdkit.sh<span class="w"> </span>-filter_value<span class="w"> </span>filtered_box.xyz<span class="w"> </span>force<span class="w"> </span><span class="m">20</span>
+<a id="__codelineno-25-7" name="__codelineno-25-7" href="#__codelineno-25-7"></a><span class="c1"># 3. 按力阈值过滤（输出 filtered.xyz）</span>
+<a id="__codelineno-25-8" name="__codelineno-25-8" href="#__codelineno-25-8"></a>gpumdkit.sh<span class="w"> </span>-filter_value<span class="w"> </span>filtered_by_box.xyz<span class="w"> </span>force<span class="w"> </span><span class="m">20</span>
 </code></pre></div>
 <h3 id="_23">扩散通道分析</h3>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-26-1" name="__codelineno-26-1" href="#__codelineno-26-1"></a><span class="c1"># 1. 计算概率密度</span>

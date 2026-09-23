@@ -12,7 +12,7 @@
         <meta name="author" content="Zihan YAN">
       
       
-        <link rel="canonical" href="https://gpumdkit.cn/en/contributing_to_gpumdkit.html">
+        <link rel="canonical" href="https://gpumdkit.cn/htmls/en/contributing_to_gpumdkit.html">
       
       
         <link rel="prev" href="polar_material_analysis.html">
@@ -440,7 +440,7 @@
   <span class="md-ellipsis">
     
   
-    Simulation and Post-processing
+    GPUMDkit Agent Skill
   
 
     
@@ -469,6 +469,34 @@
     
   
     Command Reference
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="remote_web_console.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Remote Web Console
   
 
     
@@ -863,6 +891,17 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#update-log" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Update Log
+      
+    </span>
+  </a>
+  
+</li>
+        
       </ul>
     </nav>
   
@@ -1167,7 +1206,7 @@
   <span class="md-ellipsis">
     
   
-    模拟与后处理
+    GPUMDkit Agent Skill
   
 
     
@@ -1196,6 +1235,34 @@
     
   
     命令参考
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../zh/%E8%BF%9C%E7%A8%8B%E7%BD%91%E9%A1%B5%E6%8E%A7%E5%88%B6%E5%8F%B0.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    远程 Web 控制台
   
 
     
@@ -1587,6 +1654,17 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#update-log" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Update Log
+      
+    </span>
+  </a>
+  
+</li>
+        
       </ul>
     </nav>
   
@@ -1783,12 +1861,6 @@
   <p style="text-align: justify;">Thank you for your interest in contributing to <strong>GPUMDkit</strong>! We appreciate your time and effort in helping improve this toolkit.</p>
 </div>
 
-<p align="center">
-  <strong>English</strong>
-  &nbsp;·&nbsp;
-  <a href="../zh/贡献指南.md">简体中文</a>
-</p>
-
 <p><code>GPUMDkit</code> is an open-source package, and we welcome contributions from the community, whether you're fixing bugs, adding new features, improving documentation, or suggesting enhancements.</p>
 <blockquote>
 <p><strong>Note</strong>: The authoritative version of this document is <a href="https://github.com/zhyan0603/GPUMDkit/blob/main/CONTRIBUTING.md"><code>CONTRIBUTING.md</code></a> in the repository root. This tutorial page mirrors its content.</p>
@@ -1853,6 +1925,11 @@
   If you add a new feature, consider updating the relevant tutorial page.</li>
 <li>After editing tutorial markdown files, rebuild the HTML with <code>mkdocs build -f docs/mkdocs.yml</code>.</li>
 </ul>
+<h3 id="update-log">Update Log</h3>
+<ul>
+<li>Use <code>docs/updates.info</code> only for recent user-visible feature additions and code, script, or CLI bug fixes. Documentation-only changes, including tutorials, README files, skills, references, wording corrections, and generated documentation, must not be added there.</li>
+<li>Keep at most the five newest entries in each of the <code>NEW_FEATURES</code> and <code>BUG_FIXES</code> arrays; remove older entries when adding a new one. If a change includes both code and documentation, record only the code/behavior change, not the documentation synchronization.</li>
+</ul>
 <hr />
 <h2 id="reporting-bugs">Reporting Bugs</h2>
 <p>If you encounter a bug, please help us fix it by reporting it through GitHub Issues:</p>
@@ -1894,7 +1971,7 @@
 </ol>
 <h3 id="create-a-feature-branch">Create a Feature Branch</h3>
 <p>Create a new branch for your changes:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># Create and checkout a new branch from main</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># Create and checkout a new branch from dev</span>
 <a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>git<span class="w"> </span>checkout<span class="w"> </span>-b<span class="w"> </span>your-branch-name
 </code></pre></div>
 <p>Name your branch as you prefer.</p>
@@ -1964,8 +2041,8 @@
 <li>
 <p><strong>Update the menu display</strong> in <code>gpumdkit.sh</code>:
    <div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="c1"># Find the menu() function and update it if needed</span>
-<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a><span class="c1"># Find the array_choice array and add your new choice number</span>
-<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a><span class="nv">array_choice</span><span class="o">=(</span>
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a><span class="c1"># Find the valid_menu_choices array and add your new choice number</span>
+<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a><span class="nv">valid_menu_choices</span><span class="o">=(</span>
 <a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a><span class="w">    </span><span class="s2">&quot;0&quot;</span><span class="w"> </span><span class="s2">&quot;1&quot;</span><span class="w"> </span><span class="s2">&quot;101&quot;</span><span class="w"> </span><span class="s2">&quot;102&quot;</span><span class="w"> </span><span class="s2">&quot;103&quot;</span><span class="w"> </span><span class="s2">&quot;104&quot;</span><span class="w"> </span><span class="s2">&quot;105&quot;</span><span class="w"> </span><span class="s2">&quot;106&quot;</span><span class="w"> </span><span class="s2">&quot;107&quot;</span><span class="w"> </span><span class="s2">&quot;108&quot;</span><span class="w"> </span><span class="s2">&quot;109&quot;</span><span class="w"> </span><span class="s2">&quot;110&quot;</span><span class="w"> </span><span class="s2">&quot;111&quot;</span><span class="w">  </span><span class="c1"># Added &quot;111&quot;</span>
 <a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a><span class="w">    </span><span class="c1"># ... rest of choices</span>
 <a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a><span class="o">)</span>
