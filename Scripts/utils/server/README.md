@@ -17,13 +17,96 @@ server. Read it before changing anything.
   (must keep working offline and on HPC login nodes)
 - The server sandbox is the working directory where it is started
 
+## Start and access the Web Console
+
+Choose the directory that should be visible in the browser, then start the
+server from that directory. Activate the environment that provides GPUMDkit
+and its plotting dependencies before starting it:
+
+```bash
+conda activate gpumdkit
+cd /path/to/working-directory
+gpumdkit.sh -server
+```
+
+The default address is `127.0.0.1:8888`. For local use, open
+`http://127.0.0.1:8888` in a browser on the same machine. The process stays
+in the foreground; press `Ctrl+C` in that terminal to stop it.
+
+### Remote access through SSH (recommended)
+
+On the remote host, start the server from the desired root directory and keep
+that terminal open:
+
+```bash
+conda activate gpumdkit
+cd /path/to/working-directory
+gpumdkit.sh -server
+```
+
+On the local workstation, open a second terminal and forward the remote
+loopback port:
+
+```bash
+ssh -N -L 8888:127.0.0.1:8888 <user>@<host>
+```
+
+Then open `http://127.0.0.1:8888` locally. The browser is connected to the
+remote service through SSH; files remain on the remote host unless explicitly
+downloaded. Stop the tunnel with `Ctrl+C` in the local terminal and stop the
+server with `Ctrl+C` in the remote terminal.
+
+If local port `8888` is already occupied, use another local port while keeping
+the remote port unchanged, for example:
+
+```bash
+ssh -N -L 8890:127.0.0.1:8888 <user>@<host>
+```
+
+Open `http://127.0.0.1:8890`. If the remote port is occupied, start the
+server on another port (for example `gpumdkit.sh -server 9000`) and forward
+that remote port (`ssh -N -L 8888:127.0.0.1:9000 <user>@<host>`).
+
+### Command options
+
+```text
+gpumdkit.sh -server [port] [-b <address>] [-pw <password>]
+gpumdkit.sh -server -h
+```
+
+| Option | Default | Purpose |
+|---|---|---|
+| `port` | `8888` | TCP port for the web service |
+| `-b <address>` | `127.0.0.1` | Address to bind; loopback is recommended with an SSH tunnel |
+| `-pw <password>` | No password on loopback | Require a password for web login; non-loopback binds require one |
+
+Avoid binding to `0.0.0.0` for routine remote use. That exposes the service
+on the host's network interfaces and requires a password; the service does
+not provide HTTPS. Prefer an SSH tunnel. Do not place a password in shared
+scripts or shell history.
+
+### What the console does (and does not do)
+
+- Browse and filter files under the server's starting directory; preview,
+  create, upload, download, and edit supported files.
+- Run the configured GPUMDkit plotting actions and view generated figures.
+- Read NEP and MD output files for progress estimates. It does not launch a
+  simulation, submit scheduler jobs, or prove that a process is still alive.
+- The terminal runs real shell commands on the remote host. It is not confined
+  to the file-browser root; only use it with trusted users and keep the service
+  private.
+
+The full bilingual user guide is in
+[`docs/tutorials/en/remote_web_console.md`](../../../docs/tutorials/en/remote_web_console.md)
+and [`docs/tutorials/zh/远程网页控制台.md`](../../../docs/tutorials/zh/远程网页控制台.md).
+
 ## File layout
 
 ```
 Scripts/utils/server/
 ├── server.py        # HTTP server, security, API, recommendation rules
 └── web/             # frontend assets, served at /, /style.css, /app.js
-    ├── index.html   # topbar, browser, view tabs, bottom panel, status bar
+    ├── index.html   # topbar, file toolbar, sidebar, content canvas, overlays
     ├── style.css    # design tokens (light + dark) and components
     └── app.js       # all frontend logic
 ```
@@ -44,17 +127,25 @@ endpoints are open.
 |---|---|---|
 | `/` , `/style.css`, `/app.js` | GET | Web assets (no auth) |
 | `/logo.png`, `/logo_lateral.png`, `/favicon.ico` | GET | Brand logos from `docs/Gallery/` (no auth) |
-| `/api/scan?path=<rel>` | GET | Listing, recommendations (+ staleness), training status, subdir summaries, `busy`, server `now` |
+| `/api/scan?path=<rel>` | GET | Listing, recommendations (+ staleness), training and MD simulation status, subdir summaries, `busy`, server `now` |
 | `/api/loss?path=<rel>` | GET | Bounded loss chart data (see below) |
 | `/api/file?path=<rel>[&partial=1]` | GET | Text preview, limit 512 KB, `X-File-Mtime` header; `partial=1` returns head/tail JSON for oversized files |
 | `/api/image?path=<rel>` | GET | PNG/JPEG only, limit 20 MB |
+| `/api/download?path=<rel>` | GET | Download one file from the sandbox |
 | `/api/login` | POST | `{password}` -> session cookie (5 fails -> 60 s lockout) |
 | `/api/run` | POST | `{action, path}` runs an allowlisted command |
 | `/api/exec` | POST | `{path, command}` runs a shell command (120 s timeout) |
 | `/api/save` | POST | `{path, content, base_mtime?}` atomic overwrite; 409 conflict when the file changed externally |
+| `/api/create` | POST | `{path, name, kind}` creates an empty file or directory without overwriting |
+| `/api/upload?path=<rel>&name=<name>` | POST | Upload a streamed `application/octet-stream` body; existing names are refused |
 
 All timestamp arithmetic must use the server-provided `now` field, never
 the client clock (client and server may differ through SSH tunnels).
+
+Create and upload operations are limited to the resolved working-directory
+sandbox and refuse to overwrite an existing entry. Uploads are streamed to a
+temporary sibling file before an exclusive link makes the completed file
+visible.
 
 ## Loss data path (`/api/loss`)
 
@@ -75,6 +166,35 @@ least as large as the cached offset is treated as an append.
 and the default 100000 is assumed), progress uses the last complete
 valid record, and `loss_mtime` is the evidence time shown to the user.
 File mtime shows when data was written, not whether a process is alive.
+
+## MD simulation monitoring (`/api/scan`)
+
+When `neighbor.out` exists, the monitor parses its complete records
+incrementally and uses the reported step plus the strict sum of `run <integer>`
+commands in `run.in` for progress. The chart is capped at 1200 sampled points
+and plots radial/angular `actual` counts with the corresponding `max` values
+reported in the same file. Dashed max lines are references, not a standalone
+physical-stability criterion. Recent observed step deltas provide a speed and
+ETA estimate; the first sample has no ETA yet.
+
+Only when `neighbor.out` is absent does the monitor use `thermo.out`, matching
+`gpumdkit.sh -time gpumd`: it multiplies the count of non-empty, non-comment
+rows by the first positive `dump_thermo` interval. This fallback is approximate.
+The API does not launch or inspect a GPUMD process, and file mtime alone is not
+treated as evidence that a simulation is running.
+
+## MD 模拟监测（`/api/scan`）
+
+存在 `neighbor.out` 时，监测器会增量解析完整记录，并使用其中报告的步数
+以及 `run.in` 中严格匹配的 `run <integer>` 总和计算进度。图表最多返回
+1200 个采样点，绘制径向/角向 `actual` 数量及同一文件报告的对应 `max` 值。
+`max` 虚线仅作参考，不能单独作为物理稳定性判据。速度和 ETA 根据最近观测到的
+步数变化估算；首次采样时尚无 ETA。
+
+只有在 `neighbor.out` 不存在时，监测器才使用 `thermo.out`，与
+`gpumdkit.sh -time gpumd` 的规则一致：非空且非注释行数乘以第一个正数
+`dump_thermo` 间隔得到近似进度。API 不会启动或检查 GPUMD 进程，也不会仅凭文件
+修改时间判断模拟正在运行。
 
 ## Security model (do not weaken)
 
@@ -129,22 +249,28 @@ behavior first and mirror it here.
 
 ## Frontend architecture (web/app.js)
 
-Layout: one content canvas per directory. Topbar (logo, breadcrumb as the
-only persistent location display, connection status, refresh interval,
-theme, more menu) / left file browser (filter, collapsible) / one
-scrolling content column (max 1120 px) whose sections appear only when
+Layout: one content canvas per directory. Topbar (logo, connection status,
+refresh interval, theme, more menu) / location and file-action toolbar
+(home, parent, breadcrumbs, create, upload, selected-file download) / left
+file browser (current-directory name and item counts, filter, collapsible) / one
+scrolling content column whose sections appear only when
 their data exists: training curve (only when loss.out is present and
-parseable), figures (only when images exist), available analyses (only
-when recommendations exist), plain file listing (only for directories
-without loss or images), subdirectory list, or a single empty state.
+parseable), MD monitor (when neighbor.out or thermo.out is present), figures
+(only when images exist), available analyses (only when recommendations
+exist), plain file listing (only for directories without loss, MD status, or
+images), subdirectory list, or a single empty state.
 There are no fixed view tabs, no bottom panel, no persistent status
 bar; secondary surfaces are on-demand overlays: a lightbox for images,
 a preview sheet for files, a chart zoom layer, and a command drawer
 opened from the more menu or when a command runs.
 
+Polling is off by default and follows the interval selected in the topbar.
+When the page is hidden, scheduled scans are skipped and then resume when it
+is visible again.
+
 State globals: `curPath`, `rootDir`, `connOk`, `lastGoodAt`,
 `lastScanServerNow`, `lastFiles`, `lastSubdirs`, `lastPath`,
-`lastRecs`, `lastTraining`, `nepSamples`, `lossView` (chart data plus
+`lastRecs`, `lastTraining`, `lastSimulation`, `nepSamples`, `lossView` (chart data plus
 per-directory scale state `logX`/`logY`/`hidden`), `plotState`,
 `cmdHistory`, `viewer`, `drawerTab`, `figShown`, `lbList`/`lbIndex`.
 

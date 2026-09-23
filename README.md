@@ -128,7 +128,7 @@ There are two options, <u>*interactive mode*</u> and <u>*command-line mode*</u>
              | |_| |  __/| |_| | |  | | |_| |   <| | |_
               \____|_|    \___/|_|  |_|____/|_|\_\_|\__|
 
-              GPUMDkit Version 1.5.7 (2026-09-12)
+              GPUMDkit Version 1.5.8 (2026-09-23)
         Core Developer: Zihan YAN (yanzihan@westlake.edu.cn)
      Main Contributors: Denan LI, Xin WU, Zhoulin LIU & Chen HUA
 
@@ -146,7 +146,7 @@ There are two options, <u>*interactive mode*</u> and <u>*command-line mode*</u>
 
 ----
 
-For users familiar with the `GPUMDkit`, the command-line mode allows for faster execution by directly passing arguments to `gpumdkit.sh`. Here are some examples:
+For users familiar with the `GPUMDkit`, the command-line mode allows for faster execution by directly passing arguments to `gpumdkit.sh`. Here are some examples. For browser-based access to remote working directories, see the [Remote Web Console guide](docs/tutorials/en/remote_web_console.md).
 
 ##### Example 1: View help information
 
@@ -158,7 +158,7 @@ the help information:
 
 ```
 +-------------------------------------------------------------------------------------------------------+
-|                          GPUMDkit 1.5.7 (2026-09-12)       Command Help                               |
+|                          GPUMDkit 1.5.8 (2026-09-23)       Command Help                               |
 +-------------------------------------------------------------------------------------------------------+
 |                                          MAIN FUNCTIONS                                               |
 +-------------------------------------------------------------------------------------------------------+
@@ -166,6 +166,7 @@ the help information:
 | -calc <type>  Calculator tools                | -time <gpumd|nep>  Time-consuming analyzer            |
 | -update       Update GPUMDkit                 | -clean             Clean extra files in current dir   |
 | -skill        Show GPUMDkit agent skill info  | -doctor            Check Python environment           |
+| -server       Start the GPUMDkit web server   |                                                       |
 | -prediction   Write NEP prediction .out files | -prediction_dpa  Write DPA prediction .out files      |
 +-------------------------------------------------------------------------------------------------------+
 |                                         FORMAT CONVERSION                                             |
@@ -205,7 +206,7 @@ the help information:
 
 ```
  +-----------------------------------------------------------------------------------------------+
- |                     GPUMDkit 1.5.7 (2026-09-12)       PLOT & VISUALIZATION TOOLS              |
+ |                     GPUMDkit 1.5.8 (2026-09-23)       PLOT & VISUALIZATION TOOLS              |
  +-----------------------------------------------------------------------------------------------+
  |  Usage: gpumdkit.sh -plt <type>                        List: gpumdkit.sh -plt -h              |
  +-----------------------------------------------------------------------------------------------+

@@ -42,6 +42,7 @@ import hmac
 import ipaddress
 import json
 import os
+import re
 import secrets
 import socket
 import stat
@@ -50,7 +51,7 @@ import sys
 import threading
 import time
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
-from urllib.parse import parse_qs, urlparse
+from urllib.parse import parse_qs, quote, urlparse
 
 DEFAULT_PORT = 8888
 DEFAULT_BIND = "127.0.0.1"
@@ -66,6 +67,7 @@ EXEC_MAX_CHARS = 4096
 EXEC_OUTPUT_CHARS = 65536
 LOSS_POINT_CAP = 600
 LOSS_SERIES_MAX = 6
+MD_POINT_CAP = 1200
 IMAGE_MAX_BYTES = 20 * 1024 * 1024
 LISTING_LIMIT = 2000
 SUBDIR_LIMIT = 100
@@ -99,7 +101,7 @@ RUN_ACTIONS = {
         "timeout": 900,
     },
     "plt_thermo": {
-        "argv": ["-plt", "thermo", "save"],
+        "argv": ["-plt", "thermo3", "save"],
         "requires": ["thermo.out"],
         "produces": "thermo.png",
         "timeout": 900,
@@ -129,6 +131,12 @@ RUN_ACTIONS = {
         "produces": "train_test.png",
         "timeout": 900,
     },
+    "plt_force_errors": {
+        "argv": ["-plt", "force_errors", "save"],
+        "requires": ["force_train.out"],
+        "produces": "force_errors.png",
+        "timeout": 900,
+    },
     "plt_prediction": {
         "argv": ["-plt", "prediction", "save"],
         "requires": ["energy_train.out", "force_train.out"],
@@ -153,6 +161,42 @@ RUN_ACTIONS = {
         "produces": "Arrhenius_D.png",
         "timeout": 900,
     },
+    "plt_rdf": {
+        "argv": ["-plt", "rdf", "save"],
+        "requires": ["rdf.out"],
+        "produces": "rdf.png",
+        "timeout": 900,
+    },
+    "plt_xrd": {
+        "argv": ["-plt", "xrd", "xrd.out", "save"],
+        "requires": ["xrd.out"],
+        "produces": "xrd.png",
+        "timeout": 900,
+    },
+    "plt_xrd_comp": {
+        "argv": ["-plt", "xrd_comp", "save"],
+        "batch": {"suffix": "K", "requires": ["xrd.out"], "min": 2},
+        "produces": "xrd_comp.png",
+        "timeout": 900,
+    },
+    "plt_cohesive": {
+        "argv": ["-plt", "cohesive", "save"],
+        "requires": ["cohesive.out"],
+        "produces": "cohesive.png",
+        "timeout": 900,
+    },
+    "plt_viscosity": {
+        "argv": ["-plt", "viscosity", "save"],
+        "requires": ["viscosity.out"],
+        "produces": "viscosity.png",
+        "timeout": 900,
+    },
+    "plt_phonon": {
+        "argv": ["-plt", "phonon", "phonon_NEP.dat", "QPOINTS", "save"],
+        "requires": ["phonon_NEP.dat", "QPOINTS"],
+        "produces": "phonon.png",
+        "timeout": 900,
+    },
 }
 
 DESCRIPTIONS = {
@@ -160,14 +204,21 @@ DESCRIPTIONS = {
     "plt_sdc": "Plot SDC (x, y, z) from msd.out",
     "plt_msd_sdc": "Plot MSD and SDC together",
     "plt_vac": "Plot VAC from sdc.out",
-    "plt_thermo": "Plot thermodynamic properties from thermo.out",
+    "plt_thermo": "Plot thermodynamic properties from thermo.out with thermo3",
     "plt_train": "Plot NEP training loss and parity panels",
     "plt_train_density": "Plot training parity density panels",
     "plt_train_test": "Compare train vs test energy/force/stress",
+    "plt_force_errors": "Plot NEP force errors",
     "plt_prediction": "Plot prediction parity for train/test",
     "plt_msd_conv": "MSD convergence check across msd_step*.out",
     "plt_sigma": "Arrhenius plot of conductivity across temperature dirs",
     "plt_D": "Arrhenius plot of diffusivity across temperature dirs",
+    "plt_rdf": "Plot radial distribution functions",
+    "plt_xrd": "Plot X-ray diffraction",
+    "plt_xrd_comp": "Compare X-ray diffraction across temperatures",
+    "plt_cohesive": "Plot cohesive energy",
+    "plt_viscosity": "Plot viscosity components",
+    "plt_phonon": "Plot phonon band structure",
 }
 
 USAGE_LINES = [
@@ -208,6 +259,19 @@ LOCKOUT_UNTIL = 0.0
 EXEC_LOCK = threading.Lock()
 LOSS_CACHE = {}
 LOSS_LOCK = threading.Lock()
+TRAINING_RATE_CACHE = {}
+TRAINING_RATE_LOCK = threading.Lock()
+TRAINING_SAMPLE_MIN_SECONDS = 2.0
+TRAINING_RATE_WINDOW = 3
+MD_CACHE = {}
+MD_CACHE_LOCK = threading.Lock()
+MD_RATE_SAMPLE_MIN_SECONDS = 2.0
+MD_RATE_WINDOW = 3
+NEIGHBOR_LINE = re.compile(
+    r"^Neighbor info at step\s+(\d+):\s*"
+    r"radial\(max=(\d+),actual=(\d+)\),\s*"
+    r"angular\(max=(\d+),actual=(\d+)\)\.\s*$"
+)
 
 
 def parse_args(argv):
@@ -292,6 +356,18 @@ def resolve_in_root(rel):
     if target == ROOT or target.startswith(ROOT + os.sep):
         return target
     return None
+
+
+def valid_entry_name(name):
+    """Return True for a single safe file or directory name."""
+    return (
+        isinstance(name, str)
+        and bool(name)
+        and name not in (".", "..")
+        and "/" not in name
+        and "\\" not in name
+        and not any(ord(char) < 32 or ord(char) == 127 for char in name)
+    )
 
 
 def count_columns(path):
@@ -427,6 +503,22 @@ def loss_series_labels(cols, count):
     return ["c" + str(i) for i in range(1, count + 1)]
 
 
+def loss_axis_values(entry, idxs):
+    """Build a continuous generation or epoch axis across resumed runs."""
+    raw_axis = entry["arrays"][0]
+    first = entry["first_gen"]
+    step = None
+    for i in range(1, len(raw_axis)):
+        delta = raw_axis[i] - raw_axis[i - 1]
+        if delta > 0:
+            step = delta
+            break
+    if step is None:
+        step = 1.0
+    start = first if first is not None and first > 0 else step
+    return [start + step * i for i in idxs], step
+
+
 def loss_payload(target):
     """Build the bounded loss chart payload for a directory."""
     path = os.path.join(target, "loss.out")
@@ -470,12 +562,12 @@ def loss_payload(target):
     payload["multi_run"] = entry["multi_run"]
     payload["seg_start_gen"] = entry["seg_start_gen"]
     arrays = entry["arrays"]
-    if entry["multi_run"] or entry["first_gen"] is None:
-        payload["x_mode"] = "index"
+    if entry["first_gen"] is None:
+        payload["x_mode"] = "generation"
         payload["xs"] = [i + 1 for i in idxs]
     else:
-        payload["x_mode"] = "generation"
-        payload["xs"] = [arrays[0][i] for i in idxs]
+        payload["x_mode"] = "epoch" if cols == 6 else "generation"
+        payload["xs"], payload["x_step"] = loss_axis_values(entry, idxs)
     n_series = 6 if cols >= 7 else (4 if cols == 6 else cols - 1)
     n_series = min(n_series, cols - 1, LOSS_SERIES_MAX)
     labels = loss_series_labels(cols, n_series)
@@ -488,32 +580,109 @@ def loss_payload(target):
     return payload
 
 
+def _training_timing(target, total, current, loss_size):
+    """Estimate NEP speed from a few observed loss.out generation updates."""
+    now = time.time()
+    with TRAINING_RATE_LOCK:
+        state = TRAINING_RATE_CACHE.get(target)
+        reset = (
+            state is None
+            or state["total"] != total
+            or (
+                loss_size is not None
+                and state.get("loss_size") is not None
+                and loss_size < state["loss_size"]
+            )
+        )
+        if reset:
+            state = {
+                "total": total,
+                "first_seen": now,
+                "last_step": None,
+                "last_at": now,
+                "loss_size": loss_size,
+                "samples": [],
+            }
+            TRAINING_RATE_CACHE[target] = state
+
+        if current is not None:
+            if state["last_step"] is not None and current < state["last_step"]:
+                # A resumed/restarted log changed its raw generation origin.
+                state["first_seen"] = now
+                state["last_step"] = current
+                state["last_at"] = now
+                state["samples"] = []
+            elif state["last_step"] is None:
+                state["last_step"] = current
+                state["last_at"] = now
+            elif current > state["last_step"]:
+                step_delta = current - state["last_step"]
+                time_delta = now - state["last_at"]
+                if time_delta >= TRAINING_SAMPLE_MIN_SECONDS:
+                    state["samples"].append((step_delta, time_delta))
+                    state["samples"] = state["samples"][-TRAINING_RATE_WINDOW:]
+                state["last_step"] = current
+                state["last_at"] = now
+            state["loss_size"] = loss_size
+
+        samples = state["samples"]
+        total_steps = sum(item[0] for item in samples)
+        total_seconds = sum(item[1] for item in samples)
+        rate = total_steps / total_seconds if total_seconds > 0 else None
+        eta = None
+        finish_at = None
+        if current is not None and rate and current < total:
+            eta = max(0.0, (total - current) / rate)
+            finish_at = now + eta
+        elif current is not None and current >= total:
+            eta = 0.0
+            finish_at = now
+        return {
+            "rate": rate,
+            "eta_seconds": eta,
+            "finish_at": int(finish_at) if finish_at is not None else None,
+            "observed_seconds": max(0.0, now - state["first_seen"]),
+            "sample_count": len(samples),
+            "last_progress_at": int(state["last_at"]) if state["last_step"] is not None else None,
+        }
+
+
 def training_status(target):
-    """Summarize NEP training state from nep.in and the loss cache."""
+    """Summarize NEP training state and a low-frequency speed estimate."""
     nep_in = os.path.join(target, "nep.in")
+    gnep_in = os.path.join(target, "gnep.in")
     loss_file = os.path.join(target, "loss.out")
-    if not os.path.isfile(nep_in) or not os.path.isfile(loss_file):
+    if not os.path.isfile(loss_file):
+        return None
+    if os.path.isfile(nep_in):
+        config_file = nep_in
+        keyword = "generation"
+        default_total = 100000
+    elif os.path.isfile(gnep_in):
+        config_file = gnep_in
+        keyword = "epoch"
+        default_total = 50
+    else:
         return None
     total = None
     try:
-        with open(nep_in, "r", errors="replace") as handle:
+        with open(config_file, "r", errors="replace") as handle:
             for line in handle:
                 parts = line.split()
-                if parts and parts[0] == "generation":
-                    try:
-                        total = int(float(parts[1]))
-                    except (ValueError, IndexError):
-                        total = None
+                if parts and parts[0] == keyword and len(parts) > 1 and parts[1].isdigit():
+                    total = int(parts[1])
                     break
     except OSError:
         return None
     has_target = total is not None
     if not has_target:
-        total = 100000
+        total = default_total
     entry = loss_entry(loss_file)
     if entry is None:
+        timing = _training_timing(target, total, None, None)
         return {
             "total": total,
+            "step_label": keyword,
             "has_target": has_target,
             "done": 0,
             "count": 0,
@@ -526,11 +695,14 @@ def training_status(target):
             "loss_size": None,
             "loss_empty": True,
             "finished": False,
+            **timing,
         }
     last_gen = entry["last_gen"]
     done = last_gen if last_gen is not None else 0
+    timing = _training_timing(target, total, last_gen, entry["size"])
     return {
         "total": total,
+        "step_label": keyword,
         "has_target": has_target,
         "done": min(done, total),
         "count": entry["count"],
@@ -543,6 +715,231 @@ def training_status(target):
         "loss_size": entry["size"],
         "loss_empty": entry["count"] == 0,
         "finished": has_target and last_gen is not None and last_gen >= total,
+        **timing,
+    }
+
+
+def _run_total_steps(path):
+    """Sum strict run <integer> commands, matching -time gpumd."""
+    total = 0
+    try:
+        with open(path, "r", errors="replace") as handle:
+            for line in handle:
+                parts = line.split()
+                if len(parts) > 1 and parts[0] == "run" and re.fullmatch(r"[0-9]+", parts[1]):
+                    total += int(parts[1])
+    except OSError:
+        return None
+    return total if total > 0 else None
+
+
+def _thermo_interval(path):
+    """Return the first positive dump_thermo interval from run.in."""
+    try:
+        with open(path, "r", errors="replace") as handle:
+            for line in handle:
+                parts = line.split()
+                if (
+                    len(parts) > 1
+                    and parts[0] == "dump_thermo"
+                    and re.fullmatch(r"[0-9]+", parts[1])
+                    and int(parts[1]) > 0
+                ):
+                    return int(parts[1])
+    except OSError:
+        return None
+    return None
+
+
+def _append_neighbor_line(entry, line):
+    """Parse one complete neighbor.out record into the bounded cache."""
+    match = NEIGHBOR_LINE.match(line.strip())
+    if not match:
+        return
+    step, radial_max, radial_actual, angular_max, angular_actual = map(int, match.groups())
+    row = {
+        "step": step,
+        "radial_max": radial_max,
+        "radial_actual": radial_actual,
+        "angular_max": angular_max,
+        "angular_actual": angular_actual,
+    }
+    entry["count"] += 1
+    entry["current_step"] = step
+    entry["rows"].append(row)
+    if len(entry["rows"]) > MD_POINT_CAP * 2:
+        rows = entry["rows"]
+        entry["rows"] = rows[::2]
+        if entry["rows"][-1]["step"] != rows[-1]["step"]:
+            entry["rows"].append(rows[-1])
+        entry["sampled"] = True
+
+
+def _simulation_file_state(target, source, path, interval):
+    """Incrementally parse neighbor.out or count thermo.out rows."""
+    try:
+        info = os.stat(path)
+    except OSError:
+        with MD_CACHE_LOCK:
+            MD_CACHE.pop(target, None)
+        return None
+
+    size = info.st_size
+    mtime_ns = info.st_mtime_ns
+    inode = getattr(info, "st_ino", None)
+    now = time.time()
+    with MD_CACHE_LOCK:
+        entry = MD_CACHE.get(target)
+        reset = (
+            entry is None
+            or entry["source"] != source
+            or entry["interval"] != interval
+            or entry["inode"] != inode
+            or size < entry["offset"]
+            or (size == entry["size"] and mtime_ns != entry["mtime_ns"])
+        )
+        if reset:
+            entry = {
+                "source": source,
+                "interval": interval,
+                "inode": inode,
+                "offset": 0,
+                "size": 0,
+                "mtime_ns": 0,
+                "pending": "",
+                "count": 0,
+                "rows": [],
+                "sampled": False,
+                "current_step": None,
+                "first_seen": now,
+                "last_step": None,
+                "last_at": now,
+                "samples": [],
+                "total_steps": None,
+            }
+            MD_CACHE[target] = entry
+
+        try:
+            with open(path, "rb") as handle:
+                handle.seek(entry["offset"])
+                chunk = handle.read()
+                entry["offset"] = handle.tell()
+        except OSError:
+            return None
+
+        complete = (entry["pending"] + chunk.decode("utf-8", errors="replace")).splitlines(keepends=True)
+        entry["pending"] = ""
+        for index, line in enumerate(complete):
+            if not line.endswith(("\n", "\r")):
+                entry["pending"] = "".join(complete[index:])
+                break
+            if source == "neighbor":
+                _append_neighbor_line(entry, line)
+            else:
+                stripped = line.strip()
+                if stripped and not stripped.startswith("#"):
+                    entry["count"] += 1
+                    if interval is not None:
+                        entry["current_step"] = entry["count"] * interval
+
+        entry["size"] = size
+        entry["mtime_ns"] = mtime_ns
+        entry["inode"] = inode
+        return True
+
+
+def simulation_status(target):
+    """Summarize MD progress, preferring neighbor.out as -time gpumd does."""
+    run_path = os.path.join(target, "run.in")
+    neighbor_path = os.path.join(target, "neighbor.out")
+    thermo_path = os.path.join(target, "thermo.out")
+    if os.path.isfile(neighbor_path):
+        source = "neighbor"
+        monitor_path = neighbor_path
+        interval = None
+    elif os.path.isfile(thermo_path):
+        source = "thermo"
+        monitor_path = thermo_path
+        interval = _thermo_interval(run_path)
+    else:
+        return None
+
+    total = _run_total_steps(run_path)
+    if _simulation_file_state(target, source, monitor_path, interval) is None:
+        return None
+    now = time.time()
+    with MD_CACHE_LOCK:
+        entry = MD_CACHE.get(target)
+        if entry is None or entry["source"] != source:
+            return None
+        current = entry["current_step"]
+        if entry["total_steps"] != total:
+            entry["total_steps"] = total
+            entry["first_seen"] = now
+            entry["last_step"] = current
+            entry["last_at"] = now
+            entry["samples"] = []
+        elif current is not None:
+            last_step = entry["last_step"]
+            if last_step is None or current < last_step:
+                entry["first_seen"] = now
+                entry["last_step"] = current
+                entry["last_at"] = now
+                entry["samples"] = []
+            elif current > last_step:
+                step_delta = current - last_step
+                time_delta = now - entry["last_at"]
+                if time_delta >= MD_RATE_SAMPLE_MIN_SECONDS:
+                    entry["samples"].append((step_delta, time_delta))
+                    entry["samples"] = entry["samples"][-MD_RATE_WINDOW:]
+                entry["last_step"] = current
+                entry["last_at"] = now
+        samples = list(entry["samples"])
+        first_seen = entry["first_seen"]
+        last_at = entry["last_at"]
+        rows = list(entry["rows"])
+        sampled = entry["sampled"]
+        count = entry["count"]
+
+    step_sum = sum(item[0] for item in samples)
+    time_sum = sum(item[1] for item in samples)
+    rate = step_sum / time_sum if time_sum > 0 else None
+    finished = total is not None and current is not None and current >= total
+    total_estimate = total / rate if total is not None and rate and rate > 0 else None
+    eta = None
+    finish_at = None
+    if finished:
+        eta = 0.0
+        finish_at = int(now)
+    elif total is not None and current is not None and rate and rate > 0:
+        eta = max(0.0, (total - current) / rate)
+        finish_at = int(now + eta)
+
+    points = rows
+    if len(points) > MD_POINT_CAP:
+        last = len(points) - 1
+        indexes = [round(i * last / (MD_POINT_CAP - 1)) for i in range(MD_POINT_CAP)]
+        points = [points[index] for index in indexes]
+        sampled = True
+    latest = rows[-1] if rows else None
+    return {
+        "source": source,
+        "total_steps": total,
+        "current_step": current,
+        "done": current if current is not None else 0,
+        "has_target": total is not None,
+        "finished": finished,
+        "rate": rate,
+        "total_estimate_seconds": total_estimate,
+        "eta_seconds": eta,
+        "finish_at": finish_at,
+        "observed_seconds": max(0.0, now - first_seen),
+        "last_progress_at": int(last_at) if current is not None else None,
+        "interval_steps": interval,
+        "count": count,
+        "sampled": sampled,
+        "neighbor": latest,
+        "points": points if source == "neighbor" else [],
     }
 
 
@@ -631,6 +1028,8 @@ def build_recommendations(target):
     ]
     if all(present(name) for name in train_test_files):
         add("plt_train_test", train_test_files)
+    if present("force_train.out"):
+        add("plt_force_errors", ["force_train.out"])
     if present("energy_train.out") and present("force_train.out"):
         add("plt_prediction", ["energy_train.out", "force_train.out"])
     step_files = glob.glob(os.path.join(target, "msd_step*.out"))
@@ -646,18 +1045,34 @@ def build_recommendations(target):
         entries = []
     sigma_dirs = []
     d_dirs = []
+    xrd_dirs = []
     for name in entries:
         full = os.path.join(target, name)
         has_msd = os.path.isfile(os.path.join(full, "msd.out"))
         has_thermo = os.path.isfile(os.path.join(full, "thermo.out"))
+        has_xrd = os.path.isfile(os.path.join(full, "xrd.out"))
         if has_msd and has_thermo:
             sigma_dirs.append(name)
         if has_msd:
             d_dirs.append(name)
+        if has_xrd:
+            xrd_dirs.append(name)
     if len(sigma_dirs) >= 2:
         add("plt_sigma", [f"{len(sigma_dirs)} temperature dirs"])
     if len(d_dirs) >= 2:
         add("plt_D", [f"{len(d_dirs)} temperature dirs"])
+    if len(xrd_dirs) >= 2:
+        add("plt_xrd_comp", [f"{len(xrd_dirs)} temperature dirs"])
+    if present("rdf.out"):
+        add("plt_rdf", ["rdf.out"])
+    if present("xrd.out"):
+        add("plt_xrd", ["xrd.out"])
+    if present("cohesive.out"):
+        add("plt_cohesive", ["cohesive.out"])
+    if present("viscosity.out"):
+        add("plt_viscosity", ["viscosity.out"])
+    if present("phonon_NEP.dat") and present("QPOINTS"):
+        add("plt_phonon", ["phonon_NEP.dat", "QPOINTS"])
     return recs
 
 
@@ -709,7 +1124,10 @@ def subdir_summaries(target, dir_names):
 def scan_directory(target):
     """List directory entries, recommendations, and training status."""
     try:
-        names = sorted(os.listdir(target))
+        names = sorted(
+            name for name in os.listdir(target)
+            if not name.startswith(".gpumdkit-upload-")
+        )
     except OSError:
         return None
     truncated = len(names) > LISTING_LIMIT
@@ -724,16 +1142,27 @@ def scan_directory(target):
             info = os.stat(full)
             size = info.st_size
             mtime = int(info.st_mtime)
+            mtime_ns = str(info.st_mtime_ns)
         except OSError:
             size = -1
             mtime = None
-        files.append({"name": name, "type": "file", "size": size, "mtime": mtime})
+            mtime_ns = None
+        files.append(
+            {
+                "name": name,
+                "type": "file",
+                "size": size,
+                "mtime": mtime,
+                "mtime_ns": mtime_ns,
+            }
+        )
     return {
         "dirs": dirs,
         "files": files,
         "subdirs": subdir_summaries(target, [d["name"] for d in dirs]),
         "recommendations": build_recommendations(target),
         "training": training_status(target),
+        "simulation": simulation_status(target),
         "truncated": truncated,
     }
 
@@ -762,6 +1191,7 @@ def execute_action(action, target_dir):
     """Run an allowlisted GPUMDkit command; return (payload, HTTP status)."""
     spec = RUN_ACTIONS[action]
     env = dict(os.environ)
+    env["GPUMDkit_path"] = KIT_ROOT
     env["MPLBACKEND"] = "Agg"
     argv = ["bash", GPUMDKIT_SH] + spec["argv"]
     try:
@@ -889,6 +1319,8 @@ class KitHandler(BaseHTTPRequestHandler):
                     self._api_file(query)
                 elif path == "/api/image":
                     self._api_image(query)
+                elif path == "/api/download":
+                    self._api_download(query)
                 else:
                     self._send_json({"error": "not found"}, 404)
             else:
@@ -900,6 +1332,10 @@ class KitHandler(BaseHTTPRequestHandler):
                     self._api_exec()
                 elif path == "/api/save":
                     self._api_save()
+                elif path == "/api/create":
+                    self._api_create()
+                elif path == "/api/upload":
+                    self._api_upload(query)
                 else:
                     self._send_json({"error": "not found"}, 404)
         except (BrokenPipeError, ConnectionResetError):
@@ -1149,6 +1585,140 @@ class KitHandler(BaseHTTPRequestHandler):
             self._send_json({"error": "cannot read the image"}, 400)
             return
         self._send_body(200, data, IMAGE_TYPES[ext])
+
+    def _api_download(self, query):
+        if not self._authorized():
+            self._send_json({"error": "unauthorized"}, 401)
+            return
+        rel = (query.get("path") or [""])[0]
+        target = resolve_in_root(rel)
+        if target is None or not os.path.isfile(target):
+            self._send_json({"error": "file not found"}, 400)
+            return
+        handle = None
+        try:
+            handle = open(target, "rb")
+            size = os.fstat(handle.fileno()).st_size
+        except OSError:
+            if handle is not None:
+                handle.close()
+            self._send_json({"error": "cannot read the file"}, 400)
+            return
+        filename = os.path.basename(target)
+        try:
+            with handle:
+                self.send_response(200)
+                self.send_header("Content-Type", "application/octet-stream")
+                self.send_header("Content-Length", str(size))
+                self.send_header(
+                    "Content-Disposition",
+                    "attachment; filename=\"download\"; filename*=UTF-8''" + quote(filename, safe=""),
+                )
+                self.send_header("X-Content-Type-Options", "nosniff")
+                self.send_header("Cache-Control", "no-store")
+                self.end_headers()
+                while True:
+                    chunk = handle.read(128 * 1024)
+                    if not chunk:
+                        break
+                    self.wfile.write(chunk)
+        except OSError:
+            self.close_connection = True
+
+    def _api_create(self):
+        if not self._authorized():
+            self._send_json({"error": "unauthorized"}, 401)
+            return
+        body = self._read_json()
+        if body is None:
+            return
+        rel = body.get("path", "")
+        name = body.get("name")
+        kind = body.get("kind")
+        if not isinstance(rel, str) or not valid_entry_name(name):
+            self._send_json({"error": "invalid directory or entry name"}, 400)
+            return
+        if kind not in ("file", "directory"):
+            self._send_json({"error": "kind must be file or directory"}, 400)
+            return
+        parent = resolve_in_root(rel)
+        if parent is None or not os.path.isdir(parent):
+            self._send_json({"error": "invalid directory"}, 400)
+            return
+        target = resolve_in_root(os.path.join(rel, name) if rel else name)
+        if target is None or os.path.dirname(target) != parent:
+            self._send_json({"error": "invalid entry path"}, 400)
+            return
+        try:
+            if kind == "directory":
+                os.mkdir(target)
+            else:
+                fd = os.open(target, os.O_WRONLY | os.O_CREAT | os.O_EXCL, 0o666)
+                os.close(fd)
+        except FileExistsError:
+            self._send_json({"error": "an entry with that name already exists"}, 409)
+            return
+        except OSError as exc:
+            self._send_json({"error": f"failed to create entry: {exc}"}, 500)
+            return
+        self._send_json({"ok": True, "name": name, "kind": kind})
+
+    def _api_upload(self, query):
+        if not self._authorized():
+            self.close_connection = True
+            self._send_json({"error": "unauthorized"}, 401)
+            return
+        raw_length = self.headers.get("Content-Length")
+        try:
+            length = int(raw_length) if raw_length is not None else -1
+        except ValueError:
+            length = -1
+        if length < 0:
+            self.close_connection = True
+            self._send_json({"error": "invalid Content-Length header"}, 400)
+            return
+        rel = (query.get("path") or [""])[0]
+        name = (query.get("name") or [""])[0]
+        parent = resolve_in_root(rel)
+        if parent is None or not os.path.isdir(parent) or not valid_entry_name(name):
+            self.close_connection = True
+            self._send_json({"error": "invalid directory or file name"}, 400)
+            return
+        target = resolve_in_root(os.path.join(rel, name) if rel else name)
+        if target is None or os.path.dirname(target) != parent:
+            self.close_connection = True
+            self._send_json({"error": "invalid file path"}, 400)
+            return
+        if os.path.lexists(target):
+            self.close_connection = True
+            self._send_json({"error": "an entry with that name already exists"}, 409)
+            return
+
+        temp = os.path.join(parent, ".gpumdkit-upload-" + secrets.token_hex(12))
+        try:
+            with open(temp, "xb") as handle:
+                remaining = length
+                while remaining:
+                    chunk = self.rfile.read(min(128 * 1024, remaining))
+                    if not chunk:
+                        raise OSError("incomplete upload body")
+                    handle.write(chunk)
+                    remaining -= len(chunk)
+            try:
+                os.link(temp, target)
+            except FileExistsError:
+                self._send_json({"error": "an entry with that name already exists"}, 409)
+                return
+        except OSError as exc:
+            self.close_connection = True
+            self._send_json({"error": f"failed to upload file: {exc}"}, 500)
+            return
+        finally:
+            try:
+                os.unlink(temp)
+            except OSError:
+                pass
+        self._send_json({"ok": True, "name": name, "size": length})
 
     def _api_run(self):
         if not self._authorized():

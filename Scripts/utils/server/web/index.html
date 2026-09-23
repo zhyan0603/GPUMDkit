@@ -17,29 +17,64 @@
 </div>
 
 <header class="topbar">
-  <a class="brand" href="https://gpumdkit.cn" target="_blank" rel="noopener" aria-label="GPUMDkit home">
-    <span class="brand-mark" aria-hidden="true">GK</span>
-    <span class="brand-name">GPUMDkit</span>
-  </a>
-  <nav class="crumb" id="crumb" aria-label="Current directory"></nav>
-  <span class="grow"></span>
-  <span class="conn" id="connWrap"><i aria-hidden="true"></i><span id="connText">connecting…</span></span>
-  <select id="refreshSel" class="sel" aria-label="Auto refresh interval" title="Auto refresh (off by default)">
-    <option value="0" selected data-i18n-opt="off">off</option>
-    <option value="5">5s</option>
-    <option value="15">15s</option>
-    <option value="30">30s</option>
-    <option value="60">60s</option>
-  </select>
-  <button type="button" class="iconbtn" id="refreshBtn" aria-label="Refresh now" title="Refresh now">
-    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/></svg>
-  </button>
-  <button type="button" class="segbtn lang" id="langBtn" aria-label="Switch language" title="EN / 中文">中文</button>
-  <button type="button" class="iconbtn" id="themeBtn" aria-label="Toggle light or dark theme" title="Theme"></button>
-  <button type="button" class="iconbtn" id="drawerBtn" aria-label="Commands and output" title="Commands / output">
-    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="4 17 10 11 4 5"/><line x1="12" y1="19" x2="20" y2="19"/></svg>
-  </button>
+  <div class="topbar-inner">
+    <a class="brand" href="https://gpumdkit.cn" target="_blank" rel="noopener" aria-label="GPUMDkit home">
+      <img class="brand-logo" src="/logo_lateral.png" alt="GPUMDkit">
+    </a>
+    <span class="grow"></span>
+    <span class="conn" id="connWrap"><i aria-hidden="true"></i><span id="connText">connecting…</span></span>
+    <select id="refreshSel" class="sel" aria-label="Auto refresh interval" title="Auto refresh (off by default)">
+      <option value="0" selected data-i18n-opt="off">off</option>
+      <option value="5">5s</option>
+      <option value="15">15s</option>
+      <option value="30">30s</option>
+      <option value="60">60s</option>
+    </select>
+    <button type="button" class="iconbtn" id="refreshBtn" aria-label="Refresh now" title="Refresh now">
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/></svg>
+    </button>
+    <button type="button" class="segbtn lang" id="langBtn" aria-label="Switch language" title="EN / 中文">中文</button>
+    <button type="button" class="iconbtn" id="themeBtn" aria-label="Toggle light or dark theme" title="Theme"></button>
+    <button type="button" class="iconbtn" id="drawerBtn" aria-label="Commands and output" title="Commands / output">
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="4 17 10 11 4 5"/><line x1="12" y1="19" x2="20" y2="19"/></svg>
+    </button>
+  </div>
 </header>
+
+<nav class="filebar hidden" id="filebar" aria-label="File navigation and actions">
+  <div class="filebar-inner">
+    <div class="location-tools">
+      <button type="button" class="iconbtn navbtn" id="homeBtn" aria-label="Home" title="Home">
+        <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m3 10 9-7 9 7"/><path d="M5 9v12h14V9"/><path d="M9 21v-7h6v7"/></svg>
+      </button>
+      <button type="button" class="iconbtn navbtn" id="backBtn" aria-label="Go up" title="Go up">
+        <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 19V5"/><path d="m5 12 7-7 7 7"/></svg>
+      </button>
+    </div>
+    <nav class="crumb" id="crumb" aria-label="Current directory"></nav>
+    <div class="file-actions">
+      <div class="new-menu-wrap">
+        <button type="button" class="btn soft file-action" id="newMenuBtn" aria-haspopup="true" aria-expanded="false">
+          <span data-i18n="new">New</span>
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="6 9 12 15 18 9"/></svg>
+        </button>
+        <div class="new-menu hidden" id="newMenu">
+          <button type="button" id="newFileBtn" data-i18n="newFile">New file</button>
+          <button type="button" id="newFolderBtn" data-i18n="newFolder">New folder</button>
+        </div>
+      </div>
+      <button type="button" class="btn ghost file-action" id="uploadBtn">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 16V4"/><path d="m7 9 5-5 5 5"/><path d="M4 16v4h16v-4"/></svg>
+        <span data-i18n="upload">Upload</span>
+      </button>
+      <button type="button" class="btn ghost file-action" id="downloadBtn" disabled>
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 4v12"/><path d="m7 11 5 5 5-5"/><path d="M4 16v4h16v-4"/></svg>
+        <span data-i18n="download">Download</span>
+      </button>
+      <input type="file" id="uploadInput" class="hidden" multiple>
+    </div>
+  </div>
+</nav>
 
 <div id="loginView" class="loginwrap hidden">
   <div class="logincard">
@@ -52,17 +87,29 @@
   </div>
 </div>
 
-<main id="appView" class="hidden">
-  <div class="statusline" id="statusLine">
-    <strong class="dirname mono" id="dirTitle">—</strong>
-    <span class="sep" aria-hidden="true">·</span>
-    <span id="stFiles">—</span>
-    <span class="sep" aria-hidden="true">·</span>
-    <span id="stTrain">—</span>
-    <span class="grow"></span>
-    <span id="stUpdated" class="muted mono">—</span>
-  </div>
+<div class="overlay hidden" id="fileOpLayer">
+  <section class="fileop-card" role="dialog" aria-modal="true" aria-labelledby="fileOpTitle">
+    <div class="fileop-head">
+      <div class="fileop-heading">
+        <strong id="fileOpTitle">New file</strong>
+        <span class="muted" id="fileOpPath"></span>
+      </div>
+      <button type="button" class="iconbtn" id="fileOpClose" aria-label="Close">×</button>
+    </div>
+    <div class="fileop-body">
+      <label for="fileOpName" id="fileOpLabel">Name</label>
+      <input type="text" id="fileOpName" autocomplete="off" spellcheck="false">
+      <p class="muted" id="fileOpHint"></p>
+      <p class="err" id="fileOpMsg" role="status" aria-live="polite"></p>
+    </div>
+    <div class="fileop-actions">
+      <button type="button" class="btn ghost" id="fileOpCancel" data-i18n="cancel">Cancel</button>
+      <button type="button" class="btn primary" id="fileOpSubmit" data-i18n="create">Create</button>
+    </div>
+  </section>
+</div>
 
+<main id="appView" class="hidden">
   <div id="errorBanner" class="notice hidden" role="alert">
     <span id="errorText"></span>
     <button type="button" class="btn soft small" id="retryBtn" data-i18n="retry">Retry</button>
@@ -70,6 +117,14 @@
 
   <div class="layout">
     <aside class="rail" aria-label="Files">
+      <div class="rail-summary">
+        <strong class="dirname mono" id="dirTitle">—</strong>
+        <div class="rail-summary-meta">
+          <span id="stFiles">—</span>
+          <span class="sep hidden" id="stTrainSep" aria-hidden="true">·</span>
+          <span id="stTrain" class="hidden">—</span>
+        </div>
+      </div>
       <div class="rail-search">
         <input type="search" id="fileFilter" placeholder="Filter…" aria-label="Filter files">
       </div>
@@ -84,7 +139,6 @@
 
 <div class="overlay hidden" id="lightbox">
   <div class="lbstage">
-    <img id="lbImg" alt="">
     <div class="lbbar">
       <span class="mono lbtitle" id="lbTitle"></span>
       <span class="grow"></span>
@@ -92,6 +146,7 @@
       <span class="lbhint" data-i18n="lbHint">← → navigate · Esc close</span>
       <button type="button" class="btn soft small" id="lbClose" data-i18n="close">Close</button>
     </div>
+    <img id="lbImg" alt="">
   </div>
 </div>
 
@@ -141,7 +196,6 @@
     <span class="grow"></span>
     <div class="seg">
       <button type="button" class="segbtn on" data-tab="output" data-i18n="output">Output</button>
-      <button type="button" class="segbtn" data-tab="history" data-i18n="history">History</button>
       <button type="button" class="segbtn" data-tab="terminal" data-i18n="terminal">Terminal</button>
     </div>
     <button type="button" class="iconbtn" id="drawerClose" aria-label="Close drawer" title="Close">×</button>
@@ -151,7 +205,6 @@
       <pre class="output" id="output"></pre>
       <p class="muted hidden" id="outTruncNote" data-i18n="truncated">output truncated at 64 KB on the server</p>
     </div>
-    <div id="dHistory" class="hidden"><div id="histList"></div></div>
     <div id="dTerminal" class="hidden">
       <div class="term">
         <div class="termnote" data-i18n="termNote">Each command runs independently in the current directory; session state like export is not kept; 120 s limit per command</div>
