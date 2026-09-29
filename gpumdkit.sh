@@ -19,7 +19,7 @@ if [ -z "$GPUMDkit_path" ]; then
     exit 1
 fi
 
-VERSION="1.5.8 (2026-09-23)"
+VERSION="1.5.8 (2026-09-29)"
 
 plt_path="${GPUMDkit_path}/Scripts/plt_scripts"
 analyzer_path="${GPUMDkit_path}/Scripts/analyzer"
@@ -194,11 +194,11 @@ function help_info_table(){
     echo " |                                          MAIN FUNCTIONS                                               |"
     echo " +-------------------------------------------------------------------------------------------------------+"
     echo " | -h            Show this help table            | -plt <type>        Plot and visualization tools       |"
-    echo " | -calc <type>  Calculator tools                | -time <gpumd|nep>  Time-consuming analyzer            |"
+    echo " | -calc <type>  Calculator tools                | -time <gpumd|wpe|nep|gnep>  Time-consuming analyzer   |"
     echo " | -update       Update GPUMDkit                 | -clean             Clean extra files in current dir   |"
     echo " | -skill        Show GPUMDkit agent skill info  | -doctor            Check Python environment           |"
-    echo " | -server       Start the GPUMDkit web server   |                                                       |"
     echo " | -prediction   Write NEP prediction .out files | -prediction_dpa    Write DPA prediction .out files    |"
+    echo " | -server       Start the GPUMDkit web server   |                                                       |"
     echo " +-------------------------------------------------------------------------------------------------------+"
     echo " |                                         FORMAT CONVERSION                                             |"
     echo " +-------------------------------------------------------------------------------------------------------+"
@@ -296,8 +296,10 @@ if [ ! -z "$1" ]; then
         -time)
             case $2 in
                 gpumd) bash "${analyzer_path}/time_consuming_gpumd.sh" ;;
+                wpe) bash "${analyzer_path}/time_consuming_wpe.sh" ;;
                 nep|gnep) bash "${analyzer_path}/time_consuming_nep.sh" ;;
                 *)
+                    echo " Supported modes: gpumd, wpe, nep or gnep."
                     echo " See the codes in analyzer folder for more details"
                     echo " Code path: ${analyzer_path}/time_consuming_*.sh"
                     exit 1 ;;

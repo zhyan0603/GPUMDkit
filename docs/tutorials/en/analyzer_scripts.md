@@ -31,6 +31,7 @@ Make sure GPUMDkit is installed. See [Quick Start](quick_start.md) for installat
 | Outlier detection | Menu 502 | Find high-RMSE structures in training set |
 | Probability density | `gpumdkit.sh -pda <ref> <traj> <element> <interval>` | 3D probability density for diffusion channels |
 | GPUMD time | `gpumdkit.sh -time gpumd` | Estimate remaining GPUMD run time |
+| WPE GPUMD time | `gpumdkit.sh -time wpe` | Estimate remaining time for WPE-enabled GPUMD runs |
 | NEP time | `gpumdkit.sh -time nep` | Estimate remaining NEP training time |
 
 ## Choose checks before filters
@@ -377,6 +378,16 @@ Current Frame  Speed (steps/s)   Total Time       Time Left       Estimated End
 -------------   -------------   -------------   -------------   -----------------
     13000          499.86         0h 35m 0s      0h 34m 34s    2025-12-27 18:12:04
     14000          199.93        1h 27m 31s      1h 26m 21s    2025-12-27 19:03:56
+```
+
+### WPE-Enabled GPUMD Remaining Time
+
+`time_consuming_wpe.sh` estimates the remaining time for WPE-enabled GPUMD runs using buffered progress updates.
+
+**Input files:** `run.in` and `neighbor.out` or `thermo.out` (in the current GPUMD working directory)
+
+```bash
+gpumdkit.sh -time wpe
 ```
 
 ### NEP Remaining Time

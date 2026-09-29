@@ -213,6 +213,9 @@ gpumdkit.sh -pda LLZO.vasp dump.xyz Li 0.25
 # 监控 GPUMD 进度
 gpumdkit.sh -time gpumd
 
+# 监控启用 WPE 的 GPUMD 运行
+gpumdkit.sh -time wpe
+
 # 监控 NEP 训练进度
 gpumdkit.sh -time nep
 ```
@@ -233,7 +236,7 @@ gpumdkit.sh -time nep
 | `-filter_range` | 按距离范围过滤 | `gpumdkit.sh -filter_range <file> <e1> <e2> <min> <max>` |
 | `-filter_box` | 按模拟盒尺寸过滤 | `gpumdkit.sh -filter_box <file> <limit>` |
 | `-filter_value` | 按性质过滤 | `gpumdkit.sh -filter_value <file> <prop> <thresh>` |
-| `-time` | 时间监控 | `gpumdkit.sh -time <gpumd\|nep>` |
+| `-time` | 时间监控 | `gpumdkit.sh -time <gpumd\|wpe\|nep\|gnep>` |
 
 ## 依赖
 

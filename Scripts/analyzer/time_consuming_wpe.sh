@@ -5,17 +5,17 @@
 # Citation: Z. Yan et al., GPUMDkit: A User-Friendly Toolkit for GPUMD and NEP,
 #           MGE Advances, 2026, 4, e70074 (https://doi.org/10.1002/mgea.70074)
 # =============================================================================
-# Script:     time_consuming_gpumd.sh
+# Script:     time_consuming_wpe.sh
 # Category:   Analyzer Scripts
-# Purpose:    Monitor GPUMD simulation progress in real time by tracking
-#            neighbor.out (or thermo.out), and display speed, total time, and estimated
+# Purpose:    Monitor WPE-enabled GPUMD progress using buffered neighbor.out
+#            (or thermo.out) updates, and display speed, total time, and estimated
 #            completion time.
-# Usage:      ./time_consuming_gpumd.sh
+# Usage:      ./time_consuming_wpe.sh
 # Output:
 #   Real-time table of current frame, speed, total time, time left,
 #   and estimated end time
 # Author:     Zihan YAN (yanzihan@westlake.edu.cn)
-# Last-modified: 2026-09-28
+# Last-modified: 2026-09-29
 # =============================================================================
 
 # Get the total number of frames from the "run" file
