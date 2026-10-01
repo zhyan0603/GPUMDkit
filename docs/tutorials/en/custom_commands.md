@@ -111,7 +111,7 @@ custom_prep_training() {
     gpumdkit.sh -out2xyz ./
     
     # Filter outliers
-    gpumdkit.sh -filter_value train.xyz force 30
+    gpumdkit.sh -filter_value NEPdataset/train.xyz force 30
     
     # Check quality
     gpumdkit.sh -range filtered.xyz energy

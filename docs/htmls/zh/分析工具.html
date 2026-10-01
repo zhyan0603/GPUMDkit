@@ -1403,6 +1403,17 @@
 </li>
         
           <li class="md-nav__item">
+  <a href="#wpe-gpumd" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        启用 WPE 的 GPUMD 剩余时间
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#nep" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -1904,6 +1915,17 @@
 </li>
         
           <li class="md-nav__item">
+  <a href="#wpe-gpumd" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        启用 WPE 的 GPUMD 剩余时间
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#nep" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -2089,6 +2111,11 @@
 <td>GPUMD 时间</td>
 <td><code>gpumdkit.sh -time gpumd</code></td>
 <td>估算 GPUMD 剩余运行时间</td>
+</tr>
+<tr>
+<td>WPE GPUMD 时间</td>
+<td><code>gpumdkit.sh -time wpe</code></td>
+<td>估算启用 WPE 的 GPUMD 剩余运行时间</td>
 </tr>
 <tr>
 <td>NEP 时间</td>
@@ -2332,26 +2359,31 @@ NES 设置。DFT 到 NEP 模式需要 <code>calorine</code> 和兼容的 NEP 模
 <a id="__codelineno-20-6" name="__codelineno-20-6" href="#__codelineno-20-6"></a>    13000          499.86         0h 35m 0s      0h 34m 34s    2025-12-27 18:12:04
 <a id="__codelineno-20-7" name="__codelineno-20-7" href="#__codelineno-20-7"></a>    14000          199.93        1h 27m 31s      1h 26m 21s    2025-12-27 19:03:56
 </code></pre></div>
+<h3 id="wpe-gpumd">启用 WPE 的 GPUMD 剩余时间</h3>
+<p><code>time_consuming_wpe.sh</code> 使用缓冲后的进度更新，估算启用 WPE 的 GPUMD 运行剩余时间。</p>
+<p><strong>输入文件：</strong> 当前 GPUMD 工作目录中的 <code>run.in</code>，以及 <code>neighbor.out</code> 或 <code>thermo.out</code></p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-21-1" name="__codelineno-21-1" href="#__codelineno-21-1"></a>gpumdkit.sh<span class="w"> </span>-time<span class="w"> </span>wpe
+</code></pre></div>
 <h3 id="nep">NEP 剩余时间</h3>
 <p><code>time_consuming_nep.sh</code> 估算 NEP 训练的剩余时间。</p>
 <p><strong>输入文件：</strong> <code>loss.out</code>（在当前 NEP 工作目录中）</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-21-1" name="__codelineno-21-1" href="#__codelineno-21-1"></a>gpumdkit.sh<span class="w"> </span>-time<span class="w"> </span>nep
+<div class="highlight"><pre><span></span><code><a id="__codelineno-22-1" name="__codelineno-22-1" href="#__codelineno-22-1"></a>gpumdkit.sh<span class="w"> </span>-time<span class="w"> </span>nep
 </code></pre></div>
 <p><strong>输出示例：</strong></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-22-1" name="__codelineno-22-1" href="#__codelineno-22-1"></a>+-----------------+-----------+-----------------+---------------------+
-<a id="__codelineno-22-2" name="__codelineno-22-2" href="#__codelineno-22-2"></a>|       Step      | Time Diff |    Time Left    |    Finish Time      |
-<a id="__codelineno-22-3" name="__codelineno-22-3" href="#__codelineno-22-3"></a>+-----------------+-----------+-----------------+---------------------+
-<a id="__codelineno-22-4" name="__codelineno-22-4" href="#__codelineno-22-4"></a>| 6700            | 1 s       | 0 h 15 m 33 s   | 2025-10-23 15:34:11 |
-<a id="__codelineno-22-5" name="__codelineno-22-5" href="#__codelineno-22-5"></a>| 6800            | 2 s       | 0 h 31 m 4 s    | 2025-10-23 15:49:44 |
-<a id="__codelineno-22-6" name="__codelineno-22-6" href="#__codelineno-22-6"></a>| 6900            | 2 s       | 0 h 31 m 2 s    | 2025-10-23 15:49:44 |
-<a id="__codelineno-22-7" name="__codelineno-22-7" href="#__codelineno-22-7"></a>+-----------------+-----------+-----------------+---------------------+
+<div class="highlight"><pre><span></span><code><a id="__codelineno-23-1" name="__codelineno-23-1" href="#__codelineno-23-1"></a>+-----------------+-----------+-----------------+---------------------+
+<a id="__codelineno-23-2" name="__codelineno-23-2" href="#__codelineno-23-2"></a>|       Step      | Time Diff |    Time Left    |    Finish Time      |
+<a id="__codelineno-23-3" name="__codelineno-23-3" href="#__codelineno-23-3"></a>+-----------------+-----------+-----------------+---------------------+
+<a id="__codelineno-23-4" name="__codelineno-23-4" href="#__codelineno-23-4"></a>| 6700            | 1 s       | 0 h 15 m 33 s   | 2025-10-23 15:34:11 |
+<a id="__codelineno-23-5" name="__codelineno-23-5" href="#__codelineno-23-5"></a>| 6800            | 2 s       | 0 h 31 m 4 s    | 2025-10-23 15:49:44 |
+<a id="__codelineno-23-6" name="__codelineno-23-6" href="#__codelineno-23-6"></a>| 6900            | 2 s       | 0 h 31 m 2 s    | 2025-10-23 15:49:44 |
+<a id="__codelineno-23-7" name="__codelineno-23-7" href="#__codelineno-23-7"></a>+-----------------+-----------+-----------------+---------------------+
 </code></pre></div>
 <hr />
 <h2 id="_19">概率密度分析</h2>
 <p><code>probability_density_analysis.py</code> 计算移动离子的 3D 概率密度，用于扩散通道分析。</p>
 <p><strong>输入文件：</strong> 参考结构（POSCAR）、轨迹文件（extxyz）</p>
 <p><strong>命令行模式：</strong></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-23-1" name="__codelineno-23-1" href="#__codelineno-23-1"></a>gpumdkit.sh<span class="w"> </span>-pda<span class="w"> </span>LLZO.vasp<span class="w"> </span>dump.xyz<span class="w"> </span>Li<span class="w"> </span><span class="m">0</span>.25
+<div class="highlight"><pre><span></span><code><a id="__codelineno-24-1" name="__codelineno-24-1" href="#__codelineno-24-1"></a>gpumdkit.sh<span class="w"> </span>-pda<span class="w"> </span>LLZO.vasp<span class="w"> </span>dump.xyz<span class="w"> </span>Li<span class="w"> </span><span class="m">0</span>.25
 </code></pre></div>
 <p><strong>参数说明：</strong></p>
 <table>
@@ -2391,34 +2423,34 @@ NES 设置。DFT 到 NEP 模式需要 <code>calorine</code> 和兼容的 NEP 模
 <hr />
 <h2 id="_20">示例工作流</h2>
 <h3 id="_21">结构质量检查</h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-24-1" name="__codelineno-24-1" href="#__codelineno-24-1"></a><span class="c1"># 1. 检查成分</span>
-<a id="__codelineno-24-2" name="__codelineno-24-2" href="#__codelineno-24-2"></a>gpumdkit.sh<span class="w"> </span>-analyze_comp<span class="w"> </span>train.xyz
-<a id="__codelineno-24-3" name="__codelineno-24-3" href="#__codelineno-24-3"></a>
-<a id="__codelineno-24-4" name="__codelineno-24-4" href="#__codelineno-24-4"></a><span class="c1"># 2. 检查能量/力范围</span>
-<a id="__codelineno-24-5" name="__codelineno-24-5" href="#__codelineno-24-5"></a>gpumdkit.sh<span class="w"> </span>-range<span class="w"> </span>train.xyz<span class="w"> </span>force<span class="w"> </span>hist
-<a id="__codelineno-24-6" name="__codelineno-24-6" href="#__codelineno-24-6"></a>
-<a id="__codelineno-24-7" name="__codelineno-24-7" href="#__codelineno-24-7"></a><span class="c1"># 3. 检查最短距离</span>
-<a id="__codelineno-24-8" name="__codelineno-24-8" href="#__codelineno-24-8"></a>gpumdkit.sh<span class="w"> </span>-min_dist_pbc<span class="w"> </span>train.xyz
-<a id="__codelineno-24-9" name="__codelineno-24-9" href="#__codelineno-24-9"></a>
-<a id="__codelineno-24-10" name="__codelineno-24-10" href="#__codelineno-24-10"></a><span class="c1"># 4. 查找异常值（NEP 训练后）</span>
-<a id="__codelineno-24-11" name="__codelineno-24-11" href="#__codelineno-24-11"></a><span class="c1"># 交互：5) 分析工具 → 502</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-25-1" name="__codelineno-25-1" href="#__codelineno-25-1"></a><span class="c1"># 1. 检查成分</span>
+<a id="__codelineno-25-2" name="__codelineno-25-2" href="#__codelineno-25-2"></a>gpumdkit.sh<span class="w"> </span>-analyze_comp<span class="w"> </span>train.xyz
+<a id="__codelineno-25-3" name="__codelineno-25-3" href="#__codelineno-25-3"></a>
+<a id="__codelineno-25-4" name="__codelineno-25-4" href="#__codelineno-25-4"></a><span class="c1"># 2. 检查能量/力范围</span>
+<a id="__codelineno-25-5" name="__codelineno-25-5" href="#__codelineno-25-5"></a>gpumdkit.sh<span class="w"> </span>-range<span class="w"> </span>train.xyz<span class="w"> </span>force<span class="w"> </span>hist
+<a id="__codelineno-25-6" name="__codelineno-25-6" href="#__codelineno-25-6"></a>
+<a id="__codelineno-25-7" name="__codelineno-25-7" href="#__codelineno-25-7"></a><span class="c1"># 3. 检查最短距离</span>
+<a id="__codelineno-25-8" name="__codelineno-25-8" href="#__codelineno-25-8"></a>gpumdkit.sh<span class="w"> </span>-min_dist_pbc<span class="w"> </span>train.xyz
+<a id="__codelineno-25-9" name="__codelineno-25-9" href="#__codelineno-25-9"></a>
+<a id="__codelineno-25-10" name="__codelineno-25-10" href="#__codelineno-25-10"></a><span class="c1"># 4. 查找异常值（NEP 训练后）</span>
+<a id="__codelineno-25-11" name="__codelineno-25-11" href="#__codelineno-25-11"></a><span class="c1"># 交互：5) 分析工具 → 502</span>
 </code></pre></div>
 <h3 id="_22">结构过滤流水线</h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-25-1" name="__codelineno-25-1" href="#__codelineno-25-1"></a><span class="c1"># 1. 按最短距离过滤（输出 filtered_dump.xyz）</span>
-<a id="__codelineno-25-2" name="__codelineno-25-2" href="#__codelineno-25-2"></a>gpumdkit.sh<span class="w"> </span>-filter_dist_pbc<span class="w"> </span>dump.xyz<span class="w"> </span><span class="m">1</span>.0
-<a id="__codelineno-25-3" name="__codelineno-25-3" href="#__codelineno-25-3"></a>
-<a id="__codelineno-25-4" name="__codelineno-25-4" href="#__codelineno-25-4"></a><span class="c1"># 2. 按盒子大小过滤（输出 filtered_by_box.xyz）</span>
-<a id="__codelineno-25-5" name="__codelineno-25-5" href="#__codelineno-25-5"></a>gpumdkit.sh<span class="w"> </span>-filter_box<span class="w"> </span>filtered_dump.xyz<span class="w"> </span><span class="m">13</span>
-<a id="__codelineno-25-6" name="__codelineno-25-6" href="#__codelineno-25-6"></a>
-<a id="__codelineno-25-7" name="__codelineno-25-7" href="#__codelineno-25-7"></a><span class="c1"># 3. 按力阈值过滤（输出 filtered.xyz）</span>
-<a id="__codelineno-25-8" name="__codelineno-25-8" href="#__codelineno-25-8"></a>gpumdkit.sh<span class="w"> </span>-filter_value<span class="w"> </span>filtered_by_box.xyz<span class="w"> </span>force<span class="w"> </span><span class="m">20</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-26-1" name="__codelineno-26-1" href="#__codelineno-26-1"></a><span class="c1"># 1. 按最短距离过滤（输出 filtered_dump.xyz）</span>
+<a id="__codelineno-26-2" name="__codelineno-26-2" href="#__codelineno-26-2"></a>gpumdkit.sh<span class="w"> </span>-filter_dist_pbc<span class="w"> </span>dump.xyz<span class="w"> </span><span class="m">1</span>.0
+<a id="__codelineno-26-3" name="__codelineno-26-3" href="#__codelineno-26-3"></a>
+<a id="__codelineno-26-4" name="__codelineno-26-4" href="#__codelineno-26-4"></a><span class="c1"># 2. 按盒子大小过滤（输出 filtered_by_box.xyz）</span>
+<a id="__codelineno-26-5" name="__codelineno-26-5" href="#__codelineno-26-5"></a>gpumdkit.sh<span class="w"> </span>-filter_box<span class="w"> </span>filtered_dump.xyz<span class="w"> </span><span class="m">13</span>
+<a id="__codelineno-26-6" name="__codelineno-26-6" href="#__codelineno-26-6"></a>
+<a id="__codelineno-26-7" name="__codelineno-26-7" href="#__codelineno-26-7"></a><span class="c1"># 3. 按力阈值过滤（输出 filtered.xyz）</span>
+<a id="__codelineno-26-8" name="__codelineno-26-8" href="#__codelineno-26-8"></a>gpumdkit.sh<span class="w"> </span>-filter_value<span class="w"> </span>filtered_by_box.xyz<span class="w"> </span>force<span class="w"> </span><span class="m">20</span>
 </code></pre></div>
 <h3 id="_23">扩散通道分析</h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-26-1" name="__codelineno-26-1" href="#__codelineno-26-1"></a><span class="c1"># 1. 计算概率密度</span>
-<a id="__codelineno-26-2" name="__codelineno-26-2" href="#__codelineno-26-2"></a>gpumdkit.sh<span class="w"> </span>-pda<span class="w"> </span>LLZO.vasp<span class="w"> </span>dump.xyz<span class="w"> </span>Li<span class="w"> </span><span class="m">0</span>.25
-<a id="__codelineno-26-3" name="__codelineno-26-3" href="#__codelineno-26-3"></a>
-<a id="__codelineno-26-4" name="__codelineno-26-4" href="#__codelineno-26-4"></a><span class="c1"># 2. 用 VESTA 可视化</span>
-<a id="__codelineno-26-5" name="__codelineno-26-5" href="#__codelineno-26-5"></a><span class="c1"># 打开 probability_density_0.25.vasp</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-27-1" name="__codelineno-27-1" href="#__codelineno-27-1"></a><span class="c1"># 1. 计算概率密度</span>
+<a id="__codelineno-27-2" name="__codelineno-27-2" href="#__codelineno-27-2"></a>gpumdkit.sh<span class="w"> </span>-pda<span class="w"> </span>LLZO.vasp<span class="w"> </span>dump.xyz<span class="w"> </span>Li<span class="w"> </span><span class="m">0</span>.25
+<a id="__codelineno-27-3" name="__codelineno-27-3" href="#__codelineno-27-3"></a>
+<a id="__codelineno-27-4" name="__codelineno-27-4" href="#__codelineno-27-4"></a><span class="c1"># 2. 用 VESTA 可视化</span>
+<a id="__codelineno-27-5" name="__codelineno-27-5" href="#__codelineno-27-5"></a><span class="c1"># 打开 probability_density_0.25.vasp</span>
 </code></pre></div>
 
 

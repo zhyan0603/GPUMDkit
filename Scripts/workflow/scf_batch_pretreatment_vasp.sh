@@ -12,10 +12,18 @@
 #             struct_fp directories for INCAR/POTCAR/KPOINTS.
 # Usage:      source scf_batch_pretreatment_vasp.sh
 # Author:     Zihan YAN (yanzihan@westlake.edu.cn)
-# Last-modified: 2026-05-16
+# Last-modified: 2026-09-26
 # =============================================================================
 
 function vasp_scf_batch_pretreatment(){
+    local xyz_input=0
+    local group_by_element_set=0
+    local group_directory group_key matched_group_count
+    local -a frame_element_groups
+    local -a group_directories
+    frame_element_groups=()
+    group_directories=()
+
     echo " ------------>>"
     echo " Starting SCF batch pretreatment..."
 
@@ -55,19 +63,52 @@ function vasp_scf_batch_pretreatment(){
 	            done
 	            [ -n "$xyz_file" ] || { echo " Input closed. Exiting."; return 1; }
 	        fi
+	        xyz_input=1
 	        echo " Converting ${xyz_file#./} to POSCAR files using GPUMDkit..."
-	        python ${GPUMDkit_path}/Scripts/format_conversion/exyz2pos.py "$xyz_file"
-	        
-	        mkdir -p struct_fp
-	        mv *.vasp ./struct_fp
-	        num_vasp_files=$(find ./struct_fp -maxdepth 1 -name "*.vasp" | wc -l)
-	        
+	        python "${GPUMDkit_path}/Scripts/workflow/exyz2pos_scf.py" "$xyz_file" ./struct_fp || {
+            echo " Error: failed to convert ${xyz_file#./} to POSCAR files."
+            return 1
+        }
+	        num_vasp_files=$(find ./struct_fp -type f -name "POSCAR_*.vasp" | wc -l)
+	        if [ "$num_vasp_files" -eq 0 ]; then
+	            echo " Error: no POSCAR files were created."
+	            return 1
+	        fi
+
 	        # Perform additional operations if needed after moving .vasp files
 	    else
 	        echo " No .vasp files or .xyz files found."
 	        return 1
 	    fi
 	fi
+
+    # The Python converter owns composition detection and POSCAR species ordering.
+    # Here, use its output directories only to map each frame to its POTCAR key.
+    if [ "$xyz_input" -eq 1 ]; then
+        for group_directory in ./struct_fp/*/; do
+            if [ -d "$group_directory" ]; then
+                group_directories+=("${group_directory%/}")
+            fi
+        done
+
+        if [ "${#group_directories[@]}" -gt 0 ]; then
+            group_by_element_set=1
+            for i in $(seq 1 "$num_vasp_files"); do
+                matched_group_count=0
+                for group_directory in "${group_directories[@]}"; do
+                    if [ -f "${group_directory}/POSCAR_${i}.vasp" ]; then
+                        group_key="${group_directory##*/}"
+                        frame_element_groups[$i]="$group_key"
+                        matched_group_count=$((matched_group_count + 1))
+                    fi
+                done
+                if [ "$matched_group_count" -ne 1 ]; then
+                    echo " Error: could not map POSCAR_${i}.vasp to exactly one element group."
+                    return 1
+                fi
+            done
+        fi
+    fi
 
     echo " Found $num_vasp_files .vasp files."
 
@@ -92,8 +133,16 @@ function vasp_scf_batch_pretreatment(){
         dir_name="${prefix}_${i}"
         mkdir -p "${dir_name}"
         cd "${dir_name}"
-        ln -s ../struct_fp/POSCAR_${i}.vasp ./POSCAR
-        ln -s ../fp/{POTCAR,KPOINTS,INCAR} ./
+        if [ "$group_by_element_set" -eq 1 ]; then
+            species_key="${frame_element_groups[$i]}"
+            ln -s "../struct_fp/${species_key}/POSCAR_${i}.vasp" ./POSCAR
+            ln -s "../fp/POTCAR_${species_key}" ./POTCAR
+        else
+            ln -s "../struct_fp/POSCAR_${i}.vasp" ./POSCAR
+            ln -s ../fp/POTCAR ./POTCAR
+        fi
+        ln -s ../fp/INCAR ./INCAR
+        ln -s ../fp/KPOINTS ./KPOINTS
         cd ..
     done
 
@@ -114,7 +163,16 @@ function vasp_scf_batch_pretreatment(){
     # Make presub.sh executable
     chmod +x presub.sh
 
-    echo " >---------------------------------------------------------<"
-    echo " | ATTENTION: Place POTCAR, KPOINTS and INCAR in 'fp' Dir. |"
-    echo " >---------------------------------------------------------<"
+    if [ "$group_by_element_set" -eq 1 ]; then
+        echo " Prepare the listed POTCAR_<elements> files in fp/."
+        echo " All groups share fp/INCAR; match each POTCAR order to POSCAR."
+    else
+        echo " Prepare the shared fp/POTCAR and fp/INCAR."
+    fi
+    if [ -f fp/KPOINTS ]; then
+        echo " KPOINTS links point to shared fp/KPOINTS."
+    else
+        echo " KPOINTS links point to fp/KPOINTS, which is currently absent."
+        echo " Without that file, VASP uses KSPACING from INCAR."
+    fi
 }

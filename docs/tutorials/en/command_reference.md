@@ -14,43 +14,43 @@ otherwise use `gpumdkit.sh -h`, the relevant module help, or interactive mode.
 ## `gpumdkit.sh -h` Output
 
 ```text
-+-------------------------------------------------------------------------------------------------------+
-|                          GPUMDkit 1.5.8 (2026-09-23)       Command Help                               |
-+-------------------------------------------------------------------------------------------------------+
-|                                          MAIN FUNCTIONS                                               |
-+-------------------------------------------------------------------------------------------------------+
-| -h            Show this help table            | -plt <type>        Plot and visualization tools       |
-| -calc <type>  Calculator tools                | -time <gpumd|nep>  Time-consuming analyzer            |
-| -update       Update GPUMDkit                 | -clean             Clean extra files in current dir   |
-| -skill        Show GPUMDkit agent skill info  | -doctor            Check Python environment           |
-| -server       Start the GPUMDkit web server   |                                                       |
-| -prediction   Write NEP prediction .out files | -prediction_dpa    Write DPA prediction .out files    |
-+-------------------------------------------------------------------------------------------------------+
-|                                         FORMAT CONVERSION                                             |
-+-------------------------------------------------------------------------------------------------------+
-| -out2xyz      OUTCAR -> extxyz (shell)        | -out2xyz_bec       OUTCAR -> extxyz with BEC          |
-| -out2exyz     OUTCAR -> extxyz (python)       | -xyz2dp            extxyz -> DeepMD npy               |
-| -cp2k2xyz     CP2K log -> xyz                 | -xdat2exyz         XDATCAR -> extxyz                  |
-| -cif2pos      cif -> POSCAR                   | -cif2exyz          cif -> extxyz                      |
-| -pos2exyz     POSCAR -> extxyz                | -exyz2pos          extxyz -> POSCAR                   |
-| -pos2lmp      POSCAR -> LAMMPS data           | -lmp2exyz          LAMMPS dump -> extxyz              |
-| -traj2exyz    ASE traj -> extxyz              | -replicate         Replicate structure                |
-| -addgroup     Add group labels                | -addweight         Add structure weight in extxyz     |
-| -clean_xyz    Clean extra info in extxyz      | -get_frame         Extract specific frame             |
-| -frame_range  Extract frames by range         | -dp2xyz            DeepMD npy -> extxyz               |
-+-------------------------------------------------------------------------------------------------------+
-|                                            ANALYSIS                                                   |
-+-------------------------------------------------------------------------------------------------------+
-| -range        Energy/force/virial statistics  | -analyze_comp      Analyze composition                |
-| -chem_species Analyze chemical species        | -cbc               Charge balance check               |
-| -min_dist     Min distance (no PBC)           | -min_dist_pbc      Min distance with PBC              |
-| -filter_dist  Filter by min_dist (no PBC)     | -filter_dist_pbc   Filter by min_dist (PBC)           |
-| -pda          Probability density analysis    | -filter_box        Filter by box-edge length          |
-| -pynep        Deprecated PyNEP sampling       | -nep_modifier      Modify NEP model interactively     |
-| -shift_energy Interactive energy shift        |                                                       |
-+-------------------------------------------------------------------------------------------------------+
-| Python option help: gpumdkit.sh -<option> -h    Plot list: gpumdkit.sh -plt -h                        |
-+-------------------------------------------------------------------------------------------------------+
+ +-------------------------------------------------------------------------------------------------------+
+ |                          GPUMDkit 1.5.8 (2026-09-29)       Command Help                               |
+ +-------------------------------------------------------------------------------------------------------+
+ |                                          MAIN FUNCTIONS                                               |
+ +-------------------------------------------------------------------------------------------------------+
+ | -h            Show this help table            | -plt <type>        Plot and visualization tools       |
+ | -calc <type>  Calculator tools                | -time <gpumd|wpe|nep|gnep>  Time-consuming analyzer   |
+ | -update       Update GPUMDkit                 | -clean             Clean extra files in current dir   |
+ | -skill        Show GPUMDkit agent skill info  | -doctor            Check Python environment           |
+ | -prediction   Write NEP prediction .out files | -prediction_dpa    Write DPA prediction .out files    |
+ | -server       Start the GPUMDkit web server   |                                                       |
+ +-------------------------------------------------------------------------------------------------------+
+ |                                         FORMAT CONVERSION                                             |
+ +-------------------------------------------------------------------------------------------------------+
+ | -out2xyz      OUTCAR -> extxyz (shell)        | -out2xyz_bec       OUTCAR -> extxyz with BEC          |
+ | -out2exyz     OUTCAR -> extxyz (python)       | -xyz2dp            extxyz -> DeepMD npy               |
+ | -cp2k2xyz     CP2K log -> xyz                 | -xdat2exyz         XDATCAR -> extxyz                  |
+ | -cif2pos      cif -> POSCAR                   | -cif2exyz          cif -> extxyz                      |
+ | -pos2exyz     POSCAR -> extxyz                | -exyz2pos          extxyz -> POSCAR                   |
+ | -pos2lmp      POSCAR -> LAMMPS data           | -lmp2exyz          LAMMPS dump -> extxyz              |
+ | -traj2exyz    ASE traj -> extxyz              | -replicate         Replicate structure                |
+ | -addgroup     Add group labels                | -addweight         Add structure weight in extxyz     |
+ | -clean_xyz    Clean extra info in extxyz      | -get_frame         Extract specific frame             |
+ | -frame_range  Extract frames by range         | -dp2xyz            DeepMD npy -> extxyz               |
+ +-------------------------------------------------------------------------------------------------------+
+ |                                            ANALYSIS                                                   |
+ +-------------------------------------------------------------------------------------------------------+
+ | -range        Energy/force/virial statistics  | -analyze_comp      Analyze composition                |
+ | -chem_species Analyze chemical species        | -cbc               Charge balance check               |
+ | -min_dist     Min distance (no PBC)           | -min_dist_pbc      Min distance with PBC              |
+ | -filter_dist  Filter by min_dist (no PBC)     | -filter_dist_pbc   Filter by min_dist (PBC)           |
+ | -pda          Probability density analysis    | -filter_box        Filter by box-edge length          |
+ | -pynep        Deprecated PyNEP sampling       | -nep_modifier      Modify NEP model interactively     |
+ | -shift_energy Interactive energy shift        |                                                       |
+ +-------------------------------------------------------------------------------------------------------+
+ | Python option help: gpumdkit.sh -<option> -h    Plot list: gpumdkit.sh -plt -h                        |
+ +-------------------------------------------------------------------------------------------------------+
 ```
 
 ## Main
@@ -147,95 +147,26 @@ Common types include `train`, `prediction` (alias: `test`), `thermo`, `msd`, `sd
 
 | Command | Syntax | Description |
 |---|---|---|
-| `-time` | `gpumdkit.sh -time <gpumd\|nep>` | Monitor GPUMD or NEP progress |
+| `-time` | `gpumdkit.sh -time <gpumd\|wpe\|nep\|gnep>` | Monitor GPUMD, WPE, NEP, or GNEP progress |
 | `-nep_modifier` | `gpumdkit.sh -nep_modifier [nep.txt] [nep.restart\|-] [nep.in\|-]` | Safely modify and export a NEP4 model package |
 | `-pynep` | `gpumdkit.sh -pynep` | Deprecated PyNEP FPS sampling |
 
 ### NEP model modifier
 
-`-nep_modifier` starts a guided two-column editor built on calorine's NEP model
-modification API. It is intended for developing an existing NEP4 model further:
-for example, increasing capacity, extracting a chemical subset from a foundation
-model, or adding a new species without discarding the learned parameters for the
-original species.
-
-#### Requirements and startup
-
-The command requires `calorine >= 3.4`. Expansion, reduction, and adding species
-also require the `nep.restart` that matches the model because it contains the
-SNES parameter means and exploration widths. A source `nep.in` is recommended so
-that non-architecture training settings can be retained.
+`-nep_modifier` adjusts NEP4 model capacity, adds or removes species, and exports
+model packages. It requires `calorine >= 3.4`. Expansion, reduction, and adding
+species also require a matching `nep.restart`; providing the source `nep.in`
+is recommended.
 
 ```bash
-# Prompt for files; defaults are resolved beside the selected nep.txt
 gpumdkit.sh -nep_modifier
-
-# Load a complete model package directly
 gpumdkit.sh -nep_modifier models/nep.txt models/nep.restart models/nep.in
-
-# Load without restart; species removal/retention remains available
-gpumdkit.sh -nep_modifier models/nep.txt - models/nep.in
-
-# Display command help without importing calorine
 gpumdkit.sh -nep_modifier -h
 ```
 
-#### What each operation does
-
-| Menu operation | Purpose and model effect |
-|---|---|
-| **Expand model capacity** | Increases neurons, enables 4-/5-body or `q_*` descriptor terms, or adds a charge head. Existing trained parameter means are retained and new parameters are initialized for continued optimization. |
-| **Reduce model capacity** | Keeps the highest-ranked neurons while discarding lower-ranked ones, disables descriptor terms, or removes the charge head. This can provide a smaller starting model, but accuracy and speed must be measured after retraining. |
-| **Add chemical species** | Adds a species-specific ANN subnetwork and every descriptor-weight pair involving the new species. The new parameters are untrained; an explicit seed makes their initialization reproducible. |
-| **Remove chemical species** | Removes selected species together with their ANN subnetworks and descriptor-weight pairs. This is convenient when only a few species should be discarded. |
-| **Keep selected species** | Retains the listed species and removes all others. This is the more convenient inverse operation when extracting a small subset from a large model. |
-| **Inspect current model** | Shows species order, cutoffs, descriptor switches and dimensions, neuron and parameter counts, restart state, ZBL, and charge mode. |
-| **Review pending changes** | Lists accepted operations, their arguments, changed architecture fields, and export state before files are written. |
-| **Export model package** | Writes a common, collision-free package suffix for the model, optional restart, updated input, and provenance summary. |
-
-#### Example: expand one model in a reproducible workflow
-
-After loading the package, enter `1`, select the desired expansion fields, and
-enter their target values. Multiple fields may be selected together; calorine
-applies them in one `augment()` call. For example:
-
-```text
-Input the function number:
------------->>
-1
-Input one or more choices, separated by spaces:
------------->>
-1 4
-Input target neuron count (current: 50):
------------->>
-60
-Use these SNES initialization defaults? (Y/n)
------------->>
-y
-Apply these changes? (y/N)
------------->>
-y
-```
-
-This example changes the neuron count from 50 to 60 and enables `q_112`. Choose
-`7` to review the recorded arguments and architecture changes, then choose `8`
-to export. Continued training must use the generated `.in`, `.txt`, and
-`.restart` from the same package; using a stale `nep.in` can make the restart
-layout inconsistent with the modified parameter count.
-
-#### Example: extract or extend a chemical model
-
-To extract a Li-O submodel, choose `5`, enter `Li O`, review the reported species
-order, and export. To add carbon, choose `3`, enter `C`, then provide a deliberate
-random seed. A typewise-cutoff model additionally asks for carbon's radial and
-angular cutoffs. These cutoffs are scientific choices that must be taken from
-the intended training design; the tool does not choose them.
-
-The export contains `*_modified.txt`, `*_modified.restart` when restart data are
-loaded, `*_modified.in`, and `*_modified.changes.txt`. Check the generated input
-with the exact NEP executable version intended for continued training, then
-retrain and validate the modified model on representative reference data before
-using it in production simulations.
+Use `-` in place of the restart path to omit it; species removal and retention
+remain available. Continue training with the `.in`, `.txt`, and `.restart`
+from the same exported package, then retrain and validate before production use.
 
 #### Required calorine citation
 

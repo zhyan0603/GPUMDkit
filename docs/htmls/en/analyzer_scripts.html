@@ -929,6 +929,17 @@
 </li>
         
           <li class="md-nav__item">
+  <a href="#wpe-enabled-gpumd-remaining-time" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        WPE-Enabled GPUMD Remaining Time
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#nep-remaining-time" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -1904,6 +1915,17 @@
 </li>
         
           <li class="md-nav__item">
+  <a href="#wpe-enabled-gpumd-remaining-time" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        WPE-Enabled GPUMD Remaining Time
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#nep-remaining-time" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -2089,6 +2111,11 @@
 <td>GPUMD time</td>
 <td><code>gpumdkit.sh -time gpumd</code></td>
 <td>Estimate remaining GPUMD run time</td>
+</tr>
+<tr>
+<td>WPE GPUMD time</td>
+<td><code>gpumdkit.sh -time wpe</code></td>
+<td>Estimate remaining time for WPE-enabled GPUMD runs</td>
 </tr>
 <tr>
 <td>NEP time</td>
@@ -2340,26 +2367,31 @@ inside the Python interface when needed. The DFT-to-NEP mode requires the
 <a id="__codelineno-20-6" name="__codelineno-20-6" href="#__codelineno-20-6"></a>    13000          499.86         0h 35m 0s      0h 34m 34s    2025-12-27 18:12:04
 <a id="__codelineno-20-7" name="__codelineno-20-7" href="#__codelineno-20-7"></a>    14000          199.93        1h 27m 31s      1h 26m 21s    2025-12-27 19:03:56
 </code></pre></div>
+<h3 id="wpe-enabled-gpumd-remaining-time">WPE-Enabled GPUMD Remaining Time</h3>
+<p><code>time_consuming_wpe.sh</code> estimates the remaining time for WPE-enabled GPUMD runs using buffered progress updates.</p>
+<p><strong>Input files:</strong> <code>run.in</code> and <code>neighbor.out</code> or <code>thermo.out</code> (in the current GPUMD working directory)</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-21-1" name="__codelineno-21-1" href="#__codelineno-21-1"></a>gpumdkit.sh<span class="w"> </span>-time<span class="w"> </span>wpe
+</code></pre></div>
 <h3 id="nep-remaining-time">NEP Remaining Time</h3>
 <p><code>time_consuming_nep.sh</code> estimates the remaining time for NEP training.</p>
 <p><strong>Input files:</strong> <code>loss.out</code> (in the current NEP working directory)</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-21-1" name="__codelineno-21-1" href="#__codelineno-21-1"></a>gpumdkit.sh<span class="w"> </span>-time<span class="w"> </span>nep
+<div class="highlight"><pre><span></span><code><a id="__codelineno-22-1" name="__codelineno-22-1" href="#__codelineno-22-1"></a>gpumdkit.sh<span class="w"> </span>-time<span class="w"> </span>nep
 </code></pre></div>
 <p><strong>Output example:</strong></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-22-1" name="__codelineno-22-1" href="#__codelineno-22-1"></a>+-----------------+-----------+-----------------+---------------------+
-<a id="__codelineno-22-2" name="__codelineno-22-2" href="#__codelineno-22-2"></a>|       Step      | Time Diff |    Time Left    |    Finish Time      |
-<a id="__codelineno-22-3" name="__codelineno-22-3" href="#__codelineno-22-3"></a>+-----------------+-----------+-----------------+---------------------+
-<a id="__codelineno-22-4" name="__codelineno-22-4" href="#__codelineno-22-4"></a>| 6700            | 1 s       | 0 h 15 m 33 s   | 2025-10-23 15:34:11 |
-<a id="__codelineno-22-5" name="__codelineno-22-5" href="#__codelineno-22-5"></a>| 6800            | 2 s       | 0 h 31 m 4 s    | 2025-10-23 15:49:44 |
-<a id="__codelineno-22-6" name="__codelineno-22-6" href="#__codelineno-22-6"></a>| 6900            | 2 s       | 0 h 31 m 2 s    | 2025-10-23 15:49:44 |
-<a id="__codelineno-22-7" name="__codelineno-22-7" href="#__codelineno-22-7"></a>+-----------------+-----------+-----------------+---------------------+
+<div class="highlight"><pre><span></span><code><a id="__codelineno-23-1" name="__codelineno-23-1" href="#__codelineno-23-1"></a>+-----------------+-----------+-----------------+---------------------+
+<a id="__codelineno-23-2" name="__codelineno-23-2" href="#__codelineno-23-2"></a>|       Step      | Time Diff |    Time Left    |    Finish Time      |
+<a id="__codelineno-23-3" name="__codelineno-23-3" href="#__codelineno-23-3"></a>+-----------------+-----------+-----------------+---------------------+
+<a id="__codelineno-23-4" name="__codelineno-23-4" href="#__codelineno-23-4"></a>| 6700            | 1 s       | 0 h 15 m 33 s   | 2025-10-23 15:34:11 |
+<a id="__codelineno-23-5" name="__codelineno-23-5" href="#__codelineno-23-5"></a>| 6800            | 2 s       | 0 h 31 m 4 s    | 2025-10-23 15:49:44 |
+<a id="__codelineno-23-6" name="__codelineno-23-6" href="#__codelineno-23-6"></a>| 6900            | 2 s       | 0 h 31 m 2 s    | 2025-10-23 15:49:44 |
+<a id="__codelineno-23-7" name="__codelineno-23-7" href="#__codelineno-23-7"></a>+-----------------+-----------+-----------------+---------------------+
 </code></pre></div>
 <hr />
 <h2 id="probability-density-analysis">Probability Density Analysis</h2>
 <p><code>probability_density_analysis.py</code> calculates 3D probability density of mobile ions for diffusion channel analysis.</p>
 <p><strong>Input files:</strong> Reference structure (POSCAR), trajectory file (extxyz)</p>
 <p><strong>CLI mode:</strong></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-23-1" name="__codelineno-23-1" href="#__codelineno-23-1"></a>gpumdkit.sh<span class="w"> </span>-pda<span class="w"> </span>LLZO.vasp<span class="w"> </span>dump.xyz<span class="w"> </span>Li<span class="w"> </span><span class="m">0</span>.25
+<div class="highlight"><pre><span></span><code><a id="__codelineno-24-1" name="__codelineno-24-1" href="#__codelineno-24-1"></a>gpumdkit.sh<span class="w"> </span>-pda<span class="w"> </span>LLZO.vasp<span class="w"> </span>dump.xyz<span class="w"> </span>Li<span class="w"> </span><span class="m">0</span>.25
 </code></pre></div>
 <p><strong>Arguments:</strong></p>
 <table>
@@ -2399,34 +2431,34 @@ inside the Python interface when needed. The DFT-to-NEP mode requires the
 <hr />
 <h2 id="example-workflows">Example Workflows</h2>
 <h3 id="structure-quality-check">Structure Quality Check</h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-24-1" name="__codelineno-24-1" href="#__codelineno-24-1"></a><span class="c1"># 1. Check composition</span>
-<a id="__codelineno-24-2" name="__codelineno-24-2" href="#__codelineno-24-2"></a>gpumdkit.sh<span class="w"> </span>-analyze_comp<span class="w"> </span>train.xyz
-<a id="__codelineno-24-3" name="__codelineno-24-3" href="#__codelineno-24-3"></a>
-<a id="__codelineno-24-4" name="__codelineno-24-4" href="#__codelineno-24-4"></a><span class="c1"># 2. Check energy/force range</span>
-<a id="__codelineno-24-5" name="__codelineno-24-5" href="#__codelineno-24-5"></a>gpumdkit.sh<span class="w"> </span>-range<span class="w"> </span>train.xyz<span class="w"> </span>force<span class="w"> </span>hist
-<a id="__codelineno-24-6" name="__codelineno-24-6" href="#__codelineno-24-6"></a>
-<a id="__codelineno-24-7" name="__codelineno-24-7" href="#__codelineno-24-7"></a><span class="c1"># 3. Check minimum distances</span>
-<a id="__codelineno-24-8" name="__codelineno-24-8" href="#__codelineno-24-8"></a>gpumdkit.sh<span class="w"> </span>-min_dist_pbc<span class="w"> </span>train.xyz
-<a id="__codelineno-24-9" name="__codelineno-24-9" href="#__codelineno-24-9"></a>
-<a id="__codelineno-24-10" name="__codelineno-24-10" href="#__codelineno-24-10"></a><span class="c1"># 4. Find outliers (after NEP training)</span>
-<a id="__codelineno-24-11" name="__codelineno-24-11" href="#__codelineno-24-11"></a><span class="c1"># Interactive: 5) Analyzer → 502</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-25-1" name="__codelineno-25-1" href="#__codelineno-25-1"></a><span class="c1"># 1. Check composition</span>
+<a id="__codelineno-25-2" name="__codelineno-25-2" href="#__codelineno-25-2"></a>gpumdkit.sh<span class="w"> </span>-analyze_comp<span class="w"> </span>train.xyz
+<a id="__codelineno-25-3" name="__codelineno-25-3" href="#__codelineno-25-3"></a>
+<a id="__codelineno-25-4" name="__codelineno-25-4" href="#__codelineno-25-4"></a><span class="c1"># 2. Check energy/force range</span>
+<a id="__codelineno-25-5" name="__codelineno-25-5" href="#__codelineno-25-5"></a>gpumdkit.sh<span class="w"> </span>-range<span class="w"> </span>train.xyz<span class="w"> </span>force<span class="w"> </span>hist
+<a id="__codelineno-25-6" name="__codelineno-25-6" href="#__codelineno-25-6"></a>
+<a id="__codelineno-25-7" name="__codelineno-25-7" href="#__codelineno-25-7"></a><span class="c1"># 3. Check minimum distances</span>
+<a id="__codelineno-25-8" name="__codelineno-25-8" href="#__codelineno-25-8"></a>gpumdkit.sh<span class="w"> </span>-min_dist_pbc<span class="w"> </span>train.xyz
+<a id="__codelineno-25-9" name="__codelineno-25-9" href="#__codelineno-25-9"></a>
+<a id="__codelineno-25-10" name="__codelineno-25-10" href="#__codelineno-25-10"></a><span class="c1"># 4. Find outliers (after NEP training)</span>
+<a id="__codelineno-25-11" name="__codelineno-25-11" href="#__codelineno-25-11"></a><span class="c1"># Interactive: 5) Analyzer → 502</span>
 </code></pre></div>
 <h3 id="structure-filtering-pipeline">Structure Filtering Pipeline</h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-25-1" name="__codelineno-25-1" href="#__codelineno-25-1"></a><span class="c1"># 1. Filter by minimum distance (writes filtered_dump.xyz)</span>
-<a id="__codelineno-25-2" name="__codelineno-25-2" href="#__codelineno-25-2"></a>gpumdkit.sh<span class="w"> </span>-filter_dist_pbc<span class="w"> </span>dump.xyz<span class="w"> </span><span class="m">1</span>.0
-<a id="__codelineno-25-3" name="__codelineno-25-3" href="#__codelineno-25-3"></a>
-<a id="__codelineno-25-4" name="__codelineno-25-4" href="#__codelineno-25-4"></a><span class="c1"># 2. Filter by box size (writes filtered_by_box.xyz)</span>
-<a id="__codelineno-25-5" name="__codelineno-25-5" href="#__codelineno-25-5"></a>gpumdkit.sh<span class="w"> </span>-filter_box<span class="w"> </span>filtered_dump.xyz<span class="w"> </span><span class="m">13</span>
-<a id="__codelineno-25-6" name="__codelineno-25-6" href="#__codelineno-25-6"></a>
-<a id="__codelineno-25-7" name="__codelineno-25-7" href="#__codelineno-25-7"></a><span class="c1"># 3. Filter by force threshold (writes filtered.xyz)</span>
-<a id="__codelineno-25-8" name="__codelineno-25-8" href="#__codelineno-25-8"></a>gpumdkit.sh<span class="w"> </span>-filter_value<span class="w"> </span>filtered_by_box.xyz<span class="w"> </span>force<span class="w"> </span><span class="m">20</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-26-1" name="__codelineno-26-1" href="#__codelineno-26-1"></a><span class="c1"># 1. Filter by minimum distance (writes filtered_dump.xyz)</span>
+<a id="__codelineno-26-2" name="__codelineno-26-2" href="#__codelineno-26-2"></a>gpumdkit.sh<span class="w"> </span>-filter_dist_pbc<span class="w"> </span>dump.xyz<span class="w"> </span><span class="m">1</span>.0
+<a id="__codelineno-26-3" name="__codelineno-26-3" href="#__codelineno-26-3"></a>
+<a id="__codelineno-26-4" name="__codelineno-26-4" href="#__codelineno-26-4"></a><span class="c1"># 2. Filter by box size (writes filtered_by_box.xyz)</span>
+<a id="__codelineno-26-5" name="__codelineno-26-5" href="#__codelineno-26-5"></a>gpumdkit.sh<span class="w"> </span>-filter_box<span class="w"> </span>filtered_dump.xyz<span class="w"> </span><span class="m">13</span>
+<a id="__codelineno-26-6" name="__codelineno-26-6" href="#__codelineno-26-6"></a>
+<a id="__codelineno-26-7" name="__codelineno-26-7" href="#__codelineno-26-7"></a><span class="c1"># 3. Filter by force threshold (writes filtered.xyz)</span>
+<a id="__codelineno-26-8" name="__codelineno-26-8" href="#__codelineno-26-8"></a>gpumdkit.sh<span class="w"> </span>-filter_value<span class="w"> </span>filtered_by_box.xyz<span class="w"> </span>force<span class="w"> </span><span class="m">20</span>
 </code></pre></div>
 <h3 id="diffusion-channel-analysis">Diffusion Channel Analysis</h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-26-1" name="__codelineno-26-1" href="#__codelineno-26-1"></a><span class="c1"># 1. Calculate probability density</span>
-<a id="__codelineno-26-2" name="__codelineno-26-2" href="#__codelineno-26-2"></a>gpumdkit.sh<span class="w"> </span>-pda<span class="w"> </span>LLZO.vasp<span class="w"> </span>dump.xyz<span class="w"> </span>Li<span class="w"> </span><span class="m">0</span>.25
-<a id="__codelineno-26-3" name="__codelineno-26-3" href="#__codelineno-26-3"></a>
-<a id="__codelineno-26-4" name="__codelineno-26-4" href="#__codelineno-26-4"></a><span class="c1"># 2. Visualize with VESTA</span>
-<a id="__codelineno-26-5" name="__codelineno-26-5" href="#__codelineno-26-5"></a><span class="c1"># Open probability_density_0.25.vasp</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-27-1" name="__codelineno-27-1" href="#__codelineno-27-1"></a><span class="c1"># 1. Calculate probability density</span>
+<a id="__codelineno-27-2" name="__codelineno-27-2" href="#__codelineno-27-2"></a>gpumdkit.sh<span class="w"> </span>-pda<span class="w"> </span>LLZO.vasp<span class="w"> </span>dump.xyz<span class="w"> </span>Li<span class="w"> </span><span class="m">0</span>.25
+<a id="__codelineno-27-3" name="__codelineno-27-3" href="#__codelineno-27-3"></a>
+<a id="__codelineno-27-4" name="__codelineno-27-4" href="#__codelineno-27-4"></a><span class="c1"># 2. Visualize with VESTA</span>
+<a id="__codelineno-27-5" name="__codelineno-27-5" href="#__codelineno-27-5"></a><span class="c1"># Open probability_density_0.25.vasp</span>
 </code></pre></div>
 
 

@@ -2656,11 +2656,7 @@ directory. In addition to the existing actions, it recognizes:</p>
 <p>Plots that need a user-selected element, temperature, input-file set, or other
 scientific parameter remain available from the terminal, where those choices
 can be entered explicitly.</p>
-<p>The console's location bar also provides Home, parent-directory, and
-breadcrumb navigation. Its file actions can create an empty file or folder,
-upload files, and download the file currently open in the viewer. Uploads and
-new entries stay inside the server's working-directory sandbox; existing names
-are never overwritten.</p>
+<p>See <a href="remote_web_console.html">Remote Web Console</a> for directory navigation and file management.</p>
 <h2 id="a-reliable-plotting-workflow">A reliable plotting workflow</h2>
 <p>Use the following sequence instead of trying plot names at random:</p>
 <ol>
@@ -2975,16 +2971,14 @@ not sufficient for this plot.</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-19-1" name="__codelineno-19-1" href="#__codelineno-19-1"></a>gpumdkit.sh<span class="w"> </span>-plt<span class="w"> </span>arrhenius_d
 <a id="__codelineno-19-2" name="__codelineno-19-2" href="#__codelineno-19-2"></a>gpumdkit.sh<span class="w"> </span>-plt<span class="w"> </span>D<span class="w">             </span><span class="c1"># Alternative command</span>
 </code></pre></div>
-<p><strong>Output example:</strong></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-20-1" name="__codelineno-20-1" href="#__codelineno-20-1"></a>T: 300K, D_total: 1.001e-07 cm2/s
-<a id="__codelineno-20-2" name="__codelineno-20-2" href="#__codelineno-20-2"></a>T: 350K, D_total: 4.184e-07 cm2/s
-<a id="__codelineno-20-3" name="__codelineno-20-3" href="#__codelineno-20-3"></a>T: 400K, D_total: 1.027e-06 cm2/s
-<a id="__codelineno-20-4" name="__codelineno-20-4" href="#__codelineno-20-4"></a>Ea: 0.230 eV
+<p><strong>Activation-energy output format:</strong></p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-20-1" name="__codelineno-20-1" href="#__codelineno-20-1"></a>Activation Energy: &lt;Ea&gt; eV, R2 = &lt;R2&gt;
 </code></pre></div>
 <div align="center">
   <img src="../../Gallery/Arrhenius_D.png" alt="Arrhenius diffusivity" width="58%" />
 </div>
 
+<p>The terminal reports Ea and the corresponding Arrhenius-fit <code>R2</code> to four decimal places.</p>
 <hr />
 <h3 id="plt_arrhenius_d_ptpy">plt_arrhenius_d_PT.py</h3>
 <p>Creates a piecewise Arrhenius diffusivity plot around a user-specified phase-transition temperature.
@@ -3006,7 +3000,7 @@ activation energy of each component.</p>
 <p><strong>Input Files:</strong> <code>*K/msd.out</code> files</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-22-1" name="__codelineno-22-1" href="#__codelineno-22-1"></a>gpumdkit.sh<span class="w"> </span>-plt<span class="w"> </span>D_xyz
 </code></pre></div>
-<p>The output reports <code>Ea_x</code>, <code>Ea_y</code>, and <code>Ea_z</code> from the linear fits.</p>
+<p>The output reports Ea and <code>R2</code> for the total (<code>Ea_all</code>) and each x/y/z direction.</p>
 <hr />
 <h3 id="plt_arrhenius_sigmapy">plt_arrhenius_sigma.py</h3>
 <p>Creates Arrhenius plot for ionic conductivity (ln(σ·T) vs 1000/T).</p>
@@ -3019,6 +3013,7 @@ activation energy of each component.</p>
   <img src="../../Gallery/Arrhenius_sigma.png" alt="Arrhenius ionic conductivity" width="58%" />
 </div>
 
+<p>The terminal reports Ea and the corresponding Arrhenius-fit <code>R2</code> to four decimal places.</p>
 <hr />
 <h3 id="plt_arrhenius_sigma_ptpy">plt_arrhenius_sigma_PT.py</h3>
 <p>Creates a piecewise Arrhenius ionic-conductivity plot around a user-specified phase-transition temperature.
@@ -3044,6 +3039,7 @@ relation.</p>
 <code>model.xyz</code> in the first temperature directory</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-25-1" name="__codelineno-25-1" href="#__codelineno-25-1"></a>gpumdkit.sh<span class="w"> </span>-plt<span class="w"> </span>sigma_xyz
 </code></pre></div>
+<p>The terminal reports Ea and the corresponding fit <code>R2</code> to four decimal places for the total and each x/y/z direction.</p>
 <hr />
 <h2 id="heat-transport">Heat Transport</h2>
 <h3 id="plt_emdpy">plt_emd.py</h3>
@@ -3112,7 +3108,6 @@ trajectory standard error.</p>
 </tr>
 </tbody>
 </table>
-<p><strong>Note:</strong> If no SHC data, set <code>scale_eff_size</code> and <code>cutoff_freq</code> to any number as placeholders when using <code>--save</code>.</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-28-1" name="__codelineno-28-1" href="#__codelineno-28-1"></a>gpumdkit.sh<span class="w"> </span>-plt<span class="w"> </span>nemd<span class="w"> </span><span class="o">[</span>real_length<span class="o">]</span><span class="w"> </span><span class="o">[</span>scale_eff_size<span class="o">]</span><span class="w"> </span><span class="o">[</span>cutoff_freq<span class="o">]</span><span class="w"> </span><span class="o">[</span>--save<span class="o">]</span><span class="w"> </span><span class="o">[</span>--save-data<span class="o">]</span>
 <a id="__codelineno-28-2" name="__codelineno-28-2" href="#__codelineno-28-2"></a>gpumdkit.sh<span class="w"> </span>-plt<span class="w"> </span>nemd<span class="w"> </span>--save-data<span class="w">                         </span><span class="c1"># use defaults and export data</span>
 <a id="__codelineno-28-3" name="__codelineno-28-3" href="#__codelineno-28-3"></a>gpumdkit.sh<span class="w"> </span>-plt<span class="w"> </span>nemd<span class="w"> </span>Auto<span class="w"> </span><span class="m">1</span><span class="w"> </span><span class="m">60</span><span class="w"> </span>--save<span class="w"> </span>--save-data<span class="w">       </span><span class="c1"># save the figure and data</span>
@@ -3155,7 +3150,6 @@ legacy bare tokens <code>save</code> and <code>save_data</code> remain accepted.
 </tr>
 </tbody>
 </table>
-<p><strong>Note:</strong> If no SHC data, set <code>scale_eff_size</code> and <code>cutoff_freq</code> to any number as placeholders when using <code>--save</code>.</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-29-1" name="__codelineno-29-1" href="#__codelineno-29-1"></a>gpumdkit.sh<span class="w"> </span>-plt<span class="w"> </span>hnemd<span class="w"> </span><span class="o">[</span>scale_eff_size<span class="o">]</span><span class="w"> </span><span class="o">[</span>cutoff_freq<span class="o">]</span><span class="w"> </span><span class="o">[</span>--save<span class="o">]</span><span class="w"> </span><span class="o">[</span>--save-data<span class="o">]</span>
 <a id="__codelineno-29-2" name="__codelineno-29-2" href="#__codelineno-29-2"></a>gpumdkit.sh<span class="w"> </span>-plt<span class="w"> </span>hnemd<span class="w"> </span>--save-data<span class="w">             </span><span class="c1"># use defaults and export data</span>
 <a id="__codelineno-29-3" name="__codelineno-29-3" href="#__codelineno-29-3"></a>gpumdkit.sh<span class="w"> </span>-plt<span class="w"> </span>hnemd<span class="w"> </span><span class="m">1</span><span class="w"> </span><span class="m">60</span><span class="w"> </span>--save<span class="w"> </span>--save-data<span class="w"> </span><span class="c1"># save the figure and data</span>

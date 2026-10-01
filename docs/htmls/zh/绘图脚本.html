@@ -2654,9 +2654,7 @@
 </table>
 <p>需要用户选择元素、温度、输入文件组合或其他科学参数的绘图，仍可在
 terminal 中显式输入这些选项。</p>
-<p>控制台的路径栏还提供主目录、上一级和面包屑导航。文件操作支持新建空文件、
-新建文件夹、上传文件，以及下载当前打开的文件。上传和新建操作均限制在服务端
-工作目录内，遇到同名项目时不会覆盖。</p>
+<p>目录导航和文件管理说明见<a href="%E8%BF%9C%E7%A8%8B%E7%BD%91%E9%A1%B5%E6%8E%A7%E5%88%B6%E5%8F%B0.html">远程 Web 控制台</a>。</p>
 <h2 id="_3">建议的绘图流程</h2>
 <p>与其反复尝试图类型，建议按以下顺序操作：</p>
 <ol>
@@ -2959,16 +2957,14 @@ GPUMD 会追加分组数据；请检查其布局，不要假定文件具有单�
 <div class="highlight"><pre><span></span><code><a id="__codelineno-19-1" name="__codelineno-19-1" href="#__codelineno-19-1"></a>gpumdkit.sh<span class="w"> </span>-plt<span class="w"> </span>arrhenius_d
 <a id="__codelineno-19-2" name="__codelineno-19-2" href="#__codelineno-19-2"></a>gpumdkit.sh<span class="w"> </span>-plt<span class="w"> </span>D<span class="w">             </span><span class="c1"># 替代命令</span>
 </code></pre></div>
-<p><strong>输出示例：</strong></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-20-1" name="__codelineno-20-1" href="#__codelineno-20-1"></a>T: 300K, D_total: 1.001e-07 cm2/s
-<a id="__codelineno-20-2" name="__codelineno-20-2" href="#__codelineno-20-2"></a>T: 350K, D_total: 4.184e-07 cm2/s
-<a id="__codelineno-20-3" name="__codelineno-20-3" href="#__codelineno-20-3"></a>T: 400K, D_total: 1.027e-06 cm2/s
-<a id="__codelineno-20-4" name="__codelineno-20-4" href="#__codelineno-20-4"></a>Ea: 0.230 eV
+<p><strong>活化能输出格式：</strong></p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-20-1" name="__codelineno-20-1" href="#__codelineno-20-1"></a>Activation Energy: &lt;Ea&gt; eV, R2 = &lt;R2&gt;
 </code></pre></div>
 <div align="center">
   <img src="../../Gallery/Arrhenius_D.png" alt="Arrhenius diffusivity" width="58%" />
 </div>
 
+<p>终端输出 Ea 和对应 Arrhenius 线性拟合的 <code>R2</code>（四位小数）。</p>
 <hr />
 <h3 id="plt_arrhenius_d_ptpy">plt_arrhenius_d_PT.py</h3>
 <p>在用户指定的相变温度两侧绘制分段 Arrhenius 扩散系数图。相变温度点同时纳入
@@ -2989,7 +2985,7 @@ GPUMD 会追加分组数据；请检查其布局，不要假定文件具有单�
 <p><strong>输入文件：</strong> <code>*K/msd.out</code> 文件</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-22-1" name="__codelineno-22-1" href="#__codelineno-22-1"></a>gpumdkit.sh<span class="w"> </span>-plt<span class="w"> </span>D_xyz
 </code></pre></div>
-<p>输出会给出 <code>Ea_x</code>、<code>Ea_y</code>、<code>Ea_z</code> 三个方向的线性拟合结果。</p>
+<p>输出会给出总体（<code>Ea_all</code>）及 x/y/z 各方向的 Ea 和 <code>R2</code>。</p>
 <hr />
 <h3 id="plt_arrhenius_sigmapy">plt_arrhenius_sigma.py</h3>
 <p>创建 Arrhenius 离子电导率图（ln(σ·T) vs 1000/T）。</p>
@@ -3002,6 +2998,7 @@ GPUMD 会追加分组数据；请检查其布局，不要假定文件具有单�
   <img src="../../Gallery/Arrhenius_sigma.png" alt="Arrhenius ionic conductivity" width="58%" />
 </div>
 
+<p>终端输出 Ea 和对应 Arrhenius 线性拟合的 <code>R2</code>（四位小数）。</p>
 <hr />
 <h3 id="plt_arrhenius_sigma_ptpy">plt_arrhenius_sigma_PT.py</h3>
 <p>在用户指定的相变温度两侧绘制分段 Arrhenius 离子电导率图。相变温度点同时纳入
@@ -3025,6 +3022,7 @@ Arrhenius 关系图，并用 Nernst-Einstein 关系提取每个方向的活化�
 <code>model.xyz</code></p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-25-1" name="__codelineno-25-1" href="#__codelineno-25-1"></a>gpumdkit.sh<span class="w"> </span>-plt<span class="w"> </span>sigma_xyz
 </code></pre></div>
+<p>终端输出总体及 x/y/z 各方向的 Ea 和对应线性拟合的 <code>R2</code>（四位小数）。</p>
 <hr />
 <h2 id="_6">热输运</h2>
 <h3 id="plt_emdpy">plt_emd.py</h3>
@@ -3090,7 +3088,6 @@ HAC 重复次数的平方根；它不是独立轨迹之间的标准误差。</p>
 </tr>
 </tbody>
 </table>
-<p><strong>注意：</strong> 如果没有 SHC 数据，使用 <code>--save</code> 时请将 <code>scale_eff_size</code> 和 <code>cutoff_freq</code> 设为任意占位数字。</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-28-1" name="__codelineno-28-1" href="#__codelineno-28-1"></a>gpumdkit.sh<span class="w"> </span>-plt<span class="w"> </span>nemd<span class="w"> </span><span class="o">[</span>real_length<span class="o">]</span><span class="w"> </span><span class="o">[</span>scale_eff_size<span class="o">]</span><span class="w"> </span><span class="o">[</span>cutoff_freq<span class="o">]</span><span class="w"> </span><span class="o">[</span>--save<span class="o">]</span><span class="w"> </span><span class="o">[</span>--save-data<span class="o">]</span>
 <a id="__codelineno-28-2" name="__codelineno-28-2" href="#__codelineno-28-2"></a>gpumdkit.sh<span class="w"> </span>-plt<span class="w"> </span>nemd<span class="w"> </span>--save-data<span class="w">                         </span><span class="c1"># 使用默认参数并导出数据</span>
 <a id="__codelineno-28-3" name="__codelineno-28-3" href="#__codelineno-28-3"></a>gpumdkit.sh<span class="w"> </span>-plt<span class="w"> </span>nemd<span class="w"> </span>Auto<span class="w"> </span><span class="m">1</span><span class="w"> </span><span class="m">60</span><span class="w"> </span>--save<span class="w"> </span>--save-data<span class="w">       </span><span class="c1"># 同时保存图片和数据</span>
@@ -3133,7 +3130,6 @@ HAC 重复次数的平方根；它不是独立轨迹之间的标准误差。</p>
 </tr>
 </tbody>
 </table>
-<p><strong>注意：</strong> 如果没有 SHC 数据，使用 <code>--save</code> 时请将 <code>scale_eff_size</code> 和 <code>cutoff_freq</code> 设为任意占位数字。</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-29-1" name="__codelineno-29-1" href="#__codelineno-29-1"></a>gpumdkit.sh<span class="w"> </span>-plt<span class="w"> </span>hnemd<span class="w"> </span><span class="o">[</span>scale_eff_size<span class="o">]</span><span class="w"> </span><span class="o">[</span>cutoff_freq<span class="o">]</span><span class="w"> </span><span class="o">[</span>--save<span class="o">]</span><span class="w"> </span><span class="o">[</span>--save-data<span class="o">]</span>
 <a id="__codelineno-29-2" name="__codelineno-29-2" href="#__codelineno-29-2"></a>gpumdkit.sh<span class="w"> </span>-plt<span class="w"> </span>hnemd<span class="w"> </span>--save-data<span class="w">             </span><span class="c1"># 使用默认参数并导出数据</span>
 <a id="__codelineno-29-3" name="__codelineno-29-3" href="#__codelineno-29-3"></a>gpumdkit.sh<span class="w"> </span>-plt<span class="w"> </span>hnemd<span class="w"> </span><span class="m">1</span><span class="w"> </span><span class="m">60</span><span class="w"> </span>--save<span class="w"> </span>--save-data<span class="w"> </span><span class="c1"># 同时保存图片和数据</span>

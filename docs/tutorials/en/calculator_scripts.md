@@ -7,7 +7,7 @@
 
 ## Overview
 
-The calculator module can be read as three groups:
+The calculator module can be read as four groups:
 
 - **Trajectory properties:** compute time-dependent quantities such as MSD and ionic conductivity from GPUMD or extxyz trajectories, and calculate X-ray diffraction from extxyz trajectories;
 - **Phonon properties:** calculate phonon force constants and band structures from a primitive cell, a NEP model, and a `QPOINTS` path;

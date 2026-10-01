@@ -1724,7 +1724,7 @@
 <div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>gpumdkit.sh
 <a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="c1"># 选择 3 -&gt; 301 -&gt; VASP</span>
 </code></pre></div>
-<p>运行后通常得到：</p>
+<p>所有结构只有一种元素集合时，输出保持原来的平铺结构：</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>current directory/
 <a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>├── struct_fp/
 <a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>│   ├── POSCAR_1.vasp
@@ -1734,53 +1734,73 @@
 <a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a>├── &lt;prefix&gt;_2/
 <a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a>└── presub.sh
 </code></pre></div>
-<p><code>fp/</code> 由脚本创建。准备结束后，把已经确认的 <code>INCAR</code>、<code>POTCAR</code> 和
-<code>KPOINTS</code> 放入 <code>fp/</code>；各计算目录会链接这里的文件。输入的 <code>prefix</code> 会
-成为计算目录前缀，之后用 <code>out2xyz</code> 提取结果时，目录名会写入 extxyz 的
-<code>config_type</code>。</p>
+<p>对于 extxyz 输入，专用转换脚本根据源文件中每帧的原子符号判断元素集合，并
+沿用整个轨迹的元素首次出现顺序写出 POSCAR。每个 POSCAR 都会被重新读入，
+核对元素顺序和数量。如果所有结构的元素集合相同，就沿用原来的平铺目录，
+并共用 <code>fp/POTCAR</code>。元素集合相同但原子比例不同的结构仍属于同一组。如果
+存在多个元素集合，POSCAR 会按元素顺序放入 <code>struct_fp/&lt;元素顺序&gt;/</code>，各计算
+目录链接到对应的 <code>fp/POTCAR_&lt;元素顺序&gt;</code>：</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>struct_fp/
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>├── Al_O/POSCAR_1.vasp
+<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>└── Al_O_Te_Bi/POSCAR_2.vasp
+<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a>fp/
+<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a>├── INCAR
+<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a>├── POTCAR_Al_O
+<a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a>└── POTCAR_Al_O_Te_Bi
+<a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a>&lt;prefix&gt;_1/POTCAR -&gt; ../fp/POTCAR_Al_O
+<a id="__codelineno-7-9" name="__codelineno-7-9" href="#__codelineno-7-9"></a>&lt;prefix&gt;_1/KPOINTS -&gt; ../fp/KPOINTS
+<a id="__codelineno-7-10" name="__codelineno-7-10" href="#__codelineno-7-10"></a>&lt;prefix&gt;_2/POTCAR -&gt; ../fp/POTCAR_Al_O_Te_Bi
+<a id="__codelineno-7-11" name="__codelineno-7-11" href="#__codelineno-7-11"></a>&lt;prefix&gt;_2/KPOINTS -&gt; ../fp/KPOINTS
+</code></pre></div>
+<p>请根据程序列出的名称把各组 POTCAR 放入 <code>fp/</code>，并确保 POTCAR 中元素的顺序
+与 POSCAR 头部一致。所有组共用 <code>fp/INCAR</code>，每个计算目录都会链接到
+<code>../fp/KPOINTS</code>。显式指定 k 点时，请在 <code>fp/</code> 中提供该文件。如果目标文件
+不存在，链接会悬空，VASP 会按 KPOINTS 文件缺失处理并使用 <code>KSPACING</code>。
+输入的 <code>prefix</code> 会成为计算目录前缀，之后用 <code>out2xyz</code> 提取结果时，目录名会
+写入 extxyz 的 <code>config_type</code>。</p>
 <h3 id="cp2k-301-2">CP2K 单点预处理（301 -&gt; 2）</h3>
 <p>先准备 extxyz 文件和模板。模板必须从 <code>pos.xyz</code> 读取坐标，参考模板为
 <code>Scripts/workflow/cp2k_template.inp</code>。通过菜单运行：</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>gpumdkit.sh
-<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a><span class="c1"># 选择 3 -&gt; 301 -&gt; CP2K</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>gpumdkit.sh
+<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a><span class="c1"># 选择 3 -&gt; 301 -&gt; CP2K</span>
 </code></pre></div>
 <p>交互输入为：</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>&lt;extxyz_file&gt; &lt;template.inp&gt; &lt;prefix_name&gt;
+<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>&lt;extxyz_file&gt; &lt;template.inp&gt; &lt;prefix_name&gt;
 </code></pre></div>
 <p>例如：</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>dump.xyz template.inp H2O
+<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a>dump.xyz template.inp H2O
 </code></pre></div>
 <p>脚本为每个结构创建 <code>&lt;prefix&gt;_&lt;index&gt;/</code>，并写入 <code>input.inp</code> 和 <code>pos.xyz</code>。</p>
 <p>源码用户也可以直接调用脚本。下面的相对路径要求从 GPUMDkit 仓库根目录运行，
 并将输入文件名改为实际数据路径；也可以在数据目录中使用脚本的绝对路径。
 通过 Conda 安装的用户优先使用上面的菜单。</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a>python<span class="w"> </span>Scripts/workflow/scf_batch_pretreatment_cp2k.py<span class="w"> </span>train.xyz<span class="w"> </span>template.inp<span class="w"> </span>calc
+<div class="highlight"><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a>python<span class="w"> </span>Scripts/workflow/scf_batch_pretreatment_cp2k.py<span class="w"> </span>train.xyz<span class="w"> </span>template.inp<span class="w"> </span>calc
 </code></pre></div>
 <h2 id="md">2. 准备 MD 采样目录</h2>
 <h3 id="gpumd302">GPUMD（302）</h3>
 <p>把 <code>.vasp</code> 文件或一个 extxyz 文件放在专用工作目录中。输入选择规则与 VASP
 预处理相同：<code>.vasp</code> 优先；没有 <code>.vasp</code> 且有多个 <code>.xyz</code> 时会让用户选择。</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a>gpumdkit.sh
-<a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a><span class="c1"># 选择 3 -&gt; 302</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a>gpumdkit.sh
+<a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a><span class="c1"># 选择 3 -&gt; 302</span>
 </code></pre></div>
 <p>典型输入：</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a>current directory/
-<a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a>├── POSCAR_1.vasp
-<a id="__codelineno-12-3" name="__codelineno-12-3" href="#__codelineno-12-3"></a>└── POSCAR_2.vasp
+<div class="highlight"><pre><span></span><code><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a>current directory/
+<a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a>├── POSCAR_1.vasp
+<a id="__codelineno-13-3" name="__codelineno-13-3" href="#__codelineno-13-3"></a>└── POSCAR_2.vasp
 </code></pre></div>
 <p>或：</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a>current directory/
-<a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a>└── dump.xyz
+<div class="highlight"><pre><span></span><code><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a>current directory/
+<a id="__codelineno-14-2" name="__codelineno-14-2" href="#__codelineno-14-2"></a>└── dump.xyz
 </code></pre></div>
 <p>运行后通常得到：</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a>current directory/
-<a id="__codelineno-14-2" name="__codelineno-14-2" href="#__codelineno-14-2"></a>├── struct_md/
-<a id="__codelineno-14-3" name="__codelineno-14-3" href="#__codelineno-14-3"></a>│   ├── model_1.xyz
-<a id="__codelineno-14-4" name="__codelineno-14-4" href="#__codelineno-14-4"></a>│   └── ...
-<a id="__codelineno-14-5" name="__codelineno-14-5" href="#__codelineno-14-5"></a>├── md/
-<a id="__codelineno-14-6" name="__codelineno-14-6" href="#__codelineno-14-6"></a>├── sample_1/
-<a id="__codelineno-14-7" name="__codelineno-14-7" href="#__codelineno-14-7"></a>├── sample_2/
-<a id="__codelineno-14-8" name="__codelineno-14-8" href="#__codelineno-14-8"></a>└── presub.sh
+<div class="highlight"><pre><span></span><code><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a>current directory/
+<a id="__codelineno-15-2" name="__codelineno-15-2" href="#__codelineno-15-2"></a>├── struct_md/
+<a id="__codelineno-15-3" name="__codelineno-15-3" href="#__codelineno-15-3"></a>│   ├── model_1.xyz
+<a id="__codelineno-15-4" name="__codelineno-15-4" href="#__codelineno-15-4"></a>│   └── ...
+<a id="__codelineno-15-5" name="__codelineno-15-5" href="#__codelineno-15-5"></a>├── md/
+<a id="__codelineno-15-6" name="__codelineno-15-6" href="#__codelineno-15-6"></a>├── sample_1/
+<a id="__codelineno-15-7" name="__codelineno-15-7" href="#__codelineno-15-7"></a>├── sample_2/
+<a id="__codelineno-15-8" name="__codelineno-15-8" href="#__codelineno-15-8"></a>└── presub.sh
 </code></pre></div>
 <p>准备结束后，把已确认的 <code>nep.txt</code> 和每个样本对应的 <code>run_*.in</code> 放入 <code>md/</code>。
 例如 <code>run_1.in</code> 链接到 <code>sample_1/run.in</code>，<code>run_2.in</code> 链接到
@@ -1788,19 +1808,19 @@
 <h3 id="lammps303">LAMMPS（303）</h3>
 <p>把 <code>.vasp</code> 文件或一个 extxyz 文件放在专用工作目录中；两种格式同时存在时
 优先处理 <code>.vasp</code>。</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a>gpumdkit.sh
-<a id="__codelineno-15-2" name="__codelineno-15-2" href="#__codelineno-15-2"></a><span class="c1"># 选择 3 -&gt; 303</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a>gpumdkit.sh
+<a id="__codelineno-16-2" name="__codelineno-16-2" href="#__codelineno-16-2"></a><span class="c1"># 选择 3 -&gt; 303</span>
 </code></pre></div>
 <p>运行后会在 <code>struct_md/</code> 中创建 LAMMPS data 文件，并创建样本目录、<code>md/</code>
 和 <code>presub.sh</code>：</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a>current directory/
-<a id="__codelineno-16-2" name="__codelineno-16-2" href="#__codelineno-16-2"></a>├── struct_md/
-<a id="__codelineno-16-3" name="__codelineno-16-3" href="#__codelineno-16-3"></a>│   ├── lammps_1.data
-<a id="__codelineno-16-4" name="__codelineno-16-4" href="#__codelineno-16-4"></a>│   └── ...
-<a id="__codelineno-16-5" name="__codelineno-16-5" href="#__codelineno-16-5"></a>├── md/
-<a id="__codelineno-16-6" name="__codelineno-16-6" href="#__codelineno-16-6"></a>├── sample_1/
-<a id="__codelineno-16-7" name="__codelineno-16-7" href="#__codelineno-16-7"></a>├── sample_2/
-<a id="__codelineno-16-8" name="__codelineno-16-8" href="#__codelineno-16-8"></a>└── presub.sh
+<div class="highlight"><pre><span></span><code><a id="__codelineno-17-1" name="__codelineno-17-1" href="#__codelineno-17-1"></a>current directory/
+<a id="__codelineno-17-2" name="__codelineno-17-2" href="#__codelineno-17-2"></a>├── struct_md/
+<a id="__codelineno-17-3" name="__codelineno-17-3" href="#__codelineno-17-3"></a>│   ├── lammps_1.data
+<a id="__codelineno-17-4" name="__codelineno-17-4" href="#__codelineno-17-4"></a>│   └── ...
+<a id="__codelineno-17-5" name="__codelineno-17-5" href="#__codelineno-17-5"></a>├── md/
+<a id="__codelineno-17-6" name="__codelineno-17-6" href="#__codelineno-17-6"></a>├── sample_1/
+<a id="__codelineno-17-7" name="__codelineno-17-7" href="#__codelineno-17-7"></a>├── sample_2/
+<a id="__codelineno-17-8" name="__codelineno-17-8" href="#__codelineno-17-8"></a>└── presub.sh
 </code></pre></div>
 <p>准备结束后，把已确认的 <code>lmprun.in</code> 和 <code>nep.txt</code> 放入 <code>md/</code>。</p>
 <h2 id="3">3. 运行前确认与结果检查</h2>
@@ -1818,14 +1838,14 @@
 <h2 id="4">4. 后处理与下一步</h2>
 <p>DFT 结果完成并经过检查后，使用与 DFT 程序相符的转换入口：</p>
 <p>VASP 结果：</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-17-1" name="__codelineno-17-1" href="#__codelineno-17-1"></a>gpumdkit.sh<span class="w"> </span>-out2xyz<span class="w"> </span>&lt;scf_results_directory&gt;
+<div class="highlight"><pre><span></span><code><a id="__codelineno-18-1" name="__codelineno-18-1" href="#__codelineno-18-1"></a>gpumdkit.sh<span class="w"> </span>-out2xyz<span class="w"> </span>&lt;scf_results_directory&gt;
 </code></pre></div>
 <p>如果 OUTCAR 包含完整的 <code>BORN EFFECTIVE CHARGES</code> 数据块，并且需要保留逐原子的
 BEC 标签，可以使用：</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-18-1" name="__codelineno-18-1" href="#__codelineno-18-1"></a>gpumdkit.sh<span class="w"> </span>-out2xyz_bec<span class="w"> </span>&lt;scf_results_directory&gt;
+<div class="highlight"><pre><span></span><code><a id="__codelineno-19-1" name="__codelineno-19-1" href="#__codelineno-19-1"></a>gpumdkit.sh<span class="w"> </span>-out2xyz_bec<span class="w"> </span>&lt;scf_results_directory&gt;
 </code></pre></div>
 <p>CP2K 日志与结构文件：先进入 CP2K 结果根目录，再运行以下命令。它会递归扫描当前目录下的 <code>.log</code> 及配套 <code>.xyz</code>/<code>.inp</code>，成功转换后写入当前目录的 <code>cp2k_exyz.xyz</code>，并用 <code>Logfile.txt</code> 记录处理情况。</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-19-1" name="__codelineno-19-1" href="#__codelineno-19-1"></a>gpumdkit.sh<span class="w"> </span>-cp2k2xyz
+<div class="highlight"><pre><span></span><code><a id="__codelineno-20-1" name="__codelineno-20-1" href="#__codelineno-20-1"></a>gpumdkit.sh<span class="w"> </span>-cp2k2xyz
 </code></pre></div>
 <p>VASP 的 <code>-out2xyz</code>/菜单 101 和带 BEC 的 <code>-out2xyz_bec</code> 会在当前目录生成
 <code>NEPdataset/train.xyz</code>；Python 版 <code>-out2exyz</code> 会在当前目录写入 <code>train.xyz</code>。

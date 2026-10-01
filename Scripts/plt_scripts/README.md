@@ -344,6 +344,8 @@ gpumdkit.sh -plt D  # Alternative command
     <img src="../../docs/Gallery/Arrhenius_D.png" alt="Arrhenius D" width="55%" />
 </div>
 
+The terminal reports Ea and the corresponding Arrhenius-fit `R2` to four decimal places.
+
 ---
 
 #### plt_arrhenius_d_PT.py
@@ -387,6 +389,8 @@ activation energy for each component.
 gpumdkit.sh -plt D_xyz [save]
 ```
 
+The terminal reports Ea and the corresponding fit `R2` to four decimal places for the total and each x/y/z direction.
+
 ---
 
 #### plt_arrhenius_sigma.py
@@ -406,6 +410,8 @@ gpumdkit.sh -plt sigma         # Alternative command
 <div align="center">
     <img src="../../docs/Gallery/Arrhenius_sigma.png" alt="Arrhenius sigma" width="55%" />
 </div>
+
+The terminal reports Ea and the corresponding Arrhenius-fit `R2` to four decimal places.
 
 ---
 
@@ -452,6 +458,8 @@ Nernst-Einstein relation.
 ```bash
 gpumdkit.sh -plt sigma_xyz [save]
 ```
+
+The terminal reports Ea and the corresponding fit `R2` to four decimal places for the total and each x/y/z direction.
 
 ---
 
@@ -523,7 +531,6 @@ cutoff_freq   : Optional, Cutoff frequency for SHC calculation in THz (default: 
 --save        : Optional, save the plot as 'nemd.png'
 --save-data   : Optional, additionally export tab-separated 'data_nemd.txt'
                 and, when SHC data exist, 'data_shc.txt'
-!!! Note !!!  : If no SHC data, set [scale_eff_size] and [cutoff_freq] to any number as placeholders when using '--save'.
 ```
 
 The historical `data_nemd.npz` (and `data_shc.npz` when SHC data exist) are
@@ -559,7 +566,6 @@ cutoff_freq   : Optional, Cutoff frequency for SHC calculation in THz (default: 
 --save-data   : Optional, save processed arrays as 'data_hnemd.npz' and
                 tab-separated 'data_hnemd.txt'; when SHC data exist, also
                 save 'data_shc.npz' and 'data_shc.txt'
-!!! Note !!!  : If no SHC data, set [scale_eff_size] and [cutoff_freq] to any number as placeholders when using '--save'.
 ```
 
 `--save` and `--save-data` are independent. The legacy bare tokens `save` and

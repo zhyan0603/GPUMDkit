@@ -7,10 +7,10 @@ CONTACT="yanzihan@westlake.edu.cn"
 # New features (one per line, in an array; keep at most the five newest entries)
 NEW_FEATURES=(
     "add -time wpe progress monitoring for WPE-enabled GPUMD runs with buffered updates"
+    "group VASP 301 extxyz structures by element set, link matching POTCAR files, and always create optional KPOINTS links"
     "add web MD monitor for neighbor.out radial/angular actual-vs-max traces, run.in step progress, speed, and ETA"
     "add sandboxed web-console file actions: home and parent navigation, create, upload, and download"
     "add context-aware web plot actions for RDF, XRD, cohesive energy, viscosity, phonon bands, and force errors"
-    "add --save-data TAB-separated export for EMD, NEMD, and HNEMD plot data"
 )
 
 # Bug fixes (one per line, in an array; keep at most the five newest entries)

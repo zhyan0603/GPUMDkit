@@ -38,15 +38,25 @@ Preserve the source structures elsewhere before proceeding.
 gpumdkit.sh  # Select: 3) Workflow -> 301 -> 1) VASP
 ```
 
-3. After preparation, place the user-approved `INCAR`, `POTCAR`, and `KPOINTS`
-   files in the generated `fp/` directory.
+3. After preparation, place the user-approved VASP inputs in `fp/`. Extxyz
+   structures with one element set keep the flat layout and share `fp/POTCAR`.
+   If multiple element sets are detected, structures go under
+   `struct_fp/<elements>/`, and each calculation directory links to a matching
+   `fp/POTCAR_<elements>` file. Different atom ratios with the same elements
+   share one group. Detection uses source symbols; the converter preserves the
+   trajectory-wide first-seen element order and verifies each written POSCAR's
+   order and counts by reading it back. All groups share `fp/INCAR`; POTCAR
+   order must match the POSCAR header. Every calculation directory links to
+   `../fp/KPOINTS`; provide the target for explicit k-point input. If it is
+   absent, the link stays dangling and VASP uses `KSPACING` from `INCAR`.
 
 ```text
-struct_fp/POSCAR_1.vasp, POSCAR_2.vasp, ...
-fp/INCAR, POTCAR, KPOINTS                 (user-provided after preparation)
-<prefix>_1/POSCAR -> ../struct_fp/POSCAR_1.vasp
+struct_fp/Al_O/POSCAR_1.vasp, ...          (only when element sets differ)
+fp/INCAR, POTCAR_Al_O, ...                 (user-provided after preparation)
+<prefix>_1/POSCAR -> ../struct_fp/Al_O/POSCAR_1.vasp
+<prefix>_1/POTCAR -> ../fp/POTCAR_Al_O
+<prefix>_1/KPOINTS -> ../fp/KPOINTS
 <prefix>_1/INCAR  -> ../fp/INCAR
-<prefix>_2/...
 presub.sh
 ```
 

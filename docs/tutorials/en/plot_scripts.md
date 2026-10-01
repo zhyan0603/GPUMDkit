@@ -35,11 +35,7 @@ Plots that need a user-selected element, temperature, input-file set, or other
 scientific parameter remain available from the terminal, where those choices
 can be entered explicitly.
 
-The console's location bar also provides Home, parent-directory, and
-breadcrumb navigation. Its file actions can create an empty file or folder,
-upload files, and download the file currently open in the viewer. Uploads and
-new entries stay inside the server's working-directory sandbox; existing names
-are never overwritten.
+See [Remote Web Console](remote_web_console.md) for directory navigation and file management.
 
 ## A reliable plotting workflow
 
@@ -438,18 +434,17 @@ gpumdkit.sh -plt arrhenius_d
 gpumdkit.sh -plt D             # Alternative command
 ```
 
-**Output example:**
+**Activation-energy output format:**
 
 ```text
-T: 300K, D_total: 1.001e-07 cm2/s
-T: 350K, D_total: 4.184e-07 cm2/s
-T: 400K, D_total: 1.027e-06 cm2/s
-Ea: 0.230 eV
+Activation Energy: <Ea> eV, R2 = <R2>
 ```
 
 <div align="center">
   <img src="../../Gallery/Arrhenius_D.png" alt="Arrhenius diffusivity" width="58%" />
 </div>
+
+The terminal reports Ea and the corresponding Arrhenius-fit `R2` to four decimal places.
 
 ---
 
@@ -485,7 +480,7 @@ activation energy of each component.
 gpumdkit.sh -plt D_xyz
 ```
 
-The output reports `Ea_x`, `Ea_y`, and `Ea_z` from the linear fits.
+The output reports Ea and `R2` for the total (`Ea_all`) and each x/y/z direction.
 
 ---
 
@@ -504,6 +499,8 @@ gpumdkit.sh -plt sigma         # Alternative command
 <div align="center">
   <img src="../../Gallery/Arrhenius_sigma.png" alt="Arrhenius ionic conductivity" width="58%" />
 </div>
+
+The terminal reports Ea and the corresponding Arrhenius-fit `R2` to four decimal places.
 
 ---
 
@@ -542,6 +539,8 @@ relation.
 ```bash
 gpumdkit.sh -plt sigma_xyz
 ```
+
+The terminal reports Ea and the corresponding fit `R2` to four decimal places for the total and each x/y/z direction.
 
 ---
 
@@ -609,8 +608,6 @@ Visualizes non-equilibrium molecular dynamics (NEMD) thermal transport propertie
 | `--save` | Optional, save the plot as `nemd.png` |
 | `--save-data` | Optional, additionally export tab-separated `data_nemd.txt` and, when SHC data exist, `data_shc.txt` |
 
-**Note:** If no SHC data, set `scale_eff_size` and `cutoff_freq` to any number as placeholders when using `--save`.
-
 ```bash
 gpumdkit.sh -plt nemd [real_length] [scale_eff_size] [cutoff_freq] [--save] [--save-data]
 gpumdkit.sh -plt nemd --save-data                         # use defaults and export data
@@ -641,8 +638,6 @@ Plots homogeneous non-equilibrium molecular dynamics (HNEMD) results.
 | `cutoff_freq` | Cutoff frequency for SHC calculation in THz (default: 60) |
 | `--save` | Optional, save the plot as `hnemd.png` |
 | `--save-data` | Optional, save processed arrays as `data_hnemd.npz` and tab-separated `data_hnemd.txt`; when SHC data exist, also save `data_shc.npz` and `data_shc.txt` |
-
-**Note:** If no SHC data, set `scale_eff_size` and `cutoff_freq` to any number as placeholders when using `--save`.
 
 ```bash
 gpumdkit.sh -plt hnemd [scale_eff_size] [cutoff_freq] [--save] [--save-data]

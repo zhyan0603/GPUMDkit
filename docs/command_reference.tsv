@@ -53,7 +53,7 @@ analyze	-filter_box	gpumdkit.sh -filter_box <input.xyz> <edge_limit>	Filter stru
 analyze	-filter_value	gpumdkit.sh -filter_value <input.xyz> <property> <threshold>	Filter structures by property threshold	按性质阈值过滤结构	stable
 analyze	-filter_range	gpumdkit.sh -filter_range <input.xyz> <element1> <element2> <min_dist> <max_dist>	Filter by element-pair distance range	按元素对距离范围过滤	stable
 analyze	-pda	gpumdkit.sh -pda <ref_struct> <trajectory.xyz> <species> <interval>	Calculate probability density	计算概率密度	stable
-utility	-time	gpumdkit.sh -time <gpumd|nep>	Monitor GPUMD or NEP progress	监控 GPUMD 或 NEP 进度	stable
+utility	-time	gpumdkit.sh -time <gpumd|wpe|nep|gnep>	Monitor GPUMD, WPE, NEP, or GNEP progress	监控 GPUMD、WPE、NEP 或 GNEP 进度	stable
 utility	-nep_modifier	gpumdkit.sh -nep_modifier [nep.txt] [nep.restart|-] [nep.in|-]	Safely modify and export a NEP4 model package	安全修改并导出 NEP4 模型文件包	testing
 plot	-plt emd2	gpumdkit.sh -plt emd2 [save]	Plot EMD thermal conductivity in all directions	绘制全部方向的 EMD 热导率	stable
 plot	-plt D_PT	gpumdkit.sh -plt D_PT <transition_temperature> [save]	Plot piecewise Arrhenius diffusivity around a phase transition	绘制相变温度两侧的分段 Arrhenius 扩散系数	stable

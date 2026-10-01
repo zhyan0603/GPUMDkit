@@ -82,7 +82,7 @@ gpumdkit.sh
 # choose 3 -> 301 -> VASP
 ~~~
 
-The usual output is:
+With one element set, the output stays flat:
 
 ~~~text
 current directory/
@@ -95,10 +95,35 @@ current directory/
 └── presub.sh
 ~~~
 
-The script creates `fp/`. After preparation, place the reviewed `INCAR`, `POTCAR`,
-and `KPOINTS` files in `fp/`; the calculation directories link to them. The
-`prefix` becomes the calculation-directory prefix. When `out2xyz` is used later,
-the directory name is written as `config_type` in the extxyz output.
+For extxyz input, the dedicated converter detects each frame's element set from
+the source symbols and uses the trajectory-wide first-seen element order when
+writing POSCARs. It reads each POSCAR back and checks the element order and
+counts. If all structures contain the same element set, 301 keeps the flat
+layout and uses the shared `fp/POTCAR`. Different atom ratios with the same
+element set do not create separate groups. If multiple element sets are
+present, the POSCARs are stored under `struct_fp/<elements>/`, and each
+calculation directory links to the corresponding `fp/POTCAR_<elements>` file:
+
+~~~text
+struct_fp/
+├── Al_O/POSCAR_1.vasp
+└── Al_O_Te_Bi/POSCAR_2.vasp
+fp/
+├── INCAR
+├── POTCAR_Al_O
+└── POTCAR_Al_O_Te_Bi
+<prefix>_1/POTCAR -> ../fp/POTCAR_Al_O
+<prefix>_1/KPOINTS -> ../fp/KPOINTS
+<prefix>_2/POTCAR -> ../fp/POTCAR_Al_O_Te_Bi
+<prefix>_2/KPOINTS -> ../fp/KPOINTS
+~~~
+
+Prepare each listed POTCAR in `fp/`; its element order must match the POSCAR
+header. All groups share `fp/INCAR`, and every calculation directory links to
+`../fp/KPOINTS`. Provide `fp/KPOINTS` for explicit k-point input. If the target
+file is absent, the link stays dangling and VASP uses `KSPACING` in `INCAR`.
+The `prefix` becomes the calculation-directory prefix. When `out2xyz` is used
+later, the directory name is written as `config_type` in the extxyz output.
 
 ### CP2K SCF preparation (301 -> 2)
 

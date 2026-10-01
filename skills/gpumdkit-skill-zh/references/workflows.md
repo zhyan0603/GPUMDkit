@@ -36,15 +36,23 @@
 gpumdkit.sh  # 选择：3) Workflow -> 301 -> 1) VASP
 ```
 
-3. 准备完成后，把用户批准的 `INCAR`、`POTCAR` 和 `KPOINTS` 放入生成的
-   `fp/` 目录。
+3. 准备完成后，把用户批准的 VASP 输入文件放入 `fp/`。extxyz 中只有一种
+   元素集合时，沿用原来的平铺结构并共用 `fp/POTCAR`。检测到多个元素集合时，
+   POSCAR 放入 `struct_fp/<元素顺序>/`，各计算目录链接对应的
+   `fp/POTCAR_<元素顺序>`。元素比例不同但元素集合相同的结构仍共用一组。
+   分组依据是源 extxyz 中每帧的元素符号。转换脚本沿用轨迹中元素首次出现的
+   顺序，并通过读回 POSCAR 核对元素顺序和数量。所有组共用 `fp/INCAR`，
+   POTCAR 元素顺序要与 POSCAR 头部一致。每个计算目录都会链接到
+   `../fp/KPOINTS`。显式指定 k 点时，请在 `fp/` 中提供该文件。如果目标文件
+   不存在，链接会悬空，VASP 会按 KPOINTS 文件缺失处理并使用 `KSPACING`。
 
 ```text
-struct_fp/POSCAR_1.vasp、POSCAR_2.vasp、...
-fp/INCAR、POTCAR、KPOINTS                 （准备后由用户提供）
-<prefix>_1/POSCAR -> ../struct_fp/POSCAR_1.vasp
+struct_fp/Al_O/POSCAR_1.vasp、...           （仅在元素集合不同时分组）
+fp/INCAR、POTCAR_Al_O、...                 （准备后由用户提供）
+<prefix>_1/POSCAR -> ../struct_fp/Al_O/POSCAR_1.vasp
+<prefix>_1/POTCAR -> ../fp/POTCAR_Al_O
+<prefix>_1/KPOINTS -> ../fp/KPOINTS
 <prefix>_1/INCAR  -> ../fp/INCAR
-<prefix>_2/...
 presub.sh
 ```
 
