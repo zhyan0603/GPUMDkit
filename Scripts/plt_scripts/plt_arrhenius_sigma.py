@@ -242,7 +242,7 @@ if len(raw_group_Ts) > 0:
     ax.yaxis.set_major_formatter(ticker.FormatStrFormatter('%.1f'))
 
     # Print results
-    print(f"\n{cell}, Ea: {Ea:.3f} eV")
+    print(f"\n{cell}, Ea: {Ea:.3f} eV, R2 = {r_value ** 2:.4f}")
 
     # Calculate conductivity at 300K
     target_T = 300

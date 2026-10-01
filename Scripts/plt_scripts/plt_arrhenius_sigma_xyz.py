@@ -271,10 +271,10 @@ for temp, s_all, s_x, s_y, s_z in zip(group_Ts, group_sigmaTs_all, group_sigmaTs
 print(line)
 
 # Print activation energies
-print(f"\n{cell}, Ea_total: {Ea_all:.3f} eV")
-print(f"{cell}, Ea_x: {Ea_x:.3f} eV")
-print(f"{cell}, Ea_y: {Ea_y:.3f} eV")
-print(f"{cell}, Ea_z: {Ea_z:.3f} eV")
+print(f"\n{cell}, Ea_total: {Ea_all:.3f} eV, R2 = {r_all ** 2:.4f}")
+print(f"{cell}, Ea_x: {Ea_x:.3f} eV, R2 = {r_x ** 2:.4f}")
+print(f"{cell}, Ea_y: {Ea_y:.3f} eV, R2 = {r_y ** 2:.4f}")
+print(f"{cell}, Ea_z: {Ea_z:.3f} eV, R2 = {r_z ** 2:.4f}")
 
 # Plot each direction
 for label, sigmaT_data, intercept, slope, color, marker in labels_with_ea:
