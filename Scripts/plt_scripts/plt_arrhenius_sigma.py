@@ -210,7 +210,6 @@ if len(raw_group_Ts) > 0:
     # Create figure with PRL style
     fig, ax = plt.subplots(figsize=(4.3, 3.8))
 
-    # Calculate activation energy using the new function
     Ea, intercept, slope, r_value = fit_arrhenius(group_Ts, group_sigmaTs)
 
     # Prepare data for plotting

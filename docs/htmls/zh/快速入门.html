@@ -1654,7 +1654,7 @@
 </code></pre></div>
 <p><code>-h</code> 会列出可用选项；<code>-doctor</code> 会检查 Python 环境，并分别报告环境、常用包和可选包的状态。可选包显示 <code>MISS</code> 不代表安装失败，只有使用对应功能时才需要安装它们。</p>
 <h2 id="hello-world-example">第一个练习：转换一个 POSCAR</h2>
-<p>为了避免覆盖已有文件，请在一个新的练习目录中完成下面的步骤。整个练习在子 shell 中运行；<code>mkdir</code> 不带 <code>-p</code>，如果目录已存在会失败并退出子 shell，不会进入该目录覆盖文件。</p>
+<p>请在新的练习目录中运行，避免覆盖已有文件。</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="o">(</span>
 <a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="nb">set</span><span class="w"> </span>-e
 <a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>mkdir<span class="w"> </span>gpumdkit-first-check<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="nb">cd</span><span class="w"> </span>gpumdkit-first-check<span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="nb">exit</span><span class="w"> </span><span class="m">1</span>
@@ -1673,7 +1673,7 @@
 <a id="__codelineno-2-16" name="__codelineno-2-16" href="#__codelineno-2-16"></a>head<span class="w"> </span>model.xyz
 <a id="__codelineno-2-17" name="__codelineno-2-17" href="#__codelineno-2-17"></a><span class="o">)</span>
 </code></pre></div>
-<p>如果 <code>model.xyz</code> 中显示一个 Si 原子及晶格信息，说明这次 POSCAR 到 extxyz 的转换和输出检查已经成功；这不代表其他计算器、绘图或模拟功能也都完成了验证。</p>
+<p>如果 <code>model.xyz</code> 中显示一个 Si 原子及晶格信息，说明这次 POSCAR 到 extxyz 的转换和输出检查已经成功。</p>
 <p><code>extxyz</code> 是扩展 XYZ 格式：第一行是原子数，第二行包含晶格和结构级属性，后续行记录每个原子的元素、坐标及其他原子级属性；它是 NEP 使用的原生训练数据格式。</p>
 <h2 id="common-examples">已有数据：选择下一步</h2>
 <p>如果你已经有结构或轨迹，不必重复上面的练习。回到<a href="index.html">教程首页</a>，在“常见任务”表中按目标进入格式转换、结构采样、分析、计算器、绘图或工作流教程；具体页面会说明所需输入、输出和适用条件。</p>

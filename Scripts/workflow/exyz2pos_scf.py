@@ -35,8 +35,7 @@ def print_help():
     print(" Output:")
     print("   One POSCAR_N.vasp per frame; multiple element sets are grouped")
     print(" Notes:")
-    print("   Element ordering follows exyz2pos.py's trajectory-wide first-seen order.")
-    print("   Each written POSCAR is read back and checked before installation.")
+    print("   Elements follow their first-seen order in the input trajectory.")
 
 
 def unique_symbol_order(atoms):

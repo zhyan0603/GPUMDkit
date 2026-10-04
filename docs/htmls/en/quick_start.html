@@ -1654,7 +1654,7 @@
 </code></pre></div>
 <p><code>-h</code> lists the available options. <code>-doctor</code> checks the Python environment and reports the status of the environment, common packages, and optional packages. <code>MISS</code> for an optional package is not an installation failure; install that package only when you need the corresponding feature.</p>
 <h2 id="hello-world-example">First practice: convert a POSCAR</h2>
-<p>To avoid overwriting existing files, do the exercise in a new directory. The exercise runs in a subshell; the <code>mkdir</code> command intentionally omits <code>-p</code>, so an existing directory makes it fail and <code>exit 1</code> leaves the subshell before any existing file can be overwritten.</p>
+<p>Run the exercise in a new directory to avoid overwriting existing files.</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="o">(</span>
 <a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="nb">set</span><span class="w"> </span>-e
 <a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>mkdir<span class="w"> </span>gpumdkit-first-check<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="nb">cd</span><span class="w"> </span>gpumdkit-first-check<span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="nb">exit</span><span class="w"> </span><span class="m">1</span>
@@ -1673,7 +1673,7 @@
 <a id="__codelineno-2-16" name="__codelineno-2-16" href="#__codelineno-2-16"></a>head<span class="w"> </span>model.xyz
 <a id="__codelineno-2-17" name="__codelineno-2-17" href="#__codelineno-2-17"></a><span class="o">)</span>
 </code></pre></div>
-<p>If <code>model.xyz</code> shows one Si atom and lattice information, this POSCAR-to-extxyz conversion and output check succeeded. It does not verify every calculator, plotter, or simulation feature.</p>
+<p>If <code>model.xyz</code> shows one Si atom and lattice information, this POSCAR-to-extxyz conversion and output check succeeded.</p>
 <p><code>extxyz</code> is extended XYZ: the first line gives the atom count, the second stores lattice and structure-level properties, and later lines store each atom's element, coordinates, and per-atom properties. It is the native training-data format used by NEP.</p>
 <h2 id="common-examples">Existing data: choose the next task</h2>
 <p>If you already have structures or trajectories, you can skip the practice above. Return to the <a href="index.html">tutorial index</a> and use the Common Tasks table to choose format conversion, structure sampling, analysis, calculators, plotting, or workflow preparation; each page documents its inputs, outputs, and scope.</p>

@@ -119,26 +119,26 @@ wget https://github.com/zhyan0603/GPUMDkit/archive/refs/heads/main.zip
 
 3. 根据屏幕提示交互式选择并运行所需功能。
 
-```
-               ____ ____  _   _ __  __ ____  _    _ _
-              / ___|  _ \| | | |  \/  |  _ \| | _(_) |_
-             | |  _| |_) | | | | |\/| | | | | |/ / | __|
-             | |_| |  __/| |_| | |  | | |_| |   <| | |_
-              \____|_|    \___/|_|  |_|____/|_|\_\_|\__|
+   ```
+                  ____ ____  _   _ __  __ ____  _    _ _
+                 / ___|  _ \| | | |  \/  |  _ \| | _(_) |_
+                | |  _| |_) | | | | |\/| | | | | |/ / | __|
+                | |_| |  __/| |_| | |  | | |_| |   <| | |_
+                 \____|_|    \___/|_|  |_|____/|_|\_\_|\__|
 
-              GPUMDkit Version 1.5.8 (2026-09-23)
-        Core Developer: Zihan YAN (yanzihan@westlake.edu.cn)
-     Main Contributors: Denan LI, Xin WU, Zhoulin LIU & Chen HUA
+                 GPUMDkit Version 1.5.8 (2026-09-23)
+           Core Developer: Zihan YAN (yanzihan@westlake.edu.cn)
+        Main Contributors: Denan LI, Xin WU, Zhoulin LIU & Chen HUA
 
-      ---------------------- GPUMD ------------------------
-      1) Format Conversion          2) Sample Structures
-      3) Workflow                   4) Calculators
-      5) Analyzer                   6) Visualization
-      7) Utilities                  8) Help
-      0) Exit
-      ------------>>
-      Input the function number:
-```
+         ---------------------- GPUMD ------------------------
+         1) Format Conversion          2) Sample Structures
+         3) Workflow                   4) Calculators
+         5) Analyzer                   6) Visualization
+         7) Utilities                  8) Help
+         0) Exit
+         ------------>>
+         Input the function number:
+   ```
 
 #### 命令行模式
 

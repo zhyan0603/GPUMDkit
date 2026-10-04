@@ -136,9 +136,7 @@ head -n 2 output.xyz
 ```
 
 The first line is the atom count. The second line contains extxyz metadata such
-as the cell and available properties. It does not by itself validate that the
-underlying calculation is physically appropriate; use the analyzer tutorials to
-check a dataset before training or simulation.
+as the cell and available properties.
 
 ## Common Examples
 

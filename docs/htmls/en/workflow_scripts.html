@@ -761,17 +761,6 @@
   
 </li>
       
-        <li class="md-nav__item">
-  <a href="#ai-assistance-and-authorization-boundaries" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        AI Assistance and Authorization Boundaries
-      
-    </span>
-  </a>
-  
-</li>
-      
     </ul>
   
 </nav>
@@ -1615,17 +1604,6 @@
   
 </li>
       
-        <li class="md-nav__item">
-  <a href="#ai-assistance-and-authorization-boundaries" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        AI Assistance and Authorization Boundaries
-      
-    </span>
-  </a>
-  
-</li>
-      
     </ul>
   
 </nav>
@@ -1735,10 +1713,8 @@ The scripts create <code>struct_fp/</code>, <code>struct_md/</code>, calculation
 <a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a>├── &lt;prefix&gt;_2/
 <a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a>└── presub.sh
 </code></pre></div>
-<p>For extxyz input, the dedicated converter detects each frame's element set from
-the source symbols and uses the trajectory-wide first-seen element order when
-writing POSCARs. It reads each POSCAR back and checks the element order and
-counts. If all structures contain the same element set, 301 keeps the flat
+<p>For extxyz input, POSCAR species follow the trajectory-wide first-seen element
+order. If all structures contain the same element set, 301 keeps the flat
 layout and uses the shared <code>fp/POTCAR</code>. Different atom ratios with the same
 element set do not create separate groups. If multiple element sets are
 present, the POSCARs are stored under <code>struct_fp/&lt;elements&gt;/</code>, and each
@@ -1839,8 +1815,8 @@ and <code>presub.sh</code>:</p>
 <li>every sample-directory link and file name;</li>
 <li>the executable, resources, and scheduler settings in <code>presub.sh</code>.</li>
 </ul>
-<p><code>presub.sh</code> is a template. It does not validate the inputs and is not permission
-to submit a job. Inspect the directories and links first, then run through the
+<p><code>presub.sh</code> is a template; check the executable and scheduler settings before
+running it. Inspect the directories and links first, then run through the
 project's procedure. Afterward, check exit status, logs, temperature, energy,
 pressure, cells, and trajectories, and identify failed or incomplete samples.</p>
 <h2 id="4-post-process-and-continue">4. Post-process and continue</h2>
@@ -1871,30 +1847,6 @@ for the manually reviewed protocol.</p>
 <li>Workflow scripts depend on the cluster, templates, and software versions; check a small number of structures first.</li>
 <li>Preserve templates and source structures, and inspect generated directories, links, and file names before continuing.</li>
 </ul>
-<h2 id="ai-assistance-and-authorization-boundaries">AI Assistance and Authorization Boundaries</h2>
-<p>Workflow scripts depend on the cluster, templates, and software versions. An
-agent must not infer the potential, species/type mapping, temperatures, time
-steps, ensembles, pressures, run lengths, selection thresholds, resources, or
-convergence criteria from examples or another material system. <code>INCAR</code>,
-<code>POTCAR</code>, <code>KPOINTS</code>, <code>run.in</code>, CP2K templates, and <code>nep.txt</code> are not automatically
-approved files. Preparing directories does not authorize DFT, GPUMD, LAMMPS, or
-NEP execution; execution and scheduler submission require an explicit user request.</p>
-<p>For direct source calls, first confirm the checkout root, interpreter, and
-dependencies, then use the target script's own help. Ordinary users should use
-the existing menu. Do not invent a CLI route for a menu-only function. Stop and
-report parser errors, missing files, NaN/Inf values, failed outputs, and
-unexplained warnings.</p>
-<p>Relevant skill references:</p>
-<ul>
-<li><code>skills/gpumdkit-skill/references/workflows.md</code></li>
-<li><code>skills/gpumdkit-skill/references/sampling.md</code></li>
-<li><code>skills/gpumdkit-skill/references/format-conversion.md</code></li>
-<li><code>skills/gpumdkit-skill/references/nep-data.md</code></li>
-<li><code>skills/gpumdkit-skill/references/nep-parameters.md</code></li>
-</ul>
-<p>For a reproducible iteration, record model and data revisions, approved decisions,
-exact commands, working directories, versions, exit status, warnings, generated
-files, exclusions, validation results, and known limitations.</p>
 
 
 

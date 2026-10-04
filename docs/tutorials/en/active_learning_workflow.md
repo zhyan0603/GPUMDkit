@@ -153,35 +153,3 @@ commands, working directories, executable versions, exit status, warnings,
 generated files, rejected structures, validation results, and known limitations.
 Stop the iteration when required outputs are missing or a validation issue remains
 unresolved.
-
-## AI Assistance and Authorization Boundaries
-
-Sampling conditions, selection criteria, DFT settings, scheduler resources,
-dataset policy, and model-acceptance criteria depend on the scientific system.
-An agent must not copy thresholds or simulation parameters from another material
-system, or infer the potential, species/type mapping, charge, temperature, time
-step, ensemble, pressure, run length, fit window, resources, or convergence
-criteria.
-
-Preparing directories, templates, or input files does not authorize execution.
-GPUMD, DFT, and NEP calculations and scheduler submissions require explicit user
-approval of the inputs, cost, and scientific settings. `presub.sh` is a template,
-not permission to submit. Model architecture, loss, optimizer, checkpoint, ZBL,
-and other nontrivial `nep.in` settings also require approval.
-
-At each stage, an agent should check parser and log output, geometry and labels,
-units, cells, species/type order, duplicates, leakage, failed outputs, and
-target-domain stability. Stop and report missing outputs, parser errors, NaN/Inf
-values, unphysical structures, and unexplained warnings.
-
-Relevant skill references:
-
-- `skills/gpumdkit-skill/references/workflows.md`
-- `skills/gpumdkit-skill/references/sampling.md`
-- `skills/gpumdkit-skill/references/format-conversion.md`
-- `skills/gpumdkit-skill/references/nep-data.md`
-- `skills/gpumdkit-skill/references/nep-parameters.md`
-- `skills/gpumdkit-skill/references/nep-outputs.md`
-
-This page does not execute a complete active-learning loop or choose the candidate,
-selection, DFT, dataset, or model-acceptance procedure for the user.

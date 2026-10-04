@@ -31,7 +31,7 @@ gpumdkit.sh -doctor
 
 ## First practice: convert a POSCAR {#hello-world-example}
 
-To avoid overwriting existing files, do the exercise in a new directory. The exercise runs in a subshell; the `mkdir` command intentionally omits `-p`, so an existing directory makes it fail and `exit 1` leaves the subshell before any existing file can be overwritten.
+Run the exercise in a new directory to avoid overwriting existing files.
 
 ```bash
 (
@@ -53,7 +53,7 @@ head model.xyz
 )
 ```
 
-If `model.xyz` shows one Si atom and lattice information, this POSCAR-to-extxyz conversion and output check succeeded. It does not verify every calculator, plotter, or simulation feature.
+If `model.xyz` shows one Si atom and lattice information, this POSCAR-to-extxyz conversion and output check succeeded.
 
 `extxyz` is extended XYZ: the first line gives the atom count, the second stores lattice and structure-level properties, and later lines store each atom's element, coordinates, and per-atom properties. It is the native training-data format used by NEP.
 

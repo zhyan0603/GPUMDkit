@@ -95,10 +95,8 @@ current directory/
 └── presub.sh
 ~~~
 
-For extxyz input, the dedicated converter detects each frame's element set from
-the source symbols and uses the trajectory-wide first-seen element order when
-writing POSCARs. It reads each POSCAR back and checks the element order and
-counts. If all structures contain the same element set, 301 keeps the flat
+For extxyz input, POSCAR species follow the trajectory-wide first-seen element
+order. If all structures contain the same element set, 301 keeps the flat
 layout and uses the shared `fp/POTCAR`. Different atom ratios with the same
 element set do not create separate groups. If multiple element sets are
 present, the POSCARs are stored under `struct_fp/<elements>/`, and each
@@ -241,8 +239,8 @@ Before submitting through your own execution procedure, check:
 - every sample-directory link and file name;
 - the executable, resources, and scheduler settings in `presub.sh`.
 
-`presub.sh` is a template. It does not validate the inputs and is not permission
-to submit a job. Inspect the directories and links first, then run through the
+`presub.sh` is a template; check the executable and scheduler settings before
+running it. Inspect the directories and links first, then run through the
 project's procedure. Afterward, check exit status, logs, temperature, energy,
 pressure, cells, and trajectories, and identify failed or incomplete samples.
 
@@ -288,31 +286,3 @@ for the manually reviewed protocol.
 
 - Workflow scripts depend on the cluster, templates, and software versions; check a small number of structures first.
 - Preserve templates and source structures, and inspect generated directories, links, and file names before continuing.
-
-## AI Assistance and Authorization Boundaries
-
-Workflow scripts depend on the cluster, templates, and software versions. An
-agent must not infer the potential, species/type mapping, temperatures, time
-steps, ensembles, pressures, run lengths, selection thresholds, resources, or
-convergence criteria from examples or another material system. `INCAR`,
-`POTCAR`, `KPOINTS`, `run.in`, CP2K templates, and `nep.txt` are not automatically
-approved files. Preparing directories does not authorize DFT, GPUMD, LAMMPS, or
-NEP execution; execution and scheduler submission require an explicit user request.
-
-For direct source calls, first confirm the checkout root, interpreter, and
-dependencies, then use the target script's own help. Ordinary users should use
-the existing menu. Do not invent a CLI route for a menu-only function. Stop and
-report parser errors, missing files, NaN/Inf values, failed outputs, and
-unexplained warnings.
-
-Relevant skill references:
-
-- `skills/gpumdkit-skill/references/workflows.md`
-- `skills/gpumdkit-skill/references/sampling.md`
-- `skills/gpumdkit-skill/references/format-conversion.md`
-- `skills/gpumdkit-skill/references/nep-data.md`
-- `skills/gpumdkit-skill/references/nep-parameters.md`
-
-For a reproducible iteration, record model and data revisions, approved decisions,
-exact commands, working directories, versions, exit status, warnings, generated
-files, exclusions, validation results, and known limitations.

@@ -2222,7 +2222,7 @@
 <p><code>POSCAR</code> 是输入结构文件名，<code>output.xyz</code> 是命令创建的 extxyz 文件。通配符由 shell 展开；批量转换前应先确认实际匹配到的文件名。转换完成后可以先做一个轻量格式检查：</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>head<span class="w"> </span>-n<span class="w"> </span><span class="m">2</span><span class="w"> </span>output.xyz
 </code></pre></div>
-<p>第一行是原子数，第二行包含晶胞和已有性质等 extxyz 元数据。这本身不能验证计算的物理合理性；用于训练或模拟前，请再按分析工具教程检查数据集。</p>
+<p>第一行是原子数，第二行包含晶胞和已有性质等 extxyz 元数据。</p>
 <h2 id="_8">常见例子</h2>
 <h3 id="deepmd-extxyz">将 DeepMD 数据集转换为 extxyz</h3>
 <p>使用 <code>-dp2xyz</code> 递归扫描 DeepMD 数据集目录，并写出 extxyz 文件：</p>

@@ -1347,17 +1347,6 @@
   
 </li>
       
-        <li class="md-nav__item">
-  <a href="#ai" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        AI 辅助与授权边界
-      
-    </span>
-  </a>
-  
-</li>
-      
     </ul>
   
 </nav>
@@ -1559,17 +1548,6 @@
   
 </li>
       
-        <li class="md-nav__item">
-  <a href="#ai" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        AI 辅助与授权边界
-      
-    </span>
-  </a>
-  
-</li>
-      
     </ul>
   
 </nav>
@@ -1714,29 +1692,6 @@ BEC 标签，可以改用 <code>gpumdkit.sh -out2xyz_bec &lt;scf_results_directo
 <p>为保证可复现性，应保留模型和数据的版本记录、已确认的方案、完整命令、工作目录、
 可执行文件版本、退出状态、警告、生成文件、被剔除结构、验证结果和已知限制。
 缺少必要输出或仍存在未解决的验证问题时，停止本轮迭代。</p>
-<h2 id="ai">AI 辅助与授权边界</h2>
-<p>采样条件、筛选标准、DFT 设置、调度资源、数据集策略和模型验收标准取决于
-具体科学体系。agent 不得从其他材料体系复制阈值或模拟参数，也不能自行补充
-势函数、元素/type 映射、电荷、温度、时间步长、系综、压力、运行长度、拟合
-窗口、资源或收敛标准。</p>
-<p>准备目录、模板或输入文件不等于获得运行授权。GPUMD、DFT、NEP 计算和调度
-提交必须在输入、成本和科学设置得到用户明确批准后进行。<code>presub.sh</code> 只是模板，
-不代表可以提交；模型架构、损失、优化器、检查点、ZBL 等影响训练结果的 <code>nep.in</code>
-设置也必须先获批准。</p>
-<p>Agent 应在每个阶段检查解析器和日志、几何与数据标签、单位、晶胞、元素/type
-顺序、重复项、数据泄漏、失败输出和目标范围稳定性。遇到缺少输出、解析错误、
-NaN/Inf、非物理结构或未解释警告时，应停止并报告。</p>
-<p>相关 skill reference：</p>
-<ul>
-<li><code>skills/gpumdkit-skill/references/workflows.md</code></li>
-<li><code>skills/gpumdkit-skill/references/sampling.md</code></li>
-<li><code>skills/gpumdkit-skill/references/format-conversion.md</code></li>
-<li><code>skills/gpumdkit-skill/references/nep-data.md</code></li>
-<li><code>skills/gpumdkit-skill/references/nep-parameters.md</code></li>
-<li><code>skills/gpumdkit-skill/references/nep-outputs.md</code></li>
-</ul>
-<p>本页不自动执行完整主动学习循环，也不替用户决定候选生成、筛选、DFT、数据集
-或模型验收方案。</p>
 
 
 

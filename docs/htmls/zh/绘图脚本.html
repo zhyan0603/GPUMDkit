@@ -2656,13 +2656,7 @@
 terminal 中显式输入这些选项。</p>
 <p>目录导航和文件管理说明见<a href="%E8%BF%9C%E7%A8%8B%E7%BD%91%E9%A1%B5%E6%8E%A7%E5%88%B6%E5%8F%B0.html">远程 Web 控制台</a>。</p>
 <h2 id="_3">建议的绘图流程</h2>
-<p>与其反复尝试图类型，建议按以下顺序操作：</p>
-<ol>
-<li>用 <code>gpumdkit.sh -plt -h</code> 列出可用类型。</li>
-<li>确认当前工作目录中已经有哪些数据文件。</li>
-<li>在下文找到对应条目，并按其给出的完整命令格式运行。</li>
-<li>仅在该条目明确展示时加入 <code>save</code>；不同绘图脚本中它的位置并不完全相同。</li>
-</ol>
+<p>用 <code>gpumdkit.sh -plt -h</code> 查看绘图类型，并按对应小节的命令格式和 <code>save</code> 参数位置运行。</p>
 <table>
 <thead>
 <tr>
@@ -2719,10 +2713,6 @@ terminal 中显式输入这些选项。</p>
 <p>例如，保存训练结果图的命令是：</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>gpumdkit.sh<span class="w"> </span>-plt<span class="w"> </span>train<span class="w"> </span>save
 </code></pre></div>
-<p>下方 Gallery 图片用于展示图的布局，并不是通用的质量阈值。loss 曲线、parity 散点或输运拟合是否合理，取决于模型、数据和模拟方案；不能仅凭图片作出科学结论。</p>
-<blockquote>
-<p><strong>为什么不使用 <code>gpumdkit.sh -plt train -h</code>？</strong> 各绘图脚本没有统一的单图 <code>-h</code> 接口。请用 <code>gpumdkit.sh -plt -h</code> 查看列表，再按下文对应小节的命令格式和输入文件说明执行。</p>
-</blockquote>
 <hr />
 <details>
 <summary>显示完整绘图命令菜单</summary>
@@ -2964,7 +2954,6 @@ GPUMD 会追加分组数据；请检查其布局，不要假定文件具有单�
   <img src="../../Gallery/Arrhenius_D.png" alt="Arrhenius diffusivity" width="58%" />
 </div>
 
-<p>终端输出 Ea 和对应 Arrhenius 线性拟合的 <code>R2</code>（四位小数）。</p>
 <hr />
 <h3 id="plt_arrhenius_d_ptpy">plt_arrhenius_d_PT.py</h3>
 <p>在用户指定的相变温度两侧绘制分段 Arrhenius 扩散系数图。相变温度点同时纳入
@@ -2985,7 +2974,6 @@ GPUMD 会追加分组数据；请检查其布局，不要假定文件具有单�
 <p><strong>输入文件：</strong> <code>*K/msd.out</code> 文件</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-22-1" name="__codelineno-22-1" href="#__codelineno-22-1"></a>gpumdkit.sh<span class="w"> </span>-plt<span class="w"> </span>D_xyz
 </code></pre></div>
-<p>输出会给出总体（<code>Ea_all</code>）及 x/y/z 各方向的 Ea 和 <code>R2</code>。</p>
 <hr />
 <h3 id="plt_arrhenius_sigmapy">plt_arrhenius_sigma.py</h3>
 <p>创建 Arrhenius 离子电导率图（ln(σ·T) vs 1000/T）。</p>
@@ -2998,7 +2986,6 @@ GPUMD 会追加分组数据；请检查其布局，不要假定文件具有单�
   <img src="../../Gallery/Arrhenius_sigma.png" alt="Arrhenius ionic conductivity" width="58%" />
 </div>
 
-<p>终端输出 Ea 和对应 Arrhenius 线性拟合的 <code>R2</code>（四位小数）。</p>
 <hr />
 <h3 id="plt_arrhenius_sigma_ptpy">plt_arrhenius_sigma_PT.py</h3>
 <p>在用户指定的相变温度两侧绘制分段 Arrhenius 离子电导率图。相变温度点同时纳入
@@ -3022,7 +3009,6 @@ Arrhenius 关系图，并用 Nernst-Einstein 关系提取每个方向的活化�
 <code>model.xyz</code></p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-25-1" name="__codelineno-25-1" href="#__codelineno-25-1"></a>gpumdkit.sh<span class="w"> </span>-plt<span class="w"> </span>sigma_xyz
 </code></pre></div>
-<p>终端输出总体及 x/y/z 各方向的 Ea 和对应线性拟合的 <code>R2</code>（四位小数）。</p>
 <hr />
 <h2 id="_6">热输运</h2>
 <h3 id="plt_emdpy">plt_emd.py</h3>

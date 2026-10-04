@@ -1235,17 +1235,6 @@
   
 </li>
       
-        <li class="md-nav__item">
-  <a href="#ai" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        AI 辅助与授权边界
-      
-    </span>
-  </a>
-  
-</li>
-      
     </ul>
   
 </nav>
@@ -1615,17 +1604,6 @@
   
 </li>
       
-        <li class="md-nav__item">
-  <a href="#ai" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        AI 辅助与授权边界
-      
-    </span>
-  </a>
-  
-</li>
-      
     </ul>
   
 </nav>
@@ -1734,9 +1712,8 @@
 <a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a>├── &lt;prefix&gt;_2/
 <a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a>└── presub.sh
 </code></pre></div>
-<p>对于 extxyz 输入，专用转换脚本根据源文件中每帧的原子符号判断元素集合，并
-沿用整个轨迹的元素首次出现顺序写出 POSCAR。每个 POSCAR 都会被重新读入，
-核对元素顺序和数量。如果所有结构的元素集合相同，就沿用原来的平铺目录，
+<p>对于 extxyz 输入，POSCAR 的元素顺序沿用整个轨迹中元素首次出现的顺序。
+如果所有结构的元素集合相同，就沿用原来的平铺目录，
 并共用 <code>fp/POTCAR</code>。元素集合相同但原子比例不同的结构仍属于同一组。如果
 存在多个元素集合，POSCAR 会按元素顺序放入 <code>struct_fp/&lt;元素顺序&gt;/</code>，各计算
 目录链接到对应的 <code>fp/POTCAR_&lt;元素顺序&gt;</code>：</p>
@@ -1832,7 +1809,7 @@
 <li>每个样本目录的符号链接和文件名；</li>
 <li><code>presub.sh</code> 中的可执行文件、资源和调度设置。</li>
 </ul>
-<p><code>presub.sh</code> 只是脚本模板。它不会证明输入正确，也不会代表已经获准提交。
+<p><code>presub.sh</code> 是脚本模板，运行前请检查可执行文件和调度设置。
 先检查生成目录和链接，再由项目自己的执行流程运行。完成后检查退出状态、
 日志、温度、能量、压力、晶胞和轨迹，确认没有失败或不完整的样本。</p>
 <h2 id="4">4. 后处理与下一步</h2>
@@ -1860,26 +1837,6 @@ BEC 标签，可以使用：</p>
 <li>工作流脚本和集群、模板及软件版本有关，正式批量处理前先用少量结构检查。</li>
 <li>保留模板和原始结构，并在继续前检查生成目录、链接和文件名。</li>
 </ul>
-<h2 id="ai">AI 辅助与授权边界</h2>
-<p>工作流脚本和集群、模板、软件版本有关。agent 不得从示例或其他材料体系
-推断势函数、元素/type 映射、温度、时间步长、系综、压力、运行长度、筛选
-阈值、资源或收敛标准，也不能把 <code>INCAR</code>、<code>POTCAR</code>、<code>KPOINTS</code>、<code>run.in</code>、
-CP2K 模板或 <code>nep.txt</code> 当作已批准文件。准备目录不等于授权运行 DFT、GPUMD、
-LAMMPS 或 NEP；执行和调度提交必须由用户明确要求。</p>
-<p>需要开发者直接调用源码时，先确认仓库根目录、解释器和依赖，再使用目标脚本
-自己的帮助。普通用户应优先使用已有菜单；没有 CLI 路由的功能不能凭空写成
-CLI 命令。遇到解析错误、缺少文件、NaN/Inf、失败输出或未解释的警告时，应
-停止并报告。</p>
-<p>相关 skill reference：</p>
-<ul>
-<li><code>skills/gpumdkit-skill/references/workflows.md</code></li>
-<li><code>skills/gpumdkit-skill/references/sampling.md</code></li>
-<li><code>skills/gpumdkit-skill/references/format-conversion.md</code></li>
-<li><code>skills/gpumdkit-skill/references/nep-data.md</code></li>
-<li><code>skills/gpumdkit-skill/references/nep-parameters.md</code></li>
-</ul>
-<p>为保证可复现性，应记录模型和数据的版本、已确认的方案、完整命令、工作目录、版本、退出
-状态、警告、生成文件、排除项、验证结果和已知限制。</p>
 
 
 

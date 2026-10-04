@@ -344,8 +344,6 @@ gpumdkit.sh -plt D  # Alternative command
     <img src="../../docs/Gallery/Arrhenius_D.png" alt="Arrhenius D" width="55%" />
 </div>
 
-The terminal reports Ea and the corresponding Arrhenius-fit `R2` to four decimal places.
-
 ---
 
 #### plt_arrhenius_d_PT.py
@@ -389,8 +387,6 @@ activation energy for each component.
 gpumdkit.sh -plt D_xyz [save]
 ```
 
-The terminal reports Ea and the corresponding fit `R2` to four decimal places for the total and each x/y/z direction.
-
 ---
 
 #### plt_arrhenius_sigma.py
@@ -410,8 +406,6 @@ gpumdkit.sh -plt sigma         # Alternative command
 <div align="center">
     <img src="../../docs/Gallery/Arrhenius_sigma.png" alt="Arrhenius sigma" width="55%" />
 </div>
-
-The terminal reports Ea and the corresponding Arrhenius-fit `R2` to four decimal places.
 
 ---
 
@@ -458,8 +452,6 @@ Nernst-Einstein relation.
 ```bash
 gpumdkit.sh -plt sigma_xyz [save]
 ```
-
-The terminal reports Ea and the corresponding fit `R2` to four decimal places for the total and each x/y/z direction.
 
 ---
 

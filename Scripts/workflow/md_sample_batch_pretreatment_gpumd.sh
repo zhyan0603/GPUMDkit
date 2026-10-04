@@ -70,7 +70,6 @@ function f302_md_sample_batch_pretreatment_gpumd(){
 	        mv *.xyz ./struct_md
 	        num_xyz_files=$(find ./struct_md -maxdepth 1 -name "*.xyz" | wc -l | awk '{print $1-1}')
 	        
-	        # Perform additional operations if needed after moving .vasp files
 	    else
 	        echo " No .vasp files or .xyz files found."
 	        return 1
