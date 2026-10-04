@@ -404,6 +404,14 @@ body {
     z-index: 3;
 }
 
+.feature-icon svg,
+.doc-icon svg {
+    width: 28px;
+    height: 28px;
+    color: var(--text-gpumd);
+    flex-shrink: 0;
+}
+
 .feature-item:hover .feature-icon {
     transform: scale(1.1);
     background: #e6f0fa;
