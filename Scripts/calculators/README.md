@@ -47,6 +47,12 @@ gpumdkit.sh -calc ionic-cond <element> <charge>
 python calc_ion_conductivity.py <element> <charge>
 ```
 
+The calculator reads time and `MSD_x/y/z` from columns 1–4. The `element`
+argument counts ions; it does not select MSD columns. For `all_groups` output,
+extract the target group's time and MSD columns before running. Use an integer
+charge in units of the elementary charge. The result is Nernst–Einstein
+conductivity and does not include inter-ion displacement correlations.
+
 #### Parameters
 - `<element>`: Chemical species symbol (e.g., Li, Na, O)
 - `<charge>`: Formal charge of the ion (e.g., 1 for Li⁺, -2 for O²⁻)
@@ -478,6 +484,13 @@ python calc_msd.py <extxyz_file> <element_symbol> <dt_fs> [max_corr_steps]
 ```bash
 gpumdkit.sh -calc msd dump.xyz Li 10
 ```
+
+Use a fixed-cell trajectory with stable atom order and verified unwrapped
+coordinates in the `pos` field. The script reads `pos` and the first frame's
+cell; it does not use a separate `unwrapped_position` property. Its automatic
+wrapping check is not sufficient to validate wrapped trajectories, and its
+axis-wise unwrapping does not handle general tilted or changing cells.
+The command overwrites `msd.out` in the current directory.
 
 The output file is `msd.out` with four columns: `Time(ps)`, `MSD_x`, `MSD_y`,
 and `MSD_z`. Use `gpumdkit.sh -plt msd` to plot it.

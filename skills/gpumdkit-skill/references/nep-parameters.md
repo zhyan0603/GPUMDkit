@@ -22,12 +22,12 @@ A minimal parser-level training input may contain only `type`, but a production 
 | Keyword | Syntax/values | Documented default/constraint |
 |---|---|---|
 | `version` | `version <integer>` | Only `4` in this bundled snapshot |
-| `prediction` | `prediction 0|1` | `0` optimization; `1` prediction of `train.xyz`; default 0 |
-| `model_type` | `model_type 0|1|2` | `0` potential, `1` dipole, `2` polarizability; default 0 |
+| `prediction` | `prediction 0\|1` | `0` optimization; `1` prediction of `train.xyz`; default 0 |
+| `model_type` | `model_type 0\|1\|2` | `0` potential, `1` dipole, `2` polarizability; default 0 |
 | `type` | `type <number_of_species> <species...>` | Mandatory; case-sensitive periodic-table symbols |
 | `type_weight` | `type_weight <weight_for_each_species...>` | Exactly one non-negative force-loss weight per species in `type` order; default 1.0 each; must follow `type` |
-| `charge_mode` | `charge_mode 0|1|2` | 0 original; 1 real+reciprocal qNEP; 2 reciprocal-only qNEP; default 0 |
-| `atomic_v` | `atomic_v 0|1` | 0 global default; 1 atomic for dipole/polarizability; potential virial is global only |
+| `charge_mode` | `charge_mode 0\|1\|2` | 0 original; 1 real+reciprocal qNEP; 2 reciprocal-only qNEP; default 0 |
+| `atomic_v` | `atomic_v 0\|1` | 0 global default; 1 atomic for dipole/polarizability; potential virial is global only |
 
 ## Descriptor parameters
 
@@ -72,8 +72,8 @@ Loss weights change the fitted objective and are not generic tuning knobs. Confi
 | `generation` | `generation <count>` | Integer 0 to 10^7; default 100000 |
 | `save_potential` | `save_potential <interval> <format> <save_restart>` | Interval default 100000; format 0 uses generation name, 1 uses timestamp/extended name (default); restart flag is 0/1 |
 | `output_interval` | `output_interval <number_of_generations>` | Positive integer; default 100; controls writes to `loss.out`, console output, `nep.txt`, `nep.restart`, and test-set output files |
-| `output_descriptor` | `output_descriptor 0|1|2` | Prediction only; 0 off, 1 per-structure, 2 per-atom; default 0 |
-| `import_q_scaler` | `import_q_scaler 0|1` | Default 0; with 1, reads `q_scaler` from the local `nep.txt` instead of recomputing it at generation 0; requires matching architecture and species |
+| `output_descriptor` | `output_descriptor 0\|1\|2` | Prediction only; 0 off, 1 per-structure, 2 per-atom; default 0 |
+| `import_q_scaler` | `import_q_scaler 0\|1` | Default 0; with 1, reads `q_scaler` from the local `nep.txt` instead of recomputing it at generation 0; requires matching architecture and species |
 
 For `save_potential`, `save_restart=1` requests matching restart checkpoints. A saved `nep.restart` is required for restart/foundation workflows. If checkpoint names differ locally, resolve the executable version before automating collection.
 

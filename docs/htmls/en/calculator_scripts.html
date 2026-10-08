@@ -1965,6 +1965,11 @@
 choice for every system. The current implementation fits the middle 40–80% of
 the available MSD points. Inspect the MSD curve and its convergence before
 using the resulting diffusion coefficient or conductivity in an interpretation.</p>
+<p>The calculator reads time and <code>MSD_x/y/z</code> from columns 1–4. The <code>element</code>
+argument counts ions; it does not select MSD columns. For <code>all_groups</code> output,
+extract the target group's time and MSD columns before running. Use an integer
+charge in units of the elementary charge. The result is Nernst–Einstein
+conductivity and does not include inter-ion displacement correlations.</p>
 <p>From interactive mode, choose <code>401</code>. You will see:</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>&gt;-------------------------------------------------&lt;
 <a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>| This function calls the script in calculators   |
@@ -2001,6 +2006,12 @@ using the resulting diffusion coefficient or conductivity in an interpretation.<
 <div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>gpumdkit.sh<span class="w"> </span>-calc<span class="w"> </span>msd<span class="w"> </span>dump.xyz<span class="w"> </span>Li<span class="w"> </span><span class="m">10</span>
 <a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>gpumdkit.sh<span class="w"> </span>-calc<span class="w"> </span>msd<span class="w"> </span>dump.xyz<span class="w"> </span>Li<span class="w"> </span><span class="m">10</span><span class="w"> </span><span class="m">5000</span>
 </code></pre></div>
+<p>Use a fixed-cell trajectory with stable atom order and verified unwrapped
+coordinates in the <code>pos</code> field. The script reads <code>pos</code> and the first frame's
+cell; it does not use a separate <code>unwrapped_position</code> property. Its automatic
+wrapping check is not sufficient to validate wrapped trajectories, and its
+axis-wise unwrapping does not handle general tilted or changing cells.
+The command overwrites <code>msd.out</code> in the current directory.</p>
 <p>From interactive mode, choose <code>412</code>. You will see:</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>Input &lt;extxyz_file&gt; &lt;element_symbol&gt; &lt;dt_fs&gt; [max_corr_steps]
 <a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>  Optional argument: max_corr_steps (default: frame number)

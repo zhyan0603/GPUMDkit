@@ -8,7 +8,7 @@ Citation: Z. Yan et al., GPUMDkit: A User-Friendly Toolkit for GPUMD and NEP,
 Script:     plt_arrhenius_sigma.py
 Category:   Plot Scripts
 Purpose:    Calculate ionic conductivity from MSD and thermo data in
-            temperature folders, generate an Arrhenius plot (ln(sigma*T)
+            temperature folders, generate an Arrhenius plot (log10(sigma*T)
             vs 1000/T), and extract activation energy.
 Usage:      gpumdkit.sh -plt sigma [save]
             python plt_arrhenius_sigma.py [save]
@@ -225,7 +225,7 @@ if len(raw_group_Ts) > 0:
 
     # Set axis labels with proper formatting
     ax.set_xlabel('1000/T (1/K)', labelpad=7)
-    ax.set_ylabel(r'ln($\sigma$T) (S$\cdot$K/cm)')
+    ax.set_ylabel(r'log10($\sigma$T) (S$\cdot$K/cm)')
 
     # Add legend
     ax.legend(loc='lower left', frameon=False, fontsize=11)

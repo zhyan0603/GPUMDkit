@@ -1834,6 +1834,9 @@
 </tbody>
 </table>
 <p>示例 <code>Li 1</code> 仅用于说明参数格式，并不是所有体系的默认选择。当前实现使用 MSD 数据中间的 40–80% 区间拟合。解读扩散系数或电导率前，应先检查 MSD 曲线及其收敛情况。</p>
+<p>计算器读取第 1–4 列的时间和 <code>MSD_x/y/z</code>。<code>element</code> 参数用于计数离子，
+不选择 MSD 列；<code>all_groups</code> 输出需先提取目标组的时间和 MSD 列。电荷参数为
+以元电荷为单位的整数。结果为 Nernst–Einstein 电导率，不包含离子间位移关联。</p>
 <p>交互模式选择 <code>401</code>，会看到：</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>&gt;-------------------------------------------------&lt;
 <a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>| This function calls the script in calculators   |
@@ -1897,6 +1900,10 @@
 <div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>gpumdkit.sh<span class="w"> </span>-calc<span class="w"> </span>msd<span class="w"> </span>dump.xyz<span class="w"> </span>Li<span class="w"> </span><span class="m">10</span>
 <a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>gpumdkit.sh<span class="w"> </span>-calc<span class="w"> </span>msd<span class="w"> </span>dump.xyz<span class="w"> </span>Li<span class="w"> </span><span class="m">10</span><span class="w"> </span><span class="m">5000</span>
 </code></pre></div>
+<p>使用固定晶胞、原子顺序一致的轨迹，并确保 <code>pos</code> 字段存储已核验的展开坐标。
+脚本读取 <code>pos</code> 和首帧晶胞，不读取独立的 <code>unwrapped_position</code> 属性。自动坐标
+判断不足以验证折回轨迹；按轴解包裹也不适用于一般倾斜或变化晶胞。
+命令覆盖当前目录的 <code>msd.out</code>。</p>
 <p>交互模式选择 <code>412</code>，会看到：</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>Input &lt;extxyz_file&gt; &lt;element_symbol&gt; &lt;dt_fs&gt; [max_corr_steps]
 <a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>  Optional argument: max_corr_steps (default: frame number)

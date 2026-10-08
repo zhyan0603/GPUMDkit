@@ -86,3 +86,9 @@ potential <path-to-nep.txt>
 - 当前微调语法为 `fine_tune <nep_model_file> <nep_restart_file>`，而非 `fine_tune 1`。
 - `nep.restart`（带点号）是当前文档记录的重启文件名；旧文本可能使用 `nep_restart`。
 - 不要从旧技能复制超参数默认值。使用 `nep-parameters.md`，并区分默认值和用户确认的正式训练参数。
+
+## 来源与版本范围
+
+- [GPUMD v5.8.1 源码](https://github.com/brucefan1983/GPUMD/tree/v5.8.1) 提供固定 release 参考。
+- [官方参数手册](https://gpumd.org/dev/nep/input_parameters/index.html) 包含开发版更新；使用前按可执行文件的 release 或 commit 核验关键字。
+- 记录可执行文件路径和构建 revision；程序显示的版本不一定区分补丁版本。

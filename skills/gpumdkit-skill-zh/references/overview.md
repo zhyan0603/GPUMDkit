@@ -68,8 +68,8 @@ gpumdkit.sh -calc -h              # 计算器帮助
 |---|---|
 | `gpumdkit.sh -doctor` | 检查配置路径、Python/Bash 版本以及常用或特定功能所需的 Python 软件包；缺少可选包不影响无关功能 |
 | `gpumdkit.sh -skill` | 打印规范的 Skill 路径和跨客户端安装提示 |
-| `gpumdkit.sh -time <gpumd\|nep>` | 旧版耗时分析器；仅使用支持的 `gpumd` 或 `nep` 选择器 |
-| `gpumdkit.sh -nep_modifier [nep.txt] [nep.restart|-] [nep.in|-]` | 通过 calorine 检查和修改 NEP4 模型；保留源文件，扩展、缩减和添加元素需要匹配的 restart 数据及用户明确的科学选择 |
+| `gpumdkit.sh -time <gpumd\|wpe\|nep\|gnep>` | 监控 GPUMD、WPE、NEP 或 GNEP 进度 |
+| `gpumdkit.sh -nep_modifier [nep.txt] [nep.restart\|-] [nep.in\|-]` | 通过 calorine 检查和修改 NEP4 模型；保留源文件，扩展、缩减和添加元素需要匹配的 restart 数据及用户明确的科学选择 |
 | `gpumdkit.sh -clean` | 从当前目录中删除生成的/多余的文件；运行前预览清理实现并获得明确删除批准 |
 | `gpumdkit.sh -update` | 运行 GPUMDkit 的网络自更新；先检查工作区变更并获得明确更新授权 |
 

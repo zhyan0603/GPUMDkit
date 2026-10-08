@@ -41,10 +41,14 @@ gpumdkit.sh -calc ionic-cond O -2
 
 # 推荐的非交互式输入（当前目录）：
 # - msd.out（来自 GPUMD compute_msd，或 calc_msd.py 的前四列）
-# - thermo.out（用于温度）
-# - model.xyz（用于体积）
+# - thermo.out（用于温度和体积）
+# - model.xyz（用于离子数）
 # - run.in（可选；用于检测复制因子）
 ```
+
+计算器读取第 1–4 列的时间和 `MSD_x/y/z`。`element` 参数用于计数离子，
+不选择 MSD 列；`all_groups` 输出需先提取目标组的时间和 MSD 列。电荷参数为
+以元电荷为单位的整数。结果为 Nernst–Einstein 电导率，不包含离子间位移关联。
 
 ### NEP 性质预测
 ```bash
@@ -131,6 +135,11 @@ GPUMD 原生的 `compute_msd` 写入另一种 `msd.out`。只选择一个分组�
 `all_groups` 或多个分组时，GPUMD 会追加其他分组的数据，因此不能假定每个
 `msd.out` 都有七列。独立的 `compute_sdc` 命令写入 `sdc.out`，该文件供
 `gpumdkit.sh -plt vac` 使用。
+
+使用固定晶胞、原子顺序一致的轨迹，并确保 `pos` 字段存储已核验的展开坐标。
+脚本读取 `pos` 和首帧晶胞，不读取独立的 `unwrapped_position` 属性。自动坐标
+判断不足以验证折回轨迹；按轴解包裹也不适用于一般倾斜或变化晶胞。
+命令覆盖当前目录的 `msd.out`。
 
 ### X 射线衍射（仅交互模式）
 

@@ -2975,8 +2975,13 @@ GPUMD 会追加分组数据；请检查其布局，不要假定文件具有单�
 <div class="highlight"><pre><span></span><code><a id="__codelineno-22-1" name="__codelineno-22-1" href="#__codelineno-22-1"></a>gpumdkit.sh<span class="w"> </span>-plt<span class="w"> </span>D_xyz
 </code></pre></div>
 <hr />
+<p>以下电导率图从首个温度的 <code>model.xyz</code> 合计 Li 和 Na 数量，按单价处理，
+并对所有温度沿用相同离子数和扩胞倍数。适用于单一移动 Li 或 Na 物种且 MSD
+列与其对应的体系；其他物种、混合载流子或变组成体系需单独计算。脚本拟合
+MSD 中间 40%–80% 的区间，并按 Nernst–Einstein 关系外推 300 K 电导率。
+使用结果前，应核验扩散区间与外推范围。</p>
 <h3 id="plt_arrhenius_sigmapy">plt_arrhenius_sigma.py</h3>
-<p>创建 Arrhenius 离子电导率图（ln(σ·T) vs 1000/T）。</p>
+<p>创建 Arrhenius 离子电导率图（log10(σ·T) vs 1000/T）。</p>
 <p><strong>输入文件：</strong> 每个 <code>*K/</code> 目录中的 <code>thermo.out</code> 和 <code>msd.out</code>；首个温度目录中的
 <code>model.xyz</code> 以及可选的 <code>run.in</code></p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-23-1" name="__codelineno-23-1" href="#__codelineno-23-1"></a>gpumdkit.sh<span class="w"> </span>-plt<span class="w"> </span>arrhenius_sigma

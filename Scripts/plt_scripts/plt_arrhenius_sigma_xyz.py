@@ -287,7 +287,7 @@ for label, sigmaT_data, intercept, slope, color, marker in labels_with_ea:
 
 # Set axis labels with proper formatting
 ax.set_xlabel('1000/T (1/K)', labelpad=7)
-ax.set_ylabel(r'ln($\sigma$T) (S$\cdot$K/cm)')
+ax.set_ylabel(r'log10($\sigma$T) (S$\cdot$K/cm)')
 
 # Add legend
 ax.legend(loc='lower left', frameon=False, fontsize=11)

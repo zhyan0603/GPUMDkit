@@ -46,23 +46,24 @@ description: 端到端使用 GPUMDkit、GPUMD 与 NEP。适用于安装和了解
 | 扩散或电导率的变温序列与 Arrhenius 活化能 | [arrhenius.md](references/arrhenius.md) |
 | GPUMDkit 代码、CLI、脚本、文档、测试或技能维护 | [contributing.md](references/contributing.md) |
 
-跨模块任务必须加载所有相关参考。例如：
+按当前阶段加载参考：
 
-- Arrhenius 研究：读取 `gpumd.md`、`gpumd-inputs.md`、`gpumd-ensembles.md`、`gpumd-computes.md`、`gpumd-outputs.md`、`arrhenius.md`、`calculators.md` 和 `visualization.md`；如需准备 `model.xyz`，再读取 `format-conversion.md`。
-- NEP 训练流程：读取 `nep.md`、`nep-data.md`、`nep-parameters.md`、`nep-outputs.md`、`format-conversion.md`、`analyzers.md`、`sampling.md` 和 `visualization.md`。
-- MD/FPS 主动学习迭代：读取 `gpumd.md`、当前方案涉及的 GPUMD 参数参考、`workflows.md`、`sampling.md`、`analyzers.md`、`format-conversion.md`、`nep.md`、`nep-data.md`、`nep-outputs.md` 和 `visualization.md`；准备或修改训练配置时还要读取 `nep-parameters.md`。
-- 新增 GPUMDkit 命令：读取 `contributing.md` 和受影响模块的参考文件。
-- 新增或调整绘图：读取 `visualization.md`、`plotting-style.md`、`contributing.md`，以及该物理量对应的科学参考。
+- 已有 MSD 的变温分析：`arrhenius.md` 和 `visualization.md`；计算电导率或轨迹 MSD 时再读 `calculators.md`。
+- 模拟准备：`gpumd.md`，以及当前方案涉及的输入、系综、计算和输出参考。
+- 数据集准备：`nep-data.md`，以及本次使用的转换、筛选或采样参考。
+- 训练配置与评估：`nep.md`，以及相应的参数或输出参考。
+- 主动学习：`workflows.md`，再加载当前候选筛选、DFT 标注或训练阶段需要的参考。
+- 代码或文档修改：`contributing.md` 和受影响模块的参考；调整绘图外观时加读 `plotting-style.md`。
 
 ## 信息来源优先级
 
 按以下顺序采用证据：
 
-1. 本技能内置且自成体系的 GPUMD 与 NEP 参考。
-2. 本地可执行文件的帮助、解析器报错和版本输出。
-3. `gpumdkit.sh -h`、模块帮助和目标 Python 脚本的 `-h` 输出。
-4. 已确认可在同一可执行文件版本下正常工作的现有项目输入。
-5. 当本地行为与技能内置快照不一致时，由用户提供的特定版本文档。
+1. 本地可执行文件的版本、帮助、解析器信息及对应源码。
+2. 对应 release 或 commit 的官方文档。
+3. GPUMDkit CLI、模块帮助和目标脚本实现。
+4. 版本范围与本次任务一致的内置参考。
+5. 已确认可在同一可执行文件版本下正常工作的项目输入。
 
 若不同来源互相矛盾，应列出具体冲突、可执行文件版本和解析器证据，再询问本任务应以哪个版本为准。不要猜测特定版本的语法，也不要把旧的独立 GPUMD/NEP 技能当作权威来源。
 

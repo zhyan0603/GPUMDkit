@@ -237,7 +237,7 @@ gpumdkit.sh -time nep
 | `-filter_range` | Filter by distance range | `gpumdkit.sh -filter_range <file> <e1> <e2> <min> <max>` |
 | `-filter_box` | Filter by box size | `gpumdkit.sh -filter_box <file> <limit>` |
 | `-filter_value` | Filter by property | `gpumdkit.sh -filter_value <file> <prop> <thresh>` |
-| `-time` | Time monitoring | `gpumdkit.sh -time <gpumd|wpe|nep|gnep>` |
+| `-time` | Time monitoring | `gpumdkit.sh -time <gpumd\|wpe\|nep\|gnep>` |
 
 ## Dependencies
 

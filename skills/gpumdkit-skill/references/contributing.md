@@ -8,7 +8,7 @@ Read this reference before changing GPUMDkit code, scripts, CLI routing, documen
 - Adding interactive and CLI features
 - Python and shell conventions
 - Update bookkeeping and version/date policy
-- Maintainer decisions and rejected changes
+- Maintenance boundaries
 - Validation checklist
 
 ## Project Structure
@@ -96,7 +96,7 @@ echo " ---------------------------------------------------"
 ```
 
 Key conventions:
-- Banner uses `>-----<` and `| ... |` format (49 dashes inner, 53 chars total)
+- Banner uses `>-----<` and `| ... |` format (49 dashes, 52 characters including the leading space)
 - `echo " Input <...>"` describes parameters
 - `echo " Example: ..."` shows a concrete example
 - Use `read_menu_choice var || return 1` for single-value input, `read_menu_array arr || return 1` for array input
@@ -104,7 +104,7 @@ Key conventions:
 - `"${varname[@]}"` passes all arguments properly quoted
 - Function name format: `f<Category><Number>_<descriptive_name>`
 - **Script banner must name the EXACT filename** (not an abbreviation or wrong suffix)
-- All banners use uniform width: 49 dashes inner (lines 82-86 style). Inconsistent widths (51/52/53/56) should be normalized when touching a file.
+- Banner borders use 49 dashes; align all content rows with the border.
 
 ### Step 3: Register in `gpumdkit.sh`
 
@@ -297,8 +297,9 @@ When adding a new plot script, follow the plotting rules in
 command or compression step at 100 DPI so documentation assets stay small; do
 not lower the production plot settings to create the example.
 
-For the production script, use 150 DPI for the interactive `plt.show()` figure
-and a default `savefig()` DPI of at least 300. Add the plot usage and the
+For a new production script, use 150 DPI for the interactive `plt.show()` figure
+and a default `savefig()` DPI of at least 300. Preserve existing scripts' DPI
+unless a change is requested. Add the plot usage and the
 Gallery image to both bilingual tutorial sources and the corresponding
 submodule README (for example, `Scripts/plt_scripts/README.md`).
 
@@ -484,7 +485,7 @@ echo " >-------------------------------------------------<"
 ```
 
 - The script name in the banner **must be the exact filename** (e.g., `scf_batch_pretreatment_vasp.sh`, not `scf_batch_pretreatment.sh`)
-- Width: 49 dashes inner (53 chars total between `>` and `<`). Keep uniform across projects.
+- Width: 49 dashes; 52 characters including the leading space. Keep uniform across projects.
 
 ### The Prompt Arrow
 
@@ -495,23 +496,23 @@ User input follows the marker pattern: `echo " ------------>>"` before reading i
 Shell: `echo " Error: <message>."` — leading space, capital E, colon, period at end.
 Python: `print(" Error: <message>."); sys.exit(1)` — same format, always call sys.exit after.
 
-### What NOT to Propose or Do
+### Maintenance boundaries
 
-These changes have been **explicitly rejected** by the project maintainer. Do not suggest them.
+Preserve these conventions when maintaining existing scripts.
 
-| Rejected | Reason |
+| Avoid | Constraint |
 |---|---|
 | Retrofit `if __name__ == "__main__":` into existing Python scripts | Scripts run standalone; do not churn working scripts just to add a guard |
 | Replace `from pylab import *` with explicit imports | Keep as-is |
 | Unify `-plt` "save" argument position | Different scripts have different arg counts; keep flexible |
-| Apply plot DPI policy to new or modified plots | Use 150 DPI for `plt.show()`, at least 300 DPI for production `savefig()`, and 100 DPI only for separate Gallery examples |
+| Unify DPI across existing plots | Preserve each script's display/save DPI; new plots use 150 DPI for display and at least 300 DPI for saved figures |
 | Change `exit` → `return` in workflow sourced scripts | Keep as-is |
 | Add `-filter_value` / `-filter_range` / `-get_volume` / `-re_atoms` to the help table | Intentionally undocumented |
 | Make interactive mode loop back to menu after one function | Keeps shots single-shot; designed this way |
 | Add color/ANSI escape codes | User explicitly rejected; keep monochrome |
 | Add debug examples to every tutorial page | Unnecessary; keep tutorials lean |
 | Change MSD fitting range arbitrarily | Scientific choice; ask maintainer first |
-| Remove troubleshooting pages | Removed by maintainer's explicit request; do not re-add |
+| Add standalone troubleshooting pages | Keep troubleshooting guidance within the relevant module |
 | Add `des_compare` to CLI | Script exists but maintainer chose not to wire it |
 | Keep `__pycache__` after debugging | Prefer a non-writing syntax check; if a cache is created, remove the exact recorded cache path before handoff |
 | Add `-get_volume` / `-re_atoms` to completion.sh | Intentionally excluded from completion and help table |
@@ -535,11 +536,10 @@ python3 Scripts/path/to/script.py        # missing args must print usage + exit 
 
 ### Specific Design Decisions
 
-- **calc_ion_conductivity.py**: MSD fitting range is 40%-80% of data (lines 107-108). The Arrhenius plotting scripts use the same range. Do not change without maintainer approval.
+- **calc_ion_conductivity.py**: MSD fitting range is 40%-80% of data. The Arrhenius plotting scripts use the same range. Do not change without maintainer approval.
 - **clean_extra_files.sh**: Keep-substring deletion uses **whole-word matching**, NOT substring removal. Do not regress to `${var/pattern/}` substring removal (it corrupts filenames sharing substrings).
-- **troubleshooting.md**: Only 5 FAQ items. Do not expand without asking.
-- **select_max_modev.py line 111**: The index mapping `atoms_list[filtered_indices[i]]` was recently fixed from a bug (`atoms_list[i]`). Do not undo.
-- **charge_balance_check.py lines 118-131**: Now uses manual loop instead of `dict()` to handle 3-tuple error returns. Do not revert to `dict()`.
+- **select_max_modev.py**: Map ranked deviations through `filtered_indices` to the corresponding source frames.
+- **charge_balance_check.py**: Handle both charge results and three-item error returns from the lookup.
 
 ---
 

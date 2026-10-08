@@ -46,23 +46,24 @@ Read one or more references according to the task. Do not load every file by def
 | Diffusion or conductivity temperature series and Arrhenius activation energy | [arrhenius.md](references/arrhenius.md) |
 | GPUMDkit code, CLI, scripts, docs, tests, or skill maintenance | [contributing.md](references/contributing.md) |
 
-For cross-module work, load every relevant reference. Examples:
+Load references for the current stage:
 
-- Arrhenius study: read `gpumd.md`, `gpumd-inputs.md`, `gpumd-ensembles.md`, `gpumd-computes.md`, `gpumd-outputs.md`, `arrhenius.md`, `calculators.md`, and `visualization.md`; also read `format-conversion.md` if preparing `model.xyz`.
-- NEP training pipeline: read `nep.md`, `nep-data.md`, `nep-parameters.md`, `nep-outputs.md`, `format-conversion.md`, `analyzers.md`, `sampling.md`, and `visualization.md`.
-- MD/FPS active-learning iteration: read `gpumd.md`, the GPUMD parameter references used by the protocol, `workflows.md`, `sampling.md`, `analyzers.md`, `format-conversion.md`, `nep.md`, `nep-data.md`, `nep-outputs.md`, and `visualization.md`; also read `nep-parameters.md` when preparing or changing the training configuration.
-- New GPUMDkit command: read `contributing.md` plus the reference for the affected module.
-- New or restyled plot: read `visualization.md`, `plotting-style.md`, and `contributing.md`; also read the scientific reference for the quantity being plotted.
+- Existing MSD temperature series: `arrhenius.md` and `visualization.md`; add `calculators.md` when calculating conductivity or trajectory MSD.
+- Simulation preparation: `gpumd.md` and the input, ensemble, compute, and output references for the planned protocol.
+- Dataset preparation: `nep-data.md` plus the conversion, filtering, or sampling references used by the task.
+- Training configuration and evaluation: `nep.md` plus the relevant parameter or output reference.
+- Active learning: `workflows.md`, then the references required by the current candidate-selection, DFT-labeling, or training stage.
+- Code or documentation changes: `contributing.md` and the affected module reference; add `plotting-style.md` for plot appearance changes.
 
 ## Source priority
 
 Use evidence in this order:
 
-1. The self-contained GPUMD and NEP references bundled with this skill.
-2. Local executable help, parser messages, and version output.
-3. GPUMDkit `gpumdkit.sh -h`, module help, and target Python script `-h` output.
-4. Existing project inputs confirmed to work with the same executable version.
-5. Version-specific documentation supplied by the user when local behavior differs from this bundled snapshot.
+1. Local executable version, help, parser messages, and matching source code.
+2. Official documentation for that release or commit.
+3. GPUMDkit CLI/module help and target script implementation.
+4. Bundled references whose version scope matches the task.
+5. Existing project inputs verified with the same executable version.
 
 If sources disagree, show the exact conflict, executable version, and parser evidence, then ask which software version governs the task. Do not guess version-specific syntax. Treat old standalone GPUMD/NEP skills as non-authoritative.
 

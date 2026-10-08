@@ -119,6 +119,12 @@ choice for every system. The current implementation fits the middle 40–80% of
 the available MSD points. Inspect the MSD curve and its convergence before
 using the resulting diffusion coefficient or conductivity in an interpretation.
 
+The calculator reads time and `MSD_x/y/z` from columns 1–4. The `element`
+argument counts ions; it does not select MSD columns. For `all_groups` output,
+extract the target group's time and MSD columns before running. Use an integer
+charge in units of the elementary charge. The result is Nernst–Einstein
+conductivity and does not include inter-ion displacement correlations.
+
 From interactive mode, choose `401`. You will see:
 
 ```text
@@ -168,6 +174,13 @@ Ionic Conductivity:
 gpumdkit.sh -calc msd dump.xyz Li 10
 gpumdkit.sh -calc msd dump.xyz Li 10 5000
 ```
+
+Use a fixed-cell trajectory with stable atom order and verified unwrapped
+coordinates in the `pos` field. The script reads `pos` and the first frame's
+cell; it does not use a separate `unwrapped_position` property. Its automatic
+wrapping check is not sufficient to validate wrapped trajectories, and its
+axis-wise unwrapping does not handle general tilted or changing cells.
+The command overwrites `msd.out` in the current directory.
 
 From interactive mode, choose `412`. You will see:
 

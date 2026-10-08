@@ -2985,8 +2985,15 @@ activation energy of each component.</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-22-1" name="__codelineno-22-1" href="#__codelineno-22-1"></a>gpumdkit.sh<span class="w"> </span>-plt<span class="w"> </span>D_xyz
 </code></pre></div>
 <hr />
+<p>These conductivity plots use the first temperature's <code>model.xyz</code> to count Li
+and Na together, assume unit charge, and apply the same ion count and replication
+across temperatures. Use them for one mobile Li or Na species with matching MSD
+columns; other species, mixed carriers, or changing composition require a separate
+calculation. They fit the 40%–80% MSD interval and extrapolate conductivity to
+300 K using the Nernst–Einstein relation. Validate the diffusive interval and the
+extrapolation range before interpreting the results.</p>
 <h3 id="plt_arrhenius_sigmapy">plt_arrhenius_sigma.py</h3>
-<p>Creates Arrhenius plot for ionic conductivity (ln(σ·T) vs 1000/T).</p>
+<p>Creates Arrhenius plot for ionic conductivity (log10(σ·T) vs 1000/T).</p>
 <p><strong>Input Files:</strong> <code>thermo.out</code> and <code>msd.out</code> in each <code>*K/</code> directory;
 <code>model.xyz</code> and optional <code>run.in</code> in the first temperature directory</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-23-1" name="__codelineno-23-1" href="#__codelineno-23-1"></a>gpumdkit.sh<span class="w"> </span>-plt<span class="w"> </span>arrhenius_sigma

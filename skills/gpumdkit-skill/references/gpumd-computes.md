@@ -15,7 +15,7 @@ Use this self-contained reference to find a computation's signature, output, com
 | Keyword | Current signature | Main output |
 |---|---|---|
 | `compute` | `compute <grouping_method> <sample_interval> <output_interval> {<quantity>}` | `compute.out` |
-| `compute_chunk` | `compute_chunk <sample_interval> <output_interval> bin/1d|bin/2d|bin/3d <bin parameters> {<quantity>}` | `compute_chunk.out` |
+| `compute_chunk` | `compute_chunk <sample_interval> <output_interval> bin/1d\|bin/2d\|bin/3d <bin parameters> {<quantity>}` | `compute_chunk.out` |
 | `compute_adf` | `compute_adf <interval> <num_bins> <rc_min> <rc_max>` or typed multi-triplet form | `adf.out` |
 | `compute_rdf` | `compute_rdf <cutoff> <num_bins> <interval>` | `rdf.out` |
 | `compute_angular_rdf` | `compute_angular_rdf <cutoff> <r_bins> <angle_bins> <interval> [atom <i> <j> ...]` | `angular_rdf.out` |
@@ -39,13 +39,13 @@ Common sampling rules:
 
 | Keyword | Current signature | Main output |
 |---|---|---|
-| `compute_msd` | `compute_msd <sample_interval> <Nc> [group <method> <id> | all_groups <method>] [save_every <interval>]` | `msd.out`, snapshots |
+| `compute_msd` | `compute_msd <sample_interval> <Nc> [group <method> <id> \| all_groups <method>] [save_every <interval>]` | `msd.out`, snapshots |
 | `compute_sdc` | `compute_sdc <sample_interval> <Nc> [group <method> <id>]` | `sdc.out` |
 | `compute_ic` | `compute_ic <sample_interval> <Nc> <type_index> <charge>` | `ic.out` |
 | `compute_hac` | `compute_hac <sampling_interval> <correlation_steps> <output_interval>` | `hac.out` |
 | `compute_hnemd` | `compute_hnemd <output_interval> <Fe_x> <Fe_y> <Fe_z>` | `kappa.out` |
 | `compute_hnemdec` | `compute_hnemdec <drive_type> <output_interval> <Fe_x> <Fe_y> <Fe_z>` | `onsager.out` |
-| `compute_shc` | `compute_shc <sample_interval> <Nc> <0|1|2> <num_omega> <max_omega> [group <method> <id>]` | `shc.out` |
+| `compute_shc` | `compute_shc <sample_interval> <Nc> <0\|1\|2> <num_omega> <max_omega> [group <method> <id>]` | `shc.out` |
 | `compute_viscosity` | `compute_viscosity <sampling_interval> <correlation_steps>` | `viscosity.out` |
 
 Interpretation rules:
@@ -65,7 +65,7 @@ Interpretation rules:
 | Keyword | Current signature | Main output |
 |---|---|---|
 | `compute_dos` | `compute_dos <sample_interval> <Nc> <omega_max> [group <method> <id>] [num_dos_points <n>]` | `mvac.out`, `dos.out` |
-| `compute_gkma` | `compute_gkma <sample_interval> <first_mode> <last_mode> <bin_size|f_bin_size> <size>` | `heatmode.out` |
+| `compute_gkma` | `compute_gkma <sample_interval> <first_mode> <last_mode> <bin_size\|f_bin_size> <size>` | `heatmode.out` |
 | `compute_hnema` | `compute_hnema <sample_interval> <output_interval> <Fe_x> <Fe_y> <Fe_z> <first_mode> <last_mode> <bin_option> <size>` | `kappamode.out` |
 
 GKMA/HNEMA require a matching `eigenvector.in`; mode indices and binning must match that file. `compute_gkma` and `compute_hnema` cannot be active in the same run; the last one wins. Modal calculations can require substantial memory and disk.
@@ -77,7 +77,7 @@ For HNEMA, `sample_interval` must divide `output_interval`. `bin_size` groups a 
 |---|---|---|
 | `compute_dpdt` | `compute_dpdt <sampling_interval>` | `dpdt.out` |
 | `compute_lsqt` | `compute_lsqt <direction> <num_moments> <num_energies> <E_1> <E_2> <E_max>` | `lsqt_dos.out`, `lsqt_velocity.out`, `lsqt_sigma.out` |
-| `compute_orientorder` | `compute_orientorder <interval> <cutoff|nnn> <mode_value> <ndegrees> <l...> [<average> <wl> <wlhat>]` | `orientorder.out` |
+| `compute_orientorder` | `compute_orientorder <interval> <cutoff\|nnn> <mode_value> <ndegrees> <l...> [<average> <wl> <wlhat>]` | `orientorder.out` |
 
 For `compute_orientorder`, `cutoff` uses a distance and `nnn` uses a neighbor count. Optional `average`, `wl`, and `wlhat` flags are 0/1 and control neighbor averaging and third-order invariants.
 

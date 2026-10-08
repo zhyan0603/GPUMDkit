@@ -14,8 +14,8 @@ Use this self-contained reference to select outputs, estimate storage, and preve
 
 | Keyword | Current signature | Output | Behavior |
 |---|---|---|---|
-| `dump_xyz` | `dump_xyz <interval> <filename> [group <grouping_method> <group_id>] [precision <single|double>] {<property> ...}` | User filename(s) | Appends extended XYZ frames; a filename ending in `*` writes one file per frame; precision defaults to single |
-| `dump_netcdf` | `dump_netcdf <interval> <filename> [{<optional_args> ...}]` | User NetCDF filename | Requires the NetCDF package; positions are always written; optional arguments include properties, `group`, `precision <single|double>`, and `compression none|deflate [<level>]` |
+| `dump_xyz` | `dump_xyz <interval> <filename> [group <grouping_method> <group_id>] [precision <single\|double>] {<property> ...}` | User filename(s) | Appends extended XYZ frames; a filename ending in `*` writes one file per frame; precision defaults to single |
+| `dump_netcdf` | `dump_netcdf <interval> <filename> [{<optional_args> ...}]` | User NetCDF filename | Requires the NetCDF package; positions are always written; optional arguments include properties, `group`, `precision <single\|double>`, and `compression none\|deflate [<level>]` |
 | `dump_restart` | `dump_restart <interval>` | `restart.xyz` | Overwrites latest restart state; interval should be close to total run length (e.g. write once at the end or a few times) |
 | `dump_beads` | no parameters | `beads_dump_<k>.xyz` | PIMD bead data only |
 
@@ -37,7 +37,9 @@ dump_exyz <i> <v> <f> <p> <s>       -> dump_xyz <i> dump.xyz[*] velocity force p
 
 These are migration examples, not current commands. The `*` is needed only when separate per-frame files are wanted. Extended XYZ remains a supported data format, and `dump_observer` still has an `interval_exyz` parameter; do not remove those format/parameter references.
 
-For trajectory-based GPUMDkit MSD, request unwrapped positions or verify that downstream unwrapping is valid for the cell and frame cadence.
+For GPUMDkit trajectory MSD, place verified unwrapped coordinates in the
+extxyz `pos` field; `-calc msd` does not read `unwrapped_position` directly.
+See `calculators.md` for cell and coordinate requirements.
 
 ## Thermodynamic and model-specific dumps
 

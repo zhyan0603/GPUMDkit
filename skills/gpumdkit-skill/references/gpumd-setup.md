@@ -21,7 +21,7 @@ Use this self-contained catalog for non-ensemble setup commands, external contro
 | `time_step` | `time_step <dt_in_fs> [<max_distance_per_step>]` | Step in fs; documented default is 1 fs; optional positive displacement limiter is in Angstrom |
 | `compute_extrapolation` | `compute_extrapolation nep_file <nep_file> asi_file <asi_file> gamma_low <v> gamma_high <v> check_interval <n> dump_interval <n>` | ASI extrapolation-grade monitoring for active learning. `nep_file` is the NEP model used to compute the grade and is independent of the potential driving the MD; `asi_file` comes from the ASI tool. Defaults: `gamma_low=0`, effectively unbounded `gamma_high`, and both intervals 1; selected structures are appended to `extrapolation_dump.xyz`. User approval is required before relying on them in production |
 | `dftd3` | `dftd3 <functional> <potential_cutoff> <coordination_number_cutoff>` | Cutoffs are in Angstrom; functional and cutoffs must match the intended D3 parameterization |
-| `kspace` | `kspace <ewald|pppm>` | Reciprocal-space electrostatics method; default is `pppm`; use only for a compatible charge model |
+| `kspace` | `kspace <ewald\|pppm>` | Reciprocal-space electrostatics method; default is `pppm`; use only for a compatible charge model |
 
 Recognized potential families include Tersoff-1988/1989/mini, EAM, FCP, LJ, NEP, NEP+ILP, SW+ILP, Tersoff+ILP, and Deep Potential. Potential file schemas are family-specific and are not interchangeable. Do not create or rewrite a potential file from this summary; use a user-supplied validated model or obtain its exact format specification.
 
@@ -32,8 +32,8 @@ Recognized potential families include Tersoff-1988/1989/mini, EAM, FCP, LJ, NEP,
 | `change_box` | `change_box <delta>`; `change_box <delta_xx> <delta_yy> <delta_zz>`; or the 6-parameter form followed by `<epsilon_yz> <epsilon_xz> <epsilon_xy>` | Immediate box change. Length increments are in Angstrom; shear terms are dimensionless; the 6-parameter form requires a triclinic box |
 | `deform` | General form: `deform <component> <A_per_step> [<component> <A_per_step> ...]` with components `xx`/`yy`/`zz`/`xy`/`xz`/`yz`; legacy forms: `deform <A_per_step> <deform_x> <deform_y> <deform_z>` or component-wise rates followed by three flags | Run-scoped deformation in Angstrom/step; only the general form can be combined with 6-component NPT stress control. If the parser rejects the chosen form, resolve the executable version |
 | `add_force` | `add_force <group_method> <group_id> <Fx> <Fy> <Fz>` or `add_force <group_method> <group_id> <add_force_file>` | Adds force in eV/Angstrom to every atom in the selected group; file form supplies a periodic force series |
-| `add_efield` | `add_efield <method> <group> <Ex> <Ey> <Ez> [charge|bec]` or `add_efield <method> <group> <field_file> [charge|bec]` | Field is in V/Angstrom. Default force uses qNEP BEC or `model.xyz` charge; explicit `charge` uses predicted/supplied charge, while `bec` requires qNEP |
-| `add_spring` | `add_spring ghost_com|ghost_atom|com_com ... couple|decouple ... [continue <spring_id>]` | Use one of the six complete signatures below; spring constants and references are user inputs |
+| `add_efield` | `add_efield <method> <group> <Ex> <Ey> <Ez> [charge\|bec]` or `add_efield <method> <group> <field_file> [charge\|bec]` | Field is in V/Angstrom. Default force uses qNEP BEC or `model.xyz` charge; explicit `charge` uses predicted/supplied charge, while `bec` requires qNEP |
+| `add_spring` | `add_spring ghost_com\|ghost_atom\|com_com ... couple\|decouple ... [continue <spring_id>]` | Use one of the six complete signatures below; spring constants and references are user inputs |
 | `deposit` | `deposit <interval> <direction> <height_min> [<height_max>] atom ...` or `deposit <interval> <direction> <height_min> file <add_atom_file> [velocity]` | Adds atoms during a run; it can appear only once and modifies the run/model files, so inspect the current documentation before use |
 | `electron_stop` | `electron_stop <file>` | Loads an electronic stopping-power table; validate table units/schema before use |
 | `plumed` | `plumed <plumed_file> <interval> <if_restart>` | Requires a PLUMED-enabled GPUMD build; interval is in MD steps and restart flag is 0/1 |
@@ -67,7 +67,7 @@ An `electron_stop` table starts with `N E_min E_max`, followed by `N` evenly spa
 
 | Keyword | Current signature | Important meaning/constraint |
 |---|---|---|
-| `minimize` | `minimize <sd|fire> <force_tolerance> <max_steps> [<box_change> [<hydrostatic_strain>]]` | Tolerance in eV/Angstrom; box optimization currently requires FIRE |
+| `minimize` | `minimize <sd\|fire> <force_tolerance> <max_steps> [<box_change> [<hydrostatic_strain>]]` | Tolerance in eV/Angstrom; box optimization currently requires FIRE |
 | `run` | `run <number_of_steps>` | Positive step count; executes current run-scoped settings |
 
 To output a minimized structure, use a zero-time-step, one-step NVE block with `dump_xyz 1 relaxed.xyz`. Load `gpumd-outputs.md` before using it.

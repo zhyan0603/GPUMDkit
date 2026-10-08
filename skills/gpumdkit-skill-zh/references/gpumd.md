@@ -73,3 +73,9 @@ frame_dt_fs = dump_interval_steps * time_step_fs
 - HNEMD 需要温度控制；使用 Nose-Hoover 链，不要为此目的使用 Langevin。
 - `compute_hac` 属于 EMD 正式采样阶段；它不是用于先前 `compute ... jp jk` 数据的单步后处理命令。
 - 许多关键字只在当前 `run` 段生效，不会自动延续。除非对应参考条目明确说明，否则应在每个 `run` 段重新给出系综、计算、dump、约束、形变和外场驱动命令。
+
+## 来源与版本范围
+
+- [GPUMD v5.8.1 源码](https://github.com/brucefan1983/GPUMD/tree/v5.8.1) 提供固定 release 参考。
+- [官方参数手册](https://gpumd.org/dev/gpumd/input_parameters/index.html) 包含开发版更新；使用前按可执行文件的 release 或 commit 核验关键字。
+- 记录可执行文件路径和构建 revision；程序显示的版本不一定区分补丁版本。

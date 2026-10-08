@@ -15,11 +15,11 @@ NEW_FEATURES=(
 
 # Bug fixes (one per line, in an array; keep at most the five newest entries)
 BUG_FIXES=(
+    "label ionic-conductivity Arrhenius plots as log10(sigma*T) to match the fitted values"
     "refresh changed server-console images from scan metadata and cache-bust only updated image URLs"
     "refine the server console UI with a flat, minimal card design and clearer action cards: input-file hints, colored generated/stale/not-generated status pills, and per-action chart icons"
     "rework the server training workspace with continuous generation axes for resumed loss logs, nep.in parameter context, and compact desktop action cards"
     "refresh growing loss.out data in the server console and pass GPUMDkit_path to allowlisted plot actions"
-    "capture path and sequence per loss request so late responses cannot draw into another directory"
 )
 
 # === Formatted Output Logic ===

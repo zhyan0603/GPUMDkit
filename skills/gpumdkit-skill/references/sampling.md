@@ -206,9 +206,14 @@ gpumdkit.sh -filter_dist_pbc dump.xyz 1.0
 # 3. Sample diverse structures
 gpumdkit.sh  # Select: 2) Sample Structures -> 203
 
-# 4. Add to training set
-cat selected.xyz >> train.xyz
+# 4. Prepare DFT labeling of selected.xyz through menu 301
+gpumdkit.sh  # Select: 3) Workflow -> 301
 ```
+
+Run the approved DFT calculations, convert their outputs, and validate reference
+energy, force, and virial labels before merging into the training set. Selected
+MD structures are candidates; model predictions are not DFT reference labels.
+See `workflows.md` for labeling and dataset updates.
 
 ### Active Learning Data Selection
 

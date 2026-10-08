@@ -21,7 +21,7 @@
 | `time_step` | `time_step <dt_in_fs> [<max_distance_per_step>]` | 步长单位为 fs；文档默认值为 1 fs；可选的正位移限制器单位为 Angstrom |
 | `compute_extrapolation` | `compute_extrapolation nep_file <nep_file> asi_file <asi_file> gamma_low <v> gamma_high <v> check_interval <n> dump_interval <n>` | 用于主动学习的 ASI 外推等级监控。`nep_file` 是用于计算外推等级的 NEP 模型，独立于驱动 MD 的势函数；`asi_file` 由 ASI 工具生成。默认值：`gamma_low=0`，实际上无上限的 `gamma_high`，两个间隔均为 1；被选中的结构追加写入 `extrapolation_dump.xyz`。在正式计算中依赖这些值之前需要用户批准 |
 | `dftd3` | `dftd3 <functional> <potential_cutoff> <coordination_number_cutoff>` | 截断距离单位为 Angstrom；泛函和截断距离必须匹配预期的 D3 参数化 |
-| `kspace` | `kspace <ewald|pppm>` | 倒空间静电方法；默认为 `pppm`；仅用于兼容的电荷模型 |
+| `kspace` | `kspace <ewald\|pppm>` | 倒空间静电方法；默认为 `pppm`；仅用于兼容的电荷模型 |
 
 识别的势函数族包括 Tersoff-1988/1989/mini、EAM、FCP、LJ、NEP、NEP+ILP、SW+ILP、Tersoff+ILP 和 Deep Potential。势函数文件模式是特定于族的，不可互换。不要从此摘要创建或重写势函数文件；使用用户提供的已验证模型或获取其确切格式规范。
 
@@ -32,8 +32,8 @@
 | `change_box` | `change_box <delta>`；`change_box <delta_xx> <delta_yy> <delta_zz>`；或 6 参数形式后跟 `<epsilon_yz> <epsilon_xz> <epsilon_xy>` | 即时模拟盒变更。长度增量单位为 Angstrom；剪切项无量纲；6 参数形式需要三斜模拟盒 |
 | `deform` | 通用形式：`deform <component> <A_per_step> [<component> <A_per_step> ...]`，分量可取 `xx`/`yy`/`zz`/`xy`/`xz`/`yz`；旧形式：`deform <A_per_step> <deform_x> <deform_y> <deform_z>` 或分量速率后跟三个标志 | 运行作用域变形，单位 Angstrom/step；只有通用形式可与 6 分量 NPT 应力控制联合使用。如果解析器拒绝所选形式，请确认可执行文件版本 |
 | `add_force` | `add_force <group_method> <group_id> <Fx> <Fy> <Fz>` 或 `add_force <group_method> <group_id> <add_force_file>` | 向选定分组中的每个原子添加力，单位为 eV/Angstrom；文件形式提供周期性力序列 |
-| `add_efield` | `add_efield <method> <group> <Ex> <Ey> <Ez> [charge|bec]` 或 `add_efield <method> <group> <field_file> [charge|bec]` | 电场单位为 V/Angstrom。默认力使用 qNEP BEC 或 `model.xyz` 电荷；显式 `charge` 使用预测/提供的电荷，而 `bec` 需要 qNEP |
-| `add_spring` | `add_spring ghost_com|ghost_atom|com_com ... couple|decouple ... [continue <spring_id>]` | 使用以下六个完整参数格式之一；弹簧常数和参考值由用户提供 |
+| `add_efield` | `add_efield <method> <group> <Ex> <Ey> <Ez> [charge\|bec]` 或 `add_efield <method> <group> <field_file> [charge\|bec]` | 电场单位为 V/Angstrom。默认力使用 qNEP BEC 或 `model.xyz` 电荷；显式 `charge` 使用预测/提供的电荷，而 `bec` 需要 qNEP |
+| `add_spring` | `add_spring ghost_com\|ghost_atom\|com_com ... couple\|decouple ... [continue <spring_id>]` | 使用以下六个完整参数格式之一；弹簧常数和参考值由用户提供 |
 | `deposit` | `deposit <interval> <direction> <height_min> [<height_max>] atom ...` 或 `deposit <interval> <direction> <height_min> file <add_atom_file> [velocity]` | 在运行过程中添加原子；只能出现一次，并会修改 run/model 文件，使用前应查看当前文档 |
 | `electron_stop` | `electron_stop <file>` | 加载电子阻止本领表；使用前验证表格单位/模式 |
 | `plumed` | `plumed <plumed_file> <interval> <if_restart>` | 需要启用 PLUMED 的 GPUMD 构建；间隔单位为 MD 步，重启标志为 0/1 |
@@ -67,7 +67,7 @@ add_spring com_com <method> <group1> <group2> decouple <kx> <ky> <kz>
 
 | 关键字 | 当前参数格式 | 重要含义/约束 |
 |---|---|---|
-| `minimize` | `minimize <sd|fire> <force_tolerance> <max_steps> [<box_change> [<hydrostatic_strain>]]` | 容差单位为 eV/Angstrom；模拟盒优化目前需要 FIRE |
+| `minimize` | `minimize <sd\|fire> <force_tolerance> <max_steps> [<box_change> [<hydrostatic_strain>]]` | 容差单位为 eV/Angstrom；模拟盒优化目前需要 FIRE |
 | `run` | `run <number_of_steps>` | 正步数；执行当前运行作用域设置 |
 
 要输出最小化结构，使用零时间步、单步 NVE 块配合 `dump_xyz 1 relaxed.xyz`。使用前请加载 `gpumd-outputs.md`。

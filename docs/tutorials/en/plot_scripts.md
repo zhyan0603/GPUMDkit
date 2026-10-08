@@ -466,9 +466,17 @@ gpumdkit.sh -plt D_xyz
 
 ---
 
+These conductivity plots use the first temperature's `model.xyz` to count Li
+and Na together, assume unit charge, and apply the same ion count and replication
+across temperatures. Use them for one mobile Li or Na species with matching MSD
+columns; other species, mixed carriers, or changing composition require a separate
+calculation. They fit the 40%–80% MSD interval and extrapolate conductivity to
+300 K using the Nernst–Einstein relation. Validate the diffusive interval and the
+extrapolation range before interpreting the results.
+
 ### plt_arrhenius_sigma.py
 
-Creates Arrhenius plot for ionic conductivity (ln(σ·T) vs 1000/T).
+Creates Arrhenius plot for ionic conductivity (log10(σ·T) vs 1000/T).
 
 **Input Files:** `thermo.out` and `msd.out` in each `*K/` directory;
 `model.xyz` and optional `run.in` in the first temperature directory

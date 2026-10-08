@@ -55,7 +55,9 @@ compute_msd <sample_interval> <Nc> group <group_method> <group_id> [save_every <
 
 The exact ensemble and run lengths must come from the user-approved design. Reissue non-propagating compute/dump commands in the correct production run.
 
-For trajectory-based GPUMDkit MSD, output extxyz frames with enough metadata for periodic unwrapping. Pass the time between stored frames to `-calc msd`; calculate it as:
+For trajectory-based GPUMDkit MSD, verify fixed-cell unwrapped coordinates in
+the extxyz `pos` field and stable atom order as described in `calculators.md`.
+Pass the time between stored frames to `-calc msd`:
 
 ```text
 frame_dt_fs = integration_time_step_fs * dump_interval_steps
@@ -115,16 +117,20 @@ gpumdkit.sh -calc ionic-cond <element> <charge>
 
 This uses the Nernst-Einstein relation, reads temperature/volume, counts the requested species, accounts for `replicate` when found, and prints directional/total diffusivity and conductivity. Confirm that independent-ion Nernst-Einstein conductivity is the intended observable; it does not include correlation effects unless the method is extended.
 
+Use columns 1–4 only when they represent the intended mobile species. Extract
+the target group before using multi-group MSD output; neither the species
+argument nor the plotting commands select a group automatically.
+
 ### Conductivity Arrhenius fit
 
-For monovalent Li/Na systems that satisfy the current script assumptions:
+For a single mobile monovalent Li or Na species that satisfy the current script assumptions:
 
 ```bash
 gpumdkit.sh -plt arrhenius_sigma save
 gpumdkit.sh -plt sigma_xyz save
 ```
 
-These commands fit `ln(sigma*T)` versus `1000/T` and report activation energies. Inspect the current limitations below before using them.
+These commands fit `log10(sigma*T)` versus `1000/T` and report activation energies. Inspect the current limitations below before using them.
 
 ## Interpret and report
 

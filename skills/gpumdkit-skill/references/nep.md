@@ -86,3 +86,9 @@ Confirm the model header, species order, and any charge/k-space requirements bef
 - Current fine-tuning syntax is `fine_tune <nep_model_file> <nep_restart_file>`, not `fine_tune 1`.
 - `nep.restart` (dot) is the current documented restart filename; older text may use `nep_restart`.
 - Do not copy hyperparameter defaults from old skills. Use `nep-parameters.md` and distinguish defaults from user-approved production choices.
+
+## Sources and version scope
+
+- [GPUMD v5.8.1 source](https://github.com/brucefan1983/GPUMD/tree/v5.8.1) is a fixed release reference.
+- [Official parameter manual](https://gpumd.org/dev/nep/input_parameters/index.html) includes development changes. Verify each keyword against the executable's release or commit before use.
+- Record the executable path and build revision; the displayed version alone may not identify patch releases.

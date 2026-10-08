@@ -184,9 +184,12 @@ gpumdkit.sh -filter_dist_pbc dump.xyz 1.0
 # 2. 使用 FPS 选取多样化结构
 gpumdkit.sh  # 选择 2 -> 203
 
-# 3. 经确认后加入训练集
-cat selected.xyz >> train.xyz
+# 3. 使用菜单 301 为 selected.xyz 准备 DFT 标注
+gpumdkit.sh  # 选择 3 -> 301
 ```
+
+按已确认的设置执行 DFT，转换结果并核验参考能量、力和 virial 标签后，再合并到训练集。
+MD 选出的结构是待标注候选，模型预测不能作为 DFT 参考标签。标注和数据集更新见 `workflows.md`。
 
 ### 主动学习数据筛选
 

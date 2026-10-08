@@ -41,10 +41,16 @@ gpumdkit.sh -calc ionic-cond O -2
 
 # Preferred non-interactive inputs in current directory:
 # - msd.out (from GPUMD compute_msd, or the first four columns from calc_msd.py)
-# - thermo.out (for temperature)
-# - model.xyz (for volume)
+# - thermo.out (for temperature and volume)
+# - model.xyz (for ion count)
 # - run.in (optional; used to detect replicate factors)
 ```
+
+The calculator reads time and `MSD_x/y/z` from columns 1–4. The `element`
+argument counts ions; it does not select MSD columns. For `all_groups` output,
+extract the target group's time and MSD columns before running. Use an integer
+charge in units of the elementary charge. The result is Nernst–Einstein
+conductivity and does not include inter-ion displacement correlations.
 
 ### NEP Property Prediction
 ```bash
@@ -134,6 +140,13 @@ single-group layout is required by `gpumdkit.sh -plt sdc` and
 appends additional group data, so do not assume that every `msd.out` has seven
 columns. The separate `compute_sdc` command writes `sdc.out`, which is used by
 `gpumdkit.sh -plt vac`.
+
+Use a fixed-cell trajectory with stable atom order and verified unwrapped
+coordinates in the `pos` field. The script reads `pos` and the first frame's
+cell; it does not use a separate `unwrapped_position` property. Its automatic
+wrapping check is not sufficient to validate wrapped trajectories, and its
+axis-wise unwrapping does not handle general tilted or changing cells.
+The command overwrites `msd.out` in the current directory.
 
 ### X-ray Diffraction (interactive only)
 
