@@ -1,22 +1,21 @@
 <div align="center">
   <h1>🔧 Custom Commands</h1>
-    <p style="text-align: justify;">GPUMDkit allows users to extend the command-line interface with <strong>custom commands</strong>. Define shortcuts for frequently used scripts in your <strong>~/.gpumdkit.in</strong> file.</p>
+    <p style="text-align: justify;">Add your own shortcuts to <code>gpumdkit.sh</code> by defining Bash functions in <strong>~/.gpumdkit.in</strong>.</p>
 </div>
 
-## Setup
+## How it works
 
-Create or edit `~/.gpumdkit.in`:
+When `gpumdkit.sh -<name>` is not a built-in option, GPUMDkit loads `~/.gpumdkit.in` and runs the function `custom_<name>`, passing it every argument after `-<name>`. Built-in options always take precedence, so choose names that do not clash with them (see `gpumdkit.sh -h`).
+
+Create or edit the file with any editor:
+
 ```bash
 vi ~/.gpumdkit.in
 ```
 
-Define custom functions with the `custom_` prefix.
+## Basic examples
 
-## Examples
-
-### Simple Greeting
-
-Write the following code in your `~/.gpumdkit.in` 
+### A first command
 
 ```bash
 custom_hello() {
@@ -25,49 +24,39 @@ custom_hello() {
 }
 ```
 
-and run `gpumdkit.sh -hello`, you will see:
+Running `gpumdkit.sh -hello` prints:
 
-```
+```text
 Hello, GPUMDkit user! This is a custom command.
 Current GPUMDkit path: /home/yanzihan/software/GPUMDkit
 ```
 
-### Command with Required Arguments
+### Using arguments
 
-For the following function:
+Arguments are available as `$1`, `$2`, ... inside the function:
 
 ```bash
 custom_greet() {
-    name=$1
-    echo "Hello, ${name}!"
+    echo "Hello, $1!"
 }
 ```
 
-and you can add an argument, for example: `gpumdkit.sh -greet Zihan`, then you will see:
+`gpumdkit.sh -greet Zihan` prints `Hello, Zihan!`. To pass all arguments on to another program, use `"$@"`, which keeps spaces and special characters intact.
 
-```
-Hello, Zihan!
-```
-
-**Passing arguments**: Use `"$@"` to forward all positional arguments safely; it already refers to arguments starting from the first one.
-
-### Calling an External Script
-
-If you want to call an external script like `gpumdkit.sh`.
+### Calling your own script
 
 ```bash
 custom_nepanalyse() {
-    python ~/my_gpumd_tools/analyse_nep.py
+    python ~/my_gpumd_tools/analyse_nep.py "$@"
 }
 ```
 
-and run `gpumdkit.sh -nepanalyse`
+Run it with `gpumdkit.sh -nepanalyse`, followed by any arguments your script accepts.
 
-## Advanced Examples
+## Combining GPUMDkit commands
 
-### Batch Processing
+### Plot several directories
 
-Process multiple files:
 ```bash
 custom_batch_plot() {
     for dir in "$@"; do
@@ -82,52 +71,38 @@ custom_batch_plot() {
 
 Usage: `gpumdkit.sh -batch_plot dir1 dir2 dir3`
 
-### Analysis Pipeline
+### Check a training set
 
-Combine multiple operations:
 ```bash
 custom_analyze_training() {
     xyz_file=$1
     echo "Analyzing $xyz_file..."
-    
     gpumdkit.sh -range "$xyz_file" force
     gpumdkit.sh -min_dist_pbc "$xyz_file"
     gpumdkit.sh -analyze_comp "$xyz_file"
-    
     echo "Analysis complete!"
 }
 ```
 
 Usage: `gpumdkit.sh -analyze_training train.xyz`
 
-### Custom Workflow
+### Prepare training data
 
-Automate common workflow:
 ```bash
 custom_prep_training() {
-    echo "Preparing training data..."
-    
-    # Convert VASP outputs
-    gpumdkit.sh -out2xyz ./
-    
-    # Filter outliers
-    gpumdkit.sh -filter_value NEPdataset/train.xyz force 30
-    
-    # Check quality
+    gpumdkit.sh -out2xyz ./                                  # writes NEPdataset/train.xyz
+    gpumdkit.sh -filter_value NEPdataset/train.xyz force 30   # writes filtered.xyz
     gpumdkit.sh -range filtered.xyz energy
-    
-    echo "Training data ready!"
 }
 ```
 
-Usage: `gpumdkit.sh -prep_training`
+Usage: `gpumdkit.sh -prep_training`. The force threshold `30` is only an example; choose a value suited to your system.
 
 ## Tips
 
-- **Use descriptive names**: `custom_analyze_nep_training` is clearer than `custom_ant`
-- **Add help messages**: Echo usage info when no arguments provided
-- **Error handling**: Check if required files exist before processing
-- **Forward arguments safely**: Use `"$@"` to preserve spaces and special characters
+- Use descriptive names: `custom_analyze_nep_training` is clearer than `custom_ant`.
+- Print a usage line when required arguments are missing.
+- Check that input files exist before processing them.
 
 ---
 

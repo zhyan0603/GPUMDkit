@@ -56,9 +56,9 @@ If local port `8888` is busy, choose another local port, such as `8890`:
 ssh -N -L 8890:127.0.0.1:8888 <user>@<host>
 ```
 
-Then open `http://127.0.0.1:8890`. If the server uses a different remote port,
-for example `9000`, start it with `gpumdkit.sh -server 9000` and forward that
-port with `ssh -N -L 8888:127.0.0.1:9000 <user>@<host>`.
+Then open `http://127.0.0.1:8890`. If remote port `8888` is busy, start the
+server on another port, for example `gpumdkit.sh -server 9000`, and forward it
+with `ssh -N -L 8888:127.0.0.1:9000 <user>@<host>`.
 
 Stop the tunnel with `Ctrl+C` in the local terminal. Stop the web server with
 `Ctrl+C` in its remote terminal.
@@ -74,14 +74,13 @@ gpumdkit.sh -server -h
 |---|---|---|
 | `port` | `8888` | Port used by the web server |
 | `-b <address>` | `127.0.0.1` | Network address to listen on |
-| `-pw <password>` | Disabled on loopback | Require a password to sign in |
+| `-pw <password>` | Optional on loopback | Login password; required for any other address |
 
-For an SSH tunnel, keep the default loopback bind. Do not bind to `0.0.0.0`
-unless direct network access is intentional and permitted by the host's
-security policy. A non-loopback bind requires a password; the web server does
-not provide HTTPS. When binding beyond loopback, omitting `-pw` prompts for a
-password interactively. Do not put passwords in shared scripts or shell
-history.
+With an SSH tunnel, keep the default loopback address. Bind to another address
+such as `0.0.0.0` only when direct network access is intended and allowed by the
+host's security policy. Such a bind requires a password (you are prompted for
+one if `-pw` is omitted), and the server does not use HTTPS. Keep passwords out
+of shared scripts and shell history.
 
 ## What you can do in the browser
 
@@ -95,11 +94,6 @@ history.
   scheduler jobs, or determine process liveness from file timestamps.
 - Use the terminal drawer for quick commands. Commands run on the remote host;
   this terminal is not restricted to the file-browser root.
-
-Start the server from the Conda environment you intend to use. This ensures
-that allowlisted plot actions inherit the expected GPUMDkit installation and
-Python dependencies. The browser's upload/download controls are the explicit
-ways to transfer files between your workstation and the remote host.
 
 ## Troubleshooting
 

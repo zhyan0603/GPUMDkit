@@ -1,6 +1,6 @@
 <div align="center">
   <h1>📚 GPUMDkit Documentation</h1>
-  <p style="text-align: justify;">A practical bilingual tutorial for GPUMDkit, covering installation, command-line tools, interactive workflows, plotting, and analysis utilities.</p>
+  <p style="text-align: justify;">Bilingual tutorials for GPUMDkit: installation, interactive menus, command-line tools, plotting, and analysis.</p>
 </div>
 
 ## Language
@@ -12,7 +12,7 @@
 
 ## What You Can Learn Here
 
-This documentation is organized as a practical tutorial rather than only a command list. New users are encouraged to start from the overview and quick start pages, then move to the topic that matches their task.
+The pages are organized by task. New users should start with Quick Start, then open the topic that matches their work.
 
 | Topic | What it Covers |
 |-------|----------------|
@@ -22,16 +22,16 @@ This documentation is organized as a practical tutorial rather than only a comma
 | Sampling | Uniform/random sampling, NepTrain FPS, perturbation, force-deviation selection |
 | Calculators | MSD, ionic conductivity, XRD, NEP prediction, descriptors, DOAS, NEB, polarization tools |
 | Analyzers | Composition checks, distance checks, filters, property range analysis |
-| Visualization | NEP training plots, MD plots, transport plots, thermal transport plots, example figures |
+| Visualization | NEP training, MD, diffusion, and thermal transport plots, with example figures |
 | Workflows | Batch DFT/MD processing and active-learning style workflows |
 
-For complex operations, use the interactive menu:
+Use the interactive menu for guided, multi-step tasks:
 
 ```bash
 gpumdkit.sh
 ```
 
-For common operations with fixed arguments, use direct command-line mode:
+Use command-line mode when the arguments are known:
 
 ```bash
 gpumdkit.sh -h

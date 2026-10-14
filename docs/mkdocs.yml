@@ -65,7 +65,12 @@ nav:
     - Workflow Scripts: en/workflow_scripts.md
     - Calculator Scripts: en/calculator_scripts.md
     - Analyzer Scripts: en/analyzer_scripts.md
-    - Plot Scripts: en/plot_scripts.md
+    - Plot Scripts:
+      - Overview: en/plot_scripts.md
+      - NEP Training and Model Analysis: en/plot_nep.md
+      - MD and Structure: en/plot_md_structure.md
+      - Diffusion and Ionic Transport: en/plot_diffusion.md
+      - Heat Transport and Phonons: en/plot_heat_phonon.md
     - Custom Commands: en/custom_commands.md
     - Active Learning Workflow: en/active_learning_workflow.md
     - Polar Material Analysis: en/polar_material_analysis.md
@@ -75,13 +80,18 @@ nav:
     - 快速入门: zh/快速入门.md
     - GPUMDkit Agent Skill: zh/模拟与后处理.md
     - 命令参考: zh/命令参考.md
-    - 远程 Web 控制台: zh/远程网页控制台.md
+    - 远程网页控制台: zh/远程网页控制台.md
     - 格式转换: zh/格式转换.md
     - 结构采样: zh/结构采样.md
     - 工作流脚本: zh/工作流脚本.md
     - 计算器脚本: zh/计算器脚本.md
     - 分析工具: zh/分析工具.md
-    - 绘图脚本: zh/绘图脚本.md
+    - 绘图脚本:
+      - 总览: zh/绘图脚本.md
+      - NEP 训练与模型分析: zh/NEP训练绘图.md
+      - MD 与结构: zh/MD与结构绘图.md
+      - 扩散与离子输运: zh/扩散绘图.md
+      - 热输运与声子: zh/热输运与声子绘图.md
     - 自定义命令: zh/自定义命令.md
     - 主动学习工作流: zh/主动学习工作流.md
     - 极性材料分析: zh/极性材料分析.md

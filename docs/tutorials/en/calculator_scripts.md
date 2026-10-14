@@ -35,36 +35,10 @@ If you are not sure about the required arguments, start from the interactive men
 | Octahedral tilt | `gpumdkit.sh -calc oct-tilt ...` | see [Polar Material Analysis](polar_material_analysis.md) |
 | ABO3 polarization | `gpumdkit.sh -calc pol-abo3 ...` | see [Polar Material Analysis](polar_material_analysis.md) |
 
-For a full command list:
+`gpumdkit.sh -calc -h` prints every calculator command. In interactive mode, run `gpumdkit.sh` and choose `4) Calculators`.
 
-```bash
-gpumdkit.sh -calc -h
-```
-
-The command-line help table looks like:
-
-```text
-+-------------------------------------------------------------------------------------------------------+
-|                                      CALCULATOR TOOLS                                                 |
-+-------------------------------------------------------------------------------------------------------+
-| Usage: gpumdkit.sh -calc <type> [args...]                                                             |
-+-------------------------------------------------------------------------------------------------------+
-| ionic-cond <element> <charge>                 Calculate ionic conductivity from MSD data              |
-| nep <input.xyz> <output.xyz> <nep_model>      Calculate energy/force/virial with a NEP model          |
-| des <input.xyz> <output.npy> <nep_model> <el> Calculate NEP descriptors for one element               |
-| doas <input.xyz> <nep_model> <output.txt>     Calculate density of atomistic states                   |
-| neb <initial.xyz> <final.xyz> <n_images> <nep> Run NEB calculation with a NEP model                   |
-| minimize <structure> <nep_model> [fmax] [n]   Minimize a structure with a NEP model                   |
-| msd <trajectory.xyz> <element> <dt_fs> [n]    Calculate MSD from an extxyz trajectory                 |
-| nlist [script args...]                        Build neighbor lists                                    |
-| disp [script args...]                         Calculate displacement from trajectory                  |
-| avg-struct [script args...]                   Calculate averaged structure                            |
-| oct-tilt [script args...]                     Calculate octahedral tilt                               |
-| pol-abo3 [script args...]                     Calculate local polarization for ABO3                   |
-+-------------------------------------------------------------------------------------------------------+
-```
-
-In interactive mode, choose `4) Calculators`. The menu is:
+<details markdown="1">
+<summary>Show the full menu</summary>
 
 ```text
 +----------------------------------------------------------+
@@ -89,6 +63,8 @@ In interactive mode, choose `4) Calculators`. The menu is:
 +----------------------------------------------------------+
 Input the function number:
 ```
+
+</details>
 
 ## Ionic Conductivity
 
@@ -128,11 +104,6 @@ conductivity and does not include inter-ion displacement correlations.
 From interactive mode, choose `401`. You will see:
 
 ```text
->-------------------------------------------------<
-| This function calls the script in calculators   |
-| Script: calc_ion_conductivity.py                |
-| Developer: Zihan YAN (yanzihan@westlake.edu.cn) |
->-------------------------------------------------<
 Input <element> <charge> (eg. Li 1)
 ------------>>
 ```
@@ -269,10 +240,7 @@ The output contains metadata headers followed by four columns:
 | `Count` | averaged XRD intensity |
 | `Count/Total` | intensity normalized by the total selected-range intensity |
 
-For faster runs, the script reads the trajectory once, reuses the reciprocal
-mesh when the cell is unchanged, groups atoms by element, and supports ordered
-threaded workers. These optimizations preserve the selected atoms, scattering
-formula, and `2theta` bin definition.
+Multiple CPU workers speed up long trajectories without changing the result.
 
 ## Phonon Band Structure
 
@@ -317,8 +285,6 @@ pip install calorine
 ```bash
 gpumdkit.sh -calc nep structures.xyz predictions.xyz nep.txt
 ```
-
-Use this function to run predictions with a trained NEP model. For best results, validate model quality on your target structures before relying on the output.
 
 **Tip:** Before prediction, you may want to clean the extxyz metadata:
 
@@ -474,7 +440,7 @@ pip install ovito
 **Input file:** Structure file (single frame or trajectory)
 
 ```bash
-python Scripts/calculators/rdf_calculator_ovito.py trajectory.xyz 6.0 400
+python "${GPUMDkit_path}/Scripts/calculators/rdf_calculator_ovito.py" trajectory.xyz 6.0 400
 ```
 
 **Parameters:**
@@ -485,13 +451,9 @@ python Scripts/calculators/rdf_calculator_ovito.py trajectory.xyz 6.0 400
 | `6.0` | Maximum distance for RDF calculation (Å) |
 | `400` | Number of histogram bins |
 
-**Visualization:**
+**Output:** `rdf.txt`.
 
-```bash
-gpumdkit.sh -plt rdf
-```
-
-**Note:** It is recommended to use the `compute_rdf` command directly in GPUMD when possible.
+When possible, compute the RDF during the GPUMD run with `compute_rdf` instead; its `rdf.out` can be plotted with `gpumdkit.sh -plt rdf`, which does not read `rdf.txt`.
 
 ---
 

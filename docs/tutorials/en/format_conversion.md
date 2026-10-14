@@ -11,11 +11,7 @@ This module converts structure and trajectory files between common formats used 
 
 **Script location:** `Scripts/format_conversion/`
 
-Make sure GPUMDkit is installed. See [Quick Start](quick_start.md) for installation instructions.
-
-After installation, run `gpumdkit.sh` from the working directory where you want to store conversion results. Relative paths start from the terminal's current directory; check each command's output location, which may differ from the input location. Start with a small copy of your data in a new practice directory to avoid overwriting existing results.
-
-This page prioritizes installed commands and menus. Examples using `python Scripts/...` are optional source invocations: run them from the GPUMDkit checkout root and adjust input paths, or use the script's absolute path from your data directory. With a Conda installation, prefer `gpumdkit.sh`; there is no need to enter the installation directory.
+Run GPUMDkit from the directory where you want the results: relative paths start there, and most converters write into the current directory even when the input lies elsewhere. Try a small copy of your data first so nothing is overwritten. For installation, see [Quick Start](quick_start.md).
 
 ## Supported formats
 
@@ -32,19 +28,10 @@ The format conversion module covers:
 
 ## Interactive Mode
 
-Open GPUMDkit:
+Run `gpumdkit.sh` and choose `1) Format Conversion`. Entries `101`–`110` are chosen by number, the converters listed below them by keyword (for example `pos2exyz`). The table below describes each entry.
 
-```bash
-gpumdkit.sh
-```
-
-Choose:
-
-```text
-1) Format Conversion
-```
-
-The format conversion menu is:
+<details markdown="1">
+<summary>Show the full menu</summary>
 
 ```text
 +-------------------------------------------------------------+
@@ -67,6 +54,8 @@ The format conversion menu is:
 +-------------------------------------------------------------+
 Input the function number or converter keyword:
 ```
+
+</details>
 
 ### What Each Entry Does
 
@@ -109,7 +98,7 @@ Input the function number or converter keyword:
 | CIF | extxyz | `gpumdkit.sh -cif2exyz input.cif model.xyz` |
 | ASE traj | extxyz | `gpumdkit.sh -traj2exyz input.traj output.xyz` |
 | DeepMD npy directory | extxyz | `gpumdkit.sh -dp2xyz database train.xyz` |
-| extxyz | DeepMD npy dataset | `gpumdkit.sh -xyz2dp` or direct Python invocation |
+| extxyz | DeepMD npy dataset | `gpumdkit.sh -xyz2dp train.xyz Li P S` |
 | extxyz | clean extxyz | `gpumdkit.sh -clean_xyz input.xyz clean.xyz` |
 
 ## Understand input and output names
@@ -152,19 +141,13 @@ The input directory must contain DeepMD dataset files such as `type.raw`, `type_
 
 ### Convert labeled extxyz to a DeepMD dataset
 
-Use the direct converter route to enter the input file and explicit DeepMD type-map order:
+Give the input file and the element order for the DeepMD `type_map.raw`:
 
 ```bash
-gpumdkit.sh -xyz2dp
+gpumdkit.sh -xyz2dp train.xyz Li P S
 ```
 
-Source users can also invoke Python directly. The example below assumes the terminal is at the GPUMDkit checkout root; replace `train.xyz` with the actual data path:
-
-```bash
-python3 Scripts/format_conversion/xyz2dp.py train.xyz Li P S
-```
-
-The input should contain labeled extxyz energy and force data. The output is written under `deepmd_data/` in the current directory. This command requires `dpdata`.
+Without arguments, `gpumdkit.sh -xyz2dp` asks for them interactively. The input must contain energy and force labels. The output is written under `deepmd_data/` in the current directory. This command requires `dpdata`.
 
 ### Convert VASP calculations to extxyz
 
@@ -196,11 +179,6 @@ are still converted, but their rows omit this property and a warning is shown.
 **Interactive mode:** Choose `101` from the format conversion menu. You will see:
 
 ```text
->-------------------------------------------------<
-| Calling the script in Scripts/format_conversion |
-| Script: out2xyz.sh                              |
-| Developer: Yanzhou WANG (yanzhowang@gmail.com)  |
->-------------------------------------------------<
 Input the directory containing OUTCARs
 Example: ./
 ------------>>
@@ -229,22 +207,17 @@ After conversion, use `head -n 2 NEPdataset/train.xyz` (shell/BEC route) or `hea
 gpumdkit.sh -addgroup POSCAR Li Y Cl
 ```
 
-This command reads the input structure and writes an extxyz file with group information.
+The command reads any structure file that ASE can read and writes `model.xyz`, in which each atom's group is the position of its element in the list (here Li = 0, Y = 1, Cl = 2). Every element in the structure must be listed.
 
 **Interactive mode:** Choose `106` from the format conversion menu. You will see:
 
 ```text
->-------------------------------------------------<
-| Calling the script in Scripts/format_conversion |
-| Script: add_groups.py                           |
-| Developer: Zihan YAN (yanzihan@westlake.edu.cn) |
->-------------------------------------------------<
 Input <POSCAR> <element1> <element2> ...
 Example: POSCAR Li Y Cl
 ------------>>
 ```
 
-**Output:** An extxyz file with group labels added.
+**Output:** `model.xyz` in the current directory.
 
 ## Script Details
 
@@ -273,8 +246,7 @@ gpumdkit.sh -exyz2pos structures.xyz
 This converts all frames in an extxyz file into `POSCAR_1.vasp`,
 `POSCAR_2.vasp`, and so on in the current directory. Atoms are grouped by
 element using the first-seen element order in the input trajectory, and
-velocities are not exported. The `-get_frame` command also uses 1-based frame
-numbers.
+velocities are not exported.
 
 Interactive entry: `105`
 
@@ -335,14 +307,14 @@ The first form uses explicit replication factors. The second form tries to build
 gpumdkit.sh -get_frame dump.xyz 1000
 ```
 
-This extracts frame number `1000` from an extxyz trajectory; the first frame is number `1`.
+This writes frame `1000` of the trajectory to `frame_1000.xyz`. Frames are numbered from `1`.
 
 ### Split multi-frame extxyz
 
 `split_single_xyz.py` splits an extxyz file into individual frames, each written to a separate file.
 
 ```bash
-python Scripts/format_conversion/split_single_xyz.py dump.xyz
+python "${GPUMDkit_path}/Scripts/format_conversion/split_single_xyz.py" dump.xyz
 ```
 
 This creates `model_1.xyz`, `model_2.xyz`, ... for each frame in the trajectory.
@@ -387,4 +359,4 @@ The menu offers two options:
 
 ## Notes
 
-If a Python package required by a specific converter is missing, Python will report it when that converter is used.
+Some converters need extra Python packages (for example `dpdata` for DeepMD); a missing package is reported when that converter runs.

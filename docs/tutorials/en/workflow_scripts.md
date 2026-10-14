@@ -9,19 +9,10 @@ The workflow scripts prepare directories and files. They do not submit calculati
 
 ## Interactive Entry
 
-Use the interactive menu as the normal user entry point:
+Run `gpumdkit.sh` and choose `3) Workflow`. The entries are described in the table below.
 
-~~~bash
-gpumdkit.sh
-~~~
-
-Choose:
-
-~~~text
-3) Workflow
-~~~
-
-The workflow menu looks like this (the text matches the program output):
+<details markdown="1">
+<summary>Show the full menu</summary>
 
 ~~~text
 +---------------------------------------------------------+
@@ -36,6 +27,8 @@ The workflow menu looks like this (the text matches the program output):
 Input the function number:
 ~~~
 
+</details>
+
 | Menu | Workflow | Use it for |
 |---|---|---|
 | 301 | SCF batch pretreatment | Prepare DFT single-point directories for structures |
@@ -44,10 +37,8 @@ Input the function number:
 
 ## 1. Prepare DFT single-point calculations {#scf-batch-pretreatment}
 
-This section covers the input files and single-point directory preparation.
-
 Work in a dedicated directory and keep a separate copy of the source structures.
-The scripts create `struct_fp/`, `struct_md/`, calculation directories, and
+Function 301 creates `struct_fp/`, `fp/`, the calculation directories, and
 `presub.sh` in the current directory.
 
 ### VASP SCF preparation (301 -> 1)
@@ -149,13 +140,11 @@ dump.xyz template.inp H2O
 The script creates `<prefix>_<index>/` for each structure and writes `input.inp`
 and `pos.xyz`.
 
-Source users can also invoke the script directly. This relative script path
-assumes the GPUMDkit checkout root as the working directory; replace the input
-filenames with actual data paths. Alternatively, use the script's absolute path
-from your data directory. Conda users should prefer the menu above.
+With a source installation you can also call the script directly from your data
+directory:
 
 ~~~bash
-python Scripts/workflow/scf_batch_pretreatment_cp2k.py train.xyz template.inp calc
+python "${GPUMDkit_path}/Scripts/workflow/scf_batch_pretreatment_cp2k.py" train.xyz template.inp calc
 ~~~
 
 ## 2. Prepare MD sampling directories {#md-sampling-pretreatment}
@@ -199,9 +188,9 @@ current directory/
 └── presub.sh
 ~~~
 
-After preparation, place the reviewed `nep.txt` and the matching `run_*.in` file
-for each sample in `md/`. For example, `run_1.in` links to `sample_1/run.in`
-and `run_2.in` links to `sample_2/run.in`.
+After preparation, put `nep.txt` and one `run_*.in` per sample into `md/`. Each
+sample directory links to them: `sample_1/run.in` points to `md/run_1.in`,
+`sample_2/run.in` to `md/run_2.in`, and so on.
 
 ### LAMMPS (303)
 
@@ -227,62 +216,19 @@ current directory/
 └── presub.sh
 ~~~
 
-After preparation, place the reviewed `lmprun.in` and `nep.txt` files in `md/`.
+After preparation, put `lmprun.in` and `nep.txt` into `md/`; every sample directory links to them.
 
-## 3. Confirm before running and inspect results
+## 3. Check before running
 
-Before submitting through your own execution procedure, check:
+Before submitting, check:
 
-- the structure count, atom and type order, cells, and generated-directory count;
-- `INCAR`, `POTCAR`, and `KPOINTS` in `fp/`, or `nep.txt`, `run_*.in`, and
-  `lmprun.in` in `md/`;
-- every sample-directory link and file name;
-- the executable, resources, and scheduler settings in `presub.sh`.
+- the number of structures, atom and species order, cells, and number of generated directories;
+- `INCAR`, `POTCAR`, and `KPOINTS` in `fp/`, or `nep.txt`, `run_*.in`, and `lmprun.in` in `md/`;
+- the links and file names in each directory;
+- the executable, resources, and scheduler settings in `presub.sh`, which is only a template.
 
-`presub.sh` is a template; check the executable and scheduler settings before
-running it. Inspect the directories and links first, then run through the
-project's procedure. Afterward, check exit status, logs, temperature, energy,
-pressure, cells, and trajectories, and identify failed or incomplete samples.
+Workflow scripts depend on your cluster, templates, and software versions, so try a few structures first. After the runs, look for failed or incomplete samples before continuing.
 
-## 4. Post-process and continue
+## 4. Convert the results
 
-After DFT results have completed and passed review, use the converter for the DFT
-code:
-
-For VASP results:
-
-~~~bash
-gpumdkit.sh -out2xyz <scf_results_directory>
-~~~
-
-If the OUTCAR files contain complete `BORN EFFECTIVE CHARGES` blocks and the
-per-atom BEC labels are needed, use:
-
-~~~bash
-gpumdkit.sh -out2xyz_bec <scf_results_directory>
-~~~
-
-For CP2K logs and structure files, first enter the CP2K results root. The following command recursively scans `.log` files and their accompanying `.xyz`/`.inp` files under the current directory. Successful conversion writes `cp2k_exyz.xyz` there, with processing details in `Logfile.txt`.
-
-~~~bash
-gpumdkit.sh -cp2k2xyz
-~~~
-
-The VASP `-out2xyz`/menu 101 route and the BEC-aware `-out2xyz_bec` route create
-`NEPdataset/train.xyz` in the current directory; the Python `-out2exyz` route
-writes `train.xyz` there. Continue with the file actually produced by the
-selected route and preserve the raw DFT outputs.
-
-Use analysis and sampling tools to inspect the resulting extxyz and record excluded
-directories.
-
-## Active-Learning Style Workflow
-
-For a NEP data iteration, proceed in this order: MD trajectory, geometry filtering,
-NepTrain FPS, DFT, conversion, and dataset checks. See [Active Learning Workflow](active_learning_workflow.md)
-for the manually reviewed protocol.
-
-## Practical Notes
-
-- Workflow scripts depend on the cluster, templates, and software versions; check a small number of structures first.
-- Preserve templates and source structures, and inspect generated directories, links, and file names before continuing.
+After the DFT runs finish, convert them with `gpumdkit.sh -out2xyz <dir>` (VASP, writes `NEPdataset/train.xyz`), `-out2xyz_bec <dir>` (VASP with Born effective charges), or `-cp2k2xyz` (CP2K, run from the results root, writes `cp2k_exyz.xyz`). See [Format Conversion](format_conversion.md) for details, and [Active Learning Workflow](active_learning_workflow.md) for how these steps fit into a full NEP data iteration.

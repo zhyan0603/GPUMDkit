@@ -5,14 +5,14 @@
 
 ## What it does
 
-GPUMDkit helps you perform common tasks in computational materials science without writing custom scripts. It supports format conversion, structure analysis, property calculation, visualization, and batch workflows — all from one command-line tool.
+GPUMDkit covers the routine tasks around GPUMD and NEP without custom scripts: format conversion, structure sampling and analysis, property calculation, plotting, and batch workflows, all from one command.
 
 <a id="module-overview"></a>
 <a id="all-tutorials"></a>
 
 ## Common Tasks
 
-Choose a tutorial by task. Start with [Quick Start](quick_start.md) for installation, the first checks, and a small conversion exercise.
+Choose a tutorial by task. If GPUMDkit is not installed yet, start with [Quick Start](quick_start.md).
 
 | I want to... | Tutorial |
 |--------------|----------|
@@ -33,10 +33,6 @@ Choose a tutorial by task. Start with [Quick Start](quick_start.md) for installa
 <a id="before-you-start"></a>
 <a id="interactive-mode"></a>
 <a id="cli-mode"></a>
-
-## Start here
-
-If GPUMDkit is not installed yet, read [Quick Start](quick_start.md). If it is already installed, use the task navigation above to open the relevant tutorial.
 
 ## Links
 

@@ -34,13 +34,11 @@ Make sure GPUMDkit is installed. See [Quick Start](quick_start.md) for installat
 | WPE GPUMD time | `gpumdkit.sh -time wpe` | Estimate remaining time for WPE-enabled GPUMD runs |
 | NEP time | `gpumdkit.sh -time nep` | Estimate remaining NEP training time |
 
-## Choose checks before filters
+## Check before you filter
 
-Run a non-destructive check before a filtering command whenever possible. This
-keeps the reason for excluding structures visible in the terminal output.
+Run a check such as `-min_dist_pbc` or `-range` before a `-filter_*` command, so you can see why structures would be removed. Use the PBC-aware distance check for periodic cells; the non-PBC version is only a quick comparison. The numbers in the examples below only illustrate the syntax: choose distance, box, and force thresholds for your own system and data.
 
-| Question | First command | What remains your decision |
-|---|---|---|
+---|---|---|
 | Are periodic images relevant? | `gpumdkit.sh -min_dist_pbc <input.xyz>` | Use the PBC-aware route for periodic cells; the non-PBC route is only a fast comparison. |
 | Is a value unusually large or small? | `gpumdkit.sh -range <input.xyz> energy\|force\|virial` | The acceptable range depends on the target system and reference data. |
 | Are contacts too short? | `gpumdkit.sh -min_dist_pbc <input.xyz>` | Choose a distance threshold from the chemistry and purpose of the dataset. |
@@ -54,13 +52,10 @@ for another material or workflow.
 
 ## Interactive Mode
 
-Open GPUMDkit and choose `5) Analyzer`:
+Run `gpumdkit.sh` and choose `5) Analyzer`. Most functions also have the command-line shortcuts listed in the overview table and in the sections below.
 
-```bash
-gpumdkit.sh
-```
-
-The analyzer menu is:
+<details markdown="1">
+<summary>Show the full menu</summary>
 
 ```text
 +------------------------------------------------------+
@@ -81,7 +76,8 @@ The analyzer menu is:
 Input the function number:
 ```
 
-Most analyzer functions also have direct CLI shortcuts, which are listed in the overview table and in the sections below.
+</details>
+
 
 ---
 
@@ -176,8 +172,9 @@ the detected elements and `config_type` groups, then offers three modes:
 3. DFT-to-NEP alignment: calculate NEP energies and align the original DFT
    energies to them.
 
-The existing NES defaults are retained. Advanced NES settings can be changed
-inside the Python interface when needed. The DFT-to-NEP mode requires the
+Modes 1 and 2 fit the baselines with a natural evolution strategy (NES)
+optimizer. Its default settings suit most datasets; advanced settings can be
+changed in the interface. The DFT-to-NEP mode requires the
 `calorine` package and a compatible NEP model file.
 
 ---
@@ -260,7 +257,7 @@ Overall min_distance: 1.587 Å
 gpumdkit.sh -filter_dist_pbc dump.xyz 1.0
 ```
 
-This removes structures with any interatomic distance below `1.0 Å`.
+This removes structures with any interatomic distance below `1.0 Å` and writes the rest to `filtered_dump.xyz`.
 
 ### Filter by Box Size
 
@@ -272,7 +269,7 @@ This removes structures with any interatomic distance below `1.0 Å`.
 gpumdkit.sh -filter_box dump.xyz 13
 ```
 
-This keeps structures where all box edges are below `13 Å`.
+This keeps structures whose box edges are all at most `13 Å` and writes them to `filtered_by_box.xyz`.
 
 ### Filter by Property Value
 
@@ -284,7 +281,7 @@ This keeps structures where all box edges are below `13 Å`.
 
 ```bash
 gpumdkit.sh -filter_value train.xyz force 20
-gpumdkit.sh -filter_value train.xyz energy 5
+gpumdkit.sh -filter_value train.xyz energy <max_energy>
 ```
 
 A structure is kept when every value is at most the threshold: each force component in magnitude (eV/Å) for `force`, the total energy stored in the file (eV, not per atom) for `energy`, and each virial component for `virial`. Frames that do not store the chosen property cannot be checked and are kept; the script reports how many. The kept structures are written to `filtered.xyz`.

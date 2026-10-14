@@ -5,25 +5,14 @@
 
 **Script Location:** `Scripts/sample_structures/`
 
-Run `gpumdkit.sh` in the working directory containing your candidate trajectory, reference data, and model, then enter filenames at the menu prompts. Use actual paths for files elsewhere. Relative paths start from the terminal's current directory; check each function's output location and any existing files with the same names before running.
-
-The `python Scripts/...` examples below are optional source invocations: run them from the GPUMDkit checkout root with adjusted data paths, or use the script's absolute path from your data directory. Conda users can use the menus without locating `Scripts/`.
+Run `gpumdkit.sh` in the directory that holds your trajectory, reference data, and model, and enter file names at the prompts (paths for files elsewhere). Outputs go to the current directory, so check for existing files with the same names first. The `python "${GPUMDkit_path}/Scripts/..."` commands are an alternative for source installations.
 
 ## Interactive Mode
 
-Sampling tasks are usually easier to run from the interactive menu:
+Run `gpumdkit.sh` and choose `2) Sample Structures`. The entries are described in the table below.
 
-```bash
-gpumdkit.sh
-```
-
-Choose:
-
-```text
-2) Sample Structures
-```
-
-The menu is:
+<details markdown="1">
+<summary>Show the full menu</summary>
 
 ```text
 +------------------------------------------------------+
@@ -40,6 +29,8 @@ The menu is:
 +------------------------------------------------------+
 Input the function number:
 ```
+
+</details>
 
 Available entries:
 
@@ -91,10 +82,10 @@ Output:
 
 ## Farthest Point Sampling with NepTrain
 
-This entry uses NepTrain descriptors for FPS. Choose `203` in interactive mode, or run the script directly:
+Farthest-point sampling (FPS) on NepTrain descriptors. Choose `203` in interactive mode, or run the script directly:
 
 ```bash
-python Scripts/sample_structures/parallel_neptrain_select_structs.py dump.xyz train.xyz nep.txt [threads]
+python "${GPUMDkit_path}/Scripts/sample_structures/parallel_neptrain_select_structs.py" dump.xyz train.xyz nep.txt [threads]
 ```
 
 Descriptor calculation uses one CPU worker by default. Set the optional fourth
@@ -102,7 +93,7 @@ argument to a positive integer to enable parallel calculation, for example
 `4`. Each worker loads its own copy of the NEP model and uses one native OpenMP
 thread, so the requested worker count is the total descriptor parallelism.
 
-From interactive mode, choose `203`. You will see:
+The interactive prompt is:
 
 ```text
 Input <sample.xyz> <train.xyz> <nep_model> [threads]
@@ -128,12 +119,7 @@ Outputs:
 - `pca_train.txt`
 - `pca_selected.txt`
 
-During execution, choose one of two selection modes:
-
-1. select until the descriptor distance is below a threshold;
-2. select a specified number of structures.
-
-The script then prints a selection prompt:
+The script then asks how to stop: at a minimum descriptor distance, or after a fixed number of structures:
 
 ```text
 Choose selection method:
@@ -163,13 +149,13 @@ If you choose `202` from the interactive menu, it prints:
 ### Serial PyNEP
 
 ```bash
-python Scripts/sample_structures/pynep_select_structs.py dump.xyz train.xyz nep.txt
+python "${GPUMDkit_path}/Scripts/sample_structures/pynep_select_structs.py" dump.xyz train.xyz nep.txt
 ```
 
 ### Parallel PyNEP
 
 ```bash
-python Scripts/sample_structures/parallel_pynep_select_structs.py dump.xyz train.xyz nep.txt 8
+python "${GPUMDkit_path}/Scripts/sample_structures/parallel_pynep_select_structs.py" dump.xyz train.xyz nep.txt 8
 ```
 
 The last argument is the number of CPU threads.
@@ -190,13 +176,13 @@ This entry requires `pynep` and is kept for compatibility.
 
 ## Structure Perturbation
 
-Use perturbation when you want to generate initial structures around a known configuration. Choose `204` in interactive mode, or run the script directly:
+Generates new structures around a known configuration. Choose `204` in interactive mode, or run the script directly:
 
 ```bash
-python Scripts/sample_structures/perturb_structure.py POSCAR 20 0.03 0.2 uniform
+python "${GPUMDkit_path}/Scripts/sample_structures/perturb_structure.py" POSCAR 20 0.03 0.2 uniform
 ```
 
-From interactive mode, choose `204`. You will see:
+The interactive prompt is:
 
 ```text
 Input <input.vasp> <pert_num> <cell_pert_fraction> <atom_pert_distance> <atom_pert_style>
@@ -238,10 +224,10 @@ Use this together with the GPUMD `active` command. The `active` command uses a c
 Choose `205` in interactive mode, or run the script directly:
 
 ```bash
-python Scripts/sample_structures/select_max_modev.py 200 0.15
+python "${GPUMDkit_path}/Scripts/sample_structures/select_max_modev.py" 200 0.15
 ```
 
-From interactive mode, choose `205`. You will see:
+The interactive prompt is:
 
 ```text
 +----------------------------------------------------+
@@ -323,7 +309,7 @@ Both output files preserve the input order of their retained frames. The script
 can also be launched directly, but the remaining choices are still interactive:
 
 ```bash
-python Scripts/sample_structures/split_train_test.py data.xyz
+python "${GPUMDkit_path}/Scripts/sample_structures/split_train_test.py" data.xyz
 ```
 
 Uniform and random splitting require `numpy` and `ase`. FPS additionally
@@ -332,13 +318,13 @@ dataset.
 
 ## Frame Range Extraction
 
-`frame_range.py` is an independent CLI tool and is not part of the interactive sampling menu `201–206`. Use it when you want to keep only a fraction of a trajectory before sampling, for example after equilibration.
+`-frame_range` is a command-line tool (not in menu `201–206`) for keeping part of a trajectory before sampling, for example to drop the equilibration stage:
 
 ```bash
-gpumdkit.sh -frame_range dump.xyz 0 0.8
+gpumdkit.sh -frame_range dump.xyz 0.2 1
 ```
 
-This writes frames from 0% to 80% of the trajectory. The range arguments are trajectory fractions from `0` to `1`.
+The two arguments are fractions of the trajectory between `0` and `1`; this example keeps the last 80% of the frames and writes them to `dump_0.20_1.00.xyz`.
 
 ## Example Commands
 

@@ -3,55 +3,7 @@
   <p style="text-align: justify;">This page lists the stable GPUMDkit command-line shortcuts. Interactive mode is available for workflows with many choices.</p>
 </div>
 
-The source table is maintained in `docs/command_reference.tsv`.
-
-If you are new to GPUMDkit, start with [Quick Start](quick_start.md). For
-agent-assisted work, use the [GPUMDkit Agent Skill](simulation_and_postprocessing.md).
-For remote browser access, see [Remote Web Console](remote_web_console.md).
-The `-h` form is available only for commands that expose their own option help;
-otherwise use `gpumdkit.sh -h`, the relevant module help, or interactive mode.
-
-## `gpumdkit.sh -h` Output
-
-```text
- +-------------------------------------------------------------------------------------------------------+
- |                          GPUMDkit 1.5.8 (2026-09-29)       Command Help                               |
- +-------------------------------------------------------------------------------------------------------+
- |                                          MAIN FUNCTIONS                                               |
- +-------------------------------------------------------------------------------------------------------+
- | -h            Show this help table            | -plt <type>        Plot and visualization tools       |
- | -calc <type>  Calculator tools                | -time <gpumd|wpe|nep|gnep>  Time-consuming analyzer   |
- | -update       Update GPUMDkit                 | -clean             Clean extra files in current dir   |
- | -skill        Show GPUMDkit agent skill info  | -doctor            Check Python environment           |
- | -prediction   Write NEP prediction .out files | -prediction_dpa    Write DPA prediction .out files    |
- | -server       Start the GPUMDkit web server   |                                                       |
- +-------------------------------------------------------------------------------------------------------+
- |                                         FORMAT CONVERSION                                             |
- +-------------------------------------------------------------------------------------------------------+
- | -out2xyz      OUTCAR -> extxyz (shell)        | -out2xyz_bec       OUTCAR -> extxyz with BEC          |
- | -out2exyz     OUTCAR -> extxyz (python)       | -xyz2dp            extxyz -> DeepMD npy               |
- | -cp2k2xyz     CP2K log -> xyz                 | -xdat2exyz         XDATCAR -> extxyz                  |
- | -cif2pos      cif -> POSCAR                   | -cif2exyz          cif -> extxyz                      |
- | -pos2exyz     POSCAR -> extxyz                | -exyz2pos          extxyz -> POSCAR                   |
- | -pos2lmp      POSCAR -> LAMMPS data           | -lmp2exyz          LAMMPS dump -> extxyz              |
- | -traj2exyz    ASE traj -> extxyz              | -replicate         Replicate structure                |
- | -addgroup     Add group labels                | -addweight         Add structure weight in extxyz     |
- | -clean_xyz    Clean extra info in extxyz      | -get_frame         Extract specific frame             |
- | -frame_range  Extract frames by range         | -dp2xyz            DeepMD npy -> extxyz               |
- +-------------------------------------------------------------------------------------------------------+
- |                                            ANALYSIS                                                   |
- +-------------------------------------------------------------------------------------------------------+
- | -range        Energy/force/virial statistics  | -analyze_comp      Analyze composition                |
- | -chem_species Analyze chemical species        | -cbc               Charge balance check               |
- | -min_dist     Min distance (no PBC)           | -min_dist_pbc      Min distance with PBC              |
- | -filter_dist  Filter by min_dist (no PBC)     | -filter_dist_pbc   Filter by min_dist (PBC)           |
- | -pda          Probability density analysis    | -filter_box        Filter by box-edge length          |
- | -pynep        Deprecated PyNEP sampling       | -nep_modifier      Modify NEP model interactively     |
- | -shift_energy Interactive energy shift        |                                                       |
- +-------------------------------------------------------------------------------------------------------+
- | Python option help: gpumdkit.sh -<option> -h    Plot list: gpumdkit.sh -plt -h                        |
- +-------------------------------------------------------------------------------------------------------+
-```
+Each table below lists the command, its syntax, and what it does; the same list is printed by `gpumdkit.sh -h`. Commands backed by Python scripts also accept `-h` for their own argument help, for example `gpumdkit.sh -calc msd -h`. New to GPUMDkit? Start with [Quick Start](quick_start.md).
 
 ## Main
 
@@ -62,6 +14,7 @@ otherwise use `gpumdkit.sh -h`, the relevant module help, or interactive mode.
 | `-update` | `gpumdkit.sh -update` | Update GPUMDkit |
 | `-clean` | `gpumdkit.sh -clean` | Clean extra files in the current directory |
 | `-server` | `gpumdkit.sh -server [port] [-b <address>] [-pw <password>]` | Start the Web Console for the current directory; use an SSH tunnel for remote access. |
+| `-skill` | `gpumdkit.sh -skill` | Show where the agent skills are installed and how to add them to an agent client |
 | `-prediction` | `gpumdkit.sh -prediction <input.xyz> <nep.txt> [workers]` | Write NEP-compatible energy, force, stress, and virial prediction files |
 | `-prediction_dpa` | `gpumdkit.sh -prediction_dpa <input.xyz> <dpa_model>` | Write DPA training-set prediction files in the current directory |
 
@@ -72,7 +25,7 @@ otherwise use `gpumdkit.sh -h`, the relevant module help, or interactive mode.
 | `-out2xyz` | `gpumdkit.sh -out2xyz <dir>` | OUTCAR to extxyz, shell version |
 | `-out2xyz_bec` | `gpumdkit.sh -out2xyz_bec <dir>` | OUTCAR to extxyz with BEC labels |
 | `-out2exyz` | `gpumdkit.sh -out2exyz <dir>` | OUTCAR to extxyz, Python version |
-| `-cp2k2xyz` | `gpumdkit.sh -cp2k2xyz` | CP2K output to xyz/extxyz |
+| `-cp2k2xyz` | `gpumdkit.sh -cp2k2xyz` | CP2K logs under the current directory to `cp2k_exyz.xyz` |
 | `-xdat2exyz` | `gpumdkit.sh -xdat2exyz <XDATCAR> <output.xyz>` | XDATCAR to extxyz |
 | `-cif2pos` | `gpumdkit.sh -cif2pos <input.cif> <output.vasp>` | CIF to POSCAR/VASP |
 | `-cif2exyz` | `gpumdkit.sh -cif2exyz <input.cif> <output.xyz>` | CIF to extxyz |
@@ -83,13 +36,13 @@ otherwise use `gpumdkit.sh -h`, the relevant module help, or interactive mode.
 | `-traj2exyz` | `gpumdkit.sh -traj2exyz <input.traj> <output.xyz>` | ASE trajectory to extxyz |
 | `-replicate` | `gpumdkit.sh -replicate <input> <output> a b c` | Replicate by cell factors |
 | `-replicate` | `gpumdkit.sh -replicate <input> <output> <target_num>` | Replicate toward a target atom count |
-| `-addgroup` | `gpumdkit.sh -addgroup <POSCAR> <element...>` | Add GPUMD group labels |
+| `-addgroup` | `gpumdkit.sh -addgroup <structure> <element...>` | Add GPUMD group labels |
 | `-addweight` | `gpumdkit.sh -addweight <input.xyz> <output.xyz> <weight>` | Add structure weights |
 | `-get_frame` | `gpumdkit.sh -get_frame <input.xyz> <frame_index>` | Extract one frame (1-based index) |
 | `-clean_xyz` | `gpumdkit.sh -clean_xyz <input.xyz> <output.xyz>` | Remove extra extxyz properties |
 | `-frame_range` | `gpumdkit.sh -frame_range <input.xyz> <start_frac> <end_frac>` | Extract frames by fractional range |
 | `-dp2xyz` | `gpumdkit.sh -dp2xyz <input_dir/> [output.xyz]` | DeepMD npy datasets to extxyz |
-| `-xyz2dp` | `gpumdkit.sh -xyz2dp` | Convert labeled extxyz to DeepMD npy data through the interactive prompts |
+| `-xyz2dp` | `gpumdkit.sh -xyz2dp <input.xyz> <element...>` | Labeled extxyz to DeepMD npy data (prompts for the arguments if they are omitted) |
 
 ## Calculators
 
@@ -141,7 +94,7 @@ gpumdkit.sh -plt <type> [options]
 gpumdkit.sh -plt -h
 ```
 
-Common types include `train`, `prediction` (alias: `test`), `thermo`, `msd`, `sdc`, `rdf`, `emd`, `emd2`, `nemd`, `hnemd`, `pdos`, and `plane-grid`.
+Common types include `train`, `prediction` (alias: `test`), `thermo`, `msd`, `sdc`, `rdf`, `emd`, `emd2`, `nemd`, `hnemd`, `pdos`, and `plane-grid`. The [Plot Scripts](plot_scripts.md) overview lists every type with its input files.
 
 ## Utilities
 
@@ -182,3 +135,7 @@ neuroevolution potential models,” *Journal of Open Source Software* **9**(95),
 The detailed operation guide is available in the
 [NEP modifier README](https://github.com/zhyan0603/GPUMDkit/tree/main/Scripts/utils/nep_modifier)
 and the [official calorine model-modification tutorial](https://calorine.materialsmodeling.org/dev/get_started/modifying_models.html).
+
+---
+
+The tables on this page are kept in sync with `docs/command_reference.tsv`.

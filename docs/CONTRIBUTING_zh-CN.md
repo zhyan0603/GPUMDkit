@@ -126,7 +126,8 @@
 
 ```bash
 # 从 dev 创建并切换到新分支
-git checkout -b your-branch-name
+git fetch upstream
+git checkout -b your-branch-name upstream/dev
 ```
 
 分支名称随意。
@@ -281,8 +282,8 @@ git checkout -b your-branch-name
    ```bash
    # 找到 help_info_table() 函数并添加你的命令
    function help_info_table(){
-       echo "+====================================== Analysis ===============================================+"
-       echo "| -analyze_bonds Analyze bond lengths in struct | -analyze_comp Analyze composition of extxyz      |"
+       # ... ANALYSIS section ...
+       echo " | -analyze_bonds Bond length analysis           |                                                       |"
        # ... 其余帮助表 ...
    }
    ```
@@ -412,8 +413,8 @@ git diff --check
 
 2. **保持你的分支与最新的 `dev` 分支同步**：
    ```bash
-   git fetch origin
-   git rebase origin/dev
+   git fetch upstream
+   git rebase upstream/dev
    ```
 
 3. **推送你的分支**到你的 fork：

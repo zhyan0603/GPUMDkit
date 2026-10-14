@@ -126,7 +126,8 @@ Create a new branch for your changes:
 
 ```bash
 # Create and checkout a new branch from dev
-git checkout -b your-branch-name
+git fetch upstream
+git checkout -b your-branch-name upstream/dev
 ```
 
 Name your branch as you prefer.
@@ -283,8 +284,8 @@ To add a new command-line flag or subcommand:
    ```bash
    # Find the help_info_table() function and add your command
    function help_info_table(){
-       echo "+====================================== Analysis ===============================================+"
-       echo "| -analyze_bonds Analyze bond lengths in struct | -analyze_comp Analyze composition of extxyz      |"
+       # ... ANALYSIS section ...
+       echo " | -analyze_bonds Bond length analysis           |                                                       |"
        # ... rest of help table ...
    }
    ```
@@ -414,8 +415,8 @@ Write clear, descriptive commit messages that explain what you changed. There ar
 
 2. **Keep your branch updated** with the latest `dev` branch:
    ```bash
-   git fetch origin
-   git rebase origin/dev
+   git fetch upstream
+   git rebase upstream/dev
    ```
 
 3. **Push your branch** to your fork:
