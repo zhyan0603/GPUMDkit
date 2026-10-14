@@ -19,7 +19,7 @@ if [ -z "$GPUMDkit_path" ]; then
     exit 1
 fi
 
-VERSION="1.5.8 (2026-09-29)"
+VERSION="1.5.8 (2026-10-14)"
 
 plt_path="${GPUMDkit_path}/Scripts/plt_scripts"
 analyzer_path="${GPUMDkit_path}/Scripts/analyzer"
@@ -40,18 +40,23 @@ echo " 7) Utilities                  8) Help                "
 echo " 0) Exit                                              "
 }
 
+# -e enables readline (Tab filename completion, line editing) on a terminal;
+# piped/redirected input is read as before.
 function read_menu_choice(){
     local __target_var="$1"
     local __input
-    if ! IFS= read -r -p " " __input; then
+    if ! IFS= read -e -r -p " " __input; then
         echo " Input closed. Exiting."
         return 1
     fi
+    # Strip leading/trailing whitespace (Tab completion appends a space)
+    __input="${__input#"${__input%%[![:space:]]*}"}"
+    __input="${__input%"${__input##*[![:space:]]}"}"
     printf -v "$__target_var" '%s' "$__input"
 }
 
 function read_menu_array(){
-    if ! read -r -a "$1"; then
+    if ! read -e -r -a "$1"; then
         echo " Input closed. Exiting."
         return 1
     fi
