@@ -287,7 +287,7 @@ gpumdkit.sh -filter_value train.xyz force 20
 gpumdkit.sh -filter_value train.xyz energy 5
 ```
 
-This filters out structures with force components exceeding `20 eV/Å` (or energy exceeding `5 eV/atom`).
+A structure is kept when every value is at most the threshold: each force component in magnitude (eV/Å) for `force`, the total energy stored in the file (eV, not per atom) for `energy`, and each virial component for `virial`. Frames that do not store the chosen property cannot be checked and are kept; the script reports how many. The kept structures are written to `filtered.xyz`.
 
 ### Filter by Pair-Distance Range
 

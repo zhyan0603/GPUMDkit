@@ -18,7 +18,7 @@ Arguments:
 Output:
   Printed min/max values. PNG histogram if requested.
 Author:     Zihan YAN (yanzihan@westlake.edu.cn)
-Last-modified: 2026-05-16
+Last-modified: 2026-10-14
 =============================================================================
 """
 
@@ -43,33 +43,47 @@ import numpy as np
 from ase.io import read
 import matplotlib.pyplot as plt
 
+def get_property(frame, name):
+    """Return a frame property from frame.info or its calculator, ignoring key case.
+
+    ASE 3.23+ moves extxyz keys such as energy= into frame.calc, while
+    capitalized keys such as Energy= stay in frame.info.
+    """
+    sources = [frame.info]
+    if frame.calc is not None:
+        sources.append(frame.calc.results)
+    for source in sources:
+        for key, value in source.items():
+            if key.lower() == name:
+                return value
+    return None
+
 def calculate_range(frames, property_name):
     property_name = property_name.lower()
+    if property_name == "forces":
+        property_name = "force"
+    if property_name not in ("energy", "force", "virial"):
+        print(" Error: invalid property. Choose from 'energy', 'force', or 'virial'.")
+        sys.exit(1)
     values = []
-    
+    missing = 0
+
     for frame in frames:
-        info_lower = {k.lower(): v for k, v in frame.info.items()}
-        
-        if property_name == "energy":
-            if 'energy' in info_lower:
-                values.append(info_lower['energy'])
-            else:
-                print(" Error: energy information not found in frame info.")
-                sys.exit(1)
-        elif property_name in ["force", "forces"]:
-            forces = frame.get_forces()
-            values.extend(np.linalg.norm(forces, axis=1))
-        elif property_name == "virial":
-            if 'virial' in info_lower:
-                virial = info_lower['virial']
-                values.extend(virial)  
-            else:
-                print(" Error: virial information not found in frame info.")
-                sys.exit(1)
+        value = get_property(frame, "forces" if property_name == "force" else property_name)
+        if value is None:
+            missing += 1
+            continue
+        value = np.asarray(value, dtype=float)
+        if property_name == "force":
+            values.extend(np.linalg.norm(value, axis=1))
         else:
-            print(" Error: invalid property. Choose from 'energy', 'force', or 'virial'.")
-            sys.exit(1)
-    
+            values.extend(value.ravel())
+
+    if missing == len(frames):
+        print(f" Error: {property_name} information not found in any frame.")
+        sys.exit(1)
+    if missing:
+        print(f" Note: {missing} frames have no {property_name} and were skipped.")
     return np.min(values), np.max(values), values
 
 def plot_histogram(values, property_name):

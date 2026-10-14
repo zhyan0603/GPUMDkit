@@ -17,7 +17,7 @@ Arguments:
 Output:
   filtered.xyz
 Author:     Zihan YAN (yanzihan@westlake.edu.cn)
-Last-modified: 2026-05-16
+Last-modified: 2026-10-14
 =============================================================================
 """
 
@@ -40,40 +40,71 @@ if len(args) < 3 or args[0] in ("-h", "--help"):
     print("")
     sys.exit(0 if args and args[0] in ("-h", "--help") else 1)
 
+import numpy as np
 from ase.io import read, write
+
+
+def get_property(atoms, name):
+    """Return a frame property from atoms.info or its calculator, ignoring key case.
+
+    ASE 3.23+ moves extxyz keys such as energy= into atoms.calc, while
+    capitalized keys such as Energy= stay in atoms.info.
+    """
+    sources = [atoms.info]
+    if atoms.calc is not None:
+        sources.append(atoms.calc.results)
+    for source in sources:
+        for key, value in source.items():
+            if key.lower() == name:
+                return value
+    return None
+
 
 def main():
     # Command line arguments
     filename = sys.argv[1]  # Input .extxyz file
-    property = sys.argv[2]  # Filtering property: 'energy', 'force', or 'virial'
-    threshold = float(sys.argv[3])  # Threshold value for filtering
-    
+    property = sys.argv[2].lower()  # Filtering property: 'energy', 'force', or 'virial'
+    if property == 'forces':
+        property = 'force'
+    if property not in ('energy', 'force', 'virial'):
+        print(" Error: unsupported property. Please use 'energy', 'force', or 'virial'.")
+        sys.exit(1)
+    try:
+        threshold = float(sys.argv[3])  # Threshold value for filtering
+    except ValueError:
+        print(f" Error: threshold must be a number, got '{sys.argv[3]}'.")
+        sys.exit(1)
+
     # Read the structures from the .extxyz file
     images = read(filename, index=':')
-    
-    # Filter based on the specified property
+
+    # Keep a structure only when every value is at most the threshold
+    # Frames without the property cannot be checked, so they are kept.
     filtered_images = []
+    missing = 0
     for atoms in images:
-        if property == 'energy':
-            # Assuming energy is stored as a single value in the atoms.info dictionary
-            if 'energy' in atoms.info and atoms.info['energy'] <= threshold:
-                filtered_images.append(atoms)
-        elif property in ["force", "forces"]:
-            forces = atoms.get_forces()
-            # Assuming we want to filter out structures where any force component is greater than the threshold
-            if all(abs(force) <= threshold for force in forces.flatten()):
-                filtered_images.append(atoms)
-        elif property == 'virial':
-            # Assuming virial is stored as a tensor in the atoms.info dictionary
-            if 'virial' in atoms.info and all(v <= threshold for v in atoms.info['virial'].flatten()):
-                filtered_images.append(atoms)
-        else:
-            print(" Error: unsupported property. Please use 'energy', 'force', or 'virial'.")
-            sys.exit(1)
+        values = get_property(atoms, 'forces' if property == 'force' else property)
+        if values is None:
+            missing += 1
+            filtered_images.append(atoms)
+            continue
+        values = np.asarray(values, dtype=float)
+        if property == 'force':
+            # Each force component is compared by magnitude
+            values = np.abs(values)
+        if np.all(values <= threshold):
+            filtered_images.append(atoms)
+
+    if missing == len(images):
+        print(f" Error: no frame contains {property}; filtered.xyz was not written.")
+        sys.exit(1)
+    if missing:
+        print(f" Note: {missing} frames have no {property} and were kept unchecked.")
 
     # Write the filtered structures back to a new .extxyz file
-    output_filename = f"filtered.xyz"
-    write(output_filename, filtered_images)
+    write("filtered.xyz", filtered_images)
+    print(f" {len(filtered_images)} of {len(images)} structures kept; written to filtered.xyz")
+
 
 if __name__ == "__main__":
     main()

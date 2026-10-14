@@ -15,10 +15,10 @@ NEW_FEATURES=(
 
 # Bug fixes (one per line, in an array; keep at most the five newest entries)
 BUG_FIXES=(
+    "read energy=/virial= keys again in -filter_value and -range with ASE 3.23+, and keep frames that lack the property instead of dropping them"
     "stop -lmp2exyz from writing an empty dump.xyz when no structure could be read"
     "label ionic-conductivity Arrhenius plots as log10(sigma*T) to match the fitted values"
     "refresh changed server-console images from scan metadata and cache-bust only updated image URLs"
-    "refine the server console UI with a flat, minimal card design and clearer action cards: input-file hints, colored generated/stale/not-generated status pills, and per-action chart icons"
     "rework the server training workspace with continuous generation axes for resumed loss logs, nep.in parameter context, and compact desktop action cards"
 )
 
