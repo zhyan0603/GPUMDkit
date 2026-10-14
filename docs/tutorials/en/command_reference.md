@@ -79,7 +79,7 @@ otherwise use `gpumdkit.sh -h`, the relevant module help, or interactive mode.
 | `-pos2exyz` | `gpumdkit.sh -pos2exyz <POSCAR> <output.xyz>` | POSCAR to extxyz |
 | `-exyz2pos` | `gpumdkit.sh -exyz2pos <input.xyz>` | extxyz frames to POSCAR files |
 | `-pos2lmp` | `gpumdkit.sh -pos2lmp <POSCAR> <output.data>` | POSCAR to LAMMPS data |
-| `-lmp2exyz` | `gpumdkit.sh -lmp2exyz <dump> <element...>` | LAMMPS dump to extxyz |
+| `-lmp2exyz` | `gpumdkit.sh -lmp2exyz <dump_or_data> <element...>` | LAMMPS dump or data file to extxyz |
 | `-traj2exyz` | `gpumdkit.sh -traj2exyz <input.traj> <output.xyz>` | ASE trajectory to extxyz |
 | `-replicate` | `gpumdkit.sh -replicate <input> <output> a b c` | Replicate by cell factors |
 | `-replicate` | `gpumdkit.sh -replicate <input> <output> <target_num>` | Replicate toward a target atom count |

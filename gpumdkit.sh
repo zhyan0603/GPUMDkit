@@ -212,7 +212,7 @@ function help_info_table(){
     echo " | -cp2k2xyz     CP2K log -> xyz                 | -xdat2exyz         XDATCAR -> extxyz                  |"
     echo " | -cif2pos      cif -> POSCAR                   | -cif2exyz          cif -> extxyz                      |"
     echo " | -pos2exyz     POSCAR -> extxyz                | -exyz2pos          extxyz -> POSCAR                   |"
-    echo " | -pos2lmp      POSCAR -> LAMMPS data           | -lmp2exyz          LAMMPS dump -> extxyz              |"
+    echo " | -pos2lmp      POSCAR -> LAMMPS data           | -lmp2exyz          LAMMPS dump/data -> extxyz         |"
     echo " | -traj2exyz    ASE traj -> extxyz              | -replicate         Replicate structure                |"
     echo " | -addgroup     Add group labels                | -addweight         Add structure weight in extxyz     |"
     echo " | -clean_xyz    Clean extra info in extxyz      | -get_frame         Extract specific frame             |"

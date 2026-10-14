@@ -88,7 +88,7 @@ Input the function number or converter keyword:
 | `cif2exyz` | `cif2exyz.py` | CIF to extxyz | prepare GPUMDkit input from CIF |
 | `xdat2exyz` | `xdatcar2exyz.py` | XDATCAR to extxyz | convert VASP MD trajectory |
 | `pos2lmp` | `pos2lmp.py` | POSCAR to LAMMPS data | prepare LAMMPS input |
-| `lmp2exyz` | `lmp2exyz.py` | LAMMPS dump to extxyz | convert LAMMPS trajectory |
+| `lmp2exyz` | `lmp2exyz.py` | LAMMPS dump or data file to extxyz | convert a LAMMPS trajectory or structure |
 | `traj2exyz` | `traj2exyz.py` | ASE traj to extxyz | convert ASE trajectory |
 | `dp2xyz` | `dp2xyz.py` | DeepMD npy to extxyz | convert DeepMD datasets for GPUMD/NEP workflows |
 | `xyz2dp` | `xyz2dp.py` | extxyz to DeepMD npy | prepare DeepMD datasets from labeled extxyz |
@@ -104,7 +104,7 @@ Input the function number or converter keyword:
 | extxyz | POSCAR files | `gpumdkit.sh -exyz2pos <input.xyz>` |
 | XDATCAR | extxyz | `gpumdkit.sh -xdat2exyz XDATCAR dump.xyz` |
 | POSCAR | LAMMPS data | `gpumdkit.sh -pos2lmp POSCAR lammps.data` |
-| LAMMPS dump | extxyz | `gpumdkit.sh -lmp2exyz dump.lammpstrj Li Y Cl` |
+| LAMMPS dump or data file | extxyz | `gpumdkit.sh -lmp2exyz dump.lammpstrj Li Y Cl` |
 | CIF | POSCAR | `gpumdkit.sh -cif2pos input.cif POSCAR.vasp` |
 | CIF | extxyz | `gpumdkit.sh -cif2exyz input.cif model.xyz` |
 | ASE traj | extxyz | `gpumdkit.sh -traj2exyz input.traj output.xyz` |
@@ -284,18 +284,21 @@ Example: ./train.xyz
 ------------>>
 ```
 
-### LAMMPS dump to extxyz
+### LAMMPS dump or data file to extxyz
 
 ```bash
-gpumdkit.sh -lmp2exyz dump.lammpstrj Li Y Cl
+gpumdkit.sh -lmp2exyz dump.lammpstrj Li Y Cl   # text dump: every frame
+gpumdkit.sh -lmp2exyz model.data Li Y Cl       # data file: one structure
 ```
 
-The element symbols must match the LAMMPS atom type IDs. For example, if type `1` is Li, type `2` is Y, and type `3` is Cl, the order should be `Li Y Cl`.
+The element symbols must follow the LAMMPS atom type IDs: if type `1` is Li, type `2` is Y, and type `3` is Cl, use `Li Y Cl`. The result is written to `dump.xyz`; nothing is written if no structure could be read. The file type is detected automatically, and compressed files (`.gz`, `.bz2`, `.xz`) also work.
+
+For a data file (`units metal`), the box origin is moved to zero and the atoms are wrapped into the cell, as GPUMD expects. Velocities (converted to Å/fs), masses, and charges are kept when the data file contains them; note that GPUMD uses velocities in `model.xyz` as the initial velocities. A dump with an `element` or `mass` column is not supported; write the dump with type IDs only.
 
 Interactive keyword: `lmp2exyz`
 
 ```text
-Input <dump_file> <element1> <element2> ...
+Input <dump_or_data_file> <element1> <element2> ...
 Example: dump.lammpstrj Li O
 ------------>>
 ```

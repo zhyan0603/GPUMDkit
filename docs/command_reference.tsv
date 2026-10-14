@@ -14,7 +14,7 @@ format	-cif2exyz	gpumdkit.sh -cif2exyz <input.cif> <output.xyz>	Convert CIF to e
 format	-pos2exyz	gpumdkit.sh -pos2exyz <POSCAR> <output.xyz>	Convert POSCAR to extxyz	将 POSCAR 转换为 extxyz	stable
 format	-exyz2pos	gpumdkit.sh -exyz2pos <input.xyz>	Convert extxyz frames to POSCAR files	将 extxyz 帧转换为 POSCAR 文件	stable
 format	-pos2lmp	gpumdkit.sh -pos2lmp <POSCAR> <output.data>	Convert POSCAR to LAMMPS data	将 POSCAR 转换为 LAMMPS data	stable
-format	-lmp2exyz	gpumdkit.sh -lmp2exyz <dump> <element...>	Convert LAMMPS dump to extxyz	将 LAMMPS dump 转换为 extxyz	stable
+format	-lmp2exyz	gpumdkit.sh -lmp2exyz <dump_or_data> <element...>	Convert a LAMMPS dump or data file to extxyz	将 LAMMPS dump 或 data 文件转换为 extxyz	stable
 format	-traj2exyz	gpumdkit.sh -traj2exyz <input.traj> <output.xyz>	Convert ASE trajectory to extxyz	将 ASE trajectory 转换为 extxyz	stable
 format	-replicate	gpumdkit.sh -replicate <input> <output> a b c	Replicate a structure by cell factors	按晶胞倍数扩胞	stable
 format	-replicate	gpumdkit.sh -replicate <input> <output> <target_num>	Replicate a structure toward a target atom count	按目标原子数扩胞	stable

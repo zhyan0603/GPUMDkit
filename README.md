@@ -176,7 +176,7 @@ the help information:
 | -cp2k2xyz     CP2K log -> xyz                 | -xdat2exyz         XDATCAR -> extxyz                  |
 | -cif2pos      cif -> POSCAR                   | -cif2exyz          cif -> extxyz                      |
 | -pos2exyz     POSCAR -> extxyz                | -exyz2pos          extxyz -> POSCAR                   |
-| -pos2lmp      POSCAR -> LAMMPS data           | -lmp2exyz          LAMMPS dump -> extxyz              |
+| -pos2lmp      POSCAR -> LAMMPS data           | -lmp2exyz          LAMMPS dump/data -> extxyz         |
 | -traj2exyz    ASE traj -> extxyz              | -replicate         Replicate structure                |
 | -addgroup     Add group labels                | -addweight         Add structure weight in extxyz     |
 | -clean_xyz    Clean extra info in extxyz      | -get_frame         Extract specific frame             |

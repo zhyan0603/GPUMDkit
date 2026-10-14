@@ -6,20 +6,20 @@ CONTACT="yanzihan@westlake.edu.cn"
 
 # New features (one per line, in an array; keep at most the five newest entries)
 NEW_FEATURES=(
+    "convert LAMMPS data files, including compressed ones, with -lmp2exyz"
     "add Tab filename completion and line editing at interactive-mode input prompts"
     "add -time wpe progress monitoring for WPE-enabled GPUMD runs with buffered updates"
     "group VASP 301 extxyz structures by element set, link matching POTCAR files, and always create optional KPOINTS links"
     "add web MD monitor for neighbor.out radial/angular actual-vs-max traces, run.in step progress, speed, and ETA"
-    "add sandboxed web-console file actions: home and parent navigation, create, upload, and download"
 )
 
 # Bug fixes (one per line, in an array; keep at most the five newest entries)
 BUG_FIXES=(
+    "stop -lmp2exyz from writing an empty dump.xyz when no structure could be read"
     "label ionic-conductivity Arrhenius plots as log10(sigma*T) to match the fitted values"
     "refresh changed server-console images from scan metadata and cache-bust only updated image URLs"
     "refine the server console UI with a flat, minimal card design and clearer action cards: input-file hints, colored generated/stale/not-generated status pills, and per-action chart icons"
     "rework the server training workspace with continuous generation axes for resumed loss logs, nep.in parameter context, and compact desktop action cards"
-    "refresh growing loss.out data in the server console and pass GPUMDkit_path to allowlisted plot actions"
 )
 
 # === Formatted Output Logic ===
