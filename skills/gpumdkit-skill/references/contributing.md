@@ -617,14 +617,19 @@ Do **not** run MkDocs merely because another file under `docs/` changed. The
 standalone website files below are not MkDocs inputs and should be validated
 directly instead:
 
-- `docs/index.html`, `docs/index_zh.html`, `docs/gallery.html`, and
-  `docs/publications.html`
-- `docs/css/**`, `docs/js/**`, `docs/Gallery/**`
-- standalone JSON/data files such as `docs/gallery.json` and
-  `docs/publications.json`
+- `docs/index.html`, `docs/gallery.html`, and `docs/publications.html`
+  (`docs/index_zh.html` only redirects to the Chinese view of `index.html`)
+- `docs/assets/**` (site CSS, JavaScript, and images) and `docs/Gallery/**`
+- standalone JSON/data files: `docs/gallery.json`, `docs/publications.json`,
+  and `docs/stats.json`
 - generated output under `docs/htmls/**`
 
 For standalone-site changes, use checks appropriate to the edited file, such as
 HTML parsing, JavaScript syntax checks, `git diff --check`, and a focused local
 browser smoke test when layout or interaction changed. Do not edit generated
 `docs/htmls/**` files manually; update the corresponding MkDocs source and rebuild.
+
+The website's headline numbers (interactive tools, command-line options, plot
+types, Python scripts, contributors) live only in `docs/stats.json`. Update it
+when a change alters one of these counts, for example a new plot type. The
+publication count is computed from `docs/publications.json`.

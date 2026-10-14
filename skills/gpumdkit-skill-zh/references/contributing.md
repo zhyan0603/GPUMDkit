@@ -579,13 +579,18 @@ git diff --check
 不要仅因为 `docs/` 下的其他文件发生变化就运行 MkDocs。以下独立网站文件
 不是 MkDocs 输入，应直接进行相应验证：
 
-- `docs/index.html`、`docs/index_zh.html`、`docs/gallery.html` 和
-  `docs/publications.html`
-- `docs/css/**`、`docs/js/**`、`docs/Gallery/**`
-- `docs/gallery.json`、`docs/publications.json` 等独立 JSON/数据文件
+- `docs/index.html`、`docs/gallery.html` 和 `docs/publications.html`
+  （`docs/index_zh.html` 只负责跳转到 `index.html` 的中文界面）
+- `docs/assets/**`（网站的 CSS、JavaScript 和图片）与 `docs/Gallery/**`
+- 独立 JSON/数据文件：`docs/gallery.json`、`docs/publications.json` 和
+  `docs/stats.json`
 - `docs/htmls/**` 下的生成输出
 
 对于独立网站更改，根据所编辑文件运行 HTML 解析、JavaScript 语法检查、
 `git diff --check`，以及在布局或交互发生变化时进行有针对性的本地浏览器
 冒烟测试。不要手动编辑生成的 `docs/htmls/**` 文件；应修改对应的 MkDocs
 源文件并重新构建。
+
+网站上的统计数字（交互功能、命令行选项、绘图类型、Python 脚本、贡献者）
+只保存在 `docs/stats.json` 中。若某项更改改变了其中的数量（例如新增一种
+绘图类型），需同步更新该文件。论文数量由 `docs/publications.json` 自动计算。
