@@ -20,6 +20,40 @@ Work in a new directory and keep the previous dataset and `nep.txt`. Decide thes
 | Dataset | How new data is merged, weighted, and split into training and test sets |
 | Acceptance | Which accuracy and MD-stability results make the new model good enough |
 
+## A Folder Layout That Scales
+
+Keep each round in its own folder and never overwrite the data of an earlier round. One possible layout (the names are only a suggestion):
+
+```text
+project/
+├── round_00/
+│   ├── train.xyz          # initial dataset
+│   └── nep.txt            # model trained on it
+├── round_01/
+│   ├── md/                # GPUMD sampling directories (menu 302)
+│   ├── candidates.xyz     # frames kept after the distance filters
+│   ├── selected.xyz       # frames chosen by FPS (menu 203)
+│   ├── scf/               # DFT directories (menu 301)
+│   ├── new_reference.xyz  # converted DFT results
+│   ├── train.xyz          # merged dataset for this round
+│   └── nep.txt            # model trained in this round
+└── notes.md               # thresholds, settings and results of every round
+```
+
+The commands of one round, in order, each described in the sections below:
+
+| Step | Command |
+|---|---|
+| Prepare MD directories | `gpumdkit.sh` → `3` → `302` |
+| Filter the trajectory | `gpumdkit.sh -min_dist_pbc dump.xyz`, then `-filter_dist_pbc dump.xyz <minimum_distance>` |
+| Select structures | `gpumdkit.sh` → `2` → `203` |
+| Prepare DFT inputs | `gpumdkit.sh` → `3` → `301` |
+| Convert the results | `gpumdkit.sh -out2xyz <scf_results_directory>` |
+| Check the new labels | `gpumdkit.sh -range <new_reference.xyz> force`, `-min_dist_pbc`, `-analyze_comp` |
+| Inspect the new model | `gpumdkit.sh -plt train`, `gpumdkit.sh -plt prediction` |
+
+Every threshold and setting in this table is **yours** to choose; GPUMDkit does not pick them for you.
+
 ## 1. Generate candidate structures
 
 With several starting structures or `run.in` files, prepare the GPUMD batch directories with function 302:

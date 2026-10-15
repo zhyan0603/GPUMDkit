@@ -95,6 +95,27 @@
 <section class="man-hero doc-hero"><div class="container"><div class="crumb"><a href="../../manual.html">手册</a><span>/</span><span>工具箱</span><span>/</span><span>结构采样</span></div><h1 class="h-section">结构采样</h1><p class="lead">结构采样用于为 NEP 训练和分子动力学流程选择、生成或筛选候选构型。</p></div></section>
 <div class="container man doc"><aside class="man-side" aria-label="Pages"><h6>开始</h6><a href="index.html" class=""><span>GPUMDkit 教程</span></a><a href="快速入门.html" class=""><span>快速入门</span></a><a href="远程网页控制台.html" class=""><span>远程网页控制台</span></a><a href="模拟与后处理.html" class=""><span>GPUMDkit Agent Skill</span></a><h6>工具箱</h6><a href="格式转换.html" class=""><span>格式转换</span></a><a href="结构采样.html" class="on"><span>结构采样</span></a><a href="工作流脚本.html" class=""><span>工作流脚本</span></a><a href="计算器脚本.html" class=""><span>计算器脚本</span></a><a href="分析工具.html" class=""><span>分析工具</span></a><a href="绘图脚本.html" class=""><span>绘图脚本</span></a><a href="NEP训练绘图.html" class="sub"><span>NEP 训练与模型分析</span></a><a href="MD与结构绘图.html" class="sub"><span>MD 与结构</span></a><a href="扩散绘图.html" class="sub"><span>扩散与离子输运</span></a><a href="热输运与声子绘图.html" class="sub"><span>热输运与声子</span></a><a href="极性材料分析.html" class=""><span>极性材料分析</span></a><h6>指南</h6><a href="主动学习工作流.html" class=""><span>主动学习工作流</span></a><a href="自定义命令.html" class=""><span>自定义命令</span></a><h6>参考</h6><a href="命令参考.html" class=""><span>命令参考</span></a><h6>贡献</h6><a href="贡献指南.html" class=""><span>为 GPUMDkit 贡献代码</span></a></aside><article class="man-body chap doc-body"><p><strong>脚本位置：</strong> <code>Scripts/sample_structures/</code></p>
 <p>在轨迹、参考数据和模型所在的目录中运行 <code>gpumdkit.sh</code>，按提示输入文件名（文件在其他目录时输入路径）。结果会写入当前目录，运行前请检查是否已有同名文件。<code>python "${GPUMDkit_path}/Scripts/..."</code> 形式的命令适用于源码安装，作为菜单之外的另一种调用方式。</p>
+<h2 id="完整示例">完整示例</h2>
+<p>下面的命令在一个小型示意轨迹 <code>dump.xyz</code> 上运行：100 帧、每帧 54 个原子的 Li/S 晶胞。采样数量请按你自己的数据选择。</p>
+<p><strong>均匀地挑选 5 帧：</strong></p>
+<div class="code"><div class="cap"><i></i><i></i><i></i><span>bash</span></div><pre><code>python "${GPUMDkit_path}/Scripts/sample_structures/sample_structures.py" dump.xyz uniform 5</code></pre><button class="copy-btn" data-copy-pre aria-label="Copy"><svg class="cp"><use href="#i-copy"/></svg><svg class="ok"><use href="#i-check"/></svg></button></div>
+<div class="code"><div class="cap"><i></i><i></i><i></i><span>text</span></div><pre><code> All sampled frames written to sampled_structures.xyz</code></pre><button class="copy-btn" data-copy-pre aria-label="Copy"><svg class="cp"><use href="#i-copy"/></svg><svg class="ok"><use href="#i-check"/></svg></button></div>
+<p>在交互菜单中对应 <code>gpumdkit.sh</code> → <code>2</code> → <code>201</code>，输入 <code>dump.xyz uniform 5</code>。脚本总是写出 <code>sampled_structures.xyz</code>，再次运行前请先重命名结果。</p>
+<p><strong>跳过开头若干帧并随机挑选：</strong></p>
+<div class="code"><div class="cap"><i></i><i></i><i></i><span>text</span></div><pre><code>dump.xyz random 5 20</code></pre><button class="copy-btn" data-copy-pre aria-label="Copy"><svg class="cp"><use href="#i-copy"/></svg><svg class="ok"><use href="#i-check"/></svg></button></div>
+<p>这会从前 20 帧之后的帧中随机挑选 5 帧，适合 MD 开头仍在平衡的情况。均匀和随机采样不考虑结构之间的差异；需要多样性时请使用 FPS（203）。</p>
+<p><strong>把数据集划分为训练集和测试集（206）：</strong></p>
+<div class="code"><div class="cap"><i></i><i></i><i></i><span>bash</span></div><pre><code>gpumdkit.sh   # 2) Sample Structures -&gt; 206 -&gt; dump.xyz</code></pre><button class="copy-btn" data-copy-pre aria-label="Copy"><svg class="cp"><use href="#i-copy"/></svg><svg class="ok"><use href="#i-check"/></svg></button></div>
+<div class="code"><div class="cap"><i></i><i></i><i></i><span>text</span></div><pre><code>   Elements: Li S
+   Frames: 100
+   Atoms per frame: 54-54
+ Enter the test-set fraction or frame count: 0.2
+   Test-set size: 20 frames; training-set size: 80 frames
+ Enter the selection method: 1
+   Method: uniform
+   Training frames: 80 -&gt; dump_train.xyz
+   Test frames: 20 -&gt; dump_test.xyz</code></pre><button class="copy-btn" data-copy-pre aria-label="Copy"><svg class="cp"><use href="#i-copy"/></svg><svg class="ok"><use href="#i-check"/></svg></button></div>
+<p>输入 0 到 1 之间的数表示比例，输入正整数表示测试帧的确切数量。使用这两个输出文件之前，请先用 <code>gpumdkit.sh -analyze_comp</code> 检查。</p>
 <h2 id="交互模式入口">交互模式入口</h2>
 <p>运行 <code>gpumdkit.sh</code> 并选择 <code>2) Sample Structures</code>，各入口说明见下表。</p>
 <details>
@@ -450,7 +471,7 @@ gpumdkit.sh  # 选择 2 → 203</code></pre><button class="copy-btn" data-copy-p
 <td>输入固定的整数随机种子</td>
 </tr>
 </tbody>
-</table></div><div class="doc-pn"><a href="格式转换.html"><small>上一页</small><b>格式转换</b></a><a class="next" href="工作流脚本.html"><small>下一页</small><b>工作流脚本</b></a></div><a class="doc-edit" href="https://github.com/zhyan0603/GPUMDkit/edit/main/docs/tutorials/zh/结构采样.md" target="_blank" rel="noopener">编辑此页</a></article><nav class="doc-toc" aria-label="本页目录"><h6>本页目录</h6><a href="#交互模式入口" class="l2">交互模式入口</a><a href="#均匀随机采样" class="l2">均匀/随机采样</a><a href="#neptrain-fps" class="l2">NepTrain FPS</a><a href="#训练集和测试集划分" class="l2">训练集和测试集划分</a><a href="#pynep-旧入口" class="l2">PyNEP 旧入口</a><a href="#串行-pynep" class="l3">串行 PyNEP</a><a href="#并行-pynep" class="l3">并行 PyNEP</a><a href="#gpumdkit-入口" class="l3">GPUMDkit 入口</a><a href="#结构扰动" class="l2">结构扰动</a><a href="#最大力偏差结构选择" class="l2">最大力偏差结构选择</a><a href="#帧范围提取" class="l2">帧范围提取</a><a href="#示例命令" class="l2">示例命令</a><a href="#常见问题" class="l2">常见问题</a></nav></div>
+</table></div><div class="doc-pn"><a href="格式转换.html"><small>上一页</small><b>格式转换</b></a><a class="next" href="工作流脚本.html"><small>下一页</small><b>工作流脚本</b></a></div><a class="doc-edit" href="https://github.com/zhyan0603/GPUMDkit/edit/main/docs/tutorials/zh/结构采样.md" target="_blank" rel="noopener">编辑此页</a></article><nav class="doc-toc" aria-label="本页目录"><h6>本页目录</h6><a href="#完整示例" class="l2">完整示例</a><a href="#交互模式入口" class="l2">交互模式入口</a><a href="#均匀随机采样" class="l2">均匀/随机采样</a><a href="#neptrain-fps" class="l2">NepTrain FPS</a><a href="#训练集和测试集划分" class="l2">训练集和测试集划分</a><a href="#pynep-旧入口" class="l2">PyNEP 旧入口</a><a href="#串行-pynep" class="l3">串行 PyNEP</a><a href="#并行-pynep" class="l3">并行 PyNEP</a><a href="#gpumdkit-入口" class="l3">GPUMDkit 入口</a><a href="#结构扰动" class="l2">结构扰动</a><a href="#最大力偏差结构选择" class="l2">最大力偏差结构选择</a><a href="#帧范围提取" class="l2">帧范围提取</a><a href="#示例命令" class="l2">示例命令</a><a href="#常见问题" class="l2">常见问题</a></nav></div>
 </main>
 
 <!-- ======================================================= footer -->

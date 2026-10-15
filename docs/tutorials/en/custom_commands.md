@@ -98,6 +98,40 @@ custom_prep_training() {
 
 Usage: `gpumdkit.sh -prep_training`. The force threshold `30` is only an example; choose a value suited to your system.
 
+## A Worked Example
+
+Put these two functions in `~/.gpumdkit.in`:
+
+```bash
+custom_count() {
+    # count the frames of every extxyz file given on the command line
+    for f in "$@"; do
+        printf '%s: %s frames\n' "$f" "$(grep -c '^Lattice' "$f")"
+    done
+}
+
+custom_mindist() {
+    # print the overall minimum distance of every file
+    for f in "$@"; do
+        printf '%s: ' "$f"
+        gpumdkit.sh -min_dist_pbc "$f" 2>&1 | grep "Overall"
+    done
+}
+```
+
+Then, from any directory:
+
+```bash
+gpumdkit.sh -count dump.xyz sampled_structures.xyz
+```
+
+```text
+dump.xyz: 100 frames
+sampled_structures.xyz: 5 frames
+```
+
+`gpumdkit.sh -mindist dump.xyz` works the same way and prints the line `Overall min_distance: … Å` for each file. A function can call any GPUMDkit option, so a project-specific check that you repeat often can live in one command. Functions are plain Bash: quote `"$@"` and `"$f"` so that file names with spaces keep working.
+
 ## Tips
 
 - Use descriptive names: `custom_analyze_nep_training` is clearer than `custom_ant`.

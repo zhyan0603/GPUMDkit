@@ -146,6 +146,27 @@ Current GPUMDkit path: /home/yanzihan/software/GPUMDkit</code></pre><button clas
     gpumdkit.sh -range filtered.xyz energy
 }</code></pre><button class="copy-btn" data-copy-pre aria-label="Copy"><svg class="cp"><use href="#i-copy"/></svg><svg class="ok"><use href="#i-check"/></svg></button></div>
 <p>Usage: <code>gpumdkit.sh -prep_training</code>. The force threshold <code>30</code> is only an example; choose a value suited to your system.</p>
+<h2 id="a-worked-example">A Worked Example</h2>
+<p>Put these two functions in <code>~/.gpumdkit.in</code>:</p>
+<div class="code"><div class="cap"><i></i><i></i><i></i><span>bash</span></div><pre><code>custom_count() {
+    # count the frames of every extxyz file given on the command line
+    for f in "$@"; do
+        printf '%s: %s frames\n' "$f" "$(grep -c '^Lattice' "$f")"
+    done
+}
+
+custom_mindist() {
+    # print the overall minimum distance of every file
+    for f in "$@"; do
+        printf '%s: ' "$f"
+        gpumdkit.sh -min_dist_pbc "$f" 2&gt;&amp;1 | grep "Overall"
+    done
+}</code></pre><button class="copy-btn" data-copy-pre aria-label="Copy"><svg class="cp"><use href="#i-copy"/></svg><svg class="ok"><use href="#i-check"/></svg></button></div>
+<p>Then, from any directory:</p>
+<div class="code"><div class="cap"><i></i><i></i><i></i><span>bash</span></div><pre><code>gpumdkit.sh -count dump.xyz sampled_structures.xyz</code></pre><button class="copy-btn" data-copy-pre aria-label="Copy"><svg class="cp"><use href="#i-copy"/></svg><svg class="ok"><use href="#i-check"/></svg></button></div>
+<div class="code"><div class="cap"><i></i><i></i><i></i><span>text</span></div><pre><code>dump.xyz: 100 frames
+sampled_structures.xyz: 5 frames</code></pre><button class="copy-btn" data-copy-pre aria-label="Copy"><svg class="cp"><use href="#i-copy"/></svg><svg class="ok"><use href="#i-check"/></svg></button></div>
+<p><code>gpumdkit.sh -mindist dump.xyz</code> works the same way and prints the line <code>Overall min_distance: … Å</code> for each file. A function can call any GPUMDkit option, so a project-specific check that you repeat often can live in one command. Functions are plain Bash: quote <code>"$@"</code> and <code>"$f"</code> so that file names with spaces keep working.</p>
 <h2 id="tips">Tips</h2>
 <ul>
 <li>Use descriptive names: <code>custom_analyze_nep_training</code> is clearer than <code>custom_ant</code>.</li>
@@ -153,7 +174,7 @@ Current GPUMDkit path: /home/yanzihan/software/GPUMDkit</code></pre><button clas
 <li>Check that input files exist before processing them.</li>
 </ul>
 <hr />
-<p>Thank you for using <code>GPUMDkit</code>! If you have any questions or need further assistance, feel free to open an issue on our GitHub repository or contact Zihan YAN (yanzihan@westlake.edu.cn).</p><div class="doc-pn"><a href="active_learning_workflow.html"><small>Previous</small><b>Active Learning Workflow</b></a><a class="next" href="command_reference.html"><small>Next</small><b>Command Reference</b></a></div><a class="doc-edit" href="https://github.com/zhyan0603/GPUMDkit/edit/main/docs/tutorials/en/custom_commands.md" target="_blank" rel="noopener">Edit this page</a></article><nav class="doc-toc" aria-label="On this page"><h6>On this page</h6><a href="#how-it-works" class="l2">How it works</a><a href="#basic-examples" class="l2">Basic examples</a><a href="#a-first-command" class="l3">A first command</a><a href="#using-arguments" class="l3">Using arguments</a><a href="#calling-your-own-script" class="l3">Calling your own script</a><a href="#combining-gpumdkit-commands" class="l2">Combining GPUMDkit commands</a><a href="#plot-several-directories" class="l3">Plot several directories</a><a href="#check-a-training-set" class="l3">Check a training set</a><a href="#prepare-training-data" class="l3">Prepare training data</a><a href="#tips" class="l2">Tips</a></nav></div>
+<p>Thank you for using <code>GPUMDkit</code>! If you have any questions or need further assistance, feel free to open an issue on our GitHub repository or contact Zihan YAN (yanzihan@westlake.edu.cn).</p><div class="doc-pn"><a href="active_learning_workflow.html"><small>Previous</small><b>Active Learning Workflow</b></a><a class="next" href="command_reference.html"><small>Next</small><b>Command Reference</b></a></div><a class="doc-edit" href="https://github.com/zhyan0603/GPUMDkit/edit/main/docs/tutorials/en/custom_commands.md" target="_blank" rel="noopener">Edit this page</a></article><nav class="doc-toc" aria-label="On this page"><h6>On this page</h6><a href="#how-it-works" class="l2">How it works</a><a href="#basic-examples" class="l2">Basic examples</a><a href="#a-first-command" class="l3">A first command</a><a href="#using-arguments" class="l3">Using arguments</a><a href="#calling-your-own-script" class="l3">Calling your own script</a><a href="#combining-gpumdkit-commands" class="l2">Combining GPUMDkit commands</a><a href="#plot-several-directories" class="l3">Plot several directories</a><a href="#check-a-training-set" class="l3">Check a training set</a><a href="#prepare-training-data" class="l3">Prepare training data</a><a href="#a-worked-example" class="l2">A Worked Example</a><a href="#tips" class="l2">Tips</a></nav></div>
 </main>
 
 <!-- ======================================================= footer -->

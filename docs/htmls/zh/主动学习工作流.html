@@ -131,6 +131,61 @@
 </tr>
 </tbody>
 </table></div>
+<h2 id="便于扩展的目录结构">便于扩展的目录结构</h2>
+<p>每一轮放在各自的目录中，不要覆盖前一轮的数据。下面是一种可行的布局（名称仅供参考）：</p>
+<div class="code"><div class="cap"><i></i><i></i><i></i><span>text</span></div><pre><code>project/
+├── round_00/
+│   ├── train.xyz          # 初始数据集
+│   └── nep.txt            # 用它训练的模型
+├── round_01/
+│   ├── md/                # GPUMD 采样目录（菜单 302）
+│   ├── candidates.xyz     # 经距离过滤后保留的帧
+│   ├── selected.xyz       # 由 FPS 选出的帧（菜单 203）
+│   ├── scf/               # DFT 目录（菜单 301）
+│   ├── new_reference.xyz  # 转换后的 DFT 结果
+│   ├── train.xyz          # 本轮合并后的数据集
+│   └── nep.txt            # 本轮训练的模型
+└── notes.md               # 每一轮的阈值、设置和结果</code></pre><button class="copy-btn" data-copy-pre aria-label="Copy"><svg class="cp"><use href="#i-copy"/></svg><svg class="ok"><use href="#i-check"/></svg></button></div>
+<p>一轮中的命令按顺序如下，各步在下面的章节中详细说明：</p>
+<div class="tbl-wrap"><table class="tbl">
+<thead>
+<tr>
+<th>步骤</th>
+<th>命令</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>准备 MD 目录</td>
+<td><code>gpumdkit.sh</code> → <code>3</code> → <code>302</code></td>
+</tr>
+<tr>
+<td>过滤轨迹</td>
+<td><code>gpumdkit.sh -min_dist_pbc dump.xyz</code>，再 <code>-filter_dist_pbc dump.xyz &lt;minimum_distance&gt;</code></td>
+</tr>
+<tr>
+<td>选择结构</td>
+<td><code>gpumdkit.sh</code> → <code>2</code> → <code>203</code></td>
+</tr>
+<tr>
+<td>准备 DFT 输入</td>
+<td><code>gpumdkit.sh</code> → <code>3</code> → <code>301</code></td>
+</tr>
+<tr>
+<td>转换结果</td>
+<td><code>gpumdkit.sh -out2xyz &lt;scf_results_directory&gt;</code></td>
+</tr>
+<tr>
+<td>检查新标签</td>
+<td><code>gpumdkit.sh -range &lt;new_reference.xyz&gt; force</code>、<code>-min_dist_pbc</code>、<code>-analyze_comp</code></td>
+</tr>
+<tr>
+<td>检查新模型</td>
+<td><code>gpumdkit.sh -plt train</code>、<code>gpumdkit.sh -plt prediction</code></td>
+</tr>
+</tbody>
+</table></div>
+<p>表中的每个阈值和设置都需要<strong>由你自己</strong>决定，GPUMDkit 不会替你选择。</p>
 <h2 id="1-生成候选结构">1. 生成候选结构</h2>
 <p>如果有多个起始结构或多套 <code>run.in</code>，先用功能 302 准备 GPUMD 批处理目录：</p>
 <div class="code"><div class="cap"><i></i><i></i><i></i><span>bash</span></div><pre><code>gpumdkit.sh  # 选择：3) Workflow -&gt; 302</code></pre><button class="copy-btn" data-copy-pre aria-label="Copy"><svg class="cp"><use href="#i-copy"/></svg><svg class="ok"><use href="#i-check"/></svg></button></div>
@@ -174,7 +229,7 @@ gpumdkit.sh -analyze_comp &lt;new_reference.xyz&gt;</code></pre><button class="c
 </ul>
 <p>总体 RMSE 低并不代表模型已经可用。达到验收标准后，再用新模型进行下一轮 MD。</p>
 <h2 id="做好记录">做好记录</h2>
-<p>每一轮都保留模型和数据集版本、所用命令和阈值、被剔除的结构以及验证结果。如果缺少输出或验证问题尚未解决，请先排查，不要进入下一轮。</p><div class="doc-pn"><a href="极性材料分析.html"><small>上一页</small><b>极性材料分析</b></a><a class="next" href="自定义命令.html"><small>下一页</small><b>自定义命令</b></a></div><a class="doc-edit" href="https://github.com/zhyan0603/GPUMDkit/edit/main/docs/tutorials/zh/主动学习工作流.md" target="_blank" rel="noopener">编辑此页</a></article><nav class="doc-toc" aria-label="本页目录"><h6>本页目录</h6><a href="#概览" class="l2">概览</a><a href="#开始之前" class="l2">开始之前</a><a href="#1-生成候选结构" class="l2">1. 生成候选结构</a><a href="#2-选择候选结构" class="l2">2. 选择候选结构</a><a href="#另一种方式委员会不确定度" class="l3">另一种方式：委员会不确定度</a><a href="#3-准备-dft-计算" class="l2">3. 准备 DFT 计算</a><a href="#4-转换并检查参考数据" class="l2">4. 转换并检查参考数据</a><a href="#5-更新数据集并重新训练" class="l2">5. 更新数据集并重新训练</a><a href="#做好记录" class="l2">做好记录</a></nav></div>
+<p>每一轮都保留模型和数据集版本、所用命令和阈值、被剔除的结构以及验证结果。如果缺少输出或验证问题尚未解决，请先排查，不要进入下一轮。</p><div class="doc-pn"><a href="极性材料分析.html"><small>上一页</small><b>极性材料分析</b></a><a class="next" href="自定义命令.html"><small>下一页</small><b>自定义命令</b></a></div><a class="doc-edit" href="https://github.com/zhyan0603/GPUMDkit/edit/main/docs/tutorials/zh/主动学习工作流.md" target="_blank" rel="noopener">编辑此页</a></article><nav class="doc-toc" aria-label="本页目录"><h6>本页目录</h6><a href="#概览" class="l2">概览</a><a href="#开始之前" class="l2">开始之前</a><a href="#便于扩展的目录结构" class="l2">便于扩展的目录结构</a><a href="#1-生成候选结构" class="l2">1. 生成候选结构</a><a href="#2-选择候选结构" class="l2">2. 选择候选结构</a><a href="#另一种方式委员会不确定度" class="l3">另一种方式：委员会不确定度</a><a href="#3-准备-dft-计算" class="l2">3. 准备 DFT 计算</a><a href="#4-转换并检查参考数据" class="l2">4. 转换并检查参考数据</a><a href="#5-更新数据集并重新训练" class="l2">5. 更新数据集并重新训练</a><a href="#做好记录" class="l2">做好记录</a></nav></div>
 </main>
 
 <!-- ======================================================= footer -->

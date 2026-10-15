@@ -35,6 +35,32 @@ gpumdkit.sh -doctor
 
 `-h` lists all options. `-doctor` checks the Python environment and reports common and optional packages. `MISS` for an optional package is not an error; install it only when you need the feature that uses it.
 
+## What a healthy `-doctor` looks like
+
+`gpumdkit.sh -doctor` prints one line per package. Your versions will differ; what matters is that nothing in **Environment** or **Common packages** is missing:
+
+```text
+ Environment
+   [OK]   GPUMDkit_path    /path/to/GPUMDkit
+   [OK]   Python           3.9.19
+   [OK]   Bash             3.2.57(1)-release
+
+ Common packages
+   [OK]   numpy            1.26.4
+   [OK]   scipy            1.13.1
+   [OK]   matplotlib       3.9.2
+   [OK]   ase              3.23.0
+   [OK]   pandas           2.2.3
+   [OK]   pymatgen         2024.8.9
+
+ Optional packages
+   [MISS] dpdata           DeepMD data conversion and perturbation
+   [MISS] NepTrain         NepTrain structure sampling
+   [OK]   seaborn          0.13.2
+```
+
+`[MISS]` under **Optional packages** only means that the functions listed next to the name are unavailable until you install the package. A `[MISS]` under **Common packages** should be fixed first.
+
 ## First practice: convert a POSCAR {#hello-world-example}
 
 Run this in a new directory so no existing files are overwritten:

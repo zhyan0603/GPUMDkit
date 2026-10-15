@@ -7,6 +7,50 @@
 
 Run `gpumdkit.sh` in the directory that holds your trajectory, reference data, and model, and enter file names at the prompts (paths for files elsewhere). Outputs go to the current directory, so check for existing files with the same names first. The `python "${GPUMDkit_path}/Scripts/..."` commands are an alternative for source installations.
 
+## A Worked Example
+
+The commands below were run on a small illustrative trajectory, `dump.xyz`: 100 frames of a 54-atom Li/S cell. Choose the sample sizes for your own data.
+
+**Pick 5 frames evenly spaced through the file:**
+
+```bash
+python "${GPUMDkit_path}/Scripts/sample_structures/sample_structures.py" dump.xyz uniform 5
+```
+
+```text
+ All sampled frames written to sampled_structures.xyz
+```
+
+The same step from the interactive menu is `gpumdkit.sh` → `2` → `201` and the input line `dump.xyz uniform 5`. The script always writes `sampled_structures.xyz`, so rename the result before running it again.
+
+**Skip the first frames and pick at random:**
+
+```text
+dump.xyz random 5 20
+```
+
+This chooses 5 frames at random from the frames after the first 20, which is useful when the start of an MD run is still equilibrating. Uniform and random selection ignore how different the structures are; use FPS (203) when you want a diverse set.
+
+**Split a dataset into training and test sets (206):**
+
+```bash
+gpumdkit.sh   # 2) Sample Structures -> 206 -> dump.xyz
+```
+
+```text
+   Elements: Li S
+   Frames: 100
+   Atoms per frame: 54-54
+ Enter the test-set fraction or frame count: 0.2
+   Test-set size: 20 frames; training-set size: 80 frames
+ Enter the selection method: 1
+   Method: uniform
+   Training frames: 80 -> dump_train.xyz
+   Test frames: 20 -> dump_test.xyz
+```
+
+Enter a number between 0 and 1 for a fraction, or a positive integer for an exact number of test frames. Check both output files with `gpumdkit.sh -analyze_comp` before using them.
+
 ## Interactive Mode
 
 Run `gpumdkit.sh` and choose `2) Sample Structures`. The entries are described in the table below.

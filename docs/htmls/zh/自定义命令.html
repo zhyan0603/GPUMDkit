@@ -146,6 +146,27 @@ Current GPUMDkit path: /home/yanzihan/software/GPUMDkit</code></pre><button clas
     gpumdkit.sh -range filtered.xyz energy
 }</code></pre><button class="copy-btn" data-copy-pre aria-label="Copy"><svg class="cp"><use href="#i-copy"/></svg><svg class="ok"><use href="#i-check"/></svg></button></div>
 <p>用法：<code>gpumdkit.sh -prep_training</code>。力的阈值 <code>30</code> 只是示例，请根据你的体系选择。</p>
+<h2 id="完整示例">完整示例</h2>
+<p>把下面两个函数放进 <code>~/.gpumdkit.in</code>：</p>
+<div class="code"><div class="cap"><i></i><i></i><i></i><span>bash</span></div><pre><code>custom_count() {
+    # count the frames of every extxyz file given on the command line
+    for f in "$@"; do
+        printf '%s: %s frames\n' "$f" "$(grep -c '^Lattice' "$f")"
+    done
+}
+
+custom_mindist() {
+    # print the overall minimum distance of every file
+    for f in "$@"; do
+        printf '%s: ' "$f"
+        gpumdkit.sh -min_dist_pbc "$f" 2&gt;&amp;1 | grep "Overall"
+    done
+}</code></pre><button class="copy-btn" data-copy-pre aria-label="Copy"><svg class="cp"><use href="#i-copy"/></svg><svg class="ok"><use href="#i-check"/></svg></button></div>
+<p>然后在任意目录运行：</p>
+<div class="code"><div class="cap"><i></i><i></i><i></i><span>bash</span></div><pre><code>gpumdkit.sh -count dump.xyz sampled_structures.xyz</code></pre><button class="copy-btn" data-copy-pre aria-label="Copy"><svg class="cp"><use href="#i-copy"/></svg><svg class="ok"><use href="#i-check"/></svg></button></div>
+<div class="code"><div class="cap"><i></i><i></i><i></i><span>text</span></div><pre><code>dump.xyz: 100 frames
+sampled_structures.xyz: 5 frames</code></pre><button class="copy-btn" data-copy-pre aria-label="Copy"><svg class="cp"><use href="#i-copy"/></svg><svg class="ok"><use href="#i-check"/></svg></button></div>
+<p><code>gpumdkit.sh -mindist dump.xyz</code> 的用法相同，会为每个文件打印 <code>Overall min_distance: … Å</code> 一行。函数里可以调用任何 GPUMDkit 选项，所以经常重复的项目专用检查可以收进一条命令。函数就是普通的 Bash：请给 <code>"$@"</code> 和 <code>"$f"</code> 加引号，这样带空格的文件名也能正常工作。</p>
 <h2 id="建议">建议</h2>
 <ul>
 <li>名称要清楚：<code>custom_analyze_nep_training</code> 比 <code>custom_ant</code> 更容易维护。</li>
@@ -153,7 +174,7 @@ Current GPUMDkit path: /home/yanzihan/software/GPUMDkit</code></pre><button clas
 <li>处理前先检查输入文件是否存在。</li>
 </ul>
 <hr />
-<p>感谢你使用 <code>GPUMDkit</code>！如有任何问题或需要进一步帮助，欢迎在我们的 GitHub 仓库提 issue 或联系 Zihan YAN (yanzihan@westlake.edu.cn)。</p><div class="doc-pn"><a href="主动学习工作流.html"><small>上一页</small><b>主动学习工作流</b></a><a class="next" href="命令参考.html"><small>下一页</small><b>命令参考</b></a></div><a class="doc-edit" href="https://github.com/zhyan0603/GPUMDkit/edit/main/docs/tutorials/zh/自定义命令.md" target="_blank" rel="noopener">编辑此页</a></article><nav class="doc-toc" aria-label="本页目录"><h6>本页目录</h6><a href="#工作原理" class="l2">工作原理</a><a href="#基础示例" class="l2">基础示例</a><a href="#第一个命令" class="l3">第一个命令</a><a href="#使用参数" class="l3">使用参数</a><a href="#调用自己的脚本" class="l3">调用自己的脚本</a><a href="#组合-gpumdkit-命令" class="l2">组合 GPUMDkit 命令</a><a href="#批量绘图" class="l3">批量绘图</a><a href="#检查训练集" class="l3">检查训练集</a><a href="#准备训练数据" class="l3">准备训练数据</a><a href="#建议" class="l2">建议</a></nav></div>
+<p>感谢你使用 <code>GPUMDkit</code>！如有任何问题或需要进一步帮助，欢迎在我们的 GitHub 仓库提 issue 或联系 Zihan YAN (yanzihan@westlake.edu.cn)。</p><div class="doc-pn"><a href="主动学习工作流.html"><small>上一页</small><b>主动学习工作流</b></a><a class="next" href="命令参考.html"><small>下一页</small><b>命令参考</b></a></div><a class="doc-edit" href="https://github.com/zhyan0603/GPUMDkit/edit/main/docs/tutorials/zh/自定义命令.md" target="_blank" rel="noopener">编辑此页</a></article><nav class="doc-toc" aria-label="本页目录"><h6>本页目录</h6><a href="#工作原理" class="l2">工作原理</a><a href="#基础示例" class="l2">基础示例</a><a href="#第一个命令" class="l3">第一个命令</a><a href="#使用参数" class="l3">使用参数</a><a href="#调用自己的脚本" class="l3">调用自己的脚本</a><a href="#组合-gpumdkit-命令" class="l2">组合 GPUMDkit 命令</a><a href="#批量绘图" class="l3">批量绘图</a><a href="#检查训练集" class="l3">检查训练集</a><a href="#准备训练数据" class="l3">准备训练数据</a><a href="#完整示例" class="l2">完整示例</a><a href="#建议" class="l2">建议</a></nav></div>
 </main>
 
 <!-- ======================================================= footer -->

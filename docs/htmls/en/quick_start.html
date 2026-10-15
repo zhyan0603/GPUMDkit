@@ -108,6 +108,26 @@ source ./install.sh</code></pre><button class="copy-btn" data-copy-pre aria-labe
 <div class="code"><div class="cap"><i></i><i></i><i></i><span>bash</span></div><pre><code>gpumdkit.sh -h
 gpumdkit.sh -doctor</code></pre><button class="copy-btn" data-copy-pre aria-label="Copy"><svg class="cp"><use href="#i-copy"/></svg><svg class="ok"><use href="#i-check"/></svg></button></div>
 <p><code>-h</code> lists all options. <code>-doctor</code> checks the Python environment and reports common and optional packages. <code>MISS</code> for an optional package is not an error; install it only when you need the feature that uses it.</p>
+<h2 id="what-a-healthy-doctor-looks-like">What a healthy <code>-doctor</code> looks like</h2>
+<p><code>gpumdkit.sh -doctor</code> prints one line per package. Your versions will differ; what matters is that nothing in <strong>Environment</strong> or <strong>Common packages</strong> is missing:</p>
+<div class="code"><div class="cap"><i></i><i></i><i></i><span>text</span></div><pre><code> Environment
+   [OK]   GPUMDkit_path    /path/to/GPUMDkit
+   [OK]   Python           3.9.19
+   [OK]   Bash             3.2.57(1)-release
+
+ Common packages
+   [OK]   numpy            1.26.4
+   [OK]   scipy            1.13.1
+   [OK]   matplotlib       3.9.2
+   [OK]   ase              3.23.0
+   [OK]   pandas           2.2.3
+   [OK]   pymatgen         2024.8.9
+
+ Optional packages
+   [MISS] dpdata           DeepMD data conversion and perturbation
+   [MISS] NepTrain         NepTrain structure sampling
+   [OK]   seaborn          0.13.2</code></pre><button class="copy-btn" data-copy-pre aria-label="Copy"><svg class="cp"><use href="#i-copy"/></svg><svg class="ok"><use href="#i-check"/></svg></button></div>
+<p><code>[MISS]</code> under <strong>Optional packages</strong> only means that the functions listed next to the name are unavailable until you install the package. A <code>[MISS]</code> under <strong>Common packages</strong> should be fixed first.</p>
 <h2 id="hello-world-example">First practice: convert a POSCAR</h2>
 <p>Run this in a new directory so no existing files are overwritten:</p>
 <div class="code"><div class="cap"><i></i><i></i><i></i><span>bash</span></div><pre><code>mkdir gpumdkit-first-check &amp;&amp; cd gpumdkit-first-check
@@ -167,7 +187,7 @@ head model.xyz</code></pre><button class="copy-btn" data-copy-pre aria-label="Co
 <p>GPUMDkit also ships English and Chinese agent skills. To find where they are installed and how to add them to your agent client, run:</p>
 <div class="code"><div class="cap"><i></i><i></i><i></i><span>bash</span></div><pre><code>gpumdkit.sh -skill</code></pre><button class="copy-btn" data-copy-pre aria-label="Copy"><svg class="cp"><use href="#i-copy"/></svg><svg class="ok"><use href="#i-check"/></svg></button></div>
 <h2 id="common-examples">Next steps</h2>
-<p>If you already have structures or trajectories, pick a task from the <a href="index.html">tutorial index</a>: format conversion, sampling, analysis, calculators, plotting, or workflows. Each page lists its inputs, outputs, and limits.</p><div class="doc-pn"><a href="index.html"><small>Previous</small><b>GPUMDkit Tutorials</b></a><a class="next" href="remote_web_console.html"><small>Next</small><b>Remote Web Console</b></a></div><a class="doc-edit" href="https://github.com/zhyan0603/GPUMDkit/edit/main/docs/tutorials/en/quick_start.md" target="_blank" rel="noopener">Edit this page</a></article><nav class="doc-toc" aria-label="On this page"><h6>On this page</h6><a href="#before-you-start" class="l2">Install</a><a href="#install-with-conda-recommended" class="l3">With Conda (recommended)</a><a href="#install-from-source-optional" class="l3">From source</a><a href="#verify-the-installation" class="l2">Check the installation</a><a href="#hello-world-example" class="l2">First practice: convert a POSCAR</a><a href="#two-modes" class="l2">Two ways to run GPUMDkit</a><a href="#interactive-mode" class="l3">Interactive mode</a><a href="#cli-mode" class="l3">Command-line mode</a><a href="#read-a-command-before-running-it" class="l2">Reading the examples</a><a href="#optional-packages" class="l2">Optional packages and agent skills</a><a href="#common-examples" class="l2">Next steps</a></nav></div>
+<p>If you already have structures or trajectories, pick a task from the <a href="index.html">tutorial index</a>: format conversion, sampling, analysis, calculators, plotting, or workflows. Each page lists its inputs, outputs, and limits.</p><div class="doc-pn"><a href="index.html"><small>Previous</small><b>GPUMDkit Tutorials</b></a><a class="next" href="remote_web_console.html"><small>Next</small><b>Remote Web Console</b></a></div><a class="doc-edit" href="https://github.com/zhyan0603/GPUMDkit/edit/main/docs/tutorials/en/quick_start.md" target="_blank" rel="noopener">Edit this page</a></article><nav class="doc-toc" aria-label="On this page"><h6>On this page</h6><a href="#before-you-start" class="l2">Install</a><a href="#install-with-conda-recommended" class="l3">With Conda (recommended)</a><a href="#install-from-source-optional" class="l3">From source</a><a href="#verify-the-installation" class="l2">Check the installation</a><a href="#what-a-healthy-doctor-looks-like" class="l2">What a healthy -doctor looks like</a><a href="#hello-world-example" class="l2">First practice: convert a POSCAR</a><a href="#two-modes" class="l2">Two ways to run GPUMDkit</a><a href="#interactive-mode" class="l3">Interactive mode</a><a href="#cli-mode" class="l3">Command-line mode</a><a href="#read-a-command-before-running-it" class="l2">Reading the examples</a><a href="#optional-packages" class="l2">Optional packages and agent skills</a><a href="#common-examples" class="l2">Next steps</a></nav></div>
 </main>
 
 <!-- ======================================================= footer -->

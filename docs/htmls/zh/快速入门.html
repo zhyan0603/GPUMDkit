@@ -108,6 +108,26 @@ source ./install.sh</code></pre><button class="copy-btn" data-copy-pre aria-labe
 <div class="code"><div class="cap"><i></i><i></i><i></i><span>bash</span></div><pre><code>gpumdkit.sh -h
 gpumdkit.sh -doctor</code></pre><button class="copy-btn" data-copy-pre aria-label="Copy"><svg class="cp"><use href="#i-copy"/></svg><svg class="ok"><use href="#i-check"/></svg></button></div>
 <p><code>-h</code> 列出全部选项；<code>-doctor</code> 检查 Python 环境，并报告常用包和可选包的状态。可选包显示 <code>MISS</code> 并不是错误，只有用到相应功能时才需要安装。</p>
+<h2 id="正常的-doctor-输出">正常的 <code>-doctor</code> 输出</h2>
+<p><code>gpumdkit.sh -doctor</code> 每个包输出一行。你的版本号会不同；关键是 <strong>Environment</strong> 和 <strong>Common packages</strong> 中没有缺失项：</p>
+<div class="code"><div class="cap"><i></i><i></i><i></i><span>text</span></div><pre><code> Environment
+   [OK]   GPUMDkit_path    /path/to/GPUMDkit
+   [OK]   Python           3.9.19
+   [OK]   Bash             3.2.57(1)-release
+
+ Common packages
+   [OK]   numpy            1.26.4
+   [OK]   scipy            1.13.1
+   [OK]   matplotlib       3.9.2
+   [OK]   ase              3.23.0
+   [OK]   pandas           2.2.3
+   [OK]   pymatgen         2024.8.9
+
+ Optional packages
+   [MISS] dpdata           DeepMD data conversion and perturbation
+   [MISS] NepTrain         NepTrain structure sampling
+   [OK]   seaborn          0.13.2</code></pre><button class="copy-btn" data-copy-pre aria-label="Copy"><svg class="cp"><use href="#i-copy"/></svg><svg class="ok"><use href="#i-check"/></svg></button></div>
+<p><strong>Optional packages</strong> 下的 <code>[MISS]</code> 只表示在你安装该包之前，名称旁列出的功能不可用。<strong>Common packages</strong> 下出现 <code>[MISS]</code> 则应优先解决。</p>
 <h2 id="hello-world-example">第一个练习：转换一个 POSCAR</h2>
 <p>请在新目录中运行，以免覆盖已有文件：</p>
 <div class="code"><div class="cap"><i></i><i></i><i></i><span>bash</span></div><pre><code>mkdir gpumdkit-first-check &amp;&amp; cd gpumdkit-first-check
@@ -167,7 +187,7 @@ head model.xyz</code></pre><button class="copy-btn" data-copy-pre aria-label="Co
 <p>GPUMDkit 还自带中英文 Agent 技能。运行下面的命令，可以查看它们的安装位置，以及如何添加到你的 Agent 客户端：</p>
 <div class="code"><div class="cap"><i></i><i></i><i></i><span>bash</span></div><pre><code>gpumdkit.sh -skill</code></pre><button class="copy-btn" data-copy-pre aria-label="Copy"><svg class="cp"><use href="#i-copy"/></svg><svg class="ok"><use href="#i-check"/></svg></button></div>
 <h2 id="common-examples">下一步</h2>
-<p>如果你已经有结构或轨迹，可以直接在<a href="index.html">教程首页</a>按任务选择：格式转换、结构采样、分析、计算、绘图或工作流。每一页都写明了输入、输出和适用范围。</p><div class="doc-pn"><a href="index.html"><small>上一页</small><b>GPUMDkit 教程</b></a><a class="next" href="远程网页控制台.html"><small>下一页</small><b>远程网页控制台</b></a></div><a class="doc-edit" href="https://github.com/zhyan0603/GPUMDkit/edit/main/docs/tutorials/zh/快速入门.md" target="_blank" rel="noopener">编辑此页</a></article><nav class="doc-toc" aria-label="本页目录"><h6>本页目录</h6><a href="#before-you-start" class="l2">安装</a><a href="#install-with-conda-recommended" class="l3">使用 Conda（推荐）</a><a href="#install-from-source-optional" class="l3">从源码安装</a><a href="#verify-the-installation" class="l2">检查安装</a><a href="#hello-world-example" class="l2">第一个练习：转换一个 POSCAR</a><a href="#two-modes" class="l2">两种使用方式</a><a href="#interactive-mode" class="l3">交互模式</a><a href="#cli-mode" class="l3">命令行模式</a><a href="#read-a-command-before-running-it" class="l2">如何阅读示例命令</a><a href="#optional-packages" class="l2">可选包与 Agent 技能</a><a href="#common-examples" class="l2">下一步</a></nav></div>
+<p>如果你已经有结构或轨迹，可以直接在<a href="index.html">教程首页</a>按任务选择：格式转换、结构采样、分析、计算、绘图或工作流。每一页都写明了输入、输出和适用范围。</p><div class="doc-pn"><a href="index.html"><small>上一页</small><b>GPUMDkit 教程</b></a><a class="next" href="远程网页控制台.html"><small>下一页</small><b>远程网页控制台</b></a></div><a class="doc-edit" href="https://github.com/zhyan0603/GPUMDkit/edit/main/docs/tutorials/zh/快速入门.md" target="_blank" rel="noopener">编辑此页</a></article><nav class="doc-toc" aria-label="本页目录"><h6>本页目录</h6><a href="#before-you-start" class="l2">安装</a><a href="#install-with-conda-recommended" class="l3">使用 Conda（推荐）</a><a href="#install-from-source-optional" class="l3">从源码安装</a><a href="#verify-the-installation" class="l2">检查安装</a><a href="#正常的-doctor-输出" class="l2">正常的 -doctor 输出</a><a href="#hello-world-example" class="l2">第一个练习：转换一个 POSCAR</a><a href="#two-modes" class="l2">两种使用方式</a><a href="#interactive-mode" class="l3">交互模式</a><a href="#cli-mode" class="l3">命令行模式</a><a href="#read-a-command-before-running-it" class="l2">如何阅读示例命令</a><a href="#optional-packages" class="l2">可选包与 Agent 技能</a><a href="#common-examples" class="l2">下一步</a></nav></div>
 </main>
 
 <!-- ======================================================= footer -->

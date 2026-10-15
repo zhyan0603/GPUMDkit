@@ -131,6 +131,61 @@
 </tr>
 </tbody>
 </table></div>
+<h2 id="a-folder-layout-that-scales">A Folder Layout That Scales</h2>
+<p>Keep each round in its own folder and never overwrite the data of an earlier round. One possible layout (the names are only a suggestion):</p>
+<div class="code"><div class="cap"><i></i><i></i><i></i><span>text</span></div><pre><code>project/
+├── round_00/
+│   ├── train.xyz          # initial dataset
+│   └── nep.txt            # model trained on it
+├── round_01/
+│   ├── md/                # GPUMD sampling directories (menu 302)
+│   ├── candidates.xyz     # frames kept after the distance filters
+│   ├── selected.xyz       # frames chosen by FPS (menu 203)
+│   ├── scf/               # DFT directories (menu 301)
+│   ├── new_reference.xyz  # converted DFT results
+│   ├── train.xyz          # merged dataset for this round
+│   └── nep.txt            # model trained in this round
+└── notes.md               # thresholds, settings and results of every round</code></pre><button class="copy-btn" data-copy-pre aria-label="Copy"><svg class="cp"><use href="#i-copy"/></svg><svg class="ok"><use href="#i-check"/></svg></button></div>
+<p>The commands of one round, in order, each described in the sections below:</p>
+<div class="tbl-wrap"><table class="tbl">
+<thead>
+<tr>
+<th>Step</th>
+<th>Command</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Prepare MD directories</td>
+<td><code>gpumdkit.sh</code> → <code>3</code> → <code>302</code></td>
+</tr>
+<tr>
+<td>Filter the trajectory</td>
+<td><code>gpumdkit.sh -min_dist_pbc dump.xyz</code>, then <code>-filter_dist_pbc dump.xyz &lt;minimum_distance&gt;</code></td>
+</tr>
+<tr>
+<td>Select structures</td>
+<td><code>gpumdkit.sh</code> → <code>2</code> → <code>203</code></td>
+</tr>
+<tr>
+<td>Prepare DFT inputs</td>
+<td><code>gpumdkit.sh</code> → <code>3</code> → <code>301</code></td>
+</tr>
+<tr>
+<td>Convert the results</td>
+<td><code>gpumdkit.sh -out2xyz &lt;scf_results_directory&gt;</code></td>
+</tr>
+<tr>
+<td>Check the new labels</td>
+<td><code>gpumdkit.sh -range &lt;new_reference.xyz&gt; force</code>, <code>-min_dist_pbc</code>, <code>-analyze_comp</code></td>
+</tr>
+<tr>
+<td>Inspect the new model</td>
+<td><code>gpumdkit.sh -plt train</code>, <code>gpumdkit.sh -plt prediction</code></td>
+</tr>
+</tbody>
+</table></div>
+<p>Every threshold and setting in this table is <strong>yours</strong> to choose; GPUMDkit does not pick them for you.</p>
 <h2 id="1-generate-candidate-structures">1. Generate candidate structures</h2>
 <p>With several starting structures or <code>run.in</code> files, prepare the GPUMD batch directories with function 302:</p>
 <div class="code"><div class="cap"><i></i><i></i><i></i><span>bash</span></div><pre><code>gpumdkit.sh  # Select: 3) Workflow -&gt; 302</code></pre><button class="copy-btn" data-copy-pre aria-label="Copy"><svg class="cp"><use href="#i-copy"/></svg><svg class="ok"><use href="#i-check"/></svg></button></div>
@@ -174,7 +229,7 @@ gpumdkit.sh -analyze_comp &lt;new_reference.xyz&gt;</code></pre><button class="c
 </ul>
 <p>A low overall RMSE alone does not show that the model is ready. Once it meets your acceptance criteria, use it for the next round of MD.</p>
 <h2 id="keep-a-record">Keep a record</h2>
-<p>For each iteration, keep the model and dataset versions, the commands and thresholds used, rejected structures, and validation results. Stop and investigate if outputs are missing or a validation problem is unresolved.</p><div class="doc-pn"><a href="polar_material_analysis.html"><small>Previous</small><b>Polar Material Analysis</b></a><a class="next" href="custom_commands.html"><small>Next</small><b>Custom Commands</b></a></div><a class="doc-edit" href="https://github.com/zhyan0603/GPUMDkit/edit/main/docs/tutorials/en/active_learning_workflow.md" target="_blank" rel="noopener">Edit this page</a></article><nav class="doc-toc" aria-label="On this page"><h6>On this page</h6><a href="#overview" class="l2">Overview</a><a href="#before-you-start" class="l2">Before you start</a><a href="#1-generate-candidate-structures" class="l2">1. Generate candidate structures</a><a href="#2-select-candidate-structures" class="l2">2. Select candidate structures</a><a href="#alternative-committee-uncertainty" class="l3">Alternative: committee uncertainty</a><a href="#3-prepare-the-dft-calculations" class="l2">3. Prepare the DFT calculations</a><a href="#4-convert-and-check-the-reference-data" class="l2">4. Convert and check the reference data</a><a href="#5-update-the-dataset-and-retrain" class="l2">5. Update the dataset and retrain</a><a href="#keep-a-record" class="l2">Keep a record</a></nav></div>
+<p>For each iteration, keep the model and dataset versions, the commands and thresholds used, rejected structures, and validation results. Stop and investigate if outputs are missing or a validation problem is unresolved.</p><div class="doc-pn"><a href="polar_material_analysis.html"><small>Previous</small><b>Polar Material Analysis</b></a><a class="next" href="custom_commands.html"><small>Next</small><b>Custom Commands</b></a></div><a class="doc-edit" href="https://github.com/zhyan0603/GPUMDkit/edit/main/docs/tutorials/en/active_learning_workflow.md" target="_blank" rel="noopener">Edit this page</a></article><nav class="doc-toc" aria-label="On this page"><h6>On this page</h6><a href="#overview" class="l2">Overview</a><a href="#before-you-start" class="l2">Before you start</a><a href="#a-folder-layout-that-scales" class="l2">A Folder Layout That Scales</a><a href="#1-generate-candidate-structures" class="l2">1. Generate candidate structures</a><a href="#2-select-candidate-structures" class="l2">2. Select candidate structures</a><a href="#alternative-committee-uncertainty" class="l3">Alternative: committee uncertainty</a><a href="#3-prepare-the-dft-calculations" class="l2">3. Prepare the DFT calculations</a><a href="#4-convert-and-check-the-reference-data" class="l2">4. Convert and check the reference data</a><a href="#5-update-the-dataset-and-retrain" class="l2">5. Update the dataset and retrain</a><a href="#keep-a-record" class="l2">Keep a record</a></nav></div>
 </main>
 
 <!-- ======================================================= footer -->
