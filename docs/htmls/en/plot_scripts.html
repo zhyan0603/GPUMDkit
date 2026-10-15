@@ -252,6 +252,27 @@ that every <code>msd.out</code> has seven columns.</p>
 |  phonon_comp    - Compare phonon band structures                                              |
 +-----------------------------------------------------------------------------------------------+</code></pre><button class="copy-btn" data-copy-pre aria-label="Copy"><svg class="cp"><use href="#i-copy"/></svg><svg class="ok"><use href="#i-check"/></svg></button></div>
 </details>
+<h2 id="a-worked-example-thermo-output">A Worked Example: Thermo Output</h2>
+<p>Run the plot in the folder that holds <code>thermo.out</code>. This example used a <strong>toy</strong> 12-column file (temperature, kinetic and potential energy, three pressures, three shear pressures and the box lengths); a real run gives your own curves.</p>
+<div class="code"><div class="cap"><i></i><i></i><i></i><span>bash</span></div><pre><code>gpumdkit.sh -plt thermo save</code></pre><button class="copy-btn" data-copy-pre aria-label="Copy"><svg class="cp"><use href="#i-copy"/></svg><svg class="ok"><use href="#i-check"/></svg></button></div>
+<div class="code"><div class="cap"><i></i><i></i><i></i><span>text</span></div><pre><code>+------------------------------------------+
+| Average values after 50% simulation time |
+| You can change it by the following line: |
+|    start_index = int(len(time) * 0.5)    |
++------------------------------------------+
+Temperature: 300.267 K
+Pressure X: 0.031 GPa
+Pressure Y: -0.020 GPa
+Pressure Z: -0.004 GPa
+Lattice Length X: 10.530 Angstrom
+Lattice Length Y: 10.530 Angstrom
+Lattice Length Z: 10.530 Angstrom
+Volume: 1167.500 Angstrom^3</code></pre><button class="copy-btn" data-copy-pre aria-label="Copy"><svg class="cp"><use href="#i-copy"/></svg><svg class="ok"><use href="#i-check"/></svg></button></div>
+<div align="center">
+  <img src="../../Gallery/toy_thermo.jpg" alt="Thermo plot of a toy thermo.out" width="70%" />
+</div>
+
+<p>Two files are written next to the data: <code>thermo.png</code> and <code>average_results.txt</code>, the averages above. The averages use the <strong>second half</strong> of the run; edit <code>start_index</code> in the script if your equilibration needs a different cut. The last panel (cell angles) stays empty for this 12-column file. Without <code>save</code> the same figure opens in a window.</p>
 <h2 id="plot-topics">Plot topics</h2>
 <ul>
 <li><a href="plot_nep.html">NEP Training and Model Analysis</a> — Plots for NEP training and prediction results, charges, descriptors, dimer curves, and atomistic energies.</li>
@@ -517,7 +538,7 @@ that every <code>msd.out</code> has seven columns.</p>
 <td><a href="plot_md_structure.html">MD &amp; structure</a></td>
 </tr>
 </tbody>
-</table></div><div class="doc-pn"><a href="analyzer_scripts.html"><small>Previous</small><b>Analyzer Scripts</b></a><a class="next" href="plot_nep.html"><small>Next</small><b>NEP Training and Model Analysis</b></a></div><a class="doc-edit" href="https://github.com/zhyan0603/GPUMDkit/edit/main/docs/tutorials/en/plot_scripts.md" target="_blank" rel="noopener">Edit this page</a></article><nav class="doc-toc" aria-label="On this page"><h6>On this page</h6><a href="#quick-access" class="l2">Quick Access</a><a href="#click-to-run-actions-in-the-web-console" class="l3">Click-to-run actions in the web console</a><a href="#where-to-start" class="l2">Where to start</a><a href="#plot-topics" class="l2">Plot topics</a><a href="#quick-reference-table" class="l2">Quick Reference Table</a></nav></div>
+</table></div><div class="doc-pn"><a href="analyzer_scripts.html"><small>Previous</small><b>Analyzer Scripts</b></a><a class="next" href="plot_nep.html"><small>Next</small><b>NEP Training and Model Analysis</b></a></div><a class="doc-edit" href="https://github.com/zhyan0603/GPUMDkit/edit/main/docs/tutorials/en/plot_scripts.md" target="_blank" rel="noopener">Edit this page</a></article><nav class="doc-toc" aria-label="On this page"><h6>On this page</h6><a href="#quick-access" class="l2">Quick Access</a><a href="#click-to-run-actions-in-the-web-console" class="l3">Click-to-run actions in the web console</a><a href="#where-to-start" class="l2">Where to start</a><a href="#a-worked-example-thermo-output" class="l2">A Worked Example: Thermo Output</a><a href="#plot-topics" class="l2">Plot topics</a><a href="#quick-reference-table" class="l2">Quick Reference Table</a></nav></div>
 </main>
 
 <!-- ======================================================= footer -->

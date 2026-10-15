@@ -242,6 +242,26 @@ fp/
 ├── sample_2/
 └── presub.sh</code></pre><button class="copy-btn" data-copy-pre aria-label="Copy"><svg class="cp"><use href="#i-copy"/></svg><svg class="ok"><use href="#i-check"/></svg></button></div>
 <p>准备结束后，把 <code>lmprun.in</code> 和 <code>nep.txt</code> 放入 <code>md/</code>，各样本目录会链接到它们。</p>
+<h2 id="完整示例对两个结构运行-302">完整示例：对两个结构运行 302</h2>
+<p>从只含 <code>a.vasp</code>（Li）和 <code>b.vasp</code>（Si）的目录出发，运行 <code>gpumdkit.sh</code>，依次选择 <code>3</code> 和 <code>302</code>。脚本会重命名结构、把每个结构转换为 extxyz，并为每个结构创建一个 sample 目录：</p>
+<div class="code"><div class="cap"><i></i><i></i><i></i><span>text</span></div><pre><code> Progress: [##################################################] 100% (2/2)
+        2 model.xyz files were generated.
+ |    ATTENTION: Place run_*.in and nep.txt in 'md' Dir.   |</code></pre><button class="copy-btn" data-copy-pre aria-label="Copy"><svg class="cp"><use href="#i-copy"/></svg><svg class="ok"><use href="#i-check"/></svg></button></div>
+<div class="code"><div class="cap"><i></i><i></i><i></i><span>text</span></div><pre><code>.
+├── md/                      # 空目录：把 nep.txt 和 run_1.in、run_2.in 放在这里
+├── presub.sh                # 遍历 sample_* 的模板；请按你的调度系统修改
+├── struct_md/
+│   ├── POSCAR_1.vasp        # 重命名后的输入结构（已从顶层目录移入）
+│   ├── POSCAR_2.vasp
+│   ├── model_1.xyz
+│   └── model_2.xyz
+├── sample_1/
+│   ├── model.xyz -&gt; ../struct_md/model_1.xyz
+│   ├── nep.txt   -&gt; ../md/nep.txt
+│   └── run.in    -&gt; ../md/run_1.in
+└── sample_2/
+    └── ...                  # 同样的链接，指向 *_2 文件</code></pre><button class="copy-btn" data-copy-pre aria-label="Copy"><svg class="cp"><use href="#i-copy"/></svg><svg class="ok"><use href="#i-check"/></svg></button></div>
+<p>脚本只创建链接，所以在你把 <code>nep.txt</code> 和 <code>run_*.in</code> 放进 <code>md/</code> 之前，<code>sample_1/nep.txt</code> 与 <code>sample_1/run.in</code> 都是悬空链接。这正是检查每个 <code>run_N.in</code> 是否确实对应结构 <code>N</code> 的时机。输入的 <code>.vasp</code> 文件会被<strong>移动</strong>到 <code>struct_md/</code> 中，无法重新生成的文件请自行保留一份副本。</p>
 <h2 id="3-运行前检查">3. 运行前检查</h2>
 <p>提交前请检查：</p>
 <ul>
@@ -252,7 +272,7 @@ fp/
 </ul>
 <p>工作流脚本与集群、模板和软件版本有关，正式批量处理前先用少量结构试运行。计算结束后，先找出失败或不完整的样本，再继续下一步。</p>
 <h2 id="4-转换计算结果">4. 转换计算结果</h2>
-<p>DFT 计算结束后，用以下命令转换：<code>gpumdkit.sh -out2xyz &lt;dir&gt;</code>（VASP，输出 <code>NEPdataset/train.xyz</code>）、<code>-out2xyz_bec &lt;dir&gt;</code>（VASP，含 Born 有效电荷），或 <code>-cp2k2xyz</code>（CP2K，在结果根目录运行，输出 <code>cp2k_exyz.xyz</code>）。详见<a href="格式转换.html">格式转换</a>；这些步骤如何组成完整的 NEP 数据迭代，见<a href="主动学习工作流.html">主动学习工作流</a>。</p><div class="doc-pn"><a href="结构采样.html"><small>上一页</small><b>结构采样</b></a><a class="next" href="计算器脚本.html"><small>下一页</small><b>计算器脚本</b></a></div><a class="doc-edit" href="https://github.com/zhyan0603/GPUMDkit/edit/main/docs/tutorials/zh/工作流脚本.md" target="_blank" rel="noopener">编辑此页</a></article><nav class="doc-toc" aria-label="本页目录"><h6>本页目录</h6><a href="#交互入口" class="l2">交互入口</a><a href="#scf" class="l2">1. 准备 DFT 单点计算</a><a href="#vasp-单点预处理301-1" class="l3">VASP 单点预处理（301 -&gt; 1）</a><a href="#cp2k-单点预处理301-2" class="l3">CP2K 单点预处理（301 -&gt; 2）</a><a href="#md" class="l2">2. 准备 MD 采样目录</a><a href="#gpumd302" class="l3">GPUMD（302）</a><a href="#lammps303" class="l3">LAMMPS（303）</a><a href="#3-运行前检查" class="l2">3. 运行前检查</a><a href="#4-转换计算结果" class="l2">4. 转换计算结果</a></nav></div>
+<p>DFT 计算结束后，用以下命令转换：<code>gpumdkit.sh -out2xyz &lt;dir&gt;</code>（VASP，输出 <code>NEPdataset/train.xyz</code>）、<code>-out2xyz_bec &lt;dir&gt;</code>（VASP，含 Born 有效电荷），或 <code>-cp2k2xyz</code>（CP2K，在结果根目录运行，输出 <code>cp2k_exyz.xyz</code>）。详见<a href="格式转换.html">格式转换</a>；这些步骤如何组成完整的 NEP 数据迭代，见<a href="主动学习工作流.html">主动学习工作流</a>。</p><div class="doc-pn"><a href="结构采样.html"><small>上一页</small><b>结构采样</b></a><a class="next" href="计算器脚本.html"><small>下一页</small><b>计算器脚本</b></a></div><a class="doc-edit" href="https://github.com/zhyan0603/GPUMDkit/edit/main/docs/tutorials/zh/工作流脚本.md" target="_blank" rel="noopener">编辑此页</a></article><nav class="doc-toc" aria-label="本页目录"><h6>本页目录</h6><a href="#交互入口" class="l2">交互入口</a><a href="#scf" class="l2">1. 准备 DFT 单点计算</a><a href="#vasp-单点预处理301-1" class="l3">VASP 单点预处理（301 -&gt; 1）</a><a href="#cp2k-单点预处理301-2" class="l3">CP2K 单点预处理（301 -&gt; 2）</a><a href="#md" class="l2">2. 准备 MD 采样目录</a><a href="#gpumd302" class="l3">GPUMD（302）</a><a href="#lammps303" class="l3">LAMMPS（303）</a><a href="#完整示例对两个结构运行-302" class="l2">完整示例：对两个结构运行 302</a><a href="#3-运行前检查" class="l2">3. 运行前检查</a><a href="#4-转换计算结果" class="l2">4. 转换计算结果</a></nav></div>
 </main>
 
 <!-- ======================================================= footer -->

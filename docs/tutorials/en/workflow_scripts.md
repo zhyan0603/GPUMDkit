@@ -218,6 +218,35 @@ current directory/
 
 After preparation, put `lmprun.in` and `nep.txt` into `md/`; every sample directory links to them.
 
+## A Worked Example: 302 on Two Structures
+
+Starting from a folder that only contains `a.vasp` (Li) and `b.vasp` (Si), run `gpumdkit.sh`, choose `3` and then `302`. The script renames the structures, converts each to extxyz and creates one sample folder per structure:
+
+```text
+ Progress: [##################################################] 100% (2/2)
+        2 model.xyz files were generated.
+ |    ATTENTION: Place run_*.in and nep.txt in 'md' Dir.   |
+```
+
+```text
+.
+├── md/                      # empty: put nep.txt and run_1.in, run_2.in here
+├── presub.sh                # template loop over sample_*; adapt it to your scheduler
+├── struct_md/
+│   ├── POSCAR_1.vasp        # the input structures, renamed (moved out of the top folder)
+│   ├── POSCAR_2.vasp
+│   ├── model_1.xyz
+│   └── model_2.xyz
+├── sample_1/
+│   ├── model.xyz -> ../struct_md/model_1.xyz
+│   ├── nep.txt   -> ../md/nep.txt
+│   └── run.in    -> ../md/run_1.in
+└── sample_2/
+    └── ...                  # the same links, pointing to *_2 files
+```
+
+Only links are created, so `sample_1/nep.txt` and `sample_1/run.in` stay dangling until you place `nep.txt` and the `run_*.in` files in `md/`. That is the moment to check that each `run_N.in` really belongs to structure `N`. The input `.vasp` files are **moved** into `struct_md/`, so keep your own copy of anything you cannot regenerate.
+
 ## 3. Check before running
 
 Before submitting, check:

@@ -113,7 +113,16 @@ the agent performs the installation.</p>
 <li>“Inspect my GPUMD outputs and plot the diffusion results.”</li>
 </ul>
 <p>If scientific parameters are unclear, the agent should ask before choosing them;
-long-running or expensive calculations require your confirmation first.</p><div class="doc-pn"><a href="remote_web_console.html"><small>Previous</small><b>Remote Web Console</b></a><a class="next" href="format_conversion.html"><small>Next</small><b>Format Conversion</b></a></div><a class="doc-edit" href="https://github.com/zhyan0603/GPUMDkit/edit/main/docs/tutorials/en/simulation_and_postprocessing.md" target="_blank" rel="noopener">Edit this page</a></article><nav class="doc-toc"></nav></div>
+long-running or expensive calculations require your confirmation first.</p>
+<h2 id="example-requests">Example Requests</h2>
+<p>Ask in plain language and name the files. The agent routes the request to the right GPUMDkit commands and shows them before running anything that changes files or takes time. Requests that work well:</p>
+<ul>
+<li>“List the compositions in <code>train.xyz</code>, report the energy and force ranges, and tell me if any two atoms are closer than 1 Å.” (analysis only; nothing is modified)</li>
+<li>“Convert the OUTCAR files under <code>scf/</code> to extxyz and check the result before I train.”</li>
+<li>“Plot the MSD from <code>msd.out</code> and tell me whether the slope looks converged.”</li>
+<li>“Explain what the <code>ensemble</code> line in my <code>run.in</code> does.”</li>
+</ul>
+<p>The agent should stop and ask you in these cases: a scientific choice is open (a temperature, a cutoff, a distance threshold, which species is mobile), a command would overwrite or delete files, or a step would start a simulation, a training or a scheduler job. Answer with the value you want, or tell it to leave the choice to you.</p><div class="doc-pn"><a href="remote_web_console.html"><small>Previous</small><b>Remote Web Console</b></a><a class="next" href="format_conversion.html"><small>Next</small><b>Format Conversion</b></a></div><a class="doc-edit" href="https://github.com/zhyan0603/GPUMDkit/edit/main/docs/tutorials/en/simulation_and_postprocessing.md" target="_blank" rel="noopener">Edit this page</a></article><nav class="doc-toc" aria-label="On this page"><h6>On this page</h6><a href="#example-requests" class="l2">Example Requests</a></nav></div>
 </main>
 
 <!-- ======================================================= footer -->

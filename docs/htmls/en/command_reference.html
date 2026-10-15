@@ -94,6 +94,39 @@
 <main>
 <section class="man-hero doc-hero"><div class="container"><div class="crumb"><a href="../../manual.html">Manual</a><span>/</span><span>Reference</span><span>/</span><span>Command Reference</span></div><h1 class="h-section">Command Reference</h1><p class="lead">This page lists the stable GPUMDkit command-line shortcuts. Interactive mode is available for workflows with many choices.</p></div></section>
 <div class="container man doc"><aside class="man-side" aria-label="Pages"><h6>Start</h6><a href="index.html" class=""><span>GPUMDkit Tutorials</span></a><a href="quick_start.html" class=""><span>Quick Start</span></a><a href="remote_web_console.html" class=""><span>Remote Web Console</span></a><a href="simulation_and_postprocessing.html" class=""><span>GPUMDkit Agent Skill</span></a><h6>Toolbox</h6><a href="format_conversion.html" class=""><span>Format Conversion</span></a><a href="structure_sampling.html" class=""><span>Structure Sampling</span></a><a href="workflow_scripts.html" class=""><span>Workflow Scripts</span></a><a href="calculator_scripts.html" class=""><span>Calculator Scripts</span></a><a href="analyzer_scripts.html" class=""><span>Analyzer Scripts</span></a><a href="plot_scripts.html" class=""><span>Plot Scripts</span></a><a href="plot_nep.html" class="sub"><span>NEP Training and Model Analysis</span></a><a href="plot_md_structure.html" class="sub"><span>MD and Structure</span></a><a href="plot_diffusion.html" class="sub"><span>Diffusion and Ionic Transport</span></a><a href="plot_heat_phonon.html" class="sub"><span>Heat Transport and Phonons</span></a><a href="polar_material_analysis.html" class=""><span>Polar Material Analysis</span></a><h6>Guides</h6><a href="active_learning_workflow.html" class=""><span>Active Learning Workflow</span></a><a href="custom_commands.html" class=""><span>Custom Commands</span></a><h6>Reference</h6><a href="command_reference.html" class="on"><span>Command Reference</span></a><h6>Contribute</h6><a href="contributing_to_gpumdkit.html" class=""><span>Contributing to GPUMDkit</span></a></aside><article class="man-body chap doc-body"><p>Each table below lists the command, its syntax, and what it does; the same list is printed by <code>gpumdkit.sh -h</code>. Commands backed by Python scripts also accept <code>-h</code> for their own argument help, for example <code>gpumdkit.sh -calc msd -h</code>. New to GPUMDkit? Start with <a href="quick_start.html">Quick Start</a>.</p>
+<h2 id="finding-the-right-command">Finding the Right Command</h2>
+<div class="tbl-wrap"><table class="tbl">
+<thead>
+<tr>
+<th>I want to…</th>
+<th>Run</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>list everything</td>
+<td><code>gpumdkit.sh -h</code></td>
+</tr>
+<tr>
+<td>see the arguments of one option</td>
+<td><code>gpumdkit.sh -calc msd -h</code>, <code>gpumdkit.sh -range -h</code></td>
+</tr>
+<tr>
+<td>list plot types</td>
+<td><code>gpumdkit.sh -plt -h</code></td>
+</tr>
+<tr>
+<td>check my installation</td>
+<td><code>gpumdkit.sh -doctor</code></td>
+</tr>
+<tr>
+<td>browse a folder in the browser</td>
+<td><code>gpumdkit.sh -server</code></td>
+</tr>
+</tbody>
+</table></div>
+<p>To search by keyword, pipe the help through <code>grep</code>: <code>gpumdkit.sh -h | grep -i msd</code>.</p>
+<p>The command tables below follow the order of the interactive menu: conversion, sampling, calculators, analyzers, plots, utilities. The <strong>Syntax</strong> column is the exact form to type; <code>&lt;...&gt;</code> is required, <code>[...]</code> is optional.</p>
 <h2 id="main">Main</h2>
 <div class="tbl-wrap"><table class="tbl">
 <thead>
@@ -480,7 +513,7 @@ neuroevolution potential models,” <em>Journal of Open Source Software</em> <st
 <a href="https://github.com/zhyan0603/GPUMDkit/tree/main/Scripts/utils/nep_modifier" target="_blank" rel="noopener">NEP modifier README</a>
 and the <a href="https://calorine.materialsmodeling.org/dev/get_started/modifying_models.html" target="_blank" rel="noopener">official calorine model-modification tutorial</a>.</p>
 <hr />
-<p>The tables on this page are kept in sync with <code>docs/command_reference.tsv</code>.</p><div class="doc-pn"><a href="custom_commands.html"><small>Previous</small><b>Custom Commands</b></a><a class="next" href="contributing_to_gpumdkit.html"><small>Next</small><b>Contributing to GPUMDkit</b></a></div><a class="doc-edit" href="https://github.com/zhyan0603/GPUMDkit/edit/main/docs/tutorials/en/command_reference.md" target="_blank" rel="noopener">Edit this page</a></article><nav class="doc-toc" aria-label="On this page"><h6>On this page</h6><a href="#main" class="l2">Main</a><a href="#format-conversion" class="l2">Format Conversion</a><a href="#calculators" class="l2">Calculators</a><a href="#analyzers" class="l2">Analyzers</a><a href="#visualization" class="l2">Visualization</a><a href="#utilities" class="l2">Utilities</a><a href="#nep-model-modifier" class="l3">NEP model modifier</a></nav></div>
+<p>The tables on this page are kept in sync with <code>docs/command_reference.tsv</code>.</p><div class="doc-pn"><a href="custom_commands.html"><small>Previous</small><b>Custom Commands</b></a><a class="next" href="contributing_to_gpumdkit.html"><small>Next</small><b>Contributing to GPUMDkit</b></a></div><a class="doc-edit" href="https://github.com/zhyan0603/GPUMDkit/edit/main/docs/tutorials/en/command_reference.md" target="_blank" rel="noopener">Edit this page</a></article><nav class="doc-toc" aria-label="On this page"><h6>On this page</h6><a href="#finding-the-right-command" class="l2">Finding the Right Command</a><a href="#main" class="l2">Main</a><a href="#format-conversion" class="l2">Format Conversion</a><a href="#calculators" class="l2">Calculators</a><a href="#analyzers" class="l2">Analyzers</a><a href="#visualization" class="l2">Visualization</a><a href="#utilities" class="l2">Utilities</a><a href="#nep-model-modifier" class="l3">NEP model modifier</a></nav></div>
 </main>
 
 <!-- ======================================================= footer -->

@@ -248,6 +248,26 @@ and <code>presub.sh</code>:</p>
 ├── sample_2/
 └── presub.sh</code></pre><button class="copy-btn" data-copy-pre aria-label="Copy"><svg class="cp"><use href="#i-copy"/></svg><svg class="ok"><use href="#i-check"/></svg></button></div>
 <p>After preparation, put <code>lmprun.in</code> and <code>nep.txt</code> into <code>md/</code>; every sample directory links to them.</p>
+<h2 id="a-worked-example-302-on-two-structures">A Worked Example: 302 on Two Structures</h2>
+<p>Starting from a folder that only contains <code>a.vasp</code> (Li) and <code>b.vasp</code> (Si), run <code>gpumdkit.sh</code>, choose <code>3</code> and then <code>302</code>. The script renames the structures, converts each to extxyz and creates one sample folder per structure:</p>
+<div class="code"><div class="cap"><i></i><i></i><i></i><span>text</span></div><pre><code> Progress: [##################################################] 100% (2/2)
+        2 model.xyz files were generated.
+ |    ATTENTION: Place run_*.in and nep.txt in 'md' Dir.   |</code></pre><button class="copy-btn" data-copy-pre aria-label="Copy"><svg class="cp"><use href="#i-copy"/></svg><svg class="ok"><use href="#i-check"/></svg></button></div>
+<div class="code"><div class="cap"><i></i><i></i><i></i><span>text</span></div><pre><code>.
+├── md/                      # empty: put nep.txt and run_1.in, run_2.in here
+├── presub.sh                # template loop over sample_*; adapt it to your scheduler
+├── struct_md/
+│   ├── POSCAR_1.vasp        # the input structures, renamed (moved out of the top folder)
+│   ├── POSCAR_2.vasp
+│   ├── model_1.xyz
+│   └── model_2.xyz
+├── sample_1/
+│   ├── model.xyz -&gt; ../struct_md/model_1.xyz
+│   ├── nep.txt   -&gt; ../md/nep.txt
+│   └── run.in    -&gt; ../md/run_1.in
+└── sample_2/
+    └── ...                  # the same links, pointing to *_2 files</code></pre><button class="copy-btn" data-copy-pre aria-label="Copy"><svg class="cp"><use href="#i-copy"/></svg><svg class="ok"><use href="#i-check"/></svg></button></div>
+<p>Only links are created, so <code>sample_1/nep.txt</code> and <code>sample_1/run.in</code> stay dangling until you place <code>nep.txt</code> and the <code>run_*.in</code> files in <code>md/</code>. That is the moment to check that each <code>run_N.in</code> really belongs to structure <code>N</code>. The input <code>.vasp</code> files are <strong>moved</strong> into <code>struct_md/</code>, so keep your own copy of anything you cannot regenerate.</p>
 <h2 id="3-check-before-running">3. Check before running</h2>
 <p>Before submitting, check:</p>
 <ul>
@@ -258,7 +278,7 @@ and <code>presub.sh</code>:</p>
 </ul>
 <p>Workflow scripts depend on your cluster, templates, and software versions, so try a few structures first. After the runs, look for failed or incomplete samples before continuing.</p>
 <h2 id="4-convert-the-results">4. Convert the results</h2>
-<p>After the DFT runs finish, convert them with <code>gpumdkit.sh -out2xyz &lt;dir&gt;</code> (VASP, writes <code>NEPdataset/train.xyz</code>), <code>-out2xyz_bec &lt;dir&gt;</code> (VASP with Born effective charges), or <code>-cp2k2xyz</code> (CP2K, run from the results root, writes <code>cp2k_exyz.xyz</code>). See <a href="format_conversion.html">Format Conversion</a> for details, and <a href="active_learning_workflow.html">Active Learning Workflow</a> for how these steps fit into a full NEP data iteration.</p><div class="doc-pn"><a href="structure_sampling.html"><small>Previous</small><b>Structure Sampling</b></a><a class="next" href="calculator_scripts.html"><small>Next</small><b>Calculator Scripts</b></a></div><a class="doc-edit" href="https://github.com/zhyan0603/GPUMDkit/edit/main/docs/tutorials/en/workflow_scripts.md" target="_blank" rel="noopener">Edit this page</a></article><nav class="doc-toc" aria-label="On this page"><h6>On this page</h6><a href="#interactive-entry" class="l2">Interactive Entry</a><a href="#scf-batch-pretreatment" class="l2">1. Prepare DFT single-point calculations</a><a href="#vasp-scf-preparation-301-1" class="l3">VASP SCF preparation (301 -&gt; 1)</a><a href="#cp2k-scf-preparation-301-2" class="l3">CP2K SCF preparation (301 -&gt; 2)</a><a href="#md-sampling-pretreatment" class="l2">2. Prepare MD sampling directories</a><a href="#gpumd-302" class="l3">GPUMD (302)</a><a href="#lammps-303" class="l3">LAMMPS (303)</a><a href="#3-check-before-running" class="l2">3. Check before running</a><a href="#4-convert-the-results" class="l2">4. Convert the results</a></nav></div>
+<p>After the DFT runs finish, convert them with <code>gpumdkit.sh -out2xyz &lt;dir&gt;</code> (VASP, writes <code>NEPdataset/train.xyz</code>), <code>-out2xyz_bec &lt;dir&gt;</code> (VASP with Born effective charges), or <code>-cp2k2xyz</code> (CP2K, run from the results root, writes <code>cp2k_exyz.xyz</code>). See <a href="format_conversion.html">Format Conversion</a> for details, and <a href="active_learning_workflow.html">Active Learning Workflow</a> for how these steps fit into a full NEP data iteration.</p><div class="doc-pn"><a href="structure_sampling.html"><small>Previous</small><b>Structure Sampling</b></a><a class="next" href="calculator_scripts.html"><small>Next</small><b>Calculator Scripts</b></a></div><a class="doc-edit" href="https://github.com/zhyan0603/GPUMDkit/edit/main/docs/tutorials/en/workflow_scripts.md" target="_blank" rel="noopener">Edit this page</a></article><nav class="doc-toc" aria-label="On this page"><h6>On this page</h6><a href="#interactive-entry" class="l2">Interactive Entry</a><a href="#scf-batch-pretreatment" class="l2">1. Prepare DFT single-point calculations</a><a href="#vasp-scf-preparation-301-1" class="l3">VASP SCF preparation (301 -&gt; 1)</a><a href="#cp2k-scf-preparation-301-2" class="l3">CP2K SCF preparation (301 -&gt; 2)</a><a href="#md-sampling-pretreatment" class="l2">2. Prepare MD sampling directories</a><a href="#gpumd-302" class="l3">GPUMD (302)</a><a href="#lammps-303" class="l3">LAMMPS (303)</a><a href="#a-worked-example-302-on-two-structures" class="l2">A Worked Example: 302 on Two Structures</a><a href="#3-check-before-running" class="l2">3. Check before running</a><a href="#4-convert-the-results" class="l2">4. Convert the results</a></nav></div>
 </main>
 
 <!-- ======================================================= footer -->

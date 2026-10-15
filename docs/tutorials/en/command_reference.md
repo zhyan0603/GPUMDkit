@@ -5,6 +5,20 @@
 
 Each table below lists the command, its syntax, and what it does; the same list is printed by `gpumdkit.sh -h`. Commands backed by Python scripts also accept `-h` for their own argument help, for example `gpumdkit.sh -calc msd -h`. New to GPUMDkit? Start with [Quick Start](quick_start.md).
 
+## Finding the Right Command
+
+| I want to… | Run |
+|---|---|
+| list everything | `gpumdkit.sh -h` |
+| see the arguments of one option | `gpumdkit.sh -calc msd -h`, `gpumdkit.sh -range -h` |
+| list plot types | `gpumdkit.sh -plt -h` |
+| check my installation | `gpumdkit.sh -doctor` |
+| browse a folder in the browser | `gpumdkit.sh -server` |
+
+To search by keyword, pipe the help through `grep`: `gpumdkit.sh -h | grep -i msd`.
+
+The command tables below follow the order of the interactive menu: conversion, sampling, calculators, analyzers, plots, utilities. The **Syntax** column is the exact form to type; `<...>` is required, `[...]` is optional.
+
 ## Main
 
 | Command | Syntax | Description |

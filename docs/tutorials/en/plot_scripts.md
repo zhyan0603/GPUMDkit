@@ -119,6 +119,36 @@ Running `gpumdkit.sh -plt` prints the plotting command menu:
 </details>
 
 
+## A Worked Example: Thermo Output
+
+Run the plot in the folder that holds `thermo.out`. This example used a **toy** 12-column file (temperature, kinetic and potential energy, three pressures, three shear pressures and the box lengths); a real run gives your own curves.
+
+```bash
+gpumdkit.sh -plt thermo save
+```
+
+```text
++------------------------------------------+
+| Average values after 50% simulation time |
+| You can change it by the following line: |
+|    start_index = int(len(time) * 0.5)    |
++------------------------------------------+
+Temperature: 300.267 K
+Pressure X: 0.031 GPa
+Pressure Y: -0.020 GPa
+Pressure Z: -0.004 GPa
+Lattice Length X: 10.530 Angstrom
+Lattice Length Y: 10.530 Angstrom
+Lattice Length Z: 10.530 Angstrom
+Volume: 1167.500 Angstrom^3
+```
+
+<div align="center">
+  <img src="../../Gallery/toy_thermo.jpg" alt="Thermo plot of a toy thermo.out" width="70%" />
+</div>
+
+Two files are written next to the data: `thermo.png` and `average_results.txt`, the averages above. The averages use the **second half** of the run; edit `start_index` in the script if your equilibration needs a different cut. The last panel (cell angles) stays empty for this 12-column file. Without `save` the same figure opens in a window.
+
 ## Plot topics
 
 - [NEP Training and Model Analysis](plot_nep.md) — Plots for NEP training and prediction results, charges, descriptors, dimer curves, and atomistic energies.

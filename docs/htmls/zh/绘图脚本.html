@@ -249,6 +249,27 @@ terminal 中显式输入这些选项。</p>
 |  phonon_comp    - Compare phonon band structures                                              |
 +-----------------------------------------------------------------------------------------------+</code></pre><button class="copy-btn" data-copy-pre aria-label="Copy"><svg class="cp"><use href="#i-copy"/></svg><svg class="ok"><use href="#i-check"/></svg></button></div>
 </details>
+<h2 id="完整示例thermo-输出">完整示例：Thermo 输出</h2>
+<p>请在存放 <code>thermo.out</code> 的目录中运行绘图。本示例使用一个<strong>玩具</strong> 12 列文件（温度、动能和势能、三个压力、三个剪切压力以及盒子边长）；真实运行得到的是你自己的曲线。</p>
+<div class="code"><div class="cap"><i></i><i></i><i></i><span>bash</span></div><pre><code>gpumdkit.sh -plt thermo save</code></pre><button class="copy-btn" data-copy-pre aria-label="Copy"><svg class="cp"><use href="#i-copy"/></svg><svg class="ok"><use href="#i-check"/></svg></button></div>
+<div class="code"><div class="cap"><i></i><i></i><i></i><span>text</span></div><pre><code>+------------------------------------------+
+| Average values after 50% simulation time |
+| You can change it by the following line: |
+|    start_index = int(len(time) * 0.5)    |
++------------------------------------------+
+Temperature: 300.267 K
+Pressure X: 0.031 GPa
+Pressure Y: -0.020 GPa
+Pressure Z: -0.004 GPa
+Lattice Length X: 10.530 Angstrom
+Lattice Length Y: 10.530 Angstrom
+Lattice Length Z: 10.530 Angstrom
+Volume: 1167.500 Angstrom^3</code></pre><button class="copy-btn" data-copy-pre aria-label="Copy"><svg class="cp"><use href="#i-copy"/></svg><svg class="ok"><use href="#i-check"/></svg></button></div>
+<div align="center">
+  <img src="../../Gallery/toy_thermo.jpg" alt="玩具 thermo.out 的 thermo 图" width="70%" />
+</div>
+
+<p>数据旁边会写出两个文件：<code>thermo.png</code> 和保存上述平均值的 <code>average_results.txt</code>。平均值取自运行的<strong>后半段</strong>；如果你的平衡过程需要不同的截取点，请修改脚本中的 <code>start_index</code>。对这个 12 列文件，最后一个面板（晶胞角度）为空。不加 <code>save</code> 时，同一张图会在窗口中打开。</p>
 <h2 id="绘图分类">绘图分类</h2>
 <ul>
 <li><a href="NEP训练绘图.html">NEP 训练与模型分析</a> — NEP 训练和预测结果、电荷、描述符、dimer 曲线以及原子能量的绘图。</li>
@@ -508,7 +529,7 @@ terminal 中显式输入这些选项。</p>
 <td><a href="MD与结构绘图.html">MD 与结构</a></td>
 </tr>
 </tbody>
-</table></div><div class="doc-pn"><a href="分析工具.html"><small>上一页</small><b>分析工具</b></a><a class="next" href="NEP训练绘图.html"><small>下一页</small><b>NEP 训练与模型分析</b></a></div><a class="doc-edit" href="https://github.com/zhyan0603/GPUMDkit/edit/main/docs/tutorials/zh/绘图脚本.md" target="_blank" rel="noopener">编辑此页</a></article><nav class="doc-toc" aria-label="本页目录"><h6>本页目录</h6><a href="#快速入口" class="l2">快速入口</a><a href="#网页控制台中的点击绘图操作" class="l3">网页控制台中的点击绘图操作</a><a href="#从哪里开始" class="l2">从哪里开始</a><a href="#绘图分类" class="l2">绘图分类</a><a href="#快速参考表" class="l2">快速参考表</a></nav></div>
+</table></div><div class="doc-pn"><a href="分析工具.html"><small>上一页</small><b>分析工具</b></a><a class="next" href="NEP训练绘图.html"><small>下一页</small><b>NEP 训练与模型分析</b></a></div><a class="doc-edit" href="https://github.com/zhyan0603/GPUMDkit/edit/main/docs/tutorials/zh/绘图脚本.md" target="_blank" rel="noopener">编辑此页</a></article><nav class="doc-toc" aria-label="本页目录"><h6>本页目录</h6><a href="#快速入口" class="l2">快速入口</a><a href="#网页控制台中的点击绘图操作" class="l3">网页控制台中的点击绘图操作</a><a href="#从哪里开始" class="l2">从哪里开始</a><a href="#完整示例thermo-输出" class="l2">完整示例：Thermo 输出</a><a href="#绘图分类" class="l2">绘图分类</a><a href="#快速参考表" class="l2">快速参考表</a></nav></div>
 </main>
 
 <!-- ======================================================= footer -->

@@ -94,6 +94,39 @@
 <main>
 <section class="man-hero doc-hero"><div class="container"><div class="crumb"><a href="../../manual.html">手册</a><span>/</span><span>参考</span><span>/</span><span>命令参考</span></div><h1 class="h-section">命令参考</h1><p class="lead">本页列出 GPUMDkit 稳定的命令行快捷入口。对于参数较多、需要选择的任务，也可以使用交互模式。</p></div></section>
 <div class="container man doc"><aside class="man-side" aria-label="Pages"><h6>开始</h6><a href="index.html" class=""><span>GPUMDkit 教程</span></a><a href="快速入门.html" class=""><span>快速入门</span></a><a href="远程网页控制台.html" class=""><span>远程网页控制台</span></a><a href="模拟与后处理.html" class=""><span>GPUMDkit Agent Skill</span></a><h6>工具箱</h6><a href="格式转换.html" class=""><span>格式转换</span></a><a href="结构采样.html" class=""><span>结构采样</span></a><a href="工作流脚本.html" class=""><span>工作流脚本</span></a><a href="计算器脚本.html" class=""><span>计算器脚本</span></a><a href="分析工具.html" class=""><span>分析工具</span></a><a href="绘图脚本.html" class=""><span>绘图脚本</span></a><a href="NEP训练绘图.html" class="sub"><span>NEP 训练与模型分析</span></a><a href="MD与结构绘图.html" class="sub"><span>MD 与结构</span></a><a href="扩散绘图.html" class="sub"><span>扩散与离子输运</span></a><a href="热输运与声子绘图.html" class="sub"><span>热输运与声子</span></a><a href="极性材料分析.html" class=""><span>极性材料分析</span></a><h6>指南</h6><a href="主动学习工作流.html" class=""><span>主动学习工作流</span></a><a href="自定义命令.html" class=""><span>自定义命令</span></a><h6>参考</h6><a href="命令参考.html" class="on"><span>命令参考</span></a><h6>贡献</h6><a href="贡献指南.html" class=""><span>为 GPUMDkit 贡献代码</span></a></aside><article class="man-body chap doc-body"><p>下面各表列出了命令、语法和用途，与 <code>gpumdkit.sh -h</code> 输出的列表一致。由 Python 脚本实现的命令还可以用 <code>-h</code> 查看各自的参数说明，例如 <code>gpumdkit.sh -calc msd -h</code>。第一次使用 GPUMDkit，请先阅读<a href="快速入门.html">快速入门</a>。</p>
+<h2 id="如何找到合适的命令">如何找到合适的命令</h2>
+<div class="tbl-wrap"><table class="tbl">
+<thead>
+<tr>
+<th>我想……</th>
+<th>运行</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>列出全部命令</td>
+<td><code>gpumdkit.sh -h</code></td>
+</tr>
+<tr>
+<td>查看某个选项的参数</td>
+<td><code>gpumdkit.sh -calc msd -h</code>、<code>gpumdkit.sh -range -h</code></td>
+</tr>
+<tr>
+<td>列出绘图类型</td>
+<td><code>gpumdkit.sh -plt -h</code></td>
+</tr>
+<tr>
+<td>检查安装</td>
+<td><code>gpumdkit.sh -doctor</code></td>
+</tr>
+<tr>
+<td>在浏览器中查看目录</td>
+<td><code>gpumdkit.sh -server</code></td>
+</tr>
+</tbody>
+</table></div>
+<p>按关键字搜索时，可以把帮助输出交给 <code>grep</code>：<code>gpumdkit.sh -h | grep -i msd</code>。</p>
+<p>下面的命令表按交互菜单的顺序排列：转换、采样、计算器、分析器、绘图、工具。<strong>Syntax</strong> 列是应当输入的确切形式；<code>&lt;...&gt;</code> 为必填，<code>[...]</code> 为可选。</p>
 <h2 id="主命令">主命令</h2>
 <div class="tbl-wrap"><table class="tbl">
 <thead>
@@ -475,7 +508,7 @@ neuroevolution potential models", <em>Journal of Open Source Software</em> <stro
 <a href="https://github.com/zhyan0603/GPUMDkit/tree/main/Scripts/utils/nep_modifier" target="_blank" rel="noopener">NEP modifier README</a>
 和 <a href="https://calorine.materialsmodeling.org/dev/get_started/modifying_models.html" target="_blank" rel="noopener">calorine 官方模型修改教程</a>。</p>
 <hr />
-<p>本页表格与 <code>docs/command_reference.tsv</code> 保持同步。</p><div class="doc-pn"><a href="自定义命令.html"><small>上一页</small><b>自定义命令</b></a><a class="next" href="贡献指南.html"><small>下一页</small><b>为 GPUMDkit 贡献代码</b></a></div><a class="doc-edit" href="https://github.com/zhyan0603/GPUMDkit/edit/main/docs/tutorials/zh/命令参考.md" target="_blank" rel="noopener">编辑此页</a></article><nav class="doc-toc" aria-label="本页目录"><h6>本页目录</h6><a href="#主命令" class="l2">主命令</a><a href="#格式转换" class="l2">格式转换</a><a href="#计算器" class="l2">计算器</a><a href="#分析工具" class="l2">分析工具</a><a href="#可视化" class="l2">可视化</a><a href="#工具" class="l2">工具</a><a href="#nep-模型修改器" class="l3">NEP 模型修改器</a></nav></div>
+<p>本页表格与 <code>docs/command_reference.tsv</code> 保持同步。</p><div class="doc-pn"><a href="自定义命令.html"><small>上一页</small><b>自定义命令</b></a><a class="next" href="贡献指南.html"><small>下一页</small><b>为 GPUMDkit 贡献代码</b></a></div><a class="doc-edit" href="https://github.com/zhyan0603/GPUMDkit/edit/main/docs/tutorials/zh/命令参考.md" target="_blank" rel="noopener">编辑此页</a></article><nav class="doc-toc" aria-label="本页目录"><h6>本页目录</h6><a href="#如何找到合适的命令" class="l2">如何找到合适的命令</a><a href="#主命令" class="l2">主命令</a><a href="#格式转换" class="l2">格式转换</a><a href="#计算器" class="l2">计算器</a><a href="#分析工具" class="l2">分析工具</a><a href="#可视化" class="l2">可视化</a><a href="#工具" class="l2">工具</a><a href="#nep-模型修改器" class="l3">NEP 模型修改器</a></nav></div>
 </main>
 
 <!-- ======================================================= footer -->
