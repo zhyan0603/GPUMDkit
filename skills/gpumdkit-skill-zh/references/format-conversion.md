@@ -225,4 +225,4 @@ gpumdkit.sh -replicate POSCAR supercell_256.vasp 256
 
 ## 详细文档
 
-用户指南请参见 `${GPUMDkit_path}/docs/tutorials/en/format_conversion.md` 或中文对应版本。
+用户指南请参见 `${GPUMDkit_path}/docs/tutorials/zh/格式转换.md`。

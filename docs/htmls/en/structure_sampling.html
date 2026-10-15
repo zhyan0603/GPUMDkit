@@ -2280,6 +2280,7 @@ threshold.</p>
 <ul>
 <li><code>selected.xyz</code></li>
 </ul>
+<p><code>active.xyz</code> holds only the frames above the threshold of the GPUMD <code>active</code> command, so <code>min_deviation</code> can only narrow that set further. Each frame is ranked by its own <code>uncertainty=</code> value; frames without it are matched to <code>active.out</code> by <code>Time=</code>. <code>selected.xyz</code> lists the structures in decreasing deviation, and nothing is written if no frame exceeds <code>min_deviation</code>.</p>
 <h2 id="training-and-test-set-split">Training and Test Set Split</h2>
 <p>Choose <code>206</code> to inspect an extxyz dataset and split it into training and test
 sets. The script first reports the element list, total number of frames, and the

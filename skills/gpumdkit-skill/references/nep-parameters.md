@@ -59,9 +59,20 @@ ZBL notes:
 | `lambda_q` | `lambda_q <weight>` | qNEP only; non-negative; default 0.1 |
 | `lambda_z` | `lambda_z <weight>` | qNEP only; non-negative; default 0.5 |
 | `lambda_shear` | `lambda_shear <weight>` | Extra shear-virial multiplier; effective shear weight is `lambda_v*lambda_shear`; non-negative; default 1 |
+| `lambda_d` | `lambda_d <weight>` | Potential models only (input error with `model_type 1/2`); positive; absent means off. Weights the energy-difference loss over the combinations in `ediff.in`, which refer to structures by their `name=` labels; this term is in eV of total energy |
 | `force_delta` | `force_delta <delta>` | Non-negative eV/Angstrom; default 0; positive values emphasize errors on smaller target forces |
 
 Loss weights change the fitted objective and are not generic tuning knobs. Confirm available targets, intended observables, and normalization before changing them.
+
+### `ediff.in` for `lambda_d`
+
+Read only when `lambda_d` is set. Each line is one combination of total energies:
+
+```text
+[+|-] <term> {+|- <term>} [w=<weight>]
+```
+
+A term is `<name>` or `<coefficient>*<name>` without spaces; the coefficient is a nonzero number or a fraction such as `1/3` (default 1); `+`/`-` are separate fields; the optional positive `w=` comes last (default 1). Names are the `name=` labels in `train.xyz`/`test.xyz`, matched case-insensitively, at most once per line. A combination needs at least two distinct structures and must balance the atom count of every type. Combinations with all structures in `train.xyz` enter the loss; those entirely in `test.xyz` are reported as test values; others are skipped with a warning. With `batch` smaller than the training set, NEP keeps each combination in one mini-batch, so the batches differ from a run without `lambda_d`. The combinations themselves are scientific choices; ask the user.
 
 ## Optimization and output parameters
 
@@ -70,6 +81,7 @@ Loss weights change the fitted objective and are not generic tuning knobs. Confi
 | `batch` | `batch <batch_size>` | Integer >=1; default 1000 |
 | `population` | `population <size>` | Integer 10-100; default 50 |
 | `generation` | `generation <count>` | Integer 0 to 10^7; default 100000 |
+| `seed` | `seed <seed>` | Non-negative integer; fixes the SNES random draws (initial mean and every population). GPU force summation order still varies, so long runs from one input can still yield different models |
 | `save_potential` | `save_potential <interval> <format> <save_restart>` | Interval default 100000; format 0 uses generation name, 1 uses timestamp/extended name (default); restart flag is 0/1 |
 | `output_interval` | `output_interval <number_of_generations>` | Positive integer; default 100; controls writes to `loss.out`, console output, `nep.txt`, `nep.restart`, and test-set output files |
 | `output_descriptor` | `output_descriptor 0\|1\|2` | Prediction only; 0 off, 1 per-structure, 2 per-atom; default 0 |

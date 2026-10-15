@@ -191,6 +191,8 @@ This script selects structures with large maximum force deviation from GPUMD act
 - `active.out`
 - `active.xyz`
 
+`active.xyz` holds only the frames above the GPUMD `active` threshold. The script ranks them by each frame's `uncertainty=` value (or matches them to `active.out` by `Time=`) and writes the top `top_n` above `min_deviation` to `selected.xyz`, in decreasing deviation.
+
 #### Usage
 
 ```sh

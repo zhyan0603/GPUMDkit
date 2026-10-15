@@ -50,7 +50,7 @@ See `calculators.md` for cell and coordinate requirements.
 | `dump_polarizability` | `dump_polarizability <interval> <nep_file>` | `polarizability.out` | `nep_file` is the `nep4_polarizability` potential used to predict the polarizability; it is read by this keyword and is independent of the potential driving the MD |
 | `dump_shock_nemd` | `dump_shock_nemd interval <n> [bin_size <Angstrom>]` | `temperature_hist.txt`, `pxx_hist.txt`, `pyy_hist.txt`, `pzz_hist.txt`, `density_hist.txt`, `vp_hist.txt` | Bin-size default is 10 Angstrom; each row is one output instant with bins ordered along x; density is g/cm^3 and particle velocity is km/s |
 
-In the bundled GPUMD snapshot, `thermo.out` has 18 columns: `T K U Pxx Pyy Pzz Pyz Pxz Pxy ax ay az bx by bz cx cy cz`. Temperature is K, energies are eV, pressure components are GPa, and cell-vector components are Angstrom. Older executables can differ; resolve their version before interpreting a different layout.
+In the bundled GPUMD snapshot, `thermo.out` has 18 columns: `T K U Pxx Pyy Pzz Pyz Pxz Pxy ax ay az bx by bz cx cy cz`. Temperature is K, energies are eV, pressure components are GPa, and cell-vector components are Angstrom. Each run first writes `#` header lines (`dump_thermo`, `format_version`, `num_atoms`, `dt_output` in fs, and `columns`), and appended runs repeat them, so readers must skip comment lines. In PIMD runs the first two columns are the target temperature and the quantum kinetic energy (`T_target KE_quantum`). Older executables can differ; resolve their version before interpreting a different layout.
 
 ## Active and observer modes
 

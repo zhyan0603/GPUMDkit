@@ -78,26 +78,30 @@ gpumdkit.sh -calc -h              # 计算器帮助
 ## 常用工作流
 
 ### 工作流 1：NEP 模型训练流程
+
+以下是一轮数据迭代；完整的主动学习流程见 `workflows.md`。
+
 ```bash
-# 1. 将 DFT 数据转换为 extxyz
-gpumdkit.sh -out2xyz ./vasp_results/
-
-# 2. 仅在下游工作流使用 GPUMD 分组时添加分组标签
-gpumdkit.sh -addgroup POSCAR Li Y Cl
-
-# 3. 采样多样化结构
+# 1. 从 MD 轨迹中挑选候选结构
+gpumdkit.sh -min_dist_pbc dump.xyz
+gpumdkit.sh -filter_dist_pbc dump.xyz <min_distance>
 gpumdkit.sh  # 选择：2) Sample Structures -> 203) FPS by NepTrain
 
-# 4. 训练 NEP 模型（外部）
-# ... 训练 nep.txt ...
+# 2. 为 selected.xyz 准备 DFT 输入，然后运行 DFT（外部）
+gpumdkit.sh  # 选择：3) Workflow -> 301
 
-# 5. 验证训练
+# 3. 将 DFT 结果转换为 extxyz（输出 NEPdataset/train.xyz）
+gpumdkit.sh -out2xyz ./vasp_results/
+
+# 4. 训练前检查新数据
+gpumdkit.sh -range NEPdataset/train.xyz energy
+gpumdkit.sh -range NEPdataset/train.xyz force
+gpumdkit.sh -min_dist_pbc NEPdataset/train.xyz
+
+# 5. 合并到训练集并训练 NEP（外部）
+
+# 6. 验证训练
 gpumdkit.sh -plt train
-gpumdkit.sh -plt prediction
-
-# 6. 检查数据质量
-gpumdkit.sh -range train.xyz force
-gpumdkit.sh -min_dist_pbc train.xyz
 ```
 
 ### 工作流 2：离子电导率计算
@@ -176,4 +180,4 @@ gpumdkit.sh -range train.xyz energy
 
 ## 详细文档
 
-需要面向用户的教程详情时，请阅读 `${GPUMDkit_path}/docs/tutorials/en/` 或 `/zh/` 下的对应页面。
+需要面向用户的教程详情时，请阅读 `${GPUMDkit_path}/docs/tutorials/zh/` 下的对应页面。

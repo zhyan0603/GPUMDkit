@@ -311,9 +311,11 @@ gpumdkit.sh -prediction train.xyz nep.txt 8
 Each row stores predicted values first and target values second. Energy is in
 eV/atom, force in eV/Angstrom, stress in GPa, and virial in eV/atom. Stress and
 virial tensors use the NEP order `xx yy zz xy yz xz` and the same NEP sign
-convention. When only one of stress or virial is present in a frame, the other
-is derived using `stress = virial / volume` and the corresponding unit
-conversion. If neither target is present, both target columns contain NEP's
+convention: in these files `stress = virial / volume`, positive when
+compressed. The `stress=` field of an input extxyz uses the opposite sign
+(positive when stretched), so it is converted with `virial = -stress * volume`,
+as NEP does. When only one of stress or virial is present in a frame, the other
+target is derived this way. If neither target is present, both target columns contain NEP's
 `-1e6` sentinel. Energy and force targets are required. A `tqdm` progress bar
 is shown during prediction.
 

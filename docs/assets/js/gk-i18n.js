@@ -28,9 +28,9 @@ window.GK_I18N = {
 
     "feat.eyebrow": "核心功能",
     "feat.title": "覆盖 GPUMD 与 NEP 的方方面面",
-    "feat.lead": "六大模块贯穿机器学习势的完整生命周期：从 DFT 原始输出到训练数据，从 MD 轨迹到论文插图。",
+    "feat.lead": "六大模块覆盖机器学习势开发的完整流程：从 DFT 原始输出到训练数据，从 MD 轨迹到论文插图。",
     "f1.t": "格式转换",
-    "f1.d": "支持 VASP、CP2K、ABACUS、LAMMPS、CIF、DeepMD、ASE 与 MTP 等格式，统一转换为扩展 XYZ，也能按需转回。",
+    "f1.d": "支持 VASP、CP2K、ABACUS、LAMMPS、CIF 等格式转换为扩展 XYZ，也能按需转回。",
     "f1.frames": "已写入帧 · extxyz",
     "f2.t": "结构采样",
     "f2.d": "均匀采样、随机采样、最远点采样、结构微扰以及主动学习选点。",
@@ -140,11 +140,10 @@ window.GK_I18N = {
     /* publications page */
     "pp.eyebrow": "出版物",
     "pp.title": "GPUMDkit 支撑的研究",
-    "pp.lead": "使用 GPUMDkit 的已发表论文与预印本。你的工作也用到了 GPUMDkit？欢迎告诉我们。",
+    "pp.lead": "使用 GPUMDkit 的已发表论文。",
     "pp.search": "搜索标题、作者或期刊…",
     "pp.all": "全部年份",
     "pp.count": "篇",
-    "pp.tell": "提交你的论文",
     "pp.papers": "篇论文",
 
     /* palette */

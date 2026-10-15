@@ -249,7 +249,7 @@ gpumdkit.sh  # Select: 2) Sample Structures -> 203) FPS by NepTrain
 
 ```bash
 gpumdkit.sh -out2xyz <accepted_scf_results_directory>
-gpumdkit.sh -cp2k2xyz  # CP2K alternative: interactive converter
+gpumdkit.sh -cp2k2xyz  # CP2K 替代路径：在结果根目录运行，递归扫描日志，输出 cp2k_exyz.xyz
 # Inspect the actual extxyz output from the chosen converter
 gpumdkit.sh -range <new_reference.xyz> energy
 gpumdkit.sh -range <new_reference.xyz> force

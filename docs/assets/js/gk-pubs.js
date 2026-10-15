@@ -1,4 +1,4 @@
-/* GPUMDkit website — publications page: search, year filter, grouped timeline */
+/* GPUMDkit website — publications page: search, year filter, cards grouped by year */
 (function () {
   "use strict";
   const GK = window.GK, $ = GK.$, $$ = GK.$$;
@@ -25,11 +25,13 @@
     if (!hit.length) { list.innerHTML = `<div class="empty">${zh ? "没有匹配的论文" : "No matching papers"}</div>`; return; }
     const byYear = {};
     hit.forEach(p => { (byYear[p.year] = byYear[p.year] || []).push(p); });
-    list.innerHTML = Object.keys(byYear).sort((a, b) => b - a).map(y => `<div class="year-block">
-      <div class="y"><b>${y}</b><span>${byYear[y].length} ${zh ? GK.t("pp.papers") : byYear[y].length === 1 ? "paper" : "papers"}</span></div>
-      <div class="pub-list">${byYear[y].map((p, i) => `<a class="card pub-row reveal" style="--d:${i * 0.04}s" href="${p.link}" target="_blank" rel="noopener">
-        <div><h4>${mark(p.title, q)}</h4><div class="au">${mark(p.authors, q)}</div><div class="jr">${mark(p.journal, q)}</div></div>
-        <span class="go"><svg><use href="#i-arrow"/></svg></span></a>`).join("")}</div></div>`).join("");
+    list.innerHTML = Object.keys(byYear).sort((a, b) => b - a).map(y => `<section class="year-block">
+      <div class="yb-head"><b>${y}</b><span>${byYear[y].length} ${zh ? GK.t("pp.papers") : byYear[y].length === 1 ? "paper" : "papers"}</span></div>
+      <div class="pub-cards">${byYear[y].map((p, i) => `<a class="card pcard reveal" style="--d:${(i % 3) * 0.05}s" href="${p.link}" target="_blank" rel="noopener">
+        <h4 title="${GK.esc(p.title).replace(/"/g, "&quot;")}">${mark(p.title, q)}</h4>
+        <p class="au" title="${GK.esc(p.authors).replace(/"/g, "&quot;")}">${mark(p.authors, q)}</p>
+        <div class="pc-jr">${mark(p.journal, q)}</div>
+        <div class="pc-foot"><span>${GK.esc(p.link.replace(/^https?:\/\//, ""))}</span><span class="go"><svg><use href="#i-arrow"/></svg></span></div></a>`).join("")}</div></section>`).join("");
     $$(".reveal", list).forEach(el => GK.observe(el));
   }
   GK.json("publications.json").then(data => {

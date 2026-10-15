@@ -1,5 +1,7 @@
 # GPUMDkit Agent Skill
 
+[English](README.md) | 中文
+
 GPUMDkit 提供英文和中文两个可移植、兼容 Agent Skills 规范的入口：
 
 ```text

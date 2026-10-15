@@ -59,9 +59,20 @@ ZBL 说明：
 | `lambda_q` | `lambda_q <weight>` | 仅 qNEP；非负；默认 0.1 |
 | `lambda_z` | `lambda_z <weight>` | 仅 qNEP；非负；默认 0.5 |
 | `lambda_shear` | `lambda_shear <weight>` | 额外剪切维里乘数；有效剪切权重为 `lambda_v*lambda_shear`；非负；默认 1 |
+| `lambda_d` | `lambda_d <weight>` | 仅用于势函数模型（与 `model_type 1/2` 同用会报输入错误）；正数；不设置即关闭。对 `ediff.in` 中各组合的能量差损失加权，组合通过结构的 `name=` 标签引用结构；该项以总能量的 eV 计 |
 | `force_delta` | `force_delta <delta>` | 非负，单位为 eV/Angstrom；默认 0；正值会强调较小目标力上的误差 |
 
 损失权重改变拟合目标，不是通用的调节旋钮。在更改之前，确认可用目标、预期可观测量和归一化方式。
+
+### `lambda_d` 使用的 `ediff.in`
+
+只有设置了 `lambda_d` 才会读取。每行是一个总能量组合：
+
+```text
+[+|-] <term> {+|- <term>} [w=<weight>]
+```
+
+每一项为 `<name>` 或 `<coefficient>*<name>`，中间不含空格；系数为非零实数或 `1/3` 这样的分数（默认 1）；`+`/`-` 是单独的字段；可选的正数 `w=` 放在最后（默认 1）。名称即 `train.xyz`/`test.xyz` 中的 `name=` 标签，不区分大小写，每行中同一名称最多出现一次。每个组合至少包含两个不同的结构，并且每种元素的原子数必须配平。结构全部位于 `train.xyz` 的组合进入损失函数；全部位于 `test.xyz` 的组合只作为测试值报告；其他组合会被跳过并给出警告。当 `batch` 小于训练集结构数时，NEP 会把每个组合放进同一个 mini-batch，因此分批方式与不使用 `lambda_d` 时不同。组合本身属于科学决策，请询问用户。
 
 ## 优化与输出参数
 
@@ -70,6 +81,7 @@ ZBL 说明：
 | `batch` | `batch <batch_size>` | 整数 >=1；默认 1000 |
 | `population` | `population <size>` | 整数 10-100；默认 50 |
 | `generation` | `generation <count>` | 整数 0 到 10^7；默认 100000 |
+| `seed` | `seed <seed>` | 非负整数；固定 SNES 的随机抽样（初始均值和每一代种群）。GPU 上力的求和顺序仍会变化，因此同一输入的长时间训练仍可能得到不同模型 |
 | `save_potential` | `save_potential <interval> <format> <save_restart>` | 间隔默认 100000；格式 0 使用代数命名，1 使用时间戳/扩展命名（默认）；重启标志为 0/1 |
 | `output_interval` | `output_interval <number_of_generations>` | 正整数；默认 100；控制 `loss.out`、控制台输出、`nep.txt`、`nep.restart` 和测试集输出文件的写出 |
 | `output_descriptor` | `output_descriptor 0\|1\|2` | 仅预测模式；0 关闭，1 逐结构，2 逐原子；默认 0 |

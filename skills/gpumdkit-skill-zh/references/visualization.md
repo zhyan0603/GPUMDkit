@@ -230,8 +230,8 @@ gpumdkit.sh -plt arrhenius_d
 gpumdkit.sh -plt thermo
 # 2. 绘制热导率
 gpumdkit.sh -plt emd x
-# 3. 或 NEMD/HNEMD
-gpumdkit.sh -plt nemd 10 1 60 save
+# 3. 或 NEMD/HNEMD（长度、缩放因子和截断频率按用户的模拟设置填写）
+gpumdkit.sh -plt nemd <real_length> <scale_eff_size> <cutoff_freq> --save
 ```
 
 ## 输出文件
@@ -279,4 +279,4 @@ gpumdkit.sh -plt nemd 10 1 60 save
 
 ## 详细文档
 
-用户指南请参见 `${GPUMDkit_path}/docs/tutorials/en/plot_scripts.md` 或中文对应版本。
+用户指南请参见 `${GPUMDkit_path}/docs/tutorials/zh/绘图脚本.md`。

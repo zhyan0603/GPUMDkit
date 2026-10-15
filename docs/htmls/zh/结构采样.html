@@ -2324,6 +2324,7 @@
 <ul>
 <li><code>selected.xyz</code></li>
 </ul>
+<p><code>active.xyz</code> 只包含超过 GPUMD <code>active</code> 命令阈值的帧，因此 <code>min_deviation</code> 只能在此基础上进一步收紧。脚本按每帧自带的 <code>uncertainty=</code> 排序；缺少该字段的帧按 <code>Time=</code> 与 <code>active.out</code> 对应。<code>selected.xyz</code> 按偏差从大到小排列；没有帧超过 <code>min_deviation</code> 时不会写出文件。</p>
 <h2 id="_6">帧范围提取</h2>
 <p><code>-frame_range</code> 是命令行工具（不在菜单 <code>201–206</code> 中），用于在采样前截取轨迹的一段，例如去掉平衡阶段。</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-19-1" name="__codelineno-19-1" href="#__codelineno-19-1"></a>gpumdkit.sh<span class="w"> </span>-frame_range<span class="w"> </span>dump.xyz<span class="w"> </span><span class="m">0</span>.2<span class="w"> </span><span class="m">1</span>

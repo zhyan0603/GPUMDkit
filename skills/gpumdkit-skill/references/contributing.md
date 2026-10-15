@@ -32,14 +32,19 @@ GPUMDkit/
 │   ├── calculators/
 │   ├── analyzer/
 │   ├── plt_scripts/
-│   └── utils/
+│   └── utils/               # Utilities, including completion.sh (CLI Tab completion)
 ├── skills/                  # AI agent skill definitions
 ├── docs/                    # Documentation
-│   ├── tutorials/en/        # English tutorials
-│   ├── tutorials/zh/        # Chinese tutorials
+│   ├── tutorials/en/        # English tutorials (MkDocs source)
+│   ├── tutorials/zh/        # Chinese tutorials (MkDocs source)
 │   ├── mkdocs.yml           # MkDocs config
+│   ├── htmls/               # Generated HTML (do not edit by hand)
+│   ├── command_reference.tsv  # Bilingual command list
 │   ├── updates.info         # Latest feature and code/CLI bug-fix records only
-│   └── htmls/               # Generated HTML
+│   ├── index.html, gallery.html, publications.html  # Standalone website
+│   ├── assets/              # Website CSS, JavaScript, and images
+│   ├── stats.json           # Website headline numbers
+│   └── Gallery/             # Example plot images
 ```
 
 ## How Routing Works
@@ -108,7 +113,7 @@ Key conventions:
 
 ### Step 3: Register in `gpumdkit.sh`
 
-1. Add the choice number to `valid_menu_choices` (line ~64)
+1. Add the choice number to `valid_menu_choices` in `main()`
 2. Add the case in the `main()` function's nested case statement:
    ```bash
    "413") f413_new_feature ;;
@@ -166,8 +171,8 @@ echo "| -new_flag  Description of new flag           | -existing_flag    Descrip
 
 Edit `Scripts/utils/completion.sh`:
 
-1. Add `-new_flag` to the `opts` string (line 16)
-2. If it needs file completion, add it to the `|`-separated case (line 38):
+1. Add `-new_flag` to the `opts` string
+2. If it needs file completion, add it to the `|`-separated case that calls `compgen -f`:
    ```bash
    -out2xyz|-...|-new_flag)
        COMPREPLY=($(compgen -f -- "$cur")) ;;
@@ -303,12 +308,10 @@ unless a change is requested. Add the plot usage and the
 Gallery image to both bilingual tutorial sources and the corresponding
 submodule README (for example, `Scripts/plt_scripts/README.md`).
 
-Documentation changes are opt-in during iterative development. Unless the user
-explicitly asks for documentation updates, do not modify tutorials, submodule
-README files, Gallery assets, or generate `docs/htmls/**` while refining code.
-When documentation is explicitly requested, update the relevant English and
-Chinese tutorial sources and the corresponding submodule README for every new
-user-visible feature, then rebuild the generated HTML as part of validation.
+For every user-visible feature or behavior change, update the relevant English
+and Chinese tutorial sources and the corresponding submodule README in the same
+change, then rebuild `docs/htmls/**` as part of validation. Documentation-only
+synchronization is not recorded in `docs/updates.info`.
 
 ### Dependency notices
 
@@ -358,60 +361,12 @@ fi
 
 ### Interactive menu pattern
 
-```bash
-function f413_new_feature(){
-echo " >-------------------------------------------------<"
-echo " | Calling the script in Scripts/calculators       |"
-echo " | Script: calc_new_feature.py                     |"
-echo " | Developer: Your Name (your@email.com)           |"
-echo " >-------------------------------------------------<"
-echo " Input <param1> <param2>"
-echo " Example: input.xyz nep.txt"
-echo " ------------>>"
-read_menu_array feature_args || return 1   # EOF-safe; see project conventions
-echo " ---------------------------------------------------"
-python ${GPUMDkit_path}/Scripts/calculators/calc_new_feature.py "${feature_args[@]}"
-echo " Code path: ${GPUMDkit_path}/Scripts/calculators/calc_new_feature.py"
-echo " ---------------------------------------------------"
-}
-```
+Use the wrapper template in **Adding a New Interactive Mode Feature → Step 2**; the banner, prompt, and EOF-safe input rules are listed under **Project Conventions & Personal Preferences**.
 
 ### File structure for a new Python script
 
-Use `dp2xyz.py` or `traj2exyz.py` as reference. The import order pattern is:
+Use `dp2xyz.py` or `traj2exyz.py` as reference, together with the help-check pattern under **Argument parsing — the standard pattern**:
 
-```python
-import os
-import sys
-# heavy/optional imports come AFTER the help check
-
-args = sys.argv[1:]
-if len(args) < N or args[0] in ("-h", "--help"):
-    print(" Usage: gpumdkit.sh -flag <param1> <param2>")
-    print("    or: python3 script_name.py <param1> <param2>")
-    print("")
-    print(" Arguments:")
-    print("   param1    Description")
-    print("   param2    Description")
-    print("")
-    print(" Example: gpumdkit.sh -flag input.xyz output.xyz")
-    print("")
-    sys.exit(0 if args and args[0] in ("-h", "--help") else 1)
-
-import heavy_dependency  # only after help check
-from ase.io import write  # only after help check
-
-def helper_functions():
-    """Docstrings for all helper functions."""
-    ...
-
-if __name__ == "__main__":
-    input_file = args[0]
-    output_file = args[1] if len(args) == 2 else "default.xyz"
-    ...
-```
-
-Key rules:
 - Ordinary imports (`os`, `sys`, `numpy`) go before the help check
 - Heavy/optional imports (`dpdata`, `calorine`, `ovito`, `ase`) go **after** the help check so `-h` works even when optional packages are missing
 - All helper functions have docstrings
@@ -538,7 +493,7 @@ python3 Scripts/path/to/script.py        # missing args must print usage + exit 
 
 - **calc_ion_conductivity.py**: MSD fitting range is 40%-80% of data. The Arrhenius plotting scripts use the same range. Do not change without maintainer approval.
 - **clean_extra_files.sh**: Keep-substring deletion uses **whole-word matching**, NOT substring removal. Do not regress to `${var/pattern/}` substring removal (it corrupts filenames sharing substrings).
-- **select_max_modev.py**: Map ranked deviations through `filtered_indices` to the corresponding source frames.
+- **select_max_modev.py**: `active.xyz` holds only frames above the GPUMD `active` threshold, so its frame numbers do not match `active.out` lines. Rank frames by their own `uncertainty=` value and fall back to matching `Time=` against `active.out`; never index `active.xyz` by `active.out` line numbers.
 - **charge_balance_check.py**: Handle both charge results and three-item error returns from the lookup.
 
 ---
@@ -606,8 +561,8 @@ coverage changes, update the matching file under
 
 ### When to Build MkDocs
 
-Run `mkdocs build -f docs/mkdocs.yml` only when the user has explicitly requested
-documentation updates and a change affects input consumed by MkDocs, including:
+Run `mkdocs build -f docs/mkdocs.yml` only when a change affects input consumed by
+MkDocs, including:
 
 - `docs/tutorials/**`
 - `docs/mkdocs.yml`

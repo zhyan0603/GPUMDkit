@@ -32,14 +32,19 @@ GPUMDkit/
 │   ├── calculators/
 │   ├── analyzer/
 │   ├── plt_scripts/
-│   └── utils/
+│   └── utils/               # 工具脚本，包括 completion.sh（命令行 Tab 补全）
 ├── skills/                  # AI agent skill 定义
 ├── docs/                    # 文档
-│   ├── tutorials/en/        # 英文教程
-│   ├── tutorials/zh/        # 中文教程
+│   ├── tutorials/en/        # 英文教程（MkDocs 源文件）
+│   ├── tutorials/zh/        # 中文教程（MkDocs 源文件）
 │   ├── mkdocs.yml           # MkDocs 配置
+│   ├── htmls/               # 生成的 HTML（不要手动编辑）
+│   ├── command_reference.tsv  # 中英文命令列表
 │   ├── updates.info         # 仅记录最新功能和代码/CLI bug 修复
-│   └── htmls/               # 生成的 HTML
+│   ├── index.html, gallery.html, publications.html  # 独立网站页面
+│   ├── assets/              # 网站 CSS、JavaScript 和图片
+│   ├── stats.json           # 网站首页统计数字
+│   └── Gallery/             # 绘图示例图片
 ```
 
 ## 路由工作原理
@@ -108,7 +113,7 @@ echo " ---------------------------------------------------"
 
 ### 步骤 3：在 `gpumdkit.sh` 中注册
 
-1. 将选择编号添加到 `valid_menu_choices`（约第 64 行）
+1. 将选择编号添加到 `main()` 中的 `valid_menu_choices`
 2. 在 `main()` 函数的嵌套 case 语句中添加 case：
    ```bash
    "413") f413_new_feature ;;
@@ -156,8 +161,8 @@ echo "| -new_flag  Description of new flag           | -existing_flag    Descrip
 
 编辑 `Scripts/utils/completion.sh`：
 
-1. 将 `-new_flag` 添加到 `opts` 字符串（第 16 行）
-2. 如果需要文件补全，将其添加到 `|` 分隔的 case（第 38 行）：
+1. 将 `-new_flag` 添加到 `opts` 字符串
+2. 如果需要文件补全，将其添加到调用 `compgen -f` 的 `|` 分隔 case 中：
    ```bash
    -out2xyz|-...|-new_flag)
        COMPREPLY=($(compgen -f -- "$cur")) ;;
@@ -290,11 +295,9 @@ if not os.path.isfile(input_file):
 不得低于 300。现有脚本的 DPI 仅在明确要求时调整。需要在中英文 tutorials 源文件以及对应子功能 README（例如
 `Scripts/plt_scripts/README.md`）中补充用法和 Gallery 示例图。
 
-迭代开发阶段的文档更新遵循显式授权原则。除非用户明确要求更新文档，否则
-修改代码时不要改动 tutorials、子功能 README、Gallery 资源，也不要生成
-`docs/htmls/**`。用户明确要求文档更新后，才同步修改中英文源文件，并在验证
-阶段为每个新的用户可见功能更新对应 tutorials 和子功能 README，再重新构建
-生成的 HTML。
+每个用户可见的功能或行为变化，都要在同一次修改中同步更新中英文 tutorials
+源文件和对应的子功能 README，并在验证阶段重新构建 `docs/htmls/**`。仅同步
+文档的改动不记入 `docs/updates.info`。
 
 ### 依赖提示
 
@@ -342,60 +345,12 @@ fi
 
 ### 交互菜单模式
 
-```bash
-function f413_new_feature(){
-echo " >-------------------------------------------------<"
-echo " | Calling the script in Scripts/calculators       |"
-echo " | Script: calc_new_feature.py                     |"
-echo " | Developer: Your Name (your@email.com)           |"
-echo " >-------------------------------------------------<"
-echo " Input <param1> <param2>"
-echo " Example: input.xyz nep.txt"
-echo " ------------>>"
-read_menu_array feature_args || return 1   # EOF 安全；见项目约定
-echo " ---------------------------------------------------"
-python ${GPUMDkit_path}/Scripts/calculators/calc_new_feature.py "${feature_args[@]}"
-echo " Code path: ${GPUMDkit_path}/Scripts/calculators/calc_new_feature.py"
-echo " ---------------------------------------------------"
-}
-```
+使用 **添加新的交互模式功能 → 步骤 2** 中的包装函数模板；横幅、提示符和 EOF 安全输入的规则见 **项目约定与个人偏好**。
 
 ### 新 Python 脚本的文件结构
 
-使用 `dp2xyz.py` 或 `traj2exyz.py` 作为参考。导入顺序模式为：
+以 `dp2xyz.py` 或 `traj2exyz.py` 为参考，并配合 **参数解析 — 标准模式** 中的帮助检查写法：
 
-```python
-import os
-import sys
-# 重量级/可选导入在帮助检查之后
-
-args = sys.argv[1:]
-if len(args) < N or args[0] in ("-h", "--help"):
-    print(" Usage: gpumdkit.sh -flag <param1> <param2>")
-    print("    or: python3 script_name.py <param1> <param2>")
-    print("")
-    print(" Arguments:")
-    print("   param1    Description")
-    print("   param2    Description")
-    print("")
-    print(" Example: gpumdkit.sh -flag input.xyz output.xyz")
-    print("")
-    sys.exit(0 if args and args[0] in ("-h", "--help") else 1)
-
-import heavy_dependency  # 仅在帮助检查之后
-from ase.io import write  # 仅在帮助检查之后
-
-def helper_functions():
-    """所有辅助函数的文档字符串。"""
-    ...
-
-if __name__ == "__main__":
-    input_file = args[0]
-    output_file = args[1] if len(args) == 2 else "default.xyz"
-    ...
-```
-
-关键规则：
 - 普通导入（`os`、`sys`、`numpy`）放在帮助检查之前
 - 重量级/可选导入（`dpdata`、`calorine`、`ovito`、`ase`）放在帮助检查**之后**，这样即使可选包缺失，`-h` 也能工作
 - 所有辅助函数都有文档字符串
@@ -519,7 +474,7 @@ python3 Scripts/path/to/script.py        # 缺少参数必须打印用法 + exit
 
 - **calc_ion_conductivity.py**：MSD 拟合范围为数据的 40%-80%。Arrhenius 绘图脚本使用相同范围。未经维护者批准不要更改。
 - **clean_extra_files.sh**：保留子串删除使用**全词匹配**，而非子串移除。不要退化到 `${var/pattern/}` 子串移除（它会损坏共享子串的文件名）。
-- **select_max_modev.py**：通过 `filtered_indices` 将偏差排序结果映射到对应源帧。
+- **select_max_modev.py**：`active.xyz` 只包含超过 GPUMD `active` 阈值的帧，帧号与 `active.out` 的行号不对应。应按每帧自带的 `uncertainty=` 排序，缺少时再按 `Time=` 与 `active.out` 对应；不得用 `active.out` 的行号去索引 `active.xyz`。
 - **charge_balance_check.py**：处理电荷查询结果及包含三项的错误返回。
 
 ---
@@ -569,8 +524,7 @@ git diff --check
 
 ### 何时构建 MkDocs
 
-仅当用户明确要求更新文档，且更改影响 MkDocs 消费的输入时，才运行
-`mkdocs build -f docs/mkdocs.yml`，包括：
+仅当更改影响 MkDocs 消费的输入时，才运行 `mkdocs build -f docs/mkdocs.yml`，包括：
 
 - `docs/tutorials/**`
 - `docs/mkdocs.yml`

@@ -2474,9 +2474,11 @@ the current directory.</p>
 <p>Each row stores predicted values first and target values second. Energy is in
 eV/atom, force in eV/Angstrom, stress in GPa, and virial in eV/atom. Stress and
 virial tensors use the NEP order <code>xx yy zz xy yz xz</code> and the same NEP sign
-convention. When only one of stress or virial is present in a frame, the other
-is derived using <code>stress = virial / volume</code> and the corresponding unit
-conversion. If neither target is present, both target columns contain NEP's
+convention: in these files <code>stress = virial / volume</code>, positive when
+compressed. The <code>stress=</code> field of an input extxyz uses the opposite sign
+(positive when stretched), so it is converted with <code>virial = -stress * volume</code>,
+as NEP does. When only one of stress or virial is present in a frame, the other
+target is derived this way. If neither target is present, both target columns contain NEP's
 <code>-1e6</code> sentinel. Energy and force targets are required. A <code>tqdm</code> progress bar
 is shown during prediction.</p>
 <p>The command requires <code>calorine</code>, <code>ase</code>, and <code>tqdm</code>:</p>

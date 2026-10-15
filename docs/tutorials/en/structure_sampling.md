@@ -254,6 +254,8 @@ Output:
 
 - `selected.xyz`
 
+`active.xyz` holds only the frames above the threshold of the GPUMD `active` command, so `min_deviation` can only narrow that set further. Each frame is ranked by its own `uncertainty=` value; frames without it are matched to `active.out` by `Time=`. `selected.xyz` lists the structures in decreasing deviation, and nothing is written if no frame exceeds `min_deviation`.
+
 ## Training and Test Set Split
 
 Choose `206` to inspect an extxyz dataset and split it into training and test

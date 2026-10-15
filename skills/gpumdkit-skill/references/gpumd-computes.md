@@ -68,7 +68,7 @@ Interpretation rules:
 | `compute_gkma` | `compute_gkma <sample_interval> <first_mode> <last_mode> <bin_size\|f_bin_size> <size>` | `heatmode.out` |
 | `compute_hnema` | `compute_hnema <sample_interval> <output_interval> <Fe_x> <Fe_y> <Fe_z> <first_mode> <last_mode> <bin_option> <size>` | `kappamode.out` |
 
-GKMA/HNEMA require a matching `eigenvector.in`; mode indices and binning must match that file. `compute_gkma` and `compute_hnema` cannot be active in the same run; the last one wins. Modal calculations can require substantial memory and disk.
+GKMA/HNEMA require a matching `eigenvector.in`; mode indices and binning must match that file. Only one modal-analysis calculation is allowed per run: repeating `compute_gkma` or `compute_hnema`, or combining them, is an input error (versions before 5.9 silently used the last one). Modal calculations can require substantial memory and disk.
 For HNEMA, `sample_interval` must divide `output_interval`. `bin_size` groups a fixed number of modes; `f_bin_size` groups modes by frequency width.
 
 ## Electronic, dipole, and order calculations
@@ -85,7 +85,7 @@ LSQT accepts transport direction `x`, `y`, or `z`; energies are in eV. It is pre
 
 ## Compatibility and convergence
 
-- `compute_dos` and `compute_sdc` cannot be used in the same run.
+- `compute_dos` and `compute_sdc` can share a run from GPUMD 5.9; versions before 5.9 reject the combination.
 - For `compute_dos`, angular-frequency maximum is in THz, `num_dos_points` defaults to `Nc`, and `group <method> -1` requests all groups.
 - Compute keywords are generally run-scoped/non-propagating; reissue them for each intended production block.
 - Ensure `Nc * sample_interval` is comfortably shorter than the production run and verify convergence with saved windows/replicas where applicable.

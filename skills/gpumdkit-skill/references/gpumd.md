@@ -67,8 +67,9 @@ After execution:
 
 ## Known version-sensitive points
 
-- This snapshot follows the GPUMD 5.8.1 output syntax. Before generating or translating `run.in`, identify the user's GPUMD version. For GPUMD 5.7 and later, use `dump_xyz` only for these per-atom outputs; the removed pre-5.7 keywords are collected in `gpumd-outputs.md` as migration notes.
+- This snapshot follows GPUMD 5.9.1. Before generating or translating `run.in`, identify the user's GPUMD version. For GPUMD 5.7 and later, use `dump_xyz` only for these per-atom outputs; the removed pre-5.7 keywords are collected in `gpumd-outputs.md` as migration notes.
 - Current `dump_xyz` starts with `<interval> <filename>`, followed by optional `group <grouping_method> <group_id>`, `precision`, and property keywords. Do not use the obsolete positional grouping form.
+- `compute_dos` and `compute_sdc` can share a run from GPUMD 5.9; older versions reject the combination.
 - `compute_phonon` currently takes only `<displacement>` and requires `kpoints.in`; older guides may show a cutoff argument.
 - HNEMD requires temperature control; use Nose-Hoover chain and do not use Langevin for this purpose.
 - `compute_hac` belongs in the EMD production run; it is not a one-step post-processing command for prior `compute ... jp jk` data.
@@ -76,6 +77,6 @@ After execution:
 
 ## Sources and version scope
 
-- [GPUMD v5.8.1 source](https://github.com/brucefan1983/GPUMD/tree/v5.8.1) is a fixed release reference.
+- [GPUMD v5.9.1 source](https://github.com/brucefan1983/GPUMD/tree/v5.9.1) is a fixed release reference.
 - [Official parameter manual](https://gpumd.org/dev/gpumd/input_parameters/index.html) includes development changes. Verify each keyword against the executable's release or commit before use.
 - Record the executable path and build revision; the displayed version alone may not identify patch releases.

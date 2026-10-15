@@ -277,7 +277,7 @@ reviewing the distance scale. PCA plots are diagnostics, not proof of coverage.
 
 ```bash
 gpumdkit.sh -out2xyz <accepted_scf_results_directory>
-gpumdkit.sh -cp2k2xyz  # CP2K alternative: interactive converter
+gpumdkit.sh -cp2k2xyz  # CP2K alternative: run in the results root; scans logs recursively, writes cp2k_exyz.xyz
 # Inspect the actual extxyz output from the chosen converter
 gpumdkit.sh -range <new_reference.xyz> energy
 gpumdkit.sh -range <new_reference.xyz> force

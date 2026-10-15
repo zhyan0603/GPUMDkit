@@ -15,13 +15,13 @@ Use this self-contained catalog for non-ensemble setup commands, external contro
 | Keyword | Current signature | Important meaning/constraint |
 |---|---|---|
 | `replicate` | `replicate <n_a> <n_b> <n_c>` | Positive integer replication counts; apply before loading the potential |
-| `potential` | `potential <potential_filename>` | Relative/absolute file; format comes from its content; validate species/type order |
+| `potential` | `potential <potential_filename> [<partition_direction>]` | Relative/absolute file; format comes from its content; validate species/type order. Some potential types take extra parameters. The optional `x`/`y`/`z` partition direction (`a`/`b`/`c` for a triclinic box) applies only to multi-GPU runs of standard or temperature-dependent NEP models; GPUMD chooses it automatically when omitted |
 | `velocity` | `velocity <initial_temperature> [seed <seed_number>]` | Temperature in K; seed is optional. If velocities are absent and this command is omitted, GPUMD initializes at 300 K; prefer an explicit user-approved value |
 | `correct_velocity` | `correct_velocity <interval> [<group_method>]` | Removes translational/rotational drift periodically; interval must be at least 10 steps |
 | `time_step` | `time_step <dt_in_fs> [<max_distance_per_step>]` | Step in fs; documented default is 1 fs; optional positive displacement limiter is in Angstrom |
 | `compute_extrapolation` | `compute_extrapolation nep_file <nep_file> asi_file <asi_file> gamma_low <v> gamma_high <v> check_interval <n> dump_interval <n>` | ASI extrapolation-grade monitoring for active learning. `nep_file` is the NEP model used to compute the grade and is independent of the potential driving the MD; `asi_file` comes from the ASI tool. Defaults: `gamma_low=0`, effectively unbounded `gamma_high`, and both intervals 1; selected structures are appended to `extrapolation_dump.xyz`. User approval is required before relying on them in production |
 | `dftd3` | `dftd3 <functional> <potential_cutoff> <coordination_number_cutoff>` | Cutoffs are in Angstrom; functional and cutoffs must match the intended D3 parameterization |
-| `kspace` | `kspace <ewald\|pppm>` | Reciprocal-space electrostatics method; default is `pppm`; use only for a compatible charge model |
+| `kspace` | `kspace ewald` or `kspace pppm [<spacing>]` | Reciprocal-space electrostatics method; default is `pppm`. The optional PPPM `spacing` is the maximum mesh spacing in Angstrom (default 1.0, range 0.2-2.0). Give `kspace` at most once, before the first `run`; use only for a compatible charge model |
 
 Recognized potential families include Tersoff-1988/1989/mini, EAM, FCP, LJ, NEP, NEP+ILP, SW+ILP, Tersoff+ILP, and Deep Potential. Potential file schemas are family-specific and are not interchangeable. Do not create or rewrite a potential file from this summary; use a user-supplied validated model or obtain its exact format specification.
 
@@ -51,7 +51,7 @@ add_spring com_com <method> <group1> <group2> decouple <kx> <ky> <kz>
 
 The optional `continue <spring_id>` clause (ghost forms only) reattaches a spring from its saved state instead of starting fresh. Spring forces are written to `spring_gm<method>_g<group>_s<spring_id>.out` (columns: step, mode, Fx, Fy, Fz, Ftotal, energy); the ghost state is saved to `spring_gm<method>_g<group>_s<spring_id>.restart` at the end of each run. `com_com` does not support `continue`.
 
-An `electron_stop` table starts with `N E_min E_max`, followed by `N` evenly spaced energy rows. Each row has one stopping-power column per species: for a compacted multi-element NEP potential, the columns follow the active atom type order printed at initialization; for other potentials, they follow the species order in the potential file.
+An `electron_stop` table starts with `N E_min E_max`, where `E_min` and `E_max` are atomic kinetic energies in eV, followed by `N` evenly spaced energy rows of stopping powers in eV/Angstrom. Each row has one stopping-power column per species: for a compacted multi-element NEP potential, the columns follow the active atom type order printed at initialization; for other potentials, they follow the species order in the potential file.
 
 ## Constraints and hybrid MD/MC
 
