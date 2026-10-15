@@ -9,6 +9,7 @@ window.GK_I18N = {
     "nav.gallery": "图库",
     "nav.pubs": "出版物",
     "nav.docs": "文档",
+    "nav.manual": "手册",
     "nav.search": "搜索命令…",
 
     "hero.badge.tag": "论文",
@@ -172,6 +173,10 @@ window.GK_DOCS = {
   active_learning_workflow: ["en/active_learning_workflow.html", "zh/主动学习工作流.html", "Active learning workflow", "主动学习工作流"],
   calculator_scripts: ["en/calculator_scripts.html", "zh/计算器脚本.html", "Calculator scripts", "计算器脚本"],
   analyzer_scripts: ["en/analyzer_scripts.html", "zh/分析工具.html", "Analyzer scripts", "分析工具"],
+  plot_nep: ["en/plot_nep.html", "zh/NEP训练绘图.html", "NEP training plots", "NEP 训练绘图"],
+  plot_md_structure: ["en/plot_md_structure.html", "zh/MD与结构绘图.html", "MD and structure plots", "MD 与结构绘图"],
+  plot_diffusion: ["en/plot_diffusion.html", "zh/扩散绘图.html", "Diffusion plots", "扩散绘图"],
+  plot_heat_phonon: ["en/plot_heat_phonon.html", "zh/热输运与声子绘图.html", "Heat transport and phonon plots", "热输运与声子绘图"],
   plot_scripts: ["en/plot_scripts.html", "zh/绘图脚本.html", "Plot scripts", "绘图脚本"],
   simulation_and_postprocessing: ["en/simulation_and_postprocessing.html", "zh/模拟与后处理.html", "Simulation & post-processing", "模拟与后处理"],
   polar_material_analysis: ["en/polar_material_analysis.html", "zh/极性材料分析.html", "Polar material analysis", "极性材料分析"],

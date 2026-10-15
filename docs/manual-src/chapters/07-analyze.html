@@ -1,0 +1,31 @@
+<section class="chap" id="analyze" data-group="Toolbox|工具箱">
+<div class="chap-head"><span class="chap-no"></span>
+<div><h2><span class="l-en">Analyzers</span><span class="l-zh">分析器</span></h2></div></div>
+<p class="lead l-en">Composition, ranges, distances and charge balance — know your data first.</p>
+<p class="lead l-zh">成分、范围、间距与电荷平衡——先了解你的数据。</p>
+<div class="docs-row"><span class="dr-label"><span class="l-en">Detailed pages</span><span class="l-zh">详细页面</span></span><a class="chip" href="htmls/en/index.html" data-doc="analyzer_scripts"><span class="l-en">Analyzer scripts</span><span class="l-zh">分析工具</span><svg><use href="#i-out"/></svg></a></div>
+<p class="l-en">Analyzers inspect an extxyz file without changing it, so you can trust a dataset before you train on it.</p>
+<p class="l-zh">分析器只检查 extxyz 文件而不修改它，让你在训练之前先确认数据可信。</p>
+<div class="tbl-wrap">
+<table class="tbl">
+<thead>
+<tr><th><span class="l-en">Command</span><span class="l-zh">命令</span></th><th><span class="l-en">Answers</span><span class="l-zh">回答的问题</span></th></tr></thead>
+<tbody>
+<tr><td class="cmd"><button data-copy="gpumdkit.sh -analyze_comp &lt;input.xyz&gt;" title="Copy"><code>gpumdkit.sh -analyze_comp &lt;input.xyz&gt;</code></button></td><td><span class="l-en">Which compositions are in the set, and how many of each?</span><span class="l-zh">数据集中有哪些成分，各有多少？</span></td></tr>
+<tr><td class="cmd"><button data-copy="gpumdkit.sh -chem_species &lt;input.xyz&gt;" title="Copy"><code>gpumdkit.sh -chem_species &lt;input.xyz&gt;</code></button></td><td><span class="l-en">Which chemical species occur?</span><span class="l-zh">出现了哪些化学物种？</span></td></tr>
+<tr><td class="cmd"><button data-copy="gpumdkit.sh -cbc &lt;input.xyz&gt;" title="Copy"><code>gpumdkit.sh -cbc &lt;input.xyz&gt;</code></button></td><td><span class="l-en">Is the charge balanced?</span><span class="l-zh">电荷是否平衡？</span></td></tr>
+<tr><td class="cmd"><button data-copy="gpumdkit.sh -range &lt;input.xyz&gt; &lt;energy|force|virial&gt; [hist]" title="Copy"><code>gpumdkit.sh -range &lt;input.xyz&gt; &lt;energy|force|virial&gt; [hist]</code></button></td><td><span class="l-en">What is the range (and histogram) of this property?</span><span class="l-zh">该性质的范围（及直方图）如何？</span></td></tr>
+<tr><td class="cmd"><button data-copy="gpumdkit.sh -min_dist &lt;input.xyz&gt;" title="Copy"><code>gpumdkit.sh -min_dist &lt;input.xyz&gt;</code></button></td><td><span class="l-en">What is the smallest interatomic distance (no PBC)?</span><span class="l-zh">最小原子间距是多少（不含周期性）？</span></td></tr>
+<tr><td class="cmd"><button data-copy="gpumdkit.sh -min_dist_pbc &lt;input.xyz&gt;" title="Copy"><code>gpumdkit.sh -min_dist_pbc &lt;input.xyz&gt;</code></button></td><td><span class="l-en">…with periodic boundary conditions?</span><span class="l-zh">……考虑周期性边界时呢？</span></td></tr>
+<tr><td class="cmd"><button data-copy="gpumdkit.sh -pda &lt;ref_struct&gt; &lt;trajectory.xyz&gt; &lt;species&gt; &lt;interval&gt;" title="Copy"><code>gpumdkit.sh -pda &lt;ref_struct&gt; &lt;trajectory.xyz&gt; &lt;species&gt; &lt;interval&gt;</code></button></td><td><span class="l-en">Where does a species spend its time (probability density)?</span><span class="l-zh">某物种主要出现在什么位置（概率密度）？</span></td></tr>
+<tr><td class="cmd"><button data-copy="gpumdkit.sh -shift_energy" title="Copy"><code>gpumdkit.sh -shift_energy</code></button></td><td><span class="l-en">Interactively shift the energy reference of an extxyz file.</span><span class="l-zh">交互式平移 extxyz 的能量参考点。</span></td></tr></tbody></table></div>
+<p class="l-en"><code class="inline">502</code> in the interactive menu finds outliers; <code class="inline">gpumdkit.sh -filter_*</code> (chapter 04) removes structures once you know what to remove.</p>
+<p class="l-zh">交互菜单中的 <code class="inline">502</code> 用于查找异常结构；确认要剔除什么之后，再用 <code class="inline">gpumdkit.sh -filter_*</code>（第 04 章）删除。</p>
+<h3 id="health"><span class="l-en">A five-line dataset health check</span><span class="l-zh">五行命令的数据集体检</span></h3>
+<div class="code">
+<div class="cap"><i></i><i></i><i></i><span>run after every conversion</span></div>
+<pre><code>gpumdkit.sh -analyze_comp new_reference.xyz
+gpumdkit.sh -range new_reference.xyz energy
+gpumdkit.sh -range new_reference.xyz force
+gpumdkit.sh -min_dist_pbc new_reference.xyz
+gpumdkit.sh -cbc new_reference.xyz</code></pre><button class="copy-btn" data-copy-pre aria-label="Copy"><svg class="cp"><use href="#i-copy"/></svg><svg class="ok"><use href="#i-check"/></svg></button></div></section>

@@ -295,6 +295,7 @@
     const D = window.GK_DATA || {}, onHome = document.body.dataset.page === "home", zh = GK.lang === "zh";
     const out = [];
     SECTIONS.forEach(([id, en, z]) => out.push({ g: "pal.sections", k: "sec", title: zh ? z : en, sub: "#" + id, href: (onHome ? "" : "index.html") + "#" + id }));
+    out.push({ g: "pal.sections", k: "sec", title: zh ? "使用手册" : "User manual", sub: "manual.html", href: "manual.html" });
     out.push({ g: "pal.sections", k: "sec", title: zh ? "完整图库" : "Full gallery", sub: "gallery.html", href: "gallery.html" });
     out.push({ g: "pal.sections", k: "sec", title: zh ? "全部出版物" : "All publications", sub: "publications.html", href: "publications.html" });
     Object.entries(window.GK_DOCS || {}).forEach(([key, d]) => out.push({ g: "pal.docs", k: "doc", title: zh ? d[3] : d[2], sub: "htmls/" + (zh ? d[1] : d[0]), href: GK.docHref(key) }));

@@ -1,0 +1,64 @@
+<section class="chap" id="sample" data-group="Toolbox|工具箱">
+<div class="chap-head"><span class="chap-no"></span>
+<div><h2><span class="l-en">Structure sampling and filtering</span><span class="l-zh">结构采样与过滤</span></h2></div></div>
+<p class="lead l-en">Choose informative frames from MD and drop unphysical ones.</p>
+<p class="lead l-zh">从 MD 轨迹中挑选有信息量的构型，并剔除不合理的结构。</p>
+<div class="docs-row"><span class="dr-label"><span class="l-en">Detailed pages</span><span class="l-zh">详细页面</span></span><a class="chip" href="htmls/en/index.html" data-doc="structure_sampling"><span class="l-en">Structure sampling</span><span class="l-zh">结构采样</span><svg><use href="#i-out"/></svg></a></div>
+<p class="l-en">Training sets should be diverse, not just large. GPUMDkit offers several ways to choose and clean candidate structures. Enter file names at the prompts of the interactive menu: <code class="inline">gpumdkit.sh</code> → <code class="inline">2</code>.</p>
+<p class="l-zh">训练集需要的是多样性，而不只是数量。GPUMDkit 提供多种方式挑选和清理候选结构。在交互菜单中进入 <code class="inline">gpumdkit.sh</code> → <code class="inline">2</code>，并按提示输入文件名。</p>
+<div class="grid c3">
+<div class="mcard">
+<div class="mc-top"><span class="mc-id">201</span>
+<h4><span class="l-en">Uniform / random</span><span class="l-zh">均匀 / 随机采样</span></h4></div>
+<p class="l-en">Quick frame selection from a trajectory; optionally skip the first frames.</p>
+<p class="l-zh">从轨迹中快速选帧，可跳过开头的若干帧。</p>
+<div class="mc-cmd"><code>dump.xyz uniform 50</code><button class="copy-btn" data-copy="dump.xyz uniform 50" aria-label="Copy"><svg class="cp"><use href="#i-copy"/></svg><svg class="ok"><use href="#i-check"/></svg></button></div></div>
+<div class="mcard">
+<div class="mc-top"><span class="mc-id">203</span>
+<h4><span class="l-en">Farthest-point (FPS)</span><span class="l-zh">最远点采样（FPS）</span></h4></div>
+<p class="l-en">Descriptor-based FPS with NepTrain. The preferred way to build a diverse set.</p>
+<p class="l-zh">基于 NepTrain 描述符的 FPS，是构建多样性数据集的首选。</p></div>
+<div class="mcard">
+<div class="mc-top"><span class="mc-id">204</span>
+<h4><span class="l-en">Perturb</span><span class="l-zh">结构微扰</span></h4></div>
+<p class="l-en">Generate perturbed structures from POSCAR/CONTCAR.</p>
+<p class="l-zh">由 POSCAR/CONTCAR 生成微扰结构。</p></div>
+<div class="mcard">
+<div class="mc-top"><span class="mc-id">205</span>
+<h4><span class="l-en">Force deviation</span><span class="l-zh">力偏差选点</span></h4></div>
+<p class="l-en">Rank structures by committee force deviation (from GPUMD <code>active</code> output) and cap their number.</p>
+<p class="l-zh">按委员会模型的力偏差（来自 GPUMD 的 <code>active</code> 输出）排序并限制数量。</p></div>
+<div class="mcard">
+<div class="mc-top"><span class="mc-id">206</span>
+<h4><span class="l-en">Train / test split</span><span class="l-zh">训练 / 测试集划分</span></h4></div>
+<p class="l-en">Inspect and split an extxyz dataset by uniform, random or FPS selection.</p>
+<p class="l-zh">检查并按均匀、随机或 FPS 方式划分 extxyz 数据集。</p></div>
+<div class="mcard">
+<div class="mc-top"><span class="mc-id">-pynep</span>
+<h4><span class="l-en">PyNEP (deprecated)</span><span class="l-zh">PyNEP（已弃用）</span></h4></div>
+<p class="l-en">Kept for older workflows; use 203 instead.</p>
+<p class="l-zh">为兼容旧流程保留，请改用 203。</p>
+<div class="mc-cmd"><code>gpumdkit.sh -pynep</code><button class="copy-btn" data-copy="gpumdkit.sh -pynep" aria-label="Copy"><svg class="cp"><use href="#i-copy"/></svg><svg class="ok"><use href="#i-check"/></svg></button></div></div></div>
+<h3 id="filter"><span class="l-en">Clean before you select</span><span class="l-zh">挑选之前先清理</span></h3>
+<p class="l-en">Check distances first, then filter. <code class="inline">-min_dist_pbc</code> only reports; the <code class="inline">-filter_*</code> commands remove structures and write a new file.</p>
+<p class="l-zh">先检查距离，再做过滤。<code class="inline">-min_dist_pbc</code> 只做报告；<code class="inline">-filter_*</code> 系列会删除结构并写出新文件。</p>
+<div class="code">
+<div class="cap"><i></i><i></i><i></i><span>from MD frames to a candidate set</span></div>
+<pre><code>gpumdkit.sh -min_dist_pbc dump.xyz<span class="c">                        # report only</span>
+gpumdkit.sh -filter_dist_pbc dump.xyz &lt;min_distance&gt;<span class="c">      # writes filtered_dump.xyz</span>
+gpumdkit.sh -filter_box filtered_dump.xyz &lt;edge_limit&gt;<span class="c">    # optional, writes filtered_by_box.xyz</span>
+gpumdkit.sh<span class="c">                                               # 2) Sample Structures -&gt; 203</span></code></pre><button class="copy-btn" data-copy-pre aria-label="Copy"><svg class="cp"><use href="#i-copy"/></svg><svg class="ok"><use href="#i-check"/></svg></button></div>
+<div class="tbl-wrap">
+<table class="tbl">
+<thead>
+<tr><th><span class="l-en">Command</span><span class="l-zh">命令</span></th><th><span class="l-en">What it keeps</span><span class="l-zh">保留什么</span></th></tr></thead>
+<tbody>
+<tr><td class="cmd"><button data-copy="gpumdkit.sh -filter_dist &lt;input.xyz&gt; &lt;min_dist&gt;" title="Copy"><code>gpumdkit.sh -filter_dist &lt;input.xyz&gt; &lt;min_dist&gt;</code></button></td><td><span class="l-en">Structures whose minimum distance (no PBC) exceeds the limit</span><span class="l-zh">最小距离（不含周期性）大于阈值的结构</span></td></tr>
+<tr><td class="cmd"><button data-copy="gpumdkit.sh -filter_dist_pbc &lt;input.xyz&gt; &lt;min_dist&gt;" title="Copy"><code>gpumdkit.sh -filter_dist_pbc &lt;input.xyz&gt; &lt;min_dist&gt;</code></button></td><td><span class="l-en">Same, with periodic boundary conditions</span><span class="l-zh">同上，考虑周期性边界</span></td></tr>
+<tr><td class="cmd"><button data-copy="gpumdkit.sh -filter_box &lt;input.xyz&gt; &lt;edge_limit&gt;" title="Copy"><code>gpumdkit.sh -filter_box &lt;input.xyz&gt; &lt;edge_limit&gt;</code></button></td><td><span class="l-en">Structures within a box-edge limit</span><span class="l-zh">盒子边长在限制之内的结构</span></td></tr>
+<tr><td class="cmd"><button data-copy="gpumdkit.sh -filter_value &lt;input.xyz&gt; &lt;property&gt; &lt;threshold&gt;" title="Copy"><code>gpumdkit.sh -filter_value &lt;input.xyz&gt; &lt;property&gt; &lt;threshold&gt;</code></button></td><td><span class="l-en">Structures that pass a property threshold</span><span class="l-zh">满足性质阈值的结构</span></td></tr>
+<tr><td class="cmd"><button data-copy="gpumdkit.sh -filter_range &lt;input.xyz&gt; &lt;element1&gt; &lt;element2&gt; &lt;min_dist&gt; &lt;max_dist&gt;" title="Copy"><code>gpumdkit.sh -filter_range &lt;input.xyz&gt; &lt;element1&gt; &lt;element2&gt; &lt;min_dist&gt; &lt;max_dist&gt;</code></button></td><td><span class="l-en">Structures whose element-pair distance lies in a range</span><span class="l-zh">指定元素对距离落在区间内的结构</span></td></tr></tbody></table></div>
+<div class="note tip"><span class="ni">✓</span>
+<div class="nb">
+<div class="l-en">Record the thresholds and the FPS stopping rule you used, and which source frames were selected, so the dataset can be reproduced.</div>
+<div class="l-zh">请记录所用的阈值、FPS 停止条件以及被选中的原始帧，便于日后复现数据集。</div></div></div></section>

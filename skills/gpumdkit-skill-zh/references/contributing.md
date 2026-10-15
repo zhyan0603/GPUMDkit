@@ -41,7 +41,8 @@ GPUMDkit/
 │   ├── htmls/               # 生成的 HTML（不要手动编辑）
 │   ├── command_reference.tsv  # 中英文命令列表
 │   ├── updates.info         # 仅记录最新功能和代码/CLI bug 修复
-│   ├── index.html, gallery.html, publications.html  # 独立网站页面
+│   ├── index.html, gallery.html, publications.html, manual.html  # 独立网站页面
+│   ├── manual-src/          # manual.html 的源文件；修改这里，然后运行 `python3 docs/manual-src/build.py`
 │   ├── assets/              # 网站 CSS、JavaScript 和图片
 │   ├── stats.json           # 网站首页统计数字
 │   └── Gallery/             # 绘图示例图片
@@ -533,7 +534,7 @@ git diff --check
 不要仅因为 `docs/` 下的其他文件发生变化就运行 MkDocs。以下独立网站文件
 不是 MkDocs 输入，应直接进行相应验证：
 
-- `docs/index.html`、`docs/gallery.html` 和 `docs/publications.html`
+- `docs/index.html`、`docs/gallery.html`、`docs/publications.html` 和 `docs/manual.html`
   （`docs/index_zh.html` 只负责跳转到 `index.html` 的中文界面）
 - `docs/assets/**`（网站的 CSS、JavaScript 和图片）与 `docs/Gallery/**`
 - 独立 JSON/数据文件：`docs/gallery.json`、`docs/publications.json` 和

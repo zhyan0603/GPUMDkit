@@ -1,0 +1,92 @@
+<section class="chap" id="start" data-group="Basics|基础">
+<div class="chap-head"><span class="chap-no"></span>
+<div><h2><span class="l-en">Getting started</span><span class="l-zh">快速入门</span></h2></div></div>
+<p class="lead l-en">Install, verify, and run your first command in about two minutes.</p>
+<p class="lead l-zh">两分钟内完成安装、验证，并跑通第一条命令。</p>
+<div class="docs-row"><span class="dr-label"><span class="l-en">Detailed pages</span><span class="l-zh">详细页面</span></span><a class="chip" href="htmls/en/index.html" data-doc="quick_start"><span class="l-en">Quick start</span><span class="l-zh">快速入门</span><svg><use href="#i-out"/></svg></a></div>
+<h3 id="install"><span class="num">1</span><span class="l-en">Install</span><span class="l-zh">安装</span></h3>
+<div class="install" data-install style="max-width:860px;margin:16px 0 8px">
+<div class="install-tabs" role="tablist"><button class="active" data-cmd="conda create -n gpumdkit -c gpumdkit -c conda-forge gpumdkit">conda</button><button data-cmd="git clone https://github.com/zhyan0603/GPUMDkit.git &amp;&amp; cd GPUMDkit &amp;&amp; source ./install.sh">source</button><button data-cmd="gpumdkit.sh -update">update</button></div>
+<div class="install-line"><span class="ps">$</span><code data-install-code>conda create -n gpumdkit -c gpumdkit -c conda-forge gpumdkit</code><button class="copy-btn" data-copy-from="[data-install-code]" aria-label="Copy"><svg class="cp"><use href="#i-copy"/></svg><svg class="ok"><use href="#i-check"/></svg></button></div></div>
+<p class="l-en">Conda is the recommended route: it installs GPUMDkit with its standard dependencies, with no repository clone or environment variables. Then <code class="inline">conda activate gpumdkit</code>. Choose <b>source</b> if you want to read or modify the code — the installer writes <code class="inline">GPUMDkit_path</code> and <code class="inline">PATH</code> to your <code class="inline">~/.zshrc</code> or <code class="inline">~/.bashrc</code> after backing it up.</p>
+<p class="l-zh">推荐使用 Conda：它会连同标准依赖一起安装 GPUMDkit，无需克隆仓库或配置环境变量，安装后执行 <code class="inline">conda activate gpumdkit</code> 即可。如果想阅读或修改代码，请选择 <b>source</b>：安装脚本会先备份 <code class="inline">~/.zshrc</code> 或 <code class="inline">~/.bashrc</code>，再写入 <code class="inline">GPUMDkit_path</code> 和 <code class="inline">PATH</code>。</p>
+<h3 id="verify"><span class="num">2</span><span class="l-en">Check that it works</span><span class="l-zh">检查安装</span></h3>
+<div class="code">
+<pre><code>gpumdkit.sh -h<span class="c">        # list every option</span>
+gpumdkit.sh -doctor<span class="c">   # check the Python environment</span></code></pre><button class="copy-btn" data-copy-pre aria-label="Copy"><svg class="cp"><use href="#i-copy"/></svg><svg class="ok"><use href="#i-check"/></svg></button></div>
+<div class="note tip"><span class="ni">✓</span>
+<div class="nb">
+<div class="l-en"><b><code class="inline">MISS</code> for an optional package is not an error.</b> <code class="inline">-doctor</code> reports common and optional packages; install an optional one only when you need the feature that uses it, e.g. <code class="inline">pip install neptrain calorine</code>.</div>
+<div class="l-zh"><b>可选包显示 <code class="inline">MISS</code> 并不是错误。</b><code class="inline">-doctor</code> 会报告常用和可选的 Python 包；只有在需要对应功能时才安装，例如 <code class="inline">pip install neptrain calorine</code>。</div></div></div>
+<h3 id="first"><span class="num">3</span><span class="l-en">Your first conversion</span><span class="l-zh">第一次转换</span></h3>
+<p class="l-en">Run this in a new directory so no existing file is overwritten. It converts a one-atom silicon <code class="inline">POSCAR</code> to extended XYZ, the training-data format of NEP.</p>
+<p class="l-zh">请在一个新目录中运行，以免覆盖已有文件。下面把一个单原子硅的 <code class="inline">POSCAR</code> 转换为 NEP 使用的扩展 XYZ 训练数据格式。</p>
+<div class="duo">
+<div>
+<div class="code">
+<div class="cap"><i></i><i></i><i></i><span>input</span></div>
+<pre><code>mkdir gpumdkit-first-check &amp;&amp; cd gpumdkit-first-check
+cat &gt; POSCAR &lt;&lt; &#x27;EOF&#x27;
+Si
+1.0
+0 2.715 2.715
+2.715 0 2.715
+2.715 2.715 0
+Si
+1
+direct
+0 0 0
+EOF
+gpumdkit.sh -pos2exyz POSCAR model.xyz</code></pre><button class="copy-btn" data-copy-pre aria-label="Copy"><svg class="cp"><use href="#i-copy"/></svg><svg class="ok"><use href="#i-check"/></svg></button></div></div>
+<div>
+<div class="code">
+<div class="cap"><i></i><i></i><i></i><span>model.xyz</span></div>
+<pre><code>Conversion completed, structures saved to model.xyz
+
+1
+Lattice=&quot;0.0 2.715 2.715 2.715 0.0 2.715 2.715 2.715 0.0&quot; Properties=species:S:1:pos:R:3 pbc=&quot;T T T&quot;
+Si       0.00000000       0.00000000       0.00000000</code></pre><button class="copy-btn" data-copy-pre aria-label="Copy"><svg class="cp"><use href="#i-copy"/></svg><svg class="ok"><use href="#i-check"/></svg></button></div></div></div>
+<h3 id="modes"><span class="num">4</span><span class="l-en">Two ways to work</span><span class="l-zh">两种使用方式</span></h3>
+<p class="l-en">Every tool is reachable both ways. Use the menu to explore; use options in scripts and batch jobs.</p>
+<p class="l-zh">所有工具都可以通过两种方式调用：菜单适合探索，命令行选项适合脚本与批处理。</p>
+<div class="duo">
+<div>
+<h4><svg><use href="#i-term"/></svg><span class="l-en">Interactive menu</span><span class="l-zh">交互菜单</span></h4>
+<div class="code">
+<div class="cap"><i></i><i></i><i></i><span>gpumdkit.sh</span></div>
+<pre><code> ---------------------- GPUMD ------------------------
+ 1) Format Conversion          2) Sample Structures
+ 3) Workflow                   4) Calculators
+ 5) Analyzer                   6) Visualization
+ 7) Utilities                  8) Help
+ 0) Exit
+ ------------&gt;&gt;
+ Input the function number:</code></pre><button class="copy-btn" data-copy-pre aria-label="Copy"><svg class="cp"><use href="#i-copy"/></svg><svg class="ok"><use href="#i-check"/></svg></button></div>
+<p class="l-en">Type a module number, then a function number such as <code class="inline">203</code>. At file prompts <kbd>Tab</kbd> completes names.</p>
+<p class="l-zh">输入模块编号，再输入功能编号（如 <code class="inline">203</code>）。在文件名提示处可用 <kbd>Tab</kbd> 补全。</p></div>
+<div>
+<h4><svg><use href="#i-spark"/></svg><span class="l-en">Command line</span><span class="l-zh">命令行</span></h4>
+<div class="code">
+<div class="cap"><i></i><i></i><i></i><span>gpumdkit.sh -&lt;option&gt; [args...]</span></div>
+<pre><code>gpumdkit.sh -out2xyz ./scf_results
+gpumdkit.sh -min_dist_pbc dump.xyz
+gpumdkit.sh -plt train
+gpumdkit.sh -calc msd dump.xyz Li 10
+
+gpumdkit.sh -plt -h<span class="c">        # list plot types</span>
+gpumdkit.sh -range -h<span class="c">      # help of one option</span></code></pre><button class="copy-btn" data-copy-pre aria-label="Copy"><svg class="cp"><use href="#i-copy"/></svg><svg class="ok"><use href="#i-check"/></svg></button></div>
+<p class="l-en"><code class="inline">-h</code> lists everything; <code class="inline">gpumdkit.sh -&lt;option&gt; -h</code> shows the arguments of Python-backed options.</p>
+<p class="l-zh"><code class="inline">-h</code> 列出全部选项；对基于 Python 的选项，<code class="inline">gpumdkit.sh -&lt;option&gt; -h</code> 会显示其参数说明。</p></div></div>
+<h3 id="notation"><span class="l-en">How to read the examples</span><span class="l-zh">示例约定</span></h3>
+<div class="tbl-wrap">
+<table class="tbl">
+<thead>
+<tr><th><span class="l-en">Notation</span><span class="l-zh">写法</span></th><th><span class="l-en">Meaning</span><span class="l-zh">含义</span></th><th><span class="l-en">Example</span><span class="l-zh">示例</span></th></tr></thead>
+<tbody>
+<tr><td><code>&lt;required&gt;</code></td><td><span class="l-en">A value you must provide; do not type the angle brackets.</span><span class="l-zh">必须提供的值，不要输入尖括号。</span></td><td><code>&lt;output.xyz&gt;</code> → <code>model.xyz</code></td></tr>
+<tr><td><code>[optional]</code></td><td><span class="l-en">May be omitted; the script then uses its documented default.</span><span class="l-zh">可省略，省略后脚本使用文档中的默认值。</span></td><td><code>[max_corr_steps]</code></td></tr>
+<tr><td><code>...</code></td><td><span class="l-en">One or more values.</span><span class="l-zh">一个或多个值。</span></td><td><code>&lt;element...&gt;</code></td></tr></tbody></table></div>
+<div class="note warn"><span class="ni">!</span>
+<div class="nb">
+<div class="l-en">Time parameters such as <code class="inline">dt_fs</code> must match how <b>your</b> trajectory was written; GPUMDkit does not read them from the MD input file. Example values like <code class="inline">Li 1</code> only show the argument format, they are not defaults.</div>
+<div class="l-zh"><code class="inline">dt_fs</code> 等时间参数必须与<b>你自己</b>的轨迹写出方式一致，GPUMDkit 不会从 MD 输入文件中读取。<code class="inline">Li 1</code> 之类的示例值只用于说明参数格式，并非默认值。</div></div></div></section>

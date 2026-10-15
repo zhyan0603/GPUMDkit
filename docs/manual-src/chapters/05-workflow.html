@@ -1,0 +1,37 @@
+<section class="chap" id="workflow" data-group="Toolbox|工具箱">
+<div class="chap-head"><span class="chap-no"></span>
+<div><h2><span class="l-en">Workflows</span><span class="l-zh">工作流</span></h2></div></div>
+<p class="lead l-en">Prepare batches of DFT and MD jobs without writing the glue scripts yourself.</p>
+<p class="lead l-zh">批量准备 DFT 与 MD 任务，不用自己再写胶水脚本。</p>
+<div class="docs-row"><span class="dr-label"><span class="l-en">Detailed pages</span><span class="l-zh">详细页面</span></span><a class="chip" href="htmls/en/index.html" data-doc="workflow_scripts"><span class="l-en">Workflow scripts</span><span class="l-zh">工作流脚本</span><svg><use href="#i-out"/></svg></a></div>
+<p class="l-en">Workflow scripts prepare directories, inputs and links. <b>They never submit calculations</b>: you review the generated files and run DFT, GPUMD or LAMMPS yourself.</p>
+<p class="l-zh">工作流脚本只负责准备目录、输入文件和链接，<b>不会提交任何计算</b>：请检查生成的文件，并自行运行 DFT、GPUMD 或 LAMMPS。</p>
+<div class="grid c3">
+<div class="mcard">
+<div class="mc-top"><span class="mc-id">301</span>
+<h4><span class="l-en">SCF batch</span><span class="l-zh">SCF 批量预处理</span></h4></div>
+<p class="l-en">Create DFT single-point directories for many structures (VASP or CP2K).</p>
+<p class="l-zh">为大量结构生成 DFT 单点计算目录（VASP 或 CP2K）。</p></div>
+<div class="mcard">
+<div class="mc-top"><span class="mc-id">302</span>
+<h4><span class="l-en">MD batch (GPUMD)</span><span class="l-zh">MD 采样批量预处理（GPUMD）</span></h4></div>
+<p class="l-en">Create one GPUMD sampling directory per structure, linked to shared inputs.</p>
+<p class="l-zh">为每个结构生成 GPUMD 采样目录，并链接共享输入文件。</p></div>
+<div class="mcard">
+<div class="mc-top"><span class="mc-id">303</span>
+<h4><span class="l-en">MD batch (LAMMPS)</span><span class="l-zh">MD 采样批量预处理（LAMMPS）</span></h4></div>
+<p class="l-en">The same, for LAMMPS-based sampling.</p>
+<p class="l-zh">同上，用于基于 LAMMPS 的采样。</p></div></div>
+<h3 id="scf"><span class="l-en">What 301 builds (VASP)</span><span class="l-zh">301 会生成什么（VASP）</span></h3>
+<pre class="tree"><span class="c">gpumdkit.sh → 3 → 301 → VASP</span>
+<span class="d">.</span>
+├── <span class="d">struct_fp/</span>      <span class="c"># the structures to label</span>
+├── <span class="d">fp/</span>             <span class="c"># put your INCAR, POTCAR and KPOINTS here</span>
+│   └── ...            <span class="c"># one calculation directory per structure</span>
+└── presub.sh      <span class="c"># generated helper script — review before use</span></pre>
+<p class="l-en">Before submitting, check the number of structures, atom and species order, cells, DFT inputs and the job script. For CP2K (<code class="inline">301</code> → <code class="inline">2</code>) GPUMDkit asks for an extxyz file, an input template and a directory prefix.</p>
+<p class="l-zh">提交之前，请检查结构数量、原子与元素顺序、晶胞、DFT 输入以及作业脚本。CP2K 分支（<code class="inline">301</code> → <code class="inline">2</code>）会询问 extxyz 文件、输入模板和目录前缀。</p>
+<div class="note warn"><span class="ni">!</span>
+<div class="nb">
+<div class="l-en">Function 302 only creates directories and symlinks. Afterwards put <code class="inline">nep.txt</code> and one <code class="inline">run_&lt;index&gt;.in</code> per structure into the generated <code class="inline">md/</code> directory, and check each directory points to the right files. GPUMD appends to some outputs, so rerun in a clean directory or archive old results.</div>
+<div class="l-zh">302 只创建目录和软链接。之后请把 <code class="inline">nep.txt</code> 以及每个结构对应的 <code class="inline">run_&lt;index&gt;.in</code> 放入生成的 <code class="inline">md/</code> 目录，并确认每个目录指向正确的文件。GPUMD 会向部分输出追加内容，请在干净目录中重跑或先归档旧结果。</div></div></div></section>

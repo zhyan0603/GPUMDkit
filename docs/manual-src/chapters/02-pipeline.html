@@ -1,0 +1,52 @@
+<section class="chap" id="pipeline" data-group="Basics|基础">
+<div class="chap-head"><span class="chap-no"></span>
+<div><h2><span class="l-en">The NEP data pipeline</span><span class="l-zh">NEP 数据流程</span></h2></div></div>
+<p class="lead l-en">Where each GPUMDkit module fits in building and improving a neural-network potential.</p>
+<p class="lead l-zh">GPUMDkit 的各个模块在构建和改进神经网络势函数的流程中各自处于什么位置。</p>
+<div class="docs-row"><span class="dr-label"><span class="l-en">Detailed pages</span><span class="l-zh">详细页面</span></span><a class="chip" href="htmls/en/index.html" data-doc="active_learning_workflow"><span class="l-en">Active learning workflow</span><span class="l-zh">主动学习工作流</span><svg><use href="#i-out"/></svg></a><a class="chip" href="htmls/en/index.html" data-doc="simulation_and_postprocessing"><span class="l-en">Simulation & post-processing</span><span class="l-zh">模拟与后处理</span><svg><use href="#i-out"/></svg></a></div>
+<div class="pipe">
+<div class="st"><span class="no">1</span>
+<h4><span class="l-en">Prepare structures</span><span class="l-zh">准备结构</span> <span class="pill kit">GPUMDkit</span></h4>
+<p class="l-en">Turn POSCAR, CIF, XDATCAR, LAMMPS or ASE files into extxyz; replicate cells to the size you need.</p>
+<p class="l-zh">把 POSCAR、CIF、XDATCAR、LAMMPS 或 ASE 文件转换为 extxyz，并按需扩胞。</p>
+<div class="tags"><a href="#convert">-pos2exyz</a><a href="#convert">-cif2exyz</a><a href="#convert">-replicate</a></div></div>
+<div class="st"><span class="no">2</span>
+<h4><span class="l-en">Select configurations</span><span class="l-zh">挑选构型</span> <span class="pill kit">GPUMDkit</span></h4>
+<p class="l-en">Sample frames from MD (uniform, random, farthest-point) and drop unphysical ones by distance or box size.</p>
+<p class="l-zh">从 MD 轨迹中采样（均匀、随机、最远点），并按距离或盒子尺寸剔除不合理结构。</p>
+<div class="tags"><a href="#sample">203 FPS</a><a href="#sample">-filter_dist_pbc</a><a href="#sample">-filter_box</a></div></div>
+<div class="st you"><span class="no">3</span>
+<h4><span class="l-en">Label with DFT</span><span class="l-zh">DFT 标注</span> <span class="pill you"><span class="l-en">you run it</span><span class="l-zh">由你运行</span></span></h4>
+<p class="l-en">Function 301 prepares VASP or CP2K single-point directories. GPUMDkit does not submit jobs: run DFT with your own settings.</p>
+<p class="l-zh">301 会生成 VASP 或 CP2K 单点计算目录。GPUMDkit 不会提交任务，DFT 需用你自己的参数运行。</p>
+<div class="tags"><a href="#workflow">301</a></div></div>
+<div class="st"><span class="no">4</span>
+<h4><span class="l-en">Collect and check</span><span class="l-zh">收集并检查</span> <span class="pill kit">GPUMDkit</span></h4>
+<p class="l-en">Convert the DFT output to extxyz, then check energy/force ranges, minimum distances and composition.</p>
+<p class="l-zh">把 DFT 结果转换为 extxyz，再检查能量/力范围、最小原子间距和成分。</p>
+<div class="tags"><a href="#convert">-out2xyz</a><a href="#analyze">-range</a><a href="#analyze">-min_dist_pbc</a></div></div>
+<div class="st you"><span class="no">5</span>
+<h4><span class="l-en">Train the NEP</span><span class="l-zh">训练 NEP</span> <span class="pill you"><span class="l-en">you run it</span><span class="l-zh">由你运行</span></span></h4>
+<p class="l-en">Run <code>nep</code> from GPUMD yourself, then inspect loss curves and parity plots with GPUMDkit.</p>
+<p class="l-zh">自行运行 GPUMD 的 <code>nep</code>，再用 GPUMDkit 查看损失曲线与对比图。</p>
+<div class="tags"><a href="#plot">-plt train</a><a href="#plot">-plt prediction</a></div></div>
+<div class="st you"><span class="no">6</span>
+<h4><span class="l-en">Explore with MD</span><span class="l-zh">用 MD 探索</span> <span class="pill you"><span class="l-en">you run it</span><span class="l-zh">由你运行</span></span></h4>
+<p class="l-en">Run GPUMD with the new model, follow its progress, and analyse the trajectory.</p>
+<p class="l-zh">用新模型运行 GPUMD，跟踪进度并分析轨迹。</p>
+<div class="tags"><a href="#help">-time</a><a href="#plot">-plt thermo</a><a href="#calc">-calc msd</a></div></div></div>
+<div class="pipe-back"><svg><use href="#i-spark"/></svg><span><span class="l-en">Back to step 2 with the new model. Stop when accuracy <b>and</b> MD stability meet your own acceptance criteria.</span><span class="l-zh">带着新模型回到第 2 步。当精度<b>和</b>MD 稳定性都达到你自己设定的标准时停止迭代。</span></span></div>
+<div class="legend"><span><span class="pill kit">GPUMDkit</span> <span class="l-en">this toolkit does the step</span><span class="l-zh">由本工具完成</span></span><span><span class="pill you"><span class="l-en">you run it</span><span class="l-zh">由你运行</span></span> <span class="l-en">GPUMD, NEP or DFT software, on your own cluster</span><span class="l-zh">GPUMD、NEP 或 DFT 软件，在你自己的机器上运行</span></span></div>
+<h3 id="which"><span class="l-en">Which command do I need?</span><span class="l-zh">我该用哪条命令？</span></h3>
+<div class="tbl-wrap">
+<table class="tbl">
+<thead>
+<tr><th><span class="l-en">I want to…</span><span class="l-zh">我想……</span></th><th><span class="l-en">Run</span><span class="l-zh">运行</span></th><th><span class="l-en">Chapter</span><span class="l-zh">章节</span></th></tr></thead>
+<tbody>
+<tr><td><span class="l-en">convert a folder of VASP OUTCAR files</span><span class="l-zh">转换一批 VASP OUTCAR</span></td><td class="cmd"><button data-copy="gpumdkit.sh -out2xyz &lt;dir&gt;" title="Copy"><code>gpumdkit.sh -out2xyz &lt;dir&gt;</code></button></td><td><a class="blue" href="#convert">03</a></td></tr>
+<tr><td><span class="l-en">convert a CIF to extxyz</span><span class="l-zh">把 CIF 转为 extxyz</span></td><td class="cmd"><button data-copy="gpumdkit.sh -cif2exyz &lt;input.cif&gt; &lt;output.xyz&gt;" title="Copy"><code>gpumdkit.sh -cif2exyz &lt;input.cif&gt; &lt;output.xyz&gt;</code></button></td><td><a class="blue" href="#convert">03</a></td></tr>
+<tr><td><span class="l-en">pick diverse frames from a long trajectory</span><span class="l-zh">从长轨迹中挑选多样性帧</span></td><td class="cmd"><button data-copy="gpumdkit.sh`  →  2 → 203" title="Copy"><code>gpumdkit.sh`  →  2 → 203</code></button></td><td><a class="blue" href="#sample">04</a></td></tr>
+<tr><td><span class="l-en">find overlapping atoms in a dataset</span><span class="l-zh">找出数据集中原子过近的结构</span></td><td class="cmd"><button data-copy="gpumdkit.sh -min_dist_pbc &lt;input.xyz&gt;" title="Copy"><code>gpumdkit.sh -min_dist_pbc &lt;input.xyz&gt;</code></button></td><td><a class="blue" href="#analyze">07</a></td></tr>
+<tr><td><span class="l-en">see how a NEP training is going</span><span class="l-zh">查看 NEP 训练情况</span></td><td class="cmd"><button data-copy="gpumdkit.sh -plt train" title="Copy"><code>gpumdkit.sh -plt train</code></button></td><td><a class="blue" href="#plot">08</a></td></tr>
+<tr><td><span class="l-en">get an ionic conductivity from MSD</span><span class="l-zh">由 MSD 得到离子电导率</span></td><td class="cmd"><button data-copy="gpumdkit.sh -calc ionic-cond &lt;element&gt; &lt;charge&gt;" title="Copy"><code>gpumdkit.sh -calc ionic-cond &lt;element&gt; &lt;charge&gt;</code></button></td><td><a class="blue" href="#calc">06</a></td></tr>
+<tr><td><span class="l-en">look at runs in a browser, remotely</span><span class="l-zh">在浏览器里远程查看计算</span></td><td class="cmd"><button data-copy="gpumdkit.sh -server" title="Copy"><code>gpumdkit.sh -server</code></button></td><td><a class="blue" href="#console">09</a></td></tr></tbody></table></div></section>

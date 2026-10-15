@@ -41,7 +41,8 @@ GPUMDkit/
 │   ├── htmls/               # Generated HTML (do not edit by hand)
 │   ├── command_reference.tsv  # Bilingual command list
 │   ├── updates.info         # Latest feature and code/CLI bug-fix records only
-│   ├── index.html, gallery.html, publications.html  # Standalone website
+│   ├── index.html, gallery.html, publications.html, manual.html  # Standalone website
+│   ├── manual-src/          # Sources of manual.html; edit these, then run `python3 docs/manual-src/build.py`
 │   ├── assets/              # Website CSS, JavaScript, and images
 │   ├── stats.json           # Website headline numbers
 │   └── Gallery/             # Example plot images
@@ -572,7 +573,7 @@ Do **not** run MkDocs merely because another file under `docs/` changed. The
 standalone website files below are not MkDocs inputs and should be validated
 directly instead:
 
-- `docs/index.html`, `docs/gallery.html`, and `docs/publications.html`
+- `docs/index.html`, `docs/gallery.html`, `docs/publications.html`, and `docs/manual.html`
   (`docs/index_zh.html` only redirects to the Chinese view of `index.html`)
 - `docs/assets/**` (site CSS, JavaScript, and images) and `docs/Gallery/**`
 - standalone JSON/data files: `docs/gallery.json`, `docs/publications.json`,
