@@ -101,7 +101,7 @@
 <div><h2><span class="l-en">Getting started</span><span class="l-zh">快速入门</span></h2></div></div>
 <p class="lead l-en">Install, verify, and run your first command in about two minutes.</p>
 <p class="lead l-zh">两分钟内完成安装、验证，并跑通第一条命令。</p>
-<div class="docs-row"><span class="dr-label"><span class="l-en">Detailed pages</span><span class="l-zh">详细页面</span></span><a class="chip" href="manual/en/quick_start.html" data-doc="quick_start"><span class="l-en">Quick start</span><span class="l-zh">快速入门</span><svg><use href="#i-out"/></svg></a></div>
+<div class="docs-row"><span class="dr-label"><span class="l-en">Detailed pages</span><span class="l-zh">详细页面</span></span><a class="chip" href="htmls/en/quick_start.html" data-doc="quick_start"><span class="l-en">Quick start</span><span class="l-zh">快速入门</span><svg><use href="#i-out"/></svg></a></div>
 <h3 id="install"><span class="num">1</span><span class="l-en">Install</span><span class="l-zh">安装</span></h3>
 <div class="install" data-install style="max-width:860px;margin:16px 0 8px">
 <div class="install-tabs" role="tablist"><button class="active" data-cmd="conda create -n gpumdkit -c gpumdkit -c conda-forge gpumdkit">conda</button><button data-cmd="git clone https://github.com/zhyan0603/GPUMDkit.git &amp;&amp; cd GPUMDkit &amp;&amp; source ./install.sh">source</button><button data-cmd="gpumdkit.sh -update">update</button></div>
@@ -193,7 +193,7 @@ gpumdkit.sh -range -h<span class="c">      # help of one option</span></code></p
 <div><h2><span class="l-en">The NEP data pipeline</span><span class="l-zh">NEP 数据流程</span></h2></div></div>
 <p class="lead l-en">Where each GPUMDkit module fits in building and improving a neural-network potential.</p>
 <p class="lead l-zh">GPUMDkit 的各个模块在构建和改进神经网络势函数的流程中各自处于什么位置。</p>
-<div class="docs-row"><span class="dr-label"><span class="l-en">Detailed pages</span><span class="l-zh">详细页面</span></span><a class="chip" href="manual/en/active_learning_workflow.html" data-doc="active_learning_workflow"><span class="l-en">Active learning workflow</span><span class="l-zh">主动学习工作流</span><svg><use href="#i-out"/></svg></a><a class="chip" href="manual/en/simulation_and_postprocessing.html" data-doc="simulation_and_postprocessing"><span class="l-en">Simulation & post-processing</span><span class="l-zh">模拟与后处理</span><svg><use href="#i-out"/></svg></a></div>
+<div class="docs-row"><span class="dr-label"><span class="l-en">Detailed pages</span><span class="l-zh">详细页面</span></span><a class="chip" href="htmls/en/active_learning_workflow.html" data-doc="active_learning_workflow"><span class="l-en">Active learning workflow</span><span class="l-zh">主动学习工作流</span><svg><use href="#i-out"/></svg></a><a class="chip" href="htmls/en/simulation_and_postprocessing.html" data-doc="simulation_and_postprocessing"><span class="l-en">Simulation & post-processing</span><span class="l-zh">模拟与后处理</span><svg><use href="#i-out"/></svg></a></div>
 <div class="pipe">
 <div class="st"><span class="no">1</span>
 <h4><span class="l-en">Prepare structures</span><span class="l-zh">准备结构</span> <span class="pill kit">GPUMDkit</span></h4>
@@ -245,7 +245,7 @@ gpumdkit.sh -range -h<span class="c">      # help of one option</span></code></p
 <div><h2><span class="l-en">Format conversion</span><span class="l-zh">格式转换</span></h2></div></div>
 <p class="lead l-en">Bring DFT and MD outputs into extxyz, and reshape extxyz files for training.</p>
 <p class="lead l-zh">把 DFT 与 MD 的输出转换为 extxyz，并整理成适合训练的形式。</p>
-<div class="docs-row"><span class="dr-label"><span class="l-en">Detailed pages</span><span class="l-zh">详细页面</span></span><a class="chip" href="manual/en/format_conversion.html" data-doc="format_conversion"><span class="l-en">Format conversion</span><span class="l-zh">格式转换</span><svg><use href="#i-out"/></svg></a></div>
+<div class="docs-row"><span class="dr-label"><span class="l-en">Detailed pages</span><span class="l-zh">详细页面</span></span><a class="chip" href="htmls/en/format_conversion.html" data-doc="format_conversion"><span class="l-en">Format conversion</span><span class="l-zh">格式转换</span><svg><use href="#i-out"/></svg></a></div>
 <p class="l-en">GPUMDkit converts between the formats used in computational materials science and the extended XYZ (<b>extxyz</b>) files used by GPUMD and NEP. Run it in the directory where you want the results: most converters write into the current directory, even when the input is elsewhere.</p>
 <p class="l-zh">GPUMDkit 在计算材料学常用格式与 GPUMD/NEP 使用的扩展 XYZ（<b>extxyz</b>）之间转换。请在希望保存结果的目录中运行：多数转换器即使输入文件在别处，也会把结果写到当前目录。</p>
 <h3 id="extxyz"><span class="l-en">Anatomy of an extxyz file</span><span class="l-zh">extxyz 文件长什么样</span></h3>
@@ -311,7 +311,7 @@ gpumdkit.sh -range -h<span class="c">      # help of one option</span></code></p
 <div><h2><span class="l-en">Structure sampling and filtering</span><span class="l-zh">结构采样与过滤</span></h2></div></div>
 <p class="lead l-en">Choose informative frames from MD and drop unphysical ones.</p>
 <p class="lead l-zh">从 MD 轨迹中挑选有信息量的构型，并剔除不合理的结构。</p>
-<div class="docs-row"><span class="dr-label"><span class="l-en">Detailed pages</span><span class="l-zh">详细页面</span></span><a class="chip" href="manual/en/structure_sampling.html" data-doc="structure_sampling"><span class="l-en">Structure sampling</span><span class="l-zh">结构采样</span><svg><use href="#i-out"/></svg></a></div>
+<div class="docs-row"><span class="dr-label"><span class="l-en">Detailed pages</span><span class="l-zh">详细页面</span></span><a class="chip" href="htmls/en/structure_sampling.html" data-doc="structure_sampling"><span class="l-en">Structure sampling</span><span class="l-zh">结构采样</span><svg><use href="#i-out"/></svg></a></div>
 <p class="l-en">Training sets should be diverse, not just large. GPUMDkit offers several ways to choose and clean candidate structures. Enter file names at the prompts of the interactive menu: <code class="inline">gpumdkit.sh</code> → <code class="inline">2</code>.</p>
 <p class="l-zh">训练集需要的是多样性，而不只是数量。GPUMDkit 提供多种方式挑选和清理候选结构。在交互菜单中进入 <code class="inline">gpumdkit.sh</code> → <code class="inline">2</code>，并按提示输入文件名。</p>
 <div class="grid c3">
@@ -375,7 +375,7 @@ gpumdkit.sh<span class="c">                                               # 2) S
 <div><h2><span class="l-en">Workflows</span><span class="l-zh">工作流</span></h2></div></div>
 <p class="lead l-en">Prepare batches of DFT and MD jobs without writing the glue scripts yourself.</p>
 <p class="lead l-zh">批量准备 DFT 与 MD 任务，不用自己再写胶水脚本。</p>
-<div class="docs-row"><span class="dr-label"><span class="l-en">Detailed pages</span><span class="l-zh">详细页面</span></span><a class="chip" href="manual/en/workflow_scripts.html" data-doc="workflow_scripts"><span class="l-en">Workflow scripts</span><span class="l-zh">工作流脚本</span><svg><use href="#i-out"/></svg></a></div>
+<div class="docs-row"><span class="dr-label"><span class="l-en">Detailed pages</span><span class="l-zh">详细页面</span></span><a class="chip" href="htmls/en/workflow_scripts.html" data-doc="workflow_scripts"><span class="l-en">Workflow scripts</span><span class="l-zh">工作流脚本</span><svg><use href="#i-out"/></svg></a></div>
 <p class="l-en">Workflow scripts prepare directories, inputs and links. <b>They never submit calculations</b>: you review the generated files and run DFT, GPUMD or LAMMPS yourself.</p>
 <p class="l-zh">工作流脚本只负责准备目录、输入文件和链接，<b>不会提交任何计算</b>：请检查生成的文件，并自行运行 DFT、GPUMD 或 LAMMPS。</p>
 <div class="grid c3">
@@ -412,7 +412,7 @@ gpumdkit.sh<span class="c">                                               # 2) S
 <div><h2><span class="l-en">Calculators</span><span class="l-zh">计算器</span></h2></div></div>
 <p class="lead l-en">NEP-powered predictions and trajectory analysis from one entry point.</p>
 <p class="lead l-zh">从同一个入口完成基于 NEP 的预测和轨迹分析。</p>
-<div class="docs-row"><span class="dr-label"><span class="l-en">Detailed pages</span><span class="l-zh">详细页面</span></span><a class="chip" href="manual/en/calculator_scripts.html" data-doc="calculator_scripts"><span class="l-en">Calculator scripts</span><span class="l-zh">计算器脚本</span><svg><use href="#i-out"/></svg></a><a class="chip" href="manual/en/polar_material_analysis.html" data-doc="polar_material_analysis"><span class="l-en">Polar material analysis</span><span class="l-zh">极性材料分析</span><svg><use href="#i-out"/></svg></a></div>
+<div class="docs-row"><span class="dr-label"><span class="l-en">Detailed pages</span><span class="l-zh">详细页面</span></span><a class="chip" href="htmls/en/calculator_scripts.html" data-doc="calculator_scripts"><span class="l-en">Calculator scripts</span><span class="l-zh">计算器脚本</span><svg><use href="#i-out"/></svg></a><a class="chip" href="htmls/en/polar_material_analysis.html" data-doc="polar_material_analysis"><span class="l-en">Polar material analysis</span><span class="l-zh">极性材料分析</span><svg><use href="#i-out"/></svg></a></div>
 <p class="l-en">Calculators run NEP-based or trajectory-based calculations. Syntax: <code class="inline">gpumdkit.sh -calc &lt;type&gt; [args...]</code>; <code class="inline">gpumdkit.sh -calc -h</code> lists them all.</p>
 <p class="l-zh">计算器用于基于 NEP 模型或轨迹的各类计算。语法：<code class="inline">gpumdkit.sh -calc &lt;type&gt; [args...]</code>；<code class="inline">gpumdkit.sh -calc -h</code> 可列出全部类型。</p>
 <div class="tbl-wrap">
@@ -444,7 +444,7 @@ gpumdkit.sh<span class="c">                                               # 2) S
 <div><h2><span class="l-en">Analyzers</span><span class="l-zh">分析器</span></h2></div></div>
 <p class="lead l-en">Composition, ranges, distances and charge balance — know your data first.</p>
 <p class="lead l-zh">成分、范围、间距与电荷平衡——先了解你的数据。</p>
-<div class="docs-row"><span class="dr-label"><span class="l-en">Detailed pages</span><span class="l-zh">详细页面</span></span><a class="chip" href="manual/en/analyzer_scripts.html" data-doc="analyzer_scripts"><span class="l-en">Analyzer scripts</span><span class="l-zh">分析工具</span><svg><use href="#i-out"/></svg></a></div>
+<div class="docs-row"><span class="dr-label"><span class="l-en">Detailed pages</span><span class="l-zh">详细页面</span></span><a class="chip" href="htmls/en/analyzer_scripts.html" data-doc="analyzer_scripts"><span class="l-en">Analyzer scripts</span><span class="l-zh">分析工具</span><svg><use href="#i-out"/></svg></a></div>
 <p class="l-en">Analyzers inspect an extxyz file without changing it, so you can trust a dataset before you train on it.</p>
 <p class="l-zh">分析器只检查 extxyz 文件而不修改它，让你在训练之前先确认数据可信。</p>
 <div class="tbl-wrap">
@@ -475,7 +475,7 @@ gpumdkit.sh -cbc new_reference.xyz</code></pre><button class="copy-btn" data-cop
 <div><h2><span class="l-en">Plots and visualization</span><span class="l-zh">绘图与可视化</span></h2></div></div>
 <p class="lead l-en">From training curves to phonons: publication-ready figures, one option each.</p>
 <p class="lead l-zh">从训练曲线到声子谱：每种图一个选项，直接出论文级图片。</p>
-<div class="docs-row"><span class="dr-label"><span class="l-en">Detailed pages</span><span class="l-zh">详细页面</span></span><a class="chip" href="manual/en/plot_scripts.html" data-doc="plot_scripts"><span class="l-en">Plot scripts</span><span class="l-zh">绘图脚本</span><svg><use href="#i-out"/></svg></a><a class="chip" href="manual/en/plot_nep.html" data-doc="plot_nep"><span class="l-en">NEP training plots</span><span class="l-zh">NEP 训练绘图</span><svg><use href="#i-out"/></svg></a><a class="chip" href="manual/en/plot_md_structure.html" data-doc="plot_md_structure"><span class="l-en">MD and structure plots</span><span class="l-zh">MD 与结构绘图</span><svg><use href="#i-out"/></svg></a><a class="chip" href="manual/en/plot_diffusion.html" data-doc="plot_diffusion"><span class="l-en">Diffusion plots</span><span class="l-zh">扩散绘图</span><svg><use href="#i-out"/></svg></a><a class="chip" href="manual/en/plot_heat_phonon.html" data-doc="plot_heat_phonon"><span class="l-en">Heat transport and phonon plots</span><span class="l-zh">热输运与声子绘图</span><svg><use href="#i-out"/></svg></a></div>
+<div class="docs-row"><span class="dr-label"><span class="l-en">Detailed pages</span><span class="l-zh">详细页面</span></span><a class="chip" href="htmls/en/plot_scripts.html" data-doc="plot_scripts"><span class="l-en">Plot scripts</span><span class="l-zh">绘图脚本</span><svg><use href="#i-out"/></svg></a><a class="chip" href="htmls/en/plot_nep.html" data-doc="plot_nep"><span class="l-en">NEP training plots</span><span class="l-zh">NEP 训练绘图</span><svg><use href="#i-out"/></svg></a><a class="chip" href="htmls/en/plot_md_structure.html" data-doc="plot_md_structure"><span class="l-en">MD and structure plots</span><span class="l-zh">MD 与结构绘图</span><svg><use href="#i-out"/></svg></a><a class="chip" href="htmls/en/plot_diffusion.html" data-doc="plot_diffusion"><span class="l-en">Diffusion plots</span><span class="l-zh">扩散绘图</span><svg><use href="#i-out"/></svg></a><a class="chip" href="htmls/en/plot_heat_phonon.html" data-doc="plot_heat_phonon"><span class="l-en">Heat transport and phonon plots</span><span class="l-zh">热输运与声子绘图</span><svg><use href="#i-out"/></svg></a></div>
 <p class="l-en">Every plot is one option: <code class="inline">gpumdkit.sh -plt &lt;type&gt;</code>. Run it in the directory that holds the GPUMD or NEP outputs. Several plots accept <code class="inline">save</code> to write an image instead of opening a window; <code class="inline">gpumdkit.sh -plt -h</code> lists all types and arguments.</p>
 <p class="l-zh">每种图只需一个选项：<code class="inline">gpumdkit.sh -plt &lt;type&gt;</code>。请在存放 GPUMD 或 NEP 输出的目录中运行。部分绘图支持 <code class="inline">save</code> 参数，直接保存图片而不弹出窗口；<code class="inline">gpumdkit.sh -plt -h</code> 可列出全部类型及参数。</p>
 <div data-tabscope>
@@ -536,7 +536,7 @@ gpumdkit.sh -cbc new_reference.xyz</code></pre><button class="copy-btn" data-cop
 <div><h2><span class="l-en">Remote web console</span><span class="l-zh">远程网页控制台</span></h2></div></div>
 <p class="lead l-en">Watch training and MD runs, and make figures, from your own browser.</p>
 <p class="lead l-zh">在自己的浏览器里查看训练与 MD 运行，并一键出图。</p>
-<div class="docs-row"><span class="dr-label"><span class="l-en">Detailed pages</span><span class="l-zh">详细页面</span></span><a class="chip" href="manual/en/remote_web_console.html" data-doc="remote_web_console"><span class="l-en">Remote web console</span><span class="l-zh">远程网页控制台</span><svg><use href="#i-out"/></svg></a></div>
+<div class="docs-row"><span class="dr-label"><span class="l-en">Detailed pages</span><span class="l-zh">详细页面</span></span><a class="chip" href="htmls/en/remote_web_console.html" data-doc="remote_web_console"><span class="l-en">Remote web console</span><span class="l-zh">远程网页控制台</span><svg><use href="#i-out"/></svg></a></div>
 <p class="l-en"><code class="inline">gpumdkit.sh -server</code> starts a browser-based console rooted at the directory you launched it from. The browser shows files that <b>stay on the remote machine</b>, so you can inspect runs, trigger plots and do small file operations without copying the whole project.</p>
 <p class="l-zh"><code class="inline">gpumdkit.sh -server</code> 会以启动时所在的目录为根，开启一个基于浏览器的控制台。浏览器显示的文件<b>始终留在远程机器上</b>，因此无需拷贝整个项目，就能查看计算、触发绘图并做简单的文件操作。</p>
 <h3 id="conn"><span class="l-en">Connect in three steps</span><span class="l-zh">三步连接</span></h3>
@@ -613,7 +613,7 @@ gpumdkit.sh -server -h</code></pre><button class="copy-btn" data-copy-pre aria-l
 <div><h2><span class="l-en">Recipes</span><span class="l-zh">实战流程</span></h2></div></div>
 <p class="lead l-en">Typical sequences, from raw output to a result you can use.</p>
 <p class="lead l-zh">从原始输出到可用结果的典型命令序列。</p>
-<div class="docs-row"><span class="dr-label"><span class="l-en">Detailed pages</span><span class="l-zh">详细页面</span></span><a class="chip" href="manual/en/active_learning_workflow.html" data-doc="active_learning_workflow"><span class="l-en">Active learning workflow</span><span class="l-zh">主动学习工作流</span><svg><use href="#i-out"/></svg></a><a class="chip" href="manual/en/plot_diffusion.html" data-doc="plot_diffusion"><span class="l-en">Diffusion plots</span><span class="l-zh">扩散绘图</span><svg><use href="#i-out"/></svg></a></div>
+<div class="docs-row"><span class="dr-label"><span class="l-en">Detailed pages</span><span class="l-zh">详细页面</span></span><a class="chip" href="htmls/en/active_learning_workflow.html" data-doc="active_learning_workflow"><span class="l-en">Active learning workflow</span><span class="l-zh">主动学习工作流</span><svg><use href="#i-out"/></svg></a><a class="chip" href="htmls/en/plot_diffusion.html" data-doc="plot_diffusion"><span class="l-en">Diffusion plots</span><span class="l-zh">扩散绘图</span><svg><use href="#i-out"/></svg></a></div>
 <p class="l-en">Three end-to-end examples. Steps marked <span class="pill you">you run it</span> use other software; GPUMDkit prepares around them.</p>
 <p class="l-zh">三个端到端示例。标有 <span class="pill you">由你运行</span> 的步骤使用其他软件，GPUMDkit 负责前后衔接。</p>
 <div data-tabscope>
@@ -704,7 +704,7 @@ gpumdkit.sh -plt prediction</code></pre><button class="copy-btn" data-copy-pre a
 <div><h2><span class="l-en">Command reference</span><span class="l-zh">命令参考</span></h2></div></div>
 <p class="lead l-en">Look up any option in a second.</p>
 <p class="lead l-zh">几秒钟内查到任意选项。</p>
-<div class="docs-row"><span class="dr-label"><span class="l-en">Detailed pages</span><span class="l-zh">详细页面</span></span><a class="chip" href="manual/en/command_reference.html" data-doc="command_reference"><span class="l-en">Command reference</span><span class="l-zh">命令参考</span><svg><use href="#i-out"/></svg></a><a class="chip" href="manual/en/custom_commands.html" data-doc="custom_commands"><span class="l-en">Custom commands</span><span class="l-zh">自定义命令</span><svg><use href="#i-out"/></svg></a></div>
+<div class="docs-row"><span class="dr-label"><span class="l-en">Detailed pages</span><span class="l-zh">详细页面</span></span><a class="chip" href="htmls/en/command_reference.html" data-doc="command_reference"><span class="l-en">Command reference</span><span class="l-zh">命令参考</span><svg><use href="#i-out"/></svg></a><a class="chip" href="htmls/en/custom_commands.html" data-doc="custom_commands"><span class="l-en">Custom commands</span><span class="l-zh">自定义命令</span><svg><use href="#i-out"/></svg></a></div>
 <p class="l-en">Every command from <code class="inline">command_reference.tsv</code>, plus all plot types. Click a command to copy it.</p>
 <p class="l-zh">收录 <code class="inline">command_reference.tsv</code> 中的全部命令及所有绘图类型。点击命令即可复制。</p>
 <div class="ref-bar"><label class="search"><svg><use href="#i-search"/></svg><input type="search" data-ref-search placeholder="Filter commands…" aria-label="Filter commands"></label>
@@ -720,7 +720,7 @@ gpumdkit.sh -plt prediction</code></pre><button class="copy-btn" data-copy-pre a
 <div><h2><span class="l-en">Help and more</span><span class="l-zh">帮助与更多</span></h2></div></div>
 <p class="lead l-en">Extras, troubleshooting, and where to ask.</p>
 <p class="lead l-zh">更多小工具、问题排查，以及求助渠道。</p>
-<div class="docs-row"><span class="dr-label"><span class="l-en">Detailed pages</span><span class="l-zh">详细页面</span></span><a class="chip" href="manual/en/custom_commands.html" data-doc="custom_commands"><span class="l-en">Custom commands</span><span class="l-zh">自定义命令</span><svg><use href="#i-out"/></svg></a><a class="chip" href="manual/en/contributing.html" data-doc="contributing"><span class="l-en">Contributing</span><span class="l-zh">贡献指南</span><svg><use href="#i-out"/></svg></a><a class="chip" href="manual/en/simulation_and_postprocessing.html" data-doc="simulation_and_postprocessing"><span class="l-en">Simulation & post-processing</span><span class="l-zh">模拟与后处理</span><svg><use href="#i-out"/></svg></a></div>
+<div class="docs-row"><span class="dr-label"><span class="l-en">Detailed pages</span><span class="l-zh">详细页面</span></span><a class="chip" href="htmls/en/custom_commands.html" data-doc="custom_commands"><span class="l-en">Custom commands</span><span class="l-zh">自定义命令</span><svg><use href="#i-out"/></svg></a><a class="chip" href="htmls/en/contributing_to_gpumdkit.html" data-doc="contributing"><span class="l-en">Contributing</span><span class="l-zh">贡献指南</span><svg><use href="#i-out"/></svg></a><a class="chip" href="htmls/en/simulation_and_postprocessing.html" data-doc="simulation_and_postprocessing"><span class="l-en">Simulation & post-processing</span><span class="l-zh">模拟与后处理</span><svg><use href="#i-out"/></svg></a></div>
 <h3 id="more-tools"><span class="l-en">Handy extras</span><span class="l-zh">实用小功能</span></h3>
 <div class="grid c3">
 <div class="mcard">

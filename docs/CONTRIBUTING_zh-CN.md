@@ -68,7 +68,7 @@
 
 - 确保帮助信息（如 `-h` 标志）清晰准确。
 - 教程文档位于 `docs/tutorials/en/`（英文）和 `docs/tutorials/zh/`（中文）。如果你添加了新功能，请考虑更新相关教程页面。
-- 编辑教程 Markdown 文件后，使用 `mkdocs build -f docs/mkdocs.yml` 重新构建 HTML。
+- 编辑教程 Markdown 文件后，使用 `python3 docs/manual-src/build.py` 重新生成网页。
 
 ### 更新记录
 
@@ -156,9 +156,9 @@ git checkout -b your-branch-name upstream/dev
 - **`skills/`**：可移植的 Agent Skills 定义（`gpumdkit-skill/SKILL.md`）及按需加载的 references
 - **`docs/`**：文档文件
   - `tutorials/en/` 和 `tutorials/zh/`：双语教程页面
-  - `mkdocs.yml`：构建教程 HTML 的 MkDocs 配置
+  - `manual-src/`：手册页面的源文件及渲染教程的 `build.py`
   - `command_reference.tsv`：机器可读的命令参考
-  - `htmls/`：MkDocs 生成的 HTML 输出
+  - `htmls/`：生成的教程页面（不要手动编辑）
 
 #### 交互模式贡献
 
@@ -365,8 +365,8 @@ find src Scripts -name '*.sh' -exec bash -n {} +
 # Python 语法检查（针对修改的 Python 文件）
 python3 -m py_compile path/to/modified_script.py
 
-# MkDocs 构建（如果修改了文档）
-mkdocs build -f docs/mkdocs.yml
+# 重新生成网页（如果修改了文档）
+python3 docs/manual-src/build.py
 
 # 检查尾随空格问题
 git diff --check

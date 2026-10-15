@@ -15,11 +15,11 @@ NEW_FEATURES=(
 
 # Bug fixes (one per line, in an array; keep at most the five newest entries)
 BUG_FIXES=(
-    "flip the sign of stress= targets in -prediction so stress/virial target columns follow the NEP output convention"
     "select the right active.xyz frames in menu 205 (select_max_modev.py) when GPUMD saved only frames above its active threshold"
     "read energy=/virial= keys again in -filter_value and -range with ASE 3.23+, and keep frames that lack the property instead of dropping them"
     "stop -lmp2exyz from writing an empty dump.xyz when no structure could be read"
     "label ionic-conductivity Arrhenius plots as log10(sigma*T) to match the fitted values"
+    "point the polar-material calculator menus (406-410) to the working documentation page"
 )
 
 # === Formatted Output Logic ===

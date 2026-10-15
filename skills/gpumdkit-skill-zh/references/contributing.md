@@ -35,15 +35,13 @@ GPUMDkit/
 │   └── utils/               # 工具脚本，包括 completion.sh（命令行 Tab 补全）
 ├── skills/                  # AI agent skill 定义
 ├── docs/                    # 文档
-│   ├── tutorials/en/        # 英文教程（MkDocs 源文件）
-│   ├── tutorials/zh/        # 中文教程（MkDocs 源文件）
-│   ├── mkdocs.yml           # MkDocs 配置
-│   ├── htmls/               # 生成的 HTML（不要手动编辑）
+│   ├── tutorials/en/        # 英文教程源文件（Markdown）
+│   ├── tutorials/zh/        # 中文教程源文件（Markdown）
+│   ├── htmls/               # 生成的教程页面（不要手动编辑）
 │   ├── command_reference.tsv  # 中英文命令列表
 │   ├── updates.info         # 仅记录最新功能和代码/CLI bug 修复
 │   ├── index.html, gallery.html, publications.html, manual.html  # 独立网站页面
-│   ├── manual-src/          # manual.html 的源文件；修改这里，然后运行 `python3 docs/manual-src/build.py`
-│   ├── manual/              # 生成的教程页面（由 build.py 从 tutorials/*.md 生成），请勿手动修改
+│   ├── manual-src/          # manual.html 的源文件；build.py 生成 manual.html 与 htmls/
 │   ├── assets/              # 网站 CSS、JavaScript 和图片
 │   ├── stats.json           # 网站首页统计数字
 │   └── Gallery/             # 绘图示例图片
@@ -298,7 +296,7 @@ if not os.path.isfile(input_file):
 `Scripts/plt_scripts/README.md`）中补充用法和 Gallery 示例图。
 
 每个用户可见的功能或行为变化，都要在同一次修改中同步更新中英文 tutorials
-源文件和对应的子功能 README，并在验证阶段重新构建 `docs/htmls/**`。仅同步
+源文件和对应的子功能 README，并在验证阶段运行 `python3 docs/manual-src/build.py` 重新生成 `docs/htmls/**`。仅同步
 文档的改动不记入 `docs/updates.info`。
 
 ### 依赖提示
@@ -506,8 +504,8 @@ python3 -B -c 'from pathlib import Path; p=Path("Scripts/path/to/your_script.py"
 # 如果其他测试产生缓存，只删除已记录的显式路径
 # rm -rf /exact/path/to/the/test-created/__pycache__
 
-# MkDocs 构建（仅当 MkDocs 输入有更改时；见下文）
-mkdocs build -f docs/mkdocs.yml
+# 重新生成手册与教程页面（仅当其输入有更改时；见下文）
+python3 docs/manual-src/build.py
 
 # 空白检查（始终运行）
 git diff --check
@@ -524,28 +522,32 @@ git diff --check
 - 两棵 reference 目录必须逐文件对应。中文可以为便于理解增加简短说明，但不得遗漏英文中的安全规则、依赖、支持选项或新增功能。
 - 翻译完成后，对照检查标题、表格、代码围栏和相对链接，并搜索遗漏的英文正文和生硬直译。
 
-### 何时构建 MkDocs
+### 何时重新生成手册与教程页面
 
-仅当更改影响 MkDocs 消费的输入时，才运行 `mkdocs build -f docs/mkdocs.yml`，包括：
+`docs/manual.html` 与 `docs/htmls/**` 下的教程页面由
+`python3 docs/manual-src/build.py` 生成（需要 `markdown` 和 `pymdown-extensions`
+包）。只要更改涉及其输入，就需要运行：
 
-- `docs/tutorials/**`
-- `docs/mkdocs.yml`
-- 由该配置引用的 MkDocs 主题覆盖、插件、模板或资源
+- `docs/tutorials/**`（Markdown 教程，渲染到 `docs/htmls/{en,zh}/`）
+- `docs/manual-src/**`（手册的布局、首屏、章节和带标注的截图）
 
-不要仅因为 `docs/` 下的其他文件发生变化就运行 MkDocs。以下独立网站文件
-不是 MkDocs 输入，应直接进行相应验证：
+脚本还会重新生成 `docs/htmls/index.html`、`docs/assets/js/gk-docs.js` 和
+`docs/sitemap.xml`。教程文件名是公开网址的一部分
+（`https://gpumdkit.cn/htmls/{en,zh}/<文件名>.html`）；重命名教程文件时必须保证旧地址仍然可用。
+不要手动编辑生成的文件：应修改 Markdown 或 `docs/manual-src` 后重新生成。
+不要仅因为 `docs/` 下的其他无关文件发生变化就运行构建。
 
-- `docs/index.html`、`docs/gallery.html`、`docs/publications.html` 和 `docs/manual.html`
+其他独立网站文件直接编辑，并分别验证：
+
+- `docs/index.html`、`docs/gallery.html` 和 `docs/publications.html`
   （`docs/index_zh.html` 只负责跳转到 `index.html` 的中文界面）
-- `docs/assets/**`（网站的 CSS、JavaScript 和图片）与 `docs/Gallery/**`
+- `docs/assets/**`（网站的 CSS、JavaScript 和图片；`gk-docs.js` 为生成文件）与 `docs/Gallery/**`
 - 独立 JSON/数据文件：`docs/gallery.json`、`docs/publications.json` 和
   `docs/stats.json`
-- `docs/htmls/**` 下的生成输出
 
 对于独立网站更改，根据所编辑文件运行 HTML 解析、JavaScript 语法检查、
 `git diff --check`，以及在布局或交互发生变化时进行有针对性的本地浏览器
-冒烟测试。不要手动编辑生成的 `docs/htmls/**` 文件；应修改对应的 MkDocs
-源文件并重新构建。
+冒烟测试。重新生成后，还要检查生成页面中的所有本地链接和图片都能找到。
 
 网站上的统计数字（交互功能、命令行选项、绘图类型、Python 脚本、贡献者）
 只保存在 `docs/stats.json` 中。若某项更改改变了其中的数量（例如新增一种

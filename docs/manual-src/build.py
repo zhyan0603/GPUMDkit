@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Assemble docs/manual.html and the tutorial pages in docs/manual/ (needs `markdown` + pymdown-extensions).
+"""Assemble docs/manual.html and the tutorial pages in docs/htmls/ (needs `markdown` + pymdown-extensions).
 
     python3 docs/manual-src/build.py
 
@@ -23,7 +23,7 @@ OUT = HERE.parent / "manual.html"
 def main():
     layout = (HERE / "layout.html").read_text(encoding="utf-8")
     from build_docs import build_all
-    n_docs = build_all(layout)
+    n_docs, paths = build_all(layout)
     chapters = []
     for n, f in enumerate(sorted((HERE / "chapters").glob("*.html")), 1):
         html = f.read_text(encoding="utf-8")
@@ -31,6 +31,7 @@ def main():
         h2 = re.search(r"<h2>(.*?)</h2>", html, re.S)
         if not (m and h2 and '<span class="chap-no"></span>' in html):
             raise SystemExit(f"{f.name}: needs <section class=\"chap\" id data-group>, <h2> and <span class=\"chap-no\"></span>")
+        html = re.sub(r'href="[^"]*" data-doc="([a-z_]+)"', lambda m: f'href="{paths[m.group(1)][0]}" data-doc="{m.group(1)}"' if m.group(1) in paths else m.group(0), html)
         html = html.replace('<span class="chap-no"></span>', f'<span class="chap-no">{n:02d}</span>', 1)
         chapters.append((m.group(1), (m.group(2), m.group(3)), h2.group(1), n, html))
 
@@ -47,7 +48,7 @@ def main():
                 .replace("{{SIDEBAR}}", side)
                 .replace("{{CHAPTERS}}", "\n".join(c[4].strip() for c in chapters)))
     OUT.write_text(page, encoding="utf-8")
-    print(f"wrote {OUT} ({len(chapters)} chapters) and {n_docs} tutorial pages in docs/manual/")
+    print(f"wrote {OUT} ({len(chapters)} chapters) and {n_docs} tutorial pages in docs/htmls/")
 
 
 if __name__ == "__main__":
