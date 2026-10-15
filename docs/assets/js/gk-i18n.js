@@ -161,26 +161,3 @@ window.GK_I18N = {
     "toast.copied": "已复制到剪贴板",
   },
 };
-
-/* documentation pages: key -> [English file, Chinese file] under htmls/ */
-window.GK_DOCS = {
-  index: ["en/index.html", "zh/index.html", "Documentation home", "文档首页"],
-  quick_start: ["en/quick_start.html", "zh/快速入门.html", "Quick start", "快速入门"],
-  command_reference: ["en/command_reference.html", "zh/命令参考.html", "Command reference", "命令参考"],
-  format_conversion: ["en/format_conversion.html", "zh/格式转换.html", "Format conversion", "格式转换"],
-  structure_sampling: ["en/structure_sampling.html", "zh/结构采样.html", "Structure sampling", "结构采样"],
-  workflow_scripts: ["en/workflow_scripts.html", "zh/工作流脚本.html", "Workflow scripts", "工作流脚本"],
-  active_learning_workflow: ["en/active_learning_workflow.html", "zh/主动学习工作流.html", "Active learning workflow", "主动学习工作流"],
-  calculator_scripts: ["en/calculator_scripts.html", "zh/计算器脚本.html", "Calculator scripts", "计算器脚本"],
-  analyzer_scripts: ["en/analyzer_scripts.html", "zh/分析工具.html", "Analyzer scripts", "分析工具"],
-  plot_nep: ["en/plot_nep.html", "zh/NEP训练绘图.html", "NEP training plots", "NEP 训练绘图"],
-  plot_md_structure: ["en/plot_md_structure.html", "zh/MD与结构绘图.html", "MD and structure plots", "MD 与结构绘图"],
-  plot_diffusion: ["en/plot_diffusion.html", "zh/扩散绘图.html", "Diffusion plots", "扩散绘图"],
-  plot_heat_phonon: ["en/plot_heat_phonon.html", "zh/热输运与声子绘图.html", "Heat transport and phonon plots", "热输运与声子绘图"],
-  plot_scripts: ["en/plot_scripts.html", "zh/绘图脚本.html", "Plot scripts", "绘图脚本"],
-  simulation_and_postprocessing: ["en/simulation_and_postprocessing.html", "zh/模拟与后处理.html", "Simulation & post-processing", "模拟与后处理"],
-  polar_material_analysis: ["en/polar_material_analysis.html", "zh/极性材料分析.html", "Polar material analysis", "极性材料分析"],
-  remote_web_console: ["en/remote_web_console.html", "zh/远程网页控制台.html", "Remote web console", "远程网页控制台"],
-  custom_commands: ["en/custom_commands.html", "zh/自定义命令.html", "Custom commands", "自定义命令"],
-  contributing: ["en/contributing_to_gpumdkit.html", "zh/贡献指南.html", "Contributing", "贡献指南"],
-};

@@ -26,6 +26,55 @@ The format conversion module covers:
 - **DeepMD**: `npy` datasets
 - **extxyz**: a common structure format for GPUMD and NEP
 
+## A Worked Example
+
+Every command below was run on a small illustrative file, `train.xyz`, with nine frames of a 16-atom cell. Each one writes a **new** file and leaves the input alone.
+
+```bash
+gpumdkit.sh -get_frame train.xyz 3
+```
+
+```text
+Frame 3 has been successfully written to frame_3.xyz.
+```
+
+```bash
+gpumdkit.sh -replicate train.xyz big.xyz 2 1 1
+```
+
+```text
+Supercell: 2x1x1, Total atoms: 32
+Supercell created and saved to big.xyz
+```
+
+```bash
+gpumdkit.sh -addweight train.xyz w.xyz 2.0
+```
+
+```text
+Weights in train.xyz have been updated and saved to w.xyz
+```
+
+```bash
+gpumdkit.sh -frame_range train.xyz 0 0.5
+```
+
+```text
+ Extracted 4 frames from fraction 0.0 to 0.5
+ Corresponding to frames 0 to 3
+ Saved to train_0.00_0.50.xyz
+```
+
+```bash
+gpumdkit.sh -clean_xyz train.xyz clean.xyz
+```
+
+```text
+ Cleaned 9 frames, saved to clean.xyz
+```
+
+`-get_frame` counts frames from 1, and `-frame_range` takes **fractions** of the file, so `0 0.5` means the first half. Run `head -n 2` on a result to check the header line before you use it for training.
+
 ## Interactive Mode
 
 Run `gpumdkit.sh` and choose `1) Format Conversion`. Entries `101`–`110` are chosen by number, the converters listed below them by keyword (for example `pos2exyz`). The table below describes each entry.

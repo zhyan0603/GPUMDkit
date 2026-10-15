@@ -43,6 +43,7 @@ GPUMDkit/
 │   ├── updates.info         # Latest feature and code/CLI bug-fix records only
 │   ├── index.html, gallery.html, publications.html, manual.html  # Standalone website
 │   ├── manual-src/          # Sources of manual.html; edit these, then run `python3 docs/manual-src/build.py`
+│   ├── manual/              # Generated tutorial pages (from tutorials/*.md by build.py); do not edit by hand
 │   ├── assets/              # Website CSS, JavaScript, and images
 │   ├── stats.json           # Website headline numbers
 │   └── Gallery/             # Example plot images

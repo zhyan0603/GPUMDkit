@@ -1,0 +1,652 @@
+<!DOCTYPE html>
+<html lang="zh-CN" data-theme="light">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>计算器脚本 — GPUMDkit</title>
+  <meta name="description" content="计算器模块用于从 MD 轨迹、NEP 模型和结构文件中计算材料性质。">
+  <meta property="og:title" content="GPUMDkit — A User-friendly Toolkit for GPUMD and NEP">
+  <meta property="og:description" content="Format conversion, sampling, workflows, analysis and plotting for GPUMD and NEP, in one command.">
+  <meta property="og:image" content="https://gpumdkit.cn/Gallery/gpumdkit_logo_lateral.png">
+  <meta property="og:url" content="https://gpumdkit.cn/">
+  <meta name="twitter:card" content="summary_large_image">
+  <link rel="canonical" href="https://gpumdkit.cn/manual/zh/calculator_scripts.html">
+  <link rel="icon" href="../../Gallery/gpumdkit_logo.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <!-- web fonts load without blocking rendering; system fonts are used if they are unreachable -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
+  <noscript><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet"></noscript>
+  <link rel="stylesheet" href="../../assets/css/gk.css">
+  <link rel="stylesheet" href="../../assets/css/gk-manual.css">
+  <script>
+    /* mark JS as available (reveal animations are only armed then) and apply the saved theme before first paint */
+    document.documentElement.classList.add("js"); try { localStorage.setItem("gk-lang", "zh"); } catch (e) {}
+    try { var t = localStorage.getItem("gk-theme"); if (t) document.documentElement.setAttribute("data-theme", t); } catch (e) {}
+  </script>
+</head>
+<body data-page="doc" data-root="../../" data-lang="zh" data-alt="../en/calculator_scripts.html">
+
+<!-- ======================================================= icon sprite -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <symbol id="i-logo" viewBox="0 0 100 100"><path d="M85.3 31.2A40 40 0 1 0 89.4 43" fill="none" stroke="#1867ae" stroke-width="9"/><text x="49" y="52" text-anchor="middle" dominant-baseline="central" font-family="Helvetica Neue,Helvetica,Arial,sans-serif" font-weight="800" font-size="52" fill="#1867ae">G</text><circle cx="87.4" cy="35.7" r="5" fill="#c18852"/></symbol>
+    <symbol id="i-copy" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="11" height="11" rx="2.5"/><path d="M5 15V6a2 2 0 0 1 2-2h9"/></symbol>
+    <symbol id="i-check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="m5 12.5 4.5 4.5L19 7.5"/></symbol>
+    <symbol id="i-search" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="m20 20-4-4"/></symbol>
+    <symbol id="i-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"><circle cx="12" cy="12" r="4.2"/><path d="M12 2.5v2M12 19.5v2M4.6 4.6 6 6M18 18l1.4 1.4M2.5 12h2M19.5 12h2M4.6 19.4 6 18M18 6l1.4-1.4"/></symbol>
+    <symbol id="i-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M20.5 14.2A8.5 8.5 0 0 1 9.8 3.5 8.5 8.5 0 1 0 20.5 14.2Z"/></symbol>
+    <symbol id="i-github" viewBox="0 0 16 16" fill="currentColor"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0 0 16 8c0-4.42-3.58-8-8-8z"/></symbol>
+    <symbol id="i-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></symbol>
+    <symbol id="i-out" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17 17 7M8 7h9v9"/></symbol>
+    <symbol id="i-star" viewBox="0 0 24 24" fill="currentColor"><path d="m12 2.8 2.8 5.8 6.4.9-4.6 4.5 1.1 6.3L12 17.3l-5.7 3 1.1-6.3-4.6-4.5 6.4-.9Z"/></symbol>
+    <symbol id="i-fork" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"><circle cx="6" cy="5" r="2.2"/><circle cx="18" cy="5" r="2.2"/><circle cx="12" cy="19" r="2.2"/><path d="M6 7.2v1.8a3 3 0 0 0 3 3h6a3 3 0 0 0 3-3V7.2M12 12v4.8"/></symbol>
+    <symbol id="i-menu" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 7h16M4 12h16M4 17h16"/></symbol>
+    <symbol id="i-close" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M6 6l12 12M18 6 6 18"/></symbol>
+    <symbol id="i-left" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m15 5-7 7 7 7"/></symbol>
+    <symbol id="i-right" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 5 7 7-7 7"/></symbol>
+    <symbol id="i-lock" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="5" y="11" width="14" height="9" rx="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></symbol>
+    <symbol id="i-conv" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M7 4 3 8l4 4"/><path d="M3 8h14"/><path d="m17 12 4 4-4 4"/><path d="M21 16H7"/></symbol>
+    <symbol id="i-samp" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="6" cy="7" r="1.6"/><circle cx="12.5" cy="5" r="1.6"/><circle cx="18" cy="9" r="1.6"/><circle cx="8" cy="15" r="1.6"/><circle cx="16" cy="17" r="1.6"/><circle cx="12" cy="11.5" r="6.8" stroke-dasharray="2 3"/></symbol>
+    <symbol id="i-flow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="2"/><rect x="14" y="14" width="7" height="7" rx="2"/><path d="M6.5 10v3.5a2 2 0 0 0 2 2H14"/></symbol>
+    <symbol id="i-calc" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="3" width="14" height="18" rx="2.5"/><path d="M8.5 7h7M8.5 11.5h.01M12 11.5h.01M15.5 11.5h.01M8.5 15h.01M12 15h.01M15.5 15h.01M8.5 18h.01M12 18h.01M15.5 18h.01"/></symbol>
+    <symbol id="i-anal" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="10.5" cy="10.5" r="6.5"/><path d="m20 20-4.8-4.8"/><path d="M7.5 12l2-2.5 2 1.5 2-3"/></symbol>
+    <symbol id="i-plot" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3v18h18"/><path d="m7 15 4-5 3 3 5-7"/></symbol>
+    <symbol id="i-term" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="16" rx="3"/><path d="m7 9 3 3-3 3M12.5 15H17"/></symbol>
+    <symbol id="i-doc" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"><path d="M6 3h8.5L19 7.5V21H6z"/><path d="M14 3v5h5M9 12.5h7M9 16.5h5" stroke-linecap="round"/></symbol>
+    <symbol id="i-chat" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20 15a2 2 0 0 1-2 2H8l-4 4V6a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2z"/><path d="M8.5 9.5h7M8.5 13h4.5"/></symbol>
+    <symbol id="i-shield" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3 5 6v6c0 4.4 3 7.6 7 9 4-1.4 7-4.6 7-9V6z"/><path d="m9 12 2 2 4-4"/></symbol>
+    <symbol id="i-globe" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c2.8 3 2.8 15 0 18M12 3c-2.8 3-2.8 15 0 18"/></symbol>
+    <symbol id="i-spark" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v4M12 17v4M3 12h4M17 12h4M6 6l2.5 2.5M15.5 15.5 18 18M6 18l2.5-2.5M15.5 8.5 18 6"/></symbol>
+    <symbol id="i-atom" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="1.8" fill="currentColor"/><ellipse cx="12" cy="12" rx="9" ry="3.6"/><ellipse cx="12" cy="12" rx="9" ry="3.6" transform="rotate(60 12 12)"/><ellipse cx="12" cy="12" rx="9" ry="3.6" transform="rotate(120 12 12)"/></symbol>
+    <symbol id="i-db" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><ellipse cx="12" cy="6" rx="7" ry="3"/><path d="M5 6v12c0 1.7 3.1 3 7 3s7-1.3 7-3V6M5 12c0 1.7 3.1 3 7 3s7-1.3 7-3"/></symbol>
+    <symbol id="i-brain" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="6" cy="7" r="2"/><circle cx="6" cy="17" r="2"/><circle cx="12" cy="12" r="2"/><circle cx="18" cy="7" r="2"/><circle cx="18" cy="17" r="2"/><path d="M8 7.8 10.3 11M8 16.2l2.3-3.2M13.7 11 16 7.8M13.7 13l2.3 3.2"/></symbol>
+    <symbol id="i-filter" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 5h16l-6 7.5V19l-4 2v-8.5z"/></symbol>
+    <symbol id="i-image" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="16" rx="3"/><circle cx="9" cy="10" r="2"/><path d="m21 16-5-5-9 9"/></symbol>
+  </defs>
+</svg>
+
+<div class="ambient" aria-hidden="true"><div class="orb a"></div><div class="orb b"></div><div class="orb c"></div><div class="noise"></div></div>
+<div class="progress" aria-hidden="true"></div>
+
+<!-- ======================================================= navigation -->
+<header class="nav" id="nav">
+  <div class="container">
+    <a href="../../index.html" class="brand" aria-label="GPUMDkit home"><svg><use href="#i-logo"/></svg><span><span class="gpumd">GPUMD</span><span class="kit">kit</span></span></a>
+    <nav class="nav-links" id="nav-links">
+      <a href="../../index.html#features" data-i18n="nav.features">Features</a>
+      <a href="../../index.html#terminal" data-i18n="nav.terminal">Try it</a>
+      <a href="../../index.html#workflow" data-i18n="nav.workflow">Workflow</a>
+      <a href="../../gallery.html" data-i18n="nav.gallery">Gallery</a>
+      <a href="../../publications.html" data-i18n="nav.pubs">Publications</a>
+      <a href="../../manual.html" class="active" aria-current="page" data-i18n="nav.manual">Manual</a>
+    </nav>
+    <div class="nav-tools">
+      <button class="search-btn" data-palette aria-label="Search commands and docs"><svg><use href="#i-search"/></svg><span class="label" data-i18n="nav.search">Search commands…</span><kbd>⌘K</kbd></button>
+      <button class="icon-btn lang-btn" data-lang-toggle aria-label="Switch language">中文</button>
+      <button class="icon-btn" data-theme-toggle aria-label="Toggle dark mode"><svg class="theme-icon-light"><use href="#i-moon"/></svg><svg class="theme-icon-dark"><use href="#i-sun"/></svg></button>
+      <a class="icon-btn gh-btn" href="https://github.com/zhyan0603/GPUMDkit" target="_blank" rel="noopener" aria-label="GitHub"><svg><use href="#i-github"/></svg></a>
+      <button class="icon-btn menu-btn" id="menu-btn" aria-label="Menu"><svg><use href="#i-menu"/></svg></button>
+    </div>
+  </div>
+</header>
+
+<main>
+<section class="man-hero doc-hero"><div class="container"><div class="crumb"><a href="../../manual.html">手册</a><span>/</span><span>工具箱</span><span>/</span><span>计算器脚本</span></div><h1 class="h-section">计算器脚本</h1><p class="lead">计算器模块用于从 MD 轨迹、NEP 模型和结构文件中计算材料性质。</p></div></section>
+<div class="container man doc"><aside class="man-side" aria-label="Pages"><h6>开始</h6><a href="quick_start.html" class=""><span>快速入门</span></a><a href="remote_web_console.html" class=""><span>远程网页控制台</span></a><a href="simulation_and_postprocessing.html" class=""><span>GPUMDkit Agent Skill</span></a><h6>工具箱</h6><a href="format_conversion.html" class=""><span>格式转换</span></a><a href="structure_sampling.html" class=""><span>结构采样</span></a><a href="workflow_scripts.html" class=""><span>工作流脚本</span></a><a href="calculator_scripts.html" class="on"><span>计算器脚本</span></a><a href="analyzer_scripts.html" class=""><span>分析工具</span></a><a href="plot_scripts.html" class=""><span>绘图脚本</span></a><a href="plot_nep.html" class="sub"><span>NEP 训练与模型分析</span></a><a href="plot_md_structure.html" class="sub"><span>MD 与结构</span></a><a href="plot_diffusion.html" class="sub"><span>扩散与离子输运</span></a><a href="plot_heat_phonon.html" class="sub"><span>热输运与声子</span></a><a href="polar_material_analysis.html" class=""><span>极性材料分析</span></a><h6>指南</h6><a href="active_learning_workflow.html" class=""><span>主动学习工作流</span></a><a href="custom_commands.html" class=""><span>自定义命令</span></a><h6>参考</h6><a href="command_reference.html" class=""><span>命令参考</span></a><h6>贡献</h6><a href="contributing.html" class=""><span>为 GPUMDkit 贡献代码</span></a></aside><article class="man-body chap doc-body"><p><strong>脚本位置：</strong> <code>Scripts/calculators/</code></p>
+<h2 id="功能概览">功能概览</h2>
+<p>计算器模块大致可以分为四类：</p>
+<ul>
+<li><strong>轨迹性质：</strong> 从 GPUMD 或 extxyz 轨迹计算 MSD、离子电导率等时间相关性质，并从 extxyz 轨迹计算 X 射线衍射；</li>
+<li><strong>声子性质：</strong> 使用原胞、NEP 模型和 <code>QPOINTS</code> 路径计算力常数和声子谱；</li>
+<li><strong>NEP 辅助计算：</strong> 使用 NEP 模型预测能量/力/应力、提取描述符、计算 DOAS、进行 NEB 或结构优化；</li>
+<li><strong>极性材料分析：</strong> 为钙钛矿和极性材料构建近邻列表、计算局域位移、平均结构、八面体倾转和局域极化。</li>
+</ul>
+<p>如果你还不熟悉某个脚本，建议先用交互模式查看输入提示；如果已经知道参数，可以直接使用 <code>gpumdkit.sh -calc ...</code> 调用支持 CLI 的计算器。XRD 和声子计算均只保留交互模式。</p>
+<div class="tbl-wrap"><table class="tbl">
+<thead>
+<tr>
+<th>任务</th>
+<th>命令</th>
+<th>主要输入</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>离子电导率</td>
+<td><code>gpumdkit.sh -calc ionic-cond &lt;element&gt; &lt;charge&gt;</code></td>
+<td><code>msd.out</code>、<code>thermo.out</code>、<code>model.xyz</code></td>
+</tr>
+<tr>
+<td>MSD</td>
+<td><code>gpumdkit.sh -calc msd &lt;trajectory.xyz&gt; &lt;element&gt; &lt;dt_fs&gt;</code></td>
+<td>extxyz 轨迹</td>
+</tr>
+<tr>
+<td>X 射线衍射</td>
+<td><code>4 → 413</code>（仅交互模式）</td>
+<td>带有 <code>Lattice</code>/<code>pbc</code> 的 extxyz 轨迹</td>
+</tr>
+<tr>
+<td>声子谱</td>
+<td><code>4 → 414</code>（仅交互模式）</td>
+<td><code>PRIMCELL.vasp</code>、<code>nep.txt</code>、<code>QPOINTS</code></td>
+</tr>
+<tr>
+<td>NEP 预测</td>
+<td><code>gpumdkit.sh -calc nep &lt;input.xyz&gt; &lt;output.xyz&gt; &lt;nep.txt&gt;</code></td>
+<td>extxyz + NEP 模型</td>
+</tr>
+<tr>
+<td>NEP 预测输出</td>
+<td><code>gpumdkit.sh -prediction &lt;input.xyz&gt; &lt;nep.txt&gt; [workers]</code></td>
+<td>带标签 extxyz + NEP 模型</td>
+</tr>
+<tr>
+<td>DPA 预测输出</td>
+<td><code>gpumdkit.sh -prediction_dpa &lt;input.xyz&gt; &lt;dpa_model&gt;</code></td>
+<td>带标签 extxyz + DeepMD DPA 模型</td>
+</tr>
+<tr>
+<td>NEP 描述符</td>
+<td><code>gpumdkit.sh -calc des &lt;input.xyz&gt; &lt;output.npy&gt; &lt;nep.txt&gt; &lt;element&gt;</code></td>
+<td>extxyz + NEP 模型</td>
+</tr>
+<tr>
+<td>DOAS</td>
+<td><code>gpumdkit.sh -calc doas &lt;input.xyz&gt; &lt;nep.txt&gt; &lt;output.txt&gt;</code></td>
+<td>extxyz + NEP 模型</td>
+</tr>
+<tr>
+<td>NEB</td>
+<td><code>gpumdkit.sh -calc neb &lt;initial.xyz&gt; &lt;final.xyz&gt; &lt;n_images&gt; &lt;nep.txt&gt;</code></td>
+<td>初末态结构</td>
+</tr>
+<tr>
+<td>结构优化</td>
+<td><code>gpumdkit.sh -calc minimize &lt;structure&gt; &lt;nep.txt&gt; [fmax] [max_steps]</code></td>
+<td>结构 + NEP 模型</td>
+</tr>
+<tr>
+<td>近邻列表</td>
+<td><code>gpumdkit.sh -calc nlist ...</code></td>
+<td>参见 <a href="polar_material_analysis.html">极性材料分析</a></td>
+</tr>
+<tr>
+<td>位移</td>
+<td><code>gpumdkit.sh -calc disp ...</code></td>
+<td>参见 <a href="polar_material_analysis.html">极性材料分析</a></td>
+</tr>
+<tr>
+<td>平均结构</td>
+<td><code>gpumdkit.sh -calc avg-struct ...</code></td>
+<td>参见 <a href="polar_material_analysis.html">极性材料分析</a></td>
+</tr>
+<tr>
+<td>八面体倾转</td>
+<td><code>gpumdkit.sh -calc oct-tilt ...</code></td>
+<td>参见 <a href="polar_material_analysis.html">极性材料分析</a></td>
+</tr>
+<tr>
+<td>ABO3 极化</td>
+<td><code>gpumdkit.sh -calc pol-abo3 ...</code></td>
+<td>参见 <a href="polar_material_analysis.html">极性材料分析</a></td>
+</tr>
+</tbody>
+</table></div>
+<p><code>gpumdkit.sh -calc -h</code> 会列出全部计算器命令。交互模式下运行 <code>gpumdkit.sh</code> 并选择 <code>4) Calculators</code>。</p>
+<details>
+<summary>显示完整菜单</summary>
+<div class="code"><div class="cap"><i></i><i></i><i></i><span>text</span></div><pre><code>+----------------------------------------------------------+
+|                     CALCULATOR TOOLS                     |
++----------------------------------------------------------+
+| 401) Calc ionic conductivity                             |
+| 402) Calc properties by nep                              |
+| 403) Calc descriptors of specific elements               |
+| 404) Calc density of atomistic states (DOAS)             |
+| 405) Calc nudged elastic band (NEB) by nep               |
+| 406) Build neighbor list                                 |
+| 407) Calc displacement from trajectory                   |
+| 408) Calc averaged structure                             |
+| 409) Calc octahedral tilt                                |
+| 410) Calc polarization for ABO3                          |
+| 411) Minimize structure by nep                           |
+| 412) Calc mean square displacement (MSD) from trajectory |
+| 413) Calc XRD from extxyz trajectory                     |
+| 414) Calc phonon band structure                          |
++----------------------------------------------------------+
+| 000) Return to the main menu                             |
++----------------------------------------------------------+
+Input the function number:</code></pre><button class="copy-btn" data-copy-pre aria-label="Copy"><svg class="cp"><use href="#i-copy"/></svg><svg class="ok"><use href="#i-check"/></svg></button></div>
+</details>
+<h2 id="离子电导率">离子电导率</h2>
+<p><code>calc_ion_conductivity.py</code> 从 <code>msd.out</code> 计算离子扩散系数和离子电导率。</p>
+<div class="code"><div class="cap"><i></i><i></i><i></i><span>bash</span></div><pre><code>gpumdkit.sh -calc ionic-cond Li 1</code></pre><button class="copy-btn" data-copy-pre aria-label="Copy"><svg class="cp"><use href="#i-copy"/></svg><svg class="ok"><use href="#i-check"/></svg></button></div>
+<div class="tbl-wrap"><table class="tbl">
+<thead>
+<tr>
+<th>参数</th>
+<th>表示什么</th>
+<th>运行前检查</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>element</code></td>
+<td>要分析 MSD 的移动物种</td>
+<td>元素符号应与 <code>msd.out</code> 和 <code>model.xyz</code> 中代表的物种一致。</td>
+</tr>
+<tr>
+<td><code>charge</code></td>
+<td>Nernst–Einstein 换算所用的电荷大小</td>
+<td>应按自己的体系给出电荷定义。实现中使用其平方，因此只改变正负号不会改变报告的电导率。</td>
+</tr>
+</tbody>
+</table></div>
+<p>示例 <code>Li 1</code> 仅用于说明参数格式，并不是所有体系的默认选择。当前实现使用 MSD 数据中间的 40–80% 区间拟合。解读扩散系数或电导率前，应先检查 MSD 曲线及其收敛情况。</p>
+<p>计算器读取第 1–4 列的时间和 <code>MSD_x/y/z</code>。<code>element</code> 参数用于计数离子，
+不选择 MSD 列；<code>all_groups</code> 输出需先提取目标组的时间和 MSD 列。电荷参数为
+以元电荷为单位的整数。结果为 Nernst–Einstein 电导率，不包含离子间位移关联。</p>
+<p>交互模式选择 <code>401</code>，会看到：</p>
+<div class="code"><div class="cap"><i></i><i></i><i></i><span>text</span></div><pre><code>Input &lt;element&gt; &lt;charge&gt; (eg. Li 1)
+------------&gt;&gt;</code></pre><button class="copy-btn" data-copy-pre aria-label="Copy"><svg class="cp"><use href="#i-copy"/></svg><svg class="ok"><use href="#i-check"/></svg></button></div>
+<p>常用输入文件：</p>
+<div class="tbl-wrap"><table class="tbl">
+<thead>
+<tr>
+<th>文件</th>
+<th>作用</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>msd.out</code></td>
+<td>必需，MSD 数据</td>
+</tr>
+<tr>
+<td><code>thermo.out</code></td>
+<td>可选，自动读取温度</td>
+</tr>
+<tr>
+<td><code>model.xyz</code></td>
+<td>可选，自动读取体积和离子数</td>
+</tr>
+<tr>
+<td><code>run.in</code></td>
+<td>可选，识别扩胞信息</td>
+</tr>
+</tbody>
+</table></div>
+<p>如果缺少自动识别所需文件，脚本会交互式询问温度、体积和离子数。</p>
+<p>手动模式的提示类似：</p>
+<div class="code"><div class="cap"><i></i><i></i><i></i><span>text</span></div><pre><code>Files 'thermo.out' and 'model.xyz' are not found.
+Please provide the following values:
+---------------------------&gt;
+Enter average temperature (in K):
+Enter system volume (in A^3):
+Enter number of ions:</code></pre><button class="copy-btn" data-copy-pre aria-label="Copy"><svg class="cp"><use href="#i-copy"/></svg><svg class="ok"><use href="#i-check"/></svg></button></div>
+<p>输出示例：</p>
+<div class="code"><div class="cap"><i></i><i></i><i></i><span>text</span></div><pre><code>Diffusivity (D):
+  D_x: 4.153e-07 cm^2/s
+  D_y: 4.174e-07 cm^2/s
+  D_z: 2.610e-07 cm^2/s
+  D_total: 3.646e-07 cm^2/s
+------------------------------
+Ionic Conductivity:
+  Sigma_x: 2.576e-02 mS/cm
+  Sigma_y: 2.589e-02 mS/cm
+  Sigma_z: 1.619e-02 mS/cm
+  Sigma_total: 2.261e-02 mS/cm</code></pre><button class="copy-btn" data-copy-pre aria-label="Copy"><svg class="cp"><use href="#i-copy"/></svg><svg class="ok"><use href="#i-check"/></svg></button></div>
+<h2 id="从轨迹计算-msd">从轨迹计算 MSD</h2>
+<p><code>calc_msd.py</code> 可以直接从 extxyz 轨迹中计算指定元素的 MSD。</p>
+<div class="code"><div class="cap"><i></i><i></i><i></i><span>bash</span></div><pre><code>gpumdkit.sh -calc msd dump.xyz Li 10
+gpumdkit.sh -calc msd dump.xyz Li 10 5000</code></pre><button class="copy-btn" data-copy-pre aria-label="Copy"><svg class="cp"><use href="#i-copy"/></svg><svg class="ok"><use href="#i-check"/></svg></button></div>
+<p>使用固定晶胞、原子顺序一致的轨迹，并确保 <code>pos</code> 字段存储已核验的展开坐标。
+脚本读取 <code>pos</code> 和首帧晶胞，不读取独立的 <code>unwrapped_position</code> 属性。自动坐标
+判断不足以验证折回轨迹；按轴解包裹也不适用于一般倾斜或变化晶胞。
+命令覆盖当前目录的 <code>msd.out</code>。</p>
+<p>交互模式选择 <code>412</code>，会看到：</p>
+<div class="code"><div class="cap"><i></i><i></i><i></i><span>text</span></div><pre><code>Input &lt;extxyz_file&gt; &lt;element_symbol&gt; &lt;dt_fs&gt; [max_corr_steps]
+  Optional argument: max_corr_steps (default: frame number)
+Example: dump.xyz Li 10
+------------&gt;&gt;</code></pre><button class="copy-btn" data-copy-pre aria-label="Copy"><svg class="cp"><use href="#i-copy"/></svg><svg class="ok"><use href="#i-check"/></svg></button></div>
+<p>参数含义：</p>
+<div class="tbl-wrap"><table class="tbl">
+<thead>
+<tr>
+<th>参数</th>
+<th>含义</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>dump.xyz</code></td>
+<td>输入轨迹</td>
+</tr>
+<tr>
+<td><code>Li</code></td>
+<td>目标扩散元素</td>
+</tr>
+<tr>
+<td><code>10</code></td>
+<td>帧间隔，单位 fs</td>
+</tr>
+<tr>
+<td><code>5000</code></td>
+<td>可选，最大相关步数</td>
+</tr>
+</tbody>
+</table></div>
+<p><code>max_corr_steps</code> 限制参与相关计算的最大时间滞后。省略时，脚本使用已有帧数。它会改变计算窗口，应根据自己轨迹的长度和采样间隔选择，而不是照搬其他体系的数值。</p>
+<p>输出：</p>
+<ul>
+<li><code>msd.out</code></li>
+</ul>
+<p><code>calc_msd.py</code> 写入的 <code>msd.out</code> 恰好包含四个数值列：<code>Time(ps)</code>、<code>MSD_x</code>、
+<code>MSD_y</code> 和 <code>MSD_z</code>。该输出可以使用 <code>-plt msd</code> 绘图。</p>
+<p>相比之下，GPUMD 原生的 <code>compute_msd</code> 写入的是另一种 <code>msd.out</code>。只选择一个
+分组时，它包含七列：时间、<code>MSD_x/y/z</code> 和 <code>SDC_x/y/z</code>；<code>-plt sdc</code> 与
+<code>-plt msd_sdc</code> 要求这种格式。使用 <code>all_groups</code> 或多个分组时，GPUMD 会追加
+其他分组的数据，因此不能假定每个 <code>msd.out</code> 都有七列。GPUMD 的独立命令
+<code>compute_sdc</code> 写入 <code>sdc.out</code>，该文件供 <code>-plt vac</code> 使用，不是 <code>-plt sdc</code> 或
+<code>-plt msd_sdc</code> 的输入。</p>
+<p>随后可绘图：</p>
+<div class="code"><div class="cap"><i></i><i></i><i></i><span>bash</span></div><pre><code>gpumdkit.sh -plt msd</code></pre><button class="copy-btn" data-copy-pre aria-label="Copy"><svg class="cp"><use href="#i-copy"/></svg><svg class="ok"><use href="#i-check"/></svg></button></div>
+<div align="center">
+  <img src="../../Gallery/msd.png" alt="MSD plot" width="45%" />
+</div>
+
+<h2 id="x-射线衍射xrd">X 射线衍射（XRD）</h2>
+<p><code>calc_xrd.py</code> 从 extxyz 轨迹计算并平均与 LAMMPS 兼容的 XRD 强度。该功能
+只保留交互式入口，不提供 CLI 参数接口。</p>
+<p>在菜单中选择 <code>4) Calculators</code>，再选择 <code>413) Calc XRD from extxyz
+trajectory</code>。Python 交互页面依次询问：</p>
+<div class="code"><div class="cap"><i></i><i></i><i></i><span>text</span></div><pre><code>Input extended XYZ trajectory
+Output XRD file
+X-ray wavelength (Angstrom)
+2theta range (degrees; min max)
+Number of bins in this 2theta range
+Elements to include (all or comma-separated) [all]
+CPU workers (0 means automatic) [0]</code></pre><button class="copy-btn" data-copy-pre aria-label="Copy"><svg class="cp"><use href="#i-copy"/></svg><svg class="ok"><use href="#i-check"/></svg></button></div>
+<p>bins 始终覆盖选定的 <code>2theta</code> 区间。例如，选择 <code>10 60</code> 和 <code>500</code> 个 bins，
+表示将 10 到 60 度均匀划分为 500 个区间，不再单独设置输出 bin 范围。</p>
+<p>元素选择输入 <code>all</code> 可包含全部原子，也可以输入 <code>Li</code> 或 <code>Li,Cl</code> 等元素符号；
+元素匹配不区分大小写。默认使用输入轨迹中的 <code>Lattice</code> 和 <code>pbc</code>、标准
+LAMMPS 散射因子以及 Lorentz-polarization 因子。当前支持正交晶胞；非正交
+晶胞会被拒绝，因为该计算器使用当前 LAMMPS 兼容的 reciprocal mesh 约定。</p>
+<p>输出文件包含元数据表头，随后是四列数据：</p>
+<div class="tbl-wrap"><table class="tbl">
+<thead>
+<tr>
+<th>列</th>
+<th>含义</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Bin</code></td>
+<td>从 1 开始的直方图 bin 序号</td>
+</tr>
+<tr>
+<td><code>Coord</code></td>
+<td>选定 <code>2theta</code> 区间内 bin 的中心，单位为度</td>
+</tr>
+<tr>
+<td><code>Count</code></td>
+<td>平均 XRD 强度</td>
+</tr>
+<tr>
+<td><code>Count/Total</code></td>
+<td>用选定区间总强度归一化后的强度</td>
+</tr>
+</tbody>
+</table></div>
+<p>轨迹较长时，可以用多个 CPU worker 加速，结果不受影响。</p>
+<h2 id="声子谱">声子谱</h2>
+<p><code>calc_phonon.py</code> 使用 NEP 模型计算力常数，并沿 <code>QPOINTS</code> 中定义的路径计算
+声子谱。该功能只通过交互模式使用：</p>
+<div class="code"><div class="cap"><i></i><i></i><i></i><span>text</span></div><pre><code>gpumdkit.sh -&gt; 4) Calculators -&gt; 414) Calc phonon band structure</code></pre><button class="copy-btn" data-copy-pre aria-label="Copy"><svg class="cp"><use href="#i-copy"/></svg><svg class="ok"><use href="#i-check"/></svg></button></div>
+<p>Python 页面会依次询问：</p>
+<div class="code"><div class="cap"><i></i><i></i><i></i><span>text</span></div><pre><code>Primitive cell structure [PRIMCELL.vasp]
+NEP model [nep.txt]
+QPOINTS file [QPOINTS]
+Supercell dimensions [1 1 1]
+Displacement distance [0.015]
+Output phonon file [phonon_NEP.dat]</code></pre><button class="copy-btn" data-copy-pre aria-label="Copy"><svg class="cp"><use href="#i-copy"/></svg><svg class="ok"><use href="#i-check"/></svg></button></div>
+<p><code>QPOINTS</code> 必须使用 line-mode 的起点/终点成对格式。脚本从第二行读取每段
+Q 点数，生成的输出行随后由 <code>plt_phonon.py</code> 和 <code>plt_phonon_comp.py</code> 使用。
+运行前请安装 <code>phonopy</code>：</p>
+<div class="code"><div class="cap"><i></i><i></i><i></i><span>bash</span></div><pre><code>pip install phonopy</code></pre><button class="copy-btn" data-copy-pre aria-label="Copy"><svg class="cp"><use href="#i-copy"/></svg><svg class="ok"><use href="#i-check"/></svg></button></div>
+<h2 id="nep-预测性质">NEP 预测性质</h2>
+<p><code>calc_properties_with_nep.py</code> 使用训练好的 NEP 模型计算能量、力和应力。</p>
+<p><strong>依赖：</strong> <code>calorine</code></p>
+<div class="code"><div class="cap"><i></i><i></i><i></i><span>bash</span></div><pre><code>pip install calorine</code></pre><button class="copy-btn" data-copy-pre aria-label="Copy"><svg class="cp"><use href="#i-copy"/></svg><svg class="ok"><use href="#i-check"/></svg></button></div>
+<div class="code"><div class="cap"><i></i><i></i><i></i><span>bash</span></div><pre><code>gpumdkit.sh -calc nep structures.xyz predictions.xyz nep.txt</code></pre><button class="copy-btn" data-copy-pre aria-label="Copy"><svg class="cp"><use href="#i-copy"/></svg><svg class="ok"><use href="#i-check"/></svg></button></div>
+<p><strong>提示：</strong> 预测前可以清理 extxyz 元数据：</p>
+<div class="code"><div class="cap"><i></i><i></i><i></i><span>bash</span></div><pre><code>gpumdkit.sh -clean_xyz train.xyz clean_train.xyz</code></pre><button class="copy-btn" data-copy-pre aria-label="Copy"><svg class="cp"><use href="#i-copy"/></svg><svg class="ok"><use href="#i-check"/></svg></button></div>
+<h3 id="nep-预测输出文件">NEP 预测输出文件</h3>
+<p><code>prediction.py</code> 使用 Calorine 的 <code>CPUNEP</code> 计算每个 frame，并写出 NEP
+parity 工具使用的四类预测文件。输出后缀根据输入文件名自动确定：例如输入
+<code>test.xyz</code> 时，当前目录会生成 <code>energy_test.out</code>、<code>force_test.out</code>、
+<code>stress_test.out</code> 和 <code>virial_test.out</code>。</p>
+<div class="code"><div class="cap"><i></i><i></i><i></i><span>bash</span></div><pre><code># 单核计算（默认）
+gpumdkit.sh -prediction train.xyz nep.txt
+
+# 使用八个独立 CPU worker
+gpumdkit.sh -prediction train.xyz nep.txt 8</code></pre><button class="copy-btn" data-copy-pre aria-label="Copy"><svg class="cp"><use href="#i-copy"/></svg><svg class="ok"><use href="#i-check"/></svg></button></div>
+<p>每行先写预测值，再写目标值。能量单位为 eV/atom，力为 eV/Angstrom，应力为
+GPa，virial 为 eV/atom。应力和 virial 张量使用 NEP 顺序
+<code>xx yy zz xy yz xz</code>，并遵循 NEP 相同的符号约定：在这些文件中 <code>stress = virial / volume</code>，
+受压为正。输入 extxyz 中 <code>stress=</code> 字段的符号相反（受拉为正），因此与 NEP 一样按
+<code>virial = -stress * volume</code> 换算。如果某个 frame 只有 stress 或 virial 中的一种标签，
+程序按此关系及相应单位换算自动推导另一种；
+只有两种标签都缺失时，两个目标列才写入 NEP 约定的 <code>-1e6</code> 哨兵值。energy 和 force
+标签必须存在。计算过程中会显示 <code>tqdm</code> 进度条。</p>
+<p>该命令需要 <code>calorine</code>、<code>ase</code> 和 <code>tqdm</code>：</p>
+<div class="code"><div class="cap"><i></i><i></i><i></i><span>bash</span></div><pre><code>pip install ase calorine tqdm</code></pre><button class="copy-btn" data-copy-pre aria-label="Copy"><svg class="cp"><use href="#i-copy"/></svg><svg class="ok"><use href="#i-check"/></svg></button></div>
+<h3 id="dpa-预测输出文件">DPA 预测输出文件</h3>
+<p><code>prediction_dpa.py</code> 使用 DeepMD DPA 模型计算带标签的 extended XYZ 训练集，
+并将 <code>energy_train.out</code>、<code>force_train.out</code>、<code>virial_train.out</code> 和
+<code>stress_train.out</code> 写入当前目录。</p>
+<div class="code"><div class="cap"><i></i><i></i><i></i><span>bash</span></div><pre><code>gpumdkit.sh -prediction_dpa train.xyz model.ckpt.pt</code></pre><button class="copy-btn" data-copy-pre aria-label="Copy"><svg class="cp"><use href="#i-copy"/></svg><svg class="ok"><use href="#i-check"/></svg></button></div>
+<p>输出格式遵循 NEP 训练 prediction 约定：每行先写预测值，再写目标值。能量单位为
+eV/atom，力为 eV/Angstrom，应力为 GPa，virial 为 eV/atom。该命令需要
+<code>deepmd-kit</code> 和 <code>numpy</code>。</p>
+<h2 id="nep-描述符">NEP 描述符</h2>
+<div class="code"><div class="cap"><i></i><i></i><i></i><span>bash</span></div><pre><code>gpumdkit.sh -calc des train.xyz descriptors.npy nep.txt Li</code></pre><button class="copy-btn" data-copy-pre aria-label="Copy"><svg class="cp"><use href="#i-copy"/></svg><svg class="ok"><use href="#i-check"/></svg></button></div>
+<p>用途包括：</p>
+<ul>
+<li>用 PCA/UMAP 可视化局域环境；</li>
+<li>比较训练集和候选结构；</li>
+<li>判断新数据是否扩展了描述符空间。</li>
+</ul>
+<p>绘图：</p>
+<div class="code"><div class="cap"><i></i><i></i><i></i><span>bash</span></div><pre><code>gpumdkit.sh -plt des pca descriptors.npy
+gpumdkit.sh -plt des umap descriptors.npy</code></pre><button class="copy-btn" data-copy-pre aria-label="Copy"><svg class="cp"><use href="#i-copy"/></svg><svg class="ok"><use href="#i-check"/></svg></button></div>
+<div align="center">
+  <img src="../../Gallery/des_umap.png" alt="Descriptor UMAP" width="52%" />
+</div>
+
+<h2 id="doas">DOAS</h2>
+<p><code>calc_doas.py</code> 用于计算 <a href="https://doi.org/10.1002/anie.202215544" target="_blank" rel="noopener">Wang et al.</a> 提出的原子态密度（density of atomistic states，DOAS）。</p>
+<div class="code"><div class="cap"><i></i><i></i><i></i><span>bash</span></div><pre><code>gpumdkit.sh -calc doas structures.xyz nep.txt doas.out
+gpumdkit.sh -plt doas doas.out Li</code></pre><button class="copy-btn" data-copy-pre aria-label="Copy"><svg class="cp"><use href="#i-copy"/></svg><svg class="ok"><use href="#i-check"/></svg></button></div>
+<p>脚本会：</p>
+<ol>
+<li>读取所有结构；</li>
+<li>使用 NEP 进行结构优化；</li>
+<li>提取每个原子的能量；</li>
+<li>按元素分组输出；</li>
+<li>将分组结果写入输出文件（可用 <code>-plt doas</code> 可视化）。</li>
+</ol>
+<p>对于很大的体系，如果主要目的是获得优化后的结构和原子能量分布，直接在 GPUMD 中完成最小化和原子能量输出通常会更高效。</p>
+<div align="center">
+  <img src="../../Gallery/doas.png" alt="Density of atomistic states" width="52%" />
+</div>
+
+<h2 id="neb-和结构优化">NEB 和结构优化</h2>
+<p>NEB：</p>
+<div class="code"><div class="cap"><i></i><i></i><i></i><span>bash</span></div><pre><code>gpumdkit.sh -calc neb initial.xyz final.xyz 9 nep.txt</code></pre><button class="copy-btn" data-copy-pre aria-label="Copy"><svg class="cp"><use href="#i-copy"/></svg><svg class="ok"><use href="#i-check"/></svg></button></div>
+<p>这会使用 NEP 模型运行包含 <code>9</code> 个中间构型（image）的 NEB 计算。运行过程中脚本会询问原子固定方式：</p>
+<ul>
+<li><code>none</code>：不固定原子；</li>
+<li><code>index</code>：按原子索引（编号）固定；</li>
+<li><code>element</code>：固定某一种元素的所有原子；</li>
+<li><code>position</code>：固定坐标范围内的原子。</li>
+</ul>
+<p>结构优化（通过 <code>calorine</code>）：</p>
+<p><strong>依赖：</strong> <code>calorine</code></p>
+<div class="code"><div class="cap"><i></i><i></i><i></i><span>bash</span></div><pre><code>pip install calorine</code></pre><button class="copy-btn" data-copy-pre aria-label="Copy"><svg class="cp"><use href="#i-copy"/></svg><svg class="ok"><use href="#i-check"/></svg></button></div>
+<div class="code"><div class="cap"><i></i><i></i><i></i><span>bash</span></div><pre><code>gpumdkit.sh -calc minimize POSCAR nep.txt 0.01 1000</code></pre><button class="copy-btn" data-copy-pre aria-label="Copy"><svg class="cp"><use href="#i-copy"/></svg><svg class="ok"><use href="#i-check"/></svg></button></div>
+<p>参数说明：</p>
+<div class="tbl-wrap"><table class="tbl">
+<thead>
+<tr>
+<th>参数</th>
+<th>含义</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>POSCAR</code></td>
+<td>输入结构，POSCAR/CONTCAR 或 extxyz</td>
+</tr>
+<tr>
+<td><code>nep.txt</code></td>
+<td>NEP 模型</td>
+</tr>
+<tr>
+<td><code>0.01</code></td>
+<td>可选的力收敛阈值（eV/Ang）</td>
+</tr>
+<tr>
+<td><code>1000</code></td>
+<td>可选的最大优化步数</td>
+</tr>
+</tbody>
+</table></div>
+<p>输出包括：</p>
+<ul>
+<li><code>minimize.xyz</code></li>
+<li><code>minimize.log</code></li>
+</ul>
+<h2 id="使用-ovito-计算-rdf">使用 OVITO 计算 RDF</h2>
+<p><code>rdf_calculator_ovito.py</code> 使用 OVITO 的分析工具计算径向分布函数。</p>
+<p><strong>依赖：</strong> OVITO</p>
+<div class="code"><div class="cap"><i></i><i></i><i></i><span>bash</span></div><pre><code>pip install ovito</code></pre><button class="copy-btn" data-copy-pre aria-label="Copy"><svg class="cp"><use href="#i-copy"/></svg><svg class="ok"><use href="#i-check"/></svg></button></div>
+<p><strong>输入文件：</strong> 结构文件（单帧或轨迹）</p>
+<div class="code"><div class="cap"><i></i><i></i><i></i><span>bash</span></div><pre><code>python "${GPUMDkit_path}/Scripts/calculators/rdf_calculator_ovito.py" trajectory.xyz 6.0 400</code></pre><button class="copy-btn" data-copy-pre aria-label="Copy"><svg class="cp"><use href="#i-copy"/></svg><svg class="ok"><use href="#i-check"/></svg></button></div>
+<p><strong>参数：</strong></p>
+<div class="tbl-wrap"><table class="tbl">
+<thead>
+<tr>
+<th>参数</th>
+<th>含义</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>trajectory.xyz</code></td>
+<td>输入结构文件</td>
+</tr>
+<tr>
+<td><code>6.0</code></td>
+<td>RDF 计算的最大距离（Å）</td>
+</tr>
+<tr>
+<td><code>400</code></td>
+<td>直方图的分箱数</td>
+</tr>
+</tbody>
+</table></div>
+<p><strong>输出：</strong> <code>rdf.txt</code>。</p>
+<p>条件允许时，建议直接在 GPUMD 运行中使用 <code>compute_rdf</code> 计算 RDF；它输出的 <code>rdf.out</code> 可以用 <code>gpumdkit.sh -plt rdf</code> 绘制，该命令不读取 <code>rdf.txt</code>。</p>
+<h2 id="铁电和极性材料工具">铁电和极性材料工具</h2>
+<p>选项 <code>406–410</code> 面向钙钛矿和极性材料分析，常用于从 MD 轨迹中提取局域结构信息，然后进一步分析相变、畴结构或极化纹理。</p>
+<p>这些脚本在本页只做快速索引，因为它们通常需要组合使用。推荐阅读专题教程中的完整工作流和参数说明：<strong><a href="polar_material_analysis.html">极性材料分析</a></strong>。</p>
+<div class="tbl-wrap"><table class="tbl">
+<thead>
+<tr>
+<th>菜单</th>
+<th>CLI 子命令</th>
+<th>作用</th>
+<th>详细说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>406</code></td>
+<td><code>gpumdkit.sh -calc nlist ...</code></td>
+<td>构建指定中心原子和近邻原子之间的近邻列表</td>
+<td><a href="polar_material_analysis.html">极性材料分析</a></td>
+</tr>
+<tr>
+<td><code>407</code></td>
+<td><code>gpumdkit.sh -calc disp ...</code></td>
+<td>根据轨迹和近邻列表计算局域位移</td>
+<td><a href="polar_material_analysis.html">极性材料分析</a></td>
+</tr>
+<tr>
+<td><code>408</code></td>
+<td><code>gpumdkit.sh -calc avg-struct ...</code></td>
+<td>从轨迹中计算平均结构</td>
+<td><a href="polar_material_analysis.html">极性材料分析</a></td>
+</tr>
+<tr>
+<td><code>409</code></td>
+<td><code>gpumdkit.sh -calc oct-tilt ...</code></td>
+<td>计算八面体倾转角</td>
+<td><a href="polar_material_analysis.html">极性材料分析</a></td>
+</tr>
+<tr>
+<td><code>410</code></td>
+<td><code>gpumdkit.sh -calc pol-abo3 ...</code></td>
+<td>根据 Born 有效电荷估算 ABO3 局域极化</td>
+<td><a href="polar_material_analysis.html">极性材料分析</a></td>
+</tr>
+</tbody>
+</table></div>
+<p>部分脚本需要安装 <code>ferrodispcalc</code>：</p>
+<div class="code"><div class="cap"><i></i><i></i><i></i><span>bash</span></div><pre><code>pip3 install git+https://github.com/MoseyQAQ/ferrodispcalc.git</code></pre><button class="copy-btn" data-copy-pre aria-label="Copy"><svg class="cp"><use href="#i-copy"/></svg><svg class="ok"><use href="#i-check"/></svg></button></div>
+<p>一个典型顺序是先用 <code>nlist</code> 建立近邻列表，再用该近邻列表计算位移、倾转或极化。对于平均结构，可以直接从轨迹出发，用长度容差控制哪些帧参与平均。</p><div class="doc-pn"><a href="workflow_scripts.html"><small>上一页</small><b>工作流脚本</b></a><a class="next" href="analyzer_scripts.html"><small>下一页</small><b>分析工具</b></a></div><a class="doc-edit" href="https://github.com/zhyan0603/GPUMDkit/edit/main/docs/tutorials/zh/计算器脚本.md" target="_blank" rel="noopener">编辑此页</a></article><nav class="doc-toc" aria-label="本页目录"><h6>本页目录</h6><a href="#功能概览" class="l2">功能概览</a><a href="#离子电导率" class="l2">离子电导率</a><a href="#从轨迹计算-msd" class="l2">从轨迹计算 MSD</a><a href="#x-射线衍射xrd" class="l2">X 射线衍射（XRD）</a><a href="#声子谱" class="l2">声子谱</a><a href="#nep-预测性质" class="l2">NEP 预测性质</a><a href="#nep-预测输出文件" class="l3">NEP 预测输出文件</a><a href="#dpa-预测输出文件" class="l3">DPA 预测输出文件</a><a href="#nep-描述符" class="l2">NEP 描述符</a><a href="#doas" class="l2">DOAS</a><a href="#neb-和结构优化" class="l2">NEB 和结构优化</a><a href="#使用-ovito-计算-rdf" class="l2">使用 OVITO 计算 RDF</a><a href="#铁电和极性材料工具" class="l2">铁电和极性材料工具</a></nav></div>
+</main>
+
+<!-- ======================================================= footer -->
+<footer class="footer">
+  <div class="container">
+    <div class="footer-grid">
+      <div>
+        <a href="../../index.html" class="brand"><svg><use href="#i-logo"/></svg><span><span class="gpumd">GPUMD</span><span class="kit">kit</span></span></a>
+        <p data-i18n="foot.about">A user-friendly toolkit for the GPUMD and NEP programs, built by the GPUMDkit team and contributors.</p>
+      </div>
+      <div><h5 data-i18n="foot.links">Quick links</h5><ul>
+        <li><a href="../../manual.html" data-doc="index" data-i18n="nav.docs">Docs</a></li>
+        <li><a href="../../gallery.html" data-i18n="nav.gallery">Gallery</a></li>
+        <li><a href="../../publications.html" data-i18n="nav.pubs">Publications</a></li>
+        <li><a href="https://github.com/zhyan0603/GPUMDkit/archive/refs/heads/main.zip" data-i18n="foot.dl">Download</a></li></ul></div>
+      <div><h5 data-i18n="foot.gpumd">GPUMD project</h5><ul>
+        <li><a href="https://github.com/brucefan1983/GPUMD" target="_blank" rel="noopener">GPUMD repository</a></li>
+        <li><a href="https://gpumd.org/" target="_blank" rel="noopener">GPUMD documentation</a></li>
+        <li><a href="https://github.com/brucefan1983/GPUMD-Tutorials" target="_blank" rel="noopener">GPUMD-Tutorials</a></li>
+        <li><a href="https://github.com/brucefan1983/GPUMD/tree/master/tools" target="_blank" rel="noopener">GPUMD-Tools</a></li></ul></div>
+      <div><h5 data-i18n="foot.eco">GPUMD ecosystem</h5><ul>
+        <li><a href="https://gitlab.com/brucefan1983/nep-data" target="_blank" rel="noopener">nep-data</a></li>
+        <li><a href="https://gitlab.com/materials-modeling/calorine" target="_blank" rel="noopener">calorine</a></li>
+        <li><a href="https://github.com/aboys-cb/NepTrainKit" target="_blank" rel="noopener">NepTrainKit</a></li>
+        <li><a href="https://github.com/Jonsnow-willow/GPUMD-Wizard" target="_blank" rel="noopener">GPUMD-Wizard</a></li></ul></div>
+    </div>
+    <div class="footer-bottom">
+      <span data-i18n="foot.copy">© 2026 GPUMDkit Team. Released under GPL-3.0.</span>
+      <span><span id="busuanzi_container_site_pv"><span data-i18n="foot.views">Views</span>: <span id="busuanzi_value_site_pv"></span></span> · <span id="busuanzi_container_site_uv"><span data-i18n="foot.visitors">Visitors</span>: <span id="busuanzi_value_site_uv"></span></span></span>
+    </div>
+  </div>
+</footer>
+
+<script src="../../assets/js/gk-data.js"></script>
+<script src="../../assets/js/gk-docs.js"></script>
+<script src="../../assets/js/gk-i18n.js"></script>
+<script src="../../assets/js/gk-core.js"></script>
+<script src="../../assets/js/gk-doc.js"></script>
+<script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+</body>
+</html>

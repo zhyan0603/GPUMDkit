@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Assemble docs/manual.html from the pieces in this folder (standard library only).
+"""Assemble docs/manual.html and the tutorial pages in docs/manual/ (needs `markdown` + pymdown-extensions).
 
     python3 docs/manual-src/build.py
 
@@ -21,6 +21,9 @@ OUT = HERE.parent / "manual.html"
 
 
 def main():
+    layout = (HERE / "layout.html").read_text(encoding="utf-8")
+    from build_docs import build_all
+    n_docs = build_all(layout)
     chapters = []
     for n, f in enumerate(sorted((HERE / "chapters").glob("*.html")), 1):
         html = f.read_text(encoding="utf-8")
@@ -37,15 +40,14 @@ def main():
             side += f'<h6><span class="l-en">{grp[0]}</span><span class="l-zh">{grp[1]}</span></h6>'
             last = grp
         side += f'<a href="#{cid}"><i>{n:02d}</i><span>{title}</span></a>'
-    side += ('<div class="legacy"><div class="l-en">Looking for a page of the classic tutorials? <a href="htmls/en/index.html" data-doc="index">Open the full documentation</a>.</div>'
-             '<div class="l-zh">想看原来的教程页面？<a href="htmls/zh/index.html" data-doc="index">打开完整文档</a>。</div></div></aside>')
+    side += '</aside>'
 
-    page = (HERE / "layout.html").read_text(encoding="utf-8")
+    page = layout
     page = (page.replace("{{HERO}}", (HERE / "hero.html").read_text(encoding="utf-8").strip())
                 .replace("{{SIDEBAR}}", side)
                 .replace("{{CHAPTERS}}", "\n".join(c[4].strip() for c in chapters)))
     OUT.write_text(page, encoding="utf-8")
-    print(f"wrote {OUT} ({len(chapters)} chapters)")
+    print(f"wrote {OUT} ({len(chapters)} chapters) and {n_docs} tutorial pages in docs/manual/")
 
 
 if __name__ == "__main__":

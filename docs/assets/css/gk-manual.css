@@ -298,3 +298,96 @@ html:not([lang="zh-CN"]) .l-zh { display: none !important; }
 .docs-row .dr-label { font: 600 11px/1 var(--mono); letter-spacing: 0.12em; text-transform: uppercase; color: var(--ink-3); margin-right: 4px; }
 .docs-row .chip { height: 30px; font: 500 12.5px/1 var(--font); }
 .docs-row .chip svg { width: 13px; height: 13px; }
+
+/* ==========================================================================
+   Tutorial pages (docs/manual/<lang>/*.html, rendered from docs/tutorials)
+   ========================================================================== */
+.doc-hero { padding-bottom: 8px; }
+.doc-hero h1 { font-size: clamp(30px, 24px + 1.6vw, 48px); }
+.crumb { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 14px; font: 500 12.5px/1.4 var(--mono); color: var(--ink-3); }
+.crumb a { color: var(--blue); }
+.crumb a:hover { text-decoration: underline; }
+.crumb span:last-child { color: var(--ink-2); }
+.man.doc { grid-template-columns: 240px minmax(0, 1fr) 210px; padding-top: 8px; }
+.doc-body { padding-top: 0; }
+.doc-body > :first-child { margin-top: 24px; }
+.man-side a.sub { padding-left: 26px; font-size: 13.5px; }
+.man-side a.sub::after { content: ""; position: absolute; left: 14px; top: 50%; width: 6px; height: 6px; margin-top: -3px; border-left: 1.5px solid var(--line-2); border-bottom: 1.5px solid var(--line-2); }
+
+.doc-toc { position: sticky; top: calc(var(--nav-h) + 18px); max-height: calc(100vh - var(--nav-h) - 36px); overflow-y: auto; padding-bottom: 20px; scrollbar-width: thin; }
+.doc-toc h6 { margin: 0 0 10px; font: 600 11px/1 var(--mono); letter-spacing: 0.14em; text-transform: uppercase; color: var(--ink-3); }
+.doc-toc a { display: block; padding: 5px 0 5px 12px; border-left: 2px solid var(--line); font-size: 13px; line-height: 1.4; color: var(--ink-3); transition: color 0.2s, border-color 0.2s; }
+.doc-toc a.l3 { padding-left: 24px; font-size: 12.5px; }
+.doc-toc a:hover { color: var(--ink); }
+.doc-toc a.on { color: var(--blue); border-left-color: var(--blue); font-weight: 600; }
+
+.doc-body h2 { margin: 52px 0 6px; padding-top: 4px; font-size: clamp(22px, 19px + 0.8vw, 30px); font-weight: 760; letter-spacing: -0.025em; line-height: 1.2; scroll-margin-top: calc(var(--nav-h) + 16px); }
+.doc-body h2:first-child { margin-top: 20px; }
+.doc-body h3 { margin: 34px 0 8px; font-size: var(--fs-h3); scroll-margin-top: calc(var(--nav-h) + 16px); }
+.doc-body h4 { margin: 24px 0 6px; font-size: var(--fs-h4); font-weight: 650; }
+.doc-body h5, .doc-body h6 { margin: 18px 0 4px; font-size: var(--fs-p); }
+.doc-body p, .doc-body li { color: var(--ink-2); }
+.doc-body ul, .doc-body ol { margin: 12px 0; padding-left: 1.4em; color: var(--ink-2); }
+.doc-body li { margin: 5px 0; padding-left: 2px; }
+.doc-body li::marker { color: var(--copper); }
+.doc-body li > ul, .doc-body li > ol { margin: 4px 0; }
+.doc-body a:not(.doc-edit):not(.next) { color: var(--blue); }
+.doc-body a:not(.doc-edit):not(.next):hover { text-decoration: underline; }
+.doc-body :not(pre) > code { font-size: 0.88em; padding: 2px 6px; border-radius: 7px; background: var(--copper-soft); color: var(--copper-2); }
+[data-theme="dark"] .doc-body :not(pre) > code { color: var(--copper); }
+.doc-body .tbl code { white-space: normal; word-break: break-word; }
+.doc-body hr { border: 0; border-top: 1px solid var(--line); margin: 34px 0; }
+.doc-body blockquote { margin: 16px 0; padding: 4px 18px; border-left: 3px solid var(--copper); color: var(--ink-2); background: var(--copper-soft); border-radius: 0 12px 12px 0; }
+.doc-body img { display: inline-block; max-width: 100%; height: auto; border-radius: 14px; border: 1px solid var(--line); background: #fff; cursor: zoom-in; }
+.doc-body div[align="center"] { margin: 18px 0; }
+.doc-body .tbl td:first-child { white-space: normal; }
+.doc-body .tbl td, .doc-body .tbl th { min-width: 90px; }
+.doc-body .code pre code { white-space: pre; }
+
+/* admonitions use the same callout look as the manual */
+.doc-body .admonition { margin: 20px 0; padding: 14px 18px; border-radius: 16px; background: var(--blue-soft); border: 1px solid var(--line); border-left: 4px solid var(--blue); }
+.doc-body .admonition p { margin: 6px 0 0; color: var(--ink-2); font-size: var(--fs-p); }
+.doc-body .admonition .admonition-title { margin: 0 0 2px; font: 700 12px/1.4 var(--mono); letter-spacing: 0.1em; text-transform: uppercase; color: var(--blue); }
+.doc-body .admonition.warning, .doc-body .admonition.danger, .doc-body .admonition.caution { background: var(--copper-soft); border-left-color: var(--copper-2); }
+.doc-body .admonition.warning .admonition-title, .doc-body .admonition.danger .admonition-title, .doc-body .admonition.caution .admonition-title { color: var(--copper-2); }
+.doc-body .admonition.tip, .doc-body .admonition.success { background: rgba(26, 127, 55, 0.07); border-left-color: var(--green); }
+.doc-body .admonition.tip .admonition-title, .doc-body .admonition.success .admonition-title { color: var(--green); }
+
+/* collapsible blocks */
+.doc-body details { margin: 16px 0; border-radius: 16px; background: var(--surface); border: 1px solid var(--line); overflow: hidden; }
+.doc-body details[open] { border-color: var(--line-2); box-shadow: var(--shadow-1); }
+.doc-body summary { list-style: none; cursor: pointer; padding: 13px 48px 13px 18px; font-weight: 600; position: relative; color: var(--ink); }
+.doc-body summary::-webkit-details-marker { display: none; }
+.doc-body summary::after { content: "+"; position: absolute; right: 18px; top: 50%; margin-top: -12px; width: 24px; height: 24px; display: grid; place-items: center; font: 500 20px/1 var(--mono); color: var(--ink-3); transition: transform 0.3s var(--ease); }
+.doc-body details[open] summary::after { transform: rotate(45deg); color: var(--blue); }
+.doc-body details > :not(summary) { margin-left: 18px; margin-right: 18px; }
+.doc-body details > :last-child { margin-bottom: 18px; }
+.doc-body details .code { margin-left: 0; margin-right: 0; border-radius: 0; border-left: 0; border-right: 0; box-shadow: none; }
+
+/* previous / next, edit link */
+.doc-pn { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-top: 56px; }
+.doc-pn a { display: block; padding: 16px 18px; border-radius: 16px; background: var(--surface); border: 1px solid var(--line); box-shadow: var(--shadow-1); transition: transform 0.35s var(--ease), border-color 0.25s, box-shadow 0.35s var(--ease); }
+.doc-pn a:hover { transform: translateY(-3px); border-color: var(--blue); box-shadow: var(--shadow-2); }
+.doc-pn a.next { text-align: right; grid-column: 2; }
+.doc-pn small { display: block; font: 600 11px/1 var(--mono); letter-spacing: 0.12em; text-transform: uppercase; color: var(--ink-3); margin-bottom: 6px; }
+.doc-pn b { font-size: 15px; letter-spacing: -0.01em; color: var(--ink); }
+.doc-edit { display: inline-block; margin-top: 22px; font-size: 13px; color: var(--ink-3); }
+.doc-edit:hover { color: var(--blue); }
+
+@media (max-width: 1200px) {
+  .man.doc { grid-template-columns: 220px minmax(0, 1fr); }
+  .doc-toc { display: none; }
+}
+@media (max-width: 900px) {
+  .man.doc { grid-template-columns: minmax(0, 1fr); }
+  .man-side a.sub { padding-left: 12px; }
+  .man-side a.sub::after { display: none; }
+  .doc-pn { grid-template-columns: 1fr; }
+  .doc-pn a.next { grid-column: auto; }
+}
+
+.doc-body .img-pair { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; margin: 18px 0; align-items: start; }
+.doc-body .img-pair img { width: 100%; }
+.doc-body .shot-grid { margin: 22px 0; }
+.doc-body .shot img { border: 0; border-radius: 0; }
+@media (max-width: 900px) { .doc-body .img-pair { grid-template-columns: minmax(0, 1fr); } }

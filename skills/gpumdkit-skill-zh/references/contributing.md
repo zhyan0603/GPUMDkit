@@ -43,6 +43,7 @@ GPUMDkit/
 │   ├── updates.info         # 仅记录最新功能和代码/CLI bug 修复
 │   ├── index.html, gallery.html, publications.html, manual.html  # 独立网站页面
 │   ├── manual-src/          # manual.html 的源文件；修改这里，然后运行 `python3 docs/manual-src/build.py`
+│   ├── manual/              # 生成的教程页面（由 build.py 从 tutorials/*.md 生成），请勿手动修改
 │   ├── assets/              # 网站 CSS、JavaScript 和图片
 │   ├── stats.json           # 网站首页统计数字
 │   └── Gallery/             # 绘图示例图片

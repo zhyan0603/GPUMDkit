@@ -31,6 +31,7 @@
 
   const GK = (window.GK = {
     $, $$, store, reduced,
+    root: document.body.dataset.root || "",
     lang: store.get("gk-lang") || "en",
     t(key) {
       const zh = (window.GK_I18N && window.GK_I18N.zh) || {};
@@ -42,7 +43,7 @@
     emit(evt, detail) { document.dispatchEvent(new CustomEvent("gk:" + evt, { detail })); },
     docHref(key) {
       const d = window.GK_DOCS && window.GK_DOCS[key];
-      return d ? "htmls/" + (GK.lang === "zh" ? d[1] : d[0]) : "htmls/en/index.html";
+      return GK.root + (d ? (GK.lang === "zh" ? d[1] : d[0]) : "manual.html");
     },
     esc(s) { return String(s).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;"); },
   });
@@ -267,7 +268,7 @@
       else (el.querySelector(".w") || el).textContent = v;   // .w: word span inside an animated heading
     });
   }
-  GK.json("stats.json").then(s => { GK.stats = s || {}; fillStats(); GK.emit("stats", GK.stats); }).catch(() => {});
+  GK.json(GK.root + "stats.json").then(s => { GK.stats = s || {}; fillStats(); GK.emit("stats", GK.stats); }).catch(() => {});
   GK.on("lang", fillStats);
 
   /* ------------------------------------------------------------ GitHub stats (cached for 6 h) */
@@ -294,11 +295,11 @@
   function paletteItems() {
     const D = window.GK_DATA || {}, onHome = document.body.dataset.page === "home", zh = GK.lang === "zh";
     const out = [];
-    SECTIONS.forEach(([id, en, z]) => out.push({ g: "pal.sections", k: "sec", title: zh ? z : en, sub: "#" + id, href: (onHome ? "" : "index.html") + "#" + id }));
-    out.push({ g: "pal.sections", k: "sec", title: zh ? "使用手册" : "User manual", sub: "manual.html", href: "manual.html" });
-    out.push({ g: "pal.sections", k: "sec", title: zh ? "完整图库" : "Full gallery", sub: "gallery.html", href: "gallery.html" });
-    out.push({ g: "pal.sections", k: "sec", title: zh ? "全部出版物" : "All publications", sub: "publications.html", href: "publications.html" });
-    Object.entries(window.GK_DOCS || {}).forEach(([key, d]) => out.push({ g: "pal.docs", k: "doc", title: zh ? d[3] : d[2], sub: "htmls/" + (zh ? d[1] : d[0]), href: GK.docHref(key) }));
+    SECTIONS.forEach(([id, en, z]) => out.push({ g: "pal.sections", k: "sec", title: zh ? z : en, sub: "#" + id, href: (onHome ? "" : GK.root + "index.html") + "#" + id }));
+    out.push({ g: "pal.sections", k: "sec", title: zh ? "使用手册" : "User manual", sub: "manual.html", href: GK.root + "manual.html" });
+    out.push({ g: "pal.sections", k: "sec", title: zh ? "完整图库" : "Full gallery", sub: "gallery.html", href: GK.root + "gallery.html" });
+    out.push({ g: "pal.sections", k: "sec", title: zh ? "全部出版物" : "All publications", sub: "publications.html", href: GK.root + "publications.html" });
+    Object.entries(window.GK_DOCS || {}).forEach(([key, d]) => out.push({ g: "pal.docs", k: "doc", title: zh ? d[3] : d[2], sub: zh ? d[1] : d[0], href: GK.docHref(key) }));
     Object.entries(D.flags || {}).forEach(([f, desc]) => out.push({ g: "pal.cli", k: "cli", title: "gpumdkit.sh " + f, code: true, sub: desc, copy: "gpumdkit.sh " + f }));
     Object.entries(D.plots || {}).forEach(([p, desc]) => {
       p.split("/").forEach((name, i) => {

@@ -50,6 +50,85 @@ for another material or workflow.
 
 ---
 
+## A Worked Example
+
+The commands below were run on a small illustrative file, `train.xyz`: nine frames of a 16-atom Li cell, three of which have four Li atoms replaced by F, and one frame in which two atoms are only 0.4 Å apart (a typical "bad" structure from a failed MD step). The numbers belong to this toy file, not to a real dataset.
+
+**1. What is in the file?**
+
+```bash
+gpumdkit.sh -analyze_comp train.xyz
+```
+
+```text
+ Index    Compositions           N atoms      Count
+ ---------------------------------------------------
+ 1        Li16                   16           6
+ 2        Li12F4                 16           3
+ ---------------------------------------------------
+ Enter index to export (e.g., '1,2', '2-3', 'all'), or press Enter to skip:
+```
+
+The table counts frames per composition. The last line is an interactive prompt: type an index such as `2` to write the frames of that composition to a file, or press Enter to leave the file untouched.
+
+**2. How large are the labels?**
+
+```bash
+gpumdkit.sh -range train.xyz energy
+gpumdkit.sh -range train.xyz force
+```
+
+```text
+ Energy range: -30.400 to -25.400
+ Force range: 0.199 to 3.254
+```
+
+An energy of -25.4 eV in a set where the others are near -30.4 eV is a flag, and so is a maximum force of 3.25 eV/Å. Neither is an error by itself; look at the structures behind them.
+
+**3. Are any atoms too close?**
+
+```bash
+gpumdkit.sh -min_dist_pbc train.xyz
+```
+
+```text
+ Minimum interatomic distances (with PBC):
+ +---------------------------+
+ | Atom Pair |  Distance (Å) |
+ +---------------------------+
+ |   Li-Li   |     0.400     |
+ |   Li-F    |     2.447     |
+ |   F-F     |     2.776     |
+ +---------------------------+
+ Overall min_distance: 0.400 Å
+```
+
+A Li-Li distance of 0.4 Å is far below any physical bond length, so some frame contains overlapping atoms.
+
+**4. Remove them and keep a record of what was removed.**
+
+```bash
+gpumdkit.sh -filter_dist_pbc train.xyz 1.5
+```
+
+```text
+ Total structures processed: 9
+ Structures filtered out: 1
+ Structures retained: 8
+ Filtered structures saved to: filtered_train.xyz
+ Filtered-out structures saved to: filtered_out_train.xyz
+```
+
+The threshold `1.5` is only an example: choose one that fits the elements in your own system. Keep `filtered_out_train.xyz` and look at it before you discard the structures for good.
+
+**5. Check the result.**
+
+```bash
+gpumdkit.sh -min_dist_pbc filtered_train.xyz
+```
+
+Run the same checks again on the cleaned file before it goes into a training set.
+
 ## Interactive Mode
 
 Run `gpumdkit.sh` and choose `5) Analyzer`. Most functions also have the command-line shortcuts listed in the overview table and in the sections below.

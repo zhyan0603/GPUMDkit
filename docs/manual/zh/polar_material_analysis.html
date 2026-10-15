@@ -1,0 +1,539 @@
+<!DOCTYPE html>
+<html lang="zh-CN" data-theme="light">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>极性材料分析 — GPUMDkit</title>
+  <meta name="description" content="本教程介绍 GPUMDkit 中计算器选项 406-410，以及 plane-grid 绘图流程。">
+  <meta property="og:title" content="GPUMDkit — A User-friendly Toolkit for GPUMD and NEP">
+  <meta property="og:description" content="Format conversion, sampling, workflows, analysis and plotting for GPUMD and NEP, in one command.">
+  <meta property="og:image" content="https://gpumdkit.cn/Gallery/gpumdkit_logo_lateral.png">
+  <meta property="og:url" content="https://gpumdkit.cn/">
+  <meta name="twitter:card" content="summary_large_image">
+  <link rel="canonical" href="https://gpumdkit.cn/manual/zh/polar_material_analysis.html">
+  <link rel="icon" href="../../Gallery/gpumdkit_logo.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <!-- web fonts load without blocking rendering; system fonts are used if they are unreachable -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
+  <noscript><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet"></noscript>
+  <link rel="stylesheet" href="../../assets/css/gk.css">
+  <link rel="stylesheet" href="../../assets/css/gk-manual.css">
+  <script>
+    /* mark JS as available (reveal animations are only armed then) and apply the saved theme before first paint */
+    document.documentElement.classList.add("js"); try { localStorage.setItem("gk-lang", "zh"); } catch (e) {}
+    try { var t = localStorage.getItem("gk-theme"); if (t) document.documentElement.setAttribute("data-theme", t); } catch (e) {}
+  </script>
+</head>
+<body data-page="doc" data-root="../../" data-lang="zh" data-alt="../en/polar_material_analysis.html">
+
+<!-- ======================================================= icon sprite -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <symbol id="i-logo" viewBox="0 0 100 100"><path d="M85.3 31.2A40 40 0 1 0 89.4 43" fill="none" stroke="#1867ae" stroke-width="9"/><text x="49" y="52" text-anchor="middle" dominant-baseline="central" font-family="Helvetica Neue,Helvetica,Arial,sans-serif" font-weight="800" font-size="52" fill="#1867ae">G</text><circle cx="87.4" cy="35.7" r="5" fill="#c18852"/></symbol>
+    <symbol id="i-copy" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="11" height="11" rx="2.5"/><path d="M5 15V6a2 2 0 0 1 2-2h9"/></symbol>
+    <symbol id="i-check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="m5 12.5 4.5 4.5L19 7.5"/></symbol>
+    <symbol id="i-search" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="m20 20-4-4"/></symbol>
+    <symbol id="i-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"><circle cx="12" cy="12" r="4.2"/><path d="M12 2.5v2M12 19.5v2M4.6 4.6 6 6M18 18l1.4 1.4M2.5 12h2M19.5 12h2M4.6 19.4 6 18M18 6l1.4-1.4"/></symbol>
+    <symbol id="i-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M20.5 14.2A8.5 8.5 0 0 1 9.8 3.5 8.5 8.5 0 1 0 20.5 14.2Z"/></symbol>
+    <symbol id="i-github" viewBox="0 0 16 16" fill="currentColor"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0 0 16 8c0-4.42-3.58-8-8-8z"/></symbol>
+    <symbol id="i-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></symbol>
+    <symbol id="i-out" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17 17 7M8 7h9v9"/></symbol>
+    <symbol id="i-star" viewBox="0 0 24 24" fill="currentColor"><path d="m12 2.8 2.8 5.8 6.4.9-4.6 4.5 1.1 6.3L12 17.3l-5.7 3 1.1-6.3-4.6-4.5 6.4-.9Z"/></symbol>
+    <symbol id="i-fork" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"><circle cx="6" cy="5" r="2.2"/><circle cx="18" cy="5" r="2.2"/><circle cx="12" cy="19" r="2.2"/><path d="M6 7.2v1.8a3 3 0 0 0 3 3h6a3 3 0 0 0 3-3V7.2M12 12v4.8"/></symbol>
+    <symbol id="i-menu" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 7h16M4 12h16M4 17h16"/></symbol>
+    <symbol id="i-close" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M6 6l12 12M18 6 6 18"/></symbol>
+    <symbol id="i-left" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m15 5-7 7 7 7"/></symbol>
+    <symbol id="i-right" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 5 7 7-7 7"/></symbol>
+    <symbol id="i-lock" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="5" y="11" width="14" height="9" rx="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></symbol>
+    <symbol id="i-conv" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M7 4 3 8l4 4"/><path d="M3 8h14"/><path d="m17 12 4 4-4 4"/><path d="M21 16H7"/></symbol>
+    <symbol id="i-samp" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="6" cy="7" r="1.6"/><circle cx="12.5" cy="5" r="1.6"/><circle cx="18" cy="9" r="1.6"/><circle cx="8" cy="15" r="1.6"/><circle cx="16" cy="17" r="1.6"/><circle cx="12" cy="11.5" r="6.8" stroke-dasharray="2 3"/></symbol>
+    <symbol id="i-flow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="2"/><rect x="14" y="14" width="7" height="7" rx="2"/><path d="M6.5 10v3.5a2 2 0 0 0 2 2H14"/></symbol>
+    <symbol id="i-calc" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="3" width="14" height="18" rx="2.5"/><path d="M8.5 7h7M8.5 11.5h.01M12 11.5h.01M15.5 11.5h.01M8.5 15h.01M12 15h.01M15.5 15h.01M8.5 18h.01M12 18h.01M15.5 18h.01"/></symbol>
+    <symbol id="i-anal" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="10.5" cy="10.5" r="6.5"/><path d="m20 20-4.8-4.8"/><path d="M7.5 12l2-2.5 2 1.5 2-3"/></symbol>
+    <symbol id="i-plot" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3v18h18"/><path d="m7 15 4-5 3 3 5-7"/></symbol>
+    <symbol id="i-term" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="16" rx="3"/><path d="m7 9 3 3-3 3M12.5 15H17"/></symbol>
+    <symbol id="i-doc" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"><path d="M6 3h8.5L19 7.5V21H6z"/><path d="M14 3v5h5M9 12.5h7M9 16.5h5" stroke-linecap="round"/></symbol>
+    <symbol id="i-chat" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20 15a2 2 0 0 1-2 2H8l-4 4V6a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2z"/><path d="M8.5 9.5h7M8.5 13h4.5"/></symbol>
+    <symbol id="i-shield" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3 5 6v6c0 4.4 3 7.6 7 9 4-1.4 7-4.6 7-9V6z"/><path d="m9 12 2 2 4-4"/></symbol>
+    <symbol id="i-globe" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c2.8 3 2.8 15 0 18M12 3c-2.8 3-2.8 15 0 18"/></symbol>
+    <symbol id="i-spark" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v4M12 17v4M3 12h4M17 12h4M6 6l2.5 2.5M15.5 15.5 18 18M6 18l2.5-2.5M15.5 8.5 18 6"/></symbol>
+    <symbol id="i-atom" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="1.8" fill="currentColor"/><ellipse cx="12" cy="12" rx="9" ry="3.6"/><ellipse cx="12" cy="12" rx="9" ry="3.6" transform="rotate(60 12 12)"/><ellipse cx="12" cy="12" rx="9" ry="3.6" transform="rotate(120 12 12)"/></symbol>
+    <symbol id="i-db" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><ellipse cx="12" cy="6" rx="7" ry="3"/><path d="M5 6v12c0 1.7 3.1 3 7 3s7-1.3 7-3V6M5 12c0 1.7 3.1 3 7 3s7-1.3 7-3"/></symbol>
+    <symbol id="i-brain" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="6" cy="7" r="2"/><circle cx="6" cy="17" r="2"/><circle cx="12" cy="12" r="2"/><circle cx="18" cy="7" r="2"/><circle cx="18" cy="17" r="2"/><path d="M8 7.8 10.3 11M8 16.2l2.3-3.2M13.7 11 16 7.8M13.7 13l2.3 3.2"/></symbol>
+    <symbol id="i-filter" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 5h16l-6 7.5V19l-4 2v-8.5z"/></symbol>
+    <symbol id="i-image" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="16" rx="3"/><circle cx="9" cy="10" r="2"/><path d="m21 16-5-5-9 9"/></symbol>
+  </defs>
+</svg>
+
+<div class="ambient" aria-hidden="true"><div class="orb a"></div><div class="orb b"></div><div class="orb c"></div><div class="noise"></div></div>
+<div class="progress" aria-hidden="true"></div>
+
+<!-- ======================================================= navigation -->
+<header class="nav" id="nav">
+  <div class="container">
+    <a href="../../index.html" class="brand" aria-label="GPUMDkit home"><svg><use href="#i-logo"/></svg><span><span class="gpumd">GPUMD</span><span class="kit">kit</span></span></a>
+    <nav class="nav-links" id="nav-links">
+      <a href="../../index.html#features" data-i18n="nav.features">Features</a>
+      <a href="../../index.html#terminal" data-i18n="nav.terminal">Try it</a>
+      <a href="../../index.html#workflow" data-i18n="nav.workflow">Workflow</a>
+      <a href="../../gallery.html" data-i18n="nav.gallery">Gallery</a>
+      <a href="../../publications.html" data-i18n="nav.pubs">Publications</a>
+      <a href="../../manual.html" class="active" aria-current="page" data-i18n="nav.manual">Manual</a>
+    </nav>
+    <div class="nav-tools">
+      <button class="search-btn" data-palette aria-label="Search commands and docs"><svg><use href="#i-search"/></svg><span class="label" data-i18n="nav.search">Search commands…</span><kbd>⌘K</kbd></button>
+      <button class="icon-btn lang-btn" data-lang-toggle aria-label="Switch language">中文</button>
+      <button class="icon-btn" data-theme-toggle aria-label="Toggle dark mode"><svg class="theme-icon-light"><use href="#i-moon"/></svg><svg class="theme-icon-dark"><use href="#i-sun"/></svg></button>
+      <a class="icon-btn gh-btn" href="https://github.com/zhyan0603/GPUMDkit" target="_blank" rel="noopener" aria-label="GitHub"><svg><use href="#i-github"/></svg></a>
+      <button class="icon-btn menu-btn" id="menu-btn" aria-label="Menu"><svg><use href="#i-menu"/></svg></button>
+    </div>
+  </div>
+</header>
+
+<main>
+<section class="man-hero doc-hero"><div class="container"><div class="crumb"><a href="../../manual.html">手册</a><span>/</span><span>工具箱</span><span>/</span><span>极性材料分析</span></div><h1 class="h-section">极性材料分析</h1><p class="lead">本教程介绍 GPUMDkit 中计算器选项 <code>406-410</code>，以及 <code>plane-grid</code> 绘图流程。</p></div></section>
+<div class="container man doc"><aside class="man-side" aria-label="Pages"><h6>开始</h6><a href="quick_start.html" class=""><span>快速入门</span></a><a href="remote_web_console.html" class=""><span>远程网页控制台</span></a><a href="simulation_and_postprocessing.html" class=""><span>GPUMDkit Agent Skill</span></a><h6>工具箱</h6><a href="format_conversion.html" class=""><span>格式转换</span></a><a href="structure_sampling.html" class=""><span>结构采样</span></a><a href="workflow_scripts.html" class=""><span>工作流脚本</span></a><a href="calculator_scripts.html" class=""><span>计算器脚本</span></a><a href="analyzer_scripts.html" class=""><span>分析工具</span></a><a href="plot_scripts.html" class=""><span>绘图脚本</span></a><a href="plot_nep.html" class="sub"><span>NEP 训练与模型分析</span></a><a href="plot_md_structure.html" class="sub"><span>MD 与结构</span></a><a href="plot_diffusion.html" class="sub"><span>扩散与离子输运</span></a><a href="plot_heat_phonon.html" class="sub"><span>热输运与声子</span></a><a href="polar_material_analysis.html" class="on"><span>极性材料分析</span></a><h6>指南</h6><a href="active_learning_workflow.html" class=""><span>主动学习工作流</span></a><a href="custom_commands.html" class=""><span>自定义命令</span></a><h6>参考</h6><a href="command_reference.html" class=""><span>命令参考</span></a><h6>贡献</h6><a href="contributing.html" class=""><span>为 GPUMDkit 贡献代码</span></a></aside><article class="man-body chap doc-body"><p><strong>脚本位置：</strong> <code>Scripts/calculators/</code> 和 <code>Scripts/plt_scripts/</code></p>
+<p>本教程包含通用工具和体系相关工具：</p>
+<ul>
+<li><code>nlist</code>、<code>disp</code> 和 <code>avg-struct</code> 可广泛用于结构和轨迹分析。</li>
+<li><code>oct-tilt</code> 用于八面体环境分析，需要每个中心原子周围有 6 个近邻。</li>
+<li><code>pol-abo3</code> 专用于 <code>ABO3</code> 体系的极化分析。</li>
+</ul>
+<h2 id="概览">概览</h2>
+<div class="tbl-wrap"><table class="tbl">
+<thead>
+<tr>
+<th>步骤</th>
+<th>CLI 命令</th>
+<th>主要输入</th>
+<th>输出</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>构建近邻列表</td>
+<td><code>gpumdkit.sh -calc nlist ...</code></td>
+<td><code>model.xyz</code></td>
+<td><code>nl-*.dat</code></td>
+</tr>
+<tr>
+<td>计算位移</td>
+<td><code>gpumdkit.sh -calc disp ...</code></td>
+<td>轨迹 + <code>nl-*.dat</code></td>
+<td><code>displacements.dat</code></td>
+</tr>
+<tr>
+<td>平均轨迹结构</td>
+<td><code>gpumdkit.sh -calc avg-struct ...</code></td>
+<td>轨迹</td>
+<td>平均结构 extxyz</td>
+</tr>
+<tr>
+<td>八面体倾转</td>
+<td><code>gpumdkit.sh -calc oct-tilt ...</code></td>
+<td>轨迹 + B-O 近邻列表</td>
+<td>倾转角数据表</td>
+</tr>
+<tr>
+<td>ABO3 极化</td>
+<td><code>gpumdkit.sh -calc pol-abo3 ...</code></td>
+<td>轨迹 + 近邻列表</td>
+<td>极化数据表</td>
+</tr>
+<tr>
+<td>plane-grid 绘图</td>
+<td><code>gpumdkit.sh -plt plane-grid ...</code></td>
+<td>结构 + 位移数据</td>
+<td>平面剖面图</td>
+</tr>
+</tbody>
+</table></div>
+<h2 id="依赖">依赖</h2>
+<p>构建近邻列表、计算位移、计算八面体倾转、计算 ABO3 极化以及绘制
+<code>plane-grid</code> 平面剖面的命令需要 <code>ferrodispcalc</code>：</p>
+<div class="code"><div class="cap"><i></i><i></i><i></i><span>bash</span></div><pre><code>pip3 install git+https://github.com/MoseyQAQ/ferrodispcalc.git</code></pre><button class="copy-btn" data-copy-pre aria-label="Copy"><svg class="cp"><use href="#i-copy"/></svg><svg class="ok"><use href="#i-check"/></svg></button></div>
+<p><code>avg-struct</code> 不依赖 <code>ferrodispcalc</code>，只使用 GPUMDkit 的标准 <code>ASE</code> 和
+<code>NumPy</code> 依赖。</p>
+<h2 id="交互模式入口">交互模式入口</h2>
+<p>交互模式下，它们是计算器菜单中的 <code>406</code>–<code>410</code>（<code>gpumdkit.sh</code> → <code>4) Calculators</code>）。每一项也都有下文所用的命令行形式，完整参数可以这样查看：</p>
+<div class="code"><div class="cap"><i></i><i></i><i></i><span>bash</span></div><pre><code>gpumdkit.sh -calc nlist -h
+gpumdkit.sh -calc disp -h
+gpumdkit.sh -calc avg-struct -h
+gpumdkit.sh -calc oct-tilt -h
+gpumdkit.sh -calc pol-abo3 -h
+gpumdkit.sh -plt plane-grid -h</code></pre><button class="copy-btn" data-copy-pre aria-label="Copy"><svg class="cp"><use href="#i-copy"/></svg><svg class="ok"><use href="#i-check"/></svg></button></div>
+<h2 id="406-构建近邻列表-calc_neighbor_listpy">406) 构建近邻列表 (<code>calc_neighbor_list.py</code>)</h2>
+<p>为指定中心元素和近邻元素构建近邻列表。</p>
+<p>使用场景：
+这通常是运行 <code>disp</code>、<code>oct-tilt</code> 和 <code>pol-abo3</code> 之前的第一步，因为这些脚本会读取 <code>nl-*.dat</code> 近邻文件。</p>
+<h3 id="用法">用法</h3>
+<div class="code"><div class="cap"><i></i><i></i><i></i><span>bash</span></div><pre><code># 示例 1：为八面体分析构建 Ti-O 最近 6 个近邻
+gpumdkit.sh -calc nlist -i model.xyz -c 4.0 -n 6 -C Ti -E O -o nl-Ti-O.dat
+
+# 示例 2：为 A 位中心分析构建 Pb/Sr-O 最近 12 个近邻
+gpumdkit.sh -calc nlist -i model.xyz -c 4.0 -n 12 -C Pb Sr -E O</code></pre><button class="copy-btn" data-copy-pre aria-label="Copy"><svg class="cp"><use href="#i-copy"/></svg><svg class="ok"><use href="#i-check"/></svg></button></div>
+<h3 id="参数完整">参数（完整）</h3>
+<ul>
+<li><code>-i, --input</code>：
+  输入结构文件。默认值：<code>model.xyz</code>。</li>
+<li><code>-x, --index</code>：
+  从输入文件中读取的帧编号。默认值：<code>0</code>。</li>
+<li><code>-c, --cutoff</code>（必需）：
+  近邻搜索截断距离，单位为 Angstrom。</li>
+<li><code>-n, --neighbor-num</code>（必需）：
+  每个中心原子的近邻数量。</li>
+<li><code>-d, --defect</code>：
+  缺陷模式。启用后，如果近邻数量不足，缺失位置会用中心原子编号填充。</li>
+<li><code>-C, --center-elements</code>（必需）：
+  中心元素列表。</li>
+<li><code>-E, --neighbor-elements</code>（必需）：
+  近邻元素列表。</li>
+<li><code>-o, --output</code>：
+  输出文件路径。默认值：<code>nl-&lt;center&gt;-&lt;neighbor&gt;.dat</code>；多个元素用 <code>_</code> 连接，例如 <code>nl-Pb_Sr-O.dat</code>。</li>
+</ul>
+<h3 id="输出文件">输出文件</h3>
+<ul>
+<li>主要输出：近邻列表文本文件，例如 <code>nl-Ti-O.dat</code>。</li>
+<li>文件是一个二维整数数组，形状为 <code>(n_center, neighbor_num + 1)</code>。每一行对应一个中心原子：第一列是中心原子编号，后续列是近邻原子编号，所有编号均为 1-based。</li>
+</ul>
+<h2 id="407-从轨迹计算位移-calc_displacementpy">407) 从轨迹计算位移 (<code>calc_displacement.py</code>)</h2>
+<p>根据轨迹或模型结构以及近邻列表，计算局域位移矢量。</p>
+<h3 id="用法_1">用法</h3>
+<div class="code"><div class="cap"><i></i><i></i><i></i><span>bash</span></div><pre><code># 示例 1：从 model.xyz 计算单帧位移
+gpumdkit.sh -calc disp -i model.xyz -n nl-Ti-O.dat -o disp_model.dat
+
+# 示例 2：使用 movie.xyz 的最后 20% 帧
+gpumdkit.sh -calc disp -i movie.xyz -n nl-Ti-O.dat -l 0.2 -o displacements.dat</code></pre><button class="copy-btn" data-copy-pre aria-label="Copy"><svg class="cp"><use href="#i-copy"/></svg><svg class="ok"><use href="#i-check"/></svg></button></div>
+<h3 id="参数完整_1">参数（完整）</h3>
+<ul>
+<li><code>-i, --input</code>：
+  输入 xyz 文件。默认值：<code>model.xyz</code>。</li>
+<li><code>-n, --neighbor-list</code>（必需）：
+  由 <code>nlist</code> 生成的近邻列表文件。</li>
+<li><code>-o, --output</code>：
+  输出文件。默认值：<code>displacements.dat</code>。</li>
+<li><code>-s, --start</code>：
+  切片起始帧。默认值：<code>0</code>。</li>
+<li><code>-t, --stop</code>：
+  切片终止帧。默认值：到末尾。</li>
+<li><code>-p, --step</code>：
+  切片步长。默认值：<code>1</code>。</li>
+<li><code>-l, --last</code>：
+  选择末尾部分帧。
+  整数表示最后 <code>N</code> 帧；
+  <code>0 &lt; value &lt; 1</code> 表示最后一部分比例的帧。</li>
+<li><code>-l/--last</code> 与 <code>-s/-t/-p</code> 互斥。</li>
+</ul>
+<h3 id="输出文件_1">输出文件</h3>
+<ul>
+<li>主要输出：<code>displacements.dat</code>，或你指定的输出文件名。</li>
+<li>保存的文本文件是二维数组：对于单帧输入，形状为 <code>(n_center, 3)</code>；对于多帧输入，形状为 <code>(n_selected_frame * n_center, 3)</code>，按帧优先顺序排列。三列分别为 <code>dx</code>、<code>dy</code> 和 <code>dz</code> 位移分量，单位为 Angstrom。</li>
+</ul>
+<h2 id="408-计算平均结构-calc_averaged_structurepy">408) 计算平均结构 (<code>calc_averaged_structure.py</code>)</h2>
+<p>从选定轨迹帧生成一个平均结构。
+通常可在体系平衡后使用：对于接近平衡的固体，可以对目标温度下的一段轨迹取平均，并分析该代表性结构，而不是逐帧处理每个 snapshot。</p>
+<h3 id="用法_2">用法</h3>
+<div class="code"><div class="cap"><i></i><i></i><i></i><span>bash</span></div><pre><code># 示例 1：平均所有帧
+gpumdkit.sh -calc avg-struct -i movie.xyz -o averaged_structure.xyz
+
+# 示例 2：平均选定帧范围 (100:500:2)
+gpumdkit.sh -calc avg-struct -i movie.xyz -s 100 -t 500 -p 2 -o avg_slice.xyz</code></pre><button class="copy-btn" data-copy-pre aria-label="Copy"><svg class="cp"><use href="#i-copy"/></svg><svg class="ok"><use href="#i-check"/></svg></button></div>
+<h3 id="参数完整_2">参数（完整）</h3>
+<ul>
+<li><code>-i, --input</code>：
+  输入轨迹文件。默认值：<code>movie.xyz</code>。</li>
+<li><code>-o, --output</code>：
+  输出结构文件。默认值：<code>averaged_structure.xyz</code>。</li>
+<li><code>-s, --start</code>：
+  切片起始帧。默认值：<code>0</code>。</li>
+<li><code>-t, --stop</code>：
+  切片终止帧。默认值：到末尾。</li>
+<li><code>-p, --step</code>：
+  切片步长。默认值：<code>1</code>。</li>
+<li><code>-l, --last</code>：
+  选择末尾帧，可以是最后 <code>N</code> 帧或最后一部分比例的帧。</li>
+<li><code>-l/--last</code> 与 <code>-s/-t/-p</code> 互斥。</li>
+</ul>
+<h3 id="输出文件_2">输出文件</h3>
+<ul>
+<li>主要输出：单帧平均结构 extxyz 文件。</li>
+<li>位置平均会相对于所选第一帧进行 MIC/PBC 修正。</li>
+</ul>
+<h2 id="409-计算八面体倾转-calc_oct_tiltpy">409) 计算八面体倾转 (<code>calc_oct_tilt.py</code>)</h2>
+<p>根据 B-O 近邻列表计算八面体倾转角。
+该功能常用于分析 <code>ABO3</code> 体系中的八面体转动模式，例如 <code>SrTiO3</code> 和 <code>PbZrO3</code>。</p>
+<h3 id="用法_3">用法</h3>
+<div class="code"><div class="cap"><i></i><i></i><i></i><span>bash</span></div><pre><code># 示例 1：从单帧结构计算 TiO6 八面体倾转
+gpumdkit.sh -calc oct-tilt -i model.xyz -n nl-Ti-O.dat -o oct_tilt_model.dat
+
+# 示例 2：从轨迹最后 20% 帧计算 TiO6 八面体倾转
+gpumdkit.sh -calc oct-tilt -i movie.xyz -n nl-Ti-O.dat -l 0.2 -o octahedral_tilt.dat</code></pre><button class="copy-btn" data-copy-pre aria-label="Copy"><svg class="cp"><use href="#i-copy"/></svg><svg class="ok"><use href="#i-check"/></svg></button></div>
+<h3 id="参数完整_3">参数（完整）</h3>
+<ul>
+<li><code>-i, --input</code>：
+  输入 xyz 文件。默认值：<code>model.xyz</code>。</li>
+<li><code>-n, --neighbor-list</code>（必需）：
+  B-O 近邻列表文件。</li>
+<li><code>-o, --output</code>：
+  输出文件。默认值：<code>octahedral_tilt.dat</code>。</li>
+<li><code>-s, --start</code>：
+  切片起始帧。默认值：<code>0</code>。</li>
+<li><code>-t, --stop</code>：
+  切片终止帧。默认值：到末尾。</li>
+<li><code>-p, --step</code>：
+  切片步长。默认值：<code>1</code>。</li>
+<li><code>-l, --last</code>：
+  选择末尾帧，可以是最后 <code>N</code> 帧或最后一部分比例的帧。</li>
+<li><code>-l/--last</code> 与 <code>-s/-t/-p</code> 互斥。</li>
+</ul>
+<h3 id="输出文件_3">输出文件</h3>
+<ul>
+<li>主要输出：<code>octahedral_tilt.dat</code>，或自定义输出文件名。</li>
+<li>保存的文本文件是三列二维数组，分别为 <code>theta_x</code>、<code>theta_y</code>、<code>theta_z</code>，单位为 degree。对于单帧输入，形状为 <code>(n_center, 3)</code>；对于多帧输入，形状为 <code>(n_selected_frame * n_center, 3)</code>。</li>
+</ul>
+<h2 id="410-计算-abo3-体系极化-calc_polarization_abo3py">410) 计算 ABO3 体系极化 (<code>calc_polarization_abo3.py</code>)</h2>
+<p>计算 <code>ABO3</code> 体系的局域极化矢量。</p>
+<h3 id="用法_4">用法</h3>
+<div class="code"><div class="cap"><i></i><i></i><i></i><span>bash</span></div><pre><code># 示例 1：单帧 ABO3 极化
+gpumdkit.sh -calc pol-abo3 -i model.xyz --nl-ba nl-Ti-Pb.dat --nl-bo nl-Ti-O.dat \
+  --bec Pb=2 Sr=2 Ti=4.0 O=-2.0 -o polarization_model.dat
+
+# 示例 2：选定轨迹帧范围上的极化
+gpumdkit.sh -calc pol-abo3 -i movie.xyz --nl-ba nl-Ti-Pb.dat --nl-bo nl-Ti-O.dat \
+  --bec Pb=2 Ti=4.0 O=-2.0 -s 200 -t 600 -p 5 -o polarization_slice.dat</code></pre><button class="copy-btn" data-copy-pre aria-label="Copy"><svg class="cp"><use href="#i-copy"/></svg><svg class="ok"><use href="#i-check"/></svg></button></div>
+<h3 id="参数完整_4">参数（完整）</h3>
+<ul>
+<li><code>-i, --input</code>：
+  输入 xyz 文件。默认值：<code>model.xyz</code>。</li>
+<li><code>--nl-ba</code>（必需）：
+  B-A 近邻列表。</li>
+<li><code>--nl-bo</code>（必需）：
+  B-O 近邻列表。</li>
+<li><code>-o, --output</code>：
+  输出文件。默认值：<code>polarization.dat</code>。</li>
+<li><code>--bec</code>（必需）：
+  Born 有效电荷项，格式为 <code>Element=value</code>。
+  示例：<code>Pb=2.0 Ti=4.0 O=-2.0</code>。按化学式计算的电荷总和应为零，否则脚本会给出警告。</li>
+<li><code>-s, --start</code>：
+  切片起始帧。默认值：<code>0</code>。</li>
+<li><code>-t, --stop</code>：
+  切片终止帧。默认值：到末尾。</li>
+<li><code>-p, --step</code>：
+  切片步长。默认值：<code>1</code>。</li>
+<li><code>-l, --last</code>：
+  选择末尾帧，可以是最后 <code>N</code> 帧或最后一部分比例的帧。</li>
+<li><code>-l/--last</code> 与 <code>-s/-t/-p</code> 互斥。</li>
+</ul>
+<p>重要检查：</p>
+<ul>
+<li><code>--bec</code> 必须包含输入结构中的所有元素种类。</li>
+<li><code>--nl-ba</code> 和 <code>--nl-bo</code> 中的中心原子编号必须匹配。</li>
+</ul>
+<h3 id="输出文件_4">输出文件</h3>
+<ul>
+<li>主要输出：<code>polarization.dat</code>，或自定义输出文件名。</li>
+<li>保存的文本文件是三列二维数组，分别为 <code>Px</code>、<code>Py</code>、<code>Pz</code>，单位为 <code>C/m^2</code>。对于单帧输入，形状为 <code>(n_center, 3)</code>；对于多帧输入，形状为 <code>(n_selected_frame * n_center, 3)</code>，按帧优先顺序排列。如果总 Born 电荷不平衡，脚本会打印 warning。</li>
+</ul>
+<h3 id="plane-grid-可视化-plt_plane_gridpy">Plane-grid 可视化 (<code>plt_plane_grid.py</code>)</h3>
+<p>你可以可视化 <code>displacements.dat</code> 或 <code>polarization.dat</code>：</p>
+<div class="code"><div class="cap"><i></i><i></i><i></i><span>bash</span></div><pre><code># 示例 1：Ti 位点上的位移图，选择第一个 XY 层
+gpumdkit.sh -plt plane-grid -i model.xyz -d displacements.dat -e Ti --select-xy 0
+
+# 示例 2：Pb 位点上的极化图，选择 XZ 和 YZ 层
+gpumdkit.sh -plt plane-grid -i model.xyz -d polarization.dat -e Pb --select-xz 0 1 2 --select-yz 3 4</code></pre><button class="copy-btn" data-copy-pre aria-label="Copy"><svg class="cp"><use href="#i-copy"/></svg><svg class="ok"><use href="#i-check"/></svg></button></div>
+<p>参数（完整）：</p>
+<ul>
+<li><code>-i, --input</code>：
+  用于原子布局和分层的输入 xyz 文件。默认值：<code>model.xyz</code>。</li>
+<li><code>-d, --disp</code>：
+  矢量场数据文件。默认值：<code>displacements.dat</code>。</li>
+<li><code>-e, --elements</code>（必需）：
+  用于将矢量映射到晶格层上的中心元素符号。</li>
+<li><code>-m, --tol</code>：
+  网格映射的层容差。默认值：<code>1.0</code>。</li>
+<li><code>-g, --target-size</code>：
+  期望网格大小，格式为 <code>nx ny nz</code>。</li>
+<li><code>-o, --save-dir</code>：
+  图片输出目录。默认值：<code>plot</code>。</li>
+<li><code>-f, --frame</code>：
+  当矢量数据包含多帧时，要可视化的帧编号。默认值：<code>0</code>。</li>
+<li><code>--select-xy</code>：
+  选定的 XY 层编号。</li>
+<li><code>--select-xz</code>：
+  选定的 XZ 层编号。</li>
+<li><code>--select-yz</code>：
+  选定的 YZ 层编号。</li>
+</ul>
+<p>输出：</p>
+<ul>
+<li>如果需要，会创建输出目录。</li>
+<li>图片保存为 <code>XY_*.png</code>、<code>XZ_*.png</code>、<code>YZ_*.png</code>。</li>
+</ul>
+<div align="center">
+    <img src="../../Gallery/PTO_STO_superlattice.png" alt="PTO_STO" width="65%" />
+</div>
+
+<h2 id="输出文件一览">输出文件一览</h2>
+<div class="tbl-wrap"><table class="tbl">
+<thead>
+<tr>
+<th>脚本</th>
+<th>主要输出</th>
+<th>保存内容</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>calc_neighbor_list.py</code></td>
+<td><code>nl-*.dat</code></td>
+<td>1-based 中心原子编号和近邻原子编号</td>
+</tr>
+<tr>
+<td><code>calc_displacement.py</code></td>
+<td><code>*.dat</code></td>
+<td>局域位移矢量（<code>dx dy dz</code>，Angstrom）</td>
+</tr>
+<tr>
+<td><code>calc_averaged_structure.py</code></td>
+<td><code>*.xyz</code></td>
+<td>一个平均结构</td>
+</tr>
+<tr>
+<td><code>calc_oct_tilt.py</code></td>
+<td><code>*.dat</code></td>
+<td>八面体倾转角（<code>theta_x theta_y theta_z</code>，degree）</td>
+</tr>
+<tr>
+<td><code>calc_polarization_abo3.py</code></td>
+<td><code>*.dat</code></td>
+<td>局域极化矢量（<code>Px Py Pz</code>，<code>C/m^2</code>）</td>
+</tr>
+<tr>
+<td><code>plt_plane_grid.py</code></td>
+<td><code>plot/*.png</code></td>
+<td>根据矢量场数据绘制的 XY/XZ/YZ 平面图</td>
+</tr>
+</tbody>
+</table></div>
+<h2 id="真实案例">真实案例</h2>
+<h3 id="pbtio3-的温度驱动铁电-顺电相变">PbTiO3 的温度驱动铁电-顺电相变</h3>
+<p>假设所有文件都位于当前目录 <code>./</code>：</p>
+<div class="code"><div class="cap"><i></i><i></i><i></i><span>text</span></div><pre><code>./
+├── model.xyz
+├── 300K.xyz
+├── 350K.xyz
+├── 400K.xyz
+├── ...
+└── 800K.xyz</code></pre><button class="copy-btn" data-copy-pre aria-label="Copy"><svg class="cp"><use href="#i-copy"/></svg><svg class="ok"><use href="#i-check"/></svg></button></div>
+<p><code>model.xyz</code> 是用于进行 MD 模拟的初始结构。每个 <code>&lt;T&gt;K.xyz</code> 是温度 <code>&lt;T&gt;</code> 下的轨迹。</p>
+<h4 id="第-1-步从每条轨迹的后半段得到平均结构">第 1 步：从每条轨迹的后半段得到平均结构</h4>
+<div class="code"><div class="cap"><i></i><i></i><i></i><span>bash</span></div><pre><code>for f in *K.xyz; do
+  tag="${f%.xyz}"
+  gpumdkit.sh -calc avg-struct -i "$f" -l 0.5 -o "${tag}-avg.xyz"
+done</code></pre><button class="copy-btn" data-copy-pre aria-label="Copy"><svg class="cp"><use href="#i-copy"/></svg><svg class="ok"><use href="#i-check"/></svg></button></div>
+<p>这会写出 <code>300K-avg.xyz</code>、<code>350K-avg.xyz</code>、...、<code>800K-avg.xyz</code>。</p>
+<h4 id="第-2-步基于-modelxyz-构建近邻列表">第 2 步：基于 <code>model.xyz</code> 构建近邻列表</h4>
+<div class="code"><div class="cap"><i></i><i></i><i></i><span>bash</span></div><pre><code># B-O 列表：为每个 Ti 找最近的 6 个 O 原子
+gpumdkit.sh -calc nlist -i model.xyz -c 4.0 -n 6 -C Ti -E O -o nl-Ti-O.dat
+
+# A-O 列表：为每个 Pb 找最近的 12 个 O 原子
+gpumdkit.sh -calc nlist -i model.xyz -c 4.0 -n 12 -C Pb -E O -o nl-Pb-O.dat
+
+# pol-abo3 需要的 B-A 列表：为每个 Ti 找最近的 8 个 Pb 原子
+gpumdkit.sh -calc nlist -i model.xyz -c 5.0 -n 8 -C Ti -E Pb -o nl-Ti-Pb.dat</code></pre><button class="copy-btn" data-copy-pre aria-label="Copy"><svg class="cp"><use href="#i-copy"/></svg><svg class="ok"><use href="#i-check"/></svg></button></div>
+<h4 id="第-3-步为每个温度计算位移和极化">第 3 步：为每个温度计算位移和极化</h4>
+<p>这里使用 Born 有效电荷（BEC），不是名义离子电荷。对于本例中的 PbTiO3：</p>
+<div class="code"><div class="cap"><i></i><i></i><i></i><span>python</span></div><pre><code>PTO = {
+    'Pb': 3.44,
+    'Ti': 5.18,
+    'O': -(3.44 + 5.18) / 3
+}</code></pre><button class="copy-btn" data-copy-pre aria-label="Copy"><svg class="cp"><use href="#i-copy"/></svg><svg class="ok"><use href="#i-check"/></svg></button></div>
+<p>BEC 可以取自你自己的 DFPT 计算或文献。然后计算局域位移和极化：</p>
+<div class="code"><div class="cap"><i></i><i></i><i></i><span>bash</span></div><pre><code>for f in *K.xyz; do
+  tag="${f%.xyz}"
+  gpumdkit.sh -calc disp -i "$f" -n nl-Ti-O.dat -l 0.5 -o "${tag}-disp.dat"
+  gpumdkit.sh -calc pol-abo3 -i "$f" --nl-ba nl-Ti-Pb.dat --nl-bo nl-Ti-O.dat \
+    --bec Pb=3.44 Ti=5.18 O=-2.8733333333 -l 0.5 -o "${tag}-pol.dat"
+done</code></pre><button class="copy-btn" data-copy-pre aria-label="Copy"><svg class="cp"><use href="#i-copy"/></svg><svg class="ok"><use href="#i-check"/></svg></button></div>
+<h4 id="第-4-步绘制实空间位移和极化图">第 4 步：绘制实空间位移和极化图</h4>
+<div class="code"><div class="cap"><i></i><i></i><i></i><span>bash</span></div><pre><code>for f in *K.xyz; do
+  tag="${f%.xyz}"
+  gpumdkit.sh -plt plane-grid -i "${tag}-avg.xyz" -d "${tag}-disp.dat" -e Ti --select-xz 1 -o "plot-${tag}-disp"
+  gpumdkit.sh -plt plane-grid -i "${tag}-avg.xyz" -d "${tag}-pol.dat" -e Ti --select-xz 1 -o "plot-${tag}-pol"
+done</code></pre><button class="copy-btn" data-copy-pre aria-label="Copy"><svg class="cp"><use href="#i-copy"/></svg><svg class="ok"><use href="#i-check"/></svg></button></div>
+<h4 id="第-5-步构建温度-序参量曲线">第 5 步：构建温度-序参量曲线</h4>
+<p>结合每个平均结构的晶格信息和对应的极化文件（<code>&lt;T&gt;K-pol.dat</code>），可以得到如下图：</p>
+<div align="center">
+    <img src="../../Gallery/PTO-temp.png" alt="PTO-temp" width="65%" />
+</div>
+
+<p>该趋势显示在约 <code>600 K</code> 附近发生明显相变，此时极化消失。</p>
+<h3 id="pbtio3srtio3-超晶格中的拓扑结构">PbTiO3/SrTiO3 超晶格中的拓扑结构</h3>
+<p>假设 <code>movie.xyz</code> 是当前目录下 PbTiO3/SrTiO3 超晶格的轨迹。</p>
+<h4 id="第-1-步使用最后-25-帧构建平均结构">第 1 步：使用最后 25% 帧构建平均结构</h4>
+<div class="code"><div class="cap"><i></i><i></i><i></i><span>bash</span></div><pre><code>gpumdkit.sh -calc avg-struct -i movie.xyz -l 0.25 -o model-avg.xyz</code></pre><button class="copy-btn" data-copy-pre aria-label="Copy"><svg class="cp"><use href="#i-copy"/></svg><svg class="ok"><use href="#i-check"/></svg></button></div>
+<h4 id="第-2-步构建-ti-近邻列表">第 2 步：构建 Ti 近邻列表</h4>
+<div class="code"><div class="cap"><i></i><i></i><i></i><span>bash</span></div><pre><code>gpumdkit.sh -calc nlist -i model-avg.xyz -c 4.0 -n 6 -C Ti -E O -o nl-Ti-O.dat</code></pre><button class="copy-btn" data-copy-pre aria-label="Copy"><svg class="cp"><use href="#i-copy"/></svg><svg class="ok"><use href="#i-check"/></svg></button></div>
+<h4 id="第-3-步绘制-plane-grid-图">第 3 步：绘制 plane-grid 图</h4>
+<div class="code"><div class="cap"><i></i><i></i><i></i><span>bash</span></div><pre><code>gpumdkit.sh -calc disp -i movie.xyz -n nl-Ti-O.dat -l 0.25 -o disp-last25.dat
+gpumdkit.sh -plt plane-grid -i model-avg.xyz -d disp-last25.dat -e Ti --select-xy 0 -o plot-topology</code></pre><button class="copy-btn" data-copy-pre aria-label="Copy"><svg class="cp"><use href="#i-copy"/></svg><svg class="ok"><use href="#i-check"/></svg></button></div>
+<div align="center">
+    <img src="../../Gallery/PTO-STO.png" alt="PTO_STO" width="65%" />
+</div>
+
+<p>这会得到与前面展示相似的图。在 PTO 区域可以看到类似涡旋的极化图样，而 STO 区域的极化接近于零。</p>
+<p>注意：示例图使用了自定义 colormap。GPUMDkit 默认输出使用不同风格，可通过修改绘图脚本进行调整。</p>
+<h3 id="其他体系">其他体系</h3>
+<h4 id="有机-无机杂化铁电体">有机-无机杂化铁电体</h4>
+<p>在许多有机-无机铁电体中，极化与各向异性的分子单元密切相关。跟踪分子取向的一种实用方法是使用键矢量。</p>
+<p>对于 TMCM-CdCl3，可以使用 TMCM 分子中的 C-Cl 键方向作为取向代理，并据此估计极化态：</p>
+<div class="code"><div class="cap"><i></i><i></i><i></i><span>bash</span></div><pre><code># 为每个 C 找最近的 Cl（必要时调整截断距离）
+gpumdkit.sh -calc nlist -i model.xyz -c 3 -n 1 -C C -E Cl -o nl-C-Cl.dat
+
+# 从轨迹计算 C-Cl 键向量
+gpumdkit.sh -calc disp -i movie.xyz -n nl-C-Cl.dat -o ccl_vectors.dat</code></pre><button class="copy-btn" data-copy-pre aria-label="Copy"><svg class="cp"><use href="#i-copy"/></svg><svg class="ok"><use href="#i-check"/></svg></button></div>
+<p>随后可以把 <code>ccl_vectors.dat</code> 作为取向序参量进行分析。详见 Phys. Rev. Lett. 136, 016801。</p>
+<h4 id="其他铁电材料家族">其他铁电材料家族</h4>
+<p>除 <code>ABO3</code> 外，<code>ferrodispcalc</code> 也可以适配许多铁电体系，包括氮化物、氧化铪基化合物、有机-无机杂化体系以及部分二维铁电材料。</p><div class="doc-pn"><a href="plot_heat_phonon.html"><small>上一页</small><b>热输运与声子</b></a><a class="next" href="active_learning_workflow.html"><small>下一页</small><b>主动学习工作流</b></a></div><a class="doc-edit" href="https://github.com/zhyan0603/GPUMDkit/edit/main/docs/tutorials/zh/极性材料分析.md" target="_blank" rel="noopener">编辑此页</a></article><nav class="doc-toc" aria-label="本页目录"><h6>本页目录</h6><a href="#概览" class="l2">概览</a><a href="#依赖" class="l2">依赖</a><a href="#交互模式入口" class="l2">交互模式入口</a><a href="#406-构建近邻列表-calc_neighbor_listpy" class="l2">406) 构建近邻列表 (calc_neighbor_list.py)</a><a href="#用法" class="l3">用法</a><a href="#参数完整" class="l3">参数（完整）</a><a href="#输出文件" class="l3">输出文件</a><a href="#407-从轨迹计算位移-calc_displacementpy" class="l2">407) 从轨迹计算位移 (calc_displacement.py)</a><a href="#用法_1" class="l3">用法</a><a href="#参数完整_1" class="l3">参数（完整）</a><a href="#输出文件_1" class="l3">输出文件</a><a href="#408-计算平均结构-calc_averaged_structurepy" class="l2">408) 计算平均结构 (calc_averaged_structure.py)</a><a href="#用法_2" class="l3">用法</a><a href="#参数完整_2" class="l3">参数（完整）</a><a href="#输出文件_2" class="l3">输出文件</a><a href="#409-计算八面体倾转-calc_oct_tiltpy" class="l2">409) 计算八面体倾转 (calc_oct_tilt.py)</a><a href="#用法_3" class="l3">用法</a><a href="#参数完整_3" class="l3">参数（完整）</a><a href="#输出文件_3" class="l3">输出文件</a><a href="#410-计算-abo3-体系极化-calc_polarization_abo3py" class="l2">410) 计算 ABO3 体系极化 (calc_polarization_abo3.py)</a><a href="#用法_4" class="l3">用法</a><a href="#参数完整_4" class="l3">参数（完整）</a><a href="#输出文件_4" class="l3">输出文件</a><a href="#plane-grid-可视化-plt_plane_gridpy" class="l3">Plane-grid 可视化 (plt_plane_grid.py)</a><a href="#输出文件一览" class="l2">输出文件一览</a><a href="#真实案例" class="l2">真实案例</a><a href="#pbtio3-的温度驱动铁电-顺电相变" class="l3">PbTiO3 的温度驱动铁电-顺电相变</a><a href="#pbtio3srtio3-超晶格中的拓扑结构" class="l3">PbTiO3/SrTiO3 超晶格中的拓扑结构</a><a href="#其他体系" class="l3">其他体系</a></nav></div>
+</main>
+
+<!-- ======================================================= footer -->
+<footer class="footer">
+  <div class="container">
+    <div class="footer-grid">
+      <div>
+        <a href="../../index.html" class="brand"><svg><use href="#i-logo"/></svg><span><span class="gpumd">GPUMD</span><span class="kit">kit</span></span></a>
+        <p data-i18n="foot.about">A user-friendly toolkit for the GPUMD and NEP programs, built by the GPUMDkit team and contributors.</p>
+      </div>
+      <div><h5 data-i18n="foot.links">Quick links</h5><ul>
+        <li><a href="../../manual.html" data-doc="index" data-i18n="nav.docs">Docs</a></li>
+        <li><a href="../../gallery.html" data-i18n="nav.gallery">Gallery</a></li>
+        <li><a href="../../publications.html" data-i18n="nav.pubs">Publications</a></li>
+        <li><a href="https://github.com/zhyan0603/GPUMDkit/archive/refs/heads/main.zip" data-i18n="foot.dl">Download</a></li></ul></div>
+      <div><h5 data-i18n="foot.gpumd">GPUMD project</h5><ul>
+        <li><a href="https://github.com/brucefan1983/GPUMD" target="_blank" rel="noopener">GPUMD repository</a></li>
+        <li><a href="https://gpumd.org/" target="_blank" rel="noopener">GPUMD documentation</a></li>
+        <li><a href="https://github.com/brucefan1983/GPUMD-Tutorials" target="_blank" rel="noopener">GPUMD-Tutorials</a></li>
+        <li><a href="https://github.com/brucefan1983/GPUMD/tree/master/tools" target="_blank" rel="noopener">GPUMD-Tools</a></li></ul></div>
+      <div><h5 data-i18n="foot.eco">GPUMD ecosystem</h5><ul>
+        <li><a href="https://gitlab.com/brucefan1983/nep-data" target="_blank" rel="noopener">nep-data</a></li>
+        <li><a href="https://gitlab.com/materials-modeling/calorine" target="_blank" rel="noopener">calorine</a></li>
+        <li><a href="https://github.com/aboys-cb/NepTrainKit" target="_blank" rel="noopener">NepTrainKit</a></li>
+        <li><a href="https://github.com/Jonsnow-willow/GPUMD-Wizard" target="_blank" rel="noopener">GPUMD-Wizard</a></li></ul></div>
+    </div>
+    <div class="footer-bottom">
+      <span data-i18n="foot.copy">© 2026 GPUMDkit Team. Released under GPL-3.0.</span>
+      <span><span id="busuanzi_container_site_pv"><span data-i18n="foot.views">Views</span>: <span id="busuanzi_value_site_pv"></span></span> · <span id="busuanzi_container_site_uv"><span data-i18n="foot.visitors">Visitors</span>: <span id="busuanzi_value_site_uv"></span></span></span>
+    </div>
+  </div>
+</footer>
+
+<script src="../../assets/js/gk-data.js"></script>
+<script src="../../assets/js/gk-docs.js"></script>
+<script src="../../assets/js/gk-i18n.js"></script>
+<script src="../../assets/js/gk-core.js"></script>
+<script src="../../assets/js/gk-doc.js"></script>
+<script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+</body>
+</html>
