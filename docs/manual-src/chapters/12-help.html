@@ -1,0 +1,68 @@
+<section class="chap" id="help" data-group="Look up|查阅">
+<div class="chap-head"><span class="chap-no"></span>
+<div><h2><span class="l-en">Help and more</span><span class="l-zh">帮助与更多</span></h2></div></div>
+<p class="lead l-en">Extras, troubleshooting, and where to ask.</p>
+<p class="lead l-zh">更多小工具、问题排查，以及求助渠道。</p>
+<div class="docs-row"><span class="dr-label"><span class="l-en">Detailed pages</span><span class="l-zh">详细页面</span></span><a class="chip" href="htmls/en/custom_commands.html" data-doc="custom_commands"><span class="l-en">Custom commands</span><span class="l-zh">自定义命令</span><svg><use href="#i-out"/></svg></a><a class="chip" href="htmls/en/contributing.html" data-doc="contributing"><span class="l-en">Contributing</span><span class="l-zh">贡献指南</span><svg><use href="#i-out"/></svg></a><a class="chip" href="htmls/en/simulation_and_postprocessing.html" data-doc="simulation_and_postprocessing"><span class="l-en">Simulation & post-processing</span><span class="l-zh">模拟与后处理</span><svg><use href="#i-out"/></svg></a></div>
+<h3 id="more-tools"><span class="l-en">Handy extras</span><span class="l-zh">实用小功能</span></h3>
+<div class="grid c3">
+<div class="mcard">
+<div class="mc-top"><span class="mc-id">-time</span>
+<h4><span class="l-en">Progress monitor</span><span class="l-zh">进度监控</span></h4></div>
+<p class="l-en">Follow the progress of a GPUMD, NEP, WPE or GNEP run.</p>
+<p class="l-zh">跟踪 GPUMD、NEP、WPE 或 GNEP 的运行进度。</p>
+<div class="mc-cmd"><code>gpumdkit.sh -time gpumd</code><button class="copy-btn" data-copy="gpumdkit.sh -time gpumd" aria-label="Copy"><svg class="cp"><use href="#i-copy"/></svg><svg class="ok"><use href="#i-check"/></svg></button></div></div>
+<div class="mcard">
+<div class="mc-top"><span class="mc-id">-skill</span>
+<h4><span class="l-en">Agent skills</span><span class="l-zh">Agent 技能</span></h4></div>
+<p class="l-en">Show where the English and Chinese agent skills are and how to install them for your coding agent.</p>
+<p class="l-zh">显示中英文 Agent 技能的位置，以及如何安装到你的编程助手。</p>
+<div class="mc-cmd"><code>gpumdkit.sh -skill</code><button class="copy-btn" data-copy="gpumdkit.sh -skill" aria-label="Copy"><svg class="cp"><use href="#i-copy"/></svg><svg class="ok"><use href="#i-check"/></svg></button></div></div>
+<div class="mcard">
+<div class="mc-top"><span class="mc-id">-clean</span>
+<h4><span class="l-en">Tidy up</span><span class="l-zh">清理目录</span></h4></div>
+<p class="l-en">Clean extra files in the current directory.</p>
+<p class="l-zh">清理当前目录中的冗余文件。</p>
+<div class="mc-cmd"><code>gpumdkit.sh -clean</code><button class="copy-btn" data-copy="gpumdkit.sh -clean" aria-label="Copy"><svg class="cp"><use href="#i-copy"/></svg><svg class="ok"><use href="#i-check"/></svg></button></div></div>
+<div class="mcard">
+<div class="mc-top"><span class="mc-id">-update</span>
+<h4><span class="l-en">Update</span><span class="l-zh">更新</span></h4></div>
+<p class="l-en">Update GPUMDkit from GitHub.</p>
+<p class="l-zh">从 GitHub 更新 GPUMDkit。</p>
+<div class="mc-cmd"><code>gpumdkit.sh -update</code><button class="copy-btn" data-copy="gpumdkit.sh -update" aria-label="Copy"><svg class="cp"><use href="#i-copy"/></svg><svg class="ok"><use href="#i-check"/></svg></button></div></div>
+<div class="mcard">
+<div class="mc-top"><span class="mc-id">-nep_modifier</span>
+<h4><span class="l-en">Edit a NEP model</span><span class="l-zh">修改 NEP 模型</span></h4></div>
+<p class="l-en">Safely modify and export a NEP4 model package.</p>
+<p class="l-zh">安全地修改并导出 NEP4 模型包。</p>
+<div class="mc-cmd"><code>gpumdkit.sh -nep_modifier [nep.txt]</code><button class="copy-btn" data-copy="gpumdkit.sh -nep_modifier [nep.txt]" aria-label="Copy"><svg class="cp"><use href="#i-copy"/></svg><svg class="ok"><use href="#i-check"/></svg></button></div></div>
+<div class="mcard">
+<div class="mc-top"><span class="mc-id">~/.gpumdkit.in</span>
+<h4><span class="l-en">Custom commands</span><span class="l-zh">自定义命令</span></h4></div>
+<p class="l-en">Define a Bash function <code>custom_&lt;name&gt;</code> and run it as <code>gpumdkit.sh -&lt;name&gt;</code>. Built-in options take precedence.</p>
+<p class="l-zh">定义 Bash 函数 <code>custom_&lt;name&gt;</code>，即可用 <code>gpumdkit.sh -&lt;name&gt;</code> 运行。内置选项优先。</p></div></div>
+<h3 id="faq"><span class="l-en">Troubleshooting</span><span class="l-zh">常见问题</span></h3>
+<div class="faq">
+<details><summary><span class="l-en"><code>gpumdkit.sh</code> is not found.</span><span class="l-zh">提示找不到 <code>gpumdkit.sh</code>。</span></summary>
+<div class="ans">
+<p class="l-en">Activate the Conda environment (<code>conda activate gpumdkit</code>). For a source install, open a new shell so the <code>PATH</code> written by <code>install.sh</code> is loaded.</p>
+<p class="l-zh">请先激活 Conda 环境（<code>conda activate gpumdkit</code>）。源码安装时，请新开一个 shell，让 <code>install.sh</code> 写入的 <code>PATH</code> 生效。</p></div></details>
+<details><summary><span class="l-en">A package shows <code>MISS</code> in <code>-doctor</code>.</span><span class="l-zh"><code>-doctor</code> 显示某个包 <code>MISS</code>。</span></summary>
+<div class="ans">
+<p class="l-en">Optional packages are only needed for the features that use them. Install one when a command asks for it, for example <code>pip install neptrain calorine</code>.</p>
+<p class="l-zh">可选包只在对应功能中才需要。命令提示缺少时再安装即可，例如 <code>pip install neptrain calorine</code>。</p></div></details>
+<details><summary><span class="l-en">A converter overwrote my file.</span><span class="l-zh">转换器覆盖了我的文件。</span></summary>
+<div class="ans">
+<p class="l-en">Converters write into the current directory. Work in a fresh directory and keep the source data separate.</p>
+<p class="l-zh">转换器会写入当前目录。请在新目录中操作，并把源数据单独保存。</p></div></details>
+<details><summary><span class="l-en">The conductivity looks wrong.</span><span class="l-zh">电导率结果看起来不对。</span></summary>
+<div class="ans">
+<p class="l-en">Check that <code>element</code> matches the species in <code>msd.out</code> and <code>model.xyz</code>, that the first four columns of <code>msd.out</code> are time and MSD_x/y/z, and that the MSD curve is converged.</p>
+<p class="l-zh">请确认 <code>element</code> 与 <code>msd.out</code>、<code>model.xyz</code> 中的物种一致，<code>msd.out</code> 前四列为时间与 MSD_x/y/z，且 MSD 曲线已经收敛。</p></div></details>
+<details><summary><span class="l-en">How do I get help on one option?</span><span class="l-zh">如何查看某个选项的帮助？</span></summary>
+<div class="ans">
+<p class="l-en"><code>gpumdkit.sh -h</code> lists all options; <code>gpumdkit.sh -plt -h</code> lists plot types; <code>gpumdkit.sh -&lt;option&gt; -h</code> shows the arguments of Python-backed options.</p>
+<p class="l-zh"><code>gpumdkit.sh -h</code> 列出全部选项；<code>gpumdkit.sh -plt -h</code> 列出绘图类型；<code>gpumdkit.sh -&lt;option&gt; -h</code> 显示基于 Python 的选项的参数。</p></div></details></div>
+<h3 id="community"><span class="l-en">Community and citation</span><span class="l-zh">社区与引用</span></h3>
+<p class="l-en">Questions and bug reports are welcome on <a class="blue" href="https://github.com/zhyan0603/GPUMDkit" target="_blank" rel="noopener">GitHub</a> or in the QQ group <b>825696376</b>. If GPUMDkit helps your work, please cite: <i>GPUMDkit: A User-Friendly Toolkit for GPUMD and NEP</i>, MGE Advances 2026, 4, e70074 (<a class="blue" href="https://doi.org/10.1002/mgea.70074" target="_blank" rel="noopener">doi:10.1002/mgea.70074</a>).</p>
+<p class="l-zh">欢迎在 <a class="blue" href="https://github.com/zhyan0603/GPUMDkit" target="_blank" rel="noopener">GitHub</a> 或 QQ 群 <b>825696376</b> 中提问和反馈问题。如果 GPUMDkit 对你的工作有帮助，请引用：<i>GPUMDkit: A User-Friendly Toolkit for GPUMD and NEP</i>，MGE Advances 2026, 4, e70074（<a class="blue" href="https://doi.org/10.1002/mgea.70074" target="_blank" rel="noopener">doi:10.1002/mgea.70074</a>）。</p></section>

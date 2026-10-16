@@ -32,14 +32,19 @@ GPUMDkit/
 │   ├── calculators/
 │   ├── analyzer/
 │   ├── plt_scripts/
-│   └── utils/
+│   └── utils/               # 工具脚本，包括 completion.sh（命令行 Tab 补全）
 ├── skills/                  # AI agent skill 定义
 ├── docs/                    # 文档
-│   ├── tutorials/en/        # 英文教程
-│   ├── tutorials/zh/        # 中文教程
-│   ├── mkdocs.yml           # MkDocs 配置
+│   ├── tutorials/en/        # 英文教程源文件（Markdown）
+│   ├── tutorials/zh/        # 中文教程源文件（Markdown）
+│   ├── htmls/               # 生成的教程页面（不要手动编辑）
+│   ├── command_reference.tsv  # 中英文命令列表
 │   ├── updates.info         # 仅记录最新功能和代码/CLI bug 修复
-│   └── htmls/               # 生成的 HTML
+│   ├── index.html, gallery.html, publications.html, manual.html  # 独立网站页面
+│   ├── manual-src/          # manual.html 的源文件；build.py 生成 manual.html 与 htmls/
+│   ├── assets/              # 网站 CSS、JavaScript 和图片
+│   ├── stats.json           # 网站首页统计数字
+│   └── Gallery/             # 绘图示例图片
 ```
 
 ## 路由工作原理
@@ -96,7 +101,7 @@ echo " ---------------------------------------------------"
 ```
 
 关键约定：
-- 横幅使用 `>-----<` 和 `| ... |` 格式（内部 49 个破折号，总计 53 个字符）
+- 横幅使用 `>-----<` 和 `| ... |` 格式（49 个破折号，含前导空格共 52 个字符）
 - `echo " Input <...>"` 描述参数
 - `echo " Example: ..."` 展示具体示例
 - 单值输入使用 `read_menu_choice var || return 1`，数组输入使用 `read_menu_array arr || return 1`
@@ -104,11 +109,11 @@ echo " ---------------------------------------------------"
 - `"${varname[@]}"` 正确引用传递所有参数
 - 函数名格式：`f<Category><Number>_<descriptive_name>`
 - **脚本横幅必须命名精确文件名**（不是缩写或错误后缀）
-- 所有横幅使用统一宽度：内部 49 个破折号（第 82-86 行样式）。不一致的宽度（51/52/53/56）在修改文件时应规范化。
+- 横幅边框使用 49 个破折号，内容行与边框对齐。
 
 ### 步骤 3：在 `gpumdkit.sh` 中注册
 
-1. 将选择编号添加到 `valid_menu_choices`（约第 64 行）
+1. 将选择编号添加到 `main()` 中的 `valid_menu_choices`
 2. 在 `main()` 函数的嵌套 case 语句中添加 case：
    ```bash
    "413") f413_new_feature ;;
@@ -156,8 +161,8 @@ echo "| -new_flag  Description of new flag           | -existing_flag    Descrip
 
 编辑 `Scripts/utils/completion.sh`：
 
-1. 将 `-new_flag` 添加到 `opts` 字符串（第 16 行）
-2. 如果需要文件补全，将其添加到 `|` 分隔的 case（第 38 行）：
+1. 将 `-new_flag` 添加到 `opts` 字符串
+2. 如果需要文件补全，将其添加到调用 `compgen -f` 的 `|` 分隔 case 中：
    ```bash
    -out2xyz|-...|-new_flag)
        COMPREPLY=($(compgen -f -- "$cur")) ;;
@@ -286,15 +291,13 @@ if not os.path.isfile(input_file):
 命令或压缩流程以 100 DPI 生成，以减小文档资源大小；不要为了生成示例图而
 降低正式绘图设置。
 
-正式脚本中，交互式 `plt.show()` 图使用 150 DPI，`savefig()` 的默认 DPI
-不得低于 300。需要在中英文 tutorials 源文件以及对应子功能 README（例如
+新增正式脚本的交互式 `plt.show()` 图使用 150 DPI，`savefig()` 默认 DPI
+不得低于 300。现有脚本的 DPI 仅在明确要求时调整。需要在中英文 tutorials 源文件以及对应子功能 README（例如
 `Scripts/plt_scripts/README.md`）中补充用法和 Gallery 示例图。
 
-迭代开发阶段的文档更新遵循显式授权原则。除非用户明确要求更新文档，否则
-修改代码时不要改动 tutorials、子功能 README、Gallery 资源，也不要生成
-`docs/htmls/**`。用户明确要求文档更新后，才同步修改中英文源文件，并在验证
-阶段为每个新的用户可见功能更新对应 tutorials 和子功能 README，再重新构建
-生成的 HTML。
+每个用户可见的功能或行为变化，都要在同一次修改中同步更新中英文 tutorials
+源文件和对应的子功能 README，并在验证阶段运行 `python3 docs/manual-src/build.py` 重新生成 `docs/htmls/**`。仅同步
+文档的改动不记入 `docs/updates.info`。
 
 ### 依赖提示
 
@@ -342,60 +345,12 @@ fi
 
 ### 交互菜单模式
 
-```bash
-function f413_new_feature(){
-echo " >-------------------------------------------------<"
-echo " | Calling the script in Scripts/calculators       |"
-echo " | Script: calc_new_feature.py                     |"
-echo " | Developer: Your Name (your@email.com)           |"
-echo " >-------------------------------------------------<"
-echo " Input <param1> <param2>"
-echo " Example: input.xyz nep.txt"
-echo " ------------>>"
-read_menu_array feature_args || return 1   # EOF 安全；见项目约定
-echo " ---------------------------------------------------"
-python ${GPUMDkit_path}/Scripts/calculators/calc_new_feature.py "${feature_args[@]}"
-echo " Code path: ${GPUMDkit_path}/Scripts/calculators/calc_new_feature.py"
-echo " ---------------------------------------------------"
-}
-```
+使用 **添加新的交互模式功能 → 步骤 2** 中的包装函数模板；横幅、提示符和 EOF 安全输入的规则见 **项目约定与个人偏好**。
 
 ### 新 Python 脚本的文件结构
 
-使用 `dp2xyz.py` 或 `traj2exyz.py` 作为参考。导入顺序模式为：
+以 `dp2xyz.py` 或 `traj2exyz.py` 为参考，并配合 **参数解析 — 标准模式** 中的帮助检查写法：
 
-```python
-import os
-import sys
-# 重量级/可选导入在帮助检查之后
-
-args = sys.argv[1:]
-if len(args) < N or args[0] in ("-h", "--help"):
-    print(" Usage: gpumdkit.sh -flag <param1> <param2>")
-    print("    or: python3 script_name.py <param1> <param2>")
-    print("")
-    print(" Arguments:")
-    print("   param1    Description")
-    print("   param2    Description")
-    print("")
-    print(" Example: gpumdkit.sh -flag input.xyz output.xyz")
-    print("")
-    sys.exit(0 if args and args[0] in ("-h", "--help") else 1)
-
-import heavy_dependency  # 仅在帮助检查之后
-from ase.io import write  # 仅在帮助检查之后
-
-def helper_functions():
-    """所有辅助函数的文档字符串。"""
-    ...
-
-if __name__ == "__main__":
-    input_file = args[0]
-    output_file = args[1] if len(args) == 2 else "default.xyz"
-    ...
-```
-
-关键规则：
 - 普通导入（`os`、`sys`、`numpy`）放在帮助检查之前
 - 重量级/可选导入（`dpdata`、`calorine`、`ovito`、`ase`）放在帮助检查**之后**，这样即使可选包缺失，`-h` 也能工作
 - 所有辅助函数都有文档字符串
@@ -466,7 +421,7 @@ echo " >-------------------------------------------------<"
 ```
 
 - 横幅中的脚本名称**必须是精确文件名**（例如 `scf_batch_pretreatment_vasp.sh`，而非 `scf_batch_pretreatment.sh`）
-- 宽度：内部 49 个破折号（`>` 和 `<` 之间总计 53 个字符）。在项目中保持统一。
+- 宽度：49 个破折号，含前导空格共 52 个字符。在项目中保持统一。
 
 ### 提示箭头
 
@@ -477,23 +432,23 @@ echo " >-------------------------------------------------<"
 Shell：`echo " Error: <message>."` — 前导空格，大写 E，冒号，句号结尾。
 Python：`print(" Error: <message>."); sys.exit(1)` — 相同格式，之后始终调用 sys.exit。
 
-### 不要提议或执行的操作
+### 维护边界
 
-这些更改已被项目维护者**明确拒绝**。不要建议它们。
+维护现有脚本时保留以下约定。
 
-| 被拒绝 | 原因 |
+| 避免的操作 | 约束 |
 |---|---|
 | 将 `if __name__ == "__main__":` 改造到现有 Python 脚本中 | 脚本独立运行；不要只为增加入口保护而大范围改动正常代码 |
 | 将 `from pylab import *` 替换为显式导入 | 保持现状 |
 | 统一 `-plt` "save" 参数位置 | 不同脚本有不同参数数量；保持灵活 |
-| 对新增或修改的绘图应用 DPI 规范 | `plt.show()` 使用 150 DPI，正式 `savefig()` 不低于 300 DPI，Gallery 示例单独使用 100 DPI |
+| 统一现有绘图的 DPI | 保留各脚本的显示和保存 DPI；新增图显示使用 150 DPI，保存不低于 300 DPI |
 | 将工作流 sourced 脚本中的 `exit` 改为 `return` | 保持现状 |
 | 将 `-filter_value` / `-filter_range` / `-get_volume` / `-re_atoms` 添加到帮助表 | 刻意不记录 |
 | 使交互模式在一个功能后循环回菜单 | 保持单次执行；按此设计 |
 | 添加颜色/ANSI 转义码 | 用户明确拒绝；保持单色 |
 | 在每个教程页面添加调试示例 | 不必要；保持教程精简 |
 | 随意更改 MSD 拟合范围 | 科学选择；先问维护者 |
-| 移除故障排除页面 | 由维护者明确要求移除；不要重新添加 |
+| 新增独立故障排除页面 | 将故障排除说明放在相关模块中 |
 | 将 `des_compare` 添加到 CLI | 脚本存在但维护者选择不接入 |
 | 调试后保留 `__pycache__` | 优先使用不写缓存的语法检查；如果产生缓存，交付前删除已记录的具体缓存路径 |
 | 将 `-get_volume` / `-re_atoms` 添加到 completion.sh | 刻意从补全和帮助表中排除 |
@@ -517,11 +472,10 @@ python3 Scripts/path/to/script.py        # 缺少参数必须打印用法 + exit
 
 ### 特定设计决策
 
-- **calc_ion_conductivity.py**：MSD 拟合范围为数据的 40%-80%（第 107-108 行）。Arrhenius 绘图脚本使用相同范围。未经维护者批准不要更改。
+- **calc_ion_conductivity.py**：MSD 拟合范围为数据的 40%-80%。Arrhenius 绘图脚本使用相同范围。未经维护者批准不要更改。
 - **clean_extra_files.sh**：保留子串删除使用**全词匹配**，而非子串移除。不要退化到 `${var/pattern/}` 子串移除（它会损坏共享子串的文件名）。
-- **troubleshooting.md**：仅 5 个 FAQ 项。不询问不要扩展。
-- **select_max_modev.py 第 111 行**：索引映射 `atoms_list[filtered_indices[i]]` 最近从 bug（`atoms_list[i]`）修复。不要撤销。
-- **charge_balance_check.py 第 118-131 行**：现在使用手动循环而非 `dict()` 来处理 3 元组错误返回。不要恢复为 `dict()`。
+- **select_max_modev.py**：`active.xyz` 只包含超过 GPUMD `active` 阈值的帧，帧号与 `active.out` 的行号不对应。应按每帧自带的 `uncertainty=` 排序，缺少时再按 `Time=` 与 `active.out` 对应；不得用 `active.out` 的行号去索引 `active.xyz`。
+- **charge_balance_check.py**：处理电荷查询结果及包含三项的错误返回。
 
 ---
 
@@ -550,8 +504,8 @@ python3 -B -c 'from pathlib import Path; p=Path("Scripts/path/to/your_script.py"
 # 如果其他测试产生缓存，只删除已记录的显式路径
 # rm -rf /exact/path/to/the/test-created/__pycache__
 
-# MkDocs 构建（仅当 MkDocs 输入有更改时；见下文）
-mkdocs build -f docs/mkdocs.yml
+# 重新生成手册与教程页面（仅当其输入有更改时；见下文）
+python3 docs/manual-src/build.py
 
 # 空白检查（始终运行）
 git diff --check
@@ -568,25 +522,33 @@ git diff --check
 - 两棵 reference 目录必须逐文件对应。中文可以为便于理解增加简短说明，但不得遗漏英文中的安全规则、依赖、支持选项或新增功能。
 - 翻译完成后，对照检查标题、表格、代码围栏和相对链接，并搜索遗漏的英文正文和生硬直译。
 
-### 何时构建 MkDocs
+### 何时重新生成手册与教程页面
 
-仅当用户明确要求更新文档，且更改影响 MkDocs 消费的输入时，才运行
-`mkdocs build -f docs/mkdocs.yml`，包括：
+`docs/manual.html` 与 `docs/htmls/**` 下的教程页面由
+`python3 docs/manual-src/build.py` 生成（需要 `markdown` 和 `pymdown-extensions`
+包）。只要更改涉及其输入，就需要运行：
 
-- `docs/tutorials/**`
-- `docs/mkdocs.yml`
-- 由该配置引用的 MkDocs 主题覆盖、插件、模板或资源
+- `docs/tutorials/**`（Markdown 教程，渲染到 `docs/htmls/{en,zh}/`）
+- `docs/manual-src/**`（手册的布局、首屏、章节和带标注的截图）
 
-不要仅因为 `docs/` 下的其他文件发生变化就运行 MkDocs。以下独立网站文件
-不是 MkDocs 输入，应直接进行相应验证：
+脚本还会重新生成 `docs/htmls/index.html`、`docs/assets/js/gk-docs.js` 和
+`docs/sitemap.xml`。教程文件名是公开网址的一部分
+（`https://gpumdkit.cn/htmls/{en,zh}/<文件名>.html`）；重命名教程文件时必须保证旧地址仍然可用。
+不要手动编辑生成的文件：应修改 Markdown 或 `docs/manual-src` 后重新生成。
+不要仅因为 `docs/` 下的其他无关文件发生变化就运行构建。
 
-- `docs/index.html`、`docs/index_zh.html`、`docs/gallery.html` 和
-  `docs/publications.html`
-- `docs/css/**`、`docs/js/**`、`docs/Gallery/**`
-- `docs/gallery.json`、`docs/publications.json` 等独立 JSON/数据文件
-- `docs/htmls/**` 下的生成输出
+其他独立网站文件直接编辑，并分别验证：
+
+- `docs/index.html`、`docs/gallery.html` 和 `docs/publications.html`
+  （`docs/index_zh.html` 只负责跳转到 `index.html` 的中文界面）
+- `docs/assets/**`（网站的 CSS、JavaScript 和图片；`gk-docs.js` 为生成文件）与 `docs/Gallery/**`
+- 独立 JSON/数据文件：`docs/gallery.json`、`docs/publications.json` 和
+  `docs/stats.json`
 
 对于独立网站更改，根据所编辑文件运行 HTML 解析、JavaScript 语法检查、
 `git diff --check`，以及在布局或交互发生变化时进行有针对性的本地浏览器
-冒烟测试。不要手动编辑生成的 `docs/htmls/**` 文件；应修改对应的 MkDocs
-源文件并重新构建。
+冒烟测试。重新生成后，还要检查生成页面中的所有本地链接和图片都能找到。
+
+网站上的统计数字（交互功能、命令行选项、绘图类型、Python 脚本、贡献者）
+只保存在 `docs/stats.json` 中。若某项更改改变了其中的数量（例如新增一种
+绘图类型），需同步更新该文件。论文数量由 `docs/publications.json` 自动计算。

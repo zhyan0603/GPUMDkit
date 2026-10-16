@@ -1,5 +1,7 @@
 # GPUMDkit Agent Skill
 
+English | [中文](README_zh-CN.md)
+
 GPUMDkit provides two portable Agent Skills-compatible entry points (English and Chinese):
 
 ```text

@@ -83,7 +83,6 @@ function f303_md_sample_batch_pretreatment_lmp(){
 			done
 	        num_lmp_files=$(find ./struct_md -maxdepth 1 -name "*.data" | wc -l)
 	        
-	        # Perform additional operations if needed after moving .vasp files
 	    else
 	        echo " No .vasp files or .xyz files found."
 	        return 1

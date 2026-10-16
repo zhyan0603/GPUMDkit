@@ -1,119 +1,119 @@
 <div align="center">
   <h1>🔁 Active Learning Workflow</h1>
-  <p style="text-align: justify;">A manually reviewed NEP data iteration using GPUMDkit sampling, filtering, batch preparation, conversion, and validation tools.</p>
+  <p style="text-align: justify;">One round of NEP data iteration with GPUMDkit: sample with MD, select structures, label them with DFT, and retrain.</p>
 </div>
 
-## Scope
+## Overview
 
-This page breaks one NEP data iteration into checkable stages: generate candidate
-structures, filter them, prepare reference calculations, convert the results,
-update the dataset, and validate the model. GPUMDkit prepares and analyzes files;
-GPUMD, DFT, and NEP calculations use the project's own execution procedure.
+One iteration has five steps: generate candidate structures with MD, select the informative ones, prepare DFT calculations, convert the results, and update the dataset and model. GPUMDkit prepares inputs and analyzes outputs; you run GPUMD, DFT, and NEP yourself (or through your scheduler).
 
-## Before starting an iteration
+## Before you start
 
-Create a dedicated working directory, preserve the previous dataset and model, and
-record these decisions:
+Work in a new directory and keep the previous dataset and `nep.txt`. Decide these points up front, since they shape every later step:
 
-| Item | Required decision |
+| Item | What to decide |
 |---|---|
-| Model | Current `nep.txt` revision and intended deployment domain |
-| Candidate generation | Starting structures and GPUMD conditions |
-| Selection | MD trajectory filtering followed by NepTrain FPS |
-| Criteria | Distance, box, FPS stopping, and structure-count limits |
-| DFT | Code, functional, pseudopotentials, convergence settings, and job budget |
-| Dataset | Merge, weighting, exclusion, split, and leakage policy |
-| Validation | NEP accuracy and target-domain stability acceptance criteria |
+| Model | Which `nep.txt` to start from and which systems or conditions it should cover |
+| MD sampling | Starting structures and GPUMD conditions |
+| Selection | Distance and box-size limits, the FPS stopping rule, and how many structures to keep |
+| DFT | Code, functional, pseudopotentials, convergence settings, and compute budget |
+| Dataset | How new data is merged, weighted, and split into training and test sets |
+| Acceptance | Which accuracy and MD-stability results make the new model good enough |
+
+## A Folder Layout That Scales
+
+Keep each round in its own folder and never overwrite the data of an earlier round. One possible layout (the names are only a suggestion):
+
+```text
+project/
+├── round_00/
+│   ├── train.xyz          # initial dataset
+│   └── nep.txt            # model trained on it
+├── round_01/
+│   ├── md/                # GPUMD sampling directories (menu 302)
+│   ├── candidates.xyz     # frames kept after the distance filters
+│   ├── selected.xyz       # frames chosen by FPS (menu 203)
+│   ├── scf/               # DFT directories (menu 301)
+│   ├── new_reference.xyz  # converted DFT results
+│   ├── train.xyz          # merged dataset for this round
+│   └── nep.txt            # model trained in this round
+└── notes.md               # thresholds, settings and results of every round
+```
+
+The commands of one round, in order, each described in the sections below:
+
+| Step | Command |
+|---|---|
+| Prepare MD directories | `gpumdkit.sh` → `3` → `302` |
+| Filter the trajectory | `gpumdkit.sh -min_dist_pbc dump.xyz`, then `-filter_dist_pbc dump.xyz <minimum_distance>` |
+| Select structures | `gpumdkit.sh` → `2` → `203` |
+| Prepare DFT inputs | `gpumdkit.sh` → `3` → `301` |
+| Convert the results | `gpumdkit.sh -out2xyz <scf_results_directory>` |
+| Check the new labels | `gpumdkit.sh -range <new_reference.xyz> force`, `-min_dist_pbc`, `-analyze_comp` |
+| Inspect the new model | `gpumdkit.sh -plt train`, `gpumdkit.sh -plt prediction` |
+
+Every threshold and setting in this table is **yours** to choose; GPUMDkit does not pick them for you.
 
 ## 1. Generate candidate structures
 
-When there are multiple starting structures or `run.in` files, first prepare GPUMD
-batch directories with function 302:
+With several starting structures or `run.in` files, prepare the GPUMD batch directories with function 302:
 
 ~~~bash
 gpumdkit.sh  # Select: 3) Workflow -> 302
 ~~~
 
-This function creates directories and symlinks only. After preparation, put the
-reviewed `nep.txt` and the matching `run_<index>.in` file for each sample in the
-generated `md/` directory. Inspect every mapping before running GPUMD through the
-project's procedure.
+Function 302 only creates directories and symlinks. Afterwards, put `nep.txt` and one `run_<index>.in` per structure into the generated `md/` directory, check that each directory points to the right files, and run GPUMD.
 
-Use a clean output directory before a rerun, or archive GPUMD outputs that use
-append mode. Before selecting structures, check exit status, logs, temperature,
-energy, pressure, cell, and trajectory, and confirm that `dump.xyz` is complete
-and contains no obvious unphysical structures.
+GPUMD appends to some output files, so rerun in a clean directory or archive old outputs first. Before selecting structures, check that each run finished normally, that temperature, energy, pressure, and cell behave as expected, and that `dump.xyz` is complete and free of obviously unphysical structures.
 
 ## 2. Select candidate structures
 
-For a stable MD trajectory, inspect the geometry first and then apply only the
-approved filters:
+Check distances first, then filter and run farthest-point sampling (FPS):
 
 ~~~bash
-gpumdkit.sh -min_dist_pbc dump.xyz
-gpumdkit.sh -filter_dist_pbc dump.xyz <minimum_distance>
-# Run this only when a box-edge criterion has been approved:
-gpumdkit.sh -filter_box filtered_dump.xyz <maximum_box_edge>
+gpumdkit.sh -min_dist_pbc dump.xyz                            # report only
+gpumdkit.sh -filter_dist_pbc dump.xyz <minimum_distance>      # writes filtered_dump.xyz
+gpumdkit.sh -filter_box filtered_dump.xyz <maximum_box_edge>  # optional, writes filtered_by_box.xyz
 gpumdkit.sh  # Select: 2) Sample Structures -> 203) FPS by NepTrain
 ~~~
 
-`-min_dist_pbc` reports distances but does not remove structures;
-`-filter_dist_pbc` performs the distance filter. The box filter is optional and
-should be skipped when no applicable, approved box-edge criterion exists. When
-used, it writes `filtered_by_box.xyz`; provide this file as the candidate input at
-the 203 prompt. Record all thresholds, rejected structures, the FPS stopping rule,
-and the mapping from selected structures to source frames.
+`-min_dist_pbc` only reports distances; `-filter_dist_pbc` removes structures. Use the box filter only if a box-size limit applies to your system; in that case give `filtered_by_box.xyz` to function 203. Note the thresholds and FPS stopping rule you used, and which source frames were selected.
 
-### Optional committee-uncertainty alternative
+### Alternative: committee uncertainty
 
-Use committee uncertainty only when it is part of the project. GPUMD `active`
-requires compatible committee models and produces `active.out` and `active.xyz`
-from the same run. Function 205 can then rank or cap high-force-deviation
-structures. Confirm the model order, check interval, output options, threshold,
-`top_n`, and `min_deviation` before using it.
+If you train a committee of NEP models, GPUMD's `active` keyword writes `active.out` and `active.xyz` during MD. Function 205 then ranks the structures by force deviation and can cap their number. Check the model order, check interval, threshold, `top_n`, and `min_deviation` before using it.
 
-## 3. Prepare reference calculations
+## 3. Prepare the DFT calculations
 
-Use function 301 with the reviewed `selected.xyz`:
+Pass the selected structures (`selected.xyz`) to function 301:
 
 ~~~bash
 gpumdkit.sh  # Select: 3) Workflow -> 301 -> VASP or CP2K
 ~~~
 
-The VASP branch creates `struct_fp/`, `fp/`, calculation directories, and
-`presub.sh`. After preparation, put the reviewed `INCAR`, `POTCAR`, and `KPOINTS`
-files in `fp/`. The CP2K branch, through menu 301 -> 2, accepts an extxyz file,
-a reviewed template, and a directory prefix.
+The VASP branch creates `struct_fp/`, `fp/`, one directory per structure, and `presub.sh`; then put your `INCAR`, `POTCAR`, and `KPOINTS` into `fp/`. The CP2K branch (301 -> 2) asks for an extxyz file, an input template, and a directory prefix.
 
-Before submission, check the structure count, atom and type order, cells, DFT
-inputs, resource request, executable, and expected outputs. GPUMDkit prepares files;
-it does not submit DFT jobs.
+Before submitting, check the number of structures, atom and species order, cells, DFT inputs, and the job script. GPUMDkit does not submit jobs.
 
-## 4. Convert and audit reference data
+## 4. Convert and check the reference data
 
-After confirming that every accepted DFT calculation completed successfully, use
-the converter for the DFT code:
+Once the DFT calculations have finished, convert them.
 
-For VASP results:
+VASP (writes `NEPdataset/train.xyz` in the current directory):
 
 ~~~bash
 gpumdkit.sh -out2xyz <scf_results_directory>
 ~~~
 
-If the OUTCAR files contain complete `BORN EFFECTIVE CHARGES` blocks and the
-per-atom BEC labels are needed, use `gpumdkit.sh -out2xyz_bec
-<scf_results_directory>` instead.
+If the OUTCAR files contain complete `BORN EFFECTIVE CHARGES` blocks and you need per-atom BEC labels, use `gpumdkit.sh -out2xyz_bec <scf_results_directory>` instead.
 
-For CP2K logs and structure files, first enter the CP2K results root. The following command recursively scans `.log` files and their accompanying `.xyz`/`.inp` files under the current directory. Successful conversion writes `cp2k_exyz.xyz` there, with processing details in `Logfile.txt`.
+CP2K: run the command from the root of the CP2K results. It scans `.log` files and their `.xyz`/`.inp` files recursively and writes `cp2k_exyz.xyz`, with a processing summary in `Logfile.txt`:
 
 ~~~bash
 gpumdkit.sh -cp2k2xyz
 ~~~
 
-The VASP `-out2xyz`/menu 101 and BEC-aware `-out2xyz_bec` routes write
-`NEPdataset/train.xyz` in the current directory by default; the CP2K route above
-writes `cp2k_exyz.xyz`. Replace `<new_reference.xyz>` in the following commands with the extxyz
-file actually produced by the selected converter:
+Then check the new file (replace `<new_reference.xyz>` with the file written above):
 
 ~~~bash
 gpumdkit.sh -range <new_reference.xyz> energy
@@ -122,66 +122,21 @@ gpumdkit.sh -min_dist_pbc <new_reference.xyz>
 gpumdkit.sh -analyze_comp <new_reference.xyz>
 ~~~
 
-Check energy, force, and virial labels, units, cells, species and type order,
-composition coverage, duplicates, extreme structures, and failed or incomplete
-calculations. Preserve the raw DFT outputs and record every exclusion. See [Format Conversion](format_conversion.md) for output locations and overwrite risks.
+Look for wrong units or labels, unexpected species order, missing compositions, duplicates, extreme structures, and failed calculations. Keep the raw DFT outputs. See [Format Conversion](format_conversion.md) for output locations and when files are overwritten.
 
-## 5. Update the dataset and validate the model
+## 5. Update the dataset and retrain
 
-Keep the previous dataset revision before merging new reference structures. Record
-which configurations were added, rejected, weighted, or assigned to training and
-test sets. Where independence matters, prevent neighboring trajectory frames from
-leaking across the split.
+Keep a copy of the previous dataset, then merge the new structures. If neighboring trajectory frames end up in both the training and test sets, the test error will look better than it is, so split by trajectory or time when independence matters.
 
-After checking the dataset, prepare or update `nep.in` using the confirmed
-settings. Run NEP training through the project's execution procedure, then inspect:
+Update `nep.in`, train NEP, and check:
 
 - training and test losses;
-- energy, force, and virial/stress parity outputs;
-- errors by species, composition, phase, and configuration class;
-- outliers, short-range behavior, and target-domain MD stability;
-- the project's model-acceptance criteria.
+- energy, force, and virial/stress parity plots (`gpumdkit.sh -plt train`, `-plt test`);
+- errors by species, composition, phase, and structure type;
+- outliers, short-range behavior, and MD stability in the target conditions.
 
-Aggregate RMSE alone is not evidence that a model is ready for production. Preserve
-the model and dataset revisions and record the changes before using the new model
-for another MD iteration.
+A low overall RMSE alone does not show that the model is ready. Once it meets your acceptance criteria, use it for the next round of MD.
 
-## Iteration record
+## Keep a record
 
-For reproducibility, retain model and data revisions, resolved decisions, exact
-commands, working directories, executable versions, exit status, warnings,
-generated files, rejected structures, validation results, and known limitations.
-Stop the iteration when required outputs are missing or a validation issue remains
-unresolved.
-
-## AI Assistance and Authorization Boundaries
-
-Sampling conditions, selection criteria, DFT settings, scheduler resources,
-dataset policy, and model-acceptance criteria depend on the scientific system.
-An agent must not copy thresholds or simulation parameters from another material
-system, or infer the potential, species/type mapping, charge, temperature, time
-step, ensemble, pressure, run length, fit window, resources, or convergence
-criteria.
-
-Preparing directories, templates, or input files does not authorize execution.
-GPUMD, DFT, and NEP calculations and scheduler submissions require explicit user
-approval of the inputs, cost, and scientific settings. `presub.sh` is a template,
-not permission to submit. Model architecture, loss, optimizer, checkpoint, ZBL,
-and other nontrivial `nep.in` settings also require approval.
-
-At each stage, an agent should check parser and log output, geometry and labels,
-units, cells, species/type order, duplicates, leakage, failed outputs, and
-target-domain stability. Stop and report missing outputs, parser errors, NaN/Inf
-values, unphysical structures, and unexplained warnings.
-
-Relevant skill references:
-
-- `skills/gpumdkit-skill/references/workflows.md`
-- `skills/gpumdkit-skill/references/sampling.md`
-- `skills/gpumdkit-skill/references/format-conversion.md`
-- `skills/gpumdkit-skill/references/nep-data.md`
-- `skills/gpumdkit-skill/references/nep-parameters.md`
-- `skills/gpumdkit-skill/references/nep-outputs.md`
-
-This page does not execute a complete active-learning loop or choose the candidate,
-selection, DFT, dataset, or model-acceptance procedure for the user.
+For each iteration, keep the model and dataset versions, the commands and thresholds used, rejected structures, and validation results. Stop and investigate if outputs are missing or a validation problem is unresolved.

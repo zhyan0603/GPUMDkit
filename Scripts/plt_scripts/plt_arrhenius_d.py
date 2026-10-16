@@ -111,7 +111,7 @@ if len(raw_temps) > 0:
     Ea_all, intercept_all, slope_all, r_all = fit_arrhenius(temps, D_alls)
     
     if Ea_all is not None:
-        print(f"\nActivation Energy: {Ea_all:.3f} eV")
+        print(f"\nActivation Energy: {Ea_all:.3f} eV, R2 = {r_all ** 2:.4f}")
         
         # Prepare data for plotting
         x_min, x_max = 1000/np.max(temps), 1000/np.min(temps)

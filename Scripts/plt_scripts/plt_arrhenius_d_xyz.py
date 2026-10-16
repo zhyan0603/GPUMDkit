@@ -140,10 +140,10 @@ if len(raw_temps) > 0:
     ]
 
     # Print activation energies
-    print(f"Ea_all: {Ea_all:.3f} eV")
-    print(f"Ea_x: {Ea_x:.3f} eV")
-    print(f"Ea_y: {Ea_y:.3f} eV")
-    print(f"Ea_z: {Ea_z:.3f} eV")
+    print(f"Ea_all: {Ea_all:.3f} eV, R2 = {r_all ** 2:.4f}")
+    print(f"Ea_x: {Ea_x:.3f} eV, R2 = {r_x ** 2:.4f}")
+    print(f"Ea_y: {Ea_y:.3f} eV, R2 = {r_y ** 2:.4f}")
+    print(f"Ea_z: {Ea_z:.3f} eV, R2 = {r_z ** 2:.4f}")
 
     # Prepare data for plotting
     x_min, x_max = 1000/np.max(temps), 1000/np.min(temps)

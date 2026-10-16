@@ -69,7 +69,7 @@ To maintain code quality and consistency across the project, please adhere to th
 - Ensure that help messages (e.g., `-h` flags) are clear and accurate.
 - Tutorial documentation lives in `docs/tutorials/en/` (English) and `docs/tutorials/zh/` (Chinese).
   If you add a new feature, consider updating the relevant tutorial page.
-- After editing tutorial markdown files, rebuild the HTML with `mkdocs build -f docs/mkdocs.yml`.
+- After editing tutorial markdown files, rebuild the web pages with `python3 docs/manual-src/build.py`.
 
 ### Update Log
 
@@ -127,7 +127,8 @@ Create a new branch for your changes:
 
 ```bash
 # Create and checkout a new branch from dev
-git checkout -b your-branch-name
+git fetch upstream
+git checkout -b your-branch-name upstream/dev
 ```
 
 Name your branch as you prefer.
@@ -156,9 +157,9 @@ The structure of `GPUMDkit` consists of:
 - **`skills/`**: Portable Agent Skills definition (`gpumdkit-skill/SKILL.md`) and on-demand references
 - **`docs/`**: Documentation files
   - `tutorials/en/` and `tutorials/zh/`: Bilingual tutorial pages
-  - `mkdocs.yml`: MkDocs configuration for building tutorial HTML
+  - `manual-src/`: Sources of the manual page and `build.py`, which renders the tutorials
   - `command_reference.tsv`: Machine-readable command reference
-  - `htmls/`: Generated HTML output from MkDocs
+  - `htmls/`: Generated tutorial pages (do not edit by hand)
 
 #### Interactive Mode Contributions
 
@@ -284,8 +285,8 @@ To add a new command-line flag or subcommand:
    ```bash
    # Find the help_info_table() function and add your command
    function help_info_table(){
-       echo "+====================================== Analysis ===============================================+"
-       echo "| -analyze_bonds Analyze bond lengths in struct | -analyze_comp Analyze composition of extxyz      |"
+       # ... ANALYSIS section ...
+       echo " | -analyze_bonds Bond length analysis           |                                                       |"
        # ... rest of help table ...
    }
    ```
@@ -367,8 +368,8 @@ find src Scripts -name '*.sh' -exec bash -n {} +
 # Python syntax checks (for modified Python files)
 python3 -m py_compile path/to/modified_script.py
 
-# MkDocs build (if you modified documentation)
-mkdocs build -f docs/mkdocs.yml
+# Rebuild the web pages (if you modified documentation)
+python3 docs/manual-src/build.py
 
 # Check for trailing whitespace issues
 git diff --check
@@ -415,8 +416,8 @@ Write clear, descriptive commit messages that explain what you changed. There ar
 
 2. **Keep your branch updated** with the latest `dev` branch:
    ```bash
-   git fetch origin
-   git rebase origin/dev
+   git fetch upstream
+   git rebase upstream/dev
    ```
 
 3. **Push your branch** to your fork:

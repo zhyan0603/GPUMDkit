@@ -5,25 +5,58 @@
 
 **Script Location:** `Scripts/sample_structures/`
 
-Run `gpumdkit.sh` in the working directory containing your candidate trajectory, reference data, and model, then enter filenames at the menu prompts. Use actual paths for files elsewhere. Relative paths start from the terminal's current directory; check each function's output location and any existing files with the same names before running.
+Run `gpumdkit.sh` in the directory that holds your trajectory, reference data, and model, and enter file names at the prompts (paths for files elsewhere). Outputs go to the current directory, so check for existing files with the same names first. The `python "${GPUMDkit_path}/Scripts/..."` commands are an alternative for source installations.
 
-The `python Scripts/...` examples below are optional source invocations: run them from the GPUMDkit checkout root with adjusted data paths, or use the script's absolute path from your data directory. Conda users can use the menus without locating `Scripts/`.
+## A Worked Example
+
+The commands below were run on a small illustrative trajectory, `dump.xyz`: 100 frames of a 54-atom Li/S cell. Choose the sample sizes for your own data.
+
+**Pick 5 frames evenly spaced through the file:**
+
+```bash
+python "${GPUMDkit_path}/Scripts/sample_structures/sample_structures.py" dump.xyz uniform 5
+```
+
+```text
+ All sampled frames written to sampled_structures.xyz
+```
+
+The same step from the interactive menu is `gpumdkit.sh` → `2` → `201` and the input line `dump.xyz uniform 5`. The script always writes `sampled_structures.xyz`, so rename the result before running it again.
+
+**Skip the first frames and pick at random:**
+
+```text
+dump.xyz random 5 20
+```
+
+This chooses 5 frames at random from the frames after the first 20, which is useful when the start of an MD run is still equilibrating. Uniform and random selection ignore how different the structures are; use FPS (203) when you want a diverse set.
+
+**Split a dataset into training and test sets (206):**
+
+```bash
+gpumdkit.sh   # 2) Sample Structures -> 206 -> dump.xyz
+```
+
+```text
+   Elements: Li S
+   Frames: 100
+   Atoms per frame: 54-54
+ Enter the test-set fraction or frame count: 0.2
+   Test-set size: 20 frames; training-set size: 80 frames
+ Enter the selection method: 1
+   Method: uniform
+   Training frames: 80 -> dump_train.xyz
+   Test frames: 20 -> dump_test.xyz
+```
+
+Enter a number between 0 and 1 for a fraction, or a positive integer for an exact number of test frames. Check both output files with `gpumdkit.sh -analyze_comp` before using them.
 
 ## Interactive Mode
 
-Sampling tasks are usually easier to run from the interactive menu:
+Run `gpumdkit.sh` and choose `2) Sample Structures`. The entries are described in the table below.
 
-```bash
-gpumdkit.sh
-```
-
-Choose:
-
-```text
-2) Sample Structures
-```
-
-The menu is:
+<details markdown="1">
+<summary>Show the full menu</summary>
 
 ```text
 +------------------------------------------------------+
@@ -40,6 +73,8 @@ The menu is:
 +------------------------------------------------------+
 Input the function number:
 ```
+
+</details>
 
 Available entries:
 
@@ -91,10 +126,10 @@ Output:
 
 ## Farthest Point Sampling with NepTrain
 
-This entry uses NepTrain descriptors for FPS. Choose `203` in interactive mode, or run the script directly:
+Farthest-point sampling (FPS) on NepTrain descriptors. Choose `203` in interactive mode, or run the script directly:
 
 ```bash
-python Scripts/sample_structures/parallel_neptrain_select_structs.py dump.xyz train.xyz nep.txt [threads]
+python "${GPUMDkit_path}/Scripts/sample_structures/parallel_neptrain_select_structs.py" dump.xyz train.xyz nep.txt [threads]
 ```
 
 Descriptor calculation uses one CPU worker by default. Set the optional fourth
@@ -102,7 +137,7 @@ argument to a positive integer to enable parallel calculation, for example
 `4`. Each worker loads its own copy of the NEP model and uses one native OpenMP
 thread, so the requested worker count is the total descriptor parallelism.
 
-From interactive mode, choose `203`. You will see:
+The interactive prompt is:
 
 ```text
 Input <sample.xyz> <train.xyz> <nep_model> [threads]
@@ -128,12 +163,7 @@ Outputs:
 - `pca_train.txt`
 - `pca_selected.txt`
 
-During execution, choose one of two selection modes:
-
-1. select until the descriptor distance is below a threshold;
-2. select a specified number of structures.
-
-The script then prints a selection prompt:
+The script then asks how to stop: at a minimum descriptor distance, or after a fixed number of structures:
 
 ```text
 Choose selection method:
@@ -163,13 +193,13 @@ If you choose `202` from the interactive menu, it prints:
 ### Serial PyNEP
 
 ```bash
-python Scripts/sample_structures/pynep_select_structs.py dump.xyz train.xyz nep.txt
+python "${GPUMDkit_path}/Scripts/sample_structures/pynep_select_structs.py" dump.xyz train.xyz nep.txt
 ```
 
 ### Parallel PyNEP
 
 ```bash
-python Scripts/sample_structures/parallel_pynep_select_structs.py dump.xyz train.xyz nep.txt 8
+python "${GPUMDkit_path}/Scripts/sample_structures/parallel_pynep_select_structs.py" dump.xyz train.xyz nep.txt 8
 ```
 
 The last argument is the number of CPU threads.
@@ -190,13 +220,13 @@ This entry requires `pynep` and is kept for compatibility.
 
 ## Structure Perturbation
 
-Use perturbation when you want to generate initial structures around a known configuration. Choose `204` in interactive mode, or run the script directly:
+Generates new structures around a known configuration. Choose `204` in interactive mode, or run the script directly:
 
 ```bash
-python Scripts/sample_structures/perturb_structure.py POSCAR 20 0.03 0.2 uniform
+python "${GPUMDkit_path}/Scripts/sample_structures/perturb_structure.py" POSCAR 20 0.03 0.2 uniform
 ```
 
-From interactive mode, choose `204`. You will see:
+The interactive prompt is:
 
 ```text
 Input <input.vasp> <pert_num> <cell_pert_fraction> <atom_pert_distance> <atom_pert_style>
@@ -238,10 +268,10 @@ Use this together with the GPUMD `active` command. The `active` command uses a c
 Choose `205` in interactive mode, or run the script directly:
 
 ```bash
-python Scripts/sample_structures/select_max_modev.py 200 0.15
+python "${GPUMDkit_path}/Scripts/sample_structures/select_max_modev.py" 200 0.15
 ```
 
-From interactive mode, choose `205`. You will see:
+The interactive prompt is:
 
 ```text
 +----------------------------------------------------+
@@ -267,6 +297,8 @@ Required files:
 Output:
 
 - `selected.xyz`
+
+`active.xyz` holds only the frames above the threshold of the GPUMD `active` command, so `min_deviation` can only narrow that set further. Each frame is ranked by its own `uncertainty=` value; frames without it are matched to `active.out` by `Time=`. `selected.xyz` lists the structures in decreasing deviation, and nothing is written if no frame exceeds `min_deviation`.
 
 ## Training and Test Set Split
 
@@ -323,7 +355,7 @@ Both output files preserve the input order of their retained frames. The script
 can also be launched directly, but the remaining choices are still interactive:
 
 ```bash
-python Scripts/sample_structures/split_train_test.py data.xyz
+python "${GPUMDkit_path}/Scripts/sample_structures/split_train_test.py" data.xyz
 ```
 
 Uniform and random splitting require `numpy` and `ase`. FPS additionally
@@ -332,13 +364,13 @@ dataset.
 
 ## Frame Range Extraction
 
-`frame_range.py` is an independent CLI tool and is not part of the interactive sampling menu `201–206`. Use it when you want to keep only a fraction of a trajectory before sampling, for example after equilibration.
+`-frame_range` is a command-line tool (not in menu `201–206`) for keeping part of a trajectory before sampling, for example to drop the equilibration stage:
 
 ```bash
-gpumdkit.sh -frame_range dump.xyz 0 0.8
+gpumdkit.sh -frame_range dump.xyz 0.2 1
 ```
 
-This writes frames from 0% to 80% of the trajectory. The range arguments are trajectory fractions from `0` to `1`.
+The two arguments are fractions of the trajectory between `0` and `1`; this example keeps the last 80% of the frames and writes them to `dump_0.20_1.00.xyz`.
 
 ## Example Commands
 

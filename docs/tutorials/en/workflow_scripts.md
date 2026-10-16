@@ -9,19 +9,10 @@ The workflow scripts prepare directories and files. They do not submit calculati
 
 ## Interactive Entry
 
-Use the interactive menu as the normal user entry point:
+Run `gpumdkit.sh` and choose `3) Workflow`. The entries are described in the table below.
 
-~~~bash
-gpumdkit.sh
-~~~
-
-Choose:
-
-~~~text
-3) Workflow
-~~~
-
-The workflow menu looks like this (the text matches the program output):
+<details markdown="1">
+<summary>Show the full menu</summary>
 
 ~~~text
 +---------------------------------------------------------+
@@ -36,6 +27,8 @@ The workflow menu looks like this (the text matches the program output):
 Input the function number:
 ~~~
 
+</details>
+
 | Menu | Workflow | Use it for |
 |---|---|---|
 | 301 | SCF batch pretreatment | Prepare DFT single-point directories for structures |
@@ -44,10 +37,8 @@ Input the function number:
 
 ## 1. Prepare DFT single-point calculations {#scf-batch-pretreatment}
 
-This section covers the input files and single-point directory preparation.
-
 Work in a dedicated directory and keep a separate copy of the source structures.
-The scripts create `struct_fp/`, `struct_md/`, calculation directories, and
+Function 301 creates `struct_fp/`, `fp/`, the calculation directories, and
 `presub.sh` in the current directory.
 
 ### VASP SCF preparation (301 -> 1)
@@ -82,7 +73,7 @@ gpumdkit.sh
 # choose 3 -> 301 -> VASP
 ~~~
 
-The usual output is:
+With one element set, the output stays flat:
 
 ~~~text
 current directory/
@@ -95,10 +86,33 @@ current directory/
 └── presub.sh
 ~~~
 
-The script creates `fp/`. After preparation, place the reviewed `INCAR`, `POTCAR`,
-and `KPOINTS` files in `fp/`; the calculation directories link to them. The
-`prefix` becomes the calculation-directory prefix. When `out2xyz` is used later,
-the directory name is written as `config_type` in the extxyz output.
+For extxyz input, POSCAR species follow the trajectory-wide first-seen element
+order. If all structures contain the same element set, 301 keeps the flat
+layout and uses the shared `fp/POTCAR`. Different atom ratios with the same
+element set do not create separate groups. If multiple element sets are
+present, the POSCARs are stored under `struct_fp/<elements>/`, and each
+calculation directory links to the corresponding `fp/POTCAR_<elements>` file:
+
+~~~text
+struct_fp/
+├── Al_O/POSCAR_1.vasp
+└── Al_O_Te_Bi/POSCAR_2.vasp
+fp/
+├── INCAR
+├── POTCAR_Al_O
+└── POTCAR_Al_O_Te_Bi
+<prefix>_1/POTCAR -> ../fp/POTCAR_Al_O
+<prefix>_1/KPOINTS -> ../fp/KPOINTS
+<prefix>_2/POTCAR -> ../fp/POTCAR_Al_O_Te_Bi
+<prefix>_2/KPOINTS -> ../fp/KPOINTS
+~~~
+
+Prepare each listed POTCAR in `fp/`; its element order must match the POSCAR
+header. All groups share `fp/INCAR`, and every calculation directory links to
+`../fp/KPOINTS`. Provide `fp/KPOINTS` for explicit k-point input. If the target
+file is absent, the link stays dangling and VASP uses `KSPACING` in `INCAR`.
+The `prefix` becomes the calculation-directory prefix. When `out2xyz` is used
+later, the directory name is written as `config_type` in the extxyz output.
 
 ### CP2K SCF preparation (301 -> 2)
 
@@ -126,13 +140,11 @@ dump.xyz template.inp H2O
 The script creates `<prefix>_<index>/` for each structure and writes `input.inp`
 and `pos.xyz`.
 
-Source users can also invoke the script directly. This relative script path
-assumes the GPUMDkit checkout root as the working directory; replace the input
-filenames with actual data paths. Alternatively, use the script's absolute path
-from your data directory. Conda users should prefer the menu above.
+With a source installation you can also call the script directly from your data
+directory:
 
 ~~~bash
-python Scripts/workflow/scf_batch_pretreatment_cp2k.py train.xyz template.inp calc
+python "${GPUMDkit_path}/Scripts/workflow/scf_batch_pretreatment_cp2k.py" train.xyz template.inp calc
 ~~~
 
 ## 2. Prepare MD sampling directories {#md-sampling-pretreatment}
@@ -176,9 +188,9 @@ current directory/
 └── presub.sh
 ~~~
 
-After preparation, place the reviewed `nep.txt` and the matching `run_*.in` file
-for each sample in `md/`. For example, `run_1.in` links to `sample_1/run.in`
-and `run_2.in` links to `sample_2/run.in`.
+After preparation, put `nep.txt` and one `run_*.in` per sample into `md/`. Each
+sample directory links to them: `sample_1/run.in` points to `md/run_1.in`,
+`sample_2/run.in` to `md/run_2.in`, and so on.
 
 ### LAMMPS (303)
 
@@ -204,90 +216,48 @@ current directory/
 └── presub.sh
 ~~~
 
-After preparation, place the reviewed `lmprun.in` and `nep.txt` files in `md/`.
+After preparation, put `lmprun.in` and `nep.txt` into `md/`; every sample directory links to them.
 
-## 3. Confirm before running and inspect results
+## A Worked Example: 302 on Two Structures
 
-Before submitting through your own execution procedure, check:
+Starting from a folder that only contains `a.vasp` (Li) and `b.vasp` (Si), run `gpumdkit.sh`, choose `3` and then `302`. The script renames the structures, converts each to extxyz and creates one sample folder per structure:
 
-- the structure count, atom and type order, cells, and generated-directory count;
-- `INCAR`, `POTCAR`, and `KPOINTS` in `fp/`, or `nep.txt`, `run_*.in`, and
-  `lmprun.in` in `md/`;
-- every sample-directory link and file name;
-- the executable, resources, and scheduler settings in `presub.sh`.
+```text
+ Progress: [##################################################] 100% (2/2)
+        2 model.xyz files were generated.
+ |    ATTENTION: Place run_*.in and nep.txt in 'md' Dir.   |
+```
 
-`presub.sh` is a template. It does not validate the inputs and is not permission
-to submit a job. Inspect the directories and links first, then run through the
-project's procedure. Afterward, check exit status, logs, temperature, energy,
-pressure, cells, and trajectories, and identify failed or incomplete samples.
+```text
+.
+├── md/                      # empty: put nep.txt and run_1.in, run_2.in here
+├── presub.sh                # template loop over sample_*; adapt it to your scheduler
+├── struct_md/
+│   ├── POSCAR_1.vasp        # the input structures, renamed (moved out of the top folder)
+│   ├── POSCAR_2.vasp
+│   ├── model_1.xyz
+│   └── model_2.xyz
+├── sample_1/
+│   ├── model.xyz -> ../struct_md/model_1.xyz
+│   ├── nep.txt   -> ../md/nep.txt
+│   └── run.in    -> ../md/run_1.in
+└── sample_2/
+    └── ...                  # the same links, pointing to *_2 files
+```
 
-## 4. Post-process and continue
+Only links are created, so `sample_1/nep.txt` and `sample_1/run.in` stay dangling until you place `nep.txt` and the `run_*.in` files in `md/`. That is the moment to check that each `run_N.in` really belongs to structure `N`. The input `.vasp` files are **moved** into `struct_md/`, so keep your own copy of anything you cannot regenerate.
 
-After DFT results have completed and passed review, use the converter for the DFT
-code:
+## 3. Check before running
 
-For VASP results:
+Before submitting, check:
 
-~~~bash
-gpumdkit.sh -out2xyz <scf_results_directory>
-~~~
+- the number of structures, atom and species order, cells, and number of generated directories;
+- `INCAR`, `POTCAR`, and `KPOINTS` in `fp/`, or `nep.txt`, `run_*.in`, and `lmprun.in` in `md/`;
+- the links and file names in each directory;
+- the executable, resources, and scheduler settings in `presub.sh`, which is only a template.
 
-If the OUTCAR files contain complete `BORN EFFECTIVE CHARGES` blocks and the
-per-atom BEC labels are needed, use:
+Workflow scripts depend on your cluster, templates, and software versions, so try a few structures first. After the runs, look for failed or incomplete samples before continuing.
 
-~~~bash
-gpumdkit.sh -out2xyz_bec <scf_results_directory>
-~~~
+## 4. Convert the results
 
-For CP2K logs and structure files, first enter the CP2K results root. The following command recursively scans `.log` files and their accompanying `.xyz`/`.inp` files under the current directory. Successful conversion writes `cp2k_exyz.xyz` there, with processing details in `Logfile.txt`.
-
-~~~bash
-gpumdkit.sh -cp2k2xyz
-~~~
-
-The VASP `-out2xyz`/menu 101 route and the BEC-aware `-out2xyz_bec` route create
-`NEPdataset/train.xyz` in the current directory; the Python `-out2exyz` route
-writes `train.xyz` there. Continue with the file actually produced by the
-selected route and preserve the raw DFT outputs.
-
-Use analysis and sampling tools to inspect the resulting extxyz and record excluded
-directories.
-
-## Active-Learning Style Workflow
-
-For a NEP data iteration, proceed in this order: MD trajectory, geometry filtering,
-NepTrain FPS, DFT, conversion, and dataset checks. See [Active Learning Workflow](active_learning_workflow.md)
-for the manually reviewed protocol.
-
-## Practical Notes
-
-- Workflow scripts depend on the cluster, templates, and software versions; check a small number of structures first.
-- Preserve templates and source structures, and inspect generated directories, links, and file names before continuing.
-
-## AI Assistance and Authorization Boundaries
-
-Workflow scripts depend on the cluster, templates, and software versions. An
-agent must not infer the potential, species/type mapping, temperatures, time
-steps, ensembles, pressures, run lengths, selection thresholds, resources, or
-convergence criteria from examples or another material system. `INCAR`,
-`POTCAR`, `KPOINTS`, `run.in`, CP2K templates, and `nep.txt` are not automatically
-approved files. Preparing directories does not authorize DFT, GPUMD, LAMMPS, or
-NEP execution; execution and scheduler submission require an explicit user request.
-
-For direct source calls, first confirm the checkout root, interpreter, and
-dependencies, then use the target script's own help. Ordinary users should use
-the existing menu. Do not invent a CLI route for a menu-only function. Stop and
-report parser errors, missing files, NaN/Inf values, failed outputs, and
-unexplained warnings.
-
-Relevant skill references:
-
-- `skills/gpumdkit-skill/references/workflows.md`
-- `skills/gpumdkit-skill/references/sampling.md`
-- `skills/gpumdkit-skill/references/format-conversion.md`
-- `skills/gpumdkit-skill/references/nep-data.md`
-- `skills/gpumdkit-skill/references/nep-parameters.md`
-
-For a reproducible iteration, record model and data revisions, approved decisions,
-exact commands, working directories, versions, exit status, warnings, generated
-files, exclusions, validation results, and known limitations.
+After the DFT runs finish, convert them with `gpumdkit.sh -out2xyz <dir>` (VASP, writes `NEPdataset/train.xyz`), `-out2xyz_bec <dir>` (VASP with Born effective charges), or `-cp2k2xyz` (CP2K, run from the results root, writes `cp2k_exyz.xyz`). See [Format Conversion](format_conversion.md) for details, and [Active Learning Workflow](active_learning_workflow.md) for how these steps fit into a full NEP data iteration.

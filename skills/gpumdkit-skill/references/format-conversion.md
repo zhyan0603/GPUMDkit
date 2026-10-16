@@ -55,7 +55,7 @@ input trajectory, and does not export velocities. Do not pass `-o` or `-v`.
 ### LAMMPS Conversions
 
 ```bash
-# LAMMPS dump to extxyz
+# LAMMPS dump or data file to extxyz
 # IMPORTANT: Element symbols must match atom type IDs in dump file
 gpumdkit.sh -lmp2exyz dump.lammpstrj Li Y Cl
 
@@ -162,7 +162,7 @@ gpumdkit.sh -clean_xyz input.xyz clean.xyz
 | `-pos2exyz` | POSCAR -> extxyz | `gpumdkit.sh -pos2exyz <poscar> <xyz>` |
 | `-exyz2pos` | extxyz -> POSCAR | `gpumdkit.sh -exyz2pos <xyz>` |
 | `-pos2lmp` | POSCAR -> LAMMPS data | `gpumdkit.sh -pos2lmp <poscar> <lmp>` |
-| `-lmp2exyz` | LAMMPS dump -> extxyz | `gpumdkit.sh -lmp2exyz <dump> <elem...>` |
+| `-lmp2exyz` | LAMMPS dump/data -> extxyz | `gpumdkit.sh -lmp2exyz <dump_or_data> <elem...>` |
 | `-cif2pos` | CIF -> POSCAR | `gpumdkit.sh -cif2pos <cif> <output>` |
 | `-cif2exyz` | CIF -> extxyz | `gpumdkit.sh -cif2exyz <cif> <output>` |
 | `-xdat2exyz` | XDATCAR -> extxyz | `gpumdkit.sh -xdat2exyz XDATCAR dump.xyz` |

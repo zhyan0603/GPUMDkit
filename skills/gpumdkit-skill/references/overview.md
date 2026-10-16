@@ -68,8 +68,8 @@ For current Python-backed commands, detailed usage, type conversion, file checks
 |---|---|
 | `gpumdkit.sh -doctor` | Check the configured path, Python/Bash versions, and common or feature-specific Python packages; missing optional packages do not affect unrelated functions |
 | `gpumdkit.sh -skill` | Print the canonical unified Skill path and cross-client installation hints |
-| `gpumdkit.sh -time <gpumd|nep>` | Legacy time-consumption analyzer; use only the supported `gpumd` or `nep` selector |
-| `gpumdkit.sh -nep_modifier [nep.txt] [nep.restart|-] [nep.in|-]` | Inspect and modify a NEP4 model through calorine; source files are preserved, while expansion, reduction, and adding species require matching restart data and explicit scientific choices |
+| `gpumdkit.sh -time <gpumd\|wpe\|nep\|gnep>` | Monitor GPUMD, WPE, NEP, or GNEP progress |
+| `gpumdkit.sh -nep_modifier [nep.txt] [nep.restart\|-] [nep.in\|-]` | Inspect and modify a NEP4 model through calorine; source files are preserved, while expansion, reduction, and adding species require matching restart data and explicit scientific choices |
 | `gpumdkit.sh -clean` | Remove generated/extra files from the current directory; preview the cleanup implementation and get explicit deletion approval before running |
 | `gpumdkit.sh -update` | Run GPUMDkit's networked self-update; inspect worktree changes and get explicit update authorization first |
 
@@ -78,26 +78,30 @@ Commands shown in the custom-command tutorials, such as `-greet`, `-batch_plot`,
 ## Common Workflows
 
 ### Workflow 1: NEP Model Training Pipeline
+
+One data iteration; `workflows.md` describes the full active-learning protocol.
+
 ```bash
-# 1. Convert DFT data to extxyz
-gpumdkit.sh -out2xyz ./vasp_results/
-
-# 2. Add group labels only if the downstream workflow uses GPUMD groups
-gpumdkit.sh -addgroup POSCAR Li Y Cl
-
-# 3. Sample diverse structures
+# 1. Select candidate structures from an MD trajectory
+gpumdkit.sh -min_dist_pbc dump.xyz
+gpumdkit.sh -filter_dist_pbc dump.xyz <min_distance>
 gpumdkit.sh  # Select: 2) Sample Structures -> 203) FPS by NepTrain
 
-# 4. Train NEP model (external)
-# ... train nep.txt ...
+# 2. Prepare DFT inputs for selected.xyz, then run DFT (external)
+gpumdkit.sh  # Select: 3) Workflow -> 301
 
-# 5. Validate training
+# 3. Convert DFT results to extxyz (writes NEPdataset/train.xyz)
+gpumdkit.sh -out2xyz ./vasp_results/
+
+# 4. Check the new data before training
+gpumdkit.sh -range NEPdataset/train.xyz energy
+gpumdkit.sh -range NEPdataset/train.xyz force
+gpumdkit.sh -min_dist_pbc NEPdataset/train.xyz
+
+# 5. Merge into the training set and train NEP (external)
+
+# 6. Validate training
 gpumdkit.sh -plt train
-gpumdkit.sh -plt prediction
-
-# 6. Check data quality
-gpumdkit.sh -range train.xyz force
-gpumdkit.sh -min_dist_pbc train.xyz
 ```
 
 ### Workflow 2: Ionic Conductivity Calculation

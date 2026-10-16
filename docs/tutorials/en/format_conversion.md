@@ -11,11 +11,7 @@ This module converts structure and trajectory files between common formats used 
 
 **Script location:** `Scripts/format_conversion/`
 
-Make sure GPUMDkit is installed. See [Quick Start](quick_start.md) for installation instructions.
-
-After installation, run `gpumdkit.sh` from the working directory where you want to store conversion results. Relative paths start from the terminal's current directory; check each command's output location, which may differ from the input location. Start with a small copy of your data in a new practice directory to avoid overwriting existing results.
-
-This page prioritizes installed commands and menus. Examples using `python Scripts/...` are optional source invocations: run them from the GPUMDkit checkout root and adjust input paths, or use the script's absolute path from your data directory. With a Conda installation, prefer `gpumdkit.sh`; there is no need to enter the installation directory.
+Run GPUMDkit from the directory where you want the results: relative paths start there, and most converters write into the current directory even when the input lies elsewhere. Try a small copy of your data first so nothing is overwritten. For installation, see [Quick Start](quick_start.md).
 
 ## Supported formats
 
@@ -30,21 +26,61 @@ The format conversion module covers:
 - **DeepMD**: `npy` datasets
 - **extxyz**: a common structure format for GPUMD and NEP
 
-## Interactive Mode
+## A Worked Example
 
-Open GPUMDkit:
+Every command below was run on a small illustrative file, `train.xyz`, with nine frames of a 16-atom cell. Each one writes a **new** file and leaves the input alone.
 
 ```bash
-gpumdkit.sh
+gpumdkit.sh -get_frame train.xyz 3
 ```
-
-Choose:
 
 ```text
-1) Format Conversion
+Frame 3 has been successfully written to frame_3.xyz.
 ```
 
-The format conversion menu is:
+```bash
+gpumdkit.sh -replicate train.xyz big.xyz 2 1 1
+```
+
+```text
+Supercell: 2x1x1, Total atoms: 32
+Supercell created and saved to big.xyz
+```
+
+```bash
+gpumdkit.sh -addweight train.xyz w.xyz 2.0
+```
+
+```text
+Weights in train.xyz have been updated and saved to w.xyz
+```
+
+```bash
+gpumdkit.sh -frame_range train.xyz 0 0.5
+```
+
+```text
+ Extracted 4 frames from fraction 0.0 to 0.5
+ Corresponding to frames 0 to 3
+ Saved to train_0.00_0.50.xyz
+```
+
+```bash
+gpumdkit.sh -clean_xyz train.xyz clean.xyz
+```
+
+```text
+ Cleaned 9 frames, saved to clean.xyz
+```
+
+`-get_frame` counts frames from 1, and `-frame_range` takes **fractions** of the file, so `0 0.5` means the first half. Run `head -n 2` on a result to check the header line before you use it for training.
+
+## Interactive Mode
+
+Run `gpumdkit.sh` and choose `1) Format Conversion`. Entries `101`–`110` are chosen by number, the converters listed below them by keyword (for example `pos2exyz`). The table below describes each entry.
+
+<details markdown="1">
+<summary>Show the full menu</summary>
 
 ```text
 +-------------------------------------------------------------+
@@ -68,6 +104,8 @@ The format conversion menu is:
 Input the function number or converter keyword:
 ```
 
+</details>
+
 ### What Each Entry Does
 
 | Entry | Called script | Function | When to Use |
@@ -88,7 +126,7 @@ Input the function number or converter keyword:
 | `cif2exyz` | `cif2exyz.py` | CIF to extxyz | prepare GPUMDkit input from CIF |
 | `xdat2exyz` | `xdatcar2exyz.py` | XDATCAR to extxyz | convert VASP MD trajectory |
 | `pos2lmp` | `pos2lmp.py` | POSCAR to LAMMPS data | prepare LAMMPS input |
-| `lmp2exyz` | `lmp2exyz.py` | LAMMPS dump to extxyz | convert LAMMPS trajectory |
+| `lmp2exyz` | `lmp2exyz.py` | LAMMPS dump or data file to extxyz | convert a LAMMPS trajectory or structure |
 | `traj2exyz` | `traj2exyz.py` | ASE traj to extxyz | convert ASE trajectory |
 | `dp2xyz` | `dp2xyz.py` | DeepMD npy to extxyz | convert DeepMD datasets for GPUMD/NEP workflows |
 | `xyz2dp` | `xyz2dp.py` | extxyz to DeepMD npy | prepare DeepMD datasets from labeled extxyz |
@@ -104,12 +142,12 @@ Input the function number or converter keyword:
 | extxyz | POSCAR files | `gpumdkit.sh -exyz2pos <input.xyz>` |
 | XDATCAR | extxyz | `gpumdkit.sh -xdat2exyz XDATCAR dump.xyz` |
 | POSCAR | LAMMPS data | `gpumdkit.sh -pos2lmp POSCAR lammps.data` |
-| LAMMPS dump | extxyz | `gpumdkit.sh -lmp2exyz dump.lammpstrj Li Y Cl` |
+| LAMMPS dump or data file | extxyz | `gpumdkit.sh -lmp2exyz dump.lammpstrj Li Y Cl` |
 | CIF | POSCAR | `gpumdkit.sh -cif2pos input.cif POSCAR.vasp` |
 | CIF | extxyz | `gpumdkit.sh -cif2exyz input.cif model.xyz` |
 | ASE traj | extxyz | `gpumdkit.sh -traj2exyz input.traj output.xyz` |
 | DeepMD npy directory | extxyz | `gpumdkit.sh -dp2xyz database train.xyz` |
-| extxyz | DeepMD npy dataset | `gpumdkit.sh -xyz2dp` or direct Python invocation |
+| extxyz | DeepMD npy dataset | `gpumdkit.sh -xyz2dp train.xyz Li P S` |
 | extxyz | clean extxyz | `gpumdkit.sh -clean_xyz input.xyz clean.xyz` |
 
 ## Understand input and output names
@@ -136,9 +174,7 @@ head -n 2 output.xyz
 ```
 
 The first line is the atom count. The second line contains extxyz metadata such
-as the cell and available properties. It does not by itself validate that the
-underlying calculation is physically appropriate; use the analyzer tutorials to
-check a dataset before training or simulation.
+as the cell and available properties.
 
 ## Common Examples
 
@@ -154,19 +190,13 @@ The input directory must contain DeepMD dataset files such as `type.raw`, `type_
 
 ### Convert labeled extxyz to a DeepMD dataset
 
-Use the direct converter route to enter the input file and explicit DeepMD type-map order:
+Give the input file and the element order for the DeepMD `type_map.raw`:
 
 ```bash
-gpumdkit.sh -xyz2dp
+gpumdkit.sh -xyz2dp train.xyz Li P S
 ```
 
-Source users can also invoke Python directly. The example below assumes the terminal is at the GPUMDkit checkout root; replace `train.xyz` with the actual data path:
-
-```bash
-python3 Scripts/format_conversion/xyz2dp.py train.xyz Li P S
-```
-
-The input should contain labeled extxyz energy and force data. The output is written under `deepmd_data/` in the current directory. This command requires `dpdata`.
+Without arguments, `gpumdkit.sh -xyz2dp` asks for them interactively. The input must contain energy and force labels. The output is written under `deepmd_data/` in the current directory. This command requires `dpdata`.
 
 ### Convert VASP calculations to extxyz
 
@@ -198,11 +228,6 @@ are still converted, but their rows omit this property and a warning is shown.
 **Interactive mode:** Choose `101` from the format conversion menu. You will see:
 
 ```text
->-------------------------------------------------<
-| Calling the script in Scripts/format_conversion |
-| Script: out2xyz.sh                              |
-| Developer: Yanzhou WANG (yanzhowang@gmail.com)  |
->-------------------------------------------------<
 Input the directory containing OUTCARs
 Example: ./
 ------------>>
@@ -231,22 +256,17 @@ After conversion, use `head -n 2 NEPdataset/train.xyz` (shell/BEC route) or `hea
 gpumdkit.sh -addgroup POSCAR Li Y Cl
 ```
 
-This command reads the input structure and writes an extxyz file with group information.
+The command reads any structure file that ASE can read and writes `model.xyz`, in which each atom's group is the position of its element in the list (here Li = 0, Y = 1, Cl = 2). Every element in the structure must be listed.
 
 **Interactive mode:** Choose `106` from the format conversion menu. You will see:
 
 ```text
->-------------------------------------------------<
-| Calling the script in Scripts/format_conversion |
-| Script: add_groups.py                           |
-| Developer: Zihan YAN (yanzihan@westlake.edu.cn) |
->-------------------------------------------------<
 Input <POSCAR> <element1> <element2> ...
 Example: POSCAR Li Y Cl
 ------------>>
 ```
 
-**Output:** An extxyz file with group labels added.
+**Output:** `model.xyz` in the current directory.
 
 ## Script Details
 
@@ -275,8 +295,7 @@ gpumdkit.sh -exyz2pos structures.xyz
 This converts all frames in an extxyz file into `POSCAR_1.vasp`,
 `POSCAR_2.vasp`, and so on in the current directory. Atoms are grouped by
 element using the first-seen element order in the input trajectory, and
-velocities are not exported. The `-get_frame` command also uses 1-based frame
-numbers.
+velocities are not exported.
 
 Interactive entry: `105`
 
@@ -286,18 +305,21 @@ Example: ./train.xyz
 ------------>>
 ```
 
-### LAMMPS dump to extxyz
+### LAMMPS dump or data file to extxyz
 
 ```bash
-gpumdkit.sh -lmp2exyz dump.lammpstrj Li Y Cl
+gpumdkit.sh -lmp2exyz dump.lammpstrj Li Y Cl   # text dump: every frame
+gpumdkit.sh -lmp2exyz model.data Li Y Cl       # data file: one structure
 ```
 
-The element symbols must match the LAMMPS atom type IDs. For example, if type `1` is Li, type `2` is Y, and type `3` is Cl, the order should be `Li Y Cl`.
+The element symbols must follow the LAMMPS atom type IDs: if type `1` is Li, type `2` is Y, and type `3` is Cl, use `Li Y Cl`. The result is written to `dump.xyz`; nothing is written if no structure could be read. The file type is detected automatically, and compressed files (`.gz`, `.bz2`, `.xz`) also work.
+
+For a data file (`units metal`), the box origin is moved to zero and the atoms are wrapped into the cell, as GPUMD expects. Velocities (converted to Å/fs), masses, and charges are kept when the data file contains them; note that GPUMD uses velocities in `model.xyz` as the initial velocities. A dump with an `element` or `mass` column is not supported; write the dump with type IDs only.
 
 Interactive keyword: `lmp2exyz`
 
 ```text
-Input <dump_file> <element1> <element2> ...
+Input <dump_or_data_file> <element1> <element2> ...
 Example: dump.lammpstrj Li O
 ------------>>
 ```
@@ -334,14 +356,14 @@ The first form uses explicit replication factors. The second form tries to build
 gpumdkit.sh -get_frame dump.xyz 1000
 ```
 
-This extracts frame number `1000` from an extxyz trajectory; the first frame is number `1`.
+This writes frame `1000` of the trajectory to `frame_1000.xyz`. Frames are numbered from `1`.
 
 ### Split multi-frame extxyz
 
 `split_single_xyz.py` splits an extxyz file into individual frames, each written to a separate file.
 
 ```bash
-python Scripts/format_conversion/split_single_xyz.py dump.xyz
+python "${GPUMDkit_path}/Scripts/format_conversion/split_single_xyz.py" dump.xyz
 ```
 
 This creates `model_1.xyz`, `model_2.xyz`, ... for each frame in the trajectory.
@@ -386,4 +408,4 @@ The menu offers two options:
 
 ## Notes
 
-If a Python package required by a specific converter is missing, Python will report it when that converter is used.
+Some converters need extra Python packages (for example `dpdata` for DeepMD); a missing package is reported when that converter runs.

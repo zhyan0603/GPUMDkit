@@ -31,15 +31,14 @@ Make sure GPUMDkit is installed. See [Quick Start](quick_start.md) for installat
 | Outlier detection | Menu 502 | Find high-RMSE structures in training set |
 | Probability density | `gpumdkit.sh -pda <ref> <traj> <element> <interval>` | 3D probability density for diffusion channels |
 | GPUMD time | `gpumdkit.sh -time gpumd` | Estimate remaining GPUMD run time |
+| WPE GPUMD time | `gpumdkit.sh -time wpe` | Estimate remaining time for WPE-enabled GPUMD runs |
 | NEP time | `gpumdkit.sh -time nep` | Estimate remaining NEP training time |
 
-## Choose checks before filters
+## Check before you filter
 
-Run a non-destructive check before a filtering command whenever possible. This
-keeps the reason for excluding structures visible in the terminal output.
+Run a check such as `-min_dist_pbc` or `-range` before a `-filter_*` command, so you can see why structures would be removed. Use the PBC-aware distance check for periodic cells; the non-PBC version is only a quick comparison. The numbers in the examples below only illustrate the syntax: choose distance, box, and force thresholds for your own system and data.
 
-| Question | First command | What remains your decision |
-|---|---|---|
+---|---|---|
 | Are periodic images relevant? | `gpumdkit.sh -min_dist_pbc <input.xyz>` | Use the PBC-aware route for periodic cells; the non-PBC route is only a fast comparison. |
 | Is a value unusually large or small? | `gpumdkit.sh -range <input.xyz> energy\|force\|virial` | The acceptable range depends on the target system and reference data. |
 | Are contacts too short? | `gpumdkit.sh -min_dist_pbc <input.xyz>` | Choose a distance threshold from the chemistry and purpose of the dataset. |
@@ -51,15 +50,91 @@ for another material or workflow.
 
 ---
 
-## Interactive Mode
+## A Worked Example
 
-Open GPUMDkit and choose `5) Analyzer`:
+The commands below were run on a small illustrative file, `train.xyz`: nine frames of a 16-atom Li cell, three of which have four Li atoms replaced by F, and one frame in which two atoms are only 0.4 Å apart (a typical "bad" structure from a failed MD step). The numbers belong to this toy file, not to a real dataset.
+
+**1. What is in the file?**
 
 ```bash
-gpumdkit.sh
+gpumdkit.sh -analyze_comp train.xyz
 ```
 
-The analyzer menu is:
+```text
+ Index    Compositions           N atoms      Count
+ ---------------------------------------------------
+ 1        Li16                   16           6
+ 2        Li12F4                 16           3
+ ---------------------------------------------------
+ Enter index to export (e.g., '1,2', '2-3', 'all'), or press Enter to skip:
+```
+
+The table counts frames per composition. The last line is an interactive prompt: type an index such as `2` to write the frames of that composition to a file, or press Enter to leave the file untouched.
+
+**2. How large are the labels?**
+
+```bash
+gpumdkit.sh -range train.xyz energy
+gpumdkit.sh -range train.xyz force
+```
+
+```text
+ Energy range: -30.400 to -25.400
+ Force range: 0.199 to 3.254
+```
+
+An energy of -25.4 eV in a set where the others are near -30.4 eV is a flag, and so is a maximum force of 3.25 eV/Å. Neither is an error by itself; look at the structures behind them.
+
+**3. Are any atoms too close?**
+
+```bash
+gpumdkit.sh -min_dist_pbc train.xyz
+```
+
+```text
+ Minimum interatomic distances (with PBC):
+ +---------------------------+
+ | Atom Pair |  Distance (Å) |
+ +---------------------------+
+ |   Li-Li   |     0.400     |
+ |   Li-F    |     2.447     |
+ |   F-F     |     2.776     |
+ +---------------------------+
+ Overall min_distance: 0.400 Å
+```
+
+A Li-Li distance of 0.4 Å is far below any physical bond length, so some frame contains overlapping atoms.
+
+**4. Remove them and keep a record of what was removed.**
+
+```bash
+gpumdkit.sh -filter_dist_pbc train.xyz 1.5
+```
+
+```text
+ Total structures processed: 9
+ Structures filtered out: 1
+ Structures retained: 8
+ Filtered structures saved to: filtered_train.xyz
+ Filtered-out structures saved to: filtered_out_train.xyz
+```
+
+The threshold `1.5` is only an example: choose one that fits the elements in your own system. Keep `filtered_out_train.xyz` and look at it before you discard the structures for good.
+
+**5. Check the result.**
+
+```bash
+gpumdkit.sh -min_dist_pbc filtered_train.xyz
+```
+
+Run the same checks again on the cleaned file before it goes into a training set.
+
+## Interactive Mode
+
+Run `gpumdkit.sh` and choose `5) Analyzer`. Most functions also have the command-line shortcuts listed in the overview table and in the sections below.
+
+<details markdown="1">
+<summary>Show the full menu</summary>
 
 ```text
 +------------------------------------------------------+
@@ -80,7 +155,8 @@ The analyzer menu is:
 Input the function number:
 ```
 
-Most analyzer functions also have direct CLI shortcuts, which are listed in the overview table and in the sections below.
+</details>
+
 
 ---
 
@@ -175,8 +251,9 @@ the detected elements and `config_type` groups, then offers three modes:
 3. DFT-to-NEP alignment: calculate NEP energies and align the original DFT
    energies to them.
 
-The existing NES defaults are retained. Advanced NES settings can be changed
-inside the Python interface when needed. The DFT-to-NEP mode requires the
+Modes 1 and 2 fit the baselines with a natural evolution strategy (NES)
+optimizer. Its default settings suit most datasets; advanced settings can be
+changed in the interface. The DFT-to-NEP mode requires the
 `calorine` package and a compatible NEP model file.
 
 ---
@@ -259,7 +336,7 @@ Overall min_distance: 1.587 Å
 gpumdkit.sh -filter_dist_pbc dump.xyz 1.0
 ```
 
-This removes structures with any interatomic distance below `1.0 Å`.
+This removes structures with any interatomic distance below `1.0 Å` and writes the rest to `filtered_dump.xyz`.
 
 ### Filter by Box Size
 
@@ -271,7 +348,7 @@ This removes structures with any interatomic distance below `1.0 Å`.
 gpumdkit.sh -filter_box dump.xyz 13
 ```
 
-This keeps structures where all box edges are below `13 Å`.
+This keeps structures whose box edges are all at most `13 Å` and writes them to `filtered_by_box.xyz`.
 
 ### Filter by Property Value
 
@@ -283,10 +360,10 @@ This keeps structures where all box edges are below `13 Å`.
 
 ```bash
 gpumdkit.sh -filter_value train.xyz force 20
-gpumdkit.sh -filter_value train.xyz energy 5
+gpumdkit.sh -filter_value train.xyz energy <max_energy>
 ```
 
-This filters out structures with force components exceeding `20 eV/Å` (or energy exceeding `5 eV/atom`).
+A structure is kept when every value is at most the threshold: each force component in magnitude (eV/Å) for `force`, the total energy stored in the file (eV, not per atom) for `energy`, and each virial component for `virial`. Frames that do not store the chosen property cannot be checked and are kept; the script reports how many. The kept structures are written to `filtered.xyz`.
 
 ### Filter by Pair-Distance Range
 
@@ -377,6 +454,16 @@ Current Frame  Speed (steps/s)   Total Time       Time Left       Estimated End
 -------------   -------------   -------------   -------------   -----------------
     13000          499.86         0h 35m 0s      0h 34m 34s    2025-12-27 18:12:04
     14000          199.93        1h 27m 31s      1h 26m 21s    2025-12-27 19:03:56
+```
+
+### WPE-Enabled GPUMD Remaining Time
+
+`time_consuming_wpe.sh` estimates the remaining time for WPE-enabled GPUMD runs using buffered progress updates.
+
+**Input files:** `run.in` and `neighbor.out` or `thermo.out` (in the current GPUMD working directory)
+
+```bash
+gpumdkit.sh -time wpe
 ```
 
 ### NEP Remaining Time

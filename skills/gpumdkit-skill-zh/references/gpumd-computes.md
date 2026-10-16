@@ -68,7 +68,7 @@
 | `compute_gkma` | `compute_gkma <sample_interval> <first_mode> <last_mode> <bin_size\|f_bin_size> <size>` | `heatmode.out` |
 | `compute_hnema` | `compute_hnema <sample_interval> <output_interval> <Fe_x> <Fe_y> <Fe_z> <first_mode> <last_mode> <bin_option> <size>` | `kappamode.out` |
 
-GKMA/HNEMA 需要匹配的 `eigenvector.in`；模式索引和分箱必须与该文件匹配。`compute_gkma` 和 `compute_hnema` 不能在同一运行中同时激活；后定义的生效。模态计算可能需要大量内存和磁盘空间。
+GKMA/HNEMA 需要匹配的 `eigenvector.in`；模式索引和分箱必须与该文件匹配。每次运行只允许一种模态分析：重复 `compute_gkma` 或 `compute_hnema`，或同时使用两者，都会报输入错误（5.9 之前的版本会静默采用后定义的那个）。模态计算可能需要大量内存和磁盘空间。
 对于 HNEMA，`sample_interval` 必须整除 `output_interval`。`bin_size` 按固定模式数分组；`f_bin_size` 按频率宽度分组模式。
 
 ## 电子、偶极和有序度计算
@@ -85,7 +85,7 @@ LSQT 接受输运方向 `x`、`y` 或 `z`；能量单位为 eV。它是初步的
 
 ## 兼容性和收敛性
 
-- `compute_dos` 和 `compute_sdc` 不能在同一运行中使用。
+- 从 GPUMD 5.9 起 `compute_dos` 和 `compute_sdc` 可以在同一运行中使用；5.9 之前的版本会拒绝这一组合。
 - 对于 `compute_dos`，角频率最大值单位为 THz，`num_dos_points` 默认为 `Nc`，`group <method> -1` 请求所有分组。
 - 计算关键字通常只在当前 `run` 段生效，不会自动延续；每个正式采样段都应重新给出所需命令。
 - 确保 `Nc * sample_interval` 明显短于正式采样阶段时长，并在适用时使用保存的窗口/副本验证收敛性。

@@ -42,7 +42,14 @@ This entry prepares folders for single-point calculations. For VASP, keep either
 - If both `.vasp` and `.xyz` files are present, the script prints a notice and only processes `.vasp` files.
 - If no `.vasp` file is present and multiple `.xyz` files are detected, the script asks which `.xyz` file to process.
 
-After running, the script creates `struct_fp/`, `fp/`, and `<prefix>_*` directories. Put `INCAR`, `POTCAR`, and `KPOINTS` into the generated `fp/` directory; each calculation folder links to these files.
+For extxyz input, structures with one element set keep the existing flat layout
+and share `fp/POTCAR`. If multiple element sets are detected, POSCARs are grouped
+under `struct_fp/<elements>/`; prepare one `fp/POTCAR_<elements>` file per listed
+group. All groups share `fp/INCAR`, and each calculation folder links to its
+matching POTCAR. POTCAR element order must match the POSCAR header. Each
+calculation folder links to `fp/KPOINTS`; provide that file for explicit k-point
+input. If it is absent, the link stays dangling and VASP uses `KSPACING` from
+`INCAR`.
 
 For CP2K, enter `3) Workflow`, then `301) SCF batch pretreatment`, and choose the CP2K branch. The CP2K script asks for:
 

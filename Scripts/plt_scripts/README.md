@@ -389,9 +389,17 @@ gpumdkit.sh -plt D_xyz [save]
 
 ---
 
+These conductivity plots use the first temperature's `model.xyz` to count Li
+and Na together, assume unit charge, and apply the same ion count and replication
+across temperatures. Use them for one mobile Li or Na species with matching MSD
+columns; other species, mixed carriers, or changing composition require a separate
+calculation. They fit the 40%–80% MSD interval and extrapolate conductivity to
+300 K using the Nernst–Einstein relation. Validate the diffusive interval and the
+extrapolation range before interpreting the results.
+
 #### plt_arrhenius_sigma.py
 
-Creates Arrhenius plot for ionic conductivity (ln(σ·T) vs 1000/T).
+Creates Arrhenius plot for ionic conductivity (log10(σ·T) vs 1000/T).
 
 **Input Files:** `thermo.out` and `msd.out` in each `*K/` directory;
 `model.xyz` and optional `run.in` in the first temperature directory
@@ -523,7 +531,6 @@ cutoff_freq   : Optional, Cutoff frequency for SHC calculation in THz (default: 
 --save        : Optional, save the plot as 'nemd.png'
 --save-data   : Optional, additionally export tab-separated 'data_nemd.txt'
                 and, when SHC data exist, 'data_shc.txt'
-!!! Note !!!  : If no SHC data, set [scale_eff_size] and [cutoff_freq] to any number as placeholders when using '--save'.
 ```
 
 The historical `data_nemd.npz` (and `data_shc.npz` when SHC data exist) are
@@ -559,7 +566,6 @@ cutoff_freq   : Optional, Cutoff frequency for SHC calculation in THz (default: 
 --save-data   : Optional, save processed arrays as 'data_hnemd.npz' and
                 tab-separated 'data_hnemd.txt'; when SHC data exist, also
                 save 'data_shc.npz' and 'data_shc.txt'
-!!! Note !!!  : If no SHC data, set [scale_eff_size] and [cutoff_freq] to any number as placeholders when using '--save'.
 ```
 
 `--save` and `--save-data` are independent. The legacy bare tokens `save` and

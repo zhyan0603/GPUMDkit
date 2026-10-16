@@ -14,8 +14,8 @@ Use this self-contained reference to select outputs, estimate storage, and preve
 
 | Keyword | Current signature | Output | Behavior |
 |---|---|---|---|
-| `dump_xyz` | `dump_xyz <interval> <filename> [group <grouping_method> <group_id>] [precision <single|double>] {<property> ...}` | User filename(s) | Appends extended XYZ frames; a filename ending in `*` writes one file per frame; precision defaults to single |
-| `dump_netcdf` | `dump_netcdf <interval> <filename> [{<optional_args> ...}]` | User NetCDF filename | Requires the NetCDF package; positions are always written; optional arguments include properties, `group`, `precision <single|double>`, and `compression none|deflate [<level>]` |
+| `dump_xyz` | `dump_xyz <interval> <filename> [group <grouping_method> <group_id>] [precision <single\|double>] {<property> ...}` | User filename(s) | Appends extended XYZ frames; a filename ending in `*` writes one file per frame; precision defaults to single |
+| `dump_netcdf` | `dump_netcdf <interval> <filename> [{<optional_args> ...}]` | User NetCDF filename | Requires the NetCDF package; positions are always written; optional arguments include properties, `group`, `precision <single\|double>`, and `compression none\|deflate [<level>]` |
 | `dump_restart` | `dump_restart <interval>` | `restart.xyz` | Overwrites latest restart state; interval should be close to total run length (e.g. write once at the end or a few times) |
 | `dump_beads` | no parameters | `beads_dump_<k>.xyz` | PIMD bead data only |
 
@@ -37,7 +37,9 @@ dump_exyz <i> <v> <f> <p> <s>       -> dump_xyz <i> dump.xyz[*] velocity force p
 
 These are migration examples, not current commands. The `*` is needed only when separate per-frame files are wanted. Extended XYZ remains a supported data format, and `dump_observer` still has an `interval_exyz` parameter; do not remove those format/parameter references.
 
-For trajectory-based GPUMDkit MSD, request unwrapped positions or verify that downstream unwrapping is valid for the cell and frame cadence.
+For GPUMDkit trajectory MSD, place verified unwrapped coordinates in the
+extxyz `pos` field; `-calc msd` does not read `unwrapped_position` directly.
+See `calculators.md` for cell and coordinate requirements.
 
 ## Thermodynamic and model-specific dumps
 
@@ -48,7 +50,7 @@ For trajectory-based GPUMDkit MSD, request unwrapped positions or verify that do
 | `dump_polarizability` | `dump_polarizability <interval> <nep_file>` | `polarizability.out` | `nep_file` is the `nep4_polarizability` potential used to predict the polarizability; it is read by this keyword and is independent of the potential driving the MD |
 | `dump_shock_nemd` | `dump_shock_nemd interval <n> [bin_size <Angstrom>]` | `temperature_hist.txt`, `pxx_hist.txt`, `pyy_hist.txt`, `pzz_hist.txt`, `density_hist.txt`, `vp_hist.txt` | Bin-size default is 10 Angstrom; each row is one output instant with bins ordered along x; density is g/cm^3 and particle velocity is km/s |
 
-In the bundled GPUMD snapshot, `thermo.out` has 18 columns: `T K U Pxx Pyy Pzz Pyz Pxz Pxy ax ay az bx by bz cx cy cz`. Temperature is K, energies are eV, pressure components are GPa, and cell-vector components are Angstrom. Older executables can differ; resolve their version before interpreting a different layout.
+In the bundled GPUMD snapshot, `thermo.out` has 18 columns: `T K U Pxx Pyy Pzz Pyz Pxz Pxy ax ay az bx by bz cx cy cz`. Temperature is K, energies are eV, pressure components are GPa, and cell-vector components are Angstrom. Each run first writes `#` header lines (`dump_thermo`, `format_version`, `num_atoms`, `dt_output` in fs, and `columns`), and appended runs repeat them, so readers must skip comment lines. In PIMD runs the first two columns are the target temperature and the quantum kinetic energy (`T_target KE_quantum`). Older executables can differ; resolve their version before interpreting a different layout.
 
 ## Active and observer modes
 

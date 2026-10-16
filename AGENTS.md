@@ -10,7 +10,7 @@ gpumdkit.sh -> src/fN_*.sh menu wrappers -> Scripts/<module>/ implementations
 
 - `gpumdkit.sh`: interactive and CLI entry point (`-h` lists commands; `-skill` locates skills).
 - `Scripts/`: conversion, sampling, workflow, calculator, analyzer, plot, and utility implementations.
-- `docs/tutorials/{en,zh}/`: bilingual sources; `docs/mkdocs.yml`: site config.
+- `docs/tutorials/{en,zh}/`: bilingual Markdown sources; `docs/manual-src/build.py` renders them to `docs/htmls/` and builds `docs/manual.html` (run it after editing tutorials; never hand-edit generated pages).
 - `docs/updates.info`: records only the latest GPUMDkit user-visible features and code/CLI/script bug fixes.
 - `skills/gpumdkit-skill/`: canonical agent skill; `gpumdkit-skill-zh/`: Chinese version.
 

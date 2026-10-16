@@ -16,7 +16,7 @@
   <a href="https://github.com/zhyan0603/GPUMDkit/releases"><img src="https://img.shields.io/github/v/tag/zhyan0603/GPUMDkit?label=Version&style=flat-square&color=brightgreen" alt="Version"></a>
   <a href="https://github.com/zhyan0603/GPUMDkit/blob/main/LICENCE"><img src="https://img.shields.io/badge/License-GPL--3.0-blue?style=flat-square" alt="License"></a>
   <a href="https://anaconda.org/channels/gpumdkit/packages/gpumdkit/overview"><img src="https://img.shields.io/conda/dn/gpumdkit/gpumdkit?style=flat-square&color=red&label=Conda&logo=anaconda" alt="Conda Downloads"></a>
-  <a href="https://badge.dimensions.ai/details/doi/10.1002/mgea.70074"><img src="https://citations.njzjz.win/10.1002/mgea.70074" alt="Citations"></a>
+  <a href="https://badge.dimensions.ai/details/doi/10.1002/mgea.70074"><img src="https://img.shields.io/badge/dynamic/json?url=https%3A%2F%2Fmetrics-api.dimensions.ai%2Fdoi%2F10.1002%2Fmgea.70074&query=%24.times_cited&label=Citations&style=flat-square&color=blue&cacheSeconds=86400" alt="Citations"></a>
   <a href="https://github.com/zhyan0603/GPUMDkit/stargazers"><img src="https://img.shields.io/github/stars/zhyan0603/GPUMDkit?style=flat-square&color=yellow&label=Stars" alt="Stars"></a>
   <a href="https://github.com/zhyan0603/GPUMDkit/graphs/contributors"><img src="https://img.shields.io/github/contributors/zhyan0603/GPUMDkit?style=flat-square&color=brightgreen&label=Contributors" alt="Contributors"></a>
 </p>
@@ -121,26 +121,26 @@ There are two options, <u>*interactive mode*</u> and <u>*command-line mode*</u>
 
 3. Follow the on-screen prompts to interactively select and run the desired function.
 
-```
-               ____ ____  _   _ __  __ ____  _    _ _
-              / ___|  _ \| | | |  \/  |  _ \| | _(_) |_
-             | |  _| |_) | | | | |\/| | | | | |/ / | __|
-             | |_| |  __/| |_| | |  | | |_| |   <| | |_
-              \____|_|    \___/|_|  |_|____/|_|\_\_|\__|
+   ```
+                  ____ ____  _   _ __  __ ____  _    _ _
+                 / ___|  _ \| | | |  \/  |  _ \| | _(_) |_
+                | |  _| |_) | | | | |\/| | | | | |/ / | __|
+                | |_| |  __/| |_| | |  | | |_| |   <| | |_
+                 \____|_|    \___/|_|  |_|____/|_|\_\_|\__|
 
-              GPUMDkit Version 1.5.8 (2026-09-23)
-        Core Developer: Zihan YAN (yanzihan@westlake.edu.cn)
-     Main Contributors: Denan LI, Xin WU, Zhoulin LIU & Chen HUA
+                 GPUMDkit Version 1.5.8 (2026-09-23)
+           Core Developer: Zihan YAN (yanzihan@westlake.edu.cn)
+        Main Contributors: Denan LI, Xin WU, Zhoulin LIU & Chen HUA
 
-     ---------------------- GPUMD ------------------------
-     1) Format Conversion          2) Sample Structures
-     3) Workflow                   4) Calculators
-     5) Analyzer                   6) Visualization
-     7) Utilities                  8) Help
-     0) Exit
-     ------------>>
-     Input the function number:
-```
+        ---------------------- GPUMD ------------------------
+        1) Format Conversion          2) Sample Structures
+        3) Workflow                   4) Calculators
+        5) Analyzer                   6) Visualization
+        7) Utilities                  8) Help
+        0) Exit
+        ------------>>
+        Input the function number:
+   ```
 
 #### Command-Line Mode
 
@@ -176,7 +176,7 @@ the help information:
 | -cp2k2xyz     CP2K log -> xyz                 | -xdat2exyz         XDATCAR -> extxyz                  |
 | -cif2pos      cif -> POSCAR                   | -cif2exyz          cif -> extxyz                      |
 | -pos2exyz     POSCAR -> extxyz                | -exyz2pos          extxyz -> POSCAR                   |
-| -pos2lmp      POSCAR -> LAMMPS data           | -lmp2exyz          LAMMPS dump -> extxyz              |
+| -pos2lmp      POSCAR -> LAMMPS data           | -lmp2exyz          LAMMPS dump/data -> extxyz         |
 | -traj2exyz    ASE traj -> extxyz              | -replicate         Replicate structure                |
 | -addgroup     Add group labels                | -addweight         Add structure weight in extxyz     |
 | -clean_xyz    Clean extra info in extxyz      | -get_frame         Extract specific frame             |

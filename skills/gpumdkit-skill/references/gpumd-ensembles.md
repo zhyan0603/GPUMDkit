@@ -77,7 +77,7 @@ TTM optional arguments:
 | `ttm_infile <file>` | Initial grid temperature; one `ix iy iz T_e` row per cell with 1-based indices |
 | `ttm_properties_file <file>` | One `ix iy iz C_vol kappa_e gamma_p eta` row per cell; overrides uniform heat capacity, conductivity, and coupling |
 | `ttm_source <value>` | Volumetric source in eV/(ps Angstrom^3); multiplied by per-cell `eta` when supplied |
-| `ttm_active_x|y|z <range>` | `all`, one 1-based index, or inclusive `3:10`/`3-10`; inactive cells remain at zero electron temperature |
+| `ttm_active_x\|y\|z <range>` | `all`, one 1-based index, or inclusive `3:10`/`3-10`; inactive cells remain at zero electron temperature |
 
 HNEMD is not an ensemble keyword. Use a temperature-controlling ensemble with `compute_hnemd`; Nose-Hoover chain is recommended and Langevin is excluded for this purpose.
 
@@ -96,7 +96,7 @@ HNEMD is not an ensemble keyword. Use a temperature-controlling ensemble with `c
 | Wall piston | `ensemble wall_piston vp <vp> [thickness <thickness>]` | Piston velocity and optional wall thickness in Angstrom; thickness default 20 |
 | Mirror wall | `ensemble wall_mirror vp <vp>` | Moving reflecting-wall velocity |
 | Harmonic wall | `ensemble wall_harmonic vp <vp> [k <k>]` | Wall velocity and optional harmonic force constant in eV/Angstrom^2; `k` default 10 |
-| MSST | `ensemble msst <x|y|z> <shock_velocity> qmass <q> mu <mu> [tscale <v>] [p0 <p0>] [v0 <v0>] [e0 <e0>]` | Shock velocity is km/s; `qmass` and `mu` are required; `tscale` defaults to 0; omitted initial-state values are calculated on the first step |
+| MSST | `ensemble msst <x\|y\|z> <shock_velocity> qmass <q> mu <mu> [tscale <v>] [p0 <p0>] [v0 <v0>] [e0 <e0>]` | Shock velocity is km/s; `qmass` and `mu` are required; `tscale` defaults to 0; omitted initial-state values are calculated on the first step |
 | NPHug | `ensemble nphug <direction> <p_1> <p_2> [tperiod <tau_T>] [pperiod <tau_p>] [p0 <p0>] [v0 <v0>] [e0 <e0>]` | Target pressures are in GPa and should be equal; pressure period defaults to 1000; omitted initial-state values are calculated on the first step |
 
 The table records syntax and roles, not recommended settings. These methods require user-approved physical parameters and version-specific file schemas where auxiliary files are involved.

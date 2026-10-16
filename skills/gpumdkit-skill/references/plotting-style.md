@@ -41,7 +41,7 @@ Do not force an existing script from one family into the other. Match neighborin
 ### Saving
 
 - Preserve the existing flexible `save` argument position of each script; do not impose a global argument contract.
-- Preserve per-script display DPI and save DPI. Saved figures commonly use PNG at 300 DPI, sometimes with `bbox_inches='tight'`, but DPI unification is explicitly rejected.
+- Preserve existing scripts' display/save DPI. New plots use 150 DPI for display and at least 300 DPI for saved figures; Gallery examples use a separate 100 DPI export.
 - Keep the established output filename and capitalization for an existing command. For a new command, use a stable, descriptive filename tied to the plot type.
 - Interactive display remains the default where neighboring scripts behave that way; saving is opt-in through the routed command.
 

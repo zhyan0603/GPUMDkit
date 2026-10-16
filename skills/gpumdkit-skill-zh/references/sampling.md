@@ -130,7 +130,7 @@ python3 ${GPUMDkit_path}/Scripts/sample_structures/select_max_modev.py 200 0.15
 - `active.out`；
 - `active.xyz`。
 
-脚本先筛选力偏差高于 `min_deviation` 的结构，再按偏差从高到低排序，最多保留 `top_n` 个结构，并从 `active.xyz` 提取对应帧写入 `selected.xyz`。
+GPUMD 每次检查都会向 `active.out` 写一行，但只有超过 `active` 阈值时才向 `active.xyz` 追加一帧，因此两个文件的行号并不对应。脚本按 `active.xyz` 每帧自带的 `uncertainty=` 值排序；缺少该字段的帧按 `Time=` 依次与 `active.out` 对应。随后筛选偏差高于 `min_deviation` 的帧，按偏差从高到低最多保留 `top_n` 个写入 `selected.xyz`；没有符合条件的帧时不会写出文件。
 
 ### 训练集和测试集划分
 
@@ -177,22 +177,25 @@ gpumdkit.sh -frame_range dump.xyz 0 0.8
 ### 准备训练数据
 
 ```bash
-# 1. 对候选轨迹检查并筛除不合理结构
+# 1. 对候选轨迹检查并筛除不合理结构（阈值按体系确定）
 gpumdkit.sh -min_dist_pbc dump.xyz
-gpumdkit.sh -filter_dist_pbc dump.xyz 1.0
+gpumdkit.sh -filter_dist_pbc dump.xyz <min_distance>
 
 # 2. 使用 FPS 选取多样化结构
 gpumdkit.sh  # 选择 2 -> 203
 
-# 3. 经确认后加入训练集
-cat selected.xyz >> train.xyz
+# 3. 使用菜单 301 为 selected.xyz 准备 DFT 标注
+gpumdkit.sh  # 选择 3 -> 301
 ```
+
+按已确认的设置执行 DFT，转换结果并核验参考能量、力和 virial 标签后，再合并到训练集。
+MD 选出的结构是待标注候选，模型预测不能作为 DFT 参考标签。标注和数据集更新见 `workflows.md`。
 
 ### 主动学习数据筛选
 
 ```bash
 # 1. 从 active.out/active.xyz 中挑选高偏差结构
-python3 ${GPUMDkit_path}/Scripts/sample_structures/select_max_modev.py 100 0.1
+python3 ${GPUMDkit_path}/Scripts/sample_structures/select_max_modev.py <top_n> <min_deviation>
 
 # 2. 如需进一步提高多样性，再使用 NepTrain FPS
 python3 ${GPUMDkit_path}/Scripts/sample_structures/parallel_neptrain_select_structs.py active.xyz train.xyz nep.txt 4
@@ -201,10 +204,10 @@ python3 ${GPUMDkit_path}/Scripts/sample_structures/parallel_neptrain_select_stru
 ### 生成初始扰动结构
 
 ```bash
-python3 ${GPUMDkit_path}/Scripts/sample_structures/perturb_structure.py POSCAR 50 0.05 0.3 uniform
+python3 ${GPUMDkit_path}/Scripts/sample_structures/perturb_structure.py POSCAR <pert_num> <cell_pert> <atom_pert> <style>
 ```
 
-在进行 DFT 之前，应检查扰动结构的最小原子间距和晶胞是否合理。不得擅自采用示例中的扰动幅度作为正式参数。
+扰动数量和幅度需由用户确认。在进行 DFT 之前，应检查扰动结构的最小原子间距和晶胞是否合理。
 
 ### PyNEP 兼容入口
 
@@ -239,10 +242,10 @@ pip install neptrain
 2. 新流程优先使用 NepTrain；PyNEP 入口仅为兼容旧流程保留。
 3. 采样前先检查并筛除原子距离过短、晶胞异常等非物理结构。
 4. `-frame_range` 的参数是轨迹比例，不是帧编号。
-5. 本模块的采样输出均采用 extxyz 格式。
+5. 除扰动（204）输出 `POSCAR_*.vasp` 外，本模块的采样输出均为 extxyz 格式。
 6. 功能 206 选择的是测试集结构；所有未被选中的结构写入训练集。
 
 ## 用户教程
 
 需要面向用户的完整说明时，请参阅
-`${GPUMDkit_path}/docs/tutorials/en/structure_sampling.md` 或对应的中文教程。
+`${GPUMDkit_path}/docs/tutorials/zh/结构采样.md`。

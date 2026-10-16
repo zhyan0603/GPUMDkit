@@ -30,23 +30,37 @@ Use a clean directory or archive old `loss.out` before a new training run.
 | `nep.restart` | Optimization state updated at `output_interval` generations |
 | checkpointed `nep_*.txt`/restart | Periodic model/state files controlled by `save_potential` |
 
-Potential-model `loss.out` columns:
+From GPUMD 5.9, every run starts `loss.out` with `#` header lines:
 
 ```text
-gen L_t L_1 L_2 L_e_train L_f_train L_v_train L_e_test L_f_test L_v_test
+# format_version 1
+# output_interval 100
+# columns generation total L1 L2 rmse_energy_train ...
 ```
+
+A restarted run appends another header, so readers must skip comment lines and may meet several headers in one file.
+
+Potential-model columns:
+
+```text
+generation total L1 L2 rmse_energy_train rmse_force_train rmse_virial_train rmse_energy_test rmse_force_test rmse_virial_test
+```
+
+qNEP models (nonzero `charge_mode`) insert `rmse_charge_train rmse_bec_train` after the training virial column and `rmse_charge_test rmse_bec_test` after the test virial column. Charge RMSE is in e/atom and BEC RMSE in e. With `lambda_d`, the potential columns are followed by `rmse_ediff_train rmse_ediff_test` in eV of total energy; each is 0 when no combination of that kind exists.
 
 Dipole model:
 
 ```text
-gen L_t L_1 L_2 L_mu_train L_mu_test
+generation total L1 L2 rmse_dipole_train rmse_dipole_test
 ```
 
 Polarizability model:
 
 ```text
-gen L_t L_1 L_2 L_alpha_train L_alpha_test
+generation total L1 L2 rmse_polarizability_train rmse_polarizability_test
 ```
+
+Versions before 5.9 wrote no header and named the same columns `gen L_t L_1 L_2 L_e_train ...`; the column order is unchanged.
 
 Energy/virial RMSE values are documented per atom; force RMSE is eV/Angstrom. Interpret dipole/polarizability RMSE in the dataset's recorded units.
 
@@ -59,7 +73,7 @@ If `nep.restart` is present, optimization starts from it. Descriptor-related hyp
 | `energy_train.out`, `energy_test.out` | 2 columns: predicted then target energy, eV/atom |
 | `force_train.out`, `force_test.out` | 6 columns: predicted xyz then target xyz, eV/Angstrom; one row per atom |
 | `virial_train.out`, `virial_test.out` | 12 columns: predicted then target xx yy zz xy yz zx, eV/atom |
-| `stress_train.out`, `stress_test.out` | 12 columns: predicted then target xx yy zz xy yz zx, GPa |
+| `stress_train.out`, `stress_test.out` | 12 columns: predicted then target xx yy zz xy yz zx, GPa; computed as `virial / volume`, so positive means compressed, the opposite sign of the input `stress=` field |
 | `descriptor.out` | Normalized descriptors in prediction mode when requested |
 
 For structures without target virial/stress, the output target sentinel is `-1e6`. Exclude sentinel values explicitly and report the exclusion; do not treat them as physical labels.

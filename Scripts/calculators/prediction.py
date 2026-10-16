@@ -22,7 +22,7 @@ Output:
   stress_<input-stem>.out  Predicted and target stress, GPa
   virial_<input-stem>.out  Predicted and target virial, eV/atom
 Author:     Zihan YAN (yanzihan@westlake.edu.cn)
-Last-modified: 2026-08-28
+Last-modified: 2026-10-15
 =============================================================================
 """
 
@@ -183,7 +183,9 @@ def _target_stress_virial(atoms, frame_index):
             target_stress = virial_total / volume / GPa
 
     if raw_stress is not None:
-        stress_density = _as_nep_reduced6(raw_stress, "stress", frame_index)
+        # The extxyz stress= field is positive when stretched (as in ASE), the
+        # opposite of NEP's output convention; NEP reads it as -virial/volume.
+        stress_density = -_as_nep_reduced6(raw_stress, "stress", frame_index)
         target_stress = stress_density / GPa
         if raw_virial is None:
             target_virial = stress_density * volume / natoms

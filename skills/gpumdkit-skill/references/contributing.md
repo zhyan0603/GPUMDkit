@@ -8,7 +8,7 @@ Read this reference before changing GPUMDkit code, scripts, CLI routing, documen
 - Adding interactive and CLI features
 - Python and shell conventions
 - Update bookkeeping and version/date policy
-- Maintainer decisions and rejected changes
+- Maintenance boundaries
 - Validation checklist
 
 ## Project Structure
@@ -32,14 +32,19 @@ GPUMDkit/
 │   ├── calculators/
 │   ├── analyzer/
 │   ├── plt_scripts/
-│   └── utils/
+│   └── utils/               # Utilities, including completion.sh (CLI Tab completion)
 ├── skills/                  # AI agent skill definitions
 ├── docs/                    # Documentation
-│   ├── tutorials/en/        # English tutorials
-│   ├── tutorials/zh/        # Chinese tutorials
-│   ├── mkdocs.yml           # MkDocs config
+│   ├── tutorials/en/        # English tutorial sources (Markdown)
+│   ├── tutorials/zh/        # Chinese tutorial sources (Markdown)
+│   ├── htmls/               # Generated tutorial pages (do not edit by hand)
+│   ├── command_reference.tsv  # Bilingual command list
 │   ├── updates.info         # Latest feature and code/CLI bug-fix records only
-│   └── htmls/               # Generated HTML
+│   ├── index.html, gallery.html, publications.html, manual.html  # Standalone website
+│   ├── manual-src/          # manual.html sources; build.py renders manual.html and htmls/
+│   ├── assets/              # Website CSS, JavaScript, and images
+│   ├── stats.json           # Website headline numbers
+│   └── Gallery/             # Example plot images
 ```
 
 ## How Routing Works
@@ -96,7 +101,7 @@ echo " ---------------------------------------------------"
 ```
 
 Key conventions:
-- Banner uses `>-----<` and `| ... |` format (49 dashes inner, 53 chars total)
+- Banner uses `>-----<` and `| ... |` format (49 dashes, 52 characters including the leading space)
 - `echo " Input <...>"` describes parameters
 - `echo " Example: ..."` shows a concrete example
 - Use `read_menu_choice var || return 1` for single-value input, `read_menu_array arr || return 1` for array input
@@ -104,11 +109,11 @@ Key conventions:
 - `"${varname[@]}"` passes all arguments properly quoted
 - Function name format: `f<Category><Number>_<descriptive_name>`
 - **Script banner must name the EXACT filename** (not an abbreviation or wrong suffix)
-- All banners use uniform width: 49 dashes inner (lines 82-86 style). Inconsistent widths (51/52/53/56) should be normalized when touching a file.
+- Banner borders use 49 dashes; align all content rows with the border.
 
 ### Step 3: Register in `gpumdkit.sh`
 
-1. Add the choice number to `valid_menu_choices` (line ~64)
+1. Add the choice number to `valid_menu_choices` in `main()`
 2. Add the case in the `main()` function's nested case statement:
    ```bash
    "413") f413_new_feature ;;
@@ -166,8 +171,8 @@ echo "| -new_flag  Description of new flag           | -existing_flag    Descrip
 
 Edit `Scripts/utils/completion.sh`:
 
-1. Add `-new_flag` to the `opts` string (line 16)
-2. If it needs file completion, add it to the `|`-separated case (line 38):
+1. Add `-new_flag` to the `opts` string
+2. If it needs file completion, add it to the `|`-separated case that calls `compgen -f`:
    ```bash
    -out2xyz|-...|-new_flag)
        COMPREPLY=($(compgen -f -- "$cur")) ;;
@@ -297,17 +302,16 @@ When adding a new plot script, follow the plotting rules in
 command or compression step at 100 DPI so documentation assets stay small; do
 not lower the production plot settings to create the example.
 
-For the production script, use 150 DPI for the interactive `plt.show()` figure
-and a default `savefig()` DPI of at least 300. Add the plot usage and the
+For a new production script, use 150 DPI for the interactive `plt.show()` figure
+and a default `savefig()` DPI of at least 300. Preserve existing scripts' DPI
+unless a change is requested. Add the plot usage and the
 Gallery image to both bilingual tutorial sources and the corresponding
 submodule README (for example, `Scripts/plt_scripts/README.md`).
 
-Documentation changes are opt-in during iterative development. Unless the user
-explicitly asks for documentation updates, do not modify tutorials, submodule
-README files, Gallery assets, or generate `docs/htmls/**` while refining code.
-When documentation is explicitly requested, update the relevant English and
-Chinese tutorial sources and the corresponding submodule README for every new
-user-visible feature, then rebuild the generated HTML as part of validation.
+For every user-visible feature or behavior change, update the relevant English
+and Chinese tutorial sources and the corresponding submodule README in the same
+change, then run `python3 docs/manual-src/build.py` to rebuild `docs/htmls/**` as part of validation. Documentation-only
+synchronization is not recorded in `docs/updates.info`.
 
 ### Dependency notices
 
@@ -357,60 +361,12 @@ fi
 
 ### Interactive menu pattern
 
-```bash
-function f413_new_feature(){
-echo " >-------------------------------------------------<"
-echo " | Calling the script in Scripts/calculators       |"
-echo " | Script: calc_new_feature.py                     |"
-echo " | Developer: Your Name (your@email.com)           |"
-echo " >-------------------------------------------------<"
-echo " Input <param1> <param2>"
-echo " Example: input.xyz nep.txt"
-echo " ------------>>"
-read_menu_array feature_args || return 1   # EOF-safe; see project conventions
-echo " ---------------------------------------------------"
-python ${GPUMDkit_path}/Scripts/calculators/calc_new_feature.py "${feature_args[@]}"
-echo " Code path: ${GPUMDkit_path}/Scripts/calculators/calc_new_feature.py"
-echo " ---------------------------------------------------"
-}
-```
+Use the wrapper template in **Adding a New Interactive Mode Feature → Step 2**; the banner, prompt, and EOF-safe input rules are listed under **Project Conventions & Personal Preferences**.
 
 ### File structure for a new Python script
 
-Use `dp2xyz.py` or `traj2exyz.py` as reference. The import order pattern is:
+Use `dp2xyz.py` or `traj2exyz.py` as reference, together with the help-check pattern under **Argument parsing — the standard pattern**:
 
-```python
-import os
-import sys
-# heavy/optional imports come AFTER the help check
-
-args = sys.argv[1:]
-if len(args) < N or args[0] in ("-h", "--help"):
-    print(" Usage: gpumdkit.sh -flag <param1> <param2>")
-    print("    or: python3 script_name.py <param1> <param2>")
-    print("")
-    print(" Arguments:")
-    print("   param1    Description")
-    print("   param2    Description")
-    print("")
-    print(" Example: gpumdkit.sh -flag input.xyz output.xyz")
-    print("")
-    sys.exit(0 if args and args[0] in ("-h", "--help") else 1)
-
-import heavy_dependency  # only after help check
-from ase.io import write  # only after help check
-
-def helper_functions():
-    """Docstrings for all helper functions."""
-    ...
-
-if __name__ == "__main__":
-    input_file = args[0]
-    output_file = args[1] if len(args) == 2 else "default.xyz"
-    ...
-```
-
-Key rules:
 - Ordinary imports (`os`, `sys`, `numpy`) go before the help check
 - Heavy/optional imports (`dpdata`, `calorine`, `ovito`, `ase`) go **after** the help check so `-h` works even when optional packages are missing
 - All helper functions have docstrings
@@ -484,7 +440,7 @@ echo " >-------------------------------------------------<"
 ```
 
 - The script name in the banner **must be the exact filename** (e.g., `scf_batch_pretreatment_vasp.sh`, not `scf_batch_pretreatment.sh`)
-- Width: 49 dashes inner (53 chars total between `>` and `<`). Keep uniform across projects.
+- Width: 49 dashes; 52 characters including the leading space. Keep uniform across projects.
 
 ### The Prompt Arrow
 
@@ -495,23 +451,23 @@ User input follows the marker pattern: `echo " ------------>>"` before reading i
 Shell: `echo " Error: <message>."` — leading space, capital E, colon, period at end.
 Python: `print(" Error: <message>."); sys.exit(1)` — same format, always call sys.exit after.
 
-### What NOT to Propose or Do
+### Maintenance boundaries
 
-These changes have been **explicitly rejected** by the project maintainer. Do not suggest them.
+Preserve these conventions when maintaining existing scripts.
 
-| Rejected | Reason |
+| Avoid | Constraint |
 |---|---|
 | Retrofit `if __name__ == "__main__":` into existing Python scripts | Scripts run standalone; do not churn working scripts just to add a guard |
 | Replace `from pylab import *` with explicit imports | Keep as-is |
 | Unify `-plt` "save" argument position | Different scripts have different arg counts; keep flexible |
-| Apply plot DPI policy to new or modified plots | Use 150 DPI for `plt.show()`, at least 300 DPI for production `savefig()`, and 100 DPI only for separate Gallery examples |
+| Unify DPI across existing plots | Preserve each script's display/save DPI; new plots use 150 DPI for display and at least 300 DPI for saved figures |
 | Change `exit` → `return` in workflow sourced scripts | Keep as-is |
 | Add `-filter_value` / `-filter_range` / `-get_volume` / `-re_atoms` to the help table | Intentionally undocumented |
 | Make interactive mode loop back to menu after one function | Keeps shots single-shot; designed this way |
 | Add color/ANSI escape codes | User explicitly rejected; keep monochrome |
 | Add debug examples to every tutorial page | Unnecessary; keep tutorials lean |
 | Change MSD fitting range arbitrarily | Scientific choice; ask maintainer first |
-| Remove troubleshooting pages | Removed by maintainer's explicit request; do not re-add |
+| Add standalone troubleshooting pages | Keep troubleshooting guidance within the relevant module |
 | Add `des_compare` to CLI | Script exists but maintainer chose not to wire it |
 | Keep `__pycache__` after debugging | Prefer a non-writing syntax check; if a cache is created, remove the exact recorded cache path before handoff |
 | Add `-get_volume` / `-re_atoms` to completion.sh | Intentionally excluded from completion and help table |
@@ -535,11 +491,10 @@ python3 Scripts/path/to/script.py        # missing args must print usage + exit 
 
 ### Specific Design Decisions
 
-- **calc_ion_conductivity.py**: MSD fitting range is 40%-80% of data (lines 107-108). The Arrhenius plotting scripts use the same range. Do not change without maintainer approval.
+- **calc_ion_conductivity.py**: MSD fitting range is 40%-80% of data. The Arrhenius plotting scripts use the same range. Do not change without maintainer approval.
 - **clean_extra_files.sh**: Keep-substring deletion uses **whole-word matching**, NOT substring removal. Do not regress to `${var/pattern/}` substring removal (it corrupts filenames sharing substrings).
-- **troubleshooting.md**: Only 5 FAQ items. Do not expand without asking.
-- **select_max_modev.py line 111**: The index mapping `atoms_list[filtered_indices[i]]` was recently fixed from a bug (`atoms_list[i]`). Do not undo.
-- **charge_balance_check.py lines 118-131**: Now uses manual loop instead of `dict()` to handle 3-tuple error returns. Do not revert to `dict()`.
+- **select_max_modev.py**: `active.xyz` holds only frames above the GPUMD `active` threshold, so its frame numbers do not match `active.out` lines. Rank frames by their own `uncertainty=` value and fall back to matching `Time=` against `active.out`; never index `active.xyz` by `active.out` line numbers.
+- **charge_balance_check.py**: Handle both charge results and three-item error returns from the lookup.
 
 ---
 
@@ -573,8 +528,8 @@ python3 -B -c 'from pathlib import Path; p=Path("Scripts/path/to/your_script.py"
 # If another test creates a cache, remove only its recorded explicit path
 # rm -rf /exact/path/to/the/test-created/__pycache__
 
-# MkDocs build (only when MkDocs inputs changed; see below)
-mkdocs build -f docs/mkdocs.yml
+# Rebuild the manual and tutorial pages (only when their inputs changed; see below)
+python3 docs/manual-src/build.py
 
 # Whitespace check (always)
 git diff --check
@@ -604,27 +559,36 @@ coverage changes, update the matching file under
   links between both trees. Search for untranslated prose and awkward literal
   translations before considering the update complete.
 
-### When to Build MkDocs
+### When to Rebuild the Manual and Tutorial Pages
 
-Run `mkdocs build -f docs/mkdocs.yml` only when the user has explicitly requested
-documentation updates and a change affects input consumed by MkDocs, including:
+`docs/manual.html` and the tutorial pages under `docs/htmls/**` are generated by
+`python3 docs/manual-src/build.py` (it needs the `markdown` and `pymdown-extensions`
+packages). Run it whenever a change touches its inputs:
 
-- `docs/tutorials/**`
-- `docs/mkdocs.yml`
-- MkDocs theme overrides, plugins, templates, or assets referenced by that config
+- `docs/tutorials/**` (the Markdown tutorials, rendered to `docs/htmls/{en,zh}/`)
+- `docs/manual-src/**` (the manual's layout, hero, chapters and annotated screenshots)
 
-Do **not** run MkDocs merely because another file under `docs/` changed. The
-standalone website files below are not MkDocs inputs and should be validated
-directly instead:
+The script also regenerates `docs/htmls/index.html`, `docs/assets/js/gk-docs.js` and
+`docs/sitemap.xml`. Tutorial file names are part of the public URLs
+(`https://gpumdkit.cn/htmls/{en,zh}/<file>.html`); do not rename a tutorial file
+without keeping the old address working. Never edit the generated files by hand:
+change the Markdown or `docs/manual-src` and rebuild. Do not run the build merely
+because an unrelated file under `docs/` changed.
 
-- `docs/index.html`, `docs/index_zh.html`, `docs/gallery.html`, and
-  `docs/publications.html`
-- `docs/css/**`, `docs/js/**`, `docs/Gallery/**`
-- standalone JSON/data files such as `docs/gallery.json` and
-  `docs/publications.json`
-- generated output under `docs/htmls/**`
+Other standalone website files are edited directly and validated on their own:
+
+- `docs/index.html`, `docs/gallery.html`, `docs/publications.html`
+  (`docs/index_zh.html` only redirects to the Chinese view of `index.html`)
+- `docs/assets/**` (site CSS, JavaScript, and images; `gk-docs.js` is generated) and `docs/Gallery/**`
+- standalone JSON/data files: `docs/gallery.json`, `docs/publications.json`,
+  and `docs/stats.json`
 
 For standalone-site changes, use checks appropriate to the edited file, such as
 HTML parsing, JavaScript syntax checks, `git diff --check`, and a focused local
-browser smoke test when layout or interaction changed. Do not edit generated
-`docs/htmls/**` files manually; update the corresponding MkDocs source and rebuild.
+browser smoke test when layout or interaction changed. After a rebuild, also check
+that every local link and image in the generated pages resolves.
+
+The website's headline numbers (interactive tools, command-line options, plot
+types, Python scripts, contributors) live only in `docs/stats.json`. Update it
+when a change alters one of these counts, for example a new plot type. The
+publication count is computed from `docs/publications.json`.

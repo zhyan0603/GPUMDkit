@@ -2,26 +2,174 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
     <url>
          <loc>https://gpumdkit.cn/</loc>
-         <lastmod>2026-09-14</lastmod>
+         <lastmod>2026-10-15</lastmod>
     </url>
     <url>
          <loc>https://gpumdkit.cn/index_zh.html</loc>
-         <lastmod>2026-09-14</lastmod>
+         <lastmod>2026-10-15</lastmod>
     </url>
     <url>
          <loc>https://gpumdkit.cn/gallery.html</loc>
-         <lastmod>2026-09-14</lastmod>
+         <lastmod>2026-10-15</lastmod>
     </url>
     <url>
          <loc>https://gpumdkit.cn/publications.html</loc>
-         <lastmod>2026-09-14</lastmod>
+         <lastmod>2026-10-15</lastmod>
     </url>
     <url>
-         <loc>https://gpumdkit.cn/htmls/en/</loc>
-         <lastmod>2026-09-14</lastmod>
+         <loc>https://gpumdkit.cn/manual.html</loc>
+         <lastmod>2026-10-15</lastmod>
     </url>
     <url>
-         <loc>https://gpumdkit.cn/htmls/zh/</loc>
-         <lastmod>2026-09-14</lastmod>
+         <loc>https://gpumdkit.cn/htmls/en/index.html</loc>
+         <lastmod>2026-10-15</lastmod>
+    </url>
+    <url>
+         <loc>https://gpumdkit.cn/htmls/en/quick_start.html</loc>
+         <lastmod>2026-10-15</lastmod>
+    </url>
+    <url>
+         <loc>https://gpumdkit.cn/htmls/en/remote_web_console.html</loc>
+         <lastmod>2026-10-15</lastmod>
+    </url>
+    <url>
+         <loc>https://gpumdkit.cn/htmls/en/simulation_and_postprocessing.html</loc>
+         <lastmod>2026-10-15</lastmod>
+    </url>
+    <url>
+         <loc>https://gpumdkit.cn/htmls/en/format_conversion.html</loc>
+         <lastmod>2026-10-15</lastmod>
+    </url>
+    <url>
+         <loc>https://gpumdkit.cn/htmls/en/structure_sampling.html</loc>
+         <lastmod>2026-10-15</lastmod>
+    </url>
+    <url>
+         <loc>https://gpumdkit.cn/htmls/en/workflow_scripts.html</loc>
+         <lastmod>2026-10-15</lastmod>
+    </url>
+    <url>
+         <loc>https://gpumdkit.cn/htmls/en/calculator_scripts.html</loc>
+         <lastmod>2026-10-15</lastmod>
+    </url>
+    <url>
+         <loc>https://gpumdkit.cn/htmls/en/analyzer_scripts.html</loc>
+         <lastmod>2026-10-15</lastmod>
+    </url>
+    <url>
+         <loc>https://gpumdkit.cn/htmls/en/plot_scripts.html</loc>
+         <lastmod>2026-10-15</lastmod>
+    </url>
+    <url>
+         <loc>https://gpumdkit.cn/htmls/en/plot_nep.html</loc>
+         <lastmod>2026-10-15</lastmod>
+    </url>
+    <url>
+         <loc>https://gpumdkit.cn/htmls/en/plot_md_structure.html</loc>
+         <lastmod>2026-10-15</lastmod>
+    </url>
+    <url>
+         <loc>https://gpumdkit.cn/htmls/en/plot_diffusion.html</loc>
+         <lastmod>2026-10-15</lastmod>
+    </url>
+    <url>
+         <loc>https://gpumdkit.cn/htmls/en/plot_heat_phonon.html</loc>
+         <lastmod>2026-10-15</lastmod>
+    </url>
+    <url>
+         <loc>https://gpumdkit.cn/htmls/en/polar_material_analysis.html</loc>
+         <lastmod>2026-10-15</lastmod>
+    </url>
+    <url>
+         <loc>https://gpumdkit.cn/htmls/en/active_learning_workflow.html</loc>
+         <lastmod>2026-10-15</lastmod>
+    </url>
+    <url>
+         <loc>https://gpumdkit.cn/htmls/en/custom_commands.html</loc>
+         <lastmod>2026-10-15</lastmod>
+    </url>
+    <url>
+         <loc>https://gpumdkit.cn/htmls/en/command_reference.html</loc>
+         <lastmod>2026-10-15</lastmod>
+    </url>
+    <url>
+         <loc>https://gpumdkit.cn/htmls/en/contributing_to_gpumdkit.html</loc>
+         <lastmod>2026-10-15</lastmod>
+    </url>
+    <url>
+         <loc>https://gpumdkit.cn/htmls/zh/index.html</loc>
+         <lastmod>2026-10-15</lastmod>
+    </url>
+    <url>
+         <loc>https://gpumdkit.cn/htmls/zh/快速入门.html</loc>
+         <lastmod>2026-10-15</lastmod>
+    </url>
+    <url>
+         <loc>https://gpumdkit.cn/htmls/zh/远程网页控制台.html</loc>
+         <lastmod>2026-10-15</lastmod>
+    </url>
+    <url>
+         <loc>https://gpumdkit.cn/htmls/zh/模拟与后处理.html</loc>
+         <lastmod>2026-10-15</lastmod>
+    </url>
+    <url>
+         <loc>https://gpumdkit.cn/htmls/zh/格式转换.html</loc>
+         <lastmod>2026-10-15</lastmod>
+    </url>
+    <url>
+         <loc>https://gpumdkit.cn/htmls/zh/结构采样.html</loc>
+         <lastmod>2026-10-15</lastmod>
+    </url>
+    <url>
+         <loc>https://gpumdkit.cn/htmls/zh/工作流脚本.html</loc>
+         <lastmod>2026-10-15</lastmod>
+    </url>
+    <url>
+         <loc>https://gpumdkit.cn/htmls/zh/计算器脚本.html</loc>
+         <lastmod>2026-10-15</lastmod>
+    </url>
+    <url>
+         <loc>https://gpumdkit.cn/htmls/zh/分析工具.html</loc>
+         <lastmod>2026-10-15</lastmod>
+    </url>
+    <url>
+         <loc>https://gpumdkit.cn/htmls/zh/绘图脚本.html</loc>
+         <lastmod>2026-10-15</lastmod>
+    </url>
+    <url>
+         <loc>https://gpumdkit.cn/htmls/zh/NEP训练绘图.html</loc>
+         <lastmod>2026-10-15</lastmod>
+    </url>
+    <url>
+         <loc>https://gpumdkit.cn/htmls/zh/MD与结构绘图.html</loc>
+         <lastmod>2026-10-15</lastmod>
+    </url>
+    <url>
+         <loc>https://gpumdkit.cn/htmls/zh/扩散绘图.html</loc>
+         <lastmod>2026-10-15</lastmod>
+    </url>
+    <url>
+         <loc>https://gpumdkit.cn/htmls/zh/热输运与声子绘图.html</loc>
+         <lastmod>2026-10-15</lastmod>
+    </url>
+    <url>
+         <loc>https://gpumdkit.cn/htmls/zh/极性材料分析.html</loc>
+         <lastmod>2026-10-15</lastmod>
+    </url>
+    <url>
+         <loc>https://gpumdkit.cn/htmls/zh/主动学习工作流.html</loc>
+         <lastmod>2026-10-15</lastmod>
+    </url>
+    <url>
+         <loc>https://gpumdkit.cn/htmls/zh/自定义命令.html</loc>
+         <lastmod>2026-10-15</lastmod>
+    </url>
+    <url>
+         <loc>https://gpumdkit.cn/htmls/zh/命令参考.html</loc>
+         <lastmod>2026-10-15</lastmod>
+    </url>
+    <url>
+         <loc>https://gpumdkit.cn/htmls/zh/贡献指南.html</loc>
+         <lastmod>2026-10-15</lastmod>
     </url>
 </urlset>

@@ -234,8 +234,8 @@ of the MSD series.
 gpumdkit.sh -plt thermo
 # 2. Plot thermal conductivity
 gpumdkit.sh -plt emd x
-# 3. Or NEMD/HNEMD
-gpumdkit.sh -plt nemd 10 1 60 save
+# 3. Or NEMD/HNEMD (length, scale factor, and cutoff frequency come from the user's setup)
+gpumdkit.sh -plt nemd <real_length> <scale_eff_size> <cutoff_freq> --save
 ```
 
 ## Output Files

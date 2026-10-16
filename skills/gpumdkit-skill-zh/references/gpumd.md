@@ -67,9 +67,16 @@ frame_dt_fs = dump_interval_steps * time_step_fs
 
 ## 已知版本敏感点
 
-- 本快照遵循 GPUMD 5.8.1 的输出语法。在生成或翻译 `run.in` 之前，先确认用户使用的 GPUMD 版本。GPUMD 5.7 及更高版本的原子级输出只使用 `dump_xyz`；已删除的 5.7 之前关键字集中记录在 `gpumd-outputs.md` 的迁移说明中。
+- 本快照遵循 GPUMD 5.9.1。在生成或翻译 `run.in` 之前，先确认用户使用的 GPUMD 版本。GPUMD 5.7 及更高版本的原子级输出只使用 `dump_xyz`；已删除的 5.7 之前关键字集中记录在 `gpumd-outputs.md` 的迁移说明中。
 - 当前 `dump_xyz` 以 `<interval> <filename>` 开头，之后可接 `group <grouping_method> <group_id>`、`precision` 和属性关键字。不要使用过时的 positional 分组格式。
+- 从 GPUMD 5.9 起 `compute_dos` 和 `compute_sdc` 可以在同一运行中使用；更早的版本会拒绝这一组合。
 - `compute_phonon` 当前仅接受 `<displacement>` 并需要 `kpoints.in`；较旧的指南可能显示 cutoff 参数。
 - HNEMD 需要温度控制；使用 Nose-Hoover 链，不要为此目的使用 Langevin。
 - `compute_hac` 属于 EMD 正式采样阶段；它不是用于先前 `compute ... jp jk` 数据的单步后处理命令。
 - 许多关键字只在当前 `run` 段生效，不会自动延续。除非对应参考条目明确说明，否则应在每个 `run` 段重新给出系综、计算、dump、约束、形变和外场驱动命令。
+
+## 来源与版本范围
+
+- [GPUMD v5.9.1 源码](https://github.com/brucefan1983/GPUMD/tree/v5.9.1) 提供固定 release 参考。
+- [官方参数手册](https://gpumd.org/dev/gpumd/input_parameters/index.html) 包含开发版更新；使用前按可执行文件的 release 或 commit 核验关键字。
+- 记录可执行文件路径和构建 revision；程序显示的版本不一定区分补丁版本。

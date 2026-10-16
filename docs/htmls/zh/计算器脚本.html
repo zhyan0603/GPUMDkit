@@ -1,1668 +1,100 @@
+<!DOCTYPE html>
+<html lang="zh-CN" data-theme="light">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>计算器脚本 — GPUMDkit</title>
+  <meta name="description" content="计算器模块用于从 MD 轨迹、NEP 模型和结构文件中计算材料性质。">
+  <meta property="og:title" content="GPUMDkit — A User-friendly Toolkit for GPUMD and NEP">
+  <meta property="og:description" content="Format conversion, sampling, workflows, analysis and plotting for GPUMD and NEP, in one command.">
+  <meta property="og:image" content="https://gpumdkit.cn/Gallery/gpumdkit_logo_lateral.png">
+  <meta property="og:url" content="https://gpumdkit.cn/">
+  <meta name="twitter:card" content="summary_large_image">
+  <link rel="canonical" href="https://gpumdkit.cn/htmls/zh/计算器脚本.html">
+  <link rel="icon" href="../../Gallery/gpumdkit_logo.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <!-- web fonts load without blocking rendering; system fonts are used if they are unreachable -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
+  <noscript><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet"></noscript>
+  <link rel="stylesheet" href="../../assets/css/gk.css">
+  <link rel="stylesheet" href="../../assets/css/gk-manual.css">
+  <script>
+    /* mark JS as available (reveal animations are only armed then) and apply the saved theme before first paint */
+    document.documentElement.classList.add("js"); try { localStorage.setItem("gk-lang", "zh"); } catch (e) {}
+    try { var t = localStorage.getItem("gk-theme"); if (t) document.documentElement.setAttribute("data-theme", t); } catch (e) {}
+  </script>
+</head>
+<body data-page="doc" data-root="../../" data-lang="zh" data-alt="../en/calculator_scripts.html">
 
-<!doctype html>
-<html lang="en" class="no-js">
-  <head>
-    
-      <meta charset="utf-8">
-      <meta name="viewport" content="width=device-width,initial-scale=1">
-      
-        <meta name="description" content="Tutorials for GPUMDkit.">
-      
-      
-        <meta name="author" content="Zihan YAN">
-      
-      
-        <link rel="canonical" href="https://gpumdkit.cn/htmls/zh/%E8%AE%A1%E7%AE%97%E5%99%A8%E8%84%9A%E6%9C%AC.html">
-      
-      
-        <link rel="prev" href="%E5%B7%A5%E4%BD%9C%E6%B5%81%E8%84%9A%E6%9C%AC.html">
-      
-      
-        <link rel="next" href="%E5%88%86%E6%9E%90%E5%B7%A5%E5%85%B7.html">
-      
-      
-        
-      
-      
-      <link rel="icon" href="../assets/images/favicon.png">
-      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.6">
-    
-    
-      
-        <title>计算器脚本 - GPUMDkit Tutorial</title>
-      
-    
-    
-      <link rel="stylesheet" href="../assets/stylesheets/main.484c7ddc.min.css">
-      
-        
-        <link rel="stylesheet" href="../assets/stylesheets/palette.ab4e12ef.min.css">
-      
-      
-  
-  
-    
-      
-      
-    
-  
-    
-      
-      
-    
-  
-    
-      
-      
-    
-  
-    
-      
-      
-    
-  
-    
-      
-      
-    
-  
-    
-      
-      
-    
-  
-    
-      
-      
-    
-  
-    
-      
-      
-    
-  
-    
-      
-      
-    
-  
-    
-      
-      
-    
-  
-    
-      
-      
-    
-  
-    
-      
-      
-    
-  
-  
-  <style>:root{--md-admonition-icon--note:url('data:image/svg+xml;charset=utf-8,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20viewBox%3D%220%200%2016%2016%22%3E%3Cpath%20d%3D%22M1%207.775V2.75C1%201.784%201.784%201%202.75%201h5.025c.464%200%20.91.184%201.238.513l6.25%206.25a1.75%201.75%200%200%201%200%202.474l-5.026%205.026a1.75%201.75%200%200%201-2.474%200l-6.25-6.25A1.75%201.75%200%200%201%201%207.775m1.5%200c0%20.066.026.13.073.177l6.25%206.25a.25.25%200%200%200%20.354%200l5.025-5.025a.25.25%200%200%200%200-.354l-6.25-6.25a.25.25%200%200%200-.177-.073H2.75a.25.25%200%200%200-.25.25ZM6%205a1%201%200%201%201%200%202%201%201%200%200%201%200-2%22/%3E%3C/svg%3E');--md-admonition-icon--abstract:url('data:image/svg+xml;charset=utf-8,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20viewBox%3D%220%200%2016%2016%22%3E%3Cpath%20d%3D%22M2.5%201.75v11.5c0%20.138.112.25.25.25h3.17a.75.75%200%200%201%200%201.5H2.75A1.75%201.75%200%200%201%201%2013.25V1.75C1%20.784%201.784%200%202.75%200h8.5C12.216%200%2013%20.784%2013%201.75v7.736a.75.75%200%200%201-1.5%200V1.75a.25.25%200%200%200-.25-.25h-8.5a.25.25%200%200%200-.25.25m13.274%209.537zl-4.557%204.45a.75.75%200%200%201-1.055-.008l-1.943-1.95a.75.75%200%200%201%201.062-1.058l1.419%201.425%204.026-3.932a.75.75%200%201%201%201.048%201.074M4.75%204h4.5a.75.75%200%200%201%200%201.5h-4.5a.75.75%200%200%201%200-1.5M4%207.75A.75.75%200%200%201%204.75%207h2a.75.75%200%200%201%200%201.5h-2A.75.75%200%200%201%204%207.75%22/%3E%3C/svg%3E');--md-admonition-icon--info:url('data:image/svg+xml;charset=utf-8,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20viewBox%3D%220%200%2016%2016%22%3E%3Cpath%20d%3D%22M0%208a8%208%200%201%201%2016%200A8%208%200%200%201%200%208m8-6.5a6.5%206.5%200%201%200%200%2013%206.5%206.5%200%200%200%200-13M6.5%207.75A.75.75%200%200%201%207.25%207h1a.75.75%200%200%201%20.75.75v2.75h.25a.75.75%200%200%201%200%201.5h-2a.75.75%200%200%201%200-1.5h.25v-2h-.25a.75.75%200%200%201-.75-.75M8%206a1%201%200%201%201%200-2%201%201%200%200%201%200%202%22/%3E%3C/svg%3E');--md-admonition-icon--tip:url('data:image/svg+xml;charset=utf-8,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20viewBox%3D%220%200%2016%2016%22%3E%3Cpath%20d%3D%22M3.499.75a.75.75%200%200%201%201.5%200v.996C5.9%202.903%206.793%203.65%207.662%204.376l.24.202c-.036-.694.055-1.422.426-2.163C9.1.873%2010.794-.045%2012.622.26%2014.408.558%2016%201.94%2016%204.25c0%201.278-.954%202.575-2.44%202.734l.146.508.065.22c.203.701.412%201.455.476%202.226.142%201.707-.4%203.03-1.487%203.898C11.714%2014.671%2010.27%2015%208.75%2015h-6a.75.75%200%200%201%200-1.5h1.376a4.5%204.5%200%200%201-.563-1.191%203.84%203.84%200%200%201-.05-2.063%204.65%204.65%200%200%201-2.025-.293.75.75%200%200%201%20.525-1.406c1.357.507%202.376-.006%202.698-.318l.009-.01a.747.747%200%200%201%201.06%200%20.75.75%200%200%201-.012%201.074c-.912.92-.992%201.835-.768%202.586.221.74.745%201.337%201.196%201.621H8.75c1.343%200%202.398-.296%203.074-.836.635-.507%201.036-1.31.928-2.602-.05-.603-.216-1.224-.422-1.93l-.064-.221c-.12-.407-.246-.84-.353-1.29a2.4%202.4%200%200%201-.507-.441%203.1%203.1%200%200%201-.633-1.248.75.75%200%200%201%201.455-.364c.046.185.144.436.31.627.146.168.353.305.712.305.738%200%201.25-.615%201.25-1.25%200-1.47-.95-2.315-2.123-2.51-1.172-.196-2.227.387-2.706%201.345-.46.92-.27%201.774.019%203.062l.042.19.01.05c.348.443.666.949.94%201.553a.75.75%200%201%201-1.365.62c-.553-1.217-1.32-1.94-2.3-2.768L6.7%205.527c-.814-.68-1.75-1.462-2.692-2.619a3.7%203.7%200%200%200-1.023.88c-.406.495-.663%201.036-.722%201.508.116.122.306.21.591.239.388.038.797-.06%201.032-.19a.75.75%200%200%201%20.728%201.31c-.515.287-1.23.439-1.906.373-.682-.067-1.473-.38-1.879-1.193L.75%205.677V5.5c0-.984.48-1.94%201.077-2.664.46-.559%201.05-1.055%201.673-1.353z%22/%3E%3C/svg%3E');--md-admonition-icon--success:url('data:image/svg+xml;charset=utf-8,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20viewBox%3D%220%200%2016%2016%22%3E%3Cpath%20d%3D%22M13.78%204.22a.75.75%200%200%201%200%201.06l-7.25%207.25a.75.75%200%200%201-1.06%200L2.22%209.28a.75.75%200%200%201%20.018-1.042.75.75%200%200%201%201.042-.018L6%2010.94l6.72-6.72a.75.75%200%200%201%201.06%200%22/%3E%3C/svg%3E');--md-admonition-icon--question:url('data:image/svg+xml;charset=utf-8,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20viewBox%3D%220%200%2016%2016%22%3E%3Cpath%20d%3D%22M0%208a8%208%200%201%201%2016%200A8%208%200%200%201%200%208m8-6.5a6.5%206.5%200%201%200%200%2013%206.5%206.5%200%200%200%200-13M6.92%206.085h.001a.749.749%200%201%201-1.342-.67c.169-.339.436-.701.849-.977C6.845%204.16%207.369%204%208%204a2.76%202.76%200%200%201%201.637.525c.503.377.863.965.863%201.725%200%20.448-.115.83-.329%201.15-.205.307-.47.513-.692.662-.109.072-.22.138-.313.195l-.006.004a6%206%200%200%200-.26.16%201%201%200%200%200-.276.245.75.75%200%200%201-1.248-.832c.184-.264.42-.489.692-.661q.154-.1.313-.195l.007-.004c.1-.061.182-.11.258-.161a1%201%200%200%200%20.277-.245C8.96%206.514%209%206.427%209%206.25a.61.61%200%200%200-.262-.525A1.27%201.27%200%200%200%208%205.5c-.369%200-.595.09-.74.187a1%201%200%200%200-.34.398M9%2011a1%201%200%201%201-2%200%201%201%200%200%201%202%200%22/%3E%3C/svg%3E');--md-admonition-icon--warning:url('data:image/svg+xml;charset=utf-8,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20viewBox%3D%220%200%2016%2016%22%3E%3Cpath%20d%3D%22M6.457%201.047c.659-1.234%202.427-1.234%203.086%200l6.082%2011.378A1.75%201.75%200%200%201%2014.082%2015H1.918a1.75%201.75%200%200%201-1.543-2.575Zm1.763.707a.25.25%200%200%200-.44%200L1.698%2013.132a.25.25%200%200%200%20.22.368h12.164a.25.25%200%200%200%20.22-.368Zm.53%203.996v2.5a.75.75%200%200%201-1.5%200v-2.5a.75.75%200%200%201%201.5%200M9%2011a1%201%200%201%201-2%200%201%201%200%200%201%202%200%22/%3E%3C/svg%3E');--md-admonition-icon--failure:url('data:image/svg+xml;charset=utf-8,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20viewBox%3D%220%200%2016%2016%22%3E%3Cpath%20d%3D%22M2.344%202.343za8%208%200%200%201%2011.314%2011.314A8.002%208.002%200%200%201%20.234%2010.089a8%208%200%200%201%202.11-7.746m1.06%2010.253a6.5%206.5%200%201%200%209.108-9.275%206.5%206.5%200%200%200-9.108%209.275M6.03%204.97%208%206.94l1.97-1.97a.749.749%200%200%201%201.275.326.75.75%200%200%201-.215.734L9.06%208l1.97%201.97a.749.749%200%200%201-.326%201.275.75.75%200%200%201-.734-.215L8%209.06l-1.97%201.97a.749.749%200%200%201-1.275-.326.75.75%200%200%201%20.215-.734L6.94%208%204.97%206.03a.75.75%200%200%201%20.018-1.042.75.75%200%200%201%201.042-.018%22/%3E%3C/svg%3E');--md-admonition-icon--danger:url('data:image/svg+xml;charset=utf-8,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20viewBox%3D%220%200%2016%2016%22%3E%3Cpath%20d%3D%22M9.504.43a1.516%201.516%200%200%201%202.437%201.713L10.415%205.5h2.123c1.57%200%202.346%201.909%201.22%203.004l-7.34%207.142a1.25%201.25%200%200%201-.871.354h-.302a1.25%201.25%200%200%201-1.157-1.723L5.633%2010.5H3.462c-1.57%200-2.346-1.909-1.22-3.004zm1.047%201.074L3.286%208.571A.25.25%200%200%200%203.462%209H6.75a.75.75%200%200%201%20.694%201.034l-1.713%204.188%206.982-6.793A.25.25%200%200%200%2012.538%207H9.25a.75.75%200%200%201-.683-1.06l2.008-4.418.003-.006-.004-.009-.006-.006-.008-.001q-.005%200-.009.004%22/%3E%3C/svg%3E');--md-admonition-icon--bug:url('data:image/svg+xml;charset=utf-8,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20viewBox%3D%220%200%2016%2016%22%3E%3Cpath%20d%3D%22M4.72.22a.75.75%200%200%201%201.06%200l1%20.999a3.5%203.5%200%200%201%202.441%200l.999-1a.748.748%200%200%201%201.265.332.75.75%200%200%201-.205.729l-.775.776c.616.63.995%201.493.995%202.444v.327q0%20.15-.025.292c.408.14.764.392%201.029.722l1.968-.787a.75.75%200%200%201%20.556%201.392L13%207.258V9h2.25a.75.75%200%200%201%200%201.5H13v.5q-.002.615-.141%201.186l2.17.868a.75.75%200%200%201-.557%201.392l-2.184-.873A5%205%200%200%201%208%2016a5%205%200%200%201-4.288-2.427l-2.183.873a.75.75%200%200%201-.558-1.392l2.17-.868A5%205%200%200%201%203%2011v-.5H.75a.75.75%200%200%201%200-1.5H3V7.258L.971%206.446a.75.75%200%200%201%20.558-1.392l1.967.787c.265-.33.62-.583%201.03-.722a1.7%201.7%200%200%201-.026-.292V4.5c0-.951.38-1.814.995-2.444L4.72%201.28a.75.75%200%200%201%200-1.06m.53%206.28a.75.75%200%200%200-.75.75V11a3.5%203.5%200%201%200%207%200V7.25a.75.75%200%200%200-.75-.75ZM6.173%205h3.654A.17.17%200%200%200%2010%204.827V4.5a2%202%200%201%200-4%200v.327c0%20.096.077.173.173.173%22/%3E%3C/svg%3E');--md-admonition-icon--example:url('data:image/svg+xml;charset=utf-8,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20viewBox%3D%220%200%2016%2016%22%3E%3Cpath%20d%3D%22M5%205.782V2.5h-.25a.75.75%200%200%201%200-1.5h6.5a.75.75%200%200%201%200%201.5H11v3.282l3.666%205.76C15.619%2013.04%2014.543%2015%2012.767%2015H3.233c-1.776%200-2.852-1.96-1.899-3.458Zm-2.4%206.565a.75.75%200%200%200%20.633%201.153h9.534a.75.75%200%200%200%20.633-1.153L12.225%2010.5h-8.45ZM9.5%202.5h-3V6c0%20.143-.04.283-.117.403L4.73%209h6.54L9.617%206.403A.75.75%200%200%201%209.5%206Z%22/%3E%3C/svg%3E');--md-admonition-icon--quote:url('data:image/svg+xml;charset=utf-8,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20viewBox%3D%220%200%2016%2016%22%3E%3Cpath%20d%3D%22M1.75%202.5h10.5a.75.75%200%200%201%200%201.5H1.75a.75.75%200%200%201%200-1.5m4%205h8.5a.75.75%200%200%201%200%201.5h-8.5a.75.75%200%200%201%200-1.5m0%205h8.5a.75.75%200%200%201%200%201.5h-8.5a.75.75%200%200%201%200-1.5M2.5%207.75v6a.75.75%200%200%201-1.5%200v-6a.75.75%200%200%201%201.5%200%22/%3E%3C/svg%3E');}</style>
+<!-- ======================================================= icon sprite -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <symbol id="i-logo" viewBox="0 0 100 100"><path d="M85.3 31.2A40 40 0 1 0 89.4 43" fill="none" stroke="#1867ae" stroke-width="9"/><text x="49" y="52" text-anchor="middle" dominant-baseline="central" font-family="Helvetica Neue,Helvetica,Arial,sans-serif" font-weight="800" font-size="52" fill="#1867ae">G</text><circle cx="87.4" cy="35.7" r="5" fill="#c18852"/></symbol>
+    <symbol id="i-copy" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="11" height="11" rx="2.5"/><path d="M5 15V6a2 2 0 0 1 2-2h9"/></symbol>
+    <symbol id="i-check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="m5 12.5 4.5 4.5L19 7.5"/></symbol>
+    <symbol id="i-search" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="m20 20-4-4"/></symbol>
+    <symbol id="i-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"><circle cx="12" cy="12" r="4.2"/><path d="M12 2.5v2M12 19.5v2M4.6 4.6 6 6M18 18l1.4 1.4M2.5 12h2M19.5 12h2M4.6 19.4 6 18M18 6l1.4-1.4"/></symbol>
+    <symbol id="i-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M20.5 14.2A8.5 8.5 0 0 1 9.8 3.5 8.5 8.5 0 1 0 20.5 14.2Z"/></symbol>
+    <symbol id="i-github" viewBox="0 0 16 16" fill="currentColor"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0 0 16 8c0-4.42-3.58-8-8-8z"/></symbol>
+    <symbol id="i-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></symbol>
+    <symbol id="i-out" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17 17 7M8 7h9v9"/></symbol>
+    <symbol id="i-star" viewBox="0 0 24 24" fill="currentColor"><path d="m12 2.8 2.8 5.8 6.4.9-4.6 4.5 1.1 6.3L12 17.3l-5.7 3 1.1-6.3-4.6-4.5 6.4-.9Z"/></symbol>
+    <symbol id="i-fork" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"><circle cx="6" cy="5" r="2.2"/><circle cx="18" cy="5" r="2.2"/><circle cx="12" cy="19" r="2.2"/><path d="M6 7.2v1.8a3 3 0 0 0 3 3h6a3 3 0 0 0 3-3V7.2M12 12v4.8"/></symbol>
+    <symbol id="i-menu" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 7h16M4 12h16M4 17h16"/></symbol>
+    <symbol id="i-close" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M6 6l12 12M18 6 6 18"/></symbol>
+    <symbol id="i-left" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m15 5-7 7 7 7"/></symbol>
+    <symbol id="i-right" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 5 7 7-7 7"/></symbol>
+    <symbol id="i-lock" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="5" y="11" width="14" height="9" rx="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></symbol>
+    <symbol id="i-conv" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M7 4 3 8l4 4"/><path d="M3 8h14"/><path d="m17 12 4 4-4 4"/><path d="M21 16H7"/></symbol>
+    <symbol id="i-samp" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="6" cy="7" r="1.6"/><circle cx="12.5" cy="5" r="1.6"/><circle cx="18" cy="9" r="1.6"/><circle cx="8" cy="15" r="1.6"/><circle cx="16" cy="17" r="1.6"/><circle cx="12" cy="11.5" r="6.8" stroke-dasharray="2 3"/></symbol>
+    <symbol id="i-flow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="2"/><rect x="14" y="14" width="7" height="7" rx="2"/><path d="M6.5 10v3.5a2 2 0 0 0 2 2H14"/></symbol>
+    <symbol id="i-calc" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="3" width="14" height="18" rx="2.5"/><path d="M8.5 7h7M8.5 11.5h.01M12 11.5h.01M15.5 11.5h.01M8.5 15h.01M12 15h.01M15.5 15h.01M8.5 18h.01M12 18h.01M15.5 18h.01"/></symbol>
+    <symbol id="i-anal" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="10.5" cy="10.5" r="6.5"/><path d="m20 20-4.8-4.8"/><path d="M7.5 12l2-2.5 2 1.5 2-3"/></symbol>
+    <symbol id="i-plot" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3v18h18"/><path d="m7 15 4-5 3 3 5-7"/></symbol>
+    <symbol id="i-term" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="16" rx="3"/><path d="m7 9 3 3-3 3M12.5 15H17"/></symbol>
+    <symbol id="i-doc" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"><path d="M6 3h8.5L19 7.5V21H6z"/><path d="M14 3v5h5M9 12.5h7M9 16.5h5" stroke-linecap="round"/></symbol>
+    <symbol id="i-chat" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20 15a2 2 0 0 1-2 2H8l-4 4V6a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2z"/><path d="M8.5 9.5h7M8.5 13h4.5"/></symbol>
+    <symbol id="i-shield" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3 5 6v6c0 4.4 3 7.6 7 9 4-1.4 7-4.6 7-9V6z"/><path d="m9 12 2 2 4-4"/></symbol>
+    <symbol id="i-globe" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c2.8 3 2.8 15 0 18M12 3c-2.8 3-2.8 15 0 18"/></symbol>
+    <symbol id="i-spark" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v4M12 17v4M3 12h4M17 12h4M6 6l2.5 2.5M15.5 15.5 18 18M6 18l2.5-2.5M15.5 8.5 18 6"/></symbol>
+    <symbol id="i-atom" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="1.8" fill="currentColor"/><ellipse cx="12" cy="12" rx="9" ry="3.6"/><ellipse cx="12" cy="12" rx="9" ry="3.6" transform="rotate(60 12 12)"/><ellipse cx="12" cy="12" rx="9" ry="3.6" transform="rotate(120 12 12)"/></symbol>
+    <symbol id="i-db" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><ellipse cx="12" cy="6" rx="7" ry="3"/><path d="M5 6v12c0 1.7 3.1 3 7 3s7-1.3 7-3V6M5 12c0 1.7 3.1 3 7 3s7-1.3 7-3"/></symbol>
+    <symbol id="i-brain" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="6" cy="7" r="2"/><circle cx="6" cy="17" r="2"/><circle cx="12" cy="12" r="2"/><circle cx="18" cy="7" r="2"/><circle cx="18" cy="17" r="2"/><path d="M8 7.8 10.3 11M8 16.2l2.3-3.2M13.7 11 16 7.8M13.7 13l2.3 3.2"/></symbol>
+    <symbol id="i-filter" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 5h16l-6 7.5V19l-4 2v-8.5z"/></symbol>
+    <symbol id="i-image" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="16" rx="3"/><circle cx="9" cy="10" r="2"/><path d="m21 16-5-5-9 9"/></symbol>
+  </defs>
+</svg>
 
+<div class="ambient" aria-hidden="true"><div class="orb a"></div><div class="orb b"></div><div class="orb c"></div><div class="noise"></div></div>
+<div class="progress" aria-hidden="true"></div>
 
-
-    
-    
-      
-    
-    
-      
-        
-        
-        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CJetBrains+Mono:400,400i,700,700i&display=fallback">
-        <style>:root{--md-text-font:"Roboto";--md-code-font:"JetBrains Mono"}</style>
-      
-    
-    
-    <script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
-    
-      
-
-    
-    
-  </head>
-  
-  
-    
-    
-    
-    
-    
-    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="#3498db" data-md-color-accent="light_blue">
-  
-    
-    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
-    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
-    <label class="md-overlay" for="__drawer"></label>
-    <div data-md-component="skip">
-      
-        
-        <a href="#_1" class="md-skip">
-          Skip to content
-        </a>
-      
-    </div>
-    <div data-md-component="announce">
-      
-    </div>
-    
-    
-      
-
-  
-
-<header class="md-header md-header--shadow" data-md-component="header">
-  <nav class="md-header__inner md-grid" aria-label="Header">
-    <a href="../index.html" title="GPUMDkit Tutorial" class="md-header__button md-logo" aria-label="GPUMDkit Tutorial" data-md-component="logo">
-      
-  
-  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
-
-    </a>
-    <label class="md-header__button md-icon" for="__drawer">
-      
-      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
-    </label>
-    <div class="md-header__title" data-md-component="header-title">
-      <div class="md-header__ellipsis">
-        <div class="md-header__topic">
-          <span class="md-ellipsis">
-            GPUMDkit Tutorial
-          </span>
-        </div>
-        <div class="md-header__topic" data-md-component="header-topic">
-          <span class="md-ellipsis">
-            
-              计算器脚本
-            
-          </span>
-        </div>
-      </div>
-    </div>
-    
-      
-    
-    
-    
-    
-      
-      
-        <label class="md-header__button md-icon" for="__search">
-          
-          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
-        </label>
-        <div class="md-search" data-md-component="search" role="dialog">
-  <label class="md-search__overlay" for="__search"></label>
-  <div class="md-search__inner" role="search">
-    <form class="md-search__form" name="search">
-      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
-      <label class="md-search__icon md-icon" for="__search">
-        
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
-        
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
-      </label>
-      <nav class="md-search__options" aria-label="Search">
-        
-        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
-          
-          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
-        </button>
-      </nav>
-      
-        <div class="md-search__suggest" data-md-component="search-suggest"></div>
-      
-    </form>
-    <div class="md-search__output">
-      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
-        <div class="md-search-result" data-md-component="search-result">
-          <div class="md-search-result__meta">
-            Initializing search
-          </div>
-          <ol class="md-search-result__list" role="presentation"></ol>
-        </div>
-      </div>
+<!-- ======================================================= navigation -->
+<header class="nav" id="nav">
+  <div class="container">
+    <a href="../../index.html" class="brand" aria-label="GPUMDkit home"><svg><use href="#i-logo"/></svg><span><span class="gpumd">GPUMD</span><span class="kit">kit</span></span></a>
+    <nav class="nav-links" id="nav-links">
+      <a href="../../index.html#features" data-i18n="nav.features">Features</a>
+      <a href="../../index.html#terminal" data-i18n="nav.terminal">Try it</a>
+      <a href="../../index.html#workflow" data-i18n="nav.workflow">Workflow</a>
+      <a href="../../gallery.html" data-i18n="nav.gallery">Gallery</a>
+      <a href="../../publications.html" data-i18n="nav.pubs">Publications</a>
+      <a href="../../manual.html" class="active" aria-current="page" data-i18n="nav.manual">Manual</a>
+    </nav>
+    <div class="nav-tools">
+      <button class="search-btn" data-palette aria-label="Search commands and docs"><svg><use href="#i-search"/></svg><span class="label" data-i18n="nav.search">Search commands…</span><kbd>⌘K</kbd></button>
+      <button class="icon-btn lang-btn" data-lang-toggle aria-label="Switch language">中文</button>
+      <button class="icon-btn" data-theme-toggle aria-label="Toggle dark mode"><svg class="theme-icon-light"><use href="#i-moon"/></svg><svg class="theme-icon-dark"><use href="#i-sun"/></svg></button>
+      <a class="icon-btn gh-btn" href="https://github.com/zhyan0603/GPUMDkit" target="_blank" rel="noopener" aria-label="GitHub"><svg><use href="#i-github"/></svg></a>
+      <button class="icon-btn menu-btn" id="menu-btn" aria-label="Menu"><svg><use href="#i-menu"/></svg></button>
     </div>
   </div>
-</div>
-      
-    
-    
-      <div class="md-header__source">
-        <a href="https://github.com/zhyan0603/GPUMDkit" title="Go to repository" class="md-source" data-md-component="source">
-  <div class="md-source__icon md-icon">
-    
-    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
-  </div>
-  <div class="md-source__repository">
-    zhyan0603/GPUMDkit
-  </div>
-</a>
-      </div>
-    
-  </nav>
-  
 </header>
-    
-    <div class="md-container" data-md-component="container">
-      
-      
-        
-          
-        
-      
-      <main class="md-main" data-md-component="main">
-        <div class="md-main__inner md-grid">
-          
-            
-              
-              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
-                <div class="md-sidebar__scrollwrap">
-                  <div class="md-sidebar__inner">
-                    
 
-
-
-<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
-  <label class="md-nav__title" for="__drawer">
-    <a href="../index.html" title="GPUMDkit Tutorial" class="md-nav__button md-logo" aria-label="GPUMDkit Tutorial" data-md-component="logo">
-      
-  
-  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
-
-    </a>
-    GPUMDkit Tutorial
-  </label>
-  
-    <div class="md-nav__source">
-      <a href="https://github.com/zhyan0603/GPUMDkit" title="Go to repository" class="md-source" data-md-component="source">
-  <div class="md-source__icon md-icon">
-    
-    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
-  </div>
-  <div class="md-source__repository">
-    zhyan0603/GPUMDkit
-  </div>
-</a>
-    </div>
-  
-  <ul class="md-nav__list" data-md-scrollfix>
-    
-      
-      
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../index.html" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Home
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-    
-      
-      
-  
-  
-  
-  
-    
-    
-    
-    
-    
-    <li class="md-nav__item md-nav__item--nested">
-      
-        
-        
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" >
-        
-          
-          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="0">
-            
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    English
-  
-
-    
-  </span>
-  
-  
-
-            <span class="md-nav__icon md-icon"></span>
-          </label>
-        
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
-          <label class="md-nav__title" for="__nav_2">
-            <span class="md-nav__icon md-icon"></span>
-            
-  
-    English
-  
-
-          </label>
-          <ul class="md-nav__list" data-md-scrollfix>
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../en/index.html" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    GPUMDkit Tutorials
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../en/quick_start.html" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Quick Start
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../en/simulation_and_postprocessing.html" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    GPUMDkit Agent Skill
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../en/command_reference.html" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Command Reference
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../en/remote_web_console.html" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Remote Web Console
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../en/format_conversion.html" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Format Conversion
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../en/structure_sampling.html" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Structure Sampling
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../en/workflow_scripts.html" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Workflow Scripts
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../en/calculator_scripts.html" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Calculator Scripts
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../en/analyzer_scripts.html" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Analyzer Scripts
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../en/plot_scripts.html" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Plot Scripts
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../en/custom_commands.html" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Custom Commands
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../en/active_learning_workflow.html" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Active Learning Workflow
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../en/polar_material_analysis.html" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Polar Material Analysis
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../en/contributing_to_gpumdkit.html" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Contributing to GPUMDkit
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-          </ul>
-        </nav>
-      
-    </li>
-  
-
-    
-      
-      
-  
-  
-    
-  
-  
-  
-    
-    
-    
-    
-    
-    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
-      
-        
-        
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" checked>
-        
-          
-          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="0">
-            
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    简体中文
-  
-
-    
-  </span>
-  
-  
-
-            <span class="md-nav__icon md-icon"></span>
-          </label>
-        
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="true">
-          <label class="md-nav__title" for="__nav_3">
-            <span class="md-nav__icon md-icon"></span>
-            
-  
-    简体中文
-  
-
-          </label>
-          <ul class="md-nav__list" data-md-scrollfix>
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="index.html" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    GPUMDkit 教程
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="%E5%BF%AB%E9%80%9F%E5%85%A5%E9%97%A8.html" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    快速入门
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="%E6%A8%A1%E6%8B%9F%E4%B8%8E%E5%90%8E%E5%A4%84%E7%90%86.html" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    GPUMDkit Agent Skill
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="%E5%91%BD%E4%BB%A4%E5%8F%82%E8%80%83.html" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    命令参考
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="%E8%BF%9C%E7%A8%8B%E7%BD%91%E9%A1%B5%E6%8E%A7%E5%88%B6%E5%8F%B0.html" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    远程 Web 控制台
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="%E6%A0%BC%E5%BC%8F%E8%BD%AC%E6%8D%A2.html" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    格式转换
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="%E7%BB%93%E6%9E%84%E9%87%87%E6%A0%B7.html" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    结构采样
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="%E5%B7%A5%E4%BD%9C%E6%B5%81%E8%84%9A%E6%9C%AC.html" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    工作流脚本
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-    
-  
-  
-  
-    <li class="md-nav__item md-nav__item--active">
-      
-      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
-      
-      
-      
-        <label class="md-nav__link md-nav__link--active" for="__toc">
-          
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    计算器脚本
-  
-
-    
-  </span>
-  
-  
-
-          <span class="md-nav__icon md-icon"></span>
-        </label>
-      
-      <a href="%E8%AE%A1%E7%AE%97%E5%99%A8%E8%84%9A%E6%9C%AC.html" class="md-nav__link md-nav__link--active">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    计算器脚本
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-      
-        
-
-<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
-  
-  
-  
-  
-    <label class="md-nav__title" for="__toc">
-      <span class="md-nav__icon md-icon"></span>
-      Table of contents
-    </label>
-    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
-      
-        <li class="md-nav__item">
-  <a href="#_1" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        功能概览
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#_2" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        离子电导率
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#msd" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        从轨迹计算 MSD
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#x-xrd" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        X 射线衍射（XRD）
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#_3" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        声子谱
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#nep" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        NEP 预测性质
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="NEP 预测性质">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#nep_1" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        NEP 预测输出文件
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#dpa" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        DPA 预测输出文件
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#nep_2" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        NEP 描述符
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#doas" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        DOAS
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#neb" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        NEB 和结构优化
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#ovito-rdf" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        使用 OVITO 计算 RDF
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#_4" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        铁电和极性材料工具
-      
-    </span>
-  </a>
-  
-</li>
-      
-    </ul>
-  
-</nav>
-      
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="%E5%88%86%E6%9E%90%E5%B7%A5%E5%85%B7.html" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    分析工具
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="%E7%BB%98%E5%9B%BE%E8%84%9A%E6%9C%AC.html" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    绘图脚本
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="%E8%87%AA%E5%AE%9A%E4%B9%89%E5%91%BD%E4%BB%A4.html" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    自定义命令
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="%E4%B8%BB%E5%8A%A8%E5%AD%A6%E4%B9%A0%E5%B7%A5%E4%BD%9C%E6%B5%81.html" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    主动学习工作流
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="%E6%9E%81%E6%80%A7%E6%9D%90%E6%96%99%E5%88%86%E6%9E%90.html" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    极性材料分析
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="%E8%B4%A1%E7%8C%AE%E6%8C%87%E5%8D%97.html" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    贡献指南
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-          </ul>
-        </nav>
-      
-    </li>
-  
-
-    
-  </ul>
-</nav>
-                  </div>
-                </div>
-              </div>
-            
-            
-              
-              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
-                <div class="md-sidebar__scrollwrap">
-                  <div class="md-sidebar__inner">
-                    
-
-<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
-  
-  
-  
-  
-    <label class="md-nav__title" for="__toc">
-      <span class="md-nav__icon md-icon"></span>
-      Table of contents
-    </label>
-    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
-      
-        <li class="md-nav__item">
-  <a href="#_1" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        功能概览
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#_2" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        离子电导率
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#msd" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        从轨迹计算 MSD
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#x-xrd" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        X 射线衍射（XRD）
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#_3" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        声子谱
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#nep" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        NEP 预测性质
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="NEP 预测性质">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#nep_1" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        NEP 预测输出文件
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#dpa" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        DPA 预测输出文件
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#nep_2" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        NEP 描述符
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#doas" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        DOAS
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#neb" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        NEB 和结构优化
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#ovito-rdf" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        使用 OVITO 计算 RDF
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#_4" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        铁电和极性材料工具
-      
-    </span>
-  </a>
-  
-</li>
-      
-    </ul>
-  
-</nav>
-                  </div>
-                </div>
-              </div>
-            
-          
-          
-            <div class="md-content" data-md-component="content">
-              
-              <article class="md-content__inner md-typeset">
-                
-                  
-
-
-  
-  
-
-
-<div align="center">
-  <h1>🧮 计算器脚本</h1>
-  <p style="text-align: justify;">计算器模块用于从 MD 轨迹、NEP 模型和结构文件中计算材料性质。</p>
-</div>
-
-<p><strong>脚本位置：</strong> <code>Scripts/calculators/</code></p>
-<h2 id="_1">功能概览</h2>
+<main>
+<section class="man-hero doc-hero"><div class="container"><div class="crumb"><a href="../../manual.html">手册</a><span>/</span><span>工具箱</span><span>/</span><span>计算器脚本</span></div><h1 class="h-section">计算器脚本</h1><p class="lead">计算器模块用于从 MD 轨迹、NEP 模型和结构文件中计算材料性质。</p></div></section>
+<div class="container man doc"><aside class="man-side" aria-label="Pages"><h6>开始</h6><a href="index.html" class=""><span>GPUMDkit 教程</span></a><a href="快速入门.html" class=""><span>快速入门</span></a><a href="远程网页控制台.html" class=""><span>远程网页控制台</span></a><a href="模拟与后处理.html" class=""><span>GPUMDkit Agent Skill</span></a><h6>工具箱</h6><a href="格式转换.html" class=""><span>格式转换</span></a><a href="结构采样.html" class=""><span>结构采样</span></a><a href="工作流脚本.html" class=""><span>工作流脚本</span></a><a href="计算器脚本.html" class="on"><span>计算器脚本</span></a><a href="分析工具.html" class=""><span>分析工具</span></a><a href="绘图脚本.html" class=""><span>绘图脚本</span></a><a href="NEP训练绘图.html" class="sub"><span>NEP 训练与模型分析</span></a><a href="MD与结构绘图.html" class="sub"><span>MD 与结构</span></a><a href="扩散绘图.html" class="sub"><span>扩散与离子输运</span></a><a href="热输运与声子绘图.html" class="sub"><span>热输运与声子</span></a><a href="极性材料分析.html" class=""><span>极性材料分析</span></a><h6>指南</h6><a href="主动学习工作流.html" class=""><span>主动学习工作流</span></a><a href="自定义命令.html" class=""><span>自定义命令</span></a><h6>参考</h6><a href="命令参考.html" class=""><span>命令参考</span></a><h6>贡献</h6><a href="贡献指南.html" class=""><span>为 GPUMDkit 贡献代码</span></a></aside><article class="man-body chap doc-body"><p><strong>脚本位置：</strong> <code>Scripts/calculators/</code></p>
+<h2 id="功能概览">功能概览</h2>
 <p>计算器模块大致可以分为四类：</p>
 <ul>
 <li><strong>轨迹性质：</strong> 从 GPUMD 或 extxyz 轨迹计算 MSD、离子电导率等时间相关性质，并从 extxyz 轨迹计算 X 射线衍射；</li>
@@ -1671,7 +103,7 @@
 <li><strong>极性材料分析：</strong> 为钙钛矿和极性材料构建近邻列表、计算局域位移、平均结构、八面体倾转和局域极化。</li>
 </ul>
 <p>如果你还不熟悉某个脚本，建议先用交互模式查看输入提示；如果已经知道参数，可以直接使用 <code>gpumdkit.sh -calc ...</code> 调用支持 CLI 的计算器。XRD 和声子计算均只保留交互模式。</p>
-<table>
+<div class="tbl-wrap"><table class="tbl">
 <thead>
 <tr>
 <th>任务</th>
@@ -1738,81 +170,105 @@
 <tr>
 <td>近邻列表</td>
 <td><code>gpumdkit.sh -calc nlist ...</code></td>
-<td>参见 <a href="%E6%9E%81%E6%80%A7%E6%9D%90%E6%96%99%E5%88%86%E6%9E%90.html">极性材料分析</a></td>
+<td>参见 <a href="极性材料分析.html">极性材料分析</a></td>
 </tr>
 <tr>
 <td>位移</td>
 <td><code>gpumdkit.sh -calc disp ...</code></td>
-<td>参见 <a href="%E6%9E%81%E6%80%A7%E6%9D%90%E6%96%99%E5%88%86%E6%9E%90.html">极性材料分析</a></td>
+<td>参见 <a href="极性材料分析.html">极性材料分析</a></td>
 </tr>
 <tr>
 <td>平均结构</td>
 <td><code>gpumdkit.sh -calc avg-struct ...</code></td>
-<td>参见 <a href="%E6%9E%81%E6%80%A7%E6%9D%90%E6%96%99%E5%88%86%E6%9E%90.html">极性材料分析</a></td>
+<td>参见 <a href="极性材料分析.html">极性材料分析</a></td>
 </tr>
 <tr>
 <td>八面体倾转</td>
 <td><code>gpumdkit.sh -calc oct-tilt ...</code></td>
-<td>参见 <a href="%E6%9E%81%E6%80%A7%E6%9D%90%E6%96%99%E5%88%86%E6%9E%90.html">极性材料分析</a></td>
+<td>参见 <a href="极性材料分析.html">极性材料分析</a></td>
 </tr>
 <tr>
 <td>ABO3 极化</td>
 <td><code>gpumdkit.sh -calc pol-abo3 ...</code></td>
-<td>参见 <a href="%E6%9E%81%E6%80%A7%E6%9D%90%E6%96%99%E5%88%86%E6%9E%90.html">极性材料分析</a></td>
+<td>参见 <a href="极性材料分析.html">极性材料分析</a></td>
 </tr>
 </tbody>
-</table>
-<p>查看完整帮助：</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>gpumdkit.sh<span class="w"> </span>-calc<span class="w"> </span>-h
-</code></pre></div>
-<p>命令行帮助表类似：</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>+-------------------------------------------------------------------------------------------------------+
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>|                                      CALCULATOR TOOLS                                                 |
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>+-------------------------------------------------------------------------------------------------------+
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>| Usage: gpumdkit.sh -calc &lt;type&gt; [args...]                                                             |
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>+-------------------------------------------------------------------------------------------------------+
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>| ionic-cond &lt;element&gt; &lt;charge&gt;                 Calculate ionic conductivity from MSD data              |
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>| nep &lt;input.xyz&gt; &lt;output.xyz&gt; &lt;nep_model&gt;      Calculate energy/force/virial with a NEP model          |
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>| des &lt;input.xyz&gt; &lt;output.npy&gt; &lt;nep_model&gt; &lt;el&gt; Calculate NEP descriptors for one element               |
-<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>| doas &lt;input.xyz&gt; &lt;nep_model&gt; &lt;output.txt&gt;     Calculate density of atomistic states                   |
-<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>| neb &lt;initial.xyz&gt; &lt;final.xyz&gt; &lt;n_images&gt; &lt;nep&gt; Run NEB calculation with a NEP model                   |
-<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>| minimize &lt;structure&gt; &lt;nep_model&gt; [fmax] [n]   Minimize a structure with a NEP model                   |
-<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>| msd &lt;trajectory.xyz&gt; &lt;element&gt; &lt;dt_fs&gt; [n]    Calculate MSD from an extxyz trajectory                 |
-<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>| nlist [script args...]                        Build neighbor lists                                    |
-<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>| disp [script args...]                         Calculate displacement from trajectory                  |
-<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>| avg-struct [script args...]                   Calculate averaged structure                            |
-<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>| oct-tilt [script args...]                     Calculate octahedral tilt                               |
-<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>| pol-abo3 [script args...]                     Calculate local polarization for ABO3                   |
-<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a>+-------------------------------------------------------------------------------------------------------+
-</code></pre></div>
-<p>交互模式中选择 <code>4) Calculators</code>，菜单如下：</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>+----------------------------------------------------------+
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>|                     CALCULATOR TOOLS                     |
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>+----------------------------------------------------------+
-<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>| 401) Calc ionic conductivity                             |
-<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>| 402) Calc properties by nep                              |
-<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>| 403) Calc descriptors of specific elements               |
-<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a>| 404) Calc density of atomistic states (DOAS)             |
-<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>| 405) Calc nudged elastic band (NEB) by nep               |
-<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a>| 406) Build neighbor list                                 |
-<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a>| 407) Calc displacement from trajectory                   |
-<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a>| 408) Calc averaged structure                             |
-<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a>| 409) Calc octahedral tilt                                |
-<a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a>| 410) Calc polarization for ABO3                          |
-<a id="__codelineno-2-14" name="__codelineno-2-14" href="#__codelineno-2-14"></a>| 411) Minimize structure by nep                           |
-<a id="__codelineno-2-15" name="__codelineno-2-15" href="#__codelineno-2-15"></a>| 412) Calc mean square displacement (MSD) from trajectory |
-<a id="__codelineno-2-16" name="__codelineno-2-16" href="#__codelineno-2-16"></a>| 413) Calc XRD from extxyz trajectory                     |
-<a id="__codelineno-2-17" name="__codelineno-2-17" href="#__codelineno-2-17"></a>| 414) Calc phonon band structure                          |
-<a id="__codelineno-2-18" name="__codelineno-2-18" href="#__codelineno-2-18"></a>+----------------------------------------------------------+
-<a id="__codelineno-2-19" name="__codelineno-2-19" href="#__codelineno-2-19"></a>| 000) Return to the main menu                             |
-<a id="__codelineno-2-20" name="__codelineno-2-20" href="#__codelineno-2-20"></a>+----------------------------------------------------------+
-<a id="__codelineno-2-21" name="__codelineno-2-21" href="#__codelineno-2-21"></a>Input the function number:
-</code></pre></div>
-<h2 id="_2">离子电导率</h2>
+</table></div>
+<p><code>gpumdkit.sh -calc -h</code> 会列出全部计算器命令。交互模式下运行 <code>gpumdkit.sh</code> 并选择 <code>4) Calculators</code>。</p>
+<details>
+<summary>显示完整菜单</summary>
+<div class="code"><div class="cap"><i></i><i></i><i></i><span>text</span></div><pre><code>+----------------------------------------------------------+
+|                     CALCULATOR TOOLS                     |
++----------------------------------------------------------+
+| 401) Calc ionic conductivity                             |
+| 402) Calc properties by nep                              |
+| 403) Calc descriptors of specific elements               |
+| 404) Calc density of atomistic states (DOAS)             |
+| 405) Calc nudged elastic band (NEB) by nep               |
+| 406) Build neighbor list                                 |
+| 407) Calc displacement from trajectory                   |
+| 408) Calc averaged structure                             |
+| 409) Calc octahedral tilt                                |
+| 410) Calc polarization for ABO3                          |
+| 411) Minimize structure by nep                           |
+| 412) Calc mean square displacement (MSD) from trajectory |
+| 413) Calc XRD from extxyz trajectory                     |
+| 414) Calc phonon band structure                          |
++----------------------------------------------------------+
+| 000) Return to the main menu                             |
++----------------------------------------------------------+
+Input the function number:</code></pre><button class="copy-btn" data-copy-pre aria-label="Copy"><svg class="cp"><use href="#i-copy"/></svg><svg class="ok"><use href="#i-check"/></svg></button></div>
+</details>
+<h2 id="完整示例从轨迹到电导率">完整示例：从轨迹到电导率</h2>
+<p>下面的命令在一个<strong>玩具</strong>轨迹 <code>traj.xyz</code> 上运行：400 帧、54 个原子的 Li/S 晶胞，其中 27 个 Li 原子做随机游走。它只演示文件的流转，数值没有物理意义；真实研究需要收敛的 MD 运行以及你自己的检查。</p>
+<p><strong>1. 均方位移。</strong> 相邻帧间隔 10 fs（<code>dt_fs</code> 必须与你的轨迹写出方式一致）：</p>
+<div class="code"><div class="cap"><i></i><i></i><i></i><span>bash</span></div><pre><code>gpumdkit.sh -calc msd traj.xyz Li 10</code></pre><button class="copy-btn" data-copy-pre aria-label="Copy"><svg class="cp"><use href="#i-copy"/></svg><svg class="ok"><use href="#i-check"/></svg></button></div>
+<div class="code"><div class="cap"><i></i><i></i><i></i><span>text</span></div><pre><code>  Trajectory file  : traj.xyz
+  Target element   : Li
+  Time step (dt)   : 10.0000 fs
+  Max corr. steps  : all frames
+
+   Loaded 400 frames, 27 Li atoms per frame
+   Cell lengths (a, b, c) : 10.5300  10.5300  10.5300  Ang
+ Coordinate status : Wrapped (PBC detected)
+ Unwrapping coordinates...
+   MSD computed for 398 lag times
+   Lag-time range  : 0.010000 ps  -&gt;  3.980000 ps
+ MSD calculation completed. Results saved to 'msd.out'.</code></pre><button class="copy-btn" data-copy-pre aria-label="Copy"><svg class="cp"><use href="#i-copy"/></svg><svg class="ok"><use href="#i-check"/></svg></button></div>
+<p><code>msd.out</code> 以三行表头开始，之后是四列（时间 ps，<code>MSD_x</code>、<code>MSD_y</code>、<code>MSD_z</code>，单位 Å²）：</p>
+<div class="code"><div class="cap"><i></i><i></i><i></i><span>text</span></div><pre><code># msd.out by GPUMDkit
+# Element: Li  |  dt: 10.0000 fs  |  Frames: 400  |  Atoms: 27
+#     Time(ps)    MSD_x(Ang^2)    MSD_y(Ang^2)    MSD_z(Ang^2)</code></pre><button class="copy-btn" data-copy-pre aria-label="Copy"><svg class="cp"><use href="#i-copy"/></svg><svg class="ok"><use href="#i-check"/></svg></button></div>
+<p><strong>2. 先看曲线再使用。</strong></p>
+<div class="code"><div class="cap"><i></i><i></i><i></i><span>bash</span></div><pre><code>gpumdkit.sh -plt msd</code></pre><button class="copy-btn" data-copy-pre aria-label="Copy"><svg class="cp"><use href="#i-copy"/></svg><svg class="ok"><use href="#i-check"/></svg></button></div>
+<div align="center">
+  <img src="../../Gallery/toy_msd.png" alt="玩具轨迹的 MSD" width="48%" />
+</div>
+
+<p>图例中的斜率取自曲线中间 40%–80% 的区间。长时间滞后处曲线抖动是正常的：滞后越长，可用的时间起点越少，统计越差，所以不要在那里拟合。真实且收敛的曲线，在拟合区间内应接近直线。</p>
+<p><strong>3. 电导率。</strong> 除 <code>msd.out</code> 外，计算器还需要 <code>thermo.out</code>（温度和盒子，12 或 18 列）以及用于统计离子数的 <code>model.xyz</code>：</p>
+<div class="code"><div class="cap"><i></i><i></i><i></i><span>bash</span></div><pre><code>gpumdkit.sh -calc ionic-cond Li 1</code></pre><button class="copy-btn" data-copy-pre aria-label="Copy"><svg class="cp"><use href="#i-copy"/></svg><svg class="ok"><use href="#i-check"/></svg></button></div>
+<div class="code"><div class="cap"><i></i><i></i><i></i><span>text</span></div><pre><code> +---------------------------------------------------------+
+ | Warning: run.in file not found, assuming no replication |
+ +---------------------------------------------------------+
+ Number of ions: 27
+ Average Volume: 1167.576 Å^3
+ Average Temperature: 299.667 K
+ Diffusivity (D):
+   D_x: 2.506e-05 cm^2/s
+   D_y: 4.431e-05 cm^2/s
+   D_z: 2.317e-05 cm^2/s
+   D_total: 3.085e-05 cm^2/s
+ Ionic Conductivity:
+   Sigma_x: 3.595e+03 mS/cm
+   Sigma_y: 6.358e+03 mS/cm
+   Sigma_z: 3.325e+03 mS/cm
+   Sigma_total: 4.426e+03 mS/cm</code></pre><button class="copy-btn" data-copy-pre aria-label="Copy"><svg class="cp"><use href="#i-copy"/></svg><svg class="ok"><use href="#i-check"/></svg></button></div>
+<p>数据旁边没有 <code>run.in</code> 时会出现这条警告。如果你的模拟使用了 <code>replicate</code>，请把对应的 <code>run.in</code> 放在同一目录，这样离子数和体积的缩放才一致。温度和体积取自 <code>thermo.out</code> 后半段的平均值。</p>
+<h2 id="离子电导率">离子电导率</h2>
 <p><code>calc_ion_conductivity.py</code> 从 <code>msd.out</code> 计算离子扩散系数和离子电导率。</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>gpumdkit.sh<span class="w"> </span>-calc<span class="w"> </span>ionic-cond<span class="w"> </span>Li<span class="w"> </span><span class="m">1</span>
-</code></pre></div>
-<table>
+<div class="code"><div class="cap"><i></i><i></i><i></i><span>bash</span></div><pre><code>gpumdkit.sh -calc ionic-cond Li 1</code></pre><button class="copy-btn" data-copy-pre aria-label="Copy"><svg class="cp"><use href="#i-copy"/></svg><svg class="ok"><use href="#i-check"/></svg></button></div>
+<div class="tbl-wrap"><table class="tbl">
 <thead>
 <tr>
 <th>参数</th>
@@ -1832,19 +288,16 @@
 <td>应按自己的体系给出电荷定义。实现中使用其平方，因此只改变正负号不会改变报告的电导率。</td>
 </tr>
 </tbody>
-</table>
+</table></div>
 <p>示例 <code>Li 1</code> 仅用于说明参数格式，并不是所有体系的默认选择。当前实现使用 MSD 数据中间的 40–80% 区间拟合。解读扩散系数或电导率前，应先检查 MSD 曲线及其收敛情况。</p>
+<p>计算器读取第 1–4 列的时间和 <code>MSD_x/y/z</code>。<code>element</code> 参数用于计数离子，
+不选择 MSD 列；<code>all_groups</code> 输出需先提取目标组的时间和 MSD 列。电荷参数为
+以元电荷为单位的整数。结果为 Nernst–Einstein 电导率，不包含离子间位移关联。</p>
 <p>交互模式选择 <code>401</code>，会看到：</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>&gt;-------------------------------------------------&lt;
-<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>| This function calls the script in calculators   |
-<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>| Script: calc_ion_conductivity.py                |
-<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>| Developer: Zihan YAN (yanzihan@westlake.edu.cn) |
-<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>&gt;-------------------------------------------------&lt;
-<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>Input &lt;element&gt; &lt;charge&gt; (eg. Li 1)
-<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a>------------&gt;&gt;
-</code></pre></div>
+<div class="code"><div class="cap"><i></i><i></i><i></i><span>text</span></div><pre><code>Input &lt;element&gt; &lt;charge&gt; (eg. Li 1)
+------------&gt;&gt;</code></pre><button class="copy-btn" data-copy-pre aria-label="Copy"><svg class="cp"><use href="#i-copy"/></svg><svg class="ok"><use href="#i-check"/></svg></button></div>
 <p>常用输入文件：</p>
-<table>
+<div class="tbl-wrap"><table class="tbl">
 <thead>
 <tr>
 <th>文件</th>
@@ -1869,42 +322,42 @@
 <td>可选，识别扩胞信息</td>
 </tr>
 </tbody>
-</table>
+</table></div>
 <p>如果缺少自动识别所需文件，脚本会交互式询问温度、体积和离子数。</p>
 <p>手动模式的提示类似：</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>Files &#39;thermo.out&#39; and &#39;model.xyz&#39; are not found.
-<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>Please provide the following values:
-<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>---------------------------&gt;
-<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>Enter average temperature (in K):
-<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>Enter system volume (in A^3):
-<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>Enter number of ions:
-</code></pre></div>
+<div class="code"><div class="cap"><i></i><i></i><i></i><span>text</span></div><pre><code>Files 'thermo.out' and 'model.xyz' are not found.
+Please provide the following values:
+---------------------------&gt;
+Enter average temperature (in K):
+Enter system volume (in A^3):
+Enter number of ions:</code></pre><button class="copy-btn" data-copy-pre aria-label="Copy"><svg class="cp"><use href="#i-copy"/></svg><svg class="ok"><use href="#i-check"/></svg></button></div>
 <p>输出示例：</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>Diffusivity (D):
-<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>  D_x: 4.153e-07 cm^2/s
-<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>  D_y: 4.174e-07 cm^2/s
-<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a>  D_z: 2.610e-07 cm^2/s
-<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a>  D_total: 3.646e-07 cm^2/s
-<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a>------------------------------
-<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a>Ionic Conductivity:
-<a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a>  Sigma_x: 2.576e-02 mS/cm
-<a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a>  Sigma_y: 2.589e-02 mS/cm
-<a id="__codelineno-6-10" name="__codelineno-6-10" href="#__codelineno-6-10"></a>  Sigma_z: 1.619e-02 mS/cm
-<a id="__codelineno-6-11" name="__codelineno-6-11" href="#__codelineno-6-11"></a>  Sigma_total: 2.261e-02 mS/cm
-</code></pre></div>
-<h2 id="msd">从轨迹计算 MSD</h2>
+<div class="code"><div class="cap"><i></i><i></i><i></i><span>text</span></div><pre><code>Diffusivity (D):
+  D_x: 4.153e-07 cm^2/s
+  D_y: 4.174e-07 cm^2/s
+  D_z: 2.610e-07 cm^2/s
+  D_total: 3.646e-07 cm^2/s
+------------------------------
+Ionic Conductivity:
+  Sigma_x: 2.576e-02 mS/cm
+  Sigma_y: 2.589e-02 mS/cm
+  Sigma_z: 1.619e-02 mS/cm
+  Sigma_total: 2.261e-02 mS/cm</code></pre><button class="copy-btn" data-copy-pre aria-label="Copy"><svg class="cp"><use href="#i-copy"/></svg><svg class="ok"><use href="#i-check"/></svg></button></div>
+<h2 id="从轨迹计算-msd">从轨迹计算 MSD</h2>
 <p><code>calc_msd.py</code> 可以直接从 extxyz 轨迹中计算指定元素的 MSD。</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>gpumdkit.sh<span class="w"> </span>-calc<span class="w"> </span>msd<span class="w"> </span>dump.xyz<span class="w"> </span>Li<span class="w"> </span><span class="m">10</span>
-<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>gpumdkit.sh<span class="w"> </span>-calc<span class="w"> </span>msd<span class="w"> </span>dump.xyz<span class="w"> </span>Li<span class="w"> </span><span class="m">10</span><span class="w"> </span><span class="m">5000</span>
-</code></pre></div>
+<div class="code"><div class="cap"><i></i><i></i><i></i><span>bash</span></div><pre><code>gpumdkit.sh -calc msd dump.xyz Li 10
+gpumdkit.sh -calc msd dump.xyz Li 10 5000</code></pre><button class="copy-btn" data-copy-pre aria-label="Copy"><svg class="cp"><use href="#i-copy"/></svg><svg class="ok"><use href="#i-check"/></svg></button></div>
+<p>使用固定晶胞、原子顺序一致的轨迹，并确保 <code>pos</code> 字段存储已核验的展开坐标。
+脚本读取 <code>pos</code> 和首帧晶胞，不读取独立的 <code>unwrapped_position</code> 属性。自动坐标
+判断不足以验证折回轨迹；按轴解包裹也不适用于一般倾斜或变化晶胞。
+命令覆盖当前目录的 <code>msd.out</code>。</p>
 <p>交互模式选择 <code>412</code>，会看到：</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>Input &lt;extxyz_file&gt; &lt;element_symbol&gt; &lt;dt_fs&gt; [max_corr_steps]
-<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>  Optional argument: max_corr_steps (default: frame number)
-<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a>Example: dump.xyz Li 10
-<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a>------------&gt;&gt;
-</code></pre></div>
+<div class="code"><div class="cap"><i></i><i></i><i></i><span>text</span></div><pre><code>Input &lt;extxyz_file&gt; &lt;element_symbol&gt; &lt;dt_fs&gt; [max_corr_steps]
+  Optional argument: max_corr_steps (default: frame number)
+Example: dump.xyz Li 10
+------------&gt;&gt;</code></pre><button class="copy-btn" data-copy-pre aria-label="Copy"><svg class="cp"><use href="#i-copy"/></svg><svg class="ok"><use href="#i-check"/></svg></button></div>
 <p>参数含义：</p>
-<table>
+<div class="tbl-wrap"><table class="tbl">
 <thead>
 <tr>
 <th>参数</th>
@@ -1929,7 +382,7 @@
 <td>可选，最大相关步数</td>
 </tr>
 </tbody>
-</table>
+</table></div>
 <p><code>max_corr_steps</code> 限制参与相关计算的最大时间滞后。省略时，脚本使用已有帧数。它会改变计算窗口，应根据自己轨迹的长度和采样间隔选择，而不是照搬其他体系的数值。</p>
 <p>输出：</p>
 <ul>
@@ -1944,25 +397,23 @@
 <code>compute_sdc</code> 写入 <code>sdc.out</code>，该文件供 <code>-plt vac</code> 使用，不是 <code>-plt sdc</code> 或
 <code>-plt msd_sdc</code> 的输入。</p>
 <p>随后可绘图：</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>gpumdkit.sh<span class="w"> </span>-plt<span class="w"> </span>msd
-</code></pre></div>
+<div class="code"><div class="cap"><i></i><i></i><i></i><span>bash</span></div><pre><code>gpumdkit.sh -plt msd</code></pre><button class="copy-btn" data-copy-pre aria-label="Copy"><svg class="cp"><use href="#i-copy"/></svg><svg class="ok"><use href="#i-check"/></svg></button></div>
 <div align="center">
   <img src="../../Gallery/msd.png" alt="MSD plot" width="45%" />
 </div>
 
-<h2 id="x-xrd">X 射线衍射（XRD）</h2>
+<h2 id="x-射线衍射xrd">X 射线衍射（XRD）</h2>
 <p><code>calc_xrd.py</code> 从 extxyz 轨迹计算并平均与 LAMMPS 兼容的 XRD 强度。该功能
 只保留交互式入口，不提供 CLI 参数接口。</p>
 <p>在菜单中选择 <code>4) Calculators</code>，再选择 <code>413) Calc XRD from extxyz
 trajectory</code>。Python 交互页面依次询问：</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a>Input extended XYZ trajectory
-<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a>Output XRD file
-<a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a>X-ray wavelength (Angstrom)
-<a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a>2theta range (degrees; min max)
-<a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a>Number of bins in this 2theta range
-<a id="__codelineno-10-6" name="__codelineno-10-6" href="#__codelineno-10-6"></a>Elements to include (all or comma-separated) [all]
-<a id="__codelineno-10-7" name="__codelineno-10-7" href="#__codelineno-10-7"></a>CPU workers (0 means automatic) [0]
-</code></pre></div>
+<div class="code"><div class="cap"><i></i><i></i><i></i><span>text</span></div><pre><code>Input extended XYZ trajectory
+Output XRD file
+X-ray wavelength (Angstrom)
+2theta range (degrees; min max)
+Number of bins in this 2theta range
+Elements to include (all or comma-separated) [all]
+CPU workers (0 means automatic) [0]</code></pre><button class="copy-btn" data-copy-pre aria-label="Copy"><svg class="cp"><use href="#i-copy"/></svg><svg class="ok"><use href="#i-check"/></svg></button></div>
 <p>bins 始终覆盖选定的 <code>2theta</code> 区间。例如，选择 <code>10 60</code> 和 <code>500</code> 个 bins，
 表示将 10 到 60 度均匀划分为 500 个区间，不再单独设置输出 bin 范围。</p>
 <p>元素选择输入 <code>all</code> 可包含全部原子，也可以输入 <code>Li</code> 或 <code>Li,Cl</code> 等元素符号；
@@ -1970,7 +421,7 @@ trajectory</code>。Python 交互页面依次询问：</p>
 LAMMPS 散射因子以及 Lorentz-polarization 因子。当前支持正交晶胞；非正交
 晶胞会被拒绝，因为该计算器使用当前 LAMMPS 兼容的 reciprocal mesh 约定。</p>
 <p>输出文件包含元数据表头，随后是四列数据：</p>
-<table>
+<div class="tbl-wrap"><table class="tbl">
 <thead>
 <tr>
 <th>列</th>
@@ -1995,71 +446,60 @@ LAMMPS 散射因子以及 Lorentz-polarization 因子。当前支持正交晶胞
 <td>用选定区间总强度归一化后的强度</td>
 </tr>
 </tbody>
-</table>
-<p>为提高速度，脚本只读取一次轨迹；晶胞不变时复用 reciprocal mesh；同时按
-元素分组计算，并支持按顺序归并的多 worker 线程。这些优化不会改变原子选择、
-散射公式或 <code>2theta</code> 分箱定义。</p>
-<h2 id="_3">声子谱</h2>
+</table></div>
+<p>轨迹较长时，可以用多个 CPU worker 加速，结果不受影响。</p>
+<h2 id="声子谱">声子谱</h2>
 <p><code>calc_phonon.py</code> 使用 NEP 模型计算力常数，并沿 <code>QPOINTS</code> 中定义的路径计算
 声子谱。该功能只通过交互模式使用：</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a>gpumdkit.sh -&gt; 4) Calculators -&gt; 414) Calc phonon band structure
-</code></pre></div>
+<div class="code"><div class="cap"><i></i><i></i><i></i><span>text</span></div><pre><code>gpumdkit.sh -&gt; 4) Calculators -&gt; 414) Calc phonon band structure</code></pre><button class="copy-btn" data-copy-pre aria-label="Copy"><svg class="cp"><use href="#i-copy"/></svg><svg class="ok"><use href="#i-check"/></svg></button></div>
 <p>Python 页面会依次询问：</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a>Primitive cell structure [PRIMCELL.vasp]
-<a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a>NEP model [nep.txt]
-<a id="__codelineno-12-3" name="__codelineno-12-3" href="#__codelineno-12-3"></a>QPOINTS file [QPOINTS]
-<a id="__codelineno-12-4" name="__codelineno-12-4" href="#__codelineno-12-4"></a>Supercell dimensions [1 1 1]
-<a id="__codelineno-12-5" name="__codelineno-12-5" href="#__codelineno-12-5"></a>Displacement distance [0.015]
-<a id="__codelineno-12-6" name="__codelineno-12-6" href="#__codelineno-12-6"></a>Output phonon file [phonon_NEP.dat]
-</code></pre></div>
+<div class="code"><div class="cap"><i></i><i></i><i></i><span>text</span></div><pre><code>Primitive cell structure [PRIMCELL.vasp]
+NEP model [nep.txt]
+QPOINTS file [QPOINTS]
+Supercell dimensions [1 1 1]
+Displacement distance [0.015]
+Output phonon file [phonon_NEP.dat]</code></pre><button class="copy-btn" data-copy-pre aria-label="Copy"><svg class="cp"><use href="#i-copy"/></svg><svg class="ok"><use href="#i-check"/></svg></button></div>
 <p><code>QPOINTS</code> 必须使用 line-mode 的起点/终点成对格式。脚本从第二行读取每段
 Q 点数，生成的输出行随后由 <code>plt_phonon.py</code> 和 <code>plt_phonon_comp.py</code> 使用。
 运行前请安装 <code>phonopy</code>：</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a>pip<span class="w"> </span>install<span class="w"> </span>phonopy
-</code></pre></div>
-<h2 id="nep">NEP 预测性质</h2>
+<div class="code"><div class="cap"><i></i><i></i><i></i><span>bash</span></div><pre><code>pip install phonopy</code></pre><button class="copy-btn" data-copy-pre aria-label="Copy"><svg class="cp"><use href="#i-copy"/></svg><svg class="ok"><use href="#i-check"/></svg></button></div>
+<h2 id="nep-预测性质">NEP 预测性质</h2>
 <p><code>calc_properties_with_nep.py</code> 使用训练好的 NEP 模型计算能量、力和应力。</p>
 <p><strong>依赖：</strong> <code>calorine</code></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a>pip<span class="w"> </span>install<span class="w"> </span>calorine
-</code></pre></div>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a>gpumdkit.sh<span class="w"> </span>-calc<span class="w"> </span>nep<span class="w"> </span>structures.xyz<span class="w"> </span>predictions.xyz<span class="w"> </span>nep.txt
-</code></pre></div>
-<p>使用此功能可以用训练好的 NEP 模型进行预测。建议在使用前先验证模型在目标结构上的预测质量，再将输出作为后续分析或筛选依据。</p>
+<div class="code"><div class="cap"><i></i><i></i><i></i><span>bash</span></div><pre><code>pip install calorine</code></pre><button class="copy-btn" data-copy-pre aria-label="Copy"><svg class="cp"><use href="#i-copy"/></svg><svg class="ok"><use href="#i-check"/></svg></button></div>
+<div class="code"><div class="cap"><i></i><i></i><i></i><span>bash</span></div><pre><code>gpumdkit.sh -calc nep structures.xyz predictions.xyz nep.txt</code></pre><button class="copy-btn" data-copy-pre aria-label="Copy"><svg class="cp"><use href="#i-copy"/></svg><svg class="ok"><use href="#i-check"/></svg></button></div>
 <p><strong>提示：</strong> 预测前可以清理 extxyz 元数据：</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a>gpumdkit.sh<span class="w"> </span>-clean_xyz<span class="w"> </span>train.xyz<span class="w"> </span>clean_train.xyz
-</code></pre></div>
-<h3 id="nep_1">NEP 预测输出文件</h3>
+<div class="code"><div class="cap"><i></i><i></i><i></i><span>bash</span></div><pre><code>gpumdkit.sh -clean_xyz train.xyz clean_train.xyz</code></pre><button class="copy-btn" data-copy-pre aria-label="Copy"><svg class="cp"><use href="#i-copy"/></svg><svg class="ok"><use href="#i-check"/></svg></button></div>
+<h3 id="nep-预测输出文件">NEP 预测输出文件</h3>
 <p><code>prediction.py</code> 使用 Calorine 的 <code>CPUNEP</code> 计算每个 frame，并写出 NEP
 parity 工具使用的四类预测文件。输出后缀根据输入文件名自动确定：例如输入
 <code>test.xyz</code> 时，当前目录会生成 <code>energy_test.out</code>、<code>force_test.out</code>、
 <code>stress_test.out</code> 和 <code>virial_test.out</code>。</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-17-1" name="__codelineno-17-1" href="#__codelineno-17-1"></a><span class="c1"># 单核计算（默认）</span>
-<a id="__codelineno-17-2" name="__codelineno-17-2" href="#__codelineno-17-2"></a>gpumdkit.sh<span class="w"> </span>-prediction<span class="w"> </span>train.xyz<span class="w"> </span>nep.txt
-<a id="__codelineno-17-3" name="__codelineno-17-3" href="#__codelineno-17-3"></a>
-<a id="__codelineno-17-4" name="__codelineno-17-4" href="#__codelineno-17-4"></a><span class="c1"># 使用八个独立 CPU worker</span>
-<a id="__codelineno-17-5" name="__codelineno-17-5" href="#__codelineno-17-5"></a>gpumdkit.sh<span class="w"> </span>-prediction<span class="w"> </span>train.xyz<span class="w"> </span>nep.txt<span class="w"> </span><span class="m">8</span>
-</code></pre></div>
+<div class="code"><div class="cap"><i></i><i></i><i></i><span>bash</span></div><pre><code># 单核计算（默认）
+gpumdkit.sh -prediction train.xyz nep.txt
+
+# 使用八个独立 CPU worker
+gpumdkit.sh -prediction train.xyz nep.txt 8</code></pre><button class="copy-btn" data-copy-pre aria-label="Copy"><svg class="cp"><use href="#i-copy"/></svg><svg class="ok"><use href="#i-check"/></svg></button></div>
 <p>每行先写预测值，再写目标值。能量单位为 eV/atom，力为 eV/Angstrom，应力为
 GPa，virial 为 eV/atom。应力和 virial 张量使用 NEP 顺序
-<code>xx yy zz xy yz xz</code>，并遵循 NEP 相同的符号约定。如果某个 frame 只有 stress 或 virial
-中的一种标签，程序会根据 <code>stress = virial / volume</code> 及相应单位换算自动推导另一种；
+<code>xx yy zz xy yz xz</code>，并遵循 NEP 相同的符号约定：在这些文件中 <code>stress = virial / volume</code>，
+受压为正。输入 extxyz 中 <code>stress=</code> 字段的符号相反（受拉为正），因此与 NEP 一样按
+<code>virial = -stress * volume</code> 换算。如果某个 frame 只有 stress 或 virial 中的一种标签，
+程序按此关系及相应单位换算自动推导另一种；
 只有两种标签都缺失时，两个目标列才写入 NEP 约定的 <code>-1e6</code> 哨兵值。energy 和 force
 标签必须存在。计算过程中会显示 <code>tqdm</code> 进度条。</p>
 <p>该命令需要 <code>calorine</code>、<code>ase</code> 和 <code>tqdm</code>：</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-18-1" name="__codelineno-18-1" href="#__codelineno-18-1"></a>pip<span class="w"> </span>install<span class="w"> </span>ase<span class="w"> </span>calorine<span class="w"> </span>tqdm
-</code></pre></div>
-<h3 id="dpa">DPA 预测输出文件</h3>
+<div class="code"><div class="cap"><i></i><i></i><i></i><span>bash</span></div><pre><code>pip install ase calorine tqdm</code></pre><button class="copy-btn" data-copy-pre aria-label="Copy"><svg class="cp"><use href="#i-copy"/></svg><svg class="ok"><use href="#i-check"/></svg></button></div>
+<h3 id="dpa-预测输出文件">DPA 预测输出文件</h3>
 <p><code>prediction_dpa.py</code> 使用 DeepMD DPA 模型计算带标签的 extended XYZ 训练集，
 并将 <code>energy_train.out</code>、<code>force_train.out</code>、<code>virial_train.out</code> 和
 <code>stress_train.out</code> 写入当前目录。</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-19-1" name="__codelineno-19-1" href="#__codelineno-19-1"></a>gpumdkit.sh<span class="w"> </span>-prediction_dpa<span class="w"> </span>train.xyz<span class="w"> </span>model.ckpt.pt
-</code></pre></div>
+<div class="code"><div class="cap"><i></i><i></i><i></i><span>bash</span></div><pre><code>gpumdkit.sh -prediction_dpa train.xyz model.ckpt.pt</code></pre><button class="copy-btn" data-copy-pre aria-label="Copy"><svg class="cp"><use href="#i-copy"/></svg><svg class="ok"><use href="#i-check"/></svg></button></div>
 <p>输出格式遵循 NEP 训练 prediction 约定：每行先写预测值，再写目标值。能量单位为
 eV/atom，力为 eV/Angstrom，应力为 GPa，virial 为 eV/atom。该命令需要
 <code>deepmd-kit</code> 和 <code>numpy</code>。</p>
-<h2 id="nep_2">NEP 描述符</h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-20-1" name="__codelineno-20-1" href="#__codelineno-20-1"></a>gpumdkit.sh<span class="w"> </span>-calc<span class="w"> </span>des<span class="w"> </span>train.xyz<span class="w"> </span>descriptors.npy<span class="w"> </span>nep.txt<span class="w"> </span>Li
-</code></pre></div>
+<h2 id="nep-描述符">NEP 描述符</h2>
+<div class="code"><div class="cap"><i></i><i></i><i></i><span>bash</span></div><pre><code>gpumdkit.sh -calc des train.xyz descriptors.npy nep.txt Li</code></pre><button class="copy-btn" data-copy-pre aria-label="Copy"><svg class="cp"><use href="#i-copy"/></svg><svg class="ok"><use href="#i-check"/></svg></button></div>
 <p>用途包括：</p>
 <ul>
 <li>用 PCA/UMAP 可视化局域环境；</li>
@@ -2067,18 +507,16 @@ eV/atom，力为 eV/Angstrom，应力为 GPa，virial 为 eV/atom。该命令需
 <li>判断新数据是否扩展了描述符空间。</li>
 </ul>
 <p>绘图：</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-21-1" name="__codelineno-21-1" href="#__codelineno-21-1"></a>gpumdkit.sh<span class="w"> </span>-plt<span class="w"> </span>des<span class="w"> </span>pca<span class="w"> </span>descriptors.npy
-<a id="__codelineno-21-2" name="__codelineno-21-2" href="#__codelineno-21-2"></a>gpumdkit.sh<span class="w"> </span>-plt<span class="w"> </span>des<span class="w"> </span>umap<span class="w"> </span>descriptors.npy
-</code></pre></div>
+<div class="code"><div class="cap"><i></i><i></i><i></i><span>bash</span></div><pre><code>gpumdkit.sh -plt des pca descriptors.npy
+gpumdkit.sh -plt des umap descriptors.npy</code></pre><button class="copy-btn" data-copy-pre aria-label="Copy"><svg class="cp"><use href="#i-copy"/></svg><svg class="ok"><use href="#i-check"/></svg></button></div>
 <div align="center">
   <img src="../../Gallery/des_umap.png" alt="Descriptor UMAP" width="52%" />
 </div>
 
 <h2 id="doas">DOAS</h2>
-<p><code>calc_doas.py</code> 用于计算 <a href="https://doi.org/10.1002/anie.202215544">Wang et al.</a> 提出的原子态密度（density of atomistic states，DOAS）。</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-22-1" name="__codelineno-22-1" href="#__codelineno-22-1"></a>gpumdkit.sh<span class="w"> </span>-calc<span class="w"> </span>doas<span class="w"> </span>structures.xyz<span class="w"> </span>nep.txt<span class="w"> </span>doas.out
-<a id="__codelineno-22-2" name="__codelineno-22-2" href="#__codelineno-22-2"></a>gpumdkit.sh<span class="w"> </span>-plt<span class="w"> </span>doas<span class="w"> </span>doas.out<span class="w"> </span>Li
-</code></pre></div>
+<p><code>calc_doas.py</code> 用于计算 <a href="https://doi.org/10.1002/anie.202215544" target="_blank" rel="noopener">Wang et al.</a> 提出的原子态密度（density of atomistic states，DOAS）。</p>
+<div class="code"><div class="cap"><i></i><i></i><i></i><span>bash</span></div><pre><code>gpumdkit.sh -calc doas structures.xyz nep.txt doas.out
+gpumdkit.sh -plt doas doas.out Li</code></pre><button class="copy-btn" data-copy-pre aria-label="Copy"><svg class="cp"><use href="#i-copy"/></svg><svg class="ok"><use href="#i-check"/></svg></button></div>
 <p>脚本会：</p>
 <ol>
 <li>读取所有结构；</li>
@@ -2092,10 +530,9 @@ eV/atom，力为 eV/Angstrom，应力为 GPa，virial 为 eV/atom。该命令需
   <img src="../../Gallery/doas.png" alt="Density of atomistic states" width="52%" />
 </div>
 
-<h2 id="neb">NEB 和结构优化</h2>
+<h2 id="neb-和结构优化">NEB 和结构优化</h2>
 <p>NEB：</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-23-1" name="__codelineno-23-1" href="#__codelineno-23-1"></a>gpumdkit.sh<span class="w"> </span>-calc<span class="w"> </span>neb<span class="w"> </span>initial.xyz<span class="w"> </span>final.xyz<span class="w"> </span><span class="m">9</span><span class="w"> </span>nep.txt
-</code></pre></div>
+<div class="code"><div class="cap"><i></i><i></i><i></i><span>bash</span></div><pre><code>gpumdkit.sh -calc neb initial.xyz final.xyz 9 nep.txt</code></pre><button class="copy-btn" data-copy-pre aria-label="Copy"><svg class="cp"><use href="#i-copy"/></svg><svg class="ok"><use href="#i-check"/></svg></button></div>
 <p>这会使用 NEP 模型运行包含 <code>9</code> 个中间构型（image）的 NEB 计算。运行过程中脚本会询问原子固定方式：</p>
 <ul>
 <li><code>none</code>：不固定原子；</li>
@@ -2105,12 +542,10 @@ eV/atom，力为 eV/Angstrom，应力为 GPa，virial 为 eV/atom。该命令需
 </ul>
 <p>结构优化（通过 <code>calorine</code>）：</p>
 <p><strong>依赖：</strong> <code>calorine</code></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-24-1" name="__codelineno-24-1" href="#__codelineno-24-1"></a>pip<span class="w"> </span>install<span class="w"> </span>calorine
-</code></pre></div>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-25-1" name="__codelineno-25-1" href="#__codelineno-25-1"></a>gpumdkit.sh<span class="w"> </span>-calc<span class="w"> </span>minimize<span class="w"> </span>POSCAR<span class="w"> </span>nep.txt<span class="w"> </span><span class="m">0</span>.01<span class="w"> </span><span class="m">1000</span>
-</code></pre></div>
+<div class="code"><div class="cap"><i></i><i></i><i></i><span>bash</span></div><pre><code>pip install calorine</code></pre><button class="copy-btn" data-copy-pre aria-label="Copy"><svg class="cp"><use href="#i-copy"/></svg><svg class="ok"><use href="#i-check"/></svg></button></div>
+<div class="code"><div class="cap"><i></i><i></i><i></i><span>bash</span></div><pre><code>gpumdkit.sh -calc minimize POSCAR nep.txt 0.01 1000</code></pre><button class="copy-btn" data-copy-pre aria-label="Copy"><svg class="cp"><use href="#i-copy"/></svg><svg class="ok"><use href="#i-check"/></svg></button></div>
 <p>参数说明：</p>
-<table>
+<div class="tbl-wrap"><table class="tbl">
 <thead>
 <tr>
 <th>参数</th>
@@ -2135,22 +570,20 @@ eV/atom，力为 eV/Angstrom，应力为 GPa，virial 为 eV/atom。该命令需
 <td>可选的最大优化步数</td>
 </tr>
 </tbody>
-</table>
+</table></div>
 <p>输出包括：</p>
 <ul>
 <li><code>minimize.xyz</code></li>
 <li><code>minimize.log</code></li>
 </ul>
-<h2 id="ovito-rdf">使用 OVITO 计算 RDF</h2>
+<h2 id="使用-ovito-计算-rdf">使用 OVITO 计算 RDF</h2>
 <p><code>rdf_calculator_ovito.py</code> 使用 OVITO 的分析工具计算径向分布函数。</p>
 <p><strong>依赖：</strong> OVITO</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-26-1" name="__codelineno-26-1" href="#__codelineno-26-1"></a>pip<span class="w"> </span>install<span class="w"> </span>ovito
-</code></pre></div>
+<div class="code"><div class="cap"><i></i><i></i><i></i><span>bash</span></div><pre><code>pip install ovito</code></pre><button class="copy-btn" data-copy-pre aria-label="Copy"><svg class="cp"><use href="#i-copy"/></svg><svg class="ok"><use href="#i-check"/></svg></button></div>
 <p><strong>输入文件：</strong> 结构文件（单帧或轨迹）</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-27-1" name="__codelineno-27-1" href="#__codelineno-27-1"></a>python<span class="w"> </span>Scripts/calculators/rdf_calculator_ovito.py<span class="w"> </span>trajectory.xyz<span class="w"> </span><span class="m">6</span>.0<span class="w"> </span><span class="m">400</span>
-</code></pre></div>
+<div class="code"><div class="cap"><i></i><i></i><i></i><span>bash</span></div><pre><code>python "${GPUMDkit_path}/Scripts/calculators/rdf_calculator_ovito.py" trajectory.xyz 6.0 400</code></pre><button class="copy-btn" data-copy-pre aria-label="Copy"><svg class="cp"><use href="#i-copy"/></svg><svg class="ok"><use href="#i-check"/></svg></button></div>
 <p><strong>参数：</strong></p>
-<table>
+<div class="tbl-wrap"><table class="tbl">
 <thead>
 <tr>
 <th>参数</th>
@@ -2171,15 +604,13 @@ eV/atom，力为 eV/Angstrom，应力为 GPa，virial 为 eV/atom。该命令需
 <td>直方图的分箱数</td>
 </tr>
 </tbody>
-</table>
-<p><strong>可视化：</strong></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-28-1" name="__codelineno-28-1" href="#__codelineno-28-1"></a>gpumdkit.sh<span class="w"> </span>-plt<span class="w"> </span>rdf
-</code></pre></div>
-<p><strong>注意：</strong> 建议优先使用 GPUMD 中的 <code>compute_rdf</code> 命令。</p>
-<h2 id="_4">铁电和极性材料工具</h2>
+</table></div>
+<p><strong>输出：</strong> <code>rdf.txt</code>。</p>
+<p>条件允许时，建议直接在 GPUMD 运行中使用 <code>compute_rdf</code> 计算 RDF；它输出的 <code>rdf.out</code> 可以用 <code>gpumdkit.sh -plt rdf</code> 绘制，该命令不读取 <code>rdf.txt</code>。</p>
+<h2 id="铁电和极性材料工具">铁电和极性材料工具</h2>
 <p>选项 <code>406–410</code> 面向钙钛矿和极性材料分析，常用于从 MD 轨迹中提取局域结构信息，然后进一步分析相变、畴结构或极化纹理。</p>
-<p>这些脚本在本页只做快速索引，因为它们通常需要组合使用。推荐阅读专题教程中的完整工作流和参数说明：<strong><a href="%E6%9E%81%E6%80%A7%E6%9D%90%E6%96%99%E5%88%86%E6%9E%90.html">极性材料分析</a></strong>。</p>
-<table>
+<p>这些脚本在本页只做快速索引，因为它们通常需要组合使用。推荐阅读专题教程中的完整工作流和参数说明：<strong><a href="极性材料分析.html">极性材料分析</a></strong>。</p>
+<div class="tbl-wrap"><table class="tbl">
 <thead>
 <tr>
 <th>菜单</th>
@@ -2193,143 +624,75 @@ eV/atom，力为 eV/Angstrom，应力为 GPa，virial 为 eV/atom。该命令需
 <td><code>406</code></td>
 <td><code>gpumdkit.sh -calc nlist ...</code></td>
 <td>构建指定中心原子和近邻原子之间的近邻列表</td>
-<td><a href="%E6%9E%81%E6%80%A7%E6%9D%90%E6%96%99%E5%88%86%E6%9E%90.html">极性材料分析</a></td>
+<td><a href="极性材料分析.html">极性材料分析</a></td>
 </tr>
 <tr>
 <td><code>407</code></td>
 <td><code>gpumdkit.sh -calc disp ...</code></td>
 <td>根据轨迹和近邻列表计算局域位移</td>
-<td><a href="%E6%9E%81%E6%80%A7%E6%9D%90%E6%96%99%E5%88%86%E6%9E%90.html">极性材料分析</a></td>
+<td><a href="极性材料分析.html">极性材料分析</a></td>
 </tr>
 <tr>
 <td><code>408</code></td>
 <td><code>gpumdkit.sh -calc avg-struct ...</code></td>
 <td>从轨迹中计算平均结构</td>
-<td><a href="%E6%9E%81%E6%80%A7%E6%9D%90%E6%96%99%E5%88%86%E6%9E%90.html">极性材料分析</a></td>
+<td><a href="极性材料分析.html">极性材料分析</a></td>
 </tr>
 <tr>
 <td><code>409</code></td>
 <td><code>gpumdkit.sh -calc oct-tilt ...</code></td>
 <td>计算八面体倾转角</td>
-<td><a href="%E6%9E%81%E6%80%A7%E6%9D%90%E6%96%99%E5%88%86%E6%9E%90.html">极性材料分析</a></td>
+<td><a href="极性材料分析.html">极性材料分析</a></td>
 </tr>
 <tr>
 <td><code>410</code></td>
 <td><code>gpumdkit.sh -calc pol-abo3 ...</code></td>
 <td>根据 Born 有效电荷估算 ABO3 局域极化</td>
-<td><a href="%E6%9E%81%E6%80%A7%E6%9D%90%E6%96%99%E5%88%86%E6%9E%90.html">极性材料分析</a></td>
+<td><a href="极性材料分析.html">极性材料分析</a></td>
 </tr>
 </tbody>
-</table>
+</table></div>
 <p>部分脚本需要安装 <code>ferrodispcalc</code>：</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-29-1" name="__codelineno-29-1" href="#__codelineno-29-1"></a>pip3<span class="w"> </span>install<span class="w"> </span>git+https://github.com/MoseyQAQ/ferrodispcalc.git
-</code></pre></div>
-<p>一个典型顺序是先用 <code>nlist</code> 建立近邻列表，再用该近邻列表计算位移、倾转或极化。对于平均结构，可以直接从轨迹出发，用长度容差控制哪些帧参与平均。</p>
+<div class="code"><div class="cap"><i></i><i></i><i></i><span>bash</span></div><pre><code>pip3 install git+https://github.com/MoseyQAQ/ferrodispcalc.git</code></pre><button class="copy-btn" data-copy-pre aria-label="Copy"><svg class="cp"><use href="#i-copy"/></svg><svg class="ok"><use href="#i-check"/></svg></button></div>
+<p>一个典型顺序是先用 <code>nlist</code> 建立近邻列表，再用该近邻列表计算位移、倾转或极化。对于平均结构，可以直接从轨迹出发，用长度容差控制哪些帧参与平均。</p><div class="doc-pn"><a href="工作流脚本.html"><small>上一页</small><b>工作流脚本</b></a><a class="next" href="分析工具.html"><small>下一页</small><b>分析工具</b></a></div><a class="doc-edit" href="https://github.com/zhyan0603/GPUMDkit/edit/main/docs/tutorials/zh/计算器脚本.md" target="_blank" rel="noopener">编辑此页</a></article><nav class="doc-toc" aria-label="本页目录"><h6>本页目录</h6><a href="#功能概览" class="l2">功能概览</a><a href="#完整示例从轨迹到电导率" class="l2">完整示例：从轨迹到电导率</a><a href="#离子电导率" class="l2">离子电导率</a><a href="#从轨迹计算-msd" class="l2">从轨迹计算 MSD</a><a href="#x-射线衍射xrd" class="l2">X 射线衍射（XRD）</a><a href="#声子谱" class="l2">声子谱</a><a href="#nep-预测性质" class="l2">NEP 预测性质</a><a href="#nep-预测输出文件" class="l3">NEP 预测输出文件</a><a href="#dpa-预测输出文件" class="l3">DPA 预测输出文件</a><a href="#nep-描述符" class="l2">NEP 描述符</a><a href="#doas" class="l2">DOAS</a><a href="#neb-和结构优化" class="l2">NEB 和结构优化</a><a href="#使用-ovito-计算-rdf" class="l2">使用 OVITO 计算 RDF</a><a href="#铁电和极性材料工具" class="l2">铁电和极性材料工具</a></nav></div>
+</main>
 
-
-
-
-
-
-
-
-
-
-
-
-                
-              </article>
-            </div>
-          
-          
-<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
-        </div>
-        
-          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
-  
-  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
-  Back to top
-</button>
-        
-      </main>
-      
-        <footer class="md-footer">
-  
-  <div class="md-footer-meta md-typeset">
-    <div class="md-footer-meta__inner md-grid">
-      <div class="md-copyright">
-  
-  
-    Made with
-    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
-      Material for MkDocs
-    </a>
-  
-</div>
-      
-        
-<div class="md-social">
-  
-    
-    
-    
-    
-    <a href="mailto:yanzihan@westlake.edu.cn" target="_blank" rel="noopener" title="Email" class="md-social__link">
-      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M48 64C21.5 64 0 85.5 0 112c0 15.1 7.1 29.3 19.2 38.4l208 156a48 48 0 0 0 57.6 0l208-156c12.1-9.1 19.2-23.3 19.2-38.4 0-26.5-21.5-48-48-48zM0 196v188c0 35.3 28.7 64 64 64h384c35.3 0 64-28.7 64-64V196L313.6 344.8c-34.1 25.6-81.1 25.6-115.2 0z"/></svg>
-    </a>
-  
-    
-    
-    
-    
-    <a href="https://github.com/zhyan0603" target="_blank" rel="noopener" title="GitHub" class="md-social__link">
-      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M173.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M252.8 8C114.1 8 8 113.3 8 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C436.2 457.8 504 362.9 504 252 504 113.3 391.5 8 252.8 8M105.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"/></svg>
-    </a>
-  
-    
-    
-    
-    
-    <a href="https://scholar.google.com/citations?user=NL8zhZYAAAAJ&hl=zh-CN" target="_blank" rel="noopener" title="Google Scholar" class="md-social__link">
-      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="m48 195.8 209.2 86.1c9.8 4 20.2 6.1 30.8 6.1s21-2.1 30.8-6.1l242.4-99.8c9-3.7 14.8-12.4 14.8-22.1s-5.8-18.4-14.8-22.1L318.8 38.1c-9.8-4-20.2-6.1-30.8-6.1s-21 2.1-30.8 6.1L14.8 137.9C5.8 141.6 0 150.3 0 160v296c0 13.3 10.7 24 24 24s24-10.7 24-24zm48 71.7V384c0 53 86 96 192 96s192-43 192-96V267.4l-142.9 58.9c-15.6 6.4-32.2 9.7-49.1 9.7s-33.5-3.3-49.1-9.7L96 267.4z"/></svg>
-    </a>
-  
-    
-    
-    
-    
-    <a href="https://www.researchgate.net/profile/Zihan-Yan-7?ev=hdr_xprf" target="_blank" rel="noopener" title="ResearchGate" class="md-social__link">
-      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M0 32v448h448V32zm262.2 334.4c-6.6 3-33.2 6-50-14.2-9.2-10.6-25.3-33.3-42.2-63.6-8.9 0-14.7 0-21.4-.6v46.4c0 23.5 6 21.2 25.8 23.9v8.1c-6.9-.3-23.1-.8-35.6-.8-13.1 0-26.1.6-33.6.8v-8.1c15.5-2.9 22-1.3 22-23.9V225c0-22.6-6.4-21-22-23.9V193c25.8 1 53.1-.6 70.9-.6 31.7 0 55.9 14.4 55.9 45.6 0 21.1-16.7 42.2-39.2 47.5 13.6 24.2 30 45.6 42.2 58.9 7.2 7.8 17.2 14.7 27.2 14.7zm22.9-135c-23.3 0-32.2-15.7-32.2-32.2V167c0-12.2 8.8-30.4 34-30.4s30.4 17.9 30.4 17.9l-10.7 7.2s-5.5-12.5-19.7-12.5c-7.9 0-19.7 7.3-19.7 19.7v26.8c0 13.4 6.6 23.3 17.9 23.3 14.1 0 21.5-10.9 21.5-26.8h-17.9v-10.7h30.4c0 20.5 4.7 49.9-34 49.9m-116.5 44.7c-9.4 0-13.6-.3-20-.8v-69.7c6.4-.6 15-.6 22.5-.6 23.3 0 37.2 12.2 37.2 34.5 0 21.9-15 36.6-39.7 36.6"/></svg>
-    </a>
-  
-    
-    
-    
-    
-    <a href="https://orcid.org/0000-0002-8911-6549" target="_blank" rel="noopener" title="ORCID" class="md-social__link">
-      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M294.7 188.2h-45.9V342h47.5c67.6 0 83.1-51.3 83.1-76.9 0-41.6-26.5-76.9-84.7-76.9M256 8a248 248 0 1 0 0 496 248 248 0 1 0 0-496m-80.8 360.8h-29.8V161.3h29.8zM160.3 98.5a19.6 19.6 0 1 1 0 39.2 19.6 19.6 0 1 1 0-39.2M300 369h-81V161.3h80.6c76.7 0 110.4 54.8 110.4 103.9 0 53.3-41.7 103.9-110 103.9z"/></svg>
-    </a>
-  
-</div>
-      
+<!-- ======================================================= footer -->
+<footer class="footer">
+  <div class="container">
+    <div class="footer-grid">
+      <div>
+        <a href="../../index.html" class="brand"><svg><use href="#i-logo"/></svg><span><span class="gpumd">GPUMD</span><span class="kit">kit</span></span></a>
+        <p data-i18n="foot.about">A user-friendly toolkit for the GPUMD and NEP programs, built by the GPUMDkit team and contributors.</p>
+      </div>
+      <div><h5 data-i18n="foot.links">Quick links</h5><ul>
+        <li><a href="../../manual.html" data-doc="index" data-i18n="nav.docs">Docs</a></li>
+        <li><a href="../../gallery.html" data-i18n="nav.gallery">Gallery</a></li>
+        <li><a href="../../publications.html" data-i18n="nav.pubs">Publications</a></li>
+        <li><a href="https://github.com/zhyan0603/GPUMDkit/archive/refs/heads/main.zip" data-i18n="foot.dl">Download</a></li></ul></div>
+      <div><h5 data-i18n="foot.gpumd">GPUMD project</h5><ul>
+        <li><a href="https://github.com/brucefan1983/GPUMD" target="_blank" rel="noopener">GPUMD repository</a></li>
+        <li><a href="https://gpumd.org/" target="_blank" rel="noopener">GPUMD documentation</a></li>
+        <li><a href="https://github.com/brucefan1983/GPUMD-Tutorials" target="_blank" rel="noopener">GPUMD-Tutorials</a></li>
+        <li><a href="https://github.com/brucefan1983/GPUMD/tree/master/tools" target="_blank" rel="noopener">GPUMD-Tools</a></li></ul></div>
+      <div><h5 data-i18n="foot.eco">GPUMD ecosystem</h5><ul>
+        <li><a href="https://gitlab.com/brucefan1983/nep-data" target="_blank" rel="noopener">nep-data</a></li>
+        <li><a href="https://gitlab.com/materials-modeling/calorine" target="_blank" rel="noopener">calorine</a></li>
+        <li><a href="https://github.com/aboys-cb/NepTrainKit" target="_blank" rel="noopener">NepTrainKit</a></li>
+        <li><a href="https://github.com/Jonsnow-willow/GPUMD-Wizard" target="_blank" rel="noopener">GPUMD-Wizard</a></li></ul></div>
+    </div>
+    <div class="footer-bottom">
+      <span data-i18n="foot.copy">© 2026 GPUMDkit Team. Released under GPL-3.0.</span>
+      <span><span id="busuanzi_container_site_pv"><span data-i18n="foot.views">Views</span>: <span id="busuanzi_value_site_pv"></span></span> · <span id="busuanzi_container_site_uv"><span data-i18n="foot.visitors">Visitors</span>: <span id="busuanzi_value_site_uv"></span></span></span>
     </div>
   </div>
 </footer>
-      
-    </div>
-    <div class="md-dialog" data-md-component="dialog">
-      <div class="md-dialog__inner md-typeset"></div>
-    </div>
-    
-    
-    
-      
-      
-      <script id="__config" type="application/json">{"annotate": null, "base": "..", "features": ["content.code.copy", "navigation.top", "search.suggest", "search.highlight"], "search": "../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
-    
-    
-      <script src="../assets/javascripts/bundle.79ae519e.min.js"></script>
-      
-    
-  </body>
+
+<script src="../../assets/js/gk-data.js"></script>
+<script src="../../assets/js/gk-docs.js"></script>
+<script src="../../assets/js/gk-i18n.js"></script>
+<script src="../../assets/js/gk-core.js"></script>
+<script src="../../assets/js/gk-doc.js"></script>
+<script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+</body>
 </html>

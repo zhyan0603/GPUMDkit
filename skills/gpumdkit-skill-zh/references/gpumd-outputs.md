@@ -37,7 +37,8 @@ dump_exyz <i> <v> <f> <p> <s>       -> dump_xyz <i> dump.xyz[*] velocity force p
 
 这些是迁移示例，不是当前命令。只有需要每帧独立文件时才在文件名中使用 `*`。extended XYZ 仍是支持的数据格式，`dump_observer` 仍有 `interval_exyz` 参数；不要删除这些格式/参数引用。
 
-对于基于轨迹的 GPUMDkit MSD，请求非包装坐标或验证下游解包装对模拟盒和帧频率是否有效。
+GPUMDkit 轨迹 MSD 要求 extxyz 的 `pos` 字段为已核验的展开坐标；
+`-calc msd` 不直接读取 `unwrapped_position`。晶胞和坐标要求见 `calculators.md`。
 
 ## 热力学和模型特定 dump
 
@@ -48,7 +49,7 @@ dump_exyz <i> <v> <f> <p> <s>       -> dump_xyz <i> dump.xyz[*] velocity force p
 | `dump_polarizability` | `dump_polarizability <interval> <nep_file>` | `polarizability.out` | `nep_file` 是用于预测极化率的 `nep4_polarizability` 势函数；由本关键字读取，独立于驱动 MD 的势函数 |
 | `dump_shock_nemd` | `dump_shock_nemd interval <n> [bin_size <Angstrom>]` | `temperature_hist.txt`、`pxx_hist.txt`、`pyy_hist.txt`、`pzz_hist.txt`、`density_hist.txt`、`vp_hist.txt` | 分箱大小默认为 10 Angstrom；每行对应一个输出时刻，按 x 方向连续分箱排列；密度单位 g/cm^3，粒子速度单位 km/s |
 
-在本技能内置的 GPUMD 版本快照中，`thermo.out` 有 18 列：`T K U Pxx Pyy Pzz Pyz Pxz Pxy ax ay az bx by bz cx cy cz`。温度单位为 K，能量单位为 eV，压力分量单位为 GPa，模拟盒矢量分量单位为 Angstrom。较旧的可执行文件可能不同；在解释不同布局之前确认其版本。
+在本技能内置的 GPUMD 版本快照中，`thermo.out` 有 18 列：`T K U Pxx Pyy Pzz Pyz Pxz Pxy ax ay az bx by bz cx cy cz`。温度单位为 K，能量单位为 eV，压力分量单位为 GPa，模拟盒矢量分量单位为 Angstrom。每次运行先写入若干 `#` 开头的说明行（`dump_thermo`、`format_version`、`num_atoms`、以 fs 为单位的 `dt_output` 和 `columns`），追加的运行会重复这些行，因此读取时必须跳过注释行。PIMD 运行中前两列是目标温度和量子动能（`T_target KE_quantum`）。较旧的可执行文件可能不同；在解释不同布局之前确认其版本。
 
 ## Active 和观察者模式
 
