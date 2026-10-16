@@ -575,6 +575,7 @@ kbd { display: inline-grid; place-items: center; min-width: 21px; height: 21px; 
 .bib-bar .copy-btn { margin-left: auto; width: 30px; height: 30px; }
 .bib-code { flex: 1; padding: 14px 18px 16px; font: 500 12.5px/1.8 var(--mono); color: var(--ink-2); }
 .bib-code > div { white-space: pre; overflow: hidden; text-overflow: ellipsis; }
+.bib-code > div.wrap { white-space: pre-wrap; overflow-wrap: anywhere; text-overflow: clip; }
 .bib-code .bk { color: var(--blue); font-weight: 600; }
 .bib-code .bf { color: var(--copper-2); }
 [data-theme="dark"] .bib-code .bf { color: var(--copper); }

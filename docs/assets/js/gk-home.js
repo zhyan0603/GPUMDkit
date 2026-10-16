@@ -630,14 +630,16 @@
       addEventListener("resize", fit); GK.on("lang", () => { label(); fit(); });
       if (document.fonts) document.fonts.ready.then(fit);
     }
-    const fields = [["title", "GPUMDkit: A User-Friendly Toolkit for GPUMD and NEP"], ["author", names.join(" and\n             ")], ["journal", "MGE Advances"],
+    const fields = [["title", "GPUMDkit: A User-Friendly Toolkit for GPUMD and NEP"], ["author", names.join(" and ")], ["journal", "MGE Advances"],
       ["volume", "4"], ["pages", "e70074"], ["year", "2026"], ["doi", "10.1002/mgea.70074"]];
     const bib = "@article{yan2026gpumdkit,\n" + fields.map(([k, v]) => `  ${k.padEnd(7)} = {${v}}`).join(",\n") + "\n}";
-    // on-page preview: one line per field, the author list shortened to first two … last
+    // on-page preview: one line per field, the full author list wrapping naturally
     if (view) {
-      const short = names.length > 3 ? `${names[0]} and ${names[1]} and … and ${names[names.length - 1]}` : names.join(" and ");
       view.innerHTML = `<div><span class="bk">@article</span>{yan2026gpumdkit,</div>` +
-        fields.map(([k, v], i) => `<div>  <span class="bf">${k.padEnd(7)}</span> = {<span class="bv">${GK.esc(k === "author" ? short : v)}</span>}${i < fields.length - 1 ? "," : ""}</div>`).join("") + "<div>}</div>";
+        fields.map(([k, v], i) => {
+          const val = k === "author" ? names.map(GK.esc).join(" and ") : GK.esc(v);
+          return `<div${k === "author" ? ' class="wrap"' : ""}>  <span class="bf">${k.padEnd(7)}</span> = {<span class="bv">${val}</span>}${i < fields.length - 1 ? "," : ""}</div>`;
+        }).join("") + "<div>}</div>";
     }
     $$("[data-copy-bib]").forEach(b => b.addEventListener("click", () => GK.copy(bib, b.classList.contains("copy-btn") ? b : null)));
   })();
