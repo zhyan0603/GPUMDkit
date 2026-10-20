@@ -356,6 +356,23 @@ q-path 偏移会在比较前分别归一化，但对比文件仍必须使用相�
 
 > Z. Yan\*, D. Li, X. Wu, Z. Liu, C. Hua, B. Situ, H. Yang, S. Tang, B. Tang, Z. Wang, S. Yi, H. Wang, D. Huang, K. Li, Q. Guo, Z. Chen, K. Xu, Y. Wang, Z. Wang, G. Tang, S. Liu, Z. Fan, and Y. Zhu\*. **GPUMDkit: A User-Friendly Toolkit for GPUMD and NEP**. [MGE Advances, 2026, 4, e70074](https://doi.org/10.1002/mgea.70074).
 
+<details>
+<summary><b>BibTeX</b></summary>
+
+```bibtex
+@article{yan2026gpumdkit,
+  title   = {GPUMDkit: A User-Friendly Toolkit for GPUMD and NEP},
+  author  = {Yan, Zihan and Li, Denan and Wu, Xin and Liu, Zhoulin and Hua, Chen and Situ, Boyi and Yang, Hao and Tang, Shengjie and Tang, Benrui and Wang, Ziyang and Yi, Shangzhao and Wang, Huan and Huang, Dian and Li, Ke and Guo, Qilin and Chen, Zherui and Xu, Ke and Wang, Yanzhou and Wang, Ziliang and Tang, Gang and Liu, Shi and Fan, Zheyong and Zhu, Yizhou},
+  journal = {MGE Advances},
+  volume  = {4},
+  pages   = {e70074},
+  year    = {2026},
+  doi     = {10.1002/mgea.70074}
+}
+```
+
+</details>
+
 在论文中可以参考类似表述：
 
 > Data processing and figure generation were performed using GPUMDkit [x].
