@@ -647,7 +647,7 @@ The phonon data file is optional. If it is omitted, the plotter reads
 `QPOINTS`.
 
 <div align="center">
-    <img src="../../docs/Gallery/phonon.png" alt="Phonon band structure" width="70%" />
+    <img src="../../docs/Gallery/phonon.png" alt="Phonon band structure" width="60%" />
 </div>
 
 ---
@@ -673,7 +673,7 @@ gpumdkit.sh -plt phonon_comp phonon_DFT.dat phonon_NEP.dat phonon_MACE.dat \
 ```
 
 <div align="center">
-    <img src="../../docs/Gallery/phonon_comp.png" alt="Phonon band comparison" width="70%" />
+    <img src="../../docs/Gallery/phonon_comp.png" alt="Phonon band comparison" width="60%" />
 </div>
 
 ---
@@ -700,7 +700,9 @@ marks the scaling factor `a_min` at which the energy is lowest. `a_min` is read
 directly from the data, so its precision is the step of the scaling factor in
 `compute_cohesive`.
 
-<img src="../../docs/Gallery/cohesive.png" alt="Cohesive energy curve" width="55%" />
+<div align="center">
+    <img src="../../docs/Gallery/cohesive.png" alt="Cohesive energy curve" width="55%" />
+</div>
 
 ---
 
