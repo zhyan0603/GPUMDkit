@@ -438,6 +438,28 @@ gpumdkit.sh -time gpumd
 
 
 
+### time_consuming_wpe.sh
+
+---
+
+This script estimates the remaining time for WPE-enabled GPUMD runs using buffered progress updates.
+
+#### Usage
+
+```
+bash time_consuming_wpe.sh
+```
+
+#### Command-Line Mode Example
+
+```
+gpumdkit.sh -time wpe
+```
+
+It reads `run.in` and monitors `neighbor.out` or `thermo.out` in the current GPUMD working directory.
+
+
+
 ### time_consuming_nep.sh
 
 ---

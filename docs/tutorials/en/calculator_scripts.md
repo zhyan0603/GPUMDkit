@@ -7,7 +7,7 @@
 
 ## Overview
 
-The calculator module can be read as three groups:
+The calculator module can be read as four groups:
 
 - **Trajectory properties:** compute time-dependent quantities such as MSD and ionic conductivity from GPUMD or extxyz trajectories, and calculate X-ray diffraction from extxyz trajectories;
 - **Phonon properties:** calculate phonon force constants and band structures from a primitive cell, a NEP model, and a `QPOINTS` path;
@@ -35,36 +35,10 @@ If you are not sure about the required arguments, start from the interactive men
 | Octahedral tilt | `gpumdkit.sh -calc oct-tilt ...` | see [Polar Material Analysis](polar_material_analysis.md) |
 | ABO3 polarization | `gpumdkit.sh -calc pol-abo3 ...` | see [Polar Material Analysis](polar_material_analysis.md) |
 
-For a full command list:
+`gpumdkit.sh -calc -h` prints every calculator command. In interactive mode, run `gpumdkit.sh` and choose `4) Calculators`.
 
-```bash
-gpumdkit.sh -calc -h
-```
-
-The command-line help table looks like:
-
-```text
-+-------------------------------------------------------------------------------------------------------+
-|                                      CALCULATOR TOOLS                                                 |
-+-------------------------------------------------------------------------------------------------------+
-| Usage: gpumdkit.sh -calc <type> [args...]                                                             |
-+-------------------------------------------------------------------------------------------------------+
-| ionic-cond <element> <charge>                 Calculate ionic conductivity from MSD data              |
-| nep <input.xyz> <output.xyz> <nep_model>      Calculate energy/force/virial with a NEP model          |
-| des <input.xyz> <output.npy> <nep_model> <el> Calculate NEP descriptors for one element               |
-| doas <input.xyz> <nep_model> <output.txt>     Calculate density of atomistic states                   |
-| neb <initial.xyz> <final.xyz> <n_images> <nep> Run NEB calculation with a NEP model                   |
-| minimize <structure> <nep_model> [fmax] [n]   Minimize a structure with a NEP model                   |
-| msd <trajectory.xyz> <element> <dt_fs> [n]    Calculate MSD from an extxyz trajectory                 |
-| nlist [script args...]                        Build neighbor lists                                    |
-| disp [script args...]                         Calculate displacement from trajectory                  |
-| avg-struct [script args...]                   Calculate averaged structure                            |
-| oct-tilt [script args...]                     Calculate octahedral tilt                               |
-| pol-abo3 [script args...]                     Calculate local polarization for ABO3                   |
-+-------------------------------------------------------------------------------------------------------+
-```
-
-In interactive mode, choose `4) Calculators`. The menu is:
+<details markdown="1">
+<summary>Show the full menu</summary>
 
 ```text
 +----------------------------------------------------------+
@@ -89,6 +63,53 @@ In interactive mode, choose `4) Calculators`. The menu is:
 +----------------------------------------------------------+
 Input the function number:
 ```
+
+</details>
+
+## A Worked Example: From MSD to a Conductivity
+
+The commands below use the output of a real GPUMD run: a Li<sub>7</sub>La<sub>3</sub>Zr<sub>2</sub>O<sub>12</sub> cell with 12 288 atoms (3584 Li), NPT at 1000 K for 1 000 000 steps, with `compute_msd 10 5000 group 0 0` (group 0 is the Li atoms). Run them in the folder that holds `msd.out`, `thermo.out` (18 columns), `model.xyz`, and `run.in`. A real study needs its own converged run and checks.
+
+**1. The MSD file.** With a single group, `compute_msd` writes seven columns: time (ps), `MSD_x/y/z` (Å²), and `SDC_x/y/z` (Å²/ps). `gpumdkit.sh -calc msd` produces the four-column form from a trajectory; here GPUMD's own file is used directly.
+
+**2. Look at the curve before using it.**
+
+```bash
+gpumdkit.sh -plt msd
+```
+
+<div align="center">
+  <img src="../../Gallery/msd.png" alt="MSD of Li in Li7La3Zr2O12 at 1000 K" width="48%" />
+</div>
+
+The slopes in the legend come from the middle 40%–80% of the curve (the shaded window). Here the three directions agree at 0.19 Å²/ps and the curve is close to a straight line inside the window, as a converged diffusive regime should look. The fewer time origins a long lag time has, the worse its statistics, so do not fit there.
+
+**3. Conductivity.** Besides `msd.out` the calculator needs `thermo.out` (temperature and box, 12 or 18 columns) and `model.xyz` (to count the ions):
+
+```bash
+gpumdkit.sh -calc ionic-cond Li 1
+```
+
+```text
+ Number of ions: 3584
+ Average Volume: 143914.280 Å^3
+ Average Temperature: 1000.019 K
+ ------------------------------
+ Diffusivity (D):
+   D_x: 9.545e-06 cm^2/s
+   D_y: 9.509e-06 cm^2/s
+   D_z: 9.526e-06 cm^2/s
+   D_total: 9.527e-06 cm^2/s
+ ------------------------------
+ Ionic Conductivity:
+   Sigma_x: 4.419e+02 mS/cm
+   Sigma_y: 4.403e+02 mS/cm
+   Sigma_z: 4.411e+02 mS/cm
+   Sigma_total: 4.411e+02 mS/cm
+ ------------------------------
+```
+
+If there is no `run.in` next to the data, a warning is printed and no replication is assumed. If your simulation used a `replicate` line, keep that `run.in` in the folder so the number of ions and the volume are scaled consistently. Temperature and volume are averaged over the second half of `thermo.out`.
 
 ## Ionic Conductivity
 
@@ -119,14 +140,15 @@ choice for every system. The current implementation fits the middle 40–80% of
 the available MSD points. Inspect the MSD curve and its convergence before
 using the resulting diffusion coefficient or conductivity in an interpretation.
 
+The calculator reads time and `MSD_x/y/z` from columns 1–4. The `element`
+argument counts ions; it does not select MSD columns. For `all_groups` output,
+extract the target group's time and MSD columns before running. Use an integer
+charge in units of the elementary charge. The result is Nernst–Einstein
+conductivity and does not include inter-ion displacement correlations.
+
 From interactive mode, choose `401`. You will see:
 
 ```text
->-------------------------------------------------<
-| This function calls the script in calculators   |
-| Script: calc_ion_conductivity.py                |
-| Developer: Zihan YAN (yanzihan@westlake.edu.cn) |
->-------------------------------------------------<
 Input <element> <charge> (eg. Li 1)
 ------------>>
 ```
@@ -146,19 +168,7 @@ Enter number of ions:
 
 ### Example Output
 
-```text
-Diffusivity (D):
-  D_x: 4.153e-07 cm^2/s
-  D_y: 4.174e-07 cm^2/s
-  D_z: 2.610e-07 cm^2/s
-  D_total: 3.646e-07 cm^2/s
-------------------------------
-Ionic Conductivity:
-  Sigma_x: 2.576e-02 mS/cm
-  Sigma_y: 2.589e-02 mS/cm
-  Sigma_z: 1.619e-02 mS/cm
-  Sigma_total: 2.261e-02 mS/cm
-```
+The output has the same layout as in step 3 of the worked example above.
 
 ## Mean Square Displacement
 
@@ -168,6 +178,13 @@ Ionic Conductivity:
 gpumdkit.sh -calc msd dump.xyz Li 10
 gpumdkit.sh -calc msd dump.xyz Li 10 5000
 ```
+
+Use a fixed-cell trajectory with stable atom order and verified unwrapped
+coordinates in the `pos` field. The script reads `pos` and the first frame's
+cell; it does not use a separate `unwrapped_position` property. Its automatic
+wrapping check is not sufficient to validate wrapped trajectories, and its
+axis-wise unwrapping does not handle general tilted or changing cells.
+The command overwrites `msd.out` in the current directory.
 
 From interactive mode, choose `412`. You will see:
 
@@ -256,10 +273,7 @@ The output contains metadata headers followed by four columns:
 | `Count` | averaged XRD intensity |
 | `Count/Total` | intensity normalized by the total selected-range intensity |
 
-For faster runs, the script reads the trajectory once, reuses the reciprocal
-mesh when the cell is unchanged, groups atoms by element, and supports ordered
-threaded workers. These optimizations preserve the selected atoms, scattering
-formula, and `2theta` bin definition.
+Multiple CPU workers speed up long trajectories without changing the result.
 
 ## Phonon Band Structure
 
@@ -305,8 +319,6 @@ pip install calorine
 gpumdkit.sh -calc nep structures.xyz predictions.xyz nep.txt
 ```
 
-Use this function to run predictions with a trained NEP model. For best results, validate model quality on your target structures before relying on the output.
-
 **Tip:** Before prediction, you may want to clean the extxyz metadata:
 
 ```bash
@@ -332,9 +344,11 @@ gpumdkit.sh -prediction train.xyz nep.txt 8
 Each row stores predicted values first and target values second. Energy is in
 eV/atom, force in eV/Angstrom, stress in GPa, and virial in eV/atom. Stress and
 virial tensors use the NEP order `xx yy zz xy yz xz` and the same NEP sign
-convention. When only one of stress or virial is present in a frame, the other
-is derived using `stress = virial / volume` and the corresponding unit
-conversion. If neither target is present, both target columns contain NEP's
+convention: in these files `stress = virial / volume`, positive when
+compressed. The `stress=` field of an input extxyz uses the opposite sign
+(positive when stretched), so it is converted with `virial = -stress * volume`,
+as NEP does. When only one of stress or virial is present in a frame, the other
+target is derived this way. If neither target is present, both target columns contain NEP's
 `-1e6` sentinel. Energy and force targets are required. A `tqdm` progress bar
 is shown during prediction.
 
@@ -461,7 +475,7 @@ pip install ovito
 **Input file:** Structure file (single frame or trajectory)
 
 ```bash
-python Scripts/calculators/rdf_calculator_ovito.py trajectory.xyz 6.0 400
+python "${GPUMDkit_path}/Scripts/calculators/rdf_calculator_ovito.py" trajectory.xyz 6.0 400
 ```
 
 **Parameters:**
@@ -472,13 +486,9 @@ python Scripts/calculators/rdf_calculator_ovito.py trajectory.xyz 6.0 400
 | `6.0` | Maximum distance for RDF calculation (Å) |
 | `400` | Number of histogram bins |
 
-**Visualization:**
+**Output:** `rdf.txt`.
 
-```bash
-gpumdkit.sh -plt rdf
-```
-
-**Note:** It is recommended to use the `compute_rdf` command directly in GPUMD when possible.
+When possible, compute the RDF during the GPUMD run with `compute_rdf` instead; its `rdf.out` can be plotted with `gpumdkit.sh -plt rdf`, which does not read `rdf.txt`.
 
 ---
 

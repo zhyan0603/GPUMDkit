@@ -18,7 +18,7 @@ Arguments:
 Output:
   Arrhenius_D_PT.png      (if save is used, or if backend is non-interactive)
 Author:     Zihan YAN (yanzihan@westlake.edu.cn)
-Last-modified: 2026-08-28
+Last-modified: 2026-10-21
 =============================================================================
 """
 
@@ -51,20 +51,30 @@ from matplotlib import get_backend
 from scipy.stats import linregress
 
 
+# Plot style (self-contained; keep in sync across plt_*.py scripts)
 plt.rcParams.update({
     "font.family": "sans-serif",
     "font.sans-serif": ["Arial", "DejaVu Sans", "Liberation Sans"],
-    "font.size": 11,
-    "axes.labelsize": 11.5,
-    "axes.titlesize": 12,
-    "xtick.labelsize": 11,
-    "ytick.labelsize": 11,
-    "legend.fontsize": 11,
-    "figure.figsize": (4.3, 3.8),
-    "axes.spines.top": True,
-    "axes.spines.right": True,
-    "axes.linewidth": 0.8,
+    "mathtext.fontset": "dejavusans",
+    "font.size": 9,
+    "axes.labelsize": 10,
+    "axes.linewidth": 0.9,
+    "xtick.labelsize": 9,
+    "ytick.labelsize": 9,
+    "xtick.direction": "out",
+    "ytick.direction": "out",
+    "xtick.major.size": 3.5,
+    "ytick.major.size": 3.5,
+    "xtick.minor.size": 2.0,
+    "ytick.minor.size": 2.0,
+    "xtick.major.width": 0.9,
+    "ytick.major.width": 0.9,
+    "legend.frameon": False,
+    "legend.fontsize": 9,
+    "figure.dpi": 100,
 })
+HIGH_COLOR = "C3"
+LOW_COLOR = "C0"
 
 
 BOLTZMANN_EV = 8.617333262145e-5
@@ -169,7 +179,7 @@ def format_temperature(value):
     return f"{value:.0f}" if value.is_integer() else f"{value:g}"
 
 
-def plot_branch(ax, temperatures, values, mask, label, color):
+def plot_branch(ax, temperatures, values, mask, label, color, marker="o"):
     """Plot one temperature branch and its fitted Arrhenius line."""
     valid = mask & np.isfinite(temperatures) & np.isfinite(values) & (values > 0)
     fit = fit_arrhenius(temperatures[mask], values[mask])
@@ -182,10 +192,10 @@ def plot_branch(ax, temperatures, values, mask, label, color):
     y_fit = fit["slope"] * x_fit + fit["intercept"]
     legend_label = f"{label} ({fit['activation_energy']:.3f} eV)"
     ax.plot(
-        x_data, y_data, "o", color=color, markersize=8,
-        markerfacecolor="none", markeredgewidth=1.5, label=legend_label,
+        x_data, y_data, marker, color=color, markersize=7 if marker == "o" else 6,
+        markerfacecolor="none", markeredgewidth=1.3, label=legend_label,
     )
-    ax.plot(x_fit, y_fit, "--", color=color, linewidth=1.5)
+    ax.plot(x_fit, y_fit, "--", color=color, linewidth=1.2)
     return fit
 
 
@@ -235,28 +245,29 @@ def main():
         print(f" | {temperature:^{width_temperature}.0f} | {diffusivity:^{width_diffusivity}.3e} |")
     print(f" {line}")
 
-    fig, ax = plt.subplots(figsize=(4.3, 3.8), dpi=150)
-    plot_branch(ax, temperatures, diffusivities, high_mask, "HighT", "#D62828")
-    plot_branch(ax, temperatures, diffusivities, low_mask, "LowT", "#D62828")
-    ax.set_xlabel("1000/T (1/K)", labelpad=7)
-    ax.set_ylabel(r"log10(D) (cm$^2$/s)")
-    ax.legend(loc="lower left", frameon=False, fontsize=11)
+    fig, ax = plt.subplots(figsize=(3.7, 3.4))
+    plot_branch(ax, temperatures, diffusivities, high_mask, "HighT", HIGH_COLOR)
+    plot_branch(ax, temperatures, diffusivities, low_mask, "LowT", LOW_COLOR, marker="s")
+    ax.set_xlabel("1000/T (1/K)")
+    ax.set_ylabel(r"$\log_{10}(D)$ (cm$^2$/s)")
+    ax.legend(loc="lower left", handlelength=1.0, handletextpad=0.3)
 
     ax_top = ax.secondary_xaxis("top")
-    ax_top.set_xlabel("Temperature (K)", labelpad=7)
+    ax_top.set_xlabel("Temperature (K)", labelpad=5)
     xticks = ax.get_xticks()
     ax_top.set_xticks(xticks)
     ax_top.set_xticklabels([f"{int(1000 / tick)}" if tick > 0 else "" for tick in xticks])
     ax.yaxis.set_major_formatter(ticker.FormatStrFormatter("%.1f"))
-    plt.tight_layout()
+    # Subplot geometry (figure fractions); tune these to adjust margins
+    fig.subplots_adjust(left=0.17, right=0.96, top=0.83, bottom=0.14)
 
     output_file = "Arrhenius_D_PT.png"
     if len(args) > 1 and args[-1] == "save":
-        plt.savefig(output_file, dpi=300, bbox_inches="tight")
+        plt.savefig(output_file, dpi=300)
     elif get_backend().lower() in ["agg", "cairo", "pdf", "ps", "svg"]:
         print(" Unable to display the plot due to the non-interactive backend.")
         print(f" The plot has been automatically saved as '{output_file}'.")
-        plt.savefig(output_file, dpi=300, bbox_inches="tight")
+        plt.savefig(output_file, dpi=300)
     else:
         plt.show()
 

@@ -9,7 +9,7 @@ The format conversion scripts provide seamless interconversion between:
 - **VASP** (POSCAR, OUTCAR) ↔ extxyz
 - **CP2K** output → extxyz
 - **ABACUS** output → extxyz  
-- **LAMMPS** dump → extxyz
+- **LAMMPS** dump or data file → extxyz
 - **CIF** → POSCAR/extxyz
 - **DeepMD** `npy` datasets → extxyz
 - Adding metadata (group labels, weights)
@@ -28,7 +28,7 @@ The format conversion scripts provide seamless interconversion between:
 | extxyz | POSCAR | `gpumdkit.sh -exyz2pos <xyz>` |
 | POSCAR | LAMMPS | `gpumdkit.sh -pos2lmp <poscar> <lmp>` |
 | XDATCAR | extxyz | `gpumdkit.sh -xdat2exyz XDATCAR dump.xyz` |
-| LAMMPS dump | extxyz | `gpumdkit.sh -lmp2exyz <dump> <elem...>` |
+| LAMMPS dump or data | extxyz | `gpumdkit.sh -lmp2exyz <dump_or_data> <elem...>` |
 | CIF | extxyz | `gpumdkit.sh -cif2exyz <input.cif> <output.xyz>` |
 | CIF | POSCAR | `gpumdkit.sh -cif2pos <input.cif> <output.vasp>` |
 | Add groups | - | `gpumdkit.sh -addgroup <poscar> <elem...>` |
@@ -356,30 +356,31 @@ gpumdkit.sh -xdat2exyz XDATCAR dump.xyz
 
 ---
 
-This script will convert the `lammps-dump` to `extxyz` format.
+This script converts a LAMMPS text dump (all frames) or data file (one structure, `units metal`) to `extxyz`. Compressed inputs (`.gz`, `.bz2`, `.xz`) are detected automatically. For data files the box origin is moved to zero, atoms are wrapped into the cell, and velocities (Å/fs), masses, and charges are kept when present.
 
 #### Usage
 
 ```
-python lmp2exyz.py <dump_file> <element1> <element2> ...
+python lmp2exyz.py <input_file> <element1> <element2> ...
 ```
 
-- `<dump_file>`: The path to the input `lammps-dump` file.
+- `<input_file>`: The LAMMPS text dump or data file.
 - `<element>`: The order of the specified elements.
 
 #### Example
 
 ```sh
-python lmp2exyz.py dump.data Li Y Cl
+python lmp2exyz.py dump.lammpstrj Li Y Cl
 ```
 
 #### Command-Line Mode Example
 
 ```
-gpumdkit.sh -lmp2exyz dump.data Li Y Cl
+gpumdkit.sh -lmp2exyz dump.lammpstrj Li Y Cl
+gpumdkit.sh -lmp2exyz model.data Li Y Cl
 ```
 
-It will convert the `dump.data` to `dump.xyz` file
+The result is written to `dump.xyz`.
 
 
 

@@ -334,14 +334,14 @@ echo " Code path: ${GPUMDkit_path}/Scripts/format_conversion/pos2lmp.py"
 echo " ---------------------------------------------------"
 }
 
-# Convert LAMMPS dump to extxyz
+# Convert LAMMPS dump or data file to extxyz
 function lammps2extxyz(){
 echo " >-------------------------------------------------<"
 echo " | Calling the script in Scripts/format_conversion |"
 echo " | Script: lmp2exyz.py                             |"
 echo " | Developer: Zihan YAN (yanzihan@westlake.edu.cn) |"
 echo " >-------------------------------------------------<"
-echo " Input <dump_file> <element1> <element2> ..."
+echo " Input <dump_or_data_file> <element1> <element2> ..."
 echo " Example: dump.lammpstrj Li O"
 echo " ------------>>"
 read_menu_array lmp2extxyz_args || return 1

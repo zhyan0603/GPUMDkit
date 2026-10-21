@@ -19,7 +19,7 @@ if [ -z "$GPUMDkit_path" ]; then
     exit 1
 fi
 
-VERSION="1.5.8 (2026-09-23)"
+VERSION="1.5.8 (2026-10-20)"
 
 plt_path="${GPUMDkit_path}/Scripts/plt_scripts"
 analyzer_path="${GPUMDkit_path}/Scripts/analyzer"
@@ -40,18 +40,23 @@ echo " 7) Utilities                  8) Help                "
 echo " 0) Exit                                              "
 }
 
+# -e enables readline (Tab filename completion, line editing) on a terminal;
+# piped/redirected input is read as before.
 function read_menu_choice(){
     local __target_var="$1"
     local __input
-    if ! IFS= read -r -p " " __input; then
+    if ! IFS= read -e -r -p " " __input; then
         echo " Input closed. Exiting."
         return 1
     fi
+    # Strip leading/trailing whitespace (Tab completion appends a space)
+    __input="${__input#"${__input%%[![:space:]]*}"}"
+    __input="${__input%"${__input##*[![:space:]]}"}"
     printf -v "$__target_var" '%s' "$__input"
 }
 
 function read_menu_array(){
-    if ! read -r -a "$1"; then
+    if ! read -e -r -a "$1"; then
         echo " Input closed. Exiting."
         return 1
     fi
@@ -194,11 +199,11 @@ function help_info_table(){
     echo " |                                          MAIN FUNCTIONS                                               |"
     echo " +-------------------------------------------------------------------------------------------------------+"
     echo " | -h            Show this help table            | -plt <type>        Plot and visualization tools       |"
-    echo " | -calc <type>  Calculator tools                | -time <gpumd|nep>  Time-consuming analyzer            |"
+    echo " | -calc <type>  Calculator tools                | -time <gpumd|wpe|nep|gnep>  Time-consuming analyzer   |"
     echo " | -update       Update GPUMDkit                 | -clean             Clean extra files in current dir   |"
     echo " | -skill        Show GPUMDkit agent skill info  | -doctor            Check Python environment           |"
-    echo " | -server       Start the GPUMDkit web server   |                                                       |"
     echo " | -prediction   Write NEP prediction .out files | -prediction_dpa    Write DPA prediction .out files    |"
+    echo " | -server       Start the GPUMDkit web server   |                                                       |"
     echo " +-------------------------------------------------------------------------------------------------------+"
     echo " |                                         FORMAT CONVERSION                                             |"
     echo " +-------------------------------------------------------------------------------------------------------+"
@@ -207,7 +212,7 @@ function help_info_table(){
     echo " | -cp2k2xyz     CP2K log -> xyz                 | -xdat2exyz         XDATCAR -> extxyz                  |"
     echo " | -cif2pos      cif -> POSCAR                   | -cif2exyz          cif -> extxyz                      |"
     echo " | -pos2exyz     POSCAR -> extxyz                | -exyz2pos          extxyz -> POSCAR                   |"
-    echo " | -pos2lmp      POSCAR -> LAMMPS data           | -lmp2exyz          LAMMPS dump -> extxyz              |"
+    echo " | -pos2lmp      POSCAR -> LAMMPS data           | -lmp2exyz          LAMMPS dump/data -> extxyz         |"
     echo " | -traj2exyz    ASE traj -> extxyz              | -replicate         Replicate structure                |"
     echo " | -addgroup     Add group labels                | -addweight         Add structure weight in extxyz     |"
     echo " | -clean_xyz    Clean extra info in extxyz      | -get_frame         Extract specific frame             |"
@@ -296,8 +301,10 @@ if [ ! -z "$1" ]; then
         -time)
             case $2 in
                 gpumd) bash "${analyzer_path}/time_consuming_gpumd.sh" ;;
+                wpe) bash "${analyzer_path}/time_consuming_wpe.sh" ;;
                 nep|gnep) bash "${analyzer_path}/time_consuming_nep.sh" ;;
                 *)
+                    echo " Supported modes: gpumd, wpe, nep or gnep."
                     echo " See the codes in analyzer folder for more details"
                     echo " Code path: ${analyzer_path}/time_consuming_*.sh"
                     exit 1 ;;
@@ -314,7 +321,10 @@ if [ ! -z "$1" ]; then
                 case $2 in
                     "thermo") python "${plt_path}/plt_thermo.py" "${@:3}" ;;
                     "thermo2") python "${plt_path}/plt_thermo2.py" "${@:3}" ;;
-                    "thermo3") python "${plt_path}/plt_thermo3.py" "${@:3}" ;;
+                    "thermo3")
+                        echo " Note: 'thermo3' is now the default 'thermo'; please use 'gpumdkit.sh -plt thermo'."
+                        echo " The previous 'thermo' style is available as 'thermo2'."
+                        python "${plt_path}/plt_thermo.py" "${@:3}" ;;
                     "train") python "${plt_path}/plt_train.py" "${@:3}" ;;
                     "train_density") python "${plt_path}/plt_train_density.py" "${@:3}" ;;
                     "prediction"|"test") python "${plt_path}/plt_prediction.py" "${@:3}" ;;

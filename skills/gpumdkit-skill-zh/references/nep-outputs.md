@@ -30,23 +30,37 @@
 | `nep.restart` | 按 `output_interval` 代更新的优化状态 |
 | 检查点 `nep_*.txt`/restart | 由 `save_potential` 控制的周期性模型/状态文件 |
 
-势函数模型 `loss.out` 列：
+从 GPUMD 5.9 起，每次运行都会在 `loss.out` 开头写入 `#` 说明行：
 
 ```text
-gen L_t L_1 L_2 L_e_train L_f_train L_v_train L_e_test L_f_test L_v_test
+# format_version 1
+# output_interval 100
+# columns generation total L1 L2 rmse_energy_train ...
 ```
+
+重启后的运行会再追加一组说明行，因此读取时必须跳过注释行，并且一个文件中可能出现多组说明行。
+
+势函数模型的列：
+
+```text
+generation total L1 L2 rmse_energy_train rmse_force_train rmse_virial_train rmse_energy_test rmse_force_test rmse_virial_test
+```
+
+qNEP 模型（`charge_mode` 非零）会在训练集维里列之后插入 `rmse_charge_train rmse_bec_train`，在测试集维里列之后插入 `rmse_charge_test rmse_bec_test`。电荷 RMSE 单位为 e/atom，BEC RMSE 单位为 e。使用 `lambda_d` 时，势函数列之后还有 `rmse_ediff_train rmse_ediff_test`，单位为总能量的 eV；没有对应组合时为 0。
 
 偶极矩模型：
 
 ```text
-gen L_t L_1 L_2 L_mu_train L_mu_test
+generation total L1 L2 rmse_dipole_train rmse_dipole_test
 ```
 
 极化率模型：
 
 ```text
-gen L_t L_1 L_2 L_alpha_train L_alpha_test
+generation total L1 L2 rmse_polarizability_train rmse_polarizability_test
 ```
+
+5.9 之前的版本不写说明行，同样的列名为 `gen L_t L_1 L_2 L_e_train ...`，列顺序不变。
 
 能量/维里 RMSE 值记录为每原子；力 RMSE 单位为 eV/Angstrom。偶极矩/极化率 RMSE 请按数据集记录的单位解读。
 
@@ -59,7 +73,7 @@ gen L_t L_1 L_2 L_alpha_train L_alpha_test
 | `energy_train.out`, `energy_test.out` | 2 列：预测值然后目标值，单位为 eV/atom |
 | `force_train.out`, `force_test.out` | 6 列：预测 xyz 然后目标 xyz，单位为 eV/Angstrom；每个原子一行 |
 | `virial_train.out`, `virial_test.out` | 12 列：预测值然后目标值 xx yy zz xy yz zx，单位为 eV/atom |
-| `stress_train.out`, `stress_test.out` | 12 列：预测值然后目标值 xx yy zz xy yz zx，单位为 GPa |
+| `stress_train.out`, `stress_test.out` | 12 列：预测值然后目标值 xx yy zz xy yz zx，单位为 GPa；按 `virial / volume` 计算，因此受压为正，与输入 `stress=` 字段的符号相反 |
 | `descriptor.out` | 预测模式下请求时输出归一化描述符 |
 
 对于没有目标维里/应力的结构，输出目标哨兵值为 `-1e6`。请显式排除哨兵值并报告排除操作；不要将它们视为物理标签。

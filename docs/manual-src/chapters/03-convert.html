@@ -1,0 +1,66 @@
+<section class="chap" id="convert" data-group="Toolbox|工具箱">
+<div class="chap-head"><span class="chap-no"></span>
+<div><h2><span class="l-en">Format conversion</span><span class="l-zh">格式转换</span></h2></div></div>
+<p class="lead l-en">Bring DFT and MD outputs into extxyz, and reshape extxyz files for training.</p>
+<p class="lead l-zh">把 DFT 与 MD 的输出转换为 extxyz，并整理成适合训练的形式。</p>
+<div class="docs-row"><span class="dr-label"><span class="l-en">Detailed pages</span><span class="l-zh">详细页面</span></span><a class="chip" href="htmls/en/format_conversion.html" data-doc="format_conversion"><span class="l-en">Format conversion</span><span class="l-zh">格式转换</span><svg><use href="#i-out"/></svg></a></div>
+<p class="l-en">GPUMDkit converts between the formats used in computational materials science and the extended XYZ (<b>extxyz</b>) files used by GPUMD and NEP. Run it in the directory where you want the results: most converters write into the current directory, even when the input is elsewhere.</p>
+<p class="l-zh">GPUMDkit 在计算材料学常用格式与 GPUMD/NEP 使用的扩展 XYZ（<b>extxyz</b>）之间转换。请在希望保存结果的目录中运行：多数转换器即使输入文件在别处，也会把结果写到当前目录。</p>
+<h3 id="extxyz"><span class="l-en">Anatomy of an extxyz file</span><span class="l-zh">extxyz 文件长什么样</span></h3>
+<div class="anat">
+<div class="cap">train.xyz — <span class="l-en">illustrative values, 2 atoms</span><span class="l-zh">示意数值，2 个原子</span></div>
+<pre><span class="hl a" data-n="1">2</span>
+<span class="hl b" data-n="2">Lattice="5.43 0.0 0.0 0.0 5.43 0.0 0.0 0.0 5.43"</span> <span class="hl c" data-n="3">Properties=species:S:1:pos:R:3:forces:R:3</span> <span class="hl d" data-n="4">energy=-10.52 virial="-0.21 0.0 0.0 0.0 -0.21 0.0 0.0 0.0 -0.21"</span> pbc="T T T"
+<span class="hl c" data-n="5">Si  0.00  0.00  0.00   0.012 -0.020  0.003</span>
+<span class="hl c" data-n="5">Si  1.36  1.36  1.36  -0.012  0.020 -0.003</span></pre>
+<ol class="l-en">
+<li><b>Atom count</b> of this frame; a file stacks many frames.</li>
+<li><b>Lattice</b>: nine numbers (three cell vectors, row-major, in Å).</li>
+<li><b>Properties</b> declares the atom columns: species, position, force.</li>
+<li><b>Frame labels</b>: total energy and virial (eV) from the reference calculation.</li>
+<li><b>One line per atom</b>: element, position (Å), force (eV/Å).</li></ol>
+<ol class="l-zh">
+<li><b>原子数</b>：当前帧的原子个数，一个文件可以串联很多帧。</li>
+<li><b>Lattice</b>：9 个数（三个晶格矢量，按行排列，单位 Å）。</li>
+<li><b>Properties</b> 声明每个原子行包含哪些列：元素、坐标、力。</li>
+<li><b>帧级标签</b>：参考计算得到的总能量和维里（eV）。</li>
+<li><b>每个原子一行</b>：元素、坐标（Å）、力（eV/Å）。</li></ol></div>
+<h3 id="conv-table"><span class="l-en">Converters at a glance</span><span class="l-zh">常用转换器一览</span></h3>
+<div class="tbl-wrap">
+<table class="tbl">
+<thead>
+<tr><th><span class="l-en">From</span><span class="l-zh">来源</span></th><th><span class="l-en">To</span><span class="l-zh">目标</span></th><th><span class="l-en">Command</span><span class="l-zh">命令</span></th></tr></thead>
+<tbody>
+<tr><td>VASP OUTCAR</td><td>extxyz</td><td class="cmd"><button data-copy="gpumdkit.sh -out2xyz &lt;dir&gt;" title="Copy"><code>gpumdkit.sh -out2xyz &lt;dir&gt;</code></button></td></tr>
+<tr><td>VASP OUTCAR (Python)</td><td>extxyz</td><td class="cmd"><button data-copy="gpumdkit.sh -out2exyz &lt;dir&gt;" title="Copy"><code>gpumdkit.sh -out2exyz &lt;dir&gt;</code></button></td></tr>
+<tr><td><span class="l-en">VASP OUTCAR with Born charges</span><span class="l-zh">含 Born 有效电荷的 OUTCAR</span></td><td>extxyz + BEC</td><td class="cmd"><button data-copy="gpumdkit.sh -out2xyz_bec &lt;dir&gt;" title="Copy"><code>gpumdkit.sh -out2xyz_bec &lt;dir&gt;</code></button></td></tr>
+<tr><td>VASP XDATCAR</td><td>extxyz</td><td class="cmd"><button data-copy="gpumdkit.sh -xdat2exyz &lt;XDATCAR&gt; &lt;output.xyz&gt;" title="Copy"><code>gpumdkit.sh -xdat2exyz &lt;XDATCAR&gt; &lt;output.xyz&gt;</code></button></td></tr>
+<tr><td>POSCAR</td><td>extxyz</td><td class="cmd"><button data-copy="gpumdkit.sh -pos2exyz &lt;POSCAR&gt; &lt;output.xyz&gt;" title="Copy"><code>gpumdkit.sh -pos2exyz &lt;POSCAR&gt; &lt;output.xyz&gt;</code></button></td></tr>
+<tr><td>CIF</td><td>extxyz</td><td class="cmd"><button data-copy="gpumdkit.sh -cif2exyz &lt;input.cif&gt; &lt;output.xyz&gt;" title="Copy"><code>gpumdkit.sh -cif2exyz &lt;input.cif&gt; &lt;output.xyz&gt;</code></button></td></tr>
+<tr><td>CIF</td><td>POSCAR</td><td class="cmd"><button data-copy="gpumdkit.sh -cif2pos &lt;input.cif&gt; &lt;output.vasp&gt;" title="Copy"><code>gpumdkit.sh -cif2pos &lt;input.cif&gt; &lt;output.vasp&gt;</code></button></td></tr>
+<tr><td>CP2K logs</td><td>extxyz</td><td class="cmd"><button data-copy="gpumdkit.sh -cp2k2xyz" title="Copy"><code>gpumdkit.sh -cp2k2xyz</code></button></td></tr>
+<tr><td><span class="l-en">LAMMPS dump / data</span><span class="l-zh">LAMMPS dump / data</span></td><td>extxyz</td><td class="cmd"><button data-copy="gpumdkit.sh -lmp2exyz &lt;dump_or_data&gt; &lt;element...&gt;" title="Copy"><code>gpumdkit.sh -lmp2exyz &lt;dump_or_data&gt; &lt;element...&gt;</code></button></td></tr>
+<tr><td><span class="l-en">ASE trajectory</span><span class="l-zh">ASE 轨迹</span></td><td>extxyz</td><td class="cmd"><button data-copy="gpumdkit.sh -traj2exyz &lt;input.traj&gt; &lt;output.xyz&gt;" title="Copy"><code>gpumdkit.sh -traj2exyz &lt;input.traj&gt; &lt;output.xyz&gt;</code></button></td></tr>
+<tr><td>DeepMD npy</td><td>extxyz</td><td class="cmd"><button data-copy="gpumdkit.sh -dp2xyz &lt;input_dir/&gt; [output.xyz]" title="Copy"><code>gpumdkit.sh -dp2xyz &lt;input_dir/&gt; [output.xyz]</code></button></td></tr>
+<tr><td>extxyz</td><td>POSCAR</td><td class="cmd"><button data-copy="gpumdkit.sh -exyz2pos &lt;input.xyz&gt;" title="Copy"><code>gpumdkit.sh -exyz2pos &lt;input.xyz&gt;</code></button></td></tr>
+<tr><td>POSCAR</td><td>LAMMPS data</td><td class="cmd"><button data-copy="gpumdkit.sh -pos2lmp &lt;POSCAR&gt; &lt;output.data&gt;" title="Copy"><code>gpumdkit.sh -pos2lmp &lt;POSCAR&gt; &lt;output.data&gt;</code></button></td></tr>
+<tr><td>extxyz</td><td>DeepMD npy</td><td class="cmd"><button data-copy="gpumdkit.sh -xyz2dp &lt;input.xyz&gt; &lt;element...&gt;" title="Copy"><code>gpumdkit.sh -xyz2dp &lt;input.xyz&gt; &lt;element...&gt;</code></button></td></tr></tbody></table></div>
+<p class="l-en">ABACUS and MTP converters are in the interactive menu: <code class="inline">gpumdkit.sh</code> → <code class="inline">1</code> → <code class="inline">104</code> / <code class="inline">102</code>.</p>
+<p class="l-zh">ABACUS 与 MTP 转换器在交互菜单中：<code class="inline">gpumdkit.sh</code> → <code class="inline">1</code> → <code class="inline">104</code> / <code class="inline">102</code>。</p>
+<h3 id="conv-edit"><span class="l-en">Edit an extxyz file</span><span class="l-zh">编辑 extxyz 文件</span></h3>
+<div class="tbl-wrap">
+<table class="tbl">
+<thead>
+<tr><th><span class="l-en">Task</span><span class="l-zh">任务</span></th><th><span class="l-en">Command</span><span class="l-zh">命令</span></th></tr></thead>
+<tbody>
+<tr><td><span class="l-en">Replicate a cell by factors</span><span class="l-zh">按倍数扩胞</span></td><td class="cmd"><button data-copy="gpumdkit.sh -replicate &lt;input&gt; &lt;output&gt; a b c" title="Copy"><code>gpumdkit.sh -replicate &lt;input&gt; &lt;output&gt; a b c</code></button></td></tr>
+<tr><td><span class="l-en">Replicate toward a target atom count</span><span class="l-zh">扩胞到目标原子数附近</span></td><td class="cmd"><button data-copy="gpumdkit.sh -replicate &lt;input&gt; &lt;output&gt; &lt;target_num&gt;" title="Copy"><code>gpumdkit.sh -replicate &lt;input&gt; &lt;output&gt; &lt;target_num&gt;</code></button></td></tr>
+<tr><td><span class="l-en">Add GPUMD group labels</span><span class="l-zh">添加 GPUMD 分组标签</span></td><td class="cmd"><button data-copy="gpumdkit.sh -addgroup &lt;structure&gt; &lt;element...&gt;" title="Copy"><code>gpumdkit.sh -addgroup &lt;structure&gt; &lt;element...&gt;</code></button></td></tr>
+<tr><td><span class="l-en">Add a structure weight</span><span class="l-zh">添加结构权重</span></td><td class="cmd"><button data-copy="gpumdkit.sh -addweight &lt;input.xyz&gt; &lt;output.xyz&gt; &lt;weight&gt;" title="Copy"><code>gpumdkit.sh -addweight &lt;input.xyz&gt; &lt;output.xyz&gt; &lt;weight&gt;</code></button></td></tr>
+<tr><td><span class="l-en">Extract one frame</span><span class="l-zh">提取单帧</span></td><td class="cmd"><button data-copy="gpumdkit.sh -get_frame &lt;input.xyz&gt; &lt;frame_index&gt;" title="Copy"><code>gpumdkit.sh -get_frame &lt;input.xyz&gt; &lt;frame_index&gt;</code></button></td></tr>
+<tr><td><span class="l-en">Extract frames by fractional range</span><span class="l-zh">按比例区间提取多帧</span></td><td class="cmd"><button data-copy="gpumdkit.sh -frame_range &lt;input.xyz&gt; &lt;start_frac&gt; &lt;end_frac&gt;" title="Copy"><code>gpumdkit.sh -frame_range &lt;input.xyz&gt; &lt;start_frac&gt; &lt;end_frac&gt;</code></button></td></tr>
+<tr><td><span class="l-en">Remove extra properties</span><span class="l-zh">移除多余属性</span></td><td class="cmd"><button data-copy="gpumdkit.sh -clean_xyz &lt;input.xyz&gt; &lt;output.xyz&gt;" title="Copy"><code>gpumdkit.sh -clean_xyz &lt;input.xyz&gt; &lt;output.xyz&gt;</code></button></td></tr></tbody></table></div>
+<div class="note tip"><span class="ni">✓</span>
+<div class="nb">
+<div class="l-en"><b>Try a small copy first.</b> Converters write into the current directory; keep a copy of the source data so nothing is overwritten.</div>
+<div class="l-zh"><b>先用一小份数据试一下。</b>转换器会写入当前目录，请保留源数据副本，避免被覆盖。</div></div></div></section>

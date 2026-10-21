@@ -85,4 +85,12 @@ Confirm the model header, species order, and any charge/k-space requirements bef
 - Current `l_max` is a three-body limit followed by optional 0/1 descriptor switches, not the old three-number NEP3 form.
 - Current fine-tuning syntax is `fine_tune <nep_model_file> <nep_restart_file>`, not `fine_tune 1`.
 - `nep.restart` (dot) is the current documented restart filename; older text may use `nep_restart`.
+- From GPUMD 5.9, `loss.out` starts each run with `#` header lines and uses named columns; see `nep-outputs.md`.
+- GPUMD 5.9 adds `seed` (reproducible SNES draws) and `lambda_d` with `ediff.in` (energy-difference loss); see `nep-parameters.md`.
 - Do not copy hyperparameter defaults from old skills. Use `nep-parameters.md` and distinguish defaults from user-approved production choices.
+
+## Sources and version scope
+
+- [GPUMD v5.9.1 source](https://github.com/brucefan1983/GPUMD/tree/v5.9.1) is a fixed release reference.
+- [Official parameter manual](https://gpumd.org/dev/nep/input_parameters/index.html) includes development changes. Verify each keyword against the executable's release or commit before use.
+- Record the executable path and build revision; the displayed version alone may not identify patch releases.

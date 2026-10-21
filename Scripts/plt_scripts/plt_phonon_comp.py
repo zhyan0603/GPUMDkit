@@ -22,7 +22,7 @@ Output:
   phonon_comp.png  Comparison figure when saving is requested or the selected
                    Matplotlib backend cannot display figures.
 Author:     Zihan YAN (yanzihan@westlake.edu.cn)
-Last-modified: 2026-09-14
+Last-modified: 2026-10-20
 =============================================================================
 """
 
@@ -118,16 +118,24 @@ def plot_comparison(
     plt.rcParams.update({
         "font.family": "sans-serif",
         "font.sans-serif": ["Arial", "DejaVu Sans", "Liberation Sans"],
-        "axes.linewidth": 1.2,
-        "xtick.major.width": 1.2,
-        "ytick.major.width": 1.2,
-        "xtick.direction": "in",
-        "ytick.direction": "in",
-        "font.size": 12,
-        "axes.labelsize": 14,
+        "mathtext.fontset": "dejavusans",
+        "font.size": 9,
+        "axes.labelsize": 10,
+        "axes.linewidth": 0.9,
+        "xtick.labelsize": 9,
+        "ytick.labelsize": 9,
+        "xtick.direction": "out",
+        "ytick.direction": "out",
+        "xtick.major.size": 3.5,
+        "ytick.major.size": 3.5,
+        "xtick.major.width": 0.9,
+        "ytick.major.width": 0.9,
+        "legend.frameon": False,
+        "legend.fontsize": 9,
+        "figure.dpi": 150,
     })
-    figure, axis = plt.subplots(figsize=(5.5, 4.0), dpi=150)
-    palette = ["cornflowerblue", "firebrick", "goldenrod", "0.6"]
+    figure, axis = plt.subplots(figsize=(4.4, 3.6))
+    palette = ["C0", "C1", "C2", "0.6"]
     linestyles = ["-", "--", "-.", ":"]
     legend_handles = []
     legend_labels = []
@@ -136,12 +144,12 @@ def plot_comparison(
         label = label_from_filename(filename)
         upper_label = label.upper()
         if two_file_comparison and upper_label == "DFT":
-            color, linewidth, linestyle = "0.6", 1.8, "-"
+            color, linewidth, linestyle = "0.65", 1.8, "-"
         elif two_file_comparison and upper_label == "NEP":
-            color, linewidth, linestyle = "firebrick", 1.5, "--"
+            color, linewidth, linestyle = "C3", 1.1, "--"
         else:
             color = palette[model_index % len(palette)]
-            linewidth = 1.4 if two_file_comparison else 1.2
+            linewidth = 1.2 if two_file_comparison else 1.0
             linestyle = linestyles[model_index % len(linestyles)]
         if two_file_comparison and upper_label not in {"DFT", "NEP"}:
             color = palette[model_index]
@@ -156,7 +164,6 @@ def plot_comparison(
                 linewidth=linewidth,
                 linestyle=linestyle,
                 label="_nolegend_",
-                alpha=0.8,
             )
             if representative_line is None:
                 representative_line = lines[0]
@@ -165,24 +172,23 @@ def plot_comparison(
         model_index += 1
 
     for position in tick_positions[1:-1]:
-        axis.axvline(position, color="0.8", linewidth=0.8, zorder=0)
-    axis.axhline(0.0, color="gray", linewidth=1.0, linestyle=":", zorder=0)
+        axis.axvline(position, color="0.88", linewidth=0.8, zorder=0)
+    axis.axhline(0.0, color="0.55", linewidth=1.2, linestyle="--", zorder=0)
     axis.set_xlim(q_lengths[0], q_lengths[-1])
     all_frequencies = [frequencies for _, frequencies in datasets]
     minimum = min(float(frequencies.min()) for frequencies in all_frequencies)
     maximum = max(float(frequencies.max()) for frequencies in all_frequencies)
     margin = max((maximum - minimum) * 0.05, 0.1)
-    axis.set_ylim(minimum - margin, maximum + margin)
+    legend_room = 0.07 * (maximum - minimum)  # headroom for the legend above the bands
+    axis.set_ylim(minimum - margin, maximum + margin + legend_room)
     set_qpoint_ticks(axis, tick_positions, labels)
     axis.set_xlabel("Wave vector path")
     axis.set_ylabel("Frequency (THz)")
     axis.legend(
         legend_handles,
         legend_labels,
-        loc="upper right",
+        loc="upper center",
         ncol=min(3, len(datasets)),
-        frameon=False,
-        fontsize="small",
     )
 
     conversion = 33.35641
@@ -190,13 +196,13 @@ def plot_comparison(
     lower, upper = axis.get_ylim()
     right_axis.set_ylim(lower * conversion, upper * conversion)
     right_axis.set_ylabel(r"Frequency (cm$^{-1}$)")
-    axis.tick_params(axis="x", top=True)
     axis.tick_params(axis="y", right=False)
-    right_axis.tick_params(top=True, left=False)
-    figure.tight_layout()
+    right_axis.tick_params(left=False)
+    # Subplot geometry (figure fractions); tune these to adjust margins
+    figure.subplots_adjust(left=0.15, right=0.85, top=0.97, bottom=0.13)
 
     if save or get_backend().lower() in {"agg", "cairo", "pdf", "ps", "svg"}:
-        figure.savefig("phonon_comp.png", dpi=300, bbox_inches="tight")
+        figure.savefig("phonon_comp.png", dpi=300)
         print(" Saved phonon comparison plot to 'phonon_comp.png'.")
     else:
         plt.show()

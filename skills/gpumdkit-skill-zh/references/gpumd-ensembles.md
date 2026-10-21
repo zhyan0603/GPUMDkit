@@ -77,7 +77,7 @@ TTM 可选参数：
 | `ttm_infile <file>` | 初始网格温度；每个单元一个 `ix iy iz T_e` 行，索引从 1 开始 |
 | `ttm_properties_file <file>` | 每个单元一个 `ix iy iz C_vol kappa_e gamma_p eta` 行；覆盖均匀热容、导热系数和耦合 |
 | `ttm_source <value>` | 体积热源，单位为 eV/(ps Angstrom^3)；提供时乘以每个单元的 `eta` |
-| `ttm_active_x|y|z <range>` | `all`、单个从 1 开始的索引或包含端点的 `3:10`/`3-10`；非活动单元保持零电子温度 |
+| `ttm_active_x\|y\|z <range>` | `all`、单个从 1 开始的索引或包含端点的 `3:10`/`3-10`；非活动单元保持零电子温度 |
 
 HNEMD 不是系综关键字。使用温度控制系综配合 `compute_hnemd`；推荐使用 Nose-Hoover 链，Langevin 不适用于此目的。
 
@@ -96,7 +96,7 @@ HNEMD 不是系综关键字。使用温度控制系综配合 `compute_hnemd`；�
 | 壁面活塞 | `ensemble wall_piston vp <vp> [thickness <thickness>]` | 活塞速度和可选壁厚，单位为 Angstrom；壁厚默认 20 |
 | 镜像壁面 | `ensemble wall_mirror vp <vp>` | 运动反射壁面速度 |
 | 谐波壁面 | `ensemble wall_harmonic vp <vp> [k <k>]` | 壁面速度和可选谐波力常数，单位为 eV/Angstrom^2；`k` 默认 10 |
-| MSST | `ensemble msst <x|y|z> <shock_velocity> qmass <q> mu <mu> [tscale <v>] [p0 <p0>] [v0 <v0>] [e0 <e0>]` | 冲击速度单位为 km/s；`qmass` 和 `mu` 是必需的；`tscale` 默认为 0；省略的初始状态值在第一步计算 |
+| MSST | `ensemble msst <x\|y\|z> <shock_velocity> qmass <q> mu <mu> [tscale <v>] [p0 <p0>] [v0 <v0>] [e0 <e0>]` | 冲击速度单位为 km/s；`qmass` 和 `mu` 是必需的；`tscale` 默认为 0；省略的初始状态值在第一步计算 |
 | NPHug | `ensemble nphug <direction> <p_1> <p_2> [tperiod <tau_T>] [pperiod <tau_p>] [p0 <p0>] [v0 <v0>] [e0 <e0>]` | 目标压力单位为 GPa，应相等；压力周期默认为 1000；省略的初始状态值在第一步计算 |
 
 此表记录语法和角色，而非推荐设置。这些方法需要用户批准的物理参数，以及涉及辅助文件时版本特定的文件模式。

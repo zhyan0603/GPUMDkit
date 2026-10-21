@@ -41,10 +41,16 @@ gpumdkit.sh -calc ionic-cond O -2
 
 # Preferred non-interactive inputs in current directory:
 # - msd.out (from GPUMD compute_msd, or the first four columns from calc_msd.py)
-# - thermo.out (for temperature)
-# - model.xyz (for volume)
+# - thermo.out (for temperature and volume)
+# - model.xyz (for ion count)
 # - run.in (optional; used to detect replicate factors)
 ```
+
+The calculator reads time and `MSD_x/y/z` from columns 1–4. The `element`
+argument counts ions; it does not select MSD columns. For `all_groups` output,
+extract the target group's time and MSD columns before running. Use an integer
+charge in units of the elementary charge. The result is Nernst–Einstein
+conductivity and does not include inter-ion displacement correlations.
 
 ### NEP Property Prediction
 ```bash
@@ -74,9 +80,12 @@ The output files are `energy_<input-stem>.out`, `force_<input-stem>.out`,
 `stress_<input-stem>.out`, and `virial_<input-stem>.out` in the current
 directory. Predicted columns precede target columns. Energy and virial are
 eV/atom, force is eV/Angstrom, and stress is GPa. Tensor columns use NEP's
-`xx yy zz xy yz xz` order and the same sign convention for stress and virial.
-If only one of stress or virial is supplied, the other target is derived using
-`stress = virial / volume` and the appropriate unit conversion. Only frames
+`xx yy zz xy yz xz` order and NEP's output sign convention, in which
+`stress = virial / volume` and both are positive when compressed. The input
+extxyz `stress=` field uses the opposite sign (see `nep-data.md`) and is converted
+with `virial = -stress * volume`, as NEP does. If only one of stress or virial is
+supplied, the other target is derived this way with the appropriate unit
+conversion. Only frames
 missing both use the `-1e6` sentinel; energy and force targets are required. A
 `tqdm` progress bar is shown during prediction.
 
@@ -134,6 +143,13 @@ single-group layout is required by `gpumdkit.sh -plt sdc` and
 appends additional group data, so do not assume that every `msd.out` has seven
 columns. The separate `compute_sdc` command writes `sdc.out`, which is used by
 `gpumdkit.sh -plt vac`.
+
+Use a fixed-cell trajectory with stable atom order and verified unwrapped
+coordinates in the `pos` field. The script reads `pos` and the first frame's
+cell; it does not use a separate `unwrapped_position` property. Its automatic
+wrapping check is not sufficient to validate wrapped trajectories, and its
+axis-wise unwrapping does not handle general tilted or changing cells.
+The command overwrites `msd.out` in the current directory.
 
 ### X-ray Diffraction (interactive only)
 
@@ -224,11 +240,11 @@ gpumdkit.sh -calc pol-abo3 -i <input.xyz> \
   --nl-bo <B-O neighbor list> \
   --bec <Element=charge ...>
 
-# Example
+# Example syntax; the Born effective charges are material-specific inputs
 gpumdkit.sh -calc pol-abo3 -i model.xyz \
   --nl-ba nl-Ti-Pb.dat \
   --nl-bo nl-Ti-O.dat \
-  --bec Pb=2.5 Sr=2.0 Ti=4.0 O=-2.0
+  --bec Pb=<Z_Pb> Sr=<Z_Sr> Ti=<Z_Ti> O=<Z_O>
 ```
 
 ### Structure Minimization
@@ -252,11 +268,15 @@ gpumdkit.sh -calc neb <initial.xyz> <final.xyz> <n_images> <nep.txt>
 gpumdkit.sh -calc neb init.xyz fin.xyz 9 nep.txt
 
 # Direct Python execution (also works)
-python Scripts/calculators/neb_calculation.py init.xyz fin.xyz 9 nep.txt
+python ${GPUMDkit_path}/Scripts/calculators/neb_calculation.py init.xyz fin.xyz 9 nep.txt
 
 # Alternative with NepTrainKit:
-python Scripts/calculators/neb_calculation_neptrain.py init.xyz fin.xyz 9 nep.txt
+python ${GPUMDkit_path}/Scripts/calculators/neb_calculation_neptrain.py init.xyz fin.xyz 9 nep.txt
 ```
+
+`n_images` is the number of intermediate images. Outputs: `neb.traj` (ASE
+trajectory of the NEB optimization), `neb.xyz` (final path in extxyz), and
+`images/` (individual image structures).
 
 ## Common Workflows
 
@@ -315,15 +335,13 @@ gpumdkit.sh -calc disp -i movie.xyz -n nl-Ti-O.dat -o disp.dat
 # 3. Calculate tilt
 gpumdkit.sh -calc oct-tilt -i movie.xyz -n nl-Ti-O.dat -o tilt.dat
 # 4. Calculate polarization
-gpumdkit.sh -calc pol-abo3 -i movie.xyz --nl-ba nl-Ti-Pb.dat --nl-bo nl-Ti-O.dat --bec Pb=2.5 Ti=4.0 O=-2.0
+gpumdkit.sh -calc pol-abo3 -i movie.xyz --nl-ba nl-Ti-Pb.dat --nl-bo nl-Ti-O.dat --bec Pb=<Z_Pb> Ti=<Z_Ti> O=<Z_O>
 ```
 
 ### Structure Relaxation
 ```bash
-# 1. Minimize structure
-gpumdkit.sh -calc minimize POSCAR nep.txt 0.01 1000
-# 2. Check result
-gpumdkit.sh -plt thermo  # If running MD after relaxation
+# Minimize with NEP; inspect minimize.xyz (the optimization trajectory) afterwards
+gpumdkit.sh -calc minimize POSCAR nep.txt <fmax> <max_steps>
 ```
 
 ## Dependencies

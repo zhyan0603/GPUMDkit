@@ -16,7 +16,7 @@
   <a href="https://github.com/zhyan0603/GPUMDkit/releases"><img src="https://img.shields.io/github/v/tag/zhyan0603/GPUMDkit?label=Version&style=flat-square&color=brightgreen" alt="Version"></a>
   <a href="https://github.com/zhyan0603/GPUMDkit/blob/main/LICENCE"><img src="https://img.shields.io/badge/License-GPL--3.0-blue?style=flat-square" alt="License"></a>
   <a href="https://anaconda.org/channels/gpumdkit/packages/gpumdkit/overview"><img src="https://img.shields.io/conda/dn/gpumdkit/gpumdkit?style=flat-square&color=red&label=Conda&logo=anaconda" alt="Conda Downloads"></a>
-  <a href="https://badge.dimensions.ai/details/doi/10.1002/mgea.70074"><img src="https://citations.njzjz.win/10.1002/mgea.70074" alt="Citations"></a>
+  <a href="https://badge.dimensions.ai/details/doi/10.1002/mgea.70074"><img src="https://img.shields.io/badge/dynamic/json?url=https%3A%2F%2Fmetrics-api.dimensions.ai%2Fdoi%2F10.1002%2Fmgea.70074&query=%24.times_cited&label=Citations&style=flat-square&color=blue&cacheSeconds=86400" alt="Citations"></a>
   <a href="https://github.com/zhyan0603/GPUMDkit/stargazers"><img src="https://img.shields.io/github/stars/zhyan0603/GPUMDkit?style=flat-square&color=yellow&label=Stars" alt="Stars"></a>
   <a href="https://github.com/zhyan0603/GPUMDkit/graphs/contributors"><img src="https://img.shields.io/github/contributors/zhyan0603/GPUMDkit?style=flat-square&color=brightgreen&label=Contributors" alt="Contributors"></a>
 </p>
@@ -119,26 +119,26 @@ wget https://github.com/zhyan0603/GPUMDkit/archive/refs/heads/main.zip
 
 3. 根据屏幕提示交互式选择并运行所需功能。
 
-```
-               ____ ____  _   _ __  __ ____  _    _ _
-              / ___|  _ \| | | |  \/  |  _ \| | _(_) |_
-             | |  _| |_) | | | | |\/| | | | | |/ / | __|
-             | |_| |  __/| |_| | |  | | |_| |   <| | |_
-              \____|_|    \___/|_|  |_|____/|_|\_\_|\__|
+   ```
+                  ____ ____  _   _ __  __ ____  _    _ _
+                 / ___|  _ \| | | |  \/  |  _ \| | _(_) |_
+                | |  _| |_) | | | | |\/| | | | | |/ / | __|
+                | |_| |  __/| |_| | |  | | |_| |   <| | |_
+                 \____|_|    \___/|_|  |_|____/|_|\_\_|\__|
 
-              GPUMDkit Version 1.5.8 (2026-09-23)
-        Core Developer: Zihan YAN (yanzihan@westlake.edu.cn)
-     Main Contributors: Denan LI, Xin WU, Zhoulin LIU & Chen HUA
+                 GPUMDkit Version 1.5.8 (2026-10-20)
+           Core Developer: Zihan YAN (yanzihan@westlake.edu.cn)
+        Main Contributors: Denan LI, Xin WU, Zhoulin LIU & Chen HUA
 
-      ---------------------- GPUMD ------------------------
-      1) Format Conversion          2) Sample Structures
-      3) Workflow                   4) Calculators
-      5) Analyzer                   6) Visualization
-      7) Utilities                  8) Help
-      0) Exit
-      ------------>>
-      Input the function number:
-```
+         ---------------------- GPUMD ------------------------
+         1) Format Conversion          2) Sample Structures
+         3) Workflow                   4) Calculators
+         5) Analyzer                   6) Visualization
+         7) Utilities                  8) Help
+         0) Exit
+         ------------>>
+         Input the function number:
+   ```
 
 #### 命令行模式
 
@@ -155,43 +155,43 @@ gpumdkit.sh -h
 帮助信息如下：
 
 ```
-+-------------------------------------------------------------------------------------------------------+
-|                          GPUMDkit 1.5.8 (2026-09-23)       Command Help                               |
-+-------------------------------------------------------------------------------------------------------+
-|                                          MAIN FUNCTIONS                                               |
-+-------------------------------------------------------------------------------------------------------+
-| -h            Show this help table            | -plt <type>        Plot and visualization tools       |
-| -calc <type>  Calculator tools                | -time <gpumd|nep>  Time-consuming analyzer            |
-| -update       Update GPUMDkit                 | -clean             Clean extra files in current dir   |
-| -skill        Show GPUMDkit agent skill info  | -doctor            Check Python environment           |
-| -server       Start the GPUMDkit web server   |                                                       |
-| -prediction   Write NEP prediction .out files | -prediction_dpa  Write DPA prediction .out files      |
-+-------------------------------------------------------------------------------------------------------+
-|                                         FORMAT CONVERSION                                             |
-+-------------------------------------------------------------------------------------------------------+
-| -out2xyz      OUTCAR -> extxyz (shell)        | -out2xyz_bec       OUTCAR -> extxyz with BEC          |
-| -out2exyz     OUTCAR -> extxyz (python)       | -xyz2dp            extxyz -> DeepMD npy               |
-| -cp2k2xyz     CP2K log -> xyz                 | -xdat2exyz         XDATCAR -> extxyz                  |
-| -cif2pos      cif -> POSCAR                   | -cif2exyz          cif -> extxyz                      |
-| -pos2exyz     POSCAR -> extxyz                | -exyz2pos          extxyz -> POSCAR                   |
-| -pos2lmp      POSCAR -> LAMMPS data           | -lmp2exyz          LAMMPS dump -> extxyz              |
-| -traj2exyz    ASE traj -> extxyz              | -replicate         Replicate structure                |
-| -addgroup     Add group labels                | -addweight         Add structure weight in extxyz     |
-| -clean_xyz    Clean extra info in extxyz      | -get_frame         Extract specific frame             |
-| -frame_range  Extract frames by range         | -dp2xyz            DeepMD npy -> extxyz               |
-+-------------------------------------------------------------------------------------------------------+
-|                                            ANALYSIS                                                   |
-+-------------------------------------------------------------------------------------------------------+
-| -range        Energy/force/virial statistics  | -analyze_comp      Analyze composition                |
-| -chem_species Analyze chemical species        | -cbc               Charge balance check               |
-| -min_dist     Min distance (no PBC)           | -min_dist_pbc      Min distance with PBC              |
-| -filter_dist  Filter by min_dist (no PBC)     | -filter_dist_pbc   Filter by min_dist (PBC)           |
-| -pda          Probability density analysis    | -filter_box        Filter by box-edge length          |
-| -pynep        Deprecated PyNEP sampling       | -nep_modifier      Modify NEP model interactively     |
-| -shift_energy Interactive energy shift        |                                                       |
-+-------------------------------------------------------------------------------------------------------+
-| Python option help: gpumdkit.sh -<option> -h    Plot list: gpumdkit.sh -plt -h                        |
-+-------------------------------------------------------------------------------------------------------+
+ +-------------------------------------------------------------------------------------------------------+
+ |                          GPUMDkit 1.5.8 (2026-10-20)       Command Help                               |
+ +-------------------------------------------------------------------------------------------------------+
+ |                                          MAIN FUNCTIONS                                               |
+ +-------------------------------------------------------------------------------------------------------+
+ | -h            Show this help table            | -plt <type>        Plot and visualization tools       |
+ | -calc <type>  Calculator tools                | -time <gpumd|wpe|nep|gnep>  Time-consuming analyzer   |
+ | -update       Update GPUMDkit                 | -clean             Clean extra files in current dir   |
+ | -skill        Show GPUMDkit agent skill info  | -doctor            Check Python environment           |
+ | -prediction   Write NEP prediction .out files | -prediction_dpa    Write DPA prediction .out files    |
+ | -server       Start the GPUMDkit web server   |                                                       |
+ +-------------------------------------------------------------------------------------------------------+
+ |                                         FORMAT CONVERSION                                             |
+ +-------------------------------------------------------------------------------------------------------+
+ | -out2xyz      OUTCAR -> extxyz (shell)        | -out2xyz_bec       OUTCAR -> extxyz with BEC          |
+ | -out2exyz     OUTCAR -> extxyz (python)       | -xyz2dp            extxyz -> DeepMD npy               |
+ | -cp2k2xyz     CP2K log -> xyz                 | -xdat2exyz         XDATCAR -> extxyz                  |
+ | -cif2pos      cif -> POSCAR                   | -cif2exyz          cif -> extxyz                      |
+ | -pos2exyz     POSCAR -> extxyz                | -exyz2pos          extxyz -> POSCAR                   |
+ | -pos2lmp      POSCAR -> LAMMPS data           | -lmp2exyz          LAMMPS dump/data -> extxyz         |
+ | -traj2exyz    ASE traj -> extxyz              | -replicate         Replicate structure                |
+ | -addgroup     Add group labels                | -addweight         Add structure weight in extxyz     |
+ | -clean_xyz    Clean extra info in extxyz      | -get_frame         Extract specific frame             |
+ | -frame_range  Extract frames by range         | -dp2xyz            DeepMD npy -> extxyz               |
+ +-------------------------------------------------------------------------------------------------------+
+ |                                            ANALYSIS                                                   |
+ +-------------------------------------------------------------------------------------------------------+
+ | -range        Energy/force/virial statistics  | -analyze_comp      Analyze composition                |
+ | -chem_species Analyze chemical species        | -cbc               Charge balance check               |
+ | -min_dist     Min distance (no PBC)           | -min_dist_pbc      Min distance with PBC              |
+ | -filter_dist  Filter by min_dist (no PBC)     | -filter_dist_pbc   Filter by min_dist (PBC)           |
+ | -pda          Probability density analysis    | -filter_box        Filter by box-edge length          |
+ | -pynep        Deprecated PyNEP sampling       | -nep_modifier      Modify NEP model interactively     |
+ | -shift_energy Interactive energy shift        |                                                       |
+ +-------------------------------------------------------------------------------------------------------+
+ | Python option help: gpumdkit.sh -<option> -h    Plot list: gpumdkit.sh -plt -h                        |
+ +-------------------------------------------------------------------------------------------------------+
 ```
 
 ##### 示例 2：查看 -plt 帮助信息
@@ -204,7 +204,7 @@ gpumdkit.sh -plt -h
 
 ```
  +-----------------------------------------------------------------------------------------------+
- |                     GPUMDkit 1.5.8 (2026-09-23)       PLOT & VISUALIZATION TOOLS              |
+ |                     GPUMDkit 1.5.8 (2026-10-20)       PLOT & VISUALIZATION TOOLS              |
  +-----------------------------------------------------------------------------------------------+
  |  Usage: gpumdkit.sh -plt <type>                        List: gpumdkit.sh -plt -h              |
  +-----------------------------------------------------------------------------------------------+
@@ -228,7 +228,7 @@ gpumdkit.sh -plt -h
  +-----------------------------------------------------------------------------------------------+
  |                                    MD & Structural Analysis                                   |
  +-----------------------------------------------------------------------------------------------+
- |  thermo         - thermo info in thermo.out      thermo2/3      - Thermo in different styles  |
+ |  thermo         - thermo info in thermo.out      thermo2        - Previous thermo style       |
  |  rdf            - Radial distribution function   rdf_pmf        - Potential of mean force     |
  |  vac            - Velocity autocorrelation       cohesive       - Cohesive energy curve       |
  |  xrd            - X-ray diffraction              plane-grid     - Displacement plane grid     |
@@ -237,12 +237,12 @@ gpumdkit.sh -plt -h
  |                                        Heat Transport                                         |
  +-----------------------------------------------------------------------------------------------+
  |  emd            - EMD results                    emd2           - EMD all directions          |
- |  nemd           - NEMD results                   hnemd           - HNEMD results              |
+ |  nemd           - NEMD results                   hnemd          - HNEMD results               |
  |  viscosity      - Viscosity                                                                   |
  +-----------------------------------------------------------------------------------------------+
  |                                          Phonons                                              |
  +-----------------------------------------------------------------------------------------------+
- |  pdos           - VAC and PDOS                 phonon         - Phonon band structure         |
+ |  pdos           - VAC and PDOS                   phonon       - Phonon band structure         |
  |  phonon_comp    - Compare phonon band structures                                              |
  +-----------------------------------------------------------------------------------------------+
  See the codes in plt_scripts for more details
@@ -275,7 +275,7 @@ gpumdkit.sh -plt train
 绘制 prediction 模式对 `train.xyz` 中结构生成的 parity 结果：
 
 ```
-gpumdkit.sh -plt test
+gpumdkit.sh -plt prediction
 ```
 
 <div align="center">
@@ -319,7 +319,7 @@ q-path 偏移会在比较前分别归一化，但对比文件仍必须使用相�
 
 <div align="center">
   <img src="./Gallery/phonon.png" alt="Phonon band structure" width="42%" />
-  <img src="./Gallery/phonon_comp.png" alt="Phonon band comparison" width="47%" />
+  <img src="./Gallery/phonon_comp.png" alt="Phonon band comparison" width="42%" />
 </div>
 
 更多详细示例和命令选项请参考我们的[文档](https://gpumdkit.cn/)。
@@ -338,7 +338,7 @@ q-path 偏移会在比较前分别归一化，但对比文件仍必须使用相�
 
 - 输入 `gpumdkit.sh -<Tab>` 查看所有可用选项。
 - 输入 `gpumdkit.sh -plt <Tab>` 列出绘图子选项，如 `thermo`、`train` 等。
-- 输入 `gpumdkit.sh -time <Tab>` 查看计算器选项，如 `gpumd`、`nep`。
+- 输入 `gpumdkit.sh -time <Tab>` 列出可监控进度的程序：`gpumd`、`wpe`、`nep`、`gnep`。
 
 ## 加入我们
 
@@ -355,6 +355,23 @@ q-path 偏移会在比较前分别归一化，但对比文件仍必须使用相�
 **GPUMDkit** 是一款面向所有人的开源工具。如果在你的研究或工作中它有所帮助，欢迎 ⭐ [在 GitHub 上给我们点亮 Star](https://github.com/zhyan0603/GPUMDkit)。此外，如果 GPUMDkit 对你的发表工作有贡献，请引用我们的论文：
 
 > Z. Yan\*, D. Li, X. Wu, Z. Liu, C. Hua, B. Situ, H. Yang, S. Tang, B. Tang, Z. Wang, S. Yi, H. Wang, D. Huang, K. Li, Q. Guo, Z. Chen, K. Xu, Y. Wang, Z. Wang, G. Tang, S. Liu, Z. Fan, and Y. Zhu\*. **GPUMDkit: A User-Friendly Toolkit for GPUMD and NEP**. [MGE Advances, 2026, 4, e70074](https://doi.org/10.1002/mgea.70074).
+
+<details>
+<summary><b>BibTeX</b></summary>
+
+```bibtex
+@article{yan2026gpumdkit,
+  title   = {GPUMDkit: A User-Friendly Toolkit for GPUMD and NEP},
+  author  = {Yan, Zihan and Li, Denan and Wu, Xin and Liu, Zhoulin and Hua, Chen and Situ, Boyi and Yang, Hao and Tang, Shengjie and Tang, Benrui and Wang, Ziyang and Yi, Shangzhao and Wang, Huan and Huang, Dian and Li, Ke and Guo, Qilin and Chen, Zherui and Xu, Ke and Wang, Yanzhou and Wang, Ziliang and Tang, Gang and Liu, Shi and Fan, Zheyong and Zhu, Yizhou},
+  journal = {MGE Advances},
+  volume  = {4},
+  pages   = {e70074},
+  year    = {2026},
+  doi     = {10.1002/mgea.70074}
+}
+```
+
+</details>
 
 在论文中可以参考类似表述：
 

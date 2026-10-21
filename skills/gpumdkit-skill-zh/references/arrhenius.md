@@ -55,7 +55,8 @@ compute_msd <sample_interval> <Nc> group <group_method> <group_id> [save_every <
 
 具体系综和运行时长必须来自用户确认的研究设计。在相应的正式采样段中，重新给出不会自动延续的 compute/dump 命令。
 
-对于基于轨迹的 GPUMDkit MSD，输出带有足够元数据的 extxyz 帧用于周期性展开。将存储帧之间的时间传递给 `-calc msd`；按以下公式计算：
+基于轨迹的 GPUMDkit MSD 要求固定晶胞、原子顺序一致，且 extxyz 的 `pos`
+字段为已核验的展开坐标，详见 `calculators.md`。将存储帧间隔传给 `-calc msd`：
 
 ```text
 frame_dt_fs = integration_time_step_fs * dump_interval_steps
@@ -115,16 +116,19 @@ gpumdkit.sh -calc ionic-cond <element> <charge>
 
 这使用 Nernst-Einstein 关系，读取温度/体积，计数请求的物种，在找到 `replicate` 时考虑它，并打印方向性/总扩散系数和电导率。确认独立离子 Nernst-Einstein 电导率是预期的可观测量；除非方法被扩展，否则它不包含关联效应。
 
+仅在第 1–4 列对应目标移动物种时使用。多分组 MSD 输出需先提取目标组；
+物种参数和绘图命令均不自动选择分组。
+
 ### 电导率 Arrhenius 拟合
 
-对于满足当前脚本假设的一价 Li/Na 系统：
+对于满足当前脚本假设的单一移动一价 Li 或 Na 物种：
 
 ```bash
 gpumdkit.sh -plt arrhenius_sigma save
 gpumdkit.sh -plt sigma_xyz save
 ```
 
-这些命令拟合 `ln(sigma*T)` 对 `1000/T` 并报告活化能。使用前请检查下方的当前限制。
+这些命令拟合 `log10(sigma*T)` 对 `1000/T` 并报告活化能。使用前请检查下方的当前限制。
 
 ## 解读与报告
 

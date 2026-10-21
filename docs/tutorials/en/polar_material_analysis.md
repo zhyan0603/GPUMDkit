@@ -37,38 +37,7 @@ standard GPUMDkit `ASE` and `NumPy` dependencies.
 
 ## Interactive mode entry
 
-Options `406-410` are the core functions for this tutorial. The sections below explain when to use each one and how to run it.
-
-```bash
-gpumdkit.sh
-# choose 4) Calculators
-```
-
-The calculator menu is:
-
-```text
-+----------------------------------------------------------+
-|                     CALCULATOR TOOLS                     |
-+----------------------------------------------------------+
-| 401) Calc ionic conductivity                             |
-| 402) Calc properties by nep                              |
-| 403) Calc descriptors of specific elements               |
-| 404) Calc density of atomistic states (DOAS)             |
-| 405) Calc nudged elastic band (NEB) by nep               |
-| 406) Build neighbor list                                 |
-| 407) Calc displacement from trajectory                   |
-| 408) Calc averaged structure                             |
-| 409) Calc octahedral tilt                                |
-| 410) Calc polarization for ABO3                          |
-| 411) Minimize structure by nep                           |
-| 412) Calc mean square displacement (MSD) from trajectory |
-+----------------------------------------------------------+
-| 000) Return to the main menu                             |
-+----------------------------------------------------------+
-Input the function number:
-```
-
-For full argument details, use:
+In interactive mode these are entries `406`–`410` of the calculator menu (`gpumdkit.sh` → `4) Calculators`). Each entry also has the command-line form used below; for the full argument list run:
 
 ```bash
 gpumdkit.sh -calc nlist -h
@@ -113,7 +82,7 @@ gpumdkit.sh -calc nlist -i model.xyz -c 4.0 -n 12 -C Pb Sr -E O
 - `-E, --neighbor-elements` (required):
   Neighbor species list.
 - `-o, --output`:
-  Output file path. Default: `nl-<center>-<neighbor>.dat`.
+  Output file path. Default: `nl-<center>-<neighbor>.dat`; several elements are joined with `_`, for example `nl-Pb_Sr-O.dat`.
 
 ### Output file
 
@@ -261,7 +230,7 @@ gpumdkit.sh -calc pol-abo3 -i movie.xyz --nl-ba nl-Ti-Pb.dat --nl-bo nl-Ti-O.dat
   Output file. Default: `polarization.dat`.
 - `--bec` (required):
   Born effective charge terms in `Element=value` format.
-  Example: `Pb=2.5 Ti=4.0 O=-2.0`.
+  Example: `Pb=2.0 Ti=4.0 O=-2.0`. The charges should sum to zero over the formula unit; otherwise the script prints a warning.
 - `-s, --start`:
   Slice start index. Default: `0`.
 - `-t, --stop`:
@@ -353,7 +322,7 @@ Assume all files are in the current directory `./`:
 └── 800K.xyz
 ```
 
-`model.xyz` is the initial structure used to run MD simulations. Each `TEMP K.xyz` is a trajectory at that temperature.
+`model.xyz` is the initial structure used to run MD simulations. Each `<T>K.xyz` is the trajectory at temperature `<T>`.
 
 #### Step 1: get averaged structures from the last half of each trajectory
 
@@ -391,7 +360,7 @@ PTO = {
 }
 ```
 
-You can obtain BEC from your own DFPT calculation or from literature values. Thus use following commands to compute local displacement and polarization:
+Take the BEC from your own DFPT calculation or from the literature. Then compute the local displacement and polarization:
 
 ```bash
 for f in *K.xyz; do
@@ -414,7 +383,7 @@ done
 
 #### Step 5: build a temperature-order-parameter curve
 
-By analyzing the lattice of each temperature-averaged structure together with its polarization (`XX-pol.dat`), we can obtain the following figure:
+Combining the lattice of each averaged structure with its polarization file (`<T>K-pol.dat`) gives the following figure:
 
 <div align="center">
     <img src="../../Gallery/PTO-temp.png" alt="PTO-temp" width="65%" />
@@ -469,7 +438,7 @@ gpumdkit.sh -calc nlist -i model.xyz -c 3 -n 1 -C C -E Cl -o nl-C-Cl.dat
 gpumdkit.sh -calc disp -i movie.xyz -n nl-C-Cl.dat -o ccl_vectors.dat
 ```
 
-`ccl_vectors.dat` can then be analyzed as an orientation order parameter. More details could be found at: Phys. Rev. Lett. 136, 016801
+`ccl_vectors.dat` can then be analyzed as an orientation order parameter. For details, see Phys. Rev. Lett. 136, 016801.
 
 #### Other ferroelectric families
 

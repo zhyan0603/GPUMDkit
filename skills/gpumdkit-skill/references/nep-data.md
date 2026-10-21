@@ -31,6 +31,7 @@ Line 2 contains header fields. `lattice`, `energy`, and `properties` are parser-
 | `virial="9 components"` | Optional total-cell virial tensor, eV |
 | `stress="9 components"` | Optional NEP stress tensor, eV/Angstrom^3; opposite sign convention to virial (positive stress = stretched, positive virial = compressed) and ignored if virial is present |
 | `weight=<relative_weight>` | Optional configuration weight |
+| `name=<label>` | Optional structure label used by `ediff.in`; read only when `lambda_d` is set. Unique per file, case-insensitive, at most one per structure; must not start with `#`, `+`, or `-`, or contain whitespace or `* / = " ' { }` |
 | `properties=...` | Mandatory per-atom column schema |
 
 Relevant per-atom properties:
@@ -76,7 +77,9 @@ For dipole and polarizability, confirm whether targets are global or per-atom an
 Virial and stress use opposite sign conventions: positive virial means a compressed
 state, while positive stress means a stretched state. They are related by
 `stress = -virial / volume`; if both are present, virial is used (and a
-consistency check is applied).
+consistency check is applied). This relation applies to the input `stress=`
+field. The output files `stress_*.out` use `stress = virial / volume` instead,
+so their sign follows the virial; see `nep-outputs.md`.
 
 NEP training assumes periodic boundaries in all directions. For slabs, clusters, or vacuum systems, ask the user how the periodic cell and reference calculation are intended to represent the system.
 

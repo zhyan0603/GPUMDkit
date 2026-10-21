@@ -16,7 +16,7 @@ Arguments:
 Output:
   rdf.png  RDF plot (saved or displayed)
 Author:     Zihan YAN (yanzihan@westlake.edu.cn)
-Last-modified: 2026-05-16
+Last-modified: 2026-10-21
 =============================================================================
 """
 
@@ -25,10 +25,29 @@ import matplotlib.pyplot as plt
 import argparse
 import math
 
+# Plot style (self-contained; keep in sync across plt_*.py scripts)
 plt.rcParams.update({
     "font.family": "sans-serif",
     "font.sans-serif": ["Arial", "DejaVu Sans", "Liberation Sans"],
+    "mathtext.fontset": "dejavusans",
+    "font.size": 9,
+    "axes.labelsize": 10,
+    "axes.linewidth": 0.9,
+    "xtick.labelsize": 9,
+    "ytick.labelsize": 9,
+    "xtick.direction": "out",
+    "ytick.direction": "out",
+    "xtick.major.size": 3.5,
+    "ytick.major.size": 3.5,
+    "xtick.minor.size": 2.0,
+    "ytick.minor.size": 2.0,
+    "xtick.major.width": 0.9,
+    "ytick.major.width": 0.9,
+    "legend.frameon": False,
+    "legend.fontsize": 9,
+    "figure.dpi": 100,
 })
+COLORS = ['C0', 'C1', 'C2', 'C3', 'C4', 'C5', 'C6', 'C7', 'C8', 'C9']
 
 # Parse command-line arguments
 parser = argparse.ArgumentParser(description='Plot RDF data from rdf.out file.')
@@ -68,24 +87,29 @@ ncols = min(3, num_subplots)
 nrows = math.ceil(num_subplots / ncols)
 
 # Create subplots
-fig, axs = plt.subplots(nrows, ncols, figsize=(3.3 * ncols, 2.3 * nrows)) 
+fig_width, fig_height = 3.4 * ncols, 2.2 * nrows
+fig, axs = plt.subplots(nrows, ncols, figsize=(fig_width, fig_height))
 
 # Flatten axs for easy iteration
 axs = axs.flat if num_subplots > 1 else [axs]
 
 # Plot each RDF in its own subplot
 for i, col in enumerate(rdf_columns):
-    axs[i].plot(radius, df[col], label=col)
-    axs[i].legend(loc='upper left')
-    axs[i].set_xlabel('Radius')
-    axs[i].set_ylabel('g(r)')
+    axs[i].plot(radius, df[col], color=COLORS[i % len(COLORS)], linewidth=1.4)
+    axs[i].set_title(col, fontsize=9, pad=3)
+    axs[i].set_xlabel(r'$r$ ($\mathrm{\AA}$)')
+    axs[i].set_ylabel(r'$g(r)$')
+    axs[i].set_xlim(radius.iloc[0], radius.iloc[-1])
 
 # Hide unused subplots if any
 for i in range(num_subplots, nrows * ncols):
     axs[i].axis('off')
 
-# Adjust layout
-plt.tight_layout()
+# Subplot geometry (margins are given in inches and converted to figure fractions);
+# tune these numbers to adjust margins and spacing
+fig.subplots_adjust(left=0.52 / fig_width, right=1 - 0.15 / fig_width,
+                    top=1 - 0.25 / fig_height, bottom=0.48 / fig_height,
+                    wspace=0.2, hspace=0.5)
 
 # Save or show based on argument
 if args.action == 'save':

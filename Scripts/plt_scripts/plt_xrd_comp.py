@@ -23,7 +23,7 @@ Output:
   xrd_comp.png  Comparison figure when saving is requested or the selected
                 Matplotlib backend cannot display figures.
 Author:     Zihan YAN (yanzihan@westlake.edu.cn)
-Last-modified: 2026-08-29
+Last-modified: 2026-10-21
 =============================================================================
 """
 
@@ -89,53 +89,63 @@ def read_xrd(xrd_file: Path):
 
 
 def plot_comparison(temperature_dirs: list[tuple[int, Path]], save_plot: bool) -> None:
-    """Display or save stacked XRD curves ordered from high to low temperature."""
+    """Display or save XRD curves in one panel, shifted along y with temperature."""
     import matplotlib.pyplot as plt
+    import numpy as np
     from matplotlib import get_backend
+    from matplotlib.cm import ScalarMappable
+    from matplotlib.colors import LinearSegmentedColormap, Normalize
 
+    # Plot style (self-contained; keep in sync across plt_*.py scripts)
     plt.rcParams.update({
         "font.family": "sans-serif",
         "font.sans-serif": ["Arial", "DejaVu Sans", "Liberation Sans"],
+        "mathtext.fontset": "dejavusans",
+        "font.size": 9,
+        "axes.labelsize": 10,
+        "axes.linewidth": 0.9,
+        "xtick.labelsize": 9,
+        "ytick.labelsize": 9,
+        "xtick.direction": "out",
+        "ytick.direction": "out",
+        "xtick.major.size": 3.5,
+        "ytick.major.size": 3.5,
+        "xtick.minor.size": 2.0,
+        "ytick.minor.size": 2.0,
+        "xtick.major.width": 0.9,
+        "ytick.major.width": 0.9,
+        "legend.frameon": False,
+        "legend.fontsize": 9,
+        "figure.dpi": 100,
     })
+    Y_STEP = 1.0  # vertical shift between neighbouring temperatures, in units of the highest peak (1.0: peaks never reach the curve above)
 
     datasets = []
     for temperature, directory in temperature_dirs:
         angle, intensity = read_xrd(directory / "xrd.out")
         datasets.append((temperature, angle, intensity))
+    datasets.sort(key=lambda item: item[0])  # lowest temperature at the bottom
 
-    number_of_temperatures = len(datasets)
-    figure_height = max(1.1, number_of_temperatures * 0.65)
-    figure, axes = plt.subplots(
-        number_of_temperatures,
-        1,
-        figsize=(6.0, figure_height),
-        dpi=150,
-        sharex=True,
-        squeeze=False,
-    )
-    axes = axes[:, 0]
-    figure.subplots_adjust(
-        hspace=0,
-        left=0.09,
-        right=0.97,
-        top=0.97,
-        bottom=0.07,
-    )
+    temperatures = [temperature for temperature, _, _ in datasets]
+    # Colors run from cold (blue) through teal and gold to hot (red)
+    cmap = LinearSegmentedColormap.from_list(
+        "xrd_temperature", ["#457B9D", "#2A9D8F", "#8AB17D", "#E9C46A", "#F4A261", "#D62828"])
+    norm = Normalize(vmin=min(temperatures), vmax=max(temperatures))
 
-    colors = plt.rcParams["axes.prop_cycle"].by_key()["color"]
+    step = Y_STEP * max(float(intensity.max()) for _, _, intensity in datasets)
+    fig, ax = plt.subplots(figsize=(5.0, 4.2))
     for index, (temperature, angle, intensity) in enumerate(datasets):
-        axis = axes[index]
-        color = colors[(number_of_temperatures - 1 - index) % len(colors)]
-        axis.plot(angle, intensity, color=color, linewidth=1.2)
-        axis.tick_params(labelsize=8, bottom=True, labelbottom=True)
-        axis.set_ylim(bottom=0)
-        axis.set_yticks([])
-        axis.annotate(
+        color = cmap(norm(temperature))
+        offset = index * step
+        ax.plot(angle, intensity + offset, color=color, linewidth=1.2)
+        ax.annotate(
             f"{temperature} K",
-            xy=(0.98, 0.90),
-            xycoords="axes fraction",
-            ha="right",
-            va="top",
+            xy=(0.02, offset),
+            xycoords=("axes fraction", "data"),
+            xytext=(0, 2),
+            textcoords="offset points",
+            ha="left",
+            va="bottom",
             fontsize=8,
             color=color,
         )
@@ -144,16 +154,26 @@ def plot_comparison(temperature_dirs: list[tuple[int, Path]], save_plot: bool) -
     angle_max = max(float(angle.max()) for _, angle, _ in datasets)
     if angle_min >= angle_max:
         raise ValueError("XRD angle data must span a non-zero range")
-    axes[0].set_xlim(angle_min, angle_max)
-    axes[-1].set_xlabel(r"$2\theta$ (degree)", fontsize=9)
-    axes[number_of_temperatures // 2].set_ylabel("Intensity", fontsize=9)
+    ax.set_xlim(angle_min, angle_max)
+    ax.set_ylim(-0.05 * step, (len(datasets) - 1) * step + 1.05 * step)
+    ax.set_yticks([])
+    ax.set_xlabel(r"$2\theta$ (degree)")
+
+    # Colorbar as an inset so that it spans exactly the height of the axes
+    colorbar_axes = ax.inset_axes([1.03, 0.0, 0.035, 1.0])
+    colorbar = fig.colorbar(ScalarMappable(norm=norm, cmap=cmap), cax=colorbar_axes)
+    colorbar.set_label("Temperature (K)", fontsize=9)
+    colorbar.ax.tick_params(labelsize=8, length=3, width=0.8)
+
+    # Subplot geometry (figure fractions); tune these to adjust margins
+    fig.subplots_adjust(left=0.035, right=0.84, top=0.97, bottom=0.13)
 
     if save_plot or get_backend().lower() in {"agg", "cairo", "pdf", "ps", "svg"}:
-        figure.savefig("xrd_comp.png", dpi=300)
-        print(" Saved stacked XRD plot to 'xrd_comp.png'.")
+        fig.savefig("xrd_comp.png", dpi=300)
+        print(" Saved XRD comparison plot to 'xrd_comp.png'.")
     else:
         plt.show()
-    plt.close(figure)
+    plt.close(fig)
 
 
 def main() -> int:

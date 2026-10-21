@@ -102,8 +102,7 @@ plotters.
 | Command | Input Files | Description |
 |---------|-------------|-------------|
 | `thermo` | `thermo.out` | Thermodynamic properties |
-| `thermo2` | `thermo.out` | Alternative thermo style |
-| `thermo3` | `thermo.out` | Third thermo style |
+| `thermo2` | `thermo.out` | Previous thermo style (the former default; `thermo3` is a deprecated alias of `thermo`) |
 | `rdf` | `rdf.out` | All available RDF value columns |
 | `rdf_pmf` | `rdf.out` | RDF + potential of mean force |
 | `xrd` | `xrd.out` or specified XRD output | X-ray diffraction intensity |
@@ -165,11 +164,16 @@ gpumdkit.sh -plt hnemd <scale_eff_size> <cutoff_freq> --save --save-data
 gpumdkit.sh -plt viscosity save
 ```
 
-`--save-data` exports tab-separated text files for EMD, NEMD, and HNEMD. It
-also writes the corresponding `.npz` arrays for EMD and HNEMD. NEMD keeps its
-historical `data_nemd.npz` (and `data_shc.npz` when SHC data exist) output and
-adds `data_nemd.txt`/`data_shc.txt` when requested. `--save` and `--save-data`
-are independent; the legacy bare tokens `save` and `save_data` remain accepted.
+`--save-data` writes the corresponding `.npz` arrays and tab-separated `.txt`
+files for EMD, NEMD, and HNEMD. NEMD writes neither format by default. `--save`
+and `--save-data` are independent; the legacy bare tokens `save` and `save_data`
+remain accepted.
+
+For `emd`, `nemd`, and `hnemd`, a missing `model.xyz` is generated automatically
+from an existing legacy `xyz.in`. For `nemd`/`hnemd`, `scale_eff_size` accepts a
+number or a safe arithmetic expression such as `'100/2'`. Optional `--quantum`
+(legacy `quantum`) adds a quantum-corrected SHC spectrum using the temperature
+from `run.in`; it requires `shc.out`.
 
 ### Phonons (3 plot types)
 
@@ -234,8 +238,8 @@ of the MSD series.
 gpumdkit.sh -plt thermo
 # 2. Plot thermal conductivity
 gpumdkit.sh -plt emd x
-# 3. Or NEMD/HNEMD
-gpumdkit.sh -plt nemd 10 1 60 save
+# 3. Or NEMD/HNEMD (length, scale factor, and cutoff frequency come from the user's setup)
+gpumdkit.sh -plt nemd <real_length> <scale_eff_size> <cutoff_freq> --save
 ```
 
 ## Output Files
@@ -271,7 +275,7 @@ files (comment/header lines begin with `#`):
 | Plot Type | Data Files |
 |-----------|------------|
 | `emd` | `data_emd.npz`, `data_emd.txt` |
-| `nemd` | `data_nemd.txt`; `data_shc.txt` when SHC data exist; historical `.npz` files remain available |
+| `nemd` | `data_nemd.npz`, `data_nemd.txt`; `data_shc.npz`, `data_shc.txt` when SHC data exist |
 | `hnemd` | `data_hnemd.npz`, `data_hnemd.txt`; `data_shc.npz`, `data_shc.txt` when SHC data exist |
 
 ## Dependencies

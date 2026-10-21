@@ -138,9 +138,14 @@ python3 ${GPUMDkit_path}/Scripts/sample_structures/select_max_modev.py 200 0.15
 ```
 
 **How it works**:
-1. Reads `active.out` and filters structures with force deviation above `min_deviation`
-2. Sorts by deviation (descending) and extracts the top N structures
-3. Reads corresponding frames from `active.xyz` and writes them to output
+1. GPUMD writes one `active.out` line per check but appends a frame to
+   `active.xyz` only above the `active` threshold, so line numbers of the two
+   files do not correspond.
+2. Each `active.xyz` frame is ranked by its own `uncertainty=` value; frames
+   without it are matched to `active.out` by `Time=` in file order.
+3. Frames above `min_deviation` are sorted by decreasing deviation, and the top
+   `top_n` are written to `selected.xyz`. Nothing is written if no frame
+   qualifies.
 
 ### Training and Test Set Split
 
@@ -199,16 +204,21 @@ gpumdkit.sh -frame_range dump.xyz 0 0.8
 # 1. Run MD simulation
 # ... generate trajectory ...
 
-# 2. Filter by distance
+# 2. Filter by distance (choose the threshold for your system)
 gpumdkit.sh -min_dist_pbc dump.xyz
-gpumdkit.sh -filter_dist_pbc dump.xyz 1.0
+gpumdkit.sh -filter_dist_pbc dump.xyz <min_distance>
 
 # 3. Sample diverse structures
 gpumdkit.sh  # Select: 2) Sample Structures -> 203
 
-# 4. Add to training set
-cat selected.xyz >> train.xyz
+# 4. Prepare DFT labeling of selected.xyz through menu 301
+gpumdkit.sh  # Select: 3) Workflow -> 301
 ```
+
+Run the approved DFT calculations, convert their outputs, and validate reference
+energy, force, and virial labels before merging into the training set. Selected
+MD structures are candidates; model predictions are not DFT reference labels.
+See `workflows.md` for labeling and dataset updates.
 
 ### Active Learning Data Selection
 
@@ -217,7 +227,7 @@ cat selected.xyz >> train.xyz
 # ... generate active.out and active.xyz ...
 
 # 2. Select high-deviation structures
-python3 ${GPUMDkit_path}/Scripts/sample_structures/select_max_modev.py 100 0.1
+python3 ${GPUMDkit_path}/Scripts/sample_structures/select_max_modev.py <top_n> <min_deviation>
 
 # 3. Or use FPS for diversity
 python3 ${GPUMDkit_path}/Scripts/sample_structures/parallel_neptrain_select_structs.py active.xyz train.xyz nep.txt 4
@@ -227,8 +237,8 @@ python3 ${GPUMDkit_path}/Scripts/sample_structures/parallel_neptrain_select_stru
 
 ```bash
 # 1. Start from equilibrium structure
-# 2. Generate perturbations
-python3 ${GPUMDkit_path}/Scripts/sample_structures/perturb_structure.py POSCAR 50 0.05 0.3 uniform
+# 2. Generate perturbations with user-approved settings
+python3 ${GPUMDkit_path}/Scripts/sample_structures/perturb_structure.py POSCAR <pert_num> <cell_pert> <atom_pert> <style>
 
 # 3. Run DFT on perturbed structures
 # ... DFT calculations ...
@@ -266,11 +276,11 @@ pip install neptrain  # For FPS by NepTrain
 
 ## Notes
 
-1. **FPS is preferred**: Farthest Point Sampling provides better diversity than uniform/random
+1. **FPS for diversity**: Farthest Point Sampling usually gives more structural diversity than uniform/random selection, but whether to use it depends on the purpose of the data
 2. **NepTrain over PyNEP**: NepTrain is actively maintained; PyNEP is deprecated
 3. **Filter before sampling**: Remove unphysical structures (too close, too large) first
 4. **Frame ranges use fractions**: `-frame_range` uses start/end fractions between 0.0 and 1.0
-5. **Output is extxyz**: All sampling methods output extxyz format
+5. **Output formats**: Sampling outputs are extxyz, except perturbation (204), which writes `POSCAR_*.vasp`
 6. **Split selection targets the test set**: Function 206 selects test frames;
    every unselected frame is written to the training set
 

@@ -18,7 +18,7 @@ Arguments:
 Output:
   Arrhenius_sigma_xyz.png  (if save is used)
 Author:     Zihan YAN (yanzihan@westlake.edu.cn)
-Last-modified: 2026-05-16
+Last-modified: 2026-10-21
 =============================================================================
 """
 
@@ -35,19 +35,27 @@ import matplotlib.ticker as ticker
 import warnings
 warnings.filterwarnings('ignore', category=UserWarning, module='matplotlib')
 
+# Plot style (self-contained; keep in sync across plt_*.py scripts)
 plt.rcParams.update({
     "font.family": "sans-serif",
     "font.sans-serif": ["Arial", "DejaVu Sans", "Liberation Sans"],
-    "font.size": 11,
-    "axes.labelsize": 11.5,
-    "axes.titlesize": 12,
-    "xtick.labelsize": 11,
-    "ytick.labelsize": 11,
-    "legend.fontsize": 11,
-    "figure.figsize": (4.3, 3.8),  
-    "axes.spines.top": True,
-    "axes.spines.right": True,
-    "axes.linewidth": 0.8,
+    "mathtext.fontset": "dejavusans",
+    "font.size": 9,
+    "axes.labelsize": 10,
+    "axes.linewidth": 0.9,
+    "xtick.labelsize": 9,
+    "ytick.labelsize": 9,
+    "xtick.direction": "out",
+    "ytick.direction": "out",
+    "xtick.major.size": 3.5,
+    "ytick.major.size": 3.5,
+    "xtick.minor.size": 2.0,
+    "ytick.minor.size": 2.0,
+    "xtick.major.width": 0.9,
+    "ytick.major.width": 0.9,
+    "legend.frameon": False,
+    "legend.fontsize": 9,
+    "figure.dpi": 100,
 })
 
 k = 8.617333262145e-5
@@ -130,8 +138,8 @@ group_sigmas_x = []
 group_sigmas_y = []
 group_sigmas_z = []
 
-# Create figure with PRL style
-fig, ax = plt.subplots(figsize=(4.3, 3.8))
+# Create figure
+fig, ax = plt.subplots(figsize=(3.7, 3.4))
 
 # Process each temperature folder
 for temp_folder in temp_folders:
@@ -271,30 +279,30 @@ for temp, s_all, s_x, s_y, s_z in zip(group_Ts, group_sigmaTs_all, group_sigmaTs
 print(line)
 
 # Print activation energies
-print(f"\n{cell}, Ea_total: {Ea_all:.3f} eV")
-print(f"{cell}, Ea_x: {Ea_x:.3f} eV")
-print(f"{cell}, Ea_y: {Ea_y:.3f} eV")
-print(f"{cell}, Ea_z: {Ea_z:.3f} eV")
+print(f"\n{cell}, Ea_total: {Ea_all:.3f} eV, R2 = {r_all ** 2:.4f}")
+print(f"{cell}, Ea_x: {Ea_x:.3f} eV, R2 = {r_x ** 2:.4f}")
+print(f"{cell}, Ea_y: {Ea_y:.3f} eV, R2 = {r_y ** 2:.4f}")
+print(f"{cell}, Ea_z: {Ea_z:.3f} eV, R2 = {r_z ** 2:.4f}")
 
 # Plot each direction
 for label, sigmaT_data, intercept, slope, color, marker in labels_with_ea:
     # Fitted line
-    y_fit_ln = (slope * x_fit_range + intercept) * np.log(10)
-    ax.plot(x_fit_range, y_fit_ln, '--', c=color, linewidth=1.5)
+    y_fit_log10 = slope * x_fit_range + intercept
+    ax.plot(x_fit_range, y_fit_log10, '--', c=color, linewidth=1.2)
     # Data points
-    ax.plot(1000/group_Ts, np.log(sigmaT_data), marker, label=label, 
-            c=color, markersize=8, markerfacecolor='none', markeredgewidth=1.5)
+    ax.plot(1000/group_Ts, np.log10(sigmaT_data), marker, label=label,
+            c=color, markersize=7 if marker == 'o' else 6, markerfacecolor='none', markeredgewidth=1.3)
 
 # Set axis labels with proper formatting
-ax.set_xlabel('1000/T (1/K)', labelpad=7)
-ax.set_ylabel(r'ln($\sigma$T) (S$\cdot$K/cm)')
+ax.set_xlabel('1000/T (1/K)')
+ax.set_ylabel(r'$\log_{10}(\sigma T)$ (S$\cdot$K/cm)')
 
 # Add legend
-ax.legend(loc='lower left', frameon=False, fontsize=11)
+ax.legend(loc='lower left', handlelength=1.0, handletextpad=0.3)
 
 # Add secondary x-axis on top showing actual temperature
 ax_top = ax.secondary_xaxis('top')
-ax_top.set_xlabel('Temperature (K)', labelpad=7)
+ax_top.set_xlabel('Temperature (K)', labelpad=5)
 xticks = ax.get_xticks()
 ax_top.set_xticks(xticks)
 ax_top.set_xticklabels([f'{int(1000/xt)}' if xt>0 else '' for xt in xticks])
@@ -314,15 +322,15 @@ print(f"at {target_T}K, {cell}: Sigma_x = {sig_300_x:.3e} S/cm")
 print(f"at {target_T}K, {cell}: Sigma_y = {sig_300_y:.3e} S/cm")
 print(f"at {target_T}K, {cell}: Sigma_z = {sig_300_z:.3e} S/cm")
 
-# Adjust layout and save
-plt.tight_layout()
+# Subplot geometry (figure fractions); tune these to adjust margins
+fig.subplots_adjust(left=0.17, right=0.96, top=0.83, bottom=0.14)
 
 if len(sys.argv) > 1 and sys.argv[1] == 'save':
-    plt.savefig('Arrhenius_sigma_xyz.png', dpi=300, bbox_inches='tight')
+    plt.savefig('Arrhenius_sigma_xyz.png', dpi=300)
 else:
     if get_backend().lower() in ['agg', 'cairo', 'pdf', 'ps', 'svg']:
         print("Unable to display the plot due to the non-interactive backend.")
         print("The plot has been automatically saved as 'Arrhenius_sigma_xyz.png'.")
-        plt.savefig('Arrhenius_sigma_xyz.png', dpi=300, bbox_inches='tight')
+        plt.savefig('Arrhenius_sigma_xyz.png', dpi=300)
     else:
         plt.show()

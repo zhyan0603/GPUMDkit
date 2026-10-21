@@ -14,7 +14,7 @@ Usage:      gpumdkit.sh -plt msd_conv
 Output:
   msd_convergence.png  (if save is used, or if backend is non-interactive)
 Author:     Zihan YAN (yanzihan@westlake.edu.cn)
-Last-modified: 2026-05-16
+Last-modified: 2026-10-21
 =============================================================================
 """
 
@@ -24,9 +24,27 @@ import matplotlib.pyplot as plt
 import glob
 import os
 
+# Plot style (self-contained; keep in sync across plt_*.py scripts)
 plt.rcParams.update({
     "font.family": "sans-serif",
     "font.sans-serif": ["Arial", "DejaVu Sans", "Liberation Sans"],
+    "mathtext.fontset": "dejavusans",
+    "font.size": 9,
+    "axes.labelsize": 10,
+    "axes.linewidth": 0.9,
+    "xtick.labelsize": 9,
+    "ytick.labelsize": 9,
+    "xtick.direction": "out",
+    "ytick.direction": "out",
+    "xtick.major.size": 3.5,
+    "ytick.major.size": 3.5,
+    "xtick.minor.size": 2.0,
+    "ytick.minor.size": 2.0,
+    "xtick.major.width": 0.9,
+    "ytick.major.width": 0.9,
+    "legend.frameon": False,
+    "legend.fontsize": 9,
+    "figure.dpi": 100,
 })
 
 # Function to read data from the given file
@@ -116,32 +134,30 @@ for step in steps:
         D_z_list.append(np.nan)
         D_total_list.append(np.nan)
 
-# Define custom colors
-color_total = '#1f77b4'  # Blue for total
-color_x     = '#ff7f0e'  # Orange for x
-color_y     = '#2ca02c'  # Green for y
-color_z     = '#d62728'  # Red for z
+# Define colors
+color_total = 'C0'
+color_x = 'C1'
+color_y = 'C2'
+color_z = 'C3'
 
 # Create the plot (single y-axis recommended)
-fig, ax = plt.subplots(figsize=(4.5, 3.6), dpi=150)
+fig, ax = plt.subplots(figsize=(4.2, 3.5))
 
-ax.plot(time_points, D_total_list, marker='o', linestyle='-', linewidth=2.0,
+ax.plot(time_points, D_total_list, marker='o', linestyle='-', linewidth=1.6, markersize=5,
         color=color_total, label='Total', zorder=10)
-
-ax.plot(time_points, D_x_list, marker='s', linestyle='-', linewidth=1.4,
-        color=color_x, label='x', alpha=0.9)
-ax.plot(time_points, D_y_list, marker='^', linestyle='-', linewidth=1.4,
-        color=color_y, label='y', alpha=0.9)
-ax.plot(time_points, D_z_list, marker='D', linestyle='-', linewidth=1.4,
-        color=color_z, label='z', alpha=0.9)
+ax.plot(time_points, D_x_list, marker='s', linestyle='-', linewidth=1.2, markersize=4.5,
+        color=color_x, label='x')
+ax.plot(time_points, D_y_list, marker='^', linestyle='-', linewidth=1.2, markersize=5,
+        color=color_y, label='y')
+ax.plot(time_points, D_z_list, marker='D', linestyle='-', linewidth=1.2, markersize=4,
+        color=color_z, label='z')
 
 ax.set_xlabel('Simulation Time (ns)')
-ax.set_ylabel(r'Diffusion Coefficient ($\AA^2$/ps)')
+ax.set_ylabel(r'Diffusion Coefficient ($\mathrm{\AA}^2$/ps)')
+ax.legend(loc='upper right', ncol=2, handlelength=1.6, columnspacing=1.0, handletextpad=0.5)
 
-ax.grid(True, alpha=0.25, linestyle='--')
-ax.legend(loc='best', frameon=True)
-
-plt.tight_layout()
+# Subplot geometry (figure fractions); tune these to adjust margins
+fig.subplots_adjust(left=0.175, right=0.975, top=0.97, bottom=0.125)
 
 # Save or show the plot
 if len(sys.argv) > 1 and sys.argv[1] == 'save':

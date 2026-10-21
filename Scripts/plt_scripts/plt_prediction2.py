@@ -14,7 +14,7 @@ Usage:      gpumdkit.sh -plt prediction2
 Output:
     prediction.png  (if save is used, or if backend is non-interactive)
 Author:     Zihan YAN (yanzihan@westlake.edu.cn)
-Last-modified: 2026-05-16
+Last-modified: 2026-10-21
 =============================================================================
 """
 
@@ -22,14 +22,31 @@ import sys
 import matplotlib.pyplot as plt
 import numpy as np
 
+# Plot style (self-contained; keep in sync across plt_*.py scripts)
 plt.rcParams.update({
     "font.family": "sans-serif",
     "font.sans-serif": ["Arial", "DejaVu Sans", "Liberation Sans"],
+    "mathtext.fontset": "dejavusans",
+    "font.size": 9,
+    "axes.labelsize": 10,
+    "axes.linewidth": 0.9,
+    "xtick.labelsize": 9,
+    "ytick.labelsize": 9,
+    "xtick.direction": "out",
+    "ytick.direction": "out",
+    "xtick.major.size": 3.5,
+    "ytick.major.size": 3.5,
+    "xtick.minor.size": 2.0,
+    "ytick.minor.size": 2.0,
+    "xtick.major.width": 0.9,
+    "ytick.major.width": 0.9,
+    "legend.frameon": False,
+    "legend.fontsize": 9,
+    "figure.dpi": 100,
 })
-# from cycler import cycler
-
-# custom_colors = ['#8FA2CD', '#F8BC7E', '#A9CA70', '#F09BA0', '#9D9EA3', '#B7B7EB']
-# plt.rcParams['axes.prop_cycle'] = cycler(color=custom_colors)
+COLORS = ['C0', 'C1', 'C2', 'C3', 'C4', 'C5']
+REF_STYLE = dict(color='0.55', linestyle='--', linewidth=1.2, zorder=0)
+PT_STYLE = dict(marker='o', linestyle='none', markersize=4.5, markeredgewidth=0, rasterized=True)
 
 # Load data
 energy_data = np.loadtxt('energy_train.out')
@@ -45,6 +62,16 @@ stress_data = stress_data[valid_rows]
 def calculate_rmse(pred, actual):
     return np.sqrt(np.mean((pred - actual) ** 2))
 
+# Function to calculate MAE
+def calculate_mae(pred, actual):
+    return np.mean(np.abs(pred - actual))
+
+# Function to calculate R²
+def calculate_r2(pred, actual):
+    ss_tot = np.sum((actual - np.mean(actual)) ** 2)
+    ss_res = np.sum((pred - actual) ** 2)
+    return 1 - ss_res / ss_tot if ss_tot != 0 else 1.0
+
 # Function to calculate dynamic axis limits
 def calculate_limits(train_data, padding=0.08):
     data_min = np.min(train_data)
@@ -52,69 +79,51 @@ def calculate_limits(train_data, padding=0.08):
     data_range = data_max - data_min
     return data_min - padding * data_range, data_max + padding * data_range
 
+def parity_panel(ax, actual, pred, labels, colors, lim):
+    """Draw a square parity panel with a reference diagonal and legend."""
+    ax.plot(lim, lim, **REF_STYLE)
+    for i, (label, color) in enumerate(zip(labels, colors)):
+        ax.plot(actual[:, i], pred[:, i], color=color, label=label, **PT_STYLE)
+    ax.set_xlim(lim)
+    ax.set_ylim(lim)
+    ax.legend(loc='upper left', ncol=2 if len(labels) > 3 else 1, markerscale=1.0, handletextpad=0.2, columnspacing=1.0)
+
+def metrics_text(ax, pred, actual, scale, unit, ndigits):
+    """Write R2/MAE/RMSE in the lower-right corner of a parity panel."""
+    pred, actual = pred.flatten(), actual.flatten()
+    r2 = calculate_r2(pred, actual)
+    mae = calculate_mae(pred, actual) * scale
+    rmse = calculate_rmse(pred, actual) * scale
+    ax.text(0.96, 0.05,
+            r'$R^2$ = ' + f'{r2:.4f}\nMAE = {mae:.{ndigits}f} {unit}\nRMSE = {rmse:.{ndigits}f} {unit}',
+            transform=ax.transAxes, fontsize=9, va='bottom', ha='right', linespacing=1.5)
+
 # Create a subplot with 1 row and 3 columns
-fig, axs = plt.subplots(1, 3, figsize=(12, 3.3), dpi=100)
+fig, axs = plt.subplots(1, 3, figsize=(10.8, 3.2))
 
-# Plotting the train_data figure
-xmin_energy, xmax_energy = calculate_limits(energy_data[:, 1])
-axs[0].set_xlim(xmin_energy, xmax_energy)
-axs[0].set_ylim(xmin_energy, xmax_energy)
-axs[0].plot(energy_data[:, 1], energy_data[:, 0], '.', markersize=10)
-axs[0].plot([xmin_energy, xmax_energy], [xmin_energy, xmax_energy], linewidth=2, color='grey', linestyle='--')
-axs[0].set_xlabel('DFT energy (eV/atom)', fontsize=11)
-axs[0].set_ylabel('NEP energy (eV/atom)', fontsize=11)
-axs[0].legend(['energy'], loc='upper left')
-axs[0].axis('tight')
-axs[0].tick_params(axis='both', labelsize=11)
+# Energy panel
+energy_lim = calculate_limits(energy_data[:, 1])
+parity_panel(axs[0], energy_data[:, [1]], energy_data[:, [0]], ['Energy'], COLORS[:1], energy_lim)
+axs[0].set_xlabel('DFT Energy (eV/atom)')
+axs[0].set_ylabel('NEP Energy (eV/atom)')
+metrics_text(axs[0], energy_data[:, 0], energy_data[:, 1], 1000.0, 'meV/atom', 2)
 
-# Calculate and display RMSE for energy
-energy_rmse = calculate_rmse(energy_data[:, 0], energy_data[:, 1]) * 1000
-axs[0].text(0.35, 0.08, f'RMSE: {energy_rmse:.2f} meV/atom', transform=axs[0].transAxes, fontsize=11, verticalalignment='center')
-#axs[0].text(-0.1, 1.03, "(a)", transform=axs[0].transAxes, fontsize=13, va='top', ha='right')
+# Force panel
+force_lim = calculate_limits(force_data[:, 3:6].reshape(-1))
+parity_panel(axs[1], force_data[:, 3:6], force_data[:, 0:3], ['fx', 'fy', 'fz'], COLORS[:3], force_lim)
+axs[1].set_xlabel(r'DFT Force (eV/$\mathrm{\AA}$)')
+axs[1].set_ylabel(r'NEP Force (eV/$\mathrm{\AA}$)')
+metrics_text(axs[1], force_data[:, 0:3], force_data[:, 3:6], 1000.0, r'meV/$\mathrm{\AA}$', 2)
 
-# Plotting the force_data figure
-xmin_force, xmax_force = calculate_limits(force_data[:, 3:6].reshape(-1))
-axs[1].set_xlim(xmin_force, xmax_force)
-axs[1].set_ylim(xmin_force, xmax_force)
-axs[1].plot(force_data[:, 3:6], force_data[:, 0:3], '.', markersize=10)
-axs[1].plot([xmin_force, xmax_force], [xmin_force, xmax_force], linewidth=2, color='grey', linestyle='--')
-axs[1].set_xlabel(r'DFT force (eV/$\mathrm{\AA}$)', fontsize=11)
-axs[1].set_ylabel(r'NEP force (eV/$\mathrm{\AA}$)', fontsize=11)
-axs[1].tick_params(axis='both', labelsize=11)
-axs[1].legend(['fx', 'fy', 'fz'], loc='upper left')
-axs[1].axis('tight')
+# Stress panel
+stress_lim = calculate_limits(stress_data[:, 6:12].reshape(-1))
+parity_panel(axs[2], stress_data[:, 6:12], stress_data[:, 0:6], ['xx', 'yy', 'zz', 'xy', 'yz', 'zx'], COLORS, stress_lim)
+axs[2].set_xlabel('DFT Stress (GPa)')
+axs[2].set_ylabel('NEP Stress (GPa)')
+metrics_text(axs[2], stress_data[:, 0:6], stress_data[:, 6:12], 1.0, 'GPa', 4)
 
-# Calculate and display RMSE for forces
-force_pred_flat = force_data[:, 0:3].flatten()
-force_actual_flat = force_data[:, 3:6].flatten()
-force_rmse = calculate_rmse(force_pred_flat, force_actual_flat) * 1000
-mean_force_rmse = force_rmse
-axs[1].text(0.35, 0.08, rf'RMSE: {mean_force_rmse:.2f} meV/$\mathrm{{\AA}}$', transform=axs[1].transAxes, fontsize=11, verticalalignment='center')
-#axs[1].text(-0.1, 1.03, "(b)", transform=axs[1].transAxes, fontsize=13, va='top', ha='right')
-
-# Plotting the stress figure
-xmin_stress, xmax_stress = calculate_limits(stress_data[:, 6:12].reshape(-1))
-axs[2].set_xlim(xmin_stress, xmax_stress)
-axs[2].set_ylim(xmin_stress, xmax_stress)
-axs[2].plot(stress_data[:, 6:12], stress_data[:, 0:6], '.', markersize=10)
-axs[2].plot([xmin_stress, xmax_stress], [xmin_stress, xmax_stress], linewidth=2, color='grey', linestyle='--')
-axs[2].set_xlabel('DFT stress (GPa)', fontsize=11)
-axs[2].set_ylabel('NEP stress (GPa)', fontsize=11)
-axs[2].tick_params(axis='both', labelsize=11)
-axs[2].legend(['xx', 'yy', 'zz', 'xy', 'yz', 'zx'], loc='upper left')
-axs[2].axis('tight')
-
-# Calculate and display RMSE for stresses
-stress_pred_flat = stress_data[:, 0:6].flatten()
-stress_actual_flat = stress_data[:, 6:12].flatten()
-stress_rmse = calculate_rmse(stress_pred_flat, stress_actual_flat)
-mean_stress_rmse = stress_rmse
-axs[2].text(0.35, 0.08, f'RMSE: {mean_stress_rmse:.4f} GPa', transform=axs[2].transAxes, fontsize=11, verticalalignment='center')
-#axs[2].text(-0.1, 1.03, "(c)", transform=axs[2].transAxes, fontsize=13, va='top', ha='right')
-
-# Adjust layout for better spacing
-plt.tight_layout()
-#fig.subplots_adjust(top=0.968,bottom=0.16, left=0.086,right=0.983,hspace=0.2,wspace=0.25)
+# Subplot geometry (figure fractions); tune these to adjust margins and spacing
+fig.subplots_adjust(left=0.065, right=0.985, top=0.96, bottom=0.18, wspace=0.34)
 
 if len(sys.argv) > 1 and sys.argv[1] == 'save':
     plt.savefig('prediction.png', dpi=300)

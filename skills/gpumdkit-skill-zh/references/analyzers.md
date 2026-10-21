@@ -49,6 +49,8 @@ gpumdkit.sh -range train.xyz virial
 gpumdkit.sh -range train.xyz force hist
 ```
 
+能量和维里从 `energy=`/`virial=` 读取，键名不区分大小写，ASE 3.23+ 存入 calculator 的键也能读到。缺少该性质的帧会被跳过并给出提示；只有所有帧都缺少时才报错。能量为文件中的总能量（eV）；力的范围按每个原子的力的大小统计；维里范围包含所有存储的分量。
+
 ### 能量参考平移
 ```bash
 # 打开交互式能量参考平移页面
@@ -100,14 +102,15 @@ gpumdkit.sh -chem_species train.xyz
 
 #### 按最小距离（无 PBC）
 ```bash
-gpumdkit.sh -filter_dist dump.xyz 1.5
-# 输出：filtered_<file>.xyz、filtered_out_<file>.xyz
+gpumdkit.sh -filter_dist dump.xyz <min_distance>
+# 输出：filtered_<输入文件名>、filtered_out_<输入文件名>
+# 例如 filtered_dump.xyz 和 filtered_out_dump.xyz
 ```
 
 #### 按最小距离（含 PBC）
 ```bash
-gpumdkit.sh -filter_dist_pbc dump.xyz 1.5
-# 对周期性系统更精确
+gpumdkit.sh -filter_dist_pbc dump.xyz <min_distance>
+# 对周期性系统更精确；输出文件名与 -filter_dist 相同
 ```
 
 #### 按元素对距离范围
@@ -120,19 +123,21 @@ gpumdkit.sh -filter_range dump.xyz Li Li 1.9 2.0
 
 #### 按模拟盒尺寸
 ```bash
-# 过滤模拟盒边长 > 20 埃的结构
-gpumdkit.sh -filter_box dump.xyz 20
+# 丢弃任一模拟盒边长超过 <max_edge> 埃的结构
+gpumdkit.sh -filter_box dump.xyz <max_edge>
 
 # 输出：filtered_by_box.xyz
 ```
 
 #### 按性质值
 ```bash
-# 保留力 < 20 eV/埃的结构
-gpumdkit.sh -filter_value train.xyz force 20
+# 保留所有值都不超过阈值的结构
+gpumdkit.sh -filter_value train.xyz force <max_force_component>
 
 # 输出：filtered.xyz
 ```
+
+所有值都不超过阈值的结构才会保留：`force` 比较每个力分量的绝对值（eV/埃），`energy` 比较文件中的总能量（eV，不是每原子能量），`virial` 比较每个维里分量。能量和维里的键名不区分大小写，ASE 3.23+ 存入 calculator 的键也能读到。没有存储该性质的帧无法检查，会直接保留，命令会报告其数量。没有任何帧含该性质、性质名无法识别或阈值不是数字时，命令报错且不写出文件。
 
 ### 离群值检测
 ```bash
@@ -140,7 +145,7 @@ gpumdkit.sh -filter_value train.xyz force 20
 gpumdkit.sh  # 选择：5) Analyzer -> 502
 
 # 非交互式阈值模式也可以
-python3 ${GPUMDkit_path}/Scripts/analyzer/find_outliers.py 20 100 1.0
+python3 ${GPUMDkit_path}/Scripts/analyzer/find_outliers.py <energy_rmse_meV_atom> <force_rmse_meV_A> <stress_rmse_GPa>
 
 # 当前目录中需要的文件：
 # - train.xyz
@@ -150,6 +155,8 @@ python3 ${GPUMDkit_path}/Scripts/analyzer/find_outliers.py 20 100 1.0
 
 # 输出：selected.xyz（高误差）、remained.xyz（低误差）
 ```
+
+三个可选阈值分别是能量（meV/atom）、力（meV/埃）和应力（GPa）的目标 RMSE。对每种性质，脚本逐个剔除误差最大的结构，直到剩余结构的 RMSE 低于阈值；被剔除的结构写入 `selected.xyz`。阈值需与用户确认。
 
 含有 `-1e6` 应力缺失标记，或任一应力分量绝对值超过 `1e6` 的结构，会从 RMSE 计算和两个输出数据集中排除。若没有剩余的有效结构，脚本会报错且不写出结果。
 
@@ -186,15 +193,18 @@ gpumdkit.sh  # 选择：5) Analyzer -> 502
 ```
 
 ### 结构过滤流程
+
+各阈值与体系相关，需由用户提供。
+
 ```bash
 # 1. 按距离过滤
-gpumdkit.sh -filter_dist_pbc dump.xyz 1.5
+gpumdkit.sh -filter_dist_pbc dump.xyz <min_distance>
 
 # 2. 按模拟盒尺寸过滤
-gpumdkit.sh -filter_box filtered_dump.xyz 20
+gpumdkit.sh -filter_box filtered_dump.xyz <max_edge>
 
 # 3. 按力值过滤
-gpumdkit.sh -filter_value filtered_by_box.xyz force 15
+gpumdkit.sh -filter_value filtered_by_box.xyz force <max_force_component>
 ```
 
 ### 扩散通道分析
@@ -212,6 +222,9 @@ gpumdkit.sh -pda LLZO.vasp dump.xyz Li 0.25
 ```bash
 # 监控 GPUMD 进度
 gpumdkit.sh -time gpumd
+
+# 监控启用 WPE 的 GPUMD 运行
+gpumdkit.sh -time wpe
 
 # 监控 NEP 训练进度
 gpumdkit.sh -time nep
@@ -233,7 +246,7 @@ gpumdkit.sh -time nep
 | `-filter_range` | 按距离范围过滤 | `gpumdkit.sh -filter_range <file> <e1> <e2> <min> <max>` |
 | `-filter_box` | 按模拟盒尺寸过滤 | `gpumdkit.sh -filter_box <file> <limit>` |
 | `-filter_value` | 按性质过滤 | `gpumdkit.sh -filter_value <file> <prop> <thresh>` |
-| `-time` | 时间监控 | `gpumdkit.sh -time <gpumd\|nep>` |
+| `-time` | 时间监控 | `gpumdkit.sh -time <gpumd\|wpe\|nep\|gnep>` |
 
 ## 依赖
 
@@ -248,4 +261,4 @@ gpumdkit.sh -time nep
 
 ## 详细文档
 
-用户指南请参见 `${GPUMDkit_path}/docs/tutorials/en/analyzer_scripts.md` 或中文对应版本。
+用户指南请参见 `${GPUMDkit_path}/docs/tutorials/zh/分析工具.md`。

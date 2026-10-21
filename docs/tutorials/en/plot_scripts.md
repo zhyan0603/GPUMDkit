@@ -35,20 +35,12 @@ Plots that need a user-selected element, temperature, input-file set, or other
 scientific parameter remain available from the terminal, where those choices
 can be entered explicitly.
 
-The console's location bar also provides Home, parent-directory, and
-breadcrumb navigation. Its file actions can create an empty file or folder,
-upload files, and download the file currently open in the viewer. Uploads and
-new entries stay inside the server's working-directory sandbox; existing names
-are never overwritten.
+See [Remote Web Console](remote_web_console.md) for directory navigation and file management.
 
-## A reliable plotting workflow
 
-Use the following sequence instead of trying plot names at random:
+## Where to start
 
-1. List the available types with `gpumdkit.sh -plt -h`.
-2. Identify the file already present in your working directory.
-3. Find the matching entry below, then run its exact command signature.
-4. Add `save` only where that entry shows it; the argument position is not identical for every plot.
+Use `gpumdkit.sh -plt -h` to list plot types; follow each section’s command signature and `save` argument position.
 
 | If you have... | Start with... | What to inspect first |
 |---|---|---|
@@ -71,15 +63,6 @@ For example, a saved training plot is requested as:
 gpumdkit.sh -plt train save
 ```
 
-The Gallery image below is an example of the figure layout, not a universal
-quality threshold. Whether a loss curve, parity scatter, or transport fit is
-acceptable depends on the model, data, and simulation protocol; do not infer a
-scientific conclusion from the image alone.
-
-> **Why not use `gpumdkit.sh -plt train -h`?** Plot scripts do not share a
-> uniform per-plot `-h` interface. Use `gpumdkit.sh -plt -h` for the list, then
-> use the exact signature and input-file notes in the matching section below.
-
 ---
 
 <details markdown="1">
@@ -88,952 +71,138 @@ scientific conclusion from the image alone.
 Running `gpumdkit.sh -plt` prints the plotting command menu:
 
 ```text
-+-----------------------------------------------------------------------------------------------+
-|                     GPUMDkit <version> PLOT & VISUALIZATION TOOLS              |
-+-----------------------------------------------------------------------------------------------+
-|  Usage: gpumdkit.sh -plt <type>                        List: gpumdkit.sh -plt -h              |
-+-----------------------------------------------------------------------------------------------+
-|                                    NEP Training & Evaluation                                  |
-+-----------------------------------------------------------------------------------------------+
-|  train          - NEP training results           prediction     - NEP prediction results      |
-|  train_test     - NEP train and test results     parity_density - Parity density plot         |
-|  train_density  - Training results density plot  restart        - Parameters in nep.restart   |
-|  charge         - Charge distribution            born_charge    - Born effective charges      |
-|  dimer          - Dimer energy/force curve       force_errors   - Force errors                |
-|  des            - Descriptors                    net_force      - Net force distribution      |
-+-----------------------------------------------------------------------------------------------+
-|                                     Diffusion & Transport                                     |
-+-----------------------------------------------------------------------------------------------+
-|  msd            - Mean square displacement       msd_conv       - MSD convergence             |
-|  msd_all        - MSD for all species            sdc            - Self diffusion coefficient  |
-|  msd_sdc        - MSD and SDC together           sigma          - Arrhenius ionic conductivity|
-|  D              - Arrhenius diffusivity          sigma_xyz      - Directional Arrhenius sigma |
-|  D_xyz          - Directional Arrhenius D                                                     |
-|  D_PT           - PT Arrhenius D                 sigma_PT       - PT Arrhenius sigma          |
-|  doas           - Density of atomistic states                                                 |
-+-----------------------------------------------------------------------------------------------+
-|                                    MD & Structural Analysis                                   |
-+-----------------------------------------------------------------------------------------------+
-|  thermo         - thermo info in thermo.out      thermo2/3      - Thermo in different styles  |
-|  rdf            - Radial distribution function   rdf_pmf        - Potential of mean force     |
-|  vac            - Velocity autocorrelation       cohesive       - Cohesive energy curve       |
-|  xrd            - X-ray diffraction              plane-grid     - Displacement plane grid     |
-|  xrd_comp       - Compare XRD                                                                 |
-+-----------------------------------------------------------------------------------------------+
-|                                        Heat Transport                                         |
-+-----------------------------------------------------------------------------------------------+
-|  emd            - EMD results                    emd2           - EMD all directions          |
-|  nemd           - NEMD results                   hnemd          - HNEMD results               |
-|  viscosity      - Viscosity                                                                   |
-+-----------------------------------------------------------------------------------------------+
-|                                          Phonons                                              |
-+-----------------------------------------------------------------------------------------------+
-|  pdos           - VAC and PDOS                 phonon         - Phonon band structure         |
-|  phonon_comp    - Compare phonon band structures                                              |
-+-----------------------------------------------------------------------------------------------+
+ +-----------------------------------------------------------------------------------------------+
+ |                     GPUMDkit <version>                PLOT & VISUALIZATION TOOLS              |
+ +-----------------------------------------------------------------------------------------------+
+ |  Usage: gpumdkit.sh -plt <type>                        List: gpumdkit.sh -plt -h              |
+ +-----------------------------------------------------------------------------------------------+
+ |                                    NEP Training & Evaluation                                  |
+ +-----------------------------------------------------------------------------------------------+
+ |  train          - NEP training results           prediction     - NEP prediction results      |
+ |  train_test     - NEP train and test results     parity_density - Parity density plot         |
+ |  train_density  - Training results density plot  restart        - Parameters in nep.restart   |
+ |  charge         - Charge distribution            born_charge    - Born effective charges      |
+ |  dimer          - Dimer energy/force curve       force_errors   - Force errors                |
+ |  des            - Descriptors                    net_force      - Net force distribution      |
+ +-----------------------------------------------------------------------------------------------+
+ |                                     Diffusion & Transport                                     |
+ +-----------------------------------------------------------------------------------------------+
+ |  msd            - Mean square displacement       msd_conv       - MSD convergence             |
+ |  msd_all        - MSD for all species            sdc            - Self diffusion coefficient  |
+ |  msd_sdc        - MSD and SDC together           doas           - Density of atomistic states |
+ |  D              - Arrhenius diffusivity          sigma          - Arrhenius ionic conductivity|
+ |  D_xyz          - Directional Arrhenius D        sigma_xyz      - Directional Arrhenius sigma |
+ |  D_PT           - PT Arrhenius D                 sigma_PT       - PT Arrhenius sigma          |
+ +-----------------------------------------------------------------------------------------------+
+ |                                    MD & Structural Analysis                                   |
+ +-----------------------------------------------------------------------------------------------+
+ |  thermo         - thermo info in thermo.out      thermo2        - Previous thermo style       |
+ |  rdf            - Radial distribution function   rdf_pmf        - Potential of mean force     |
+ |  vac            - Velocity autocorrelation       cohesive       - Cohesive energy curve       |
+ |  xrd            - X-ray diffraction              plane-grid     - Displacement plane grid     |
+ |  xrd_comp       - Compare XRD                                                                 |
+ +-----------------------------------------------------------------------------------------------+
+ |                                        Heat Transport                                         |
+ +-----------------------------------------------------------------------------------------------+
+ |  emd            - EMD results                    emd2           - EMD all directions          |
+ |  nemd           - NEMD results                   hnemd          - HNEMD results               |
+ |  viscosity      - Viscosity                                                                   |
+ +-----------------------------------------------------------------------------------------------+
+ |                                          Phonons                                              |
+ +-----------------------------------------------------------------------------------------------+
+ |  pdos           - VAC and PDOS                   phonon       - Phonon band structure         |
+ |  phonon_comp    - Compare phonon band structures                                              |
+ +-----------------------------------------------------------------------------------------------+
+ See the codes in plt_scripts for more details
 ```
 
 </details>
 
----
 
-## NEP Training and Prediction
+## A Worked Example: Thermo Output
 
-The `train`, `prediction`, `train_density`, and `parity_density` plots also
-print a terminal table containing R^2, MAE, and RMSE for energy, force, and
-stress. If no valid stress rows are available, the stress entries are `N/A`.
-
-### plt_train.py
-
-Visualizes NEP training progress including loss curves, RMSE evolution, and parity plots comparing DFT vs NEP predictions for energy, forces, and stresses.
-
-**Input Files:** `loss.out`, `energy_train.out`, `force_train.out`, and either
-`stress_train.out` (preferred) or `virial_train.out`
+Run the plot in the folder that holds `thermo.out`. This example uses the `thermo.out` of a real NPT run (`npt_mttk` at 900 K, 500 000 steps, one row every 10 steps): an 18-column file holding temperature, kinetic and potential energy, six pressure components, and the nine components of the cell vectors.
 
 ```bash
-gpumdkit.sh -plt train
+gpumdkit.sh -plt thermo save
 ```
-
-<div align="center">
-  <img src="../../Gallery/train.png" alt="NEP training results" width="75%" />
-</div>
-
----
-
-### plt_prediction.py
-
-Visualizes NEP prediction-mode results for the structures in `train.xyz`.
-Prediction mode still writes the parity data to files ending in `_train.out`.
-
-**Input Files:** `energy_train.out`, `force_train.out`, and either
-`stress_train.out` (preferred when it contains valid rows) or `virial_train.out`
-
-```bash
-gpumdkit.sh -plt prediction
-gpumdkit.sh -plt test         # Alternative command
-```
-
-<div align="center">
-  <img src="../../Gallery/prediction.png" alt="NEP prediction results" width="75%" />
-</div>
-
----
-
-### plt_train_test.py
-
-Creates combined parity plots for both training and testing datasets.
-
-**Input Files:** `energy_train.out`, `force_train.out`, `stress_train.out`,
-`energy_test.out`, `force_test.out`, and `stress_test.out`
-
-```bash
-gpumdkit.sh -plt train_test
-```
-
-<div align="center">
-  <img src="../../Gallery/train_test.png" alt="NEP train and test comparison" width="75%" />
-</div>
-
----
-
-### plt_parity_density.py
-
-Generates density-based parity plots for energies, forces, and stresses. Useful for large datasets where scatter plots become unreadable.
-
-**Input Files:** `energy_train.out`, `force_train.out`, and either
-`stress_train.out` (preferred) or `virial_train.out`
-
-```bash
-gpumdkit.sh -plt parity_density
-```
-
-<div align="center">
-  <img src="../../Gallery/parity_plot_density.png" alt="Parity density plot" width="70%" />
-</div>
-
----
-
-### plt_train_density.py
-
-Generates density-based parity plots for NEP training results (energy, forces, stress or virial).
-Stress is preferred when both tensor files exist. Useful for large datasets where
-scatter plots become unreadable.
-
-**Input Files:** `energy_train.out`, `force_train.out`, and either
-`stress_train.out` (preferred) or `virial_train.out`
-
-```bash
-gpumdkit.sh -plt train_density
-```
-
----
-
-### plt_force_errors.py
-
-Plots force error evaluation metrics as proposed by [Liu et al.](https://doi.org/10.1038/s41524-023-01123-3).
-
-**Input File:** `force_train.out`
-
-**Metrics Displayed:**
-- Force magnitude errors (delta_F)
-- Force angle errors (delta_theta)
-- Distribution of errors
-
-```bash
-gpumdkit.sh -plt force_errors
-```
-
-<div align="center">
-  <img src="../../Gallery/force_errors.png" alt="Force error analysis" width="70%" />
-</div>
-
----
-
-### plt_nep_restart.py
-
-Visualizes parameters stored in the `nep.restart` file.
-
-**Input File:** `nep.restart`
-
-```bash
-gpumdkit.sh -plt restart
-```
-
-<div align="center">
-  <img src="../../Gallery/nep_restart.png" alt="NEP restart parameters" width="60%" />
-</div>
-
----
-
-### plt_charge.py
-
-Plots charge distribution from `qNEP` model.
-
-**Input Files:** `train.xyz` and `charge_train.out`
-
-**Important:** Ensure consistency between training set and charge output atom ordering. Use full batch training or run prediction step first.
-
-```bash
-gpumdkit.sh -plt charge
-```
-
-<div align="center">
-  <img src="../../Gallery/charge.png" alt="Charge distribution" width="45%" />
-</div>
-
----
-
-### plt_born_charge.py
-
-Creates parity plots for Born effective charges (BEC) on training and testing datasets. Structures with all-zero reference BEC are filtered out.
-
-**Input Files:** `bec_train.out`; optional `bec_test.out`
-
-```bash
-gpumdkit.sh -plt born_charge
-gpumdkit.sh -plt bec          # Alternative command
-```
-
-<div align="center">
-  <img src="../../Gallery/born_charge.png" alt="Born effective charge parity plot" width="45%" />
-</div>
-
----
-
-## Thermodynamic Properties
-
-### plt_thermo.py
-
-Primary script for comprehensive thermodynamic property visualization.
-
-**Input File:** `thermo.out`
-
-```bash
-gpumdkit.sh -plt thermo
-```
-
-<div align="center">
-  <img src="../../Gallery/thermo.png" alt="Thermo plot" width="75%" />
-</div>
-
----
-
-### plt_thermo2.py & plt_thermo3.py
-
-Alternative thermodynamic visualization with different styles.
-
-**Input File:** `thermo.out`
-
-```bash
-gpumdkit.sh -plt thermo2
-gpumdkit.sh -plt thermo3
-```
-
----
-
-## Diffusion and Ionic Transport
-
-### plt_msd.py
-
-Plots mean square displacement (MSD) for all directions.
-
-**Input File:** `msd.out` with time and `MSD_x/y/z` in its first four columns.
-This accepts the four-column output from `gpumdkit.sh -calc msd` and the first
-four columns of GPUMD `compute_msd` output.
-
-The slope annotations use the middle 40%-80% of the MSD series.
-
-```bash
-gpumdkit.sh -plt msd
-```
-
-<div align="center">
-  <img src="../../Gallery/msd.png" alt="Mean square displacement" width="48%" />
-</div>
-
----
-
-### plt_msd_all.py
-
-Plots MSD for all atomic species separately when using `all_groups` in GPUMD.
-
-**Input File:** `msd.out` (computed with `all_groups` option)
-
-**Requirements:** Must use `all_groups` in the `compute_msd` command in `run.in`.
-For multiple groups, GPUMD appends group data; inspect that layout rather than
-assuming the file has the seven columns of a single-group result.
-
-```bash
-gpumdkit.sh -plt msd_all msd.out Li P S
-```
-
-<div align="center">
-  <img src="../../Gallery/msd_all.png" alt="MSD for all species" width="48%" />
-</div>
-
----
-
-### plt_msd_convergence_check.py
-
-Checks convergence of MSD calculations across different time windows.
-
-**Input File:** `msd_step*.out` (computed with `save_every` option)
-
-**Requirements:** Use `save_every` in the `compute_msd` command.
-
-**Purpose:** Verify MSD has converged sufficiently for accurate diffusion coefficient calculation.
-
-```bash
-gpumdkit.sh -plt msd_conv
-```
-
-<div align="center">
-  <img src="../../Gallery/msd_convergence.png" alt="MSD convergence" width="48%" />
-</div>
-
----
-
-### plt_sdc.py
-
-Plots self-diffusion coefficient (SDC) vs time.
-
-**Input File:** a single-group seven-column `msd.out` from GPUMD `compute_msd`:
-time, `MSD_x/y/z`, and `SDC_x/y/z`. The four-column file from `-calc msd` is
-not sufficient for this plot.
-
-```bash
-gpumdkit.sh -plt sdc
-```
-
-<div align="center">
-  <img src="../../Gallery/sdc.png" alt="Self-diffusion coefficient" width="48%" />
-</div>
-
----
-
-### plt_msd_sdc.py
-
-Plots MSD and self-diffusion coefficient (SDC) side by side. The slope
-annotations use the middle 40%-80% of the MSD series; the inset shows the
-last 80% of the SDC data with a moving-average overlay.
-
-**Input File:** a single-group seven-column `msd.out` from GPUMD `compute_msd`:
-time, `MSD_x/y/z`, and `SDC_x/y/z`. The four-column file from `-calc msd` is
-not sufficient for this plot.
-
-```bash
-gpumdkit.sh -plt msd_sdc
-```
-
----
-
-### plt_arrhenius_d.py
-
-Creates Arrhenius plot for diffusivity (log10 D vs 1000/T).
-
-**Input Files:** `*K/msd.out` files (each temperature subdirectory should contain an `msd.out`)
-
-```bash
-gpumdkit.sh -plt arrhenius_d
-gpumdkit.sh -plt D             # Alternative command
-```
-
-**Output example:**
 
 ```text
-T: 300K, D_total: 1.001e-07 cm2/s
-T: 350K, D_total: 4.184e-07 cm2/s
-T: 400K, D_total: 1.027e-06 cm2/s
-Ea: 0.230 eV
++------------------------------------------+
+| Average values after 50% simulation time |
+| You can change it by the following line: |
+|    start_index = int(len(time) * 0.5)    |
++------------------------------------------+
+Temperature: 899.877 K
+Pressure X: 0.011 GPa
+Pressure Y: 0.015 GPa
+Pressure Z: 0.013 GPa
+Lattice Length X: 8.918 Angstrom
+Lattice Length Y: 8.938 Angstrom
+Lattice Length Z: 12.880 Angstrom
+Volume: 1025.207 Angstrom^3
+Angle Alpha: 91.99°
+Angle Beta: 90.65°
+Angle Gamma: 90.25°
+Average lattice matrix: 8.918, 0.000, 0.000, -0.039, 8.938, 0.000, -0.145, -0.448, 12.871
 ```
 
 <div align="center">
-  <img src="../../Gallery/Arrhenius_D.png" alt="Arrhenius diffusivity" width="58%" />
+  <img src="../../Gallery/thermo.png" alt="Thermo plot of an NPT run at 900 K" width="70%" />
 </div>
 
----
+Two files are written next to the data: `thermo.png` and `average_results.txt`, the averages above. The averages use the **second half** of the run; edit `start_index` in the script if your equilibration needs a different cut. In the figure, the light curves are the raw data and the thick lines are running averages over 2% of the run. Without `save` the same figure opens in a window.
 
-### plt_arrhenius_d_PT.py
+## Plot topics
 
-Creates a piecewise Arrhenius diffusivity plot around a user-specified phase-transition temperature.
-The transition-temperature point is included in both the `LowT` (`T <= Tc`) and `HighT` (`T >= Tc`) fits.
+- [NEP Training and Model Analysis](plot_nep.md) — Plots for NEP training and prediction results, charges, descriptors, dimer curves, and atomistic energies.
+- [MD and Structure](plot_md_structure.md) — Plots for thermodynamic output and structural analysis of MD runs, including polar-material plane profiles.
+- [Diffusion and Ionic Transport](plot_diffusion.md) — Plots for MSD, self-diffusion coefficients, and Arrhenius fits of diffusivity and ionic conductivity.
+- [Heat Transport and Phonons](plot_heat_phonon.md) — Plots for EMD, NEMD, and HNEMD thermal transport, viscosity, phonon dispersion, and PDOS.
 
-**Input Files:** `*K/msd.out` files
-
-```bash
-gpumdkit.sh -plt D_PT 380
-gpumdkit.sh -plt D_PT 380 save
-```
-
-The legend reports the activation energy of each branch as `HighT (xx eV)` and `LowT (xx eV)`.
-
-<div align="center">
-  <img src="../../Gallery/Arrhenius_D_PT.png" alt="Phase-transition Arrhenius diffusivity" width="58%" />
-</div>
-
----
-
-### plt_arrhenius_d_xyz.py
-
-Calculates diffusion coefficients from `msd.out` in temperature folders for the
-x/y/z directions, generates a directional Arrhenius plot, and extracts the
-activation energy of each component.
-
-**Input Files:** `*K/msd.out` files
-
-```bash
-gpumdkit.sh -plt D_xyz
-```
-
-The output reports `Ea_x`, `Ea_y`, and `Ea_z` from the linear fits.
-
----
-
-### plt_arrhenius_sigma.py
-
-Creates Arrhenius plot for ionic conductivity (ln(σ·T) vs 1000/T).
-
-**Input Files:** `thermo.out` and `msd.out` in each `*K/` directory;
-`model.xyz` and optional `run.in` in the first temperature directory
-
-```bash
-gpumdkit.sh -plt arrhenius_sigma
-gpumdkit.sh -plt sigma         # Alternative command
-```
-
-<div align="center">
-  <img src="../../Gallery/Arrhenius_sigma.png" alt="Arrhenius ionic conductivity" width="58%" />
-</div>
-
----
-
-### plt_arrhenius_sigma_PT.py
-
-Creates a piecewise Arrhenius ionic-conductivity plot around a user-specified phase-transition temperature.
-The transition-temperature point is included in both the `LowT` (`T <= Tc`) and `HighT` (`T >= Tc`) fits.
-The 300 K conductivity is extrapolated from the branch on the same side of the transition as 300 K.
-
-**Input Files:** `thermo.out` and `msd.out` in each `*K/` directory;
-`model.xyz` and optional `run.in` in the first temperature directory
-
-```bash
-gpumdkit.sh -plt sigma_PT 380
-gpumdkit.sh -plt sigma_PT 380 save
-```
-
-The legend reports the activation energy of each branch as `HighT (xx eV)` and `LowT (xx eV)`.
-
-<div align="center">
-  <img src="../../Gallery/Arrhenius_sigma_PT.png" alt="Phase-transition Arrhenius ionic conductivity" width="58%" />
-</div>
-
----
-
-### plt_arrhenius_sigma_xyz.py
-
-Calculates the ionic conductivity from MSD and thermo data in temperature
-folders for the x/y/z directions, plots the directional Arrhenius relationship,
-and extracts the activation energy of each direction using the Nernst-Einstein
-relation.
-
-**Input Files:** `thermo.out` and `msd.out` in each `*K/` directory;
-`model.xyz` in the first temperature directory
-
-```bash
-gpumdkit.sh -plt sigma_xyz
-```
-
----
-
-## Heat Transport
-
-### plt_emd.py
-
-Analyzes and plots thermal conductivity from equilibrium molecular dynamics (EMD).
-
-**Input Files:** EMD output files from GPUMD
-
-```bash
-gpumdkit.sh -plt emd x --save-data        # export processed data
-gpumdkit.sh -plt emd x --save --save-data # save the figure and data
-```
-
-`--save` saves the figure as `emd.png`. `--save-data` saves the processed
-arrays as `data_emd.npz` and tab-separated `data_emd.txt`; the two options are
-independent. The legacy bare tokens `save` and `save_data` remain accepted.
-
-<div align="center">
-  <img src="../../Gallery/emd.png" alt="EMD thermal conductivity" width="70%" />
-</div>
-
----
-
-### plt_emd2.py
-
-Plots heat-current correlation and total EMD thermal conductivity in the x, y,
-and z directions in one figure. It uses the same `run.in` and `hac.out` files
-and averaging rule as `plt_emd.py`.
-
-**Input Files:** EMD output files from GPUMD
-
-```bash
-gpumdkit.sh -plt emd2             # Display all directional results
-gpumdkit.sh -plt emd2 save        # Save as emd2.png
-```
-
-The HAC panels use a logarithmic correlation-time axis and retain the signed
-HAC values on the y-axis. A physically zero direction is shown as a zero
-curve. The reported uncertainty follows the legacy half-window spread divided
-by the square root of the number of HAC repeats; it is not an independent-
-trajectory standard error.
-
-<div align="center">
-  <img src="../../Gallery/emd2.png" alt="EMD thermal conductivity in all directions" width="90%" />
-</div>
-
----
-
-### plt_nemd.py
-
-Visualizes non-equilibrium molecular dynamics (NEMD) thermal transport properties.
-
-**Input Files:** NEMD output files from GPUMD
-
-**Parameters:**
-
-| Parameter | Description |
-|-----------|-------------|
-| `real_length` | Real length of heat transfer zone in nm (set to `Auto` for auto-calculation) |
-| `scale_eff_size` | Scale factor for effective cross-sectional area (default: 1). For 3D bulk: use 1. For low-dimensional systems with vacuum: S_box / S_eff |
-| `cutoff_freq` | Cutoff frequency for SHC calculation in THz (default: 60) |
-| `--save` | Optional, save the plot as `nemd.png` |
-| `--save-data` | Optional, additionally export tab-separated `data_nemd.txt` and, when SHC data exist, `data_shc.txt` |
-
-**Note:** If no SHC data, set `scale_eff_size` and `cutoff_freq` to any number as placeholders when using `--save`.
-
-```bash
-gpumdkit.sh -plt nemd [real_length] [scale_eff_size] [cutoff_freq] [--save] [--save-data]
-gpumdkit.sh -plt nemd --save-data                         # use defaults and export data
-gpumdkit.sh -plt nemd Auto 1 60 --save --save-data       # save the figure and data
-```
-
-The historical `data_nemd.npz` (and `data_shc.npz` when SHC data exist) are
-still written as before. `--save` and `--save-data` are independent. The
-legacy bare tokens `save` and `save_data` remain accepted.
-
-<div align="center">
-  <img src="../../Gallery/nemd.png" alt="NEMD results" width="70%" />
-</div>
-
----
-
-### plt_hnemd.py
-
-Plots homogeneous non-equilibrium molecular dynamics (HNEMD) results.
-
-**Input Files:** HNEMD output files from GPUMD
-
-**Parameters:**
-
-| Parameter | Description |
-|-----------|-------------|
-| `scale_eff_size` | Scale factor for effective cross-sectional area (default: 1) |
-| `cutoff_freq` | Cutoff frequency for SHC calculation in THz (default: 60) |
-| `--save` | Optional, save the plot as `hnemd.png` |
-| `--save-data` | Optional, save processed arrays as `data_hnemd.npz` and tab-separated `data_hnemd.txt`; when SHC data exist, also save `data_shc.npz` and `data_shc.txt` |
-
-**Note:** If no SHC data, set `scale_eff_size` and `cutoff_freq` to any number as placeholders when using `--save`.
-
-```bash
-gpumdkit.sh -plt hnemd [scale_eff_size] [cutoff_freq] [--save] [--save-data]
-gpumdkit.sh -plt hnemd --save-data             # use defaults and export data
-gpumdkit.sh -plt hnemd 1 60 --save --save-data # save the figure and data
-```
-
-`--save` and `--save-data` are independent. The legacy bare tokens `save` and
-`save_data` remain accepted.
-
-<div align="center">
-  <img src="../../Gallery/hnemd.png" alt="HNEMD results" width="70%" />
-</div>
-
----
-
-### plt_viscosity.py
-
-Plots the stress autocorrelation and viscosity components from `viscosity.out`,
-including diagonal and off-diagonal components.
-
-**Input Files:** `viscosity.out` from the GPUMD viscosity calculation
-
-```bash
-gpumdkit.sh -plt viscosity
-```
-
----
-
-## Structural Analysis
-
-### plt_rdf.py
-
-Plots all RDF value columns in `rdf.out` (the radius column is used as the x-axis).
-
-**Input File:** `rdf.out`
-
-```bash
-gpumdkit.sh -plt rdf               # Plot all RDF pairs
-gpumdkit.sh -plt rdf save          # Save the figure as rdf.png
-```
-
-The `rdf` plotter does not select a single column. Use `rdf_pmf` when a
-specific RDF output column is needed for PMF analysis.
-
-**RDF output:**
-
-<div align="center">
-  <img src="../../Gallery/rdf1.png" alt="Complete RDF" width="90%" />
-</div>
-
----
-
-### plt_xrd.py
-
-Plots the X-ray diffraction (XRD) output generated by calculator 413.
-
-**Input File:** `xrd.out` by default; an alternative XRD output path can be
-passed as the first argument.
-
-The input file must be generated by calculator 413.
-
-```bash
-gpumdkit.sh -plt xrd
-gpumdkit.sh -plt xrd path/to/xrd.out save
-```
-
-With `save`, the figure is written to `xrd.png` in the current working
-directory.
-
-**Example:**
-
-<div align="center">
-  <img src="../../Gallery/xrd.png" alt="X-ray diffraction example" width="75%" />
-</div>
-
----
-
-### plt_xrd_comp.py
-
-Compares XRD curves from several temperature folders in the current working
-directory. Each folder must be named `<temperature>K` and contain an
-`xrd.out` file written by calculator 413. Curves are stacked from high
-temperature at the top to low temperature at the bottom.
-
-Generate each `xrd.out` with calculator 413 before running the comparison.
-
-Run the comparison from the directory containing the `*K` subdirectories.
-This command does not take a directory argument:
-
-```bash
-cd /path/to/xrd_series
-gpumdkit.sh -plt xrd_comp
-gpumdkit.sh -plt xrd_comp save
-```
-
-With `save`, the figure is written to `xrd_comp.png` in the current working
-directory.
-
----
-
-### plt_rdf_pmf.py
-
-Plots RDF combined with potential of mean force (PMF).
-
-**Input File:** `rdf.out`
-
-```bash
-gpumdkit.sh -plt rdf_pmf
-gpumdkit.sh -plt rdf_pmf 300 2 save
-```
-
-`column_index` selects an `rdf.out` output column: column 2 is the total RDF,
-and columns 3 and above are pair RDFs.
-
----
-
-### plt_vac.py
-
-Plots velocity autocorrelation function (VAC). Useful for analyzing phonon properties and atomic dynamics.
-
-**Input File:** `sdc.out` written by GPUMD `compute_sdc` (the VAC columns are
-read from this file by the plotting script). This is separate from the
-`msd.out` input used by `-plt sdc` and `-plt msd_sdc`.
-
-**Output:** Interactive plot or `vac.png` (with `save` option)
-
-```bash
-gpumdkit.sh -plt vac
-```
-
----
-
-### plt_cohesive.py
-
-Plots cohesive energy curve from `cohesive.out`. Useful for analyzing lattice stability and equilibrium lattice constants.
-
-**Input File:** `cohesive.out` (isotropic scaling factor vs cohesive energy)
-
-**Output:** Interactive plot or `cohesive.png` (with `save` option)
-
-```bash
-gpumdkit.sh -plt cohesive
-```
-
----
-
-### plt_net_force.py
-
-Plots distribution of net forces on structures, useful for identifying problematic configurations.
-
-**Input File:** `train.xyz` (extxyz format)
-
-```bash
-gpumdkit.sh -plt net_force train.xyz
-```
-
-**Reference:** [arXiv:2510.19774](https://arxiv.org/abs/2510.19774)
-
-<div align="center">
-  <img src="../../Gallery/net_force_distribution.png" alt="Net force distribution" width="58%" />
-</div>
-
----
-
-## Phonons
-
-### plt_phonon.py
-
-Plots a phonon band structure generated by calculator `414`. The plotter reads
-the q-point path and high-symmetry labels directly from a line-mode `QPOINTS`
-file, so the path does not need to be repeated in the plotting script.
-
-**Input Files:** A phonon data file (default `phonon_NEP.dat`) and `QPOINTS`
-
-The calculation step is interactive:
-
-```text
-gpumdkit.sh -> 4) Calculators -> 414) Calc phonon band structure
-```
-
-The Python prompts accept a primitive-cell structure (default `PRIMCELL.vasp`),
-a NEP model (default `nep.txt`), a line-mode path (default `QPOINTS`), the
-supercell, the displacement amplitude, and the output name (default
-`phonon_NEP.dat`). The calculation requires `phonopy` in addition to the
-usual GPUMDkit/Calorine dependencies.
-
-Plot the result with:
-
-```bash
-gpumdkit.sh -plt phonon
-gpumdkit.sh -plt phonon phonon_DFT.dat
-gpumdkit.sh -plt phonon phonon_NEP.dat QPOINTS save
-```
-
-The phonon data file is optional. If it is omitted, the plotter reads
-`phonon_NEP.dat`; if only one file is supplied, the path file defaults to
-`QPOINTS`.
-
-Each disconnected q-path segment is drawn separately. Boundary labels such as
-`S|S₀` are combined at one horizontal position, and labels stay at one height
-with lateral alignment used when neighboring labels are crowded.
-
-<div align="center">
-  <img src="../../Gallery/phonon.png" alt="Phonon band structure" width="70%" />
-</div>
-
----
-
-### plt_phonon_comp.py
-
-Compares two or more phonon band-structure files. The legend is inferred from
-the filename: `phonon_NEP.dat` becomes `NEP`, `phonon_DFT.dat` becomes `DFT`,
-and `phonon_MACE.dat` becomes `MACE`.
-
-```bash
-gpumdkit.sh -plt phonon_comp phonon_DFT.dat phonon_NEP.dat save
-gpumdkit.sh -plt phonon_comp phonon_DFT.dat phonon_NEP.dat phonon_MACE.dat \
-    --qpoints QPOINTS save
-```
-
-The default path file is `QPOINTS`; use `--qpoints FILE` for another path
-definition. For two-file DFT/NEP comparisons, DFT is gray and solid while NEP
-is firebrick and dashed. Additional models use the comparison palette and
-distinct line styles. Disconnected path segments are normalized independently
-before comparison, so files may use different offsets across a path jump. The
-files must still contain the same q-point sampling and number of bands; matching
-row counts alone are not sufficient.
-
-<div align="center">
-  <img src="../../Gallery/phonon_comp.png" alt="Phonon band comparison" width="70%" />
-</div>
-
----
-
-### plt_pdos.py
-
-Calculates and plots normalized VAC, PDOS, and Heat Capacity (Cv).
-
-**Input Files:** `model.xyz`, `run.in`, `dos.out`, `mvac.out`
-
-```bash
-gpumdkit.sh -plt pdos
-gpumdkit.sh -plt pdos save
-```
-
-<div align="center">
-  <img src="../../Gallery/vac_pdos.png" alt="VAC and PDOS" width="70%" />
-</div>
-
-Heat capacity output:
-
-<div align="center">
-  <img src="../../Gallery/heat_capacity.png" alt="Heat capacity" width="50%" />
-</div>
-
----
-
-## Descriptor, Dimer, and Extra Analysis
-
-### plt_descriptors.py
-
-Visualizes high-dimensional NEP descriptors using dimensionality reduction (PCA or UMAP).
-
-**Input File:** `descriptors.npy` (generated by `gpumdkit.sh -calc des`)
-
-**Methods:**
-- `pca` — Principal Component Analysis
-- `umap` — Uniform Manifold Approximation and Projection
-
-```bash
-# First generate descriptors
-gpumdkit.sh -calc des train.xyz descriptors.npy nep.txt Li
-
-# Then visualize
-gpumdkit.sh -plt des pca descriptors.npy
-gpumdkit.sh -plt des umap descriptors.npy
-```
-
-<div align="center">
-  <img src="../../Gallery/des_umap.png" alt="UMAP descriptor visualization" width="52%" />
-</div>
-
----
-
-### plt_dimer.py
-
-Plots dimer interaction curves. Two atoms are placed in a cubic box (30 Å) and the potential energy and force are calculated as a function of dimer distance using a NEP model.
-
-**Input File:** `nep.txt`
-
-```bash
-gpumdkit.sh -plt dimer <element1> <element2> <nep_model>
-gpumdkit.sh -plt dimer Li Li nep.txt
-```
-
-<div align="center">
-  <img src="../../Gallery/dimer_nep.png" alt="Dimer NEP curve" width="45%" />
-  <img src="../../Gallery/dimer.png" alt="Dimer comparison" width="45%" />
-</div>
-
-**Reference:** [J. Chem. Inf. Model. 2026, 66, 3, 1406-1413](https://doi.org/10.1021/acs.jcim.5c02335)
-
----
-
-### plt_doas.py
-
-Plots density of atomistic states (DOAS) proposed by [Wang et al.](https://doi.org/10.1002/anie.202215544).
-
-**Input File:** `doas.out` (calculated by `gpumdkit.sh -calc doas`)
-
-```bash
-gpumdkit.sh -plt doas <doas.out> <species>
-gpumdkit.sh -plt doas doas.out Li
-```
-
-<div align="center">
-  <img src="../../Gallery/doas.png" alt="Density of atomistic states" width="52%" />
-</div>
-
----
-
-## Plane-Grid Plot for Polar Materials
-
-This workflow maps displacement or polarization data onto a grid and plots selected plane profiles. For detailed usage and real-world examples, see **[Polar Material Analysis](polar_material_analysis.md)**.
-
-**Dependency:**
-
-```bash
-pip3 install git+https://github.com/MoseyQAQ/ferrodispcalc.git
-```
-
-**Typical upstream steps:**
-
-```bash
-gpumdkit.sh -calc nlist -i model.xyz -c 4 -n 12 -C Pb Sr -E O
-gpumdkit.sh -calc disp -i movie.xyz -n nl-Pb_Sr-O.dat -o displacements.dat
-gpumdkit.sh -calc avg-struct -i movie.xyz -l 0.2 -o averaged_structure.xyz
-```
-
-**Usage:**
-
-```bash
-gpumdkit.sh -plt plane-grid -i averaged_structure.xyz -d displacements.dat -e Pb Sr
-gpumdkit.sh -plt plane-grid -i averaged_structure.xyz -d displacements.dat -e Pb Sr --select-xy 0 1
-```
-
----
 
 ## Quick Reference Table
 
-| Command | Input File(s) | Description |
-|---------|---------------|-------------|
-| `train` | `loss.out`, `*_train.out` | NEP training plots |
-| `prediction` / `test` | `*_train.out` | NEP prediction-mode parity plots for `train.xyz` |
-| `train_test` | `*_train.out`, `*_test.out` | Combined parity plots |
-| `parity_density` | `*_train.out` | Density-based parity plots |
-| `train_density` | `*_train.out` | Density-based training parity plots (stress preferred over virial) |
-| `force_errors` | `force_train.out` | Force error metrics |
-| `restart` | `nep.restart` | Restart file parameters |
-| `charge` | `train.xyz`, `charge_train.out` | Charge distribution |
-| `born_charge` / `bec` | `bec_train.out`, optional `bec_test.out` | Born effective charges |
-| `thermo` | `thermo.out` | Thermodynamic properties |
-| `thermo2` / `thermo3` | `thermo.out` | Thermodynamic plots in alternative styles |
-| `msd` | four-column `msd.out` from `-calc msd`, or first four columns of GPUMD `compute_msd` output | Mean square displacement |
-| `msd_all` | `msd.out` (all_groups) | MSD for all species |
-| `msd_conv` | `msd_step*.out` | MSD convergence check |
-| `sdc` | single-group seven-column `msd.out` from GPUMD `compute_msd` | Self-diffusion coefficient |
-| `msd_sdc` | single-group seven-column `msd.out` from GPUMD `compute_msd` | MSD and SDC combined |
-| `arrhenius_d` / `D` | `*K/msd.out` | Arrhenius diffusivity |
-| `arrhenius_sigma` / `sigma` | `*K/{thermo.out, msd.out}` plus first-directory `model.xyz` and optional `run.in` | Arrhenius ionic conductivity |
-| `D_PT` | `*K/msd.out` plus a transition temperature | Piecewise Arrhenius diffusivity around a phase transition |
-| `sigma_PT` | `*K/{thermo.out, msd.out}` plus first-directory `model.xyz`, optional `run.in`, and a transition temperature | Piecewise Arrhenius ionic conductivity around a phase transition |
-| `D_xyz` | `*K/msd.out` | Directional Arrhenius diffusivity (x/y/z) |
-| `sigma_xyz` | `*K/{thermo.out, msd.out}` plus first-directory `model.xyz` | Directional Arrhenius ionic conductivity (x/y/z) |
-| `rdf` | `rdf.out` | Radial distribution function |
-| `rdf_pmf` | `rdf.out` | RDF + potential of mean force |
-| `xrd` | `xrd.out` | X-ray diffraction intensity |
-| `xrd_comp` | `*K/xrd.out` | XRD comparison across temperatures |
-| `vac` | `sdc.out` | Velocity autocorrelation |
-| `cohesive` | `cohesive.out` | Cohesive energy curve |
-| `net_force` | `train.xyz` | Net force distribution |
-| `doas` | `doas.out` | Density of atomistic states |
-| `des` | `descriptors.npy` | Descriptor PCA/UMAP |
-| `dimer` | `nep.txt` | Dimer energy/force curve |
-| `pdos` | `model.xyz`, `run.in`, `dos.out`, `mvac.out` | VAC and PDOS |
-| `phonon` | phonopy band-structure data | Phonon band structure |
-| `phonon_comp` | phonopy band-structure data | Compare phonon band structures |
-| `emd` | EMD outputs | EMD thermal conductivity in one direction |
-| `emd2` | EMD outputs | EMD thermal conductivity in all directions |
-| `nemd` | NEMD outputs | NEMD thermal transport |
-| `hnemd` | HNEMD outputs | HNEMD thermal transport |
-| `viscosity` | `viscosity.out` | Stress autocorrelation and viscosity components |
-| `plane-grid` | `model.xyz`, `displacements.dat` | Displacement plane grid profiles |
+| Command | Input File(s) | Description | Page |
+|---------|---------------|-------------|------|
+| `train` | `loss.out`, `*_train.out` | NEP training plots | [NEP](plot_nep.md) |
+| `prediction` / `test` | `*_train.out` | NEP prediction-mode parity plots for `train.xyz` | [NEP](plot_nep.md) |
+| `train_test` | `*_train.out`, `*_test.out` | Combined parity plots | [NEP](plot_nep.md) |
+| `parity_density` | `*_train.out` | Density-based parity plots | [NEP](plot_nep.md) |
+| `train_density` | `*_train.out` | Density-based training parity plots (stress preferred over virial) | [NEP](plot_nep.md) |
+| `force_errors` | `force_train.out` | Force error metrics | [NEP](plot_nep.md) |
+| `restart` | `nep.restart` | Restart file parameters | [NEP](plot_nep.md) |
+| `charge` | `train.xyz`, `charge_train.out` | Charge distribution | [NEP](plot_nep.md) |
+| `born_charge` / `bec` | `bec_train.out`, optional `bec_test.out` | Born effective charges | [NEP](plot_nep.md) |
+| `thermo` | `thermo.out` | Thermodynamic properties | [MD & structure](plot_md_structure.md) |
+| `thermo2` | `thermo.out` | Previous thermodynamic plot style (`thermo3` is now the default `thermo`) | [MD & structure](plot_md_structure.md) |
+| `msd` | four-column `msd.out` from `-calc msd`, or first four columns of GPUMD `compute_msd` output | Mean square displacement | [Diffusion](plot_diffusion.md) |
+| `msd_all` | `msd.out` (all_groups) | MSD for all species | [Diffusion](plot_diffusion.md) |
+| `msd_conv` | `msd_step*.out` | MSD convergence check | [Diffusion](plot_diffusion.md) |
+| `sdc` | single-group seven-column `msd.out` from GPUMD `compute_msd` | Self-diffusion coefficient | [Diffusion](plot_diffusion.md) |
+| `msd_sdc` | single-group seven-column `msd.out` from GPUMD `compute_msd` | MSD and SDC combined | [Diffusion](plot_diffusion.md) |
+| `arrhenius_d` / `D` | `*K/msd.out` | Arrhenius diffusivity | [Diffusion](plot_diffusion.md) |
+| `arrhenius_sigma` / `sigma` | `*K/{thermo.out, msd.out}` plus first-directory `model.xyz` and optional `run.in` | Arrhenius ionic conductivity | [Diffusion](plot_diffusion.md) |
+| `D_PT` | `*K/msd.out` plus a transition temperature | Piecewise Arrhenius diffusivity around a phase transition | [Diffusion](plot_diffusion.md) |
+| `sigma_PT` | `*K/{thermo.out, msd.out}` plus first-directory `model.xyz`, optional `run.in`, and a transition temperature | Piecewise Arrhenius ionic conductivity around a phase transition | [Diffusion](plot_diffusion.md) |
+| `D_xyz` | `*K/msd.out` | Directional Arrhenius diffusivity (x/y/z) | [Diffusion](plot_diffusion.md) |
+| `sigma_xyz` | `*K/{thermo.out, msd.out}` plus first-directory `model.xyz` | Directional Arrhenius ionic conductivity (x/y/z) | [Diffusion](plot_diffusion.md) |
+| `rdf` | `rdf.out` | Radial distribution function | [MD & structure](plot_md_structure.md) |
+| `rdf_pmf` | `rdf.out` | RDF + potential of mean force | [MD & structure](plot_md_structure.md) |
+| `xrd` | `xrd.out` | X-ray diffraction intensity | [MD & structure](plot_md_structure.md) |
+| `xrd_comp` | `*K/xrd.out` | XRD comparison across temperatures | [MD & structure](plot_md_structure.md) |
+| `vac` | `sdc.out` | Velocity autocorrelation | [MD & structure](plot_md_structure.md) |
+| `cohesive` | `cohesive.out` | Cohesive energy curve | [MD & structure](plot_md_structure.md) |
+| `net_force` | `train.xyz` | Net force distribution | [MD & structure](plot_md_structure.md) |
+| `doas` | `doas.out` | Density of atomistic states | [NEP](plot_nep.md) |
+| `des` | `descriptors.npy` | Descriptor PCA/UMAP | [NEP](plot_nep.md) |
+| `dimer` | `nep.txt` | Dimer energy/force curve | [NEP](plot_nep.md) |
+| `pdos` | `model.xyz`, `run.in`, `dos.out`, `mvac.out` | VAC and PDOS | [Heat & phonons](plot_heat_phonon.md) |
+| `phonon` | phonopy band-structure data | Phonon band structure | [Heat & phonons](plot_heat_phonon.md) |
+| `phonon_comp` | phonopy band-structure data | Compare phonon band structures | [Heat & phonons](plot_heat_phonon.md) |
+| `emd` | EMD outputs | EMD thermal conductivity in one direction | [Heat & phonons](plot_heat_phonon.md) |
+| `emd2` | EMD outputs | EMD thermal conductivity in all directions | [Heat & phonons](plot_heat_phonon.md) |
+| `nemd` | NEMD outputs | NEMD thermal transport | [Heat & phonons](plot_heat_phonon.md) |
+| `hnemd` | HNEMD outputs | HNEMD thermal transport | [Heat & phonons](plot_heat_phonon.md) |
+| `viscosity` | `viscosity.out` | Stress autocorrelation and viscosity components | [Heat & phonons](plot_heat_phonon.md) |
+| `plane-grid` | `model.xyz`, `displacements.dat` | Displacement plane grid profiles | [MD & structure](plot_md_structure.md) |

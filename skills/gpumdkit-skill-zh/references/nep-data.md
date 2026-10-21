@@ -31,6 +31,7 @@
 | `virial="9 components"` | 可选的全晶胞维里张量，单位为 eV |
 | `stress="9 components"` | 可选的 NEP 应力张量，单位为 eV/Angstrom^3；与 virial 符号约定相反（正的 stress 表示拉伸态，正的 virial 表示压缩态），如果存在 virial 则忽略 |
 | `weight=<relative_weight>` | 可选的构型权重 |
+| `name=<label>` | 可选的结构标签，供 `ediff.in` 引用；只有设置 `lambda_d` 时才读取。同一文件内唯一，不区分大小写，每个结构最多一个；不能以 `#`、`+` 或 `-` 开头，也不能包含空白或 `* / = " ' { }` |
 | `properties=...` | 必需的逐原子列格式 |
 
 相关逐原子属性：
@@ -75,7 +76,8 @@ properties=species:S:1:pos:R:3:force:R:3
 
 维里和 stress 的符号约定相反：正的 virial 表示压缩态，正的 stress 表示拉伸态。
 两者的换算关系为 `stress = -virial / volume`；如果两者同时存在，使用维里
-（并进行一致性校验）。
+（并进行一致性校验）。这一关系适用于输入的 `stress=` 字段；输出文件 `stress_*.out`
+则使用 `stress = virial / volume`，符号与维里相同，见 `nep-outputs.md`。
 
 NEP 训练假设所有方向均为周期性边界条件。对于平板、团簇或真空体系，请向用户确认周期性晶胞和参考计算如何表征该体系。
 

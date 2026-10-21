@@ -49,6 +49,12 @@ gpumdkit.sh -range train.xyz virial
 gpumdkit.sh -range train.xyz force hist
 ```
 
+Energy and virial are read from `energy=`/`virial=` in either letter case,
+including keys that ASE 3.23+ stores in the calculator. Frames without the
+requested property are skipped with a note; the command fails only when no
+frame has it. Energy is the total energy in the file (eV); force ranges use the
+per-atom force magnitude; virial ranges use every stored component.
+
 ### Energy Reference Shifting
 ```bash
 # Open the interactive energy reference shifter
@@ -101,14 +107,15 @@ gpumdkit.sh -chem_species train.xyz
 
 #### By Minimum Distance (No PBC)
 ```bash
-gpumdkit.sh -filter_dist dump.xyz 1.5
-# Output: filtered_<file>.xyz, filtered_out_<file>.xyz
+gpumdkit.sh -filter_dist dump.xyz <min_distance>
+# Output: filtered_<input_name>, filtered_out_<input_name>
+# e.g. filtered_dump.xyz and filtered_out_dump.xyz
 ```
 
 #### By Minimum Distance (With PBC)
 ```bash
-gpumdkit.sh -filter_dist_pbc dump.xyz 1.5
-# More accurate for periodic systems
+gpumdkit.sh -filter_dist_pbc dump.xyz <min_distance>
+# More accurate for periodic systems; same output names as -filter_dist
 ```
 
 #### By Element-Pair Distance Range
@@ -121,19 +128,28 @@ gpumdkit.sh -filter_range dump.xyz Li Li 1.9 2.0
 
 #### By Box Size
 ```bash
-# Filter structures with box edge > 20 Angstrom
-gpumdkit.sh -filter_box dump.xyz 20
+# Discard structures with any box edge longer than <max_edge> Angstrom
+gpumdkit.sh -filter_box dump.xyz <max_edge>
 
 # Output: filtered_by_box.xyz
 ```
 
 #### By Property Value
 ```bash
-# Keep structures with force < 20 eV/Angstrom
-gpumdkit.sh -filter_value train.xyz force 20
+# Keep structures whose values are all <= the threshold
+gpumdkit.sh -filter_value train.xyz force <max_force_component>
 
 # Output: filtered.xyz
 ```
+
+A structure is kept when every value is at most the threshold: each force
+component in magnitude (eV/Angstrom) for `force`, the total energy in the file
+(eV, not per atom) for `energy`, and each virial component for `virial`.
+Energy and virial are read in either letter case, including keys that ASE 3.23+
+stores in the calculator. Frames without the chosen property cannot be checked
+and are kept; the command reports how many. It fails without writing output
+when no frame has the property, the property name is unknown, or the threshold
+is not a number.
 
 ### Outlier Detection
 ```bash
@@ -141,7 +157,7 @@ gpumdkit.sh -filter_value train.xyz force 20
 gpumdkit.sh  # Select: 5) Analyzer -> 502
 
 # Non-interactive threshold mode also works
-python3 ${GPUMDkit_path}/Scripts/analyzer/find_outliers.py 20 100 1.0
+python3 ${GPUMDkit_path}/Scripts/analyzer/find_outliers.py <energy_rmse_meV_atom> <force_rmse_meV_A> <stress_rmse_GPa>
 
 # Required files in current directory:
 # - train.xyz
@@ -151,6 +167,12 @@ python3 ${GPUMDkit_path}/Scripts/analyzer/find_outliers.py 20 100 1.0
 
 # Output: selected.xyz (high-error), remained.xyz (low-error)
 ```
+
+The three optional thresholds are target RMSE values for energy (meV/atom),
+force (meV/Angstrom), and stress (GPa). For each property the script removes
+the highest-error structures one at a time until the RMSE of the remaining set
+falls below the threshold; removed structures go to `selected.xyz`. Choose the
+thresholds with the user.
 
 Structures with a `-1e6` missing-stress marker or a stress component whose absolute value exceeds `1e6` are excluded from RMSE calculation and both output datasets. If none remain, the script reports an error without writing outputs.
 
@@ -187,15 +209,18 @@ gpumdkit.sh  # Select: 5) Analyzer -> 502
 ```
 
 ### Structure Filtering Pipeline
+
+Thresholds are system-specific; take them from the user.
+
 ```bash
 # 1. Filter by distance
-gpumdkit.sh -filter_dist_pbc dump.xyz 1.5
+gpumdkit.sh -filter_dist_pbc dump.xyz <min_distance>
 
 # 2. Filter by box size
-gpumdkit.sh -filter_box filtered_dump.xyz 20
+gpumdkit.sh -filter_box filtered_dump.xyz <max_edge>
 
 # 3. Filter by force value
-gpumdkit.sh -filter_value filtered_by_box.xyz force 15
+gpumdkit.sh -filter_value filtered_by_box.xyz force <max_force_component>
 ```
 
 ### Diffusion Channel Analysis
@@ -213,6 +238,9 @@ gpumdkit.sh -pda LLZO.vasp dump.xyz Li 0.25
 ```bash
 # Monitor GPUMD progress
 gpumdkit.sh -time gpumd
+
+# Monitor a WPE-enabled GPUMD run
+gpumdkit.sh -time wpe
 
 # Monitor NEP training progress
 gpumdkit.sh -time nep
@@ -234,7 +262,7 @@ gpumdkit.sh -time nep
 | `-filter_range` | Filter by distance range | `gpumdkit.sh -filter_range <file> <e1> <e2> <min> <max>` |
 | `-filter_box` | Filter by box size | `gpumdkit.sh -filter_box <file> <limit>` |
 | `-filter_value` | Filter by property | `gpumdkit.sh -filter_value <file> <prop> <thresh>` |
-| `-time` | Time monitoring | `gpumdkit.sh -time <gpumd|nep>` |
+| `-time` | Time monitoring | `gpumdkit.sh -time <gpumd\|wpe\|nep\|gnep>` |
 
 ## Dependencies
 

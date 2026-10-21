@@ -41,10 +41,14 @@ gpumdkit.sh -calc ionic-cond O -2
 
 # 推荐的非交互式输入（当前目录）：
 # - msd.out（来自 GPUMD compute_msd，或 calc_msd.py 的前四列）
-# - thermo.out（用于温度）
-# - model.xyz（用于体积）
+# - thermo.out（用于温度和体积）
+# - model.xyz（用于离子数）
 # - run.in（可选；用于检测复制因子）
 ```
+
+计算器读取第 1–4 列的时间和 `MSD_x/y/z`。`element` 参数用于计数离子，
+不选择 MSD 列；`all_groups` 输出需先提取目标组的时间和 MSD 列。电荷参数为
+以元电荷为单位的整数。结果为 Nernst–Einstein 电导率，不包含离子间位移关联。
 
 ### NEP 性质预测
 ```bash
@@ -74,8 +78,10 @@ gpumdkit.sh -prediction train.xyz nep.txt 8
 `force_<input-stem>.out`、`stress_<input-stem>.out` 和
 `virial_<input-stem>.out`。每行先写预测列，再写目标列。能量和 virial 单位为
 eV/atom，力为 eV/Angstrom，应力为 GPa。张量列使用 NEP 的
-`xx yy zz xy yz xz` 顺序，并遵循 stress 与 virial 同号的 NEP 约定。如果只提供 stress
-或 virial 中的一种，程序会使用 `stress = virial / volume` 和相应单位换算自动推导另一种；
+`xx yy zz xy yz xz` 顺序，并遵循 NEP 输出文件的符号约定：`stress = virial / volume`，
+两者都以受压为正。输入 extxyz 的 `stress=` 字段符号相反（见 `nep-data.md`），与 NEP
+一样按 `virial = -stress * volume` 换算。如果只提供 stress 或 virial 中的一种，程序按此
+关系和相应单位换算自动推导另一种；
 只有两者都缺失时才写入 `-1e6` 哨兵值。energy 和 force 标签必须存在。计算过程中会显示
 `tqdm` 进度条。
 
@@ -131,6 +137,11 @@ GPUMD 原生的 `compute_msd` 写入另一种 `msd.out`。只选择一个分组�
 `all_groups` 或多个分组时，GPUMD 会追加其他分组的数据，因此不能假定每个
 `msd.out` 都有七列。独立的 `compute_sdc` 命令写入 `sdc.out`，该文件供
 `gpumdkit.sh -plt vac` 使用。
+
+使用固定晶胞、原子顺序一致的轨迹，并确保 `pos` 字段存储已核验的展开坐标。
+脚本读取 `pos` 和首帧晶胞，不读取独立的 `unwrapped_position` 属性。自动坐标
+判断不足以验证折回轨迹；按轴解包裹也不适用于一般倾斜或变化晶胞。
+命令覆盖当前目录的 `msd.out`。
 
 ### X 射线衍射（仅交互模式）
 
@@ -216,11 +227,11 @@ gpumdkit.sh -calc pol-abo3 -i <input.xyz> \
   --nl-bo <B-O neighbor list> \
   --bec <Element=charge ...>
 
-# 示例
+# 语法示例；Born 有效电荷是与材料相关的输入
 gpumdkit.sh -calc pol-abo3 -i model.xyz \
   --nl-ba nl-Ti-Pb.dat \
   --nl-bo nl-Ti-O.dat \
-  --bec Pb=2.5 Sr=2.0 Ti=4.0 O=-2.0
+  --bec Pb=<Z_Pb> Sr=<Z_Sr> Ti=<Z_Ti> O=<Z_O>
 ```
 
 ### 结构最小化
@@ -244,11 +255,13 @@ gpumdkit.sh -calc neb <initial.xyz> <final.xyz> <n_images> <nep.txt>
 gpumdkit.sh -calc neb init.xyz fin.xyz 9 nep.txt
 
 # 直接 Python 执行（也可以）
-python Scripts/calculators/neb_calculation.py init.xyz fin.xyz 9 nep.txt
+python ${GPUMDkit_path}/Scripts/calculators/neb_calculation.py init.xyz fin.xyz 9 nep.txt
 
 # 使用 NepTrainKit 的替代方案：
-python Scripts/calculators/neb_calculation_neptrain.py init.xyz fin.xyz 9 nep.txt
+python ${GPUMDkit_path}/Scripts/calculators/neb_calculation_neptrain.py init.xyz fin.xyz 9 nep.txt
 ```
+
+`n_images` 是中间像的数量。输出：`neb.traj`（NEB 优化过程的 ASE 轨迹）、`neb.xyz`（extxyz 格式的最终路径）和 `images/`（各个像的结构）。
 
 ## 常用工作流
 
@@ -304,15 +317,13 @@ gpumdkit.sh -calc disp -i movie.xyz -n nl-Ti-O.dat -o disp.dat
 # 3. 计算倾斜
 gpumdkit.sh -calc oct-tilt -i movie.xyz -n nl-Ti-O.dat -o tilt.dat
 # 4. 计算极化
-gpumdkit.sh -calc pol-abo3 -i movie.xyz --nl-ba nl-Ti-Pb.dat --nl-bo nl-Ti-O.dat --bec Pb=2.5 Ti=4.0 O=-2.0
+gpumdkit.sh -calc pol-abo3 -i movie.xyz --nl-ba nl-Ti-Pb.dat --nl-bo nl-Ti-O.dat --bec Pb=<Z_Pb> Ti=<Z_Ti> O=<Z_O>
 ```
 
 ### 结构弛豫
 ```bash
-# 1. 最小化结构
-gpumdkit.sh -calc minimize POSCAR nep.txt 0.01 1000
-# 2. 检查结果
-gpumdkit.sh -plt thermo  # 如果弛豫后运行 MD
+# 用 NEP 最小化结构，完成后检查 minimize.xyz（优化轨迹）
+gpumdkit.sh -calc minimize POSCAR nep.txt <fmax> <max_steps>
 ```
 
 ## 依赖
@@ -335,4 +346,4 @@ pip3 install git+https://github.com/MoseyQAQ/ferrodispcalc.git
 
 ## 详细文档
 
-用户指南请参见 `${GPUMDkit_path}/docs/tutorials/en/calculator_scripts.md` 或中文对应版本。
+用户指南请参见 `${GPUMDkit_path}/docs/tutorials/zh/计算器脚本.md`。
