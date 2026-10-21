@@ -1,18 +1,25 @@
 # === User Configuration Section: Only modify these variables ===
-VERSION="1.5.5"
-RELEASE_DATE="2026-05-18"
-HOME_PAGE="https://zhyan0603.github.io/GPUMDkit"
+VERSION="1.5.8"
+RELEASE_DATE="2026-09-23"
+HOME_PAGE="https://gpumdkit.cn"
 CONTACT="yanzihan@westlake.edu.cn"
 
-# New features (one per line, in an array)
+# New features (one per line, in an array; keep at most the five newest entries)
 NEW_FEATURES=(
-    "add -plt train_density"
-    "add -plt bec"
+    "convert legacy xyz.in to model.xyz automatically for EMD, NEMD, and HNEMD post-processing"
+    "add optional --quantum SHC correction to NEMD and HNEMD while retaining classical spectra"
+    "convert LAMMPS data files, including compressed ones, with -lmp2exyz"
+    "add Tab filename completion and line editing at interactive-mode input prompts"
+    "add -time wpe progress monitoring for WPE-enabled GPUMD runs with buffered updates"
 )
 
-# Bug fixes (one per line, in an array)
+# Bug fixes (one per line, in an array; keep at most the five newest entries)
 BUG_FIXES=(
-    "None"
+    "preserve complete out2xyz Config_type metadata for paths containing spaces or quotes"
+    "accept fractional NEMD time_step values and write NPZ/TXT data only with --save-data"
+    "select the right active.xyz frames in menu 205 (select_max_modev.py) when GPUMD saved only frames above its active threshold"
+    "read energy=/virial= keys again in -filter_value and -range with ASE 3.23+, and keep frames that lack the property instead of dropping them"
+    "stop -lmp2exyz from writing an empty dump.xyz when no structure could be read"
 )
 
 # === Formatted Output Logic ===

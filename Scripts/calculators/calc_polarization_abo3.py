@@ -3,7 +3,7 @@
 GPUMDkit: A User-Friendly Toolkit for GPUMD and NEP
 Repository: https://github.com/zhyan0603/GPUMDkit
 Citation: Z. Yan et al., GPUMDkit: A User-Friendly Toolkit for GPUMD and NEP,
-          MGE Advances, 2026, e70074 (https://doi.org/10.1002/mgea.70074)
+          MGE Advances, 2026, 4, e70074 (https://doi.org/10.1002/mgea.70074)
 =============================================================================
 Script:     calc_polarization_abo3.py
 Category:   Calculator Scripts
@@ -59,6 +59,7 @@ def parse_args():
         epilog=(
             "Examples :\n"
             "1. Single-frame model.xyz:\n"
+            ">>  gpumdkit.sh -calc pol-abo3 -i model.xyz --nl-ba nl-Ti-A.dat --nl-bo nl-Ti-O.dat --bec Pb=2.5 Sr=2.0 Ti=4.0 O=-2.0\n"
             ">>  python calc_polarization_abo3.py -i model.xyz --nl-ba nl-Ti-A.dat --nl-bo nl-Ti-O.dat\n"
             "2. Multi-frame movie.xyz with slice:\n"
             ">>  python calc_polarization_abo3.py -i movie.xyz --nl-ba nl-Ti-A.dat --nl-bo nl-Ti-O.dat -s 100 -t 500 -p 2 -o pol_slice.dat\n"

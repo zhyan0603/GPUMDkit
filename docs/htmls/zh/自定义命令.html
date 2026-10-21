@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="zh-CN" data-theme="light">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>自定义命令 — GPUMDkit</title>
+  <meta name="description" content="在 ~/.gpumdkit.in 中定义 Bash 函数，就可以给 gpumdkit.sh 添加自己的快捷命令。">
+  <meta property="og:title" content="GPUMDkit — A User-friendly Toolkit for GPUMD and NEP">
+  <meta property="og:description" content="Format conversion, sampling, workflows, analysis and plotting for GPUMD and NEP, in one command.">
+  <meta property="og:image" content="https://gpumdkit.cn/Gallery/gpumdkit_logo_lateral.png">
+  <meta property="og:url" content="https://gpumdkit.cn/">
+  <meta name="twitter:card" content="summary_large_image">
+  <link rel="canonical" href="https://gpumdkit.cn/htmls/zh/自定义命令.html">
+  <link rel="icon" href="../../Gallery/gpumdkit_logo.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <!-- web fonts load without blocking rendering; system fonts are used if they are unreachable -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
+  <noscript><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet"></noscript>
+  <link rel="stylesheet" href="../../assets/css/gk.css">
+  <link rel="stylesheet" href="../../assets/css/gk-manual.css">
+  <script>
+    /* mark JS as available (reveal animations are only armed then) and apply the saved theme before first paint */
+    document.documentElement.classList.add("js"); try { localStorage.setItem("gk-lang", "zh"); } catch (e) {}
+    try { var t = localStorage.getItem("gk-theme"); if (t) document.documentElement.setAttribute("data-theme", t); } catch (e) {}
+  </script>
+</head>
+<body data-page="doc" data-root="../../" data-lang="zh" data-alt="../en/custom_commands.html">
+
+<!-- ======================================================= icon sprite -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <symbol id="i-logo" viewBox="0 0 100 100"><path d="M85.3 31.2A40 40 0 1 0 89.4 43" fill="none" stroke="#1867ae" stroke-width="9"/><text x="49" y="52" text-anchor="middle" dominant-baseline="central" font-family="Helvetica Neue,Helvetica,Arial,sans-serif" font-weight="800" font-size="52" fill="#1867ae">G</text><circle cx="87.4" cy="35.7" r="5" fill="#c18852"/></symbol>
+    <symbol id="i-copy" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="11" height="11" rx="2.5"/><path d="M5 15V6a2 2 0 0 1 2-2h9"/></symbol>
+    <symbol id="i-check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="m5 12.5 4.5 4.5L19 7.5"/></symbol>
+    <symbol id="i-search" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="m20 20-4-4"/></symbol>
+    <symbol id="i-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"><circle cx="12" cy="12" r="4.2"/><path d="M12 2.5v2M12 19.5v2M4.6 4.6 6 6M18 18l1.4 1.4M2.5 12h2M19.5 12h2M4.6 19.4 6 18M18 6l1.4-1.4"/></symbol>
+    <symbol id="i-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M20.5 14.2A8.5 8.5 0 0 1 9.8 3.5 8.5 8.5 0 1 0 20.5 14.2Z"/></symbol>
+    <symbol id="i-github" viewBox="0 0 16 16" fill="currentColor"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0 0 16 8c0-4.42-3.58-8-8-8z"/></symbol>
+    <symbol id="i-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></symbol>
+    <symbol id="i-out" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17 17 7M8 7h9v9"/></symbol>
+    <symbol id="i-star" viewBox="0 0 24 24" fill="currentColor"><path d="m12 2.8 2.8 5.8 6.4.9-4.6 4.5 1.1 6.3L12 17.3l-5.7 3 1.1-6.3-4.6-4.5 6.4-.9Z"/></symbol>
+    <symbol id="i-fork" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"><circle cx="6" cy="5" r="2.2"/><circle cx="18" cy="5" r="2.2"/><circle cx="12" cy="19" r="2.2"/><path d="M6 7.2v1.8a3 3 0 0 0 3 3h6a3 3 0 0 0 3-3V7.2M12 12v4.8"/></symbol>
+    <symbol id="i-menu" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 7h16M4 12h16M4 17h16"/></symbol>
+    <symbol id="i-close" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M6 6l12 12M18 6 6 18"/></symbol>
+    <symbol id="i-left" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m15 5-7 7 7 7"/></symbol>
+    <symbol id="i-right" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 5 7 7-7 7"/></symbol>
+    <symbol id="i-lock" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="5" y="11" width="14" height="9" rx="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></symbol>
+    <symbol id="i-conv" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M7 4 3 8l4 4"/><path d="M3 8h14"/><path d="m17 12 4 4-4 4"/><path d="M21 16H7"/></symbol>
+    <symbol id="i-samp" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="6" cy="7" r="1.6"/><circle cx="12.5" cy="5" r="1.6"/><circle cx="18" cy="9" r="1.6"/><circle cx="8" cy="15" r="1.6"/><circle cx="16" cy="17" r="1.6"/><circle cx="12" cy="11.5" r="6.8" stroke-dasharray="2 3"/></symbol>
+    <symbol id="i-flow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="2"/><rect x="14" y="14" width="7" height="7" rx="2"/><path d="M6.5 10v3.5a2 2 0 0 0 2 2H14"/></symbol>
+    <symbol id="i-calc" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="3" width="14" height="18" rx="2.5"/><path d="M8.5 7h7M8.5 11.5h.01M12 11.5h.01M15.5 11.5h.01M8.5 15h.01M12 15h.01M15.5 15h.01M8.5 18h.01M12 18h.01M15.5 18h.01"/></symbol>
+    <symbol id="i-anal" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="10.5" cy="10.5" r="6.5"/><path d="m20 20-4.8-4.8"/><path d="M7.5 12l2-2.5 2 1.5 2-3"/></symbol>
+    <symbol id="i-plot" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3v18h18"/><path d="m7 15 4-5 3 3 5-7"/></symbol>
+    <symbol id="i-term" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="16" rx="3"/><path d="m7 9 3 3-3 3M12.5 15H17"/></symbol>
+    <symbol id="i-doc" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"><path d="M6 3h8.5L19 7.5V21H6z"/><path d="M14 3v5h5M9 12.5h7M9 16.5h5" stroke-linecap="round"/></symbol>
+    <symbol id="i-chat" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20 15a2 2 0 0 1-2 2H8l-4 4V6a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2z"/><path d="M8.5 9.5h7M8.5 13h4.5"/></symbol>
+    <symbol id="i-shield" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3 5 6v6c0 4.4 3 7.6 7 9 4-1.4 7-4.6 7-9V6z"/><path d="m9 12 2 2 4-4"/></symbol>
+    <symbol id="i-globe" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c2.8 3 2.8 15 0 18M12 3c-2.8 3-2.8 15 0 18"/></symbol>
+    <symbol id="i-spark" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v4M12 17v4M3 12h4M17 12h4M6 6l2.5 2.5M15.5 15.5 18 18M6 18l2.5-2.5M15.5 8.5 18 6"/></symbol>
+    <symbol id="i-atom" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="1.8" fill="currentColor"/><ellipse cx="12" cy="12" rx="9" ry="3.6"/><ellipse cx="12" cy="12" rx="9" ry="3.6" transform="rotate(60 12 12)"/><ellipse cx="12" cy="12" rx="9" ry="3.6" transform="rotate(120 12 12)"/></symbol>
+    <symbol id="i-db" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><ellipse cx="12" cy="6" rx="7" ry="3"/><path d="M5 6v12c0 1.7 3.1 3 7 3s7-1.3 7-3V6M5 12c0 1.7 3.1 3 7 3s7-1.3 7-3"/></symbol>
+    <symbol id="i-brain" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="6" cy="7" r="2"/><circle cx="6" cy="17" r="2"/><circle cx="12" cy="12" r="2"/><circle cx="18" cy="7" r="2"/><circle cx="18" cy="17" r="2"/><path d="M8 7.8 10.3 11M8 16.2l2.3-3.2M13.7 11 16 7.8M13.7 13l2.3 3.2"/></symbol>
+    <symbol id="i-filter" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 5h16l-6 7.5V19l-4 2v-8.5z"/></symbol>
+    <symbol id="i-image" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="16" rx="3"/><circle cx="9" cy="10" r="2"/><path d="m21 16-5-5-9 9"/></symbol>
+  </defs>
+</svg>
+
+<div class="ambient" aria-hidden="true"><div class="orb a"></div><div class="orb b"></div><div class="orb c"></div><div class="noise"></div></div>
+<div class="progress" aria-hidden="true"></div>
+
+<!-- ======================================================= navigation -->
+<header class="nav" id="nav">
+  <div class="container">
+    <a href="../../index.html" class="brand" aria-label="GPUMDkit home"><svg><use href="#i-logo"/></svg><span><span class="gpumd">GPUMD</span><span class="kit">kit</span></span></a>
+    <nav class="nav-links" id="nav-links">
+      <a href="../../index.html#features" data-i18n="nav.features">Features</a>
+      <a href="../../index.html#terminal" data-i18n="nav.terminal">Try it</a>
+      <a href="../../index.html#workflow" data-i18n="nav.workflow">Workflow</a>
+      <a href="../../gallery.html" data-i18n="nav.gallery">Gallery</a>
+      <a href="../../publications.html" data-i18n="nav.pubs">Publications</a>
+      <a href="../../manual.html" class="active" aria-current="page" data-i18n="nav.manual">Manual</a>
+    </nav>
+    <div class="nav-tools">
+      <button class="search-btn" data-palette aria-label="Search commands and docs"><svg><use href="#i-search"/></svg><span class="label" data-i18n="nav.search">Search commands…</span><kbd>⌘K</kbd></button>
+      <button class="icon-btn lang-btn" data-lang-toggle aria-label="Switch language">中文</button>
+      <button class="icon-btn" data-theme-toggle aria-label="Toggle dark mode"><svg class="theme-icon-light"><use href="#i-moon"/></svg><svg class="theme-icon-dark"><use href="#i-sun"/></svg></button>
+      <a class="icon-btn gh-btn" href="https://github.com/zhyan0603/GPUMDkit" target="_blank" rel="noopener" aria-label="GitHub"><svg><use href="#i-github"/></svg></a>
+      <button class="icon-btn menu-btn" id="menu-btn" aria-label="Menu"><svg><use href="#i-menu"/></svg></button>
+    </div>
+  </div>
+</header>
+
+<main>
+<section class="man-hero doc-hero"><div class="container"><div class="crumb"><a href="../../manual.html">手册</a><span>/</span><span>指南</span><span>/</span><span>自定义命令</span></div><h1 class="h-section">自定义命令</h1><p class="lead">在 <strong>~/.gpumdkit.in</strong> 中定义 Bash 函数，就可以给 <code>gpumdkit.sh</code> 添加自己的快捷命令。</p></div></section>
+<div class="container man doc"><aside class="man-side" aria-label="Pages"><h6>开始</h6><a href="index.html" class=""><span>GPUMDkit 教程</span></a><a href="快速入门.html" class=""><span>快速入门</span></a><a href="远程网页控制台.html" class=""><span>远程网页控制台</span></a><a href="模拟与后处理.html" class=""><span>GPUMDkit Agent Skill</span></a><h6>工具箱</h6><a href="格式转换.html" class=""><span>格式转换</span></a><a href="结构采样.html" class=""><span>结构采样</span></a><a href="工作流脚本.html" class=""><span>工作流脚本</span></a><a href="计算器脚本.html" class=""><span>计算器脚本</span></a><a href="分析工具.html" class=""><span>分析工具</span></a><a href="绘图脚本.html" class=""><span>绘图脚本</span></a><a href="NEP训练绘图.html" class="sub"><span>NEP 训练与模型分析</span></a><a href="MD与结构绘图.html" class="sub"><span>MD 与结构</span></a><a href="扩散绘图.html" class="sub"><span>扩散与离子输运</span></a><a href="热输运与声子绘图.html" class="sub"><span>热输运与声子</span></a><a href="极性材料分析.html" class=""><span>极性材料分析</span></a><h6>指南</h6><a href="主动学习工作流.html" class=""><span>主动学习工作流</span></a><a href="自定义命令.html" class="on"><span>自定义命令</span></a><h6>参考</h6><a href="命令参考.html" class=""><span>命令参考</span></a><h6>贡献</h6><a href="贡献指南.html" class=""><span>为 GPUMDkit 贡献代码</span></a></aside><article class="man-body chap doc-body"><h2 id="工作原理">工作原理</h2>
+<p>当 <code>gpumdkit.sh -&lt;name&gt;</code> 不是内置选项时，GPUMDkit 会加载 <code>~/.gpumdkit.in</code>，运行其中的 <code>custom_&lt;name&gt;</code> 函数，并把 <code>-&lt;name&gt;</code> 后面的所有参数传给它。内置选项总是优先，因此命名时不要与它们重复（可用 <code>gpumdkit.sh -h</code> 查看）。</p>
+<p>用任意编辑器创建或修改该文件：</p>
+<div class="code"><div class="cap"><i></i><i></i><i></i><span>bash</span></div><pre><code>vi ~/.gpumdkit.in</code></pre><button class="copy-btn" data-copy-pre aria-label="Copy"><svg class="cp"><use href="#i-copy"/></svg><svg class="ok"><use href="#i-check"/></svg></button></div>
+<h2 id="基础示例">基础示例</h2>
+<h3 id="第一个命令">第一个命令</h3>
+<div class="code"><div class="cap"><i></i><i></i><i></i><span>bash</span></div><pre><code>custom_hello() {
+    echo "Hello, GPUMDkit user! This is a custom command."
+    echo "Current GPUMDkit path: ${GPUMDkit_path}"
+}</code></pre><button class="copy-btn" data-copy-pre aria-label="Copy"><svg class="cp"><use href="#i-copy"/></svg><svg class="ok"><use href="#i-check"/></svg></button></div>
+<p>运行 <code>gpumdkit.sh -hello</code> 会输出：</p>
+<div class="code"><div class="cap"><i></i><i></i><i></i><span>text</span></div><pre><code>Hello, GPUMDkit user! This is a custom command.
+Current GPUMDkit path: /home/yanzihan/software/GPUMDkit</code></pre><button class="copy-btn" data-copy-pre aria-label="Copy"><svg class="cp"><use href="#i-copy"/></svg><svg class="ok"><use href="#i-check"/></svg></button></div>
+<h3 id="使用参数">使用参数</h3>
+<p>在函数中用 <code>$1</code>、<code>$2</code>……读取参数：</p>
+<div class="code"><div class="cap"><i></i><i></i><i></i><span>bash</span></div><pre><code>custom_greet() {
+    echo "Hello, $1!"
+}</code></pre><button class="copy-btn" data-copy-pre aria-label="Copy"><svg class="cp"><use href="#i-copy"/></svg><svg class="ok"><use href="#i-check"/></svg></button></div>
+<p>运行 <code>gpumdkit.sh -greet Zihan</code> 会输出 <code>Hello, Zihan!</code>。如果要把全部参数转交给其他程序，请使用 <code>"$@"</code>，它会完整保留参数中的空格和特殊字符。</p>
+<h3 id="调用自己的脚本">调用自己的脚本</h3>
+<div class="code"><div class="cap"><i></i><i></i><i></i><span>bash</span></div><pre><code>custom_nepanalyse() {
+    python ~/my_gpumd_tools/analyse_nep.py "$@"
+}</code></pre><button class="copy-btn" data-copy-pre aria-label="Copy"><svg class="cp"><use href="#i-copy"/></svg><svg class="ok"><use href="#i-check"/></svg></button></div>
+<p>运行 <code>gpumdkit.sh -nepanalyse</code>，后面可以跟上该脚本需要的参数。</p>
+<h2 id="组合-gpumdkit-命令">组合 GPUMDkit 命令</h2>
+<h3 id="批量绘图">批量绘图</h3>
+<div class="code"><div class="cap"><i></i><i></i><i></i><span>bash</span></div><pre><code>custom_batch_plot() {
+    for dir in "$@"; do
+        (
+            cd "$dir" || exit 1
+            gpumdkit.sh -plt thermo save
+            gpumdkit.sh -plt msd save
+        ) || return 1
+    done
+}</code></pre><button class="copy-btn" data-copy-pre aria-label="Copy"><svg class="cp"><use href="#i-copy"/></svg><svg class="ok"><use href="#i-check"/></svg></button></div>
+<p>用法：<code>gpumdkit.sh -batch_plot dir1 dir2 dir3</code></p>
+<h3 id="检查训练集">检查训练集</h3>
+<div class="code"><div class="cap"><i></i><i></i><i></i><span>bash</span></div><pre><code>custom_analyze_training() {
+    xyz_file=$1
+    echo "Analyzing $xyz_file..."
+    gpumdkit.sh -range "$xyz_file" force
+    gpumdkit.sh -min_dist_pbc "$xyz_file"
+    gpumdkit.sh -analyze_comp "$xyz_file"
+    echo "Analysis complete!"
+}</code></pre><button class="copy-btn" data-copy-pre aria-label="Copy"><svg class="cp"><use href="#i-copy"/></svg><svg class="ok"><use href="#i-check"/></svg></button></div>
+<p>用法：<code>gpumdkit.sh -analyze_training train.xyz</code></p>
+<h3 id="准备训练数据">准备训练数据</h3>
+<div class="code"><div class="cap"><i></i><i></i><i></i><span>bash</span></div><pre><code>custom_prep_training() {
+    gpumdkit.sh -out2xyz ./                                  # 输出 NEPdataset/train.xyz
+    gpumdkit.sh -filter_value NEPdataset/train.xyz force 30   # 输出 filtered.xyz
+    gpumdkit.sh -range filtered.xyz energy
+}</code></pre><button class="copy-btn" data-copy-pre aria-label="Copy"><svg class="cp"><use href="#i-copy"/></svg><svg class="ok"><use href="#i-check"/></svg></button></div>
+<p>用法：<code>gpumdkit.sh -prep_training</code>。力的阈值 <code>30</code> 只是示例，请根据你的体系选择。</p>
+<h2 id="完整示例">完整示例</h2>
+<p>把下面两个函数放进 <code>~/.gpumdkit.in</code>：</p>
+<div class="code"><div class="cap"><i></i><i></i><i></i><span>bash</span></div><pre><code>custom_count() {
+    # count the frames of every extxyz file given on the command line
+    for f in "$@"; do
+        printf '%s: %s frames\n' "$f" "$(grep -c '^Lattice' "$f")"
+    done
+}
+
+custom_mindist() {
+    # print the overall minimum distance of every file
+    for f in "$@"; do
+        printf '%s: ' "$f"
+        gpumdkit.sh -min_dist_pbc "$f" 2&gt;&amp;1 | grep "Overall"
+    done
+}</code></pre><button class="copy-btn" data-copy-pre aria-label="Copy"><svg class="cp"><use href="#i-copy"/></svg><svg class="ok"><use href="#i-check"/></svg></button></div>
+<p>然后在任意目录运行：</p>
+<div class="code"><div class="cap"><i></i><i></i><i></i><span>bash</span></div><pre><code>gpumdkit.sh -count dump.xyz sampled_structures.xyz</code></pre><button class="copy-btn" data-copy-pre aria-label="Copy"><svg class="cp"><use href="#i-copy"/></svg><svg class="ok"><use href="#i-check"/></svg></button></div>
+<div class="code"><div class="cap"><i></i><i></i><i></i><span>text</span></div><pre><code>dump.xyz: 100 frames
+sampled_structures.xyz: 5 frames</code></pre><button class="copy-btn" data-copy-pre aria-label="Copy"><svg class="cp"><use href="#i-copy"/></svg><svg class="ok"><use href="#i-check"/></svg></button></div>
+<p><code>gpumdkit.sh -mindist dump.xyz</code> 的用法相同，会为每个文件打印 <code>Overall min_distance: … Å</code> 一行。函数里可以调用任何 GPUMDkit 选项，所以经常重复的项目专用检查可以收进一条命令。函数就是普通的 Bash：请给 <code>"$@"</code> 和 <code>"$f"</code> 加引号，这样带空格的文件名也能正常工作。</p>
+<h2 id="建议">建议</h2>
+<ul>
+<li>名称要清楚：<code>custom_analyze_nep_training</code> 比 <code>custom_ant</code> 更容易维护。</li>
+<li>缺少必需参数时打印用法提示。</li>
+<li>处理前先检查输入文件是否存在。</li>
+</ul>
+<hr />
+<p>感谢你使用 <code>GPUMDkit</code>！如有任何问题或需要进一步帮助，欢迎在我们的 GitHub 仓库提 issue 或联系 Zihan YAN (yanzihan@westlake.edu.cn)。</p><div class="doc-pn"><a href="主动学习工作流.html"><small>上一页</small><b>主动学习工作流</b></a><a class="next" href="命令参考.html"><small>下一页</small><b>命令参考</b></a></div><a class="doc-edit" href="https://github.com/zhyan0603/GPUMDkit/edit/main/docs/tutorials/zh/自定义命令.md" target="_blank" rel="noopener">编辑此页</a></article><nav class="doc-toc" aria-label="本页目录"><h6>本页目录</h6><a href="#工作原理" class="l2">工作原理</a><a href="#基础示例" class="l2">基础示例</a><a href="#第一个命令" class="l3">第一个命令</a><a href="#使用参数" class="l3">使用参数</a><a href="#调用自己的脚本" class="l3">调用自己的脚本</a><a href="#组合-gpumdkit-命令" class="l2">组合 GPUMDkit 命令</a><a href="#批量绘图" class="l3">批量绘图</a><a href="#检查训练集" class="l3">检查训练集</a><a href="#准备训练数据" class="l3">准备训练数据</a><a href="#完整示例" class="l2">完整示例</a><a href="#建议" class="l2">建议</a></nav></div>
+</main>
+
+<!-- ======================================================= footer -->
+<footer class="footer">
+  <div class="container">
+    <div class="footer-grid">
+      <div>
+        <a href="../../index.html" class="brand"><svg><use href="#i-logo"/></svg><span><span class="gpumd">GPUMD</span><span class="kit">kit</span></span></a>
+        <p data-i18n="foot.about">A user-friendly toolkit for the GPUMD and NEP programs, built by the GPUMDkit team and contributors.</p>
+      </div>
+      <div><h5 data-i18n="foot.links">Quick links</h5><ul>
+        <li><a href="../../manual.html" data-doc="index" data-i18n="nav.docs">Docs</a></li>
+        <li><a href="../../gallery.html" data-i18n="nav.gallery">Gallery</a></li>
+        <li><a href="../../publications.html" data-i18n="nav.pubs">Publications</a></li>
+        <li><a href="https://github.com/zhyan0603/GPUMDkit/archive/refs/heads/main.zip" data-i18n="foot.dl">Download</a></li></ul></div>
+      <div><h5 data-i18n="foot.gpumd">GPUMD project</h5><ul>
+        <li><a href="https://github.com/brucefan1983/GPUMD" target="_blank" rel="noopener">GPUMD repository</a></li>
+        <li><a href="https://gpumd.org/" target="_blank" rel="noopener">GPUMD documentation</a></li>
+        <li><a href="https://github.com/brucefan1983/GPUMD-Tutorials" target="_blank" rel="noopener">GPUMD-Tutorials</a></li>
+        <li><a href="https://github.com/brucefan1983/GPUMD/tree/master/tools" target="_blank" rel="noopener">GPUMD-Tools</a></li></ul></div>
+      <div><h5 data-i18n="foot.eco">GPUMD ecosystem</h5><ul>
+        <li><a href="https://gitlab.com/brucefan1983/nep-data" target="_blank" rel="noopener">nep-data</a></li>
+        <li><a href="https://gitlab.com/materials-modeling/calorine" target="_blank" rel="noopener">calorine</a></li>
+        <li><a href="https://github.com/aboys-cb/NepTrainKit" target="_blank" rel="noopener">NepTrainKit</a></li>
+        <li><a href="https://github.com/Jonsnow-willow/GPUMD-Wizard" target="_blank" rel="noopener">GPUMD-Wizard</a></li></ul></div>
+    </div>
+    <div class="footer-bottom">
+      <span data-i18n="foot.copy">© 2026 GPUMDkit Team. Released under GPL-3.0.</span>
+      <span><span id="busuanzi_container_site_pv"><span data-i18n="foot.views">Views</span>: <span id="busuanzi_value_site_pv"></span></span> · <span id="busuanzi_container_site_uv"><span data-i18n="foot.visitors">Visitors</span>: <span id="busuanzi_value_site_uv"></span></span></span>
+    </div>
+  </div>
+</footer>
+
+<script src="../../assets/js/gk-data.js"></script>
+<script src="../../assets/js/gk-docs.js"></script>
+<script src="../../assets/js/gk-i18n.js"></script>
+<script src="../../assets/js/gk-core.js"></script>
+<script src="../../assets/js/gk-doc.js"></script>
+<script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+</body>
+</html>

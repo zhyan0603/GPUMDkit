@@ -1,0 +1,594 @@
+# Contributing to GPUMDkit
+
+Read this reference before changing GPUMDkit code, scripts, CLI routing, documentation, or skill files. Keep edits minimal, preserve unrelated changes, and ask the maintainer before changing scientific defaults or user-visible behavior.
+
+## Contents
+
+- Project structure and routing
+- Adding interactive and CLI features
+- Python and shell conventions
+- Update bookkeeping and version/date policy
+- Maintenance boundaries
+- Validation checklist
+
+## Project Structure
+
+```
+GPUMDkit/
+├── gpumdkit.sh              # Main entry: CLI routing + interactive menu
+├── install.sh               # Installation script
+├── src/                     # Shell menu modules (interactive mode wrappers)
+│   ├── f1_format_conversions.sh
+│   ├── f2_sample_structures.sh
+│   ├── f3_workflows.sh
+│   ├── f4_calculators.sh
+│   ├── f5_analyzers.sh
+│   ├── f6_plots.sh
+│   └── f7_utilities.sh
+├── Scripts/                 # Implementation scripts (Python + Bash)
+│   ├── format_conversion/
+│   ├── sample_structures/
+│   ├── workflow/
+│   ├── calculators/
+│   ├── analyzer/
+│   ├── plt_scripts/
+│   └── utils/               # Utilities, including completion.sh (CLI Tab completion)
+├── skills/                  # AI agent skill definitions
+├── docs/                    # Documentation
+│   ├── tutorials/en/        # English tutorial sources (Markdown)
+│   ├── tutorials/zh/        # Chinese tutorial sources (Markdown)
+│   ├── htmls/               # Generated tutorial pages (do not edit by hand)
+│   ├── command_reference.tsv  # Bilingual command list
+│   ├── updates.info         # Latest feature and code/CLI bug-fix records only
+│   ├── index.html, gallery.html, publications.html, manual.html  # Standalone website
+│   ├── manual-src/          # manual.html sources; build.py renders manual.html and htmls/
+│   ├── assets/              # Website CSS, JavaScript, and images
+│   ├── stats.json           # Website headline numbers
+│   └── Gallery/             # Example plot images
+```
+
+## How Routing Works
+
+`gpumdkit.sh` has two modes:
+
+1. **Interactive mode**: `gpumdkit.sh` (no arguments) → shows numbered menu
+   - User selects a category (1-7) → sources the corresponding `src/fN_*.sh`
+   - User selects a function (e.g., 403) → calls the function (e.g., `f403_calc_descriptors`)
+   - The function prompts for input, calls a Python/Bash script from `Scripts/`, prints the code path
+
+2. **CLI mode**: `gpumdkit.sh -flag [args]` → routes via `case $1 in`
+   - Each flag maps to a script in `Scripts/`
+   - Help messages go in `help_info_table()` and `calculator_help_table()`
+
+## Update and Version Bookkeeping
+
+- Use `docs/updates.info` only for recent user-visible feature additions and code, script, or CLI bug fixes. Documentation-only changes, including tutorials, README files, skills, references, wording corrections, and generated documentation, must not be added there.
+- Keep at most the five newest entries in each of `NEW_FEATURES` and `BUG_FIXES`; remove older entries when adding a new one. If a change includes both code and documentation, record only the code/behavior change, not the documentation synchronization.
+- Keep the other list as `"None"` only when it has no entries.
+- If `gpumdkit.sh` is modified, update the date in its `VERSION="..."` declaration to the current date using `YYYY-MM-DD` format.
+- Preserve the existing version string. Do not change any version number in `gpumdkit.sh` or `docs/updates.info` unless the user explicitly requests a version update.
+
+## Adding a New Interactive Mode Feature
+
+### Step 1: Create the implementation script
+
+Place it in the appropriate `Scripts/` subdirectory:
+
+```bash
+# Python script example: Scripts/calculators/calc_new_feature.py
+```
+
+### Step 2: Add a wrapper function in `src/fN_*.sh`
+
+Follow this exact pattern:
+
+```bash
+function f413_new_feature(){
+echo " >-------------------------------------------------<"
+echo " | Calling the script in Scripts/calculators       |"
+echo " | Script: calc_new_feature.py                     |"
+echo " | Developer: Your Name (your@email.com)           |"
+echo " >-------------------------------------------------<"
+echo " Input <param1> <param2> [optional_param3]"
+echo " Example: input.xyz nep.txt"
+echo " ------------>>"
+read_menu_array feature_args || return 1
+echo " ---------------------------------------------------"
+python ${GPUMDkit_path}/Scripts/calculators/calc_new_feature.py "${feature_args[@]}"
+echo " Code path: ${GPUMDkit_path}/Scripts/calculators/calc_new_feature.py"
+echo " ---------------------------------------------------"
+}
+```
+
+Key conventions:
+- Banner uses `>-----<` and `| ... |` format (49 dashes, 52 characters including the leading space)
+- `echo " Input <...>"` describes parameters
+- `echo " Example: ..."` shows a concrete example
+- Use `read_menu_choice var || return 1` for single-value input, `read_menu_array arr || return 1` for array input
+- **Never use bare `read -p` or `read -r -a`** — these hang on closed stdin. The helpers are defined in `gpumdkit.sh`
+- `"${varname[@]}"` passes all arguments properly quoted
+- Function name format: `f<Category><Number>_<descriptive_name>`
+- **Script banner must name the EXACT filename** (not an abbreviation or wrong suffix)
+- Banner borders use 49 dashes; align all content rows with the border.
+
+### Step 3: Register in `gpumdkit.sh`
+
+1. Add the choice number to `valid_menu_choices` in `main()`
+2. Add the case in the `main()` function's nested case statement:
+   ```bash
+   "413") f413_new_feature ;;
+   ```
+
+### Step 4: Update the menu display in `src/f6_plots.sh` or the relevant `fN_*.sh`
+
+If it's a calculator, update the calculator menu display in `f4_calculators.sh`.
+
+After adding a menu row, **run `gpumdkit.sh`, enter the affected module, and
+inspect the rendered submenu in the terminal**. Every row must end at the same
+right-hand `|` as the surrounding rows. Do not validate alignment only by
+counting border dashes: one extra or missing padding space in a content row is
+enough to shift its border even when the top and bottom borders are correct.
+Compare the new row's character count with adjacent rows and test the complete
+interactive path through the new function, including the transition from the
+shell wrapper to the implementation script.
+
+## Adding a New CLI Flag
+
+### Step 1: Create the implementation script
+
+Same as above — place in `Scripts/`.
+
+### Step 2: Add the CLI handler in `gpumdkit.sh`
+
+Add a new case in the main `case $1 in` block. Keep this handler lightweight:
+`gpumdkit.sh` should route to the implementation script and print broad module help
+only for large dispatchers such as `-plt` and `-calc`. Detailed argument checks,
+usage text, type conversion, file existence checks, and user-facing error messages
+belong in the Python implementation script.
+
+```bash
+-new_flag)
+    run_python_script "Your Name (your@email.com)" "${analyzer_path}/new_script.py" "${@:2}" ;;
+```
+
+Key conventions:
+- Prefer `run_python_script "Author" "${path}/script.py" "${@:2}"` for Python CLI entries so arguments are forwarded consistently.
+- Do not duplicate detailed parameter validation in `gpumdkit.sh`; implement `-h`/`--help`, missing-argument handling, and validation in the Python script.
+- Keep shell-side checks only for top-level dispatch decisions (`-plt <type>`, `-calc <type>`) or legacy shell scripts that cannot validate themselves.
+- Place alphabetically among existing flags for readability
+
+> When the script needs an interactive menu entry as well, also add a keyword converter wrapper function in `src/f1_format_conversions.sh` following the same banner pattern. Reference the existing `dp2extxyz` function as a template.
+
+### Step 3: Add to help table
+
+Update `help_info_table()` or `calculator_help_table()` in `gpumdkit.sh`:
+
+```bash
+echo "| -new_flag  Description of new flag           | -existing_flag    Description                   |"
+```
+
+### Step 4: Update tab completion
+
+Edit `Scripts/utils/completion.sh`:
+
+1. Add `-new_flag` to the `opts` string
+2. If it needs file completion, add it to the `|`-separated case that calls `compgen -f`:
+   ```bash
+   -out2xyz|-...|-new_flag)
+       COMPREPLY=($(compgen -f -- "$cur")) ;;
+   ```
+3. If it needs secondary options, add a new case block
+
+## Python Script Conventions
+
+### File header (complete docstring)
+
+Every script over 50 lines must have a module-level docstring with all sections:
+
+```python
+"""
+=============================================================================
+GPUMDkit: A User-Friendly Toolkit for GPUMD and NEP
+Repository: https://github.com/zhyan0603/GPUMDkit
+Citation: Z. Yan et al., GPUMDkit: A User-Friendly Toolkit for GPUMD and NEP,
+          MGE Advances, 2026, 4, e70074 (https://doi.org/10.1002/mgea.70074)
+=============================================================================
+Script:     script_name.py
+Category:   Category Name
+Purpose:    One-line description of what this script does.
+            Multi-line elaboration if needed.
+Usage:      gpumdkit.sh -flag <param1> <param2> [optional]
+            python3 script_name.py <param1> <param2> [optional]
+Arguments:
+  param1    Description of param1
+  param2    Description of param2
+  optional  Description of optional (default: value)
+Output:
+  <file>     (description of output)
+Author:     Name (email)
+Last-modified: YYYY-MM-DD
+=============================================================================
+"""
+```
+
+### Argument parsing — the standard pattern
+
+Use `sys.argv` positional for simple scripts. Use this EXACT pattern (mirrors `traj2exyz.py`, `dp2xyz.py`, `pos2exyz.py`, etc.):
+
+```python
+import sys
+
+args = sys.argv[1:]
+if len(args) < N or args[0] in ("-h", "--help"):
+    print(" Usage: gpumdkit.sh -flag <param1> <param2>")
+    print("    or: python3 script_name.py <param1> <param2>")
+    print("")
+    print(" Arguments:")
+    print("   param1    Description")
+    print("   param2    Description")
+    print("")
+    print(" Example: gpumdkit.sh -flag input.xyz output.xyz")
+    print("")
+    sys.exit(0 if args and args[0] in ("-h", "--help") else 1)
+```
+
+Key points about this pattern:
+- `sys.exit(0 ...)` for `-h`/`--help` (success exit), `sys.exit(1)` for missing args (error exit)
+- Uses `args = sys.argv[1:]` slice pattern, then `args[0]`, `args[1]` instead of `sys.argv[1]`, `sys.argv[2]`
+- The `Usage:` line shows BOTH gpumdkit.sh invocation AND direct python invocation
+- **Critically: put this block BEFORE any heavy/optional imports** (like `import dpdata`, `import calorine`, `import ovito`). Ordinary imports (`os`, `sys`, `numpy`) go first, then the help check, then optional imports. This ensures `-h` works even when optional packages are not installed.
+- After the check, read positional args: `input_file = args[0]`, `output_file = args[1] if len(args) >= 2 else "default"`
+
+Use `argparse` only if the script has many optional flags with complex defaults (e.g., `calc_neighbor_list.py`, `calc_displacement.py`).
+
+### Main guard
+
+`if __name__ == "__main__":` is optional for GPUMDkit scripts (they run standalone). However, **new scripts are encouraged to use it** for clean module-level readability. Existing scripts without it should not be retrofitted (explicitly rejected by maintainer).
+
+### Error handling
+
+Python scripts use `print()` with `sys.exit(1)`, never raw exceptions:
+
+```python
+# ✓ Correct — leading space, f-string for clarity, sys.exit after
+if not os.path.isfile(input_file):
+    print(f" Error: file '{input_file}' does not exist.")
+    sys.exit(1)
+
+# ✓ Correct — f-string with leading space
+print(f" Error: failed to load {dataset_dir}: {e}")
+
+# ✗ Wrong — missing leading space
+print(f"Error: file '{input_file}' does not exist.")
+
+# ✗ Wrong — raise Exception instead of print + exit
+raise FileNotFoundError(input_file)
+```
+
+For try/except blocks that catch expected failures:
+
+```python
+try:
+    result = do_something()
+except Exception as e:
+    print(f" Error: operation failed: {e}")
+    sys.exit(1)
+```
+
+### Input validation
+
+Always validate file/directory existence before reading:
+
+```python
+if not os.path.isdir(input_dir):
+    print(f" Error: input directory '{input_dir}' does not exist.")
+    sys.exit(1)
+
+if not os.path.isfile(input_file):
+    print(f" Error: file '{input_file}' does not exist.")
+    sys.exit(1)
+```
+
+### Output file naming
+
+- Output filenames should include enough context to avoid collisions (e.g., `filtered_Li_Li_1.8_2.0.xyz`, not just `filtered.xyz`)
+- Overwriting existing files without warning is accepted (project convention — this is a CLI toolkit, not interactive software)
+
+### Plot scripts and Gallery examples
+
+When adding a new plot script, follow the plotting rules in
+`references/plotting-style.md` and provide a representative example image in
+`docs/Gallery/`. Generate the Gallery image through a separate example-only
+command or compression step at 100 DPI so documentation assets stay small; do
+not lower the production plot settings to create the example.
+
+For a new production script, use 150 DPI for the interactive `plt.show()` figure
+and a default `savefig()` DPI of at least 300. Preserve existing scripts' DPI
+unless a change is requested. Add the plot usage and the
+Gallery image to both bilingual tutorial sources and the corresponding
+submodule README (for example, `Scripts/plt_scripts/README.md`).
+
+For every user-visible feature or behavior change, update the relevant English
+and Chinese tutorial sources and the corresponding submodule README in the same
+change, then run `python3 docs/manual-src/build.py` to rebuild `docs/htmls/**` as part of validation. Documentation-only
+synchronization is not recorded in `docs/updates.info`.
+
+### Dependency notices
+
+If your script requires a heavy/special package (`NepTrain`, `calorine`, `dpdata`, `ovito`), add a notice:
+
+```python
+def print_dependency_notice():
+    print(" This function requires the 'calorine' package.")
+    print(" If you use this function, please cite:")
+    print("   Bochkov et al., npj Comput Mater 6, 170 (2020)")
+
+# Call it early in the script
+print_dependency_notice()
+```
+
+Do NOT add notices for common packages like `ase`, `numpy`, `pymatgen`.
+
+## Shell Script Conventions
+
+### File header (in `src/`)
+
+```bash
+# ============================================================
+# GPUMDkit <module name> module
+# Repository: https://github.com/zhyan0603/GPUMDkit
+# Author: Your Name (your@email.com)
+# ============================================================
+```
+
+### Variable checks
+
+Use shell variable checks only for shell control flow and broad dispatch decisions.
+New Python-backed CLI commands should forward arguments to Python and let the Python
+script handle detailed validation and error messages.
+
+```bash
+# Non-empty check (project convention)
+if [ ! -z "$var" ]; then
+    ...
+fi
+
+# Not the -h flag check
+if [ ! -z "$2" ] && [ "$2" != "-h" ]; then
+    ...
+fi
+```
+
+### Interactive menu pattern
+
+Use the wrapper template in **Adding a New Interactive Mode Feature → Step 2**; the banner, prompt, and EOF-safe input rules are listed under **Project Conventions & Personal Preferences**.
+
+### File structure for a new Python script
+
+Use `dp2xyz.py` or `traj2exyz.py` as reference, together with the help-check pattern under **Argument parsing — the standard pattern**:
+
+- Ordinary imports (`os`, `sys`, `numpy`) go before the help check
+- Heavy/optional imports (`dpdata`, `calorine`, `ovito`, `ase`) go **after** the help check so `-h` works even when optional packages are missing
+- All helper functions have docstrings
+- The `if __name__ == "__main__":` guard is encouraged for new scripts
+- Use `args = sys.argv[1:]` pattern, then access `args[0]`, `args[1]`, etc.
+
+## Project Conventions & Personal Preferences
+
+These are the maintainer's conventions. Follow them strictly.
+
+### Echo / Print Leading Space
+
+**Every user-facing `echo`/`print` must start with a space.**
+
+```bash
+# ✓ Correct
+echo " Error: File not found."
+echo " Deleting the files..."
+echo " Operation canceled."
+
+# ✗ Wrong
+echo "Error: File not found."
+```
+
+```python
+# ✓ Correct
+print(" Error: 'input.xyz' not found.")
+print(" Deleting the files...")
+
+# ✗ Wrong
+print("Error: 'input.xyz' not found.")
+```
+
+This applies to ALL script types: interactive wrappers, workflow scripts, utility messages, tutorial transcripts, and Python print() output. The only exception is the `" ------------>>"` prompt marker which starts with a space by design.
+
+### ASCII Only Box Drawing
+
+All border characters must be pure ASCII: `|`, `+`, `-`, `/`, `\`, `>`, `<`. **Never use** Unicode box-drawing characters like `│` (U+2502) — they render as mojibake on non-UTF-8 terminals.
+
+### EOF-Safe Input
+
+All interactive input must go through the helpers defined in `gpumdkit.sh`:
+
+- `read_menu_choice var || return 1` — reads a single line into a variable
+- `read_menu_array arr || return 1` — reads whitespace-separated tokens into an array
+
+**Never use bare `read -p` or `read -r -a`.** When stdin is closed (pipe, redirect, /dev/null), bare read silently succeeds with empty/unset values or hangs forever. The helpers print `" Input closed. Exiting."` and return 1.
+
+### Menu Validation
+
+- Validation array: always named `valid_menu_choices`
+- Validation loop: `while ! echo "${valid_menu_choices[@]}" | grep -wq "$num_choice"; do ...; done`
+- Return-to-main-menu: `case ... "000") menu; main ;;`
+- Every menu content row must have the same rendered width as its border and
+  neighboring rows; pay special attention to trailing padding spaces before `|`
+- For every added menu entry, run `gpumdkit.sh`, select the parent module, and
+  visually verify the actual terminal output before considering the change done
+- Continue through the new entry once to review the combined shell and Python
+  prompts as one interaction, not as two independently formatted components
+
+### Script Banners
+
+The info banner displayed before running a script follows this exact format:
+
+```bash
+echo " >-------------------------------------------------<"   # exactly 49 dashes
+echo " | Calling the script in Scripts/<category>       |"
+echo " | Script: <exact_filename>                         |"   # MUST match actual filename
+echo " | Developer: Name (email)                          |"
+echo " >-------------------------------------------------<"
+```
+
+- The script name in the banner **must be the exact filename** (e.g., `scf_batch_pretreatment_vasp.sh`, not `scf_batch_pretreatment.sh`)
+- Width: 49 dashes; 52 characters including the leading space. Keep uniform across projects.
+
+### The Prompt Arrow
+
+User input follows the marker pattern: `echo " ------------>>"` before reading input. This is consistent across all interactive functions.
+
+### Error Message Format
+
+Shell: `echo " Error: <message>."` — leading space, capital E, colon, period at end.
+Python: `print(" Error: <message>."); sys.exit(1)` — same format, always call sys.exit after.
+
+### Maintenance boundaries
+
+Preserve these conventions when maintaining existing scripts.
+
+| Avoid | Constraint |
+|---|---|
+| Retrofit `if __name__ == "__main__":` into existing Python scripts | Scripts run standalone; do not churn working scripts just to add a guard |
+| Replace `from pylab import *` with explicit imports | Keep as-is |
+| Unify `-plt` "save" argument position | Different scripts have different arg counts; keep flexible |
+| Unify DPI across existing plots | Preserve each script's display/save DPI; new plots use 150 DPI for display and at least 300 DPI for saved figures |
+| Change `exit` → `return` in workflow sourced scripts | Keep as-is |
+| Add `-filter_value` / `-filter_range` / `-get_volume` / `-re_atoms` to the help table | Intentionally undocumented |
+| Make interactive mode loop back to menu after one function | Keeps shots single-shot; designed this way |
+| Add color/ANSI escape codes | User explicitly rejected; keep monochrome |
+| Add debug examples to every tutorial page | Unnecessary; keep tutorials lean |
+| Change MSD fitting range arbitrarily | Scientific choice; ask maintainer first |
+| Add standalone troubleshooting pages | Keep troubleshooting guidance within the relevant module |
+| Add `des_compare` to CLI | Script exists but maintainer chose not to wire it |
+| Keep `__pycache__` after debugging | Prefer a non-writing syntax check; if a cache is created, remove the exact recorded cache path before handoff |
+| Add `-get_volume` / `-re_atoms` to completion.sh | Intentionally excluded from completion and help table |
+| Modify logic in plt_scripts | Unless explicitly requested, only cosmetic/formatting changes to plotting scripts |
+
+### macOS / Cross-Platform Notes
+
+- macOS ships **bash 3.2** (no `local -n` nameref). Use `read -a "$varname"` with eval or herestring instead of namerefs.
+- macOS **sed is BSD**, not GNU. Cross-platform sed: use `perl -i -pe` instead.
+- **zsh does not support `read -a`** (bash-only). All scripts run under bash.
+- `timeout` command is not available on macOS. Use background jobs or rely on EOF-safe read.
+
+### Testing new scripts
+
+For ANY new script, run BOTH of these before committing:
+
+```bash
+python3 Scripts/path/to/script.py -h    # help must work without dependencies
+python3 Scripts/path/to/script.py        # missing args must print usage + exit 1
+```
+
+### Specific Design Decisions
+
+- **calc_ion_conductivity.py**: MSD fitting range is 40%-80% of data. The Arrhenius plotting scripts use the same range. Do not change without maintainer approval.
+- **clean_extra_files.sh**: Keep-substring deletion uses **whole-word matching**, NOT substring removal. Do not regress to `${var/pattern/}` substring removal (it corrupts filenames sharing substrings).
+- **select_max_modev.py**: `active.xyz` holds only frames above the GPUMD `active` threshold, so its frame numbers do not match `active.out` lines. Rank frames by their own `uncertainty=` value and fall back to matching `Time=` against `active.out`; never index `active.xyz` by `active.out` line numbers.
+- **charge_balance_check.py**: Handle both charge results and three-item error returns from the lookup.
+
+---
+
+## Validation Checklist
+
+Run only the checks relevant to the files changed; do not run every project check
+unconditionally. Always run the whitespace check.
+
+### Temporary test artifacts
+
+- Run smoke tests from an isolated temporary working directory so fixed-name
+  outputs such as `deepmd_data/`, plots, logs, and caches never appear in the
+  repository root.
+- Record every temporary path created by the validation. Remove its test
+  outputs, `MPLCONFIGDIR`, build directories, logs, and caches before handoff,
+  including after failed commands.
+- Resolve cleanup targets to explicit paths and confirm they belong to the
+  current work before deletion. Do not use broad globs or recursively delete a
+  shared temporary root.
+- Finish with a read-only inventory of the relevant temporary prefix and the
+  repository status to verify that no test artifacts remain.
+
+```bash
+# Shell syntax (only when .sh files changed)
+bash -n gpumdkit.sh
+find src Scripts -name '*.sh' -exec bash -n {} +
+
+# Python syntax without creating __pycache__ (only for changed Python files)
+python3 -B -c 'from pathlib import Path; p=Path("Scripts/path/to/your_script.py"); compile(p.read_text(), str(p), "exec")'
+
+# If another test creates a cache, remove only its recorded explicit path
+# rm -rf /exact/path/to/the/test-created/__pycache__
+
+# Rebuild the manual and tutorial pages (only when their inputs changed; see below)
+python3 docs/manual-src/build.py
+
+# Whitespace check (always)
+git diff --check
+```
+
+For interactive-menu changes, the validation is not complete until the affected
+submenu has also been opened through `gpumdkit.sh` and all right borders have
+been checked for alignment in the rendered terminal output.
+
+### Maintaining the English and Chinese Skills
+
+The English directory `skills/gpumdkit-skill/` is the canonical technical
+source. When its behavior, routing, commands, defaults, constraints, or file
+coverage changes, update the matching file under
+`skills/gpumdkit-skill-zh/` in the same change.
+
+- Preserve commands, filenames, keywords, units, equations, code blocks, links,
+  tables, warnings, and numerical values exactly unless the underlying feature
+  also changed.
+- Translate meaning, not English word order. Use established Chinese technical
+  terms and keep program keywords such as `dump_xyz`, `ensemble`, `type`, and
+  `compute_msd` unchanged in code formatting.
+- Keep the two reference trees file-for-file aligned. A Chinese reference may
+  add a short clarification for readability, but it must not omit a safety rule,
+  dependency, supported option, or newly added feature from the English source.
+- After translation, compare headings, tables, fenced code blocks, and relative
+  links between both trees. Search for untranslated prose and awkward literal
+  translations before considering the update complete.
+
+### When to Rebuild the Manual and Tutorial Pages
+
+`docs/manual.html` and the tutorial pages under `docs/htmls/**` are generated by
+`python3 docs/manual-src/build.py` (it needs the `markdown` and `pymdown-extensions`
+packages). Run it whenever a change touches its inputs:
+
+- `docs/tutorials/**` (the Markdown tutorials, rendered to `docs/htmls/{en,zh}/`)
+- `docs/manual-src/**` (the manual's layout, hero, chapters and annotated screenshots)
+
+The script also regenerates `docs/htmls/index.html`, `docs/assets/js/gk-docs.js` and
+`docs/sitemap.xml`. Tutorial file names are part of the public URLs
+(`https://gpumdkit.cn/htmls/{en,zh}/<file>.html`); do not rename a tutorial file
+without keeping the old address working. Never edit the generated files by hand:
+change the Markdown or `docs/manual-src` and rebuild. Do not run the build merely
+because an unrelated file under `docs/` changed.
+
+Other standalone website files are edited directly and validated on their own:
+
+- `docs/index.html`, `docs/gallery.html`, `docs/publications.html`
+  (`docs/index_zh.html` only redirects to the Chinese view of `index.html`)
+- `docs/assets/**` (site CSS, JavaScript, and images; `gk-docs.js` is generated) and `docs/Gallery/**`
+- standalone JSON/data files: `docs/gallery.json`, `docs/publications.json`,
+  and `docs/stats.json`
+
+For standalone-site changes, use checks appropriate to the edited file, such as
+HTML parsing, JavaScript syntax checks, `git diff --check`, and a focused local
+browser smoke test when layout or interaction changed. After a rebuild, also check
+that every local link and image in the generated pages resolves.
+
+The website's headline numbers (interactive tools, command-line options, plot
+types, Python scripts, contributors) live only in `docs/stats.json`. Update it
+when a change alters one of these counts, for example a new plot type. The
+publication count is computed from `docs/publications.json`.

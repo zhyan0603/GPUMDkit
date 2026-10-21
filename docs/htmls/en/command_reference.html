@@ -1,0 +1,557 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Command Reference — GPUMDkit</title>
+  <meta name="description" content="This page lists the stable GPUMDkit command-line shortcuts. Interactive mode is available for workflows with many choices.">
+  <meta property="og:title" content="GPUMDkit — A User-friendly Toolkit for GPUMD and NEP">
+  <meta property="og:description" content="Format conversion, sampling, workflows, analysis and plotting for GPUMD and NEP, in one command.">
+  <meta property="og:image" content="https://gpumdkit.cn/Gallery/gpumdkit_logo_lateral.png">
+  <meta property="og:url" content="https://gpumdkit.cn/">
+  <meta name="twitter:card" content="summary_large_image">
+  <link rel="canonical" href="https://gpumdkit.cn/htmls/en/command_reference.html">
+  <link rel="icon" href="../../Gallery/gpumdkit_logo.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <!-- web fonts load without blocking rendering; system fonts are used if they are unreachable -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
+  <noscript><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet"></noscript>
+  <link rel="stylesheet" href="../../assets/css/gk.css">
+  <link rel="stylesheet" href="../../assets/css/gk-manual.css">
+  <script>
+    /* mark JS as available (reveal animations are only armed then) and apply the saved theme before first paint */
+    document.documentElement.classList.add("js"); try { localStorage.setItem("gk-lang", "en"); } catch (e) {}
+    try { var t = localStorage.getItem("gk-theme"); if (t) document.documentElement.setAttribute("data-theme", t); } catch (e) {}
+  </script>
+</head>
+<body data-page="doc" data-root="../../" data-lang="en" data-alt="../zh/命令参考.html">
+
+<!-- ======================================================= icon sprite -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <symbol id="i-logo" viewBox="0 0 100 100"><path d="M85.3 31.2A40 40 0 1 0 89.4 43" fill="none" stroke="#1867ae" stroke-width="9"/><text x="49" y="52" text-anchor="middle" dominant-baseline="central" font-family="Helvetica Neue,Helvetica,Arial,sans-serif" font-weight="800" font-size="52" fill="#1867ae">G</text><circle cx="87.4" cy="35.7" r="5" fill="#c18852"/></symbol>
+    <symbol id="i-copy" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="11" height="11" rx="2.5"/><path d="M5 15V6a2 2 0 0 1 2-2h9"/></symbol>
+    <symbol id="i-check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="m5 12.5 4.5 4.5L19 7.5"/></symbol>
+    <symbol id="i-search" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="m20 20-4-4"/></symbol>
+    <symbol id="i-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"><circle cx="12" cy="12" r="4.2"/><path d="M12 2.5v2M12 19.5v2M4.6 4.6 6 6M18 18l1.4 1.4M2.5 12h2M19.5 12h2M4.6 19.4 6 18M18 6l1.4-1.4"/></symbol>
+    <symbol id="i-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M20.5 14.2A8.5 8.5 0 0 1 9.8 3.5 8.5 8.5 0 1 0 20.5 14.2Z"/></symbol>
+    <symbol id="i-github" viewBox="0 0 16 16" fill="currentColor"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0 0 16 8c0-4.42-3.58-8-8-8z"/></symbol>
+    <symbol id="i-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></symbol>
+    <symbol id="i-out" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17 17 7M8 7h9v9"/></symbol>
+    <symbol id="i-star" viewBox="0 0 24 24" fill="currentColor"><path d="m12 2.8 2.8 5.8 6.4.9-4.6 4.5 1.1 6.3L12 17.3l-5.7 3 1.1-6.3-4.6-4.5 6.4-.9Z"/></symbol>
+    <symbol id="i-fork" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"><circle cx="6" cy="5" r="2.2"/><circle cx="18" cy="5" r="2.2"/><circle cx="12" cy="19" r="2.2"/><path d="M6 7.2v1.8a3 3 0 0 0 3 3h6a3 3 0 0 0 3-3V7.2M12 12v4.8"/></symbol>
+    <symbol id="i-menu" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 7h16M4 12h16M4 17h16"/></symbol>
+    <symbol id="i-close" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M6 6l12 12M18 6 6 18"/></symbol>
+    <symbol id="i-left" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m15 5-7 7 7 7"/></symbol>
+    <symbol id="i-right" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 5 7 7-7 7"/></symbol>
+    <symbol id="i-lock" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="5" y="11" width="14" height="9" rx="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></symbol>
+    <symbol id="i-conv" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M7 4 3 8l4 4"/><path d="M3 8h14"/><path d="m17 12 4 4-4 4"/><path d="M21 16H7"/></symbol>
+    <symbol id="i-samp" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="6" cy="7" r="1.6"/><circle cx="12.5" cy="5" r="1.6"/><circle cx="18" cy="9" r="1.6"/><circle cx="8" cy="15" r="1.6"/><circle cx="16" cy="17" r="1.6"/><circle cx="12" cy="11.5" r="6.8" stroke-dasharray="2 3"/></symbol>
+    <symbol id="i-flow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="2"/><rect x="14" y="14" width="7" height="7" rx="2"/><path d="M6.5 10v3.5a2 2 0 0 0 2 2H14"/></symbol>
+    <symbol id="i-calc" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="3" width="14" height="18" rx="2.5"/><path d="M8.5 7h7M8.5 11.5h.01M12 11.5h.01M15.5 11.5h.01M8.5 15h.01M12 15h.01M15.5 15h.01M8.5 18h.01M12 18h.01M15.5 18h.01"/></symbol>
+    <symbol id="i-anal" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="10.5" cy="10.5" r="6.5"/><path d="m20 20-4.8-4.8"/><path d="M7.5 12l2-2.5 2 1.5 2-3"/></symbol>
+    <symbol id="i-plot" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3v18h18"/><path d="m7 15 4-5 3 3 5-7"/></symbol>
+    <symbol id="i-term" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="16" rx="3"/><path d="m7 9 3 3-3 3M12.5 15H17"/></symbol>
+    <symbol id="i-doc" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"><path d="M6 3h8.5L19 7.5V21H6z"/><path d="M14 3v5h5M9 12.5h7M9 16.5h5" stroke-linecap="round"/></symbol>
+    <symbol id="i-chat" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20 15a2 2 0 0 1-2 2H8l-4 4V6a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2z"/><path d="M8.5 9.5h7M8.5 13h4.5"/></symbol>
+    <symbol id="i-shield" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3 5 6v6c0 4.4 3 7.6 7 9 4-1.4 7-4.6 7-9V6z"/><path d="m9 12 2 2 4-4"/></symbol>
+    <symbol id="i-globe" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c2.8 3 2.8 15 0 18M12 3c-2.8 3-2.8 15 0 18"/></symbol>
+    <symbol id="i-spark" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v4M12 17v4M3 12h4M17 12h4M6 6l2.5 2.5M15.5 15.5 18 18M6 18l2.5-2.5M15.5 8.5 18 6"/></symbol>
+    <symbol id="i-atom" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="1.8" fill="currentColor"/><ellipse cx="12" cy="12" rx="9" ry="3.6"/><ellipse cx="12" cy="12" rx="9" ry="3.6" transform="rotate(60 12 12)"/><ellipse cx="12" cy="12" rx="9" ry="3.6" transform="rotate(120 12 12)"/></symbol>
+    <symbol id="i-db" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><ellipse cx="12" cy="6" rx="7" ry="3"/><path d="M5 6v12c0 1.7 3.1 3 7 3s7-1.3 7-3V6M5 12c0 1.7 3.1 3 7 3s7-1.3 7-3"/></symbol>
+    <symbol id="i-brain" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="6" cy="7" r="2"/><circle cx="6" cy="17" r="2"/><circle cx="12" cy="12" r="2"/><circle cx="18" cy="7" r="2"/><circle cx="18" cy="17" r="2"/><path d="M8 7.8 10.3 11M8 16.2l2.3-3.2M13.7 11 16 7.8M13.7 13l2.3 3.2"/></symbol>
+    <symbol id="i-filter" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 5h16l-6 7.5V19l-4 2v-8.5z"/></symbol>
+    <symbol id="i-image" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="16" rx="3"/><circle cx="9" cy="10" r="2"/><path d="m21 16-5-5-9 9"/></symbol>
+  </defs>
+</svg>
+
+<div class="ambient" aria-hidden="true"><div class="orb a"></div><div class="orb b"></div><div class="orb c"></div><div class="noise"></div></div>
+<div class="progress" aria-hidden="true"></div>
+
+<!-- ======================================================= navigation -->
+<header class="nav" id="nav">
+  <div class="container">
+    <a href="../../index.html" class="brand" aria-label="GPUMDkit home"><svg><use href="#i-logo"/></svg><span><span class="gpumd">GPUMD</span><span class="kit">kit</span></span></a>
+    <nav class="nav-links" id="nav-links">
+      <a href="../../index.html#features" data-i18n="nav.features">Features</a>
+      <a href="../../index.html#terminal" data-i18n="nav.terminal">Try it</a>
+      <a href="../../index.html#workflow" data-i18n="nav.workflow">Workflow</a>
+      <a href="../../gallery.html" data-i18n="nav.gallery">Gallery</a>
+      <a href="../../publications.html" data-i18n="nav.pubs">Publications</a>
+      <a href="../../manual.html" class="active" aria-current="page" data-i18n="nav.manual">Manual</a>
+    </nav>
+    <div class="nav-tools">
+      <button class="search-btn" data-palette aria-label="Search commands and docs"><svg><use href="#i-search"/></svg><span class="label" data-i18n="nav.search">Search commands…</span><kbd>⌘K</kbd></button>
+      <button class="icon-btn lang-btn" data-lang-toggle aria-label="Switch language">中文</button>
+      <button class="icon-btn" data-theme-toggle aria-label="Toggle dark mode"><svg class="theme-icon-light"><use href="#i-moon"/></svg><svg class="theme-icon-dark"><use href="#i-sun"/></svg></button>
+      <a class="icon-btn gh-btn" href="https://github.com/zhyan0603/GPUMDkit" target="_blank" rel="noopener" aria-label="GitHub"><svg><use href="#i-github"/></svg></a>
+      <button class="icon-btn menu-btn" id="menu-btn" aria-label="Menu"><svg><use href="#i-menu"/></svg></button>
+    </div>
+  </div>
+</header>
+
+<main>
+<section class="man-hero doc-hero"><div class="container"><div class="crumb"><a href="../../manual.html">Manual</a><span>/</span><span>Reference</span><span>/</span><span>Command Reference</span></div><h1 class="h-section">Command Reference</h1><p class="lead">This page lists the stable GPUMDkit command-line shortcuts. Interactive mode is available for workflows with many choices.</p></div></section>
+<div class="container man doc"><aside class="man-side" aria-label="Pages"><h6>Start</h6><a href="index.html" class=""><span>GPUMDkit Tutorials</span></a><a href="quick_start.html" class=""><span>Quick Start</span></a><a href="remote_web_console.html" class=""><span>Remote Web Console</span></a><a href="simulation_and_postprocessing.html" class=""><span>GPUMDkit Agent Skill</span></a><h6>Toolbox</h6><a href="format_conversion.html" class=""><span>Format Conversion</span></a><a href="structure_sampling.html" class=""><span>Structure Sampling</span></a><a href="workflow_scripts.html" class=""><span>Workflow Scripts</span></a><a href="calculator_scripts.html" class=""><span>Calculator Scripts</span></a><a href="analyzer_scripts.html" class=""><span>Analyzer Scripts</span></a><a href="plot_scripts.html" class=""><span>Plot Scripts</span></a><a href="plot_nep.html" class="sub"><span>NEP Training and Model Analysis</span></a><a href="plot_md_structure.html" class="sub"><span>MD and Structure</span></a><a href="plot_diffusion.html" class="sub"><span>Diffusion and Ionic Transport</span></a><a href="plot_heat_phonon.html" class="sub"><span>Heat Transport and Phonons</span></a><a href="polar_material_analysis.html" class=""><span>Polar Material Analysis</span></a><h6>Guides</h6><a href="active_learning_workflow.html" class=""><span>Active Learning Workflow</span></a><a href="custom_commands.html" class=""><span>Custom Commands</span></a><h6>Reference</h6><a href="command_reference.html" class="on"><span>Command Reference</span></a><h6>Contribute</h6><a href="contributing_to_gpumdkit.html" class=""><span>Contributing to GPUMDkit</span></a></aside><article class="man-body chap doc-body"><p>Each table below lists the command, its syntax, and what it does; the same list is printed by <code>gpumdkit.sh -h</code>. Commands backed by Python scripts also accept <code>-h</code> for their own argument help, for example <code>gpumdkit.sh -calc msd -h</code>. New to GPUMDkit? Start with <a href="quick_start.html">Quick Start</a>.</p>
+<h2 id="finding-the-right-command">Finding the Right Command</h2>
+<div class="tbl-wrap"><table class="tbl">
+<thead>
+<tr>
+<th>I want to…</th>
+<th>Run</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>list everything</td>
+<td><code>gpumdkit.sh -h</code></td>
+</tr>
+<tr>
+<td>see the arguments of one option</td>
+<td><code>gpumdkit.sh -calc msd -h</code>, <code>gpumdkit.sh -range -h</code></td>
+</tr>
+<tr>
+<td>list plot types</td>
+<td><code>gpumdkit.sh -plt -h</code></td>
+</tr>
+<tr>
+<td>check my installation</td>
+<td><code>gpumdkit.sh -doctor</code></td>
+</tr>
+<tr>
+<td>browse a folder in the browser</td>
+<td><code>gpumdkit.sh -server</code></td>
+</tr>
+</tbody>
+</table></div>
+<p>To search by keyword, pipe the help through <code>grep</code>: <code>gpumdkit.sh -h | grep -i msd</code>.</p>
+<p>The command tables below follow the order of the interactive menu: conversion, sampling, calculators, analyzers, plots, utilities. The <strong>Syntax</strong> column is the exact form to type; <code>&lt;...&gt;</code> is required, <code>[...]</code> is optional.</p>
+<h2 id="main">Main</h2>
+<div class="tbl-wrap"><table class="tbl">
+<thead>
+<tr>
+<th>Command</th>
+<th>Syntax</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>-h</code></td>
+<td><code>gpumdkit.sh -h</code></td>
+<td>Show general help</td>
+</tr>
+<tr>
+<td><code>-doctor</code></td>
+<td><code>gpumdkit.sh -doctor</code></td>
+<td>Check Python and GPUMDkit package availability</td>
+</tr>
+<tr>
+<td><code>-update</code></td>
+<td><code>gpumdkit.sh -update</code></td>
+<td>Update GPUMDkit</td>
+</tr>
+<tr>
+<td><code>-clean</code></td>
+<td><code>gpumdkit.sh -clean</code></td>
+<td>Clean extra files in the current directory</td>
+</tr>
+<tr>
+<td><code>-server</code></td>
+<td><code>gpumdkit.sh -server [port] [-b &lt;address&gt;] [-pw &lt;password&gt;]</code></td>
+<td>Start the Web Console for the current directory; use an SSH tunnel for remote access.</td>
+</tr>
+<tr>
+<td><code>-skill</code></td>
+<td><code>gpumdkit.sh -skill</code></td>
+<td>Show where the agent skills are installed and how to add them to an agent client</td>
+</tr>
+<tr>
+<td><code>-prediction</code></td>
+<td><code>gpumdkit.sh -prediction &lt;input.xyz&gt; &lt;nep.txt&gt; [workers]</code></td>
+<td>Write NEP-compatible energy, force, stress, and virial prediction files</td>
+</tr>
+<tr>
+<td><code>-prediction_dpa</code></td>
+<td><code>gpumdkit.sh -prediction_dpa &lt;input.xyz&gt; &lt;dpa_model&gt;</code></td>
+<td>Write DPA training-set prediction files in the current directory</td>
+</tr>
+</tbody>
+</table></div>
+<h2 id="format-conversion">Format Conversion</h2>
+<div class="tbl-wrap"><table class="tbl">
+<thead>
+<tr>
+<th>Command</th>
+<th>Syntax</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>-out2xyz</code></td>
+<td><code>gpumdkit.sh -out2xyz &lt;dir&gt;</code></td>
+<td>OUTCAR to extxyz, shell version</td>
+</tr>
+<tr>
+<td><code>-out2xyz_bec</code></td>
+<td><code>gpumdkit.sh -out2xyz_bec &lt;dir&gt;</code></td>
+<td>OUTCAR to extxyz with BEC labels</td>
+</tr>
+<tr>
+<td><code>-out2exyz</code></td>
+<td><code>gpumdkit.sh -out2exyz &lt;dir&gt;</code></td>
+<td>OUTCAR to extxyz, Python version</td>
+</tr>
+<tr>
+<td><code>-cp2k2xyz</code></td>
+<td><code>gpumdkit.sh -cp2k2xyz</code></td>
+<td>CP2K logs under the current directory to <code>cp2k_exyz.xyz</code></td>
+</tr>
+<tr>
+<td><code>-xdat2exyz</code></td>
+<td><code>gpumdkit.sh -xdat2exyz &lt;XDATCAR&gt; &lt;output.xyz&gt;</code></td>
+<td>XDATCAR to extxyz</td>
+</tr>
+<tr>
+<td><code>-cif2pos</code></td>
+<td><code>gpumdkit.sh -cif2pos &lt;input.cif&gt; &lt;output.vasp&gt;</code></td>
+<td>CIF to POSCAR/VASP</td>
+</tr>
+<tr>
+<td><code>-cif2exyz</code></td>
+<td><code>gpumdkit.sh -cif2exyz &lt;input.cif&gt; &lt;output.xyz&gt;</code></td>
+<td>CIF to extxyz</td>
+</tr>
+<tr>
+<td><code>-pos2exyz</code></td>
+<td><code>gpumdkit.sh -pos2exyz &lt;POSCAR&gt; &lt;output.xyz&gt;</code></td>
+<td>POSCAR to extxyz</td>
+</tr>
+<tr>
+<td><code>-exyz2pos</code></td>
+<td><code>gpumdkit.sh -exyz2pos &lt;input.xyz&gt;</code></td>
+<td>extxyz frames to POSCAR files</td>
+</tr>
+<tr>
+<td><code>-pos2lmp</code></td>
+<td><code>gpumdkit.sh -pos2lmp &lt;POSCAR&gt; &lt;output.data&gt;</code></td>
+<td>POSCAR to LAMMPS data</td>
+</tr>
+<tr>
+<td><code>-lmp2exyz</code></td>
+<td><code>gpumdkit.sh -lmp2exyz &lt;dump_or_data&gt; &lt;element...&gt;</code></td>
+<td>LAMMPS dump or data file to extxyz</td>
+</tr>
+<tr>
+<td><code>-traj2exyz</code></td>
+<td><code>gpumdkit.sh -traj2exyz &lt;input.traj&gt; &lt;output.xyz&gt;</code></td>
+<td>ASE trajectory to extxyz</td>
+</tr>
+<tr>
+<td><code>-replicate</code></td>
+<td><code>gpumdkit.sh -replicate &lt;input&gt; &lt;output&gt; a b c</code></td>
+<td>Replicate by cell factors</td>
+</tr>
+<tr>
+<td><code>-replicate</code></td>
+<td><code>gpumdkit.sh -replicate &lt;input&gt; &lt;output&gt; &lt;target_num&gt;</code></td>
+<td>Replicate toward a target atom count</td>
+</tr>
+<tr>
+<td><code>-addgroup</code></td>
+<td><code>gpumdkit.sh -addgroup &lt;structure&gt; &lt;element...&gt;</code></td>
+<td>Add GPUMD group labels</td>
+</tr>
+<tr>
+<td><code>-addweight</code></td>
+<td><code>gpumdkit.sh -addweight &lt;input.xyz&gt; &lt;output.xyz&gt; &lt;weight&gt;</code></td>
+<td>Add structure weights</td>
+</tr>
+<tr>
+<td><code>-get_frame</code></td>
+<td><code>gpumdkit.sh -get_frame &lt;input.xyz&gt; &lt;frame_index&gt;</code></td>
+<td>Extract one frame (1-based index)</td>
+</tr>
+<tr>
+<td><code>-clean_xyz</code></td>
+<td><code>gpumdkit.sh -clean_xyz &lt;input.xyz&gt; &lt;output.xyz&gt;</code></td>
+<td>Remove extra extxyz properties</td>
+</tr>
+<tr>
+<td><code>-frame_range</code></td>
+<td><code>gpumdkit.sh -frame_range &lt;input.xyz&gt; &lt;start_frac&gt; &lt;end_frac&gt;</code></td>
+<td>Extract frames by fractional range</td>
+</tr>
+<tr>
+<td><code>-dp2xyz</code></td>
+<td><code>gpumdkit.sh -dp2xyz &lt;input_dir/&gt; [output.xyz]</code></td>
+<td>DeepMD npy datasets to extxyz</td>
+</tr>
+<tr>
+<td><code>-xyz2dp</code></td>
+<td><code>gpumdkit.sh -xyz2dp &lt;input.xyz&gt; &lt;element...&gt;</code></td>
+<td>Labeled extxyz to DeepMD npy data (prompts for the arguments if they are omitted)</td>
+</tr>
+</tbody>
+</table></div>
+<h2 id="calculators">Calculators</h2>
+<div class="tbl-wrap"><table class="tbl">
+<thead>
+<tr>
+<th>Command</th>
+<th>Syntax</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>-calc ionic-cond</code></td>
+<td><code>gpumdkit.sh -calc ionic-cond &lt;element&gt; &lt;charge&gt;</code></td>
+<td>Ionic conductivity</td>
+</tr>
+<tr>
+<td><code>-calc nep</code></td>
+<td><code>gpumdkit.sh -calc nep &lt;input.xyz&gt; &lt;output.xyz&gt; &lt;nep.txt&gt;</code></td>
+<td>NEP property prediction</td>
+</tr>
+<tr>
+<td><code>-prediction</code></td>
+<td><code>gpumdkit.sh -prediction &lt;input.xyz&gt; &lt;nep.txt&gt; [workers]</code></td>
+<td>NEP-compatible prediction output files</td>
+</tr>
+<tr>
+<td><code>-prediction_dpa</code></td>
+<td><code>gpumdkit.sh -prediction_dpa &lt;input.xyz&gt; &lt;dpa_model&gt;</code></td>
+<td>DPA training-set prediction output files</td>
+</tr>
+<tr>
+<td><code>-calc des</code></td>
+<td><code>gpumdkit.sh -calc des &lt;input.xyz&gt; &lt;output.npy&gt; &lt;nep.txt&gt; &lt;element&gt;</code></td>
+<td>NEP descriptors</td>
+</tr>
+<tr>
+<td><code>-calc doas</code></td>
+<td><code>gpumdkit.sh -calc doas &lt;input.xyz&gt; &lt;nep.txt&gt; &lt;output.txt&gt;</code></td>
+<td>Density of atomistic states</td>
+</tr>
+<tr>
+<td><code>-calc neb</code></td>
+<td><code>gpumdkit.sh -calc neb &lt;initial.xyz&gt; &lt;final.xyz&gt; &lt;n_images&gt; &lt;nep.txt&gt;</code></td>
+<td>NEB with a NEP model</td>
+</tr>
+<tr>
+<td><code>-calc minimize</code></td>
+<td><code>gpumdkit.sh -calc minimize &lt;structure&gt; &lt;nep.txt&gt; [fmax] [max_steps]</code></td>
+<td>Structure minimization</td>
+</tr>
+<tr>
+<td><code>-calc msd</code></td>
+<td><code>gpumdkit.sh -calc msd &lt;trajectory.xyz&gt; &lt;element&gt; &lt;dt_fs&gt; [max_corr_steps]</code></td>
+<td>MSD from trajectory</td>
+</tr>
+<tr>
+<td><code>-calc nlist</code></td>
+<td><code>gpumdkit.sh -calc nlist [args...]</code></td>
+<td>Neighbor lists</td>
+</tr>
+<tr>
+<td><code>-calc disp</code></td>
+<td><code>gpumdkit.sh -calc disp [args...]</code></td>
+<td>Displacements</td>
+</tr>
+<tr>
+<td><code>-calc avg-struct</code></td>
+<td><code>gpumdkit.sh -calc avg-struct [args...]</code></td>
+<td>Averaged structure</td>
+</tr>
+<tr>
+<td><code>-calc oct-tilt</code></td>
+<td><code>gpumdkit.sh -calc oct-tilt [args...]</code></td>
+<td>Octahedral tilt</td>
+</tr>
+<tr>
+<td><code>-calc pol-abo3</code></td>
+<td><code>gpumdkit.sh -calc pol-abo3 [args...]</code></td>
+<td>ABO3 local polarization</td>
+</tr>
+</tbody>
+</table></div>
+<p><code>-calc nep</code> writes an output extxyz containing properties predicted by a NEP
+model. <code>-prediction</code> writes the separate NEP prediction files used by training
+and validation workflows.</p>
+<h2 id="analyzers">Analyzers</h2>
+<div class="tbl-wrap"><table class="tbl">
+<thead>
+<tr>
+<th>Command</th>
+<th>Syntax</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>-range</code></td>
+<td><code>gpumdkit.sh -range &lt;input.xyz&gt; &lt;energy\|force\|virial&gt; [hist]</code></td>
+<td>Property range analysis</td>
+</tr>
+<tr>
+<td><code>-shift_energy</code></td>
+<td><code>gpumdkit.sh -shift_energy</code></td>
+<td>Interactive energy reference shifting</td>
+</tr>
+<tr>
+<td><code>-analyze_comp</code></td>
+<td><code>gpumdkit.sh -analyze_comp &lt;input.xyz&gt;</code></td>
+<td>Composition analysis</td>
+</tr>
+<tr>
+<td><code>-chem_species</code></td>
+<td><code>gpumdkit.sh -chem_species &lt;input.xyz&gt;</code></td>
+<td>Chemical species list</td>
+</tr>
+<tr>
+<td><code>-cbc</code></td>
+<td><code>gpumdkit.sh -cbc &lt;input.xyz&gt;</code></td>
+<td>Charge-balance check</td>
+</tr>
+<tr>
+<td><code>-min_dist</code></td>
+<td><code>gpumdkit.sh -min_dist &lt;input.xyz&gt;</code></td>
+<td>Minimum distance without PBC</td>
+</tr>
+<tr>
+<td><code>-min_dist_pbc</code></td>
+<td><code>gpumdkit.sh -min_dist_pbc &lt;input.xyz&gt;</code></td>
+<td>Minimum distance with PBC</td>
+</tr>
+<tr>
+<td><code>-filter_dist</code></td>
+<td><code>gpumdkit.sh -filter_dist &lt;input.xyz&gt; &lt;min_dist&gt;</code></td>
+<td>Distance filtering</td>
+</tr>
+<tr>
+<td><code>-filter_dist_pbc</code></td>
+<td><code>gpumdkit.sh -filter_dist_pbc &lt;input.xyz&gt; &lt;min_dist&gt;</code></td>
+<td>PBC-aware distance filtering</td>
+</tr>
+<tr>
+<td><code>-filter_box</code></td>
+<td><code>gpumdkit.sh -filter_box &lt;input.xyz&gt; &lt;edge_limit&gt;</code></td>
+<td>Box-edge filtering</td>
+</tr>
+<tr>
+<td><code>-filter_value</code></td>
+<td><code>gpumdkit.sh -filter_value &lt;input.xyz&gt; &lt;property&gt; &lt;threshold&gt;</code></td>
+<td>Property threshold filtering</td>
+</tr>
+<tr>
+<td><code>-filter_range</code></td>
+<td><code>gpumdkit.sh -filter_range &lt;input.xyz&gt; &lt;element1&gt; &lt;element2&gt; &lt;min_dist&gt; &lt;max_dist&gt;</code></td>
+<td>Element-pair distance range filtering</td>
+</tr>
+<tr>
+<td><code>-pda</code></td>
+<td><code>gpumdkit.sh -pda &lt;ref_struct&gt; &lt;trajectory.xyz&gt; &lt;species&gt; &lt;interval&gt;</code></td>
+<td>Probability density analysis</td>
+</tr>
+</tbody>
+</table></div>
+<h2 id="visualization">Visualization</h2>
+<p>Use:</p>
+<div class="code"><div class="cap"><i></i><i></i><i></i><span>bash</span></div><pre><code>gpumdkit.sh -plt &lt;type&gt; [options]
+gpumdkit.sh -plt -h</code></pre><button class="copy-btn" data-copy-pre aria-label="Copy"><svg class="cp"><use href="#i-copy"/></svg><svg class="ok"><use href="#i-check"/></svg></button></div>
+<p>Common types include <code>train</code>, <code>prediction</code> (alias: <code>test</code>), <code>thermo</code>, <code>msd</code>, <code>sdc</code>, <code>rdf</code>, <code>emd</code>, <code>emd2</code>, <code>nemd</code>, <code>hnemd</code>, <code>pdos</code>, and <code>plane-grid</code>. The <a href="plot_scripts.html">Plot Scripts</a> overview lists every type with its input files.</p>
+<h2 id="utilities">Utilities</h2>
+<div class="tbl-wrap"><table class="tbl">
+<thead>
+<tr>
+<th>Command</th>
+<th>Syntax</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>-time</code></td>
+<td><code>gpumdkit.sh -time &lt;gpumd\|wpe\|nep\|gnep&gt;</code></td>
+<td>Monitor GPUMD, WPE, NEP, or GNEP progress</td>
+</tr>
+<tr>
+<td><code>-nep_modifier</code></td>
+<td><code>gpumdkit.sh -nep_modifier [nep.txt] [nep.restart\|-] [nep.in\|-]</code></td>
+<td>Safely modify and export a NEP4 model package</td>
+</tr>
+<tr>
+<td><code>-pynep</code></td>
+<td><code>gpumdkit.sh -pynep</code></td>
+<td>Deprecated PyNEP FPS sampling</td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="nep-model-modifier">NEP model modifier</h3>
+<p><code>-nep_modifier</code> adjusts NEP4 model capacity, adds or removes species, and exports
+model packages. It requires <code>calorine &gt;= 3.4</code>. Expansion, reduction, and adding
+species also require a matching <code>nep.restart</code>; providing the source <code>nep.in</code>
+is recommended.</p>
+<div class="code"><div class="cap"><i></i><i></i><i></i><span>bash</span></div><pre><code>gpumdkit.sh -nep_modifier
+gpumdkit.sh -nep_modifier models/nep.txt models/nep.restart models/nep.in
+gpumdkit.sh -nep_modifier -h</code></pre><button class="copy-btn" data-copy-pre aria-label="Copy"><svg class="cp"><use href="#i-copy"/></svg><svg class="ok"><use href="#i-check"/></svg></button></div>
+<p>Use <code>-</code> in place of the restart path to omit it; species removal and retention
+remain available. Continue training with the <code>.in</code>, <code>.txt</code>, and <code>.restart</code>
+from the same exported package, then retrain and validate before production use.</p>
+<h4 id="required-calorine-citation">Required calorine citation</h4>
+<p>This GPUMDkit feature directly uses calorine's model modification
+implementation. Research that uses this feature should cite calorine as
+requested by its developers:</p>
+<p>E. Lindgren, J. M. Rahm, E. Fransson, F. Eriksson, N. Österbacka, Z. Fan, and
+P. Erhart, “calorine: A Python package for constructing and sampling
+neuroevolution potential models,” <em>Journal of Open Source Software</em> <strong>9</strong>(95),
+6264 (2024), <a href="https://doi.org/10.21105/joss.06264" target="_blank" rel="noopener">https://doi.org/10.21105/joss.06264</a>.</p>
+<p>The detailed operation guide is available in the
+<a href="https://github.com/zhyan0603/GPUMDkit/tree/main/Scripts/utils/nep_modifier" target="_blank" rel="noopener">NEP modifier README</a>
+and the <a href="https://calorine.materialsmodeling.org/dev/get_started/modifying_models.html" target="_blank" rel="noopener">official calorine model-modification tutorial</a>.</p>
+<hr />
+<p>The tables on this page are kept in sync with <code>docs/command_reference.tsv</code>.</p><div class="doc-pn"><a href="custom_commands.html"><small>Previous</small><b>Custom Commands</b></a><a class="next" href="contributing_to_gpumdkit.html"><small>Next</small><b>Contributing to GPUMDkit</b></a></div><a class="doc-edit" href="https://github.com/zhyan0603/GPUMDkit/edit/main/docs/tutorials/en/command_reference.md" target="_blank" rel="noopener">Edit this page</a></article><nav class="doc-toc" aria-label="On this page"><h6>On this page</h6><a href="#finding-the-right-command" class="l2">Finding the Right Command</a><a href="#main" class="l2">Main</a><a href="#format-conversion" class="l2">Format Conversion</a><a href="#calculators" class="l2">Calculators</a><a href="#analyzers" class="l2">Analyzers</a><a href="#visualization" class="l2">Visualization</a><a href="#utilities" class="l2">Utilities</a><a href="#nep-model-modifier" class="l3">NEP model modifier</a></nav></div>
+</main>
+
+<!-- ======================================================= footer -->
+<footer class="footer">
+  <div class="container">
+    <div class="footer-grid">
+      <div>
+        <a href="../../index.html" class="brand"><svg><use href="#i-logo"/></svg><span><span class="gpumd">GPUMD</span><span class="kit">kit</span></span></a>
+        <p data-i18n="foot.about">A user-friendly toolkit for the GPUMD and NEP programs, built by the GPUMDkit team and contributors.</p>
+      </div>
+      <div><h5 data-i18n="foot.links">Quick links</h5><ul>
+        <li><a href="../../manual.html" data-doc="index" data-i18n="nav.docs">Docs</a></li>
+        <li><a href="../../gallery.html" data-i18n="nav.gallery">Gallery</a></li>
+        <li><a href="../../publications.html" data-i18n="nav.pubs">Publications</a></li>
+        <li><a href="https://github.com/zhyan0603/GPUMDkit/archive/refs/heads/main.zip" data-i18n="foot.dl">Download</a></li></ul></div>
+      <div><h5 data-i18n="foot.gpumd">GPUMD project</h5><ul>
+        <li><a href="https://github.com/brucefan1983/GPUMD" target="_blank" rel="noopener">GPUMD repository</a></li>
+        <li><a href="https://gpumd.org/" target="_blank" rel="noopener">GPUMD documentation</a></li>
+        <li><a href="https://github.com/brucefan1983/GPUMD-Tutorials" target="_blank" rel="noopener">GPUMD-Tutorials</a></li>
+        <li><a href="https://github.com/brucefan1983/GPUMD/tree/master/tools" target="_blank" rel="noopener">GPUMD-Tools</a></li></ul></div>
+      <div><h5 data-i18n="foot.eco">GPUMD ecosystem</h5><ul>
+        <li><a href="https://gitlab.com/brucefan1983/nep-data" target="_blank" rel="noopener">nep-data</a></li>
+        <li><a href="https://gitlab.com/materials-modeling/calorine" target="_blank" rel="noopener">calorine</a></li>
+        <li><a href="https://github.com/aboys-cb/NepTrainKit" target="_blank" rel="noopener">NepTrainKit</a></li>
+        <li><a href="https://github.com/Jonsnow-willow/GPUMD-Wizard" target="_blank" rel="noopener">GPUMD-Wizard</a></li></ul></div>
+    </div>
+    <div class="footer-bottom">
+      <span data-i18n="foot.copy">© 2026 GPUMDkit Team. Released under GPL-3.0.</span>
+      <span><span id="busuanzi_container_site_pv"><span data-i18n="foot.views">Views</span>: <span id="busuanzi_value_site_pv"></span></span> · <span id="busuanzi_container_site_uv"><span data-i18n="foot.visitors">Visitors</span>: <span id="busuanzi_value_site_uv"></span></span></span>
+    </div>
+  </div>
+</footer>
+
+<script src="../../assets/js/gk-data.js"></script>
+<script src="../../assets/js/gk-docs.js"></script>
+<script src="../../assets/js/gk-i18n.js"></script>
+<script src="../../assets/js/gk-core.js"></script>
+<script src="../../assets/js/gk-doc.js"></script>
+<script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+</body>
+</html>

@@ -3,13 +3,14 @@
 GPUMDkit: A User-Friendly Toolkit for GPUMD and NEP
 Repository: https://github.com/zhyan0603/GPUMDkit
 Citation: Z. Yan et al., GPUMDkit: A User-Friendly Toolkit for GPUMD and NEP,
-          MGE Advances, 2026, e70074 (https://doi.org/10.1002/mgea.70074)
+          MGE Advances, 2026, 4, e70074 (https://doi.org/10.1002/mgea.70074)
 =============================================================================
 Script:     add_weight.py
 Category:   Format Conversion Scripts
 Purpose:    Add a weight value to the 'Weight' attribute of each structure
             in an input file and save the modified structures.
-Usage:      python add_weight.py <input_file> <output_file> <new_weight>
+Usage:      gpumdkit.sh -addweight <input_file> <output_file> <new_weight>
+            python add_weight.py <input_file> <output_file> <new_weight>
 Arguments:
   input_file   Input structure file
   output_file  Output structure file with added weight
@@ -23,14 +24,24 @@ Last-modified: 2026-05-16
 
 import os
 import sys
+
+args = sys.argv[1:]
+if len(args) < 3 or args[0] in ("-h", "--help"):
+    print(" Usage: gpumdkit.sh -addweight <input.xyz> <output.xyz> <weight>")
+    print("    or: python add_weight.py <input.xyz> <output.xyz> <weight>")
+    print("")
+    print(" Arguments:")
+    print("   input.xyz   Input extxyz file")
+    print("   output.xyz  Output extxyz file with added weight")
+    print("   weight      Weight value to assign (e.g., 1.0)")
+    print("")
+    print(" Example: gpumdkit.sh -addweight train.xyz weighted.xyz 2.0")
+    print("")
+    sys.exit(0 if args and args[0] in ("-h", "--help") else 1)
+
 from ase.io import read, write
 
 def main():
-    # Check if the correct number of arguments are provided
-    if len(sys.argv) != 4:
-        print("Usage: python script.py <input_file> <output_file> <new_weight>")
-        sys.exit(1)
-
     # Parse command line arguments
     input_file = sys.argv[1]
     output_file = sys.argv[2]

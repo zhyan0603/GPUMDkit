@@ -1,0 +1,91 @@
+<section class="chap" id="recipes" data-group="Practice|实践">
+<div class="chap-head"><span class="chap-no"></span>
+<div><h2><span class="l-en">Recipes</span><span class="l-zh">实战流程</span></h2></div></div>
+<p class="lead l-en">Typical sequences, from raw output to a result you can use.</p>
+<p class="lead l-zh">从原始输出到可用结果的典型命令序列。</p>
+<div class="docs-row"><span class="dr-label"><span class="l-en">Detailed pages</span><span class="l-zh">详细页面</span></span><a class="chip" href="htmls/en/active_learning_workflow.html" data-doc="active_learning_workflow"><span class="l-en">Active learning workflow</span><span class="l-zh">主动学习工作流</span><svg><use href="#i-out"/></svg></a><a class="chip" href="htmls/en/plot_diffusion.html" data-doc="plot_diffusion"><span class="l-en">Diffusion plots</span><span class="l-zh">扩散绘图</span><svg><use href="#i-out"/></svg></a></div>
+<p class="l-en">Three end-to-end examples. Steps marked <span class="pill you">you run it</span> use other software; GPUMDkit prepares around them.</p>
+<p class="l-zh">三个端到端示例。标有 <span class="pill you">由你运行</span> 的步骤使用其他软件，GPUMDkit 负责前后衔接。</p>
+<div data-tabscope>
+<div class="tabs" data-tabs="rec"><button class="chip active" data-pane="rc-a"><span class="l-en">Check a new dataset</span><span class="l-zh">检查新数据集</span></button><button class="chip" data-pane="rc-b"><span class="l-en">One active-learning round</span><span class="l-zh">一轮主动学习</span></button><button class="chip" data-pane="rc-c"><span class="l-en">Diffusion & conductivity</span><span class="l-zh">扩散与电导率</span></button></div>
+<div class="pane on" id="rc-a" data-group="rec">
+<div class="recipe">
+<div class="rs">
+<h4><span class="l-en">Convert the finished calculations</span><span class="l-zh">转换已完成的计算</span></h4>
+<div class="code">
+<pre><code>gpumdkit.sh -out2xyz &lt;scf_results_directory&gt;<span class="c">   # writes NEPdataset/train.xyz</span></code></pre><button class="copy-btn" data-copy-pre aria-label="Copy"><svg class="cp"><use href="#i-copy"/></svg><svg class="ok"><use href="#i-check"/></svg></button></div></div>
+<div class="rs">
+<h4><span class="l-en">Check energies and forces</span><span class="l-zh">检查能量与力</span></h4>
+<div class="code">
+<pre><code>gpumdkit.sh -range NEPdataset/train.xyz energy
+gpumdkit.sh -range NEPdataset/train.xyz force</code></pre><button class="copy-btn" data-copy-pre aria-label="Copy"><svg class="cp"><use href="#i-copy"/></svg><svg class="ok"><use href="#i-check"/></svg></button></div></div>
+<div class="rs">
+<h4><span class="l-en">Check distances and composition</span><span class="l-zh">检查间距与成分</span></h4>
+<div class="code">
+<pre><code>gpumdkit.sh -min_dist_pbc NEPdataset/train.xyz
+gpumdkit.sh -analyze_comp NEPdataset/train.xyz</code></pre><button class="copy-btn" data-copy-pre aria-label="Copy"><svg class="cp"><use href="#i-copy"/></svg><svg class="ok"><use href="#i-check"/></svg></button></div></div>
+<div class="rs">
+<h4><span class="l-en">Optional: split into training and test sets</span><span class="l-zh">可选：划分训练集与测试集</span></h4>
+<div class="code">
+<pre><code>gpumdkit.sh<span class="c">   # 2) Sample Structures -&gt; 206</span></code></pre><button class="copy-btn" data-copy-pre aria-label="Copy"><svg class="cp"><use href="#i-copy"/></svg><svg class="ok"><use href="#i-check"/></svg></button></div></div></div></div>
+<div class="pane" id="rc-b" data-group="rec">
+<div class="recipe">
+<div class="rs">
+<h4><span class="l-en">Prepare MD sampling directories</span><span class="l-zh">准备 MD 采样目录</span></h4>
+<div class="code">
+<pre><code>gpumdkit.sh<span class="c">   # 3) Workflow -&gt; 302</span></code></pre><button class="copy-btn" data-copy-pre aria-label="Copy"><svg class="cp"><use href="#i-copy"/></svg><svg class="ok"><use href="#i-check"/></svg></button></div></div>
+<div class="rs you">
+<h4><span class="l-en">Run GPUMD in each directory</span><span class="l-zh">在每个目录中运行 GPUMD</span></h4></div>
+<div class="rs">
+<h4><span class="l-en">Filter the trajectory</span><span class="l-zh">过滤轨迹</span></h4>
+<div class="code">
+<pre><code>gpumdkit.sh -min_dist_pbc dump.xyz
+gpumdkit.sh -filter_dist_pbc dump.xyz &lt;minimum_distance&gt;</code></pre><button class="copy-btn" data-copy-pre aria-label="Copy"><svg class="cp"><use href="#i-copy"/></svg><svg class="ok"><use href="#i-check"/></svg></button></div></div>
+<div class="rs">
+<h4><span class="l-en">Select diverse structures (FPS)</span><span class="l-zh">用 FPS 挑选多样性结构</span></h4>
+<div class="code">
+<pre><code>gpumdkit.sh<span class="c">   # 2) Sample Structures -&gt; 203</span></code></pre><button class="copy-btn" data-copy-pre aria-label="Copy"><svg class="cp"><use href="#i-copy"/></svg><svg class="ok"><use href="#i-check"/></svg></button></div></div>
+<div class="rs">
+<h4><span class="l-en">Prepare DFT single points</span><span class="l-zh">准备 DFT 单点计算</span></h4>
+<div class="code">
+<pre><code>gpumdkit.sh<span class="c">   # 3) Workflow -&gt; 301 -&gt; VASP or CP2K</span></code></pre><button class="copy-btn" data-copy-pre aria-label="Copy"><svg class="cp"><use href="#i-copy"/></svg><svg class="ok"><use href="#i-check"/></svg></button></div></div>
+<div class="rs you">
+<h4><span class="l-en">Run DFT with your own settings</span><span class="l-zh">用你自己的参数运行 DFT</span></h4></div>
+<div class="rs">
+<h4><span class="l-en">Convert and check the new labels</span><span class="l-zh">转换并检查新标签</span></h4>
+<div class="code">
+<pre><code>gpumdkit.sh -out2xyz &lt;scf_results_directory&gt;
+gpumdkit.sh -range &lt;new_reference.xyz&gt; force</code></pre><button class="copy-btn" data-copy-pre aria-label="Copy"><svg class="cp"><use href="#i-copy"/></svg><svg class="ok"><use href="#i-check"/></svg></button></div></div>
+<div class="rs you">
+<h4><span class="l-en">Merge the data and retrain the NEP</span><span class="l-zh">合并数据并重新训练 NEP</span></h4></div>
+<div class="rs">
+<h4><span class="l-en">Inspect the new model</span><span class="l-zh">查看新模型</span></h4>
+<div class="code">
+<pre><code>gpumdkit.sh -plt train
+gpumdkit.sh -plt prediction</code></pre><button class="copy-btn" data-copy-pre aria-label="Copy"><svg class="cp"><use href="#i-copy"/></svg><svg class="ok"><use href="#i-check"/></svg></button></div></div></div></div>
+<div class="pane" id="rc-c" data-group="rec">
+<div class="recipe">
+<div class="rs you">
+<h4><span class="l-en">Run GPUMD with compute_msd</span><span class="l-zh">运行带 compute_msd 的 GPUMD</span></h4></div>
+<div class="rs">
+<h4><span class="l-en">Look at the MSD</span><span class="l-zh">查看 MSD</span></h4>
+<div class="code">
+<pre><code>gpumdkit.sh -plt msd</code></pre><button class="copy-btn" data-copy-pre aria-label="Copy"><svg class="cp"><use href="#i-copy"/></svg><svg class="ok"><use href="#i-check"/></svg></button></div></div>
+<div class="rs">
+<h4><span class="l-en">Check convergence (needs save_every in compute_msd)</span><span class="l-zh">检查收敛性（compute_msd 需设置 save_every）</span></h4>
+<div class="code">
+<pre><code>gpumdkit.sh -plt msd_conv</code></pre><button class="copy-btn" data-copy-pre aria-label="Copy"><svg class="cp"><use href="#i-copy"/></svg><svg class="ok"><use href="#i-check"/></svg></button></div></div>
+<div class="rs">
+<h4><span class="l-en">Estimate the ionic conductivity</span><span class="l-zh">估算离子电导率</span></h4>
+<div class="code">
+<pre><code>gpumdkit.sh -calc ionic-cond &lt;element&gt; &lt;charge&gt;</code></pre><button class="copy-btn" data-copy-pre aria-label="Copy"><svg class="cp"><use href="#i-copy"/></svg><svg class="ok"><use href="#i-check"/></svg></button></div></div>
+<div class="rs you">
+<h4><span class="l-en">Repeat at several temperatures</span><span class="l-zh">在多个温度下重复</span></h4></div>
+<div class="rs">
+<h4><span class="l-en">Plot the Arrhenius fit</span><span class="l-zh">绘制 Arrhenius 拟合</span></h4>
+<div class="code">
+<pre><code>gpumdkit.sh -plt D/sigma<span class="c">     # see the plot pages for the input layout</span></code></pre><button class="copy-btn" data-copy-pre aria-label="Copy"><svg class="cp"><use href="#i-copy"/></svg><svg class="ok"><use href="#i-check"/></svg></button></div></div></div></div></div>
+<div class="note warn"><span class="ni">!</span>
+<div class="nb">
+<div class="l-en">Scientific choices — thresholds, DFT settings, sampling temperature, acceptance criteria — are <b>yours</b> to make. The recipes show the commands, not recommended values.</div>
+<div class="l-zh">阈值、DFT 参数、采样温度、验收标准等科学选择需要<b>由你自己决定</b>。这些流程只展示命令，不提供推荐数值。</div></div></div></section>

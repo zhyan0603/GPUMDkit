@@ -1,0 +1,539 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Contributing to GPUMDkit — GPUMDkit</title>
+  <meta name="description" content="Thank you for your interest in contributing to GPUMDkit! We appreciate your time and effort in helping improve this toolkit.">
+  <meta property="og:title" content="GPUMDkit — A User-friendly Toolkit for GPUMD and NEP">
+  <meta property="og:description" content="Format conversion, sampling, workflows, analysis and plotting for GPUMD and NEP, in one command.">
+  <meta property="og:image" content="https://gpumdkit.cn/Gallery/gpumdkit_logo_lateral.png">
+  <meta property="og:url" content="https://gpumdkit.cn/">
+  <meta name="twitter:card" content="summary_large_image">
+  <link rel="canonical" href="https://gpumdkit.cn/htmls/en/contributing_to_gpumdkit.html">
+  <link rel="icon" href="../../Gallery/gpumdkit_logo.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <!-- web fonts load without blocking rendering; system fonts are used if they are unreachable -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
+  <noscript><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet"></noscript>
+  <link rel="stylesheet" href="../../assets/css/gk.css">
+  <link rel="stylesheet" href="../../assets/css/gk-manual.css">
+  <script>
+    /* mark JS as available (reveal animations are only armed then) and apply the saved theme before first paint */
+    document.documentElement.classList.add("js"); try { localStorage.setItem("gk-lang", "en"); } catch (e) {}
+    try { var t = localStorage.getItem("gk-theme"); if (t) document.documentElement.setAttribute("data-theme", t); } catch (e) {}
+  </script>
+</head>
+<body data-page="doc" data-root="../../" data-lang="en" data-alt="../zh/贡献指南.html">
+
+<!-- ======================================================= icon sprite -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <symbol id="i-logo" viewBox="0 0 100 100"><path d="M85.3 31.2A40 40 0 1 0 89.4 43" fill="none" stroke="#1867ae" stroke-width="9"/><text x="49" y="52" text-anchor="middle" dominant-baseline="central" font-family="Helvetica Neue,Helvetica,Arial,sans-serif" font-weight="800" font-size="52" fill="#1867ae">G</text><circle cx="87.4" cy="35.7" r="5" fill="#c18852"/></symbol>
+    <symbol id="i-copy" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="11" height="11" rx="2.5"/><path d="M5 15V6a2 2 0 0 1 2-2h9"/></symbol>
+    <symbol id="i-check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="m5 12.5 4.5 4.5L19 7.5"/></symbol>
+    <symbol id="i-search" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="m20 20-4-4"/></symbol>
+    <symbol id="i-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"><circle cx="12" cy="12" r="4.2"/><path d="M12 2.5v2M12 19.5v2M4.6 4.6 6 6M18 18l1.4 1.4M2.5 12h2M19.5 12h2M4.6 19.4 6 18M18 6l1.4-1.4"/></symbol>
+    <symbol id="i-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M20.5 14.2A8.5 8.5 0 0 1 9.8 3.5 8.5 8.5 0 1 0 20.5 14.2Z"/></symbol>
+    <symbol id="i-github" viewBox="0 0 16 16" fill="currentColor"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0 0 16 8c0-4.42-3.58-8-8-8z"/></symbol>
+    <symbol id="i-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></symbol>
+    <symbol id="i-out" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17 17 7M8 7h9v9"/></symbol>
+    <symbol id="i-star" viewBox="0 0 24 24" fill="currentColor"><path d="m12 2.8 2.8 5.8 6.4.9-4.6 4.5 1.1 6.3L12 17.3l-5.7 3 1.1-6.3-4.6-4.5 6.4-.9Z"/></symbol>
+    <symbol id="i-fork" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"><circle cx="6" cy="5" r="2.2"/><circle cx="18" cy="5" r="2.2"/><circle cx="12" cy="19" r="2.2"/><path d="M6 7.2v1.8a3 3 0 0 0 3 3h6a3 3 0 0 0 3-3V7.2M12 12v4.8"/></symbol>
+    <symbol id="i-menu" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 7h16M4 12h16M4 17h16"/></symbol>
+    <symbol id="i-close" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M6 6l12 12M18 6 6 18"/></symbol>
+    <symbol id="i-left" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m15 5-7 7 7 7"/></symbol>
+    <symbol id="i-right" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 5 7 7-7 7"/></symbol>
+    <symbol id="i-lock" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="5" y="11" width="14" height="9" rx="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></symbol>
+    <symbol id="i-conv" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M7 4 3 8l4 4"/><path d="M3 8h14"/><path d="m17 12 4 4-4 4"/><path d="M21 16H7"/></symbol>
+    <symbol id="i-samp" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="6" cy="7" r="1.6"/><circle cx="12.5" cy="5" r="1.6"/><circle cx="18" cy="9" r="1.6"/><circle cx="8" cy="15" r="1.6"/><circle cx="16" cy="17" r="1.6"/><circle cx="12" cy="11.5" r="6.8" stroke-dasharray="2 3"/></symbol>
+    <symbol id="i-flow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="2"/><rect x="14" y="14" width="7" height="7" rx="2"/><path d="M6.5 10v3.5a2 2 0 0 0 2 2H14"/></symbol>
+    <symbol id="i-calc" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="3" width="14" height="18" rx="2.5"/><path d="M8.5 7h7M8.5 11.5h.01M12 11.5h.01M15.5 11.5h.01M8.5 15h.01M12 15h.01M15.5 15h.01M8.5 18h.01M12 18h.01M15.5 18h.01"/></symbol>
+    <symbol id="i-anal" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="10.5" cy="10.5" r="6.5"/><path d="m20 20-4.8-4.8"/><path d="M7.5 12l2-2.5 2 1.5 2-3"/></symbol>
+    <symbol id="i-plot" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3v18h18"/><path d="m7 15 4-5 3 3 5-7"/></symbol>
+    <symbol id="i-term" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="16" rx="3"/><path d="m7 9 3 3-3 3M12.5 15H17"/></symbol>
+    <symbol id="i-doc" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"><path d="M6 3h8.5L19 7.5V21H6z"/><path d="M14 3v5h5M9 12.5h7M9 16.5h5" stroke-linecap="round"/></symbol>
+    <symbol id="i-chat" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20 15a2 2 0 0 1-2 2H8l-4 4V6a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2z"/><path d="M8.5 9.5h7M8.5 13h4.5"/></symbol>
+    <symbol id="i-shield" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3 5 6v6c0 4.4 3 7.6 7 9 4-1.4 7-4.6 7-9V6z"/><path d="m9 12 2 2 4-4"/></symbol>
+    <symbol id="i-globe" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c2.8 3 2.8 15 0 18M12 3c-2.8 3-2.8 15 0 18"/></symbol>
+    <symbol id="i-spark" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v4M12 17v4M3 12h4M17 12h4M6 6l2.5 2.5M15.5 15.5 18 18M6 18l2.5-2.5M15.5 8.5 18 6"/></symbol>
+    <symbol id="i-atom" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="1.8" fill="currentColor"/><ellipse cx="12" cy="12" rx="9" ry="3.6"/><ellipse cx="12" cy="12" rx="9" ry="3.6" transform="rotate(60 12 12)"/><ellipse cx="12" cy="12" rx="9" ry="3.6" transform="rotate(120 12 12)"/></symbol>
+    <symbol id="i-db" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><ellipse cx="12" cy="6" rx="7" ry="3"/><path d="M5 6v12c0 1.7 3.1 3 7 3s7-1.3 7-3V6M5 12c0 1.7 3.1 3 7 3s7-1.3 7-3"/></symbol>
+    <symbol id="i-brain" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="6" cy="7" r="2"/><circle cx="6" cy="17" r="2"/><circle cx="12" cy="12" r="2"/><circle cx="18" cy="7" r="2"/><circle cx="18" cy="17" r="2"/><path d="M8 7.8 10.3 11M8 16.2l2.3-3.2M13.7 11 16 7.8M13.7 13l2.3 3.2"/></symbol>
+    <symbol id="i-filter" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 5h16l-6 7.5V19l-4 2v-8.5z"/></symbol>
+    <symbol id="i-image" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="16" rx="3"/><circle cx="9" cy="10" r="2"/><path d="m21 16-5-5-9 9"/></symbol>
+  </defs>
+</svg>
+
+<div class="ambient" aria-hidden="true"><div class="orb a"></div><div class="orb b"></div><div class="orb c"></div><div class="noise"></div></div>
+<div class="progress" aria-hidden="true"></div>
+
+<!-- ======================================================= navigation -->
+<header class="nav" id="nav">
+  <div class="container">
+    <a href="../../index.html" class="brand" aria-label="GPUMDkit home"><svg><use href="#i-logo"/></svg><span><span class="gpumd">GPUMD</span><span class="kit">kit</span></span></a>
+    <nav class="nav-links" id="nav-links">
+      <a href="../../index.html#features" data-i18n="nav.features">Features</a>
+      <a href="../../index.html#terminal" data-i18n="nav.terminal">Try it</a>
+      <a href="../../index.html#workflow" data-i18n="nav.workflow">Workflow</a>
+      <a href="../../gallery.html" data-i18n="nav.gallery">Gallery</a>
+      <a href="../../publications.html" data-i18n="nav.pubs">Publications</a>
+      <a href="../../manual.html" class="active" aria-current="page" data-i18n="nav.manual">Manual</a>
+    </nav>
+    <div class="nav-tools">
+      <button class="search-btn" data-palette aria-label="Search commands and docs"><svg><use href="#i-search"/></svg><span class="label" data-i18n="nav.search">Search commands…</span><kbd>⌘K</kbd></button>
+      <button class="icon-btn lang-btn" data-lang-toggle aria-label="Switch language">中文</button>
+      <button class="icon-btn" data-theme-toggle aria-label="Toggle dark mode"><svg class="theme-icon-light"><use href="#i-moon"/></svg><svg class="theme-icon-dark"><use href="#i-sun"/></svg></button>
+      <a class="icon-btn gh-btn" href="https://github.com/zhyan0603/GPUMDkit" target="_blank" rel="noopener" aria-label="GitHub"><svg><use href="#i-github"/></svg></a>
+      <button class="icon-btn menu-btn" id="menu-btn" aria-label="Menu"><svg><use href="#i-menu"/></svg></button>
+    </div>
+  </div>
+</header>
+
+<main>
+<section class="man-hero doc-hero"><div class="container"><div class="crumb"><a href="../../manual.html">Manual</a><span>/</span><span>Contribute</span><span>/</span><span>Contributing to GPUMDkit</span></div><h1 class="h-section">Contributing to GPUMDkit</h1><p class="lead">Thank you for your interest in contributing to <strong>GPUMDkit</strong>! We appreciate your time and effort in helping improve this toolkit.</p></div></section>
+<div class="container man doc"><aside class="man-side" aria-label="Pages"><h6>Start</h6><a href="index.html" class=""><span>GPUMDkit Tutorials</span></a><a href="quick_start.html" class=""><span>Quick Start</span></a><a href="remote_web_console.html" class=""><span>Remote Web Console</span></a><a href="simulation_and_postprocessing.html" class=""><span>GPUMDkit Agent Skill</span></a><h6>Toolbox</h6><a href="format_conversion.html" class=""><span>Format Conversion</span></a><a href="structure_sampling.html" class=""><span>Structure Sampling</span></a><a href="workflow_scripts.html" class=""><span>Workflow Scripts</span></a><a href="calculator_scripts.html" class=""><span>Calculator Scripts</span></a><a href="analyzer_scripts.html" class=""><span>Analyzer Scripts</span></a><a href="plot_scripts.html" class=""><span>Plot Scripts</span></a><a href="plot_nep.html" class="sub"><span>NEP Training and Model Analysis</span></a><a href="plot_md_structure.html" class="sub"><span>MD and Structure</span></a><a href="plot_diffusion.html" class="sub"><span>Diffusion and Ionic Transport</span></a><a href="plot_heat_phonon.html" class="sub"><span>Heat Transport and Phonons</span></a><a href="polar_material_analysis.html" class=""><span>Polar Material Analysis</span></a><h6>Guides</h6><a href="active_learning_workflow.html" class=""><span>Active Learning Workflow</span></a><a href="custom_commands.html" class=""><span>Custom Commands</span></a><h6>Reference</h6><a href="command_reference.html" class=""><span>Command Reference</span></a><h6>Contribute</h6><a href="contributing_to_gpumdkit.html" class="on"><span>Contributing to GPUMDkit</span></a></aside><article class="man-body chap doc-body"><p><code>GPUMDkit</code> is an open-source package, and we welcome contributions from the community, whether you're fixing bugs, adding new features, improving documentation, or suggesting enhancements.</p>
+<blockquote>
+<p><strong>Note</strong>: The authoritative version of this document is <a href="https://github.com/zhyan0603/GPUMDkit/blob/main/CONTRIBUTING.md" target="_blank" rel="noopener"><code>CONTRIBUTING.md</code></a> in the repository root. This tutorial page mirrors its content.</p>
+</blockquote>
+<hr />
+<h2 id="table-of-contents">Table of Contents</h2>
+<ul>
+<li><a href="#development-restrictions-and-guidelines">Development Restrictions and Guidelines</a></li>
+<li><a href="#reporting-bugs">Reporting Bugs</a></li>
+<li><a href="#suggesting-features">Suggesting Features</a></li>
+<li><a href="#contributing-code">Contributing Code</a></li>
+<li><a href="#fork-and-clone-the-repository">Fork and Clone the Repository</a></li>
+<li><a href="#create-a-feature-branch">Create a Feature Branch</a></li>
+<li><a href="#making-changes">Making Changes</a><ul>
+<li><a href="#interactive-mode-contributions">Interactive Mode Contributions</a></li>
+<li><a href="#command-line-mode-contributions">Command-Line Mode Contributions</a></li>
+<li><a href="#updating-tab-completion">Updating Tab Completion</a></li>
+</ul>
+</li>
+<li><a href="#code-style-and-best-practices">Code Style and Best Practices</a></li>
+<li><a href="#testing-your-changes">Testing Your Changes</a></li>
+<li><a href="#commit-messages">Commit Messages</a></li>
+<li><a href="#push-and-open-a-pull-request">Push and Open a Pull Request</a></li>
+</ul>
+<hr />
+<h2 id="development-restrictions-and-guidelines">Development Restrictions and Guidelines</h2>
+<p>To maintain code quality and consistency across the project, please adhere to these guidelines:</p>
+<h3 id="language-requirements">Language Requirements</h3>
+<ul>
+<li><strong>All code should be written in English</strong>: This includes variable names, function names, comments, docstrings, commit messages, and documentation.</li>
+<li>While we understand that contributors come from diverse backgrounds, using English ensures that the codebase is accessible to the widest possible audience.</li>
+</ul>
+<h3 id="modularity-and-reusability">Modularity and Reusability</h3>
+<ul>
+<li><strong>Write modular and reusable code</strong>: Functions and scripts should be designed with flexibility in mind.</li>
+<li><strong>Prefer passing parameters over hardcoding values</strong>: Use function arguments, command-line parameters, or configuration files instead of hardcoded values. However, some filenames are required to be fixed by GPUMD and NEP programs (e.g., <code>train.xyz</code>, <code>thermo.out</code>), and these can be hardcoded as needed.</li>
+<li><strong>Example</strong>: 
+  <div class="code"><div class="cap"><i></i><i></i><i></i><span>bash</span></div><pre><code># Good: accepts parameters
+function convert_file() {
+    local input_file=$1
+    local output_file=$2
+    # processing logic
+}
+
+# Avoid: hardcoded values (unless required by GPUMD/NEP)
+function convert_file() {
+    local input_file="hardcoded_input.xyz"
+    # processing logic
+}</code></pre><button class="copy-btn" data-copy-pre aria-label="Copy"><svg class="cp"><use href="#i-copy"/></svg><svg class="ok"><use href="#i-check"/></svg></button></div></li>
+</ul>
+<h3 id="code-style">Code Style</h3>
+<ul>
+<li>Write code that is clear and easy for others to maintain and modify.</li>
+<li>Use meaningful variable and function names.</li>
+<li>Add comments where necessary to explain complex logic.</li>
+</ul>
+<h3 id="documentation">Documentation</h3>
+<ul>
+<li>Ensure that help messages (e.g., <code>-h</code> flags) are clear and accurate.</li>
+<li>Tutorial documentation lives in <code>docs/tutorials/en/</code> (English) and <code>docs/tutorials/zh/</code> (Chinese).
+  If you add a new feature, consider updating the relevant tutorial page.</li>
+<li>After editing tutorial markdown files, rebuild the web pages with <code>python3 docs/manual-src/build.py</code>.</li>
+</ul>
+<h3 id="update-log">Update Log</h3>
+<ul>
+<li>Use <code>docs/updates.info</code> only for recent user-visible feature additions and code, script, or CLI bug fixes. Documentation-only changes, including tutorials, README files, skills, references, wording corrections, and generated documentation, must not be added there.</li>
+<li>Keep at most the five newest entries in each of the <code>NEW_FEATURES</code> and <code>BUG_FIXES</code> arrays; remove older entries when adding a new one. If a change includes both code and documentation, record only the code/behavior change, not the documentation synchronization.</li>
+</ul>
+<hr />
+<h2 id="reporting-bugs">Reporting Bugs</h2>
+<p>If you encounter a bug, please help us fix it by reporting it through GitHub Issues:</p>
+<ol>
+<li><strong>Search existing issues</strong> to see if the bug has already been reported.</li>
+<li><strong>Open a new issue</strong> if it hasn't been reported yet: <a href="https://github.com/zhyan0603/GPUMDkit/issues/new" target="_blank" rel="noopener">Create an Issue</a></li>
+<li><strong>Describe the problem in detail</strong> and provide test files if possible.</li>
+</ol>
+<p>You can also reach out to us through:
+- <strong>QQ Group</strong>: 825696376
+- <strong>Email</strong>: yanzihan@westlake.edu.cn
+- <strong>Script Developer</strong>: Contact the developer listed in the script header</p>
+<hr />
+<h2 id="suggesting-features">Suggesting Features</h2>
+<p>We welcome feature suggestions! To propose a new feature:</p>
+<ol>
+<li><strong>Search existing issues</strong> to see if someone has already suggested it.</li>
+<li><strong>Open a new feature request</strong>: <a href="https://github.com/zhyan0603/GPUMDkit/issues/new" target="_blank" rel="noopener">Create a Feature Request</a> and mention @zhyan0603</li>
+<li><strong>Describe what you need</strong> clearly and explain how it would be useful.</li>
+</ol>
+<hr />
+<h2 id="contributing-code">Contributing Code</h2>
+<h3 id="fork-and-clone-the-repository">Fork and Clone the Repository</h3>
+<ol>
+<li>
+<p><strong>Fork the repository</strong> on GitHub by clicking the "Fork" button at the top right of the <a href="https://github.com/zhyan0603/GPUMDkit" target="_blank" rel="noopener">repository page</a>.</p>
+</li>
+<li>
+<p><strong>Clone your fork</strong> to your local machine:</p>
+</li>
+</ol>
+<div class="code"><div class="cap"><i></i><i></i><i></i><span>bash</span></div><pre><code>git clone https://github.com/YOUR_USERNAME/GPUMDkit.git
+cd GPUMDkit</code></pre><button class="copy-btn" data-copy-pre aria-label="Copy"><svg class="cp"><use href="#i-copy"/></svg><svg class="ok"><use href="#i-check"/></svg></button></div>
+<ol start="3">
+<li><strong>Set up the upstream remote</strong> to keep your fork in sync:
+   <div class="code"><div class="cap"><i></i><i></i><i></i><span>bash</span></div><pre><code>git remote add upstream https://github.com/zhyan0603/GPUMDkit.git</code></pre><button class="copy-btn" data-copy-pre aria-label="Copy"><svg class="cp"><use href="#i-copy"/></svg><svg class="ok"><use href="#i-check"/></svg></button></div></li>
+</ol>
+<h3 id="create-a-feature-branch">Create a Feature Branch</h3>
+<p>Create a new branch for your changes:</p>
+<div class="code"><div class="cap"><i></i><i></i><i></i><span>bash</span></div><pre><code># Create and checkout a new branch from dev
+git fetch upstream
+git checkout -b your-branch-name upstream/dev</code></pre><button class="copy-btn" data-copy-pre aria-label="Copy"><svg class="cp"><use href="#i-copy"/></svg><svg class="ok"><use href="#i-check"/></svg></button></div>
+<p>Name your branch as you prefer.</p>
+<h3 id="making-changes">Making Changes</h3>
+<p>The structure of <code>GPUMDkit</code> consists of:
+- <strong><code>gpumdkit.sh</code></strong>: Main entry point (Bash script) handling both interactive menu mode and command-line mode
+- <strong><code>install.sh</code></strong>: Installation script that sets up environment variables and shell configuration
+- <strong><code>Scripts/</code></strong>: Python and Bash implementation scripts organized by functionality
+  - <code>plt_scripts/</code>: Plotting scripts
+  - <code>calculators/</code>: Calculation utilities
+  - <code>format_conversion/</code>: Format conversion tools
+  - <code>workflow/</code>: Workflow automation
+  - <code>sample_structures/</code>: Structure sampling utilities
+  - <code>analyzer/</code>: Analysis tools
+  - <code>utils/</code>: Utility functions (including <code>completion.sh</code> for tab completion)
+- <strong><code>src/</code></strong>: Shell scripts containing menu functions for interactive mode
+  - <code>f1_format_conversions.sh</code>
+  - <code>f2_sample_structures.sh</code>
+  - <code>f3_workflows.sh</code>
+  - <code>f4_calculators.sh</code>
+  - <code>f5_analyzers.sh</code>
+  - <code>f6_plots.sh</code>
+  - <code>f7_utilities.sh</code>
+- <strong><code>skills/</code></strong>: Portable Agent Skills definition (<code>gpumdkit-skill/SKILL.md</code>) and on-demand references
+- <strong><code>docs/</code></strong>: Documentation files
+  - <code>tutorials/en/</code> and <code>tutorials/zh/</code>: Bilingual tutorial pages
+  - <code>manual-src/</code>: Sources of the manual page and <code>build.py</code>, which renders the tutorials
+  - <code>command_reference.tsv</code>: Machine-readable command reference
+  - <code>htmls/</code>: Generated tutorial pages (do not edit by hand)</p>
+<h4 id="interactive-mode-contributions">Interactive Mode Contributions</h4>
+<p>To add a new feature accessible through the interactive menu:</p>
+<ol>
+<li><strong>Create your implementation script</strong> in the appropriate <code>Scripts/</code> subdirectory:</li>
+</ol>
+<div class="code"><div class="cap"><i></i><i></i><i></i><span>bash</span></div><pre><code># Example: Add a new format conversion script
+touch Scripts/format_conversion/new_converter.py</code></pre><button class="copy-btn" data-copy-pre aria-label="Copy"><svg class="cp"><use href="#i-copy"/></svg><svg class="ok"><use href="#i-check"/></svg></button></div>
+<ol start="2">
+<li>
+<p><strong>Implement your functionality</strong> following the modularity guidelines (accept parameters, avoid hardcoding).</p>
+</li>
+<li>
+<p><strong>Add a wrapper function</strong> in the corresponding <code>src/</code> file:
+   <div class="code"><div class="cap"><i></i><i></i><i></i><span>bash</span></div><pre><code># Example: Edit src/f1_format_conversions.sh
+vim src/f1_format_conversions.sh</code></pre><button class="copy-btn" data-copy-pre aria-label="Copy"><svg class="cp"><use href="#i-copy"/></svg><svg class="ok"><use href="#i-check"/></svg></button></div></p>
+</li>
+</ol>
+<p>Add a new function:
+   <div class="code"><div class="cap"><i></i><i></i><i></i><span>bash</span></div><pre><code>function f111_new_converter(){
+echo " &gt;-------------------------------------------------&lt;"
+echo " | Calling the script in Scripts/format_conversion |"
+echo " | Script: new_converter.py                        |"
+echo " | Developer: Your Name (your@email.com)           |"
+echo " &gt;-------------------------------------------------&lt;"
+echo " Input &lt;required_param1&gt; &lt;required_param2&gt;"
+echo " Example: input.xyz output.lmp"
+echo " ------------&gt;&gt;"
+read_menu_array converter_args || return 1
+echo " ---------------------------------------------------"
+python ${GPUMDkit_path}/Scripts/format_conversion/new_converter.py "${converter_args[@]}"
+echo " Code path: ${GPUMDkit_path}/Scripts/format_conversion/new_converter.py"
+echo " ---------------------------------------------------"
+}</code></pre><button class="copy-btn" data-copy-pre aria-label="Copy"><svg class="cp"><use href="#i-copy"/></svg><svg class="ok"><use href="#i-check"/></svg></button></div></p>
+<ol start="4">
+<li>
+<p><strong>Update the menu display</strong> in <code>gpumdkit.sh</code>:
+   <div class="code"><div class="cap"><i></i><i></i><i></i><span>bash</span></div><pre><code># Find the menu() function and update it if needed
+# Find the valid_menu_choices array and add your new choice number
+valid_menu_choices=(
+    "0" "1" "101" "102" "103" "104" "105" "106" "107" "108" "109" "110" "111"  # Added "111"
+    # ... rest of choices
+)</code></pre><button class="copy-btn" data-copy-pre aria-label="Copy"><svg class="cp"><use href="#i-copy"/></svg><svg class="ok"><use href="#i-check"/></svg></button></div></p>
+</li>
+<li>
+<p><strong>Add the case statement</strong> in <code>gpumdkit.sh</code>:
+   <div class="code"><div class="cap"><i></i><i></i><i></i><span>bash</span></div><pre><code># In the main() function, find the appropriate case statement
+case "${choice:0:1}" in
+    # ...
+    "1")
+        source ${GPUMDkit_path}/src/f1_format_conversions.sh
+        case $choice in
+            "1") f1_format_conversion ;;
+             "101") f101_out2xyz ;;
+             # ... existing cases ...
+             "111") f111_new_converter ;;  # Add your case
+        esac ;;
+    # ...
+esac</code></pre><button class="copy-btn" data-copy-pre aria-label="Copy"><svg class="cp"><use href="#i-copy"/></svg><svg class="ok"><use href="#i-check"/></svg></button></div></p>
+</li>
+</ol>
+<h4 id="command-line-mode-contributions">Command-Line Mode Contributions</h4>
+<p>To add a new command-line flag or subcommand:</p>
+<ol>
+<li>
+<p><strong>Create your implementation script</strong> in the appropriate <code>Scripts/</code> subdirectory:
+   <div class="code"><div class="cap"><i></i><i></i><i></i><span>bash</span></div><pre><code># Example: Add a new analyzer script
+touch Scripts/analyzer/analyze_bonds.py</code></pre><button class="copy-btn" data-copy-pre aria-label="Copy"><svg class="cp"><use href="#i-copy"/></svg><svg class="ok"><use href="#i-check"/></svg></button></div></p>
+</li>
+<li>
+<p><strong>Implement your functionality</strong> with clear parameter requirements. Python scripts
+   should own detailed argument parsing, help text, type conversion, file checks, and
+   user-facing error messages:
+   <div class="code"><div class="cap"><i></i><i></i><i></i><span>python</span></div><pre><code># Example: Scripts/analyzer/analyze_bonds.py
+import sys
+
+args = sys.argv[1:]
+if len(args) &lt; 2 or args[0] in ("-h", "--help"):
+    print(" Usage: gpumdkit.sh -analyze_bonds &lt;input.xyz&gt; &lt;cutoff_distance&gt;")
+    print("    or: python3 analyze_bonds.py &lt;input.xyz&gt; &lt;cutoff_distance&gt;")
+    print("")
+    print(" Arguments:")
+    print("   input.xyz        Input extxyz file")
+    print("   cutoff_distance  Bond cutoff distance")
+    print("")
+    print(" Example: gpumdkit.sh -analyze_bonds structure.xyz 3.0")
+    print("")
+    sys.exit(0 if args and args[0] in ("-h", "--help") else 1)
+
+input_file = args[0]
+cutoff = float(args[1])
+
+# Your implementation here</code></pre><button class="copy-btn" data-copy-pre aria-label="Copy"><svg class="cp"><use href="#i-copy"/></svg><svg class="ok"><use href="#i-check"/></svg></button></div></p>
+</li>
+</ol>
+<blockquote>
+<p><strong>Note</strong>: GPUMDkit Python scripts are designed to run directly (not imported as modules).
+You may use a <code>main()</code> function with <code>if __name__ == "__main__":</code> guard if you prefer,
+but it is not required. Most existing scripts execute at module level.</p>
+</blockquote>
+<ol start="3">
+<li>
+<p><strong>Add the command-line flag handler</strong> in <code>gpumdkit.sh</code>. Keep this layer as a
+   lightweight router. Detailed parameter validation should stay in the Python script,
+   not in the main shell entry point.
+   <div class="code"><div class="cap"><i></i><i></i><i></i><span>bash</span></div><pre><code># Find the command-line parsing section (the large "case $1 in" block)
+# Add your new flag in the appropriate location
+
+case $1 in
+    # ... existing cases ...
+    -analyze_bonds)
+        run_python_script "Your Name (your@email.com)" "${analyzer_path}/analyze_bonds.py" "${@:2}" ;;
+    # ... rest of cases ...
+esac</code></pre><button class="copy-btn" data-copy-pre aria-label="Copy"><svg class="cp"><use href="#i-copy"/></svg><svg class="ok"><use href="#i-check"/></svg></button></div></p>
+</li>
+<li>
+<p><strong>Update the help information</strong> in <code>gpumdkit.sh</code>:
+   <div class="code"><div class="cap"><i></i><i></i><i></i><span>bash</span></div><pre><code># Find the help_info_table() function and add your command
+function help_info_table(){
+    # ... ANALYSIS section ...
+    echo " | -analyze_bonds Bond length analysis           |                                                       |"
+    # ... rest of help table ...
+}</code></pre><button class="copy-btn" data-copy-pre aria-label="Copy"><svg class="cp"><use href="#i-copy"/></svg><svg class="ok"><use href="#i-check"/></svg></button></div></p>
+</li>
+</ol>
+<h4 id="updating-tab-completion">Updating Tab Completion</h4>
+<p>When adding new command-line flags, update the tab completion script:</p>
+<div class="code"><div class="cap"><i></i><i></i><i></i><span>bash</span></div><pre><code># Edit Scripts/utils/completion.sh
+vim Scripts/utils/completion.sh</code></pre><button class="copy-btn" data-copy-pre aria-label="Copy"><svg class="cp"><use href="#i-copy"/></svg><svg class="ok"><use href="#i-check"/></svg></button></div>
+<p>Add your new flag to the <code>opts</code> variable:
+<div class="code"><div class="cap"><i></i><i></i><i></i><span>bash</span></div><pre><code># Find the line with local opts=...
+local opts="-h -help -update -U -clean -time -plt -calc ... -your_new_flag ..."
+#                                                        Add your flag here</code></pre><button class="copy-btn" data-copy-pre aria-label="Copy"><svg class="cp"><use href="#i-copy"/></svg><svg class="ok"><use href="#i-check"/></svg></button></div></p>
+<p>If your flag requires file arguments, add it to the existing file-completion case:
+<div class="code"><div class="cap"><i></i><i></i><i></i><span>bash</span></div><pre><code># Find the case for file-requiring flags and add yours with |
+-out2xyz|-out2exyz|-...|-your_new_flag)
+    COMPREPLY=($(compgen -f -- "$cur")) ;;</code></pre><button class="copy-btn" data-copy-pre aria-label="Copy"><svg class="cp"><use href="#i-copy"/></svg><svg class="ok"><use href="#i-check"/></svg></button></div></p>
+<p>If your flag accepts secondary options (like <code>-plt</code> or <code>-calc</code>), add a new case:
+<div class="code"><div class="cap"><i></i><i></i><i></i><span>bash</span></div><pre><code>case "$prev" in
+    # ... existing cases ...
+    -your_new_flag)
+        COMPREPLY=($(compgen -W "option1 option2 option3" -- "$cur")) ;;
+    # ... rest of cases ...
+esac</code></pre><button class="copy-btn" data-copy-pre aria-label="Copy"><svg class="cp"><use href="#i-copy"/></svg><svg class="ok"><use href="#i-check"/></svg></button></div></p>
+<h3 id="code-style-and-best-practices">Code Style and Best Practices</h3>
+<ul>
+<li><strong>Shell Scripts</strong>:</li>
+<li>Use <code>${variable}</code> for variable expansion</li>
+<li>Use <code>[ ! -z "$var" ]</code> for shell control flow and broad dispatch checks (project convention)</li>
+<li>Interactive functions should follow the banner format:
+    <div class="code"><div class="cap"><i></i><i></i><i></i><span>bash</span></div><pre><code>echo " &gt;-------------------------------------------------&lt;"
+echo " | Calling the script in Scripts/&lt;category&gt;        |"
+echo " | Script: &lt;script_name&gt;.py                        |"
+echo " | Developer: &lt;Name&gt; (&lt;email&gt;)                     |"
+echo " &gt;-------------------------------------------------&lt;"</code></pre><button class="copy-btn" data-copy-pre aria-label="Copy"><svg class="cp"><use href="#i-copy"/></svg><svg class="ok"><use href="#i-check"/></svg></button></div></li>
+<li>Use <code>read_menu_choice varname || return 1</code> or <code>read_menu_array varname || return 1</code> for interactive input, then pass arrays with <code>"${varname[@]}"</code></li>
+<li>
+<p>Shell scripts in <code>src/</code> should start with a file header block:
+    <div class="code"><div class="cap"><i></i><i></i><i></i><span>bash</span></div><pre><code># ============================================================
+# GPUMDkit &lt;module name&gt; module
+# Repository: https://github.com/zhyan0603/GPUMDkit
+# Author: &lt;Name&gt; (&lt;email&gt;)
+# ============================================================</code></pre><button class="copy-btn" data-copy-pre aria-label="Copy"><svg class="cp"><use href="#i-copy"/></svg><svg class="ok"><use href="#i-check"/></svg></button></div></p>
+</li>
+<li>
+<p><strong>Python Scripts</strong>:</p>
+</li>
+<li>Write clear, maintainable code</li>
+<li>Use meaningful variable names</li>
+<li>Use <code>args = sys.argv[1:]</code> for simple positional argument parsing, or <code>argparse</code> for complex option sets</li>
+<li>Provide clear usage messages with leading-space prints such as <code>print(" Usage: ...")</code> and <code>print(" Example: ...")</code></li>
+<li>Put help and missing-argument checks before heavy optional imports so <code>-h</code> works without optional packages installed</li>
+<li>If your script uses heavy/special packages (<code>NepTrain</code>, <code>calorine</code>, <code>dpdata</code>), add a
+    <code>print_dependency_notice()</code> function to inform users about citation recommendations</li>
+</ul>
+<h3 id="testing-your-changes">Testing Your Changes</h3>
+<p>Before submitting your contribution, run the relevant validation commands:</p>
+<div class="code"><div class="cap"><i></i><i></i><i></i><span>bash</span></div><pre><code># Shell syntax checks (always run these)
+bash -n gpumdkit.sh
+find src Scripts -name '*.sh' -exec bash -n {} +
+
+# Python syntax checks (for modified Python files)
+python3 -m py_compile path/to/modified_script.py
+
+# Rebuild the web pages (if you modified documentation)
+python3 docs/manual-src/build.py
+
+# Check for trailing whitespace issues
+git diff --check</code></pre><button class="copy-btn" data-copy-pre aria-label="Copy"><svg class="cp"><use href="#i-copy"/></svg><svg class="ok"><use href="#i-check"/></svg></button></div>
+<p>Then test functionality:</p>
+<ol>
+<li>
+<p><strong>Test interactive mode</strong> (if applicable):
+   <div class="code"><div class="cap"><i></i><i></i><i></i><span>bash</span></div><pre><code>gpumdkit.sh
+# Navigate to your new feature and test it thoroughly</code></pre><button class="copy-btn" data-copy-pre aria-label="Copy"><svg class="cp"><use href="#i-copy"/></svg><svg class="ok"><use href="#i-check"/></svg></button></div></p>
+</li>
+<li>
+<p><strong>Test command-line mode</strong> (if applicable):
+   <div class="code"><div class="cap"><i></i><i></i><i></i><span>bash</span></div><pre><code>gpumdkit.sh -your_new_flag [arguments]
+gpumdkit.sh -your_new_flag -h  # Test help message</code></pre><button class="copy-btn" data-copy-pre aria-label="Copy"><svg class="cp"><use href="#i-copy"/></svg><svg class="ok"><use href="#i-check"/></svg></button></div></p>
+</li>
+<li>
+<p><strong>Test tab completion</strong> (if you modified <code>completion.sh</code>):
+   <div class="code"><div class="cap"><i></i><i></i><i></i><span>bash</span></div><pre><code>source Scripts/utils/completion.sh
+gpumdkit.sh -&lt;TAB&gt;  # Should show your new flag</code></pre><button class="copy-btn" data-copy-pre aria-label="Copy"><svg class="cp"><use href="#i-copy"/></svg><svg class="ok"><use href="#i-check"/></svg></button></div></p>
+</li>
+<li>
+<p><strong>Test with various inputs</strong>:
+   - Test with typical inputs
+   - Test with edge cases (empty files, large files, etc.)
+   - Test error handling (missing files, invalid parameters)</p>
+</li>
+<li>
+<p><strong>Verify no regressions</strong>: Ensure existing functionality still works correctly.</p>
+</li>
+</ol>
+<h3 id="commit-messages">Commit Messages</h3>
+<p>Write clear, descriptive commit messages that explain what you changed. There are no strict format requirements - just make sure your message is understandable.</p>
+<h3 id="push-and-open-a-pull-request">Push and Open a Pull Request</h3>
+<ol>
+<li>
+<p><strong>Commit your changes</strong>:
+   <div class="code"><div class="cap"><i></i><i></i><i></i><span>bash</span></div><pre><code>git add .
+git commit -m "your descriptive message"</code></pre><button class="copy-btn" data-copy-pre aria-label="Copy"><svg class="cp"><use href="#i-copy"/></svg><svg class="ok"><use href="#i-check"/></svg></button></div></p>
+</li>
+<li>
+<p><strong>Keep your branch updated</strong> with the latest <code>dev</code> branch:
+   <div class="code"><div class="cap"><i></i><i></i><i></i><span>bash</span></div><pre><code>git fetch upstream
+git rebase upstream/dev</code></pre><button class="copy-btn" data-copy-pre aria-label="Copy"><svg class="cp"><use href="#i-copy"/></svg><svg class="ok"><use href="#i-check"/></svg></button></div></p>
+</li>
+<li>
+<p><strong>Push your branch</strong> to your fork:
+   <div class="code"><div class="cap"><i></i><i></i><i></i><span>bash</span></div><pre><code>git push origin your-branch-name</code></pre><button class="copy-btn" data-copy-pre aria-label="Copy"><svg class="cp"><use href="#i-copy"/></svg><svg class="ok"><use href="#i-check"/></svg></button></div></p>
+</li>
+<li>
+<p><strong>Open a Pull Request</strong>:
+   - Go to the <a href="https://github.com/zhyan0603/GPUMDkit" target="_blank" rel="noopener">GPUMDkit repository</a>
+   - Click "Pull Requests" → "New Pull Request"
+   - Set the base branch to <code>dev</code> for code review
+   - Set the compare branch to your feature branch
+   - Fill in the PR description with:</p>
+<ul>
+<li><strong>Title</strong>: Brief description of changes</li>
+<li><strong>Description</strong>: Detailed explanation of what changed and why</li>
+<li><strong>Testing</strong>: Describe how you tested the changes</li>
+</ul>
+</li>
+<li>
+<p><strong>Respond to review feedback</strong>:
+   - Be open to suggestions and constructive criticism
+   - Make requested changes promptly
+   - Push additional commits to your branch (they'll automatically appear in the PR)</p>
+</li>
+<li>
+<p><strong>After approval</strong>: A maintainer will merge your PR.</p>
+</li>
+</ol>
+<hr />
+<h2 id="questions-or-need-help">Questions or Need Help?</h2>
+<p>If you have questions about contributing or need help with your contribution:</p>
+<ul>
+<li><strong>Open a discussion</strong>: Use <a href="https://github.com/zhyan0603/GPUMDkit/discussions" target="_blank" rel="noopener">GitHub Discussions</a> for general questions</li>
+<li><strong>Ask in an issue</strong>: Comment on related issues for specific questions</li>
+<li><strong>Contact maintainers</strong>: Reach out to the core developers listed in the README</li>
+</ul>
+<hr />
+<p>Thank you again for contributing to <code>GPUMDkit</code>! Your efforts help make this toolkit better for the entire GPUMD and NEP community.</p><div class="doc-pn"><a href="command_reference.html"><small>Previous</small><b>Command Reference</b></a><span></span></div><a class="doc-edit" href="https://github.com/zhyan0603/GPUMDkit/edit/main/docs/tutorials/en/contributing_to_gpumdkit.md" target="_blank" rel="noopener">Edit this page</a></article><nav class="doc-toc" aria-label="On this page"><h6>On this page</h6><a href="#table-of-contents" class="l2">Table of Contents</a><a href="#development-restrictions-and-guidelines" class="l2">Development Restrictions and Guidelines</a><a href="#language-requirements" class="l3">Language Requirements</a><a href="#modularity-and-reusability" class="l3">Modularity and Reusability</a><a href="#code-style" class="l3">Code Style</a><a href="#documentation" class="l3">Documentation</a><a href="#update-log" class="l3">Update Log</a><a href="#reporting-bugs" class="l2">Reporting Bugs</a><a href="#suggesting-features" class="l2">Suggesting Features</a><a href="#contributing-code" class="l2">Contributing Code</a><a href="#fork-and-clone-the-repository" class="l3">Fork and Clone the Repository</a><a href="#create-a-feature-branch" class="l3">Create a Feature Branch</a><a href="#making-changes" class="l3">Making Changes</a><a href="#code-style-and-best-practices" class="l3">Code Style and Best Practices</a><a href="#testing-your-changes" class="l3">Testing Your Changes</a><a href="#commit-messages" class="l3">Commit Messages</a><a href="#push-and-open-a-pull-request" class="l3">Push and Open a Pull Request</a><a href="#questions-or-need-help" class="l2">Questions or Need Help?</a></nav></div>
+</main>
+
+<!-- ======================================================= footer -->
+<footer class="footer">
+  <div class="container">
+    <div class="footer-grid">
+      <div>
+        <a href="../../index.html" class="brand"><svg><use href="#i-logo"/></svg><span><span class="gpumd">GPUMD</span><span class="kit">kit</span></span></a>
+        <p data-i18n="foot.about">A user-friendly toolkit for the GPUMD and NEP programs, built by the GPUMDkit team and contributors.</p>
+      </div>
+      <div><h5 data-i18n="foot.links">Quick links</h5><ul>
+        <li><a href="../../manual.html" data-doc="index" data-i18n="nav.docs">Docs</a></li>
+        <li><a href="../../gallery.html" data-i18n="nav.gallery">Gallery</a></li>
+        <li><a href="../../publications.html" data-i18n="nav.pubs">Publications</a></li>
+        <li><a href="https://github.com/zhyan0603/GPUMDkit/archive/refs/heads/main.zip" data-i18n="foot.dl">Download</a></li></ul></div>
+      <div><h5 data-i18n="foot.gpumd">GPUMD project</h5><ul>
+        <li><a href="https://github.com/brucefan1983/GPUMD" target="_blank" rel="noopener">GPUMD repository</a></li>
+        <li><a href="https://gpumd.org/" target="_blank" rel="noopener">GPUMD documentation</a></li>
+        <li><a href="https://github.com/brucefan1983/GPUMD-Tutorials" target="_blank" rel="noopener">GPUMD-Tutorials</a></li>
+        <li><a href="https://github.com/brucefan1983/GPUMD/tree/master/tools" target="_blank" rel="noopener">GPUMD-Tools</a></li></ul></div>
+      <div><h5 data-i18n="foot.eco">GPUMD ecosystem</h5><ul>
+        <li><a href="https://gitlab.com/brucefan1983/nep-data" target="_blank" rel="noopener">nep-data</a></li>
+        <li><a href="https://gitlab.com/materials-modeling/calorine" target="_blank" rel="noopener">calorine</a></li>
+        <li><a href="https://github.com/aboys-cb/NepTrainKit" target="_blank" rel="noopener">NepTrainKit</a></li>
+        <li><a href="https://github.com/Jonsnow-willow/GPUMD-Wizard" target="_blank" rel="noopener">GPUMD-Wizard</a></li></ul></div>
+    </div>
+    <div class="footer-bottom">
+      <span data-i18n="foot.copy">© 2026 GPUMDkit Team. Released under GPL-3.0.</span>
+      <span><span id="busuanzi_container_site_pv"><span data-i18n="foot.views">Views</span>: <span id="busuanzi_value_site_pv"></span></span> · <span id="busuanzi_container_site_uv"><span data-i18n="foot.visitors">Visitors</span>: <span id="busuanzi_value_site_uv"></span></span></span>
+    </div>
+  </div>
+</footer>
+
+<script src="../../assets/js/gk-data.js"></script>
+<script src="../../assets/js/gk-docs.js"></script>
+<script src="../../assets/js/gk-i18n.js"></script>
+<script src="../../assets/js/gk-core.js"></script>
+<script src="../../assets/js/gk-doc.js"></script>
+<script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+</body>
+</html>

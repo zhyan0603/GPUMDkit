@@ -3,7 +3,7 @@
 GPUMDkit: A User-Friendly Toolkit for GPUMD and NEP
 Repository: https://github.com/zhyan0603/GPUMDkit
 Citation: Z. Yan et al., GPUMDkit: A User-Friendly Toolkit for GPUMD and NEP,
-          MGE Advances, 2026, e70074 (https://doi.org/10.1002/mgea.70074)
+          MGE Advances, 2026, 4, e70074 (https://doi.org/10.1002/mgea.70074)
 =============================================================================
 Script:     plt_arrhenius_d.py
 Category:   Plot Scripts
@@ -111,7 +111,7 @@ if len(raw_temps) > 0:
     Ea_all, intercept_all, slope_all, r_all = fit_arrhenius(temps, D_alls)
     
     if Ea_all is not None:
-        print(f"\nActivation Energy: {Ea_all:.3f} eV")
+        print(f"\nActivation Energy: {Ea_all:.3f} eV, R2 = {r_all ** 2:.4f}")
         
         # Prepare data for plotting
         x_min, x_max = 1000/np.max(temps), 1000/np.min(temps)

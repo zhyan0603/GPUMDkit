@@ -3,20 +3,22 @@
 GPUMDkit: A User-Friendly Toolkit for GPUMD and NEP
 Repository: https://github.com/zhyan0603/GPUMDkit
 Citation: Z. Yan et al., GPUMDkit: A User-Friendly Toolkit for GPUMD and NEP,
-          MGE Advances, 2026, e70074 (https://doi.org/10.1002/mgea.70074)
+          MGE Advances, 2026, 4, e70074 (https://doi.org/10.1002/mgea.70074)
 =============================================================================
 Script:     calc_averaged_structure.py
 Category:   Calculator Scripts
 Purpose:    Calculate and save the averaged structure from trajectory frames
-            using the ferrodispcalc package.
-Usage:      python calc_averaged_structure.py -i <movie.xyz> -o <output.xyz> [options]
+            using ASE and NumPy.
+Usage:      gpumdkit.sh -calc avg-struct [options]
+            python calc_averaged_structure.py -i <movie.xyz> -o <output.xyz> [options]
+Example:    gpumdkit.sh -calc avg-struct -i movie.xyz -l 0.2 -o averaged_structure.xyz
 Arguments:
   -i, --input   Input trajectory file (default: movie.xyz)
   -s            Start index
   -t            End index
   -p            Step (process every p-th frame)
   -l            Fraction or number of last frames to average
-  -o, --output  Output averaged structure file (required)
+  -o, --output  Output averaged structure file (default: averaged_structure.xyz)
 Output:
   Averaged structure in extxyz format
 Author:     Denan LI (lidenan@westlake.edu.cn)
@@ -24,10 +26,29 @@ Last-modified: 2026-05-16
 =============================================================================
 """
 
+import sys
+
+if __name__ == "__main__" and (
+    len(sys.argv) == 1 or (len(sys.argv) > 1 and sys.argv[1] in ("-h", "--help"))
+):
+    print(" Usage: gpumdkit.sh -calc avg-struct -i <movie.xyz> -o <output.xyz> [options]")
+    print("    or: python calc_averaged_structure.py -i <movie.xyz> -o <output.xyz> [options]")
+    print("")
+    print(" Arguments:")
+    print("   -i, --input   Input trajectory file")
+    print("   -o, --output  Output averaged structure file")
+    print("   -s, --start   Slice start index")
+    print("   -t, --stop    Slice stop index")
+    print("   -p, --step    Slice step")
+    print("   -l, --last    Use the last frames; integer N or 0 < ratio < 1")
+    print("")
+    print(" Example: gpumdkit.sh -calc avg-struct -i movie.xyz -l 0.2 -o averaged_structure.xyz")
+    print("")
+    sys.exit(0 if len(sys.argv) > 1 and sys.argv[1] in ("-h", "--help") else 1)
+
 from ase.io import read, write
 import argparse
 import math
-import sys
 from ase import Atoms
 import numpy as np
 
@@ -109,6 +130,7 @@ def parse_args():
         epilog=(
             "Examples :\n"
             "1. Use all frames:\n"
+            ">>  gpumdkit.sh -calc avg-struct -i movie.xyz -o averaged_structure.xyz\n"
             ">>  python calc_averaged_structure.py -i movie.xyz -o averaged_structure.xyz\n"
             "2. Average every 2 frames from index 100 to 500:\n"
             ">>  python calc_averaged_structure.py -i movie.xyz -s 100 -t 500 -p 2 -o avg.xyz\n"

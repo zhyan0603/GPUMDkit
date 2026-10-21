@@ -3,12 +3,12 @@
 GPUMDkit: A User-Friendly Toolkit for GPUMD and NEP
 Repository: https://github.com/zhyan0603/GPUMDkit
 Citation: Z. Yan et al., GPUMDkit: A User-Friendly Toolkit for GPUMD and NEP,
-          MGE Advances, 2026, e70074 (https://doi.org/10.1002/mgea.70074)
+          MGE Advances, 2026, 4, e70074 (https://doi.org/10.1002/mgea.70074)
 =============================================================================
 Script:     plt_arrhenius_sigma.py
 Category:   Plot Scripts
 Purpose:    Calculate ionic conductivity from MSD and thermo data in
-            temperature folders, generate an Arrhenius plot (ln(sigma*T)
+            temperature folders, generate an Arrhenius plot (log10(sigma*T)
             vs 1000/T), and extract activation energy.
 Usage:      gpumdkit.sh -plt sigma [save]
             python plt_arrhenius_sigma.py [save]
@@ -210,7 +210,6 @@ if len(raw_group_Ts) > 0:
     # Create figure with PRL style
     fig, ax = plt.subplots(figsize=(4.3, 3.8))
 
-    # Calculate activation energy using the new function
     Ea, intercept, slope, r_value = fit_arrhenius(group_Ts, group_sigmaTs)
 
     # Prepare data for plotting
@@ -226,7 +225,7 @@ if len(raw_group_Ts) > 0:
 
     # Set axis labels with proper formatting
     ax.set_xlabel('1000/T (1/K)', labelpad=7)
-    ax.set_ylabel(r'ln($\sigma$T) (S$\cdot$K/cm)')
+    ax.set_ylabel(r'log10($\sigma$T) (S$\cdot$K/cm)')
 
     # Add legend
     ax.legend(loc='lower left', frameon=False, fontsize=11)
@@ -242,7 +241,7 @@ if len(raw_group_Ts) > 0:
     ax.yaxis.set_major_formatter(ticker.FormatStrFormatter('%.1f'))
 
     # Print results
-    print(f"\n{cell}, Ea: {Ea:.3f} eV")
+    print(f"\n{cell}, Ea: {Ea:.3f} eV, R2 = {r_value ** 2:.4f}")
 
     # Calculate conductivity at 300K
     target_T = 300

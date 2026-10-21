@@ -1,0 +1,564 @@
+<div align="center">
+  <h1>🔍 Analyzer Scripts</h1>
+  <p style="text-align: justify;">Analyzer scripts provide structure statistics, distance checks, filters, composition analysis, outlier detection, and time estimation for extxyz datasets.</p>
+</div>
+
+## What it does
+
+This module helps you inspect, filter, and validate structure datasets. You can check composition, analyze property ranges, detect short contacts, filter structures by various criteria, find outliers in NEP training data, and estimate remaining simulation time.
+
+## Before you start
+
+**Script location:** `Scripts/analyzer/`
+
+Make sure GPUMDkit is installed. See [Quick Start](quick_start.md) for installation instructions.
+
+## Overview
+
+| Task | Command | Purpose |
+|------|---------|---------|
+| Composition | `gpumdkit.sh -analyze_comp train.xyz` | Group structures by chemical composition |
+| Chemical species | `gpumdkit.sh -chem_species train.xyz` | List species in a file |
+| Property range | `gpumdkit.sh -range train.xyz force` | Inspect energy/force/virial range |
+| Energy reference shifting | `gpumdkit.sh -shift_energy` | Interactively shift extxyz energy references |
+| Minimum distance | `gpumdkit.sh -min_dist dump.xyz` | Fast distance check without PBC |
+| Minimum distance with PBC | `gpumdkit.sh -min_dist_pbc dump.xyz` | Accurate distance check with PBC |
+| Charge balance | `gpumdkit.sh -cbc train.xyz` | Oxidation-state balance check |
+| Distance filter | `gpumdkit.sh -filter_dist_pbc dump.xyz 1.0` | Remove structures with short contacts |
+| Box filter | `gpumdkit.sh -filter_box dump.xyz 13` | Remove structures with too-large box edges |
+| Property filter | `gpumdkit.sh -filter_value train.xyz force 20` | Filter by energy/force/virial threshold |
+| Pair-distance range | `gpumdkit.sh -filter_range dump.xyz Li Li 1.8 2.0` | Extract structures by pair distance |
+| Outlier detection | Menu 502 | Find high-RMSE structures in training set |
+| Probability density | `gpumdkit.sh -pda <ref> <traj> <element> <interval>` | 3D probability density for diffusion channels |
+| GPUMD time | `gpumdkit.sh -time gpumd` | Estimate remaining GPUMD run time |
+| WPE GPUMD time | `gpumdkit.sh -time wpe` | Estimate remaining time for WPE-enabled GPUMD runs |
+| NEP time | `gpumdkit.sh -time nep` | Estimate remaining NEP training time |
+
+## Check before you filter
+
+Run a check such as `-min_dist_pbc` or `-range` before a `-filter_*` command, so you can see why structures would be removed. Use the PBC-aware distance check for periodic cells; the non-PBC version is only a quick comparison. The numbers in the examples below only illustrate the syntax: choose distance, box, and force thresholds for your own system and data.
+
+---|---|---|
+| Are periodic images relevant? | `gpumdkit.sh -min_dist_pbc <input.xyz>` | Use the PBC-aware route for periodic cells; the non-PBC route is only a fast comparison. |
+| Is a value unusually large or small? | `gpumdkit.sh -range <input.xyz> energy\|force\|virial` | The acceptable range depends on the target system and reference data. |
+| Are contacts too short? | `gpumdkit.sh -min_dist_pbc <input.xyz>` | Choose a distance threshold from the chemistry and purpose of the dataset. |
+| Which structures should be removed? | inspect the check result first, then `-filter_*` | Filtering thresholds are not universal defaults. |
+
+Numbers in the examples below demonstrate command syntax only. Do not treat a
+distance, box-edge, or force cutoff shown in an example as a recommended value
+for another material or workflow.
+
+---
+
+## A Worked Example
+
+The commands below were run on a small illustrative file, `train.xyz`: nine frames of a 16-atom Li cell, three of which have four Li atoms replaced by F, and one frame in which two atoms are only 0.4 Å apart (a typical "bad" structure from a failed MD step). The numbers belong to this toy file, not to a real dataset.
+
+**1. What is in the file?**
+
+```bash
+gpumdkit.sh -analyze_comp train.xyz
+```
+
+```text
+ Index    Compositions           N atoms      Count
+ ---------------------------------------------------
+ 1        Li16                   16           6
+ 2        Li12F4                 16           3
+ ---------------------------------------------------
+ Enter index to export (e.g., '1,2', '2-3', 'all'), or press Enter to skip:
+```
+
+The table counts frames per composition. The last line is an interactive prompt: type an index such as `2` to write the frames of that composition to a file, or press Enter to leave the file untouched.
+
+**2. How large are the labels?**
+
+```bash
+gpumdkit.sh -range train.xyz energy
+gpumdkit.sh -range train.xyz force
+```
+
+```text
+ Energy range: -30.400 to -25.400
+ Force range: 0.199 to 3.254
+```
+
+An energy of -25.4 eV in a set where the others are near -30.4 eV is a flag, and so is a maximum force of 3.25 eV/Å. Neither is an error by itself; look at the structures behind them.
+
+**3. Are any atoms too close?**
+
+```bash
+gpumdkit.sh -min_dist_pbc train.xyz
+```
+
+```text
+ Minimum interatomic distances (with PBC):
+ +---------------------------+
+ | Atom Pair |  Distance (Å) |
+ +---------------------------+
+ |   Li-Li   |     0.400     |
+ |   Li-F    |     2.447     |
+ |   F-F     |     2.776     |
+ +---------------------------+
+ Overall min_distance: 0.400 Å
+```
+
+A Li-Li distance of 0.4 Å is far below any physical bond length, so some frame contains overlapping atoms.
+
+**4. Remove them and keep a record of what was removed.**
+
+```bash
+gpumdkit.sh -filter_dist_pbc train.xyz 1.5
+```
+
+```text
+ Total structures processed: 9
+ Structures filtered out: 1
+ Structures retained: 8
+ Filtered structures saved to: filtered_train.xyz
+ Filtered-out structures saved to: filtered_out_train.xyz
+```
+
+The threshold `1.5` is only an example: choose one that fits the elements in your own system. Keep `filtered_out_train.xyz` and look at it before you discard the structures for good.
+
+**5. Check the result.**
+
+```bash
+gpumdkit.sh -min_dist_pbc filtered_train.xyz
+```
+
+Run the same checks again on the cleaned file before it goes into a training set.
+
+## Interactive Mode
+
+Run `gpumdkit.sh` and choose `5) Analyzer`. Most functions also have the command-line shortcuts listed in the overview table and in the sections below.
+
+<details markdown="1">
+<summary>Show the full menu</summary>
+
+```text
++------------------------------------------------------+
+|                    ANALYZER TOOLS                    |
++------------------------------------------------------+
+| 501) Analyze composition of extxyz                   |
+| 502) Find outliers of extxyz                         |
+| 503) Analyze chemical species of extxyz              |
+| 504) Check charge balance of extxyz                  |
+| 505) Analyze energy/force/virial range               |
+| 506) Filter structures by minimum distance           |
+| 507) Get minimum interatomic distance                |
+| 508) Probability density analysis                    |
+| 509) Shift energy reference interactively            |
++------------------------------------------------------+
+| 000) Return to the main menu                         |
++------------------------------------------------------+
+Input the function number:
+```
+
+</details>
+
+
+---
+
+## Composition Analysis
+
+`analyze_composition.py` analyzes the composition of your extxyz file and lets you export subsets.
+
+**What it does:** Groups structures by chemical composition and shows how many structures belong to each composition. You can export subsets by composition.
+
+**CLI mode:**
+
+```bash
+gpumdkit.sh -analyze_comp train.xyz
+```
+
+**Interactive mode:** Choose `501` from the analyzer menu.
+
+**Output example:**
+
+```text
+Index    Compositions           N atoms      Count
+---------------------------------------------------
+1        Li56O96Zr16La24        192          51
+---------------------------------------------------
+Enter index to export (e.g., '1,2', '2-3', 'all'), or press Enter to skip:
+```
+
+This is useful when `train.xyz` contains structures from different systems or different cell sizes. You can export a subset by composition from the interactive prompt.
+
+---
+
+## Chemical Species
+
+`analyze_chem_species.py` lists all unique chemical species in an extxyz file.
+
+**Input file:** `train.xyz` (extxyz format)
+
+```bash
+gpumdkit.sh -chem_species train.xyz
+```
+
+---
+
+## Property Range Analysis
+
+`energy_force_virial_analyzer.py` calculates and visualizes the range of properties from an extxyz file.
+
+**Input file:** `train.xyz` (extxyz format)
+
+**Supported properties:** `energy`, `force`, `virial`
+
+```bash
+gpumdkit.sh -range train.xyz force
+gpumdkit.sh -range train.xyz energy
+gpumdkit.sh -range train.xyz virial
+gpumdkit.sh -range train.xyz force hist    # Show histogram
+```
+
+**Output example:**
+
+```text
+Force range: 0.03210566767721861 to 9.230115912468435
+```
+
+With `hist` option:
+
+<div align="center">
+  <img src="../../Gallery/range_force.png" alt="Force range histogram" width="52%" />
+</div>
+
+---
+
+## Energy Reference Shifting
+
+`align_energy_reference.py` interactively shifts the `energy=` values in a
+multi-frame extxyz file. Atom lines and all other header fields are copied to
+the output file unchanged.
+
+Start the interface directly:
+
+```bash
+gpumdkit.sh -shift_energy
+```
+
+Or choose `5) Analyzer -> 509` from the main menu. The interface first shows
+the detected elements and `config_type` groups, then offers three modes:
+
+1. Reference-group alignment: align selected groups to the mean energy of a
+   reference group.
+2. Zero atomic baseline alignment: optimize a baseline for each group so its
+   shifted energies target zero.
+3. DFT-to-NEP alignment: calculate NEP energies and align the original DFT
+   energies to them.
+
+Modes 1 and 2 fit the baselines with a natural evolution strategy (NES)
+optimizer. Its default settings suit most datasets; advanced settings can be
+changed in the interface. The DFT-to-NEP mode requires the
+`calorine` package and a compatible NEP model file.
+
+---
+
+## Minimum Distance Checks
+
+### Without PBC (Fast)
+
+`get_min_dist.py` calculates minimum interatomic distances without considering periodic boundary conditions. Fast but may be inaccurate for periodic systems.
+
+**What it does:** Reports the minimum distance for each element pair across all frames, ignoring periodic boundary conditions. Elements are collected from the entire dataset in first-appearance order; pairs absent from a frame are skipped. The PBC version follows the same element-pair coverage.
+
+**CLI mode:**
+
+```bash
+gpumdkit.sh -min_dist dump.xyz
+```
+
+**Interactive mode:** Choose `507` from the analyzer menu.
+
+**Output example:**
+
+```text
++---------------------------+
+|   PBC ignored for speed   |
+| use -min_dist_pbc for PBC |
++---------------------------+
+Minimum interatomic distances:
++---------------------------+
+| Atom Pair |  Distance (Å) |
++---------------------------+
+|   Li-Li   |     1.696     |
+|   Li-O    |     1.587     |
+|   O-O     |     2.480     |
++---------------------------+
+Overall min_distance: 1.587 Å
+```
+
+**Notes:** Use this for a quick check. For periodic systems, prefer `-min_dist_pbc` for accurate results.
+
+### With PBC (Accurate)
+
+`get_min_dist_pbc.py` calculates minimum interatomic distances considering periodic boundary conditions.
+
+**What it does:** Reports the minimum distance between each pair of elements, accounting for periodic boundary conditions.
+
+**CLI mode:**
+
+```bash
+gpumdkit.sh -min_dist_pbc dump.xyz
+```
+
+**Interactive mode:** Choose `507` from the analyzer menu and answer `y` when asked whether to consider PBC.
+
+**Output example:**
+
+```text
+Minimum interatomic distances (with PBC):
++---------------------------+
+| Atom Pair |  Distance (Å) |
++---------------------------+
+|   Li-Li   |     1.696     |
+|   Li-O    |     1.587     |
+|   O-O     |     2.355     |
++---------------------------+
+Overall min_distance: 1.587 Å
+```
+
+---
+
+## Filtering Structures
+
+### Filter by Minimum Distance
+
+`filter_structures_by_distance_pbc.py` removes structures with any interatomic distance below a threshold.
+
+**Input file:** `dump.xyz` (extxyz format)
+
+```bash
+gpumdkit.sh -filter_dist_pbc dump.xyz 1.0
+```
+
+This removes structures with any interatomic distance below `1.0 Å` and writes the rest to `filtered_dump.xyz`.
+
+### Filter by Box Size
+
+`filter_exyz_by_box.py` filters structures by box-edge length.
+
+**Input file:** `dump.xyz` (extxyz format)
+
+```bash
+gpumdkit.sh -filter_box dump.xyz 13
+```
+
+This keeps structures whose box edges are all at most `13 Å` and writes them to `filtered_by_box.xyz`.
+
+### Filter by Property Value
+
+`filter_exyz_by_value.py` filters structures by energy, force, or virial threshold.
+
+**Input file:** `train.xyz` (extxyz format)
+
+**Supported properties:** `energy`, `force`, `virial`
+
+```bash
+gpumdkit.sh -filter_value train.xyz force 20
+gpumdkit.sh -filter_value train.xyz energy <max_energy>
+```
+
+A structure is kept when every value is at most the threshold: each force component in magnitude (eV/Å) for `force`, the total energy stored in the file (eV, not per atom) for `energy`, and each virial component for `virial`. Frames that do not store the chosen property cannot be checked and are kept; the script reports how many. The kept structures are written to `filtered.xyz`.
+
+### Filter by Pair-Distance Range
+
+`filter_dist_range.py` extracts structures where a specific element-pair distance falls within a given range.
+
+**Input file:** `dump.xyz` (extxyz format)
+
+```bash
+gpumdkit.sh -filter_range dump.xyz Li Li 1.8 2.0
+```
+
+This extracts structures where the Li-Li minimum distance is between `1.8 Å` and `2.0 Å`. Output: `filtered_Li_Li_1.8_2.0.xyz`.
+
+---
+
+## Charge Balance Check
+
+`charge_balance_check.py` checks the oxidation-state balance of structures.
+
+**Input file:** `train.xyz` (extxyz format)
+
+```bash
+gpumdkit.sh -cbc train.xyz
+```
+
+**Output files:**
+
+- `balanced.xyz` — structures with balanced charges
+- `unbalanced.xyz` — structures with unbalanced charges
+- `indices.txt` — indices of balanced structures
+
+This is intended for systems where common oxidation states are meaningful.
+
+---
+
+## Outlier Detection
+
+`find_outliers.py` finds outlier structures in NEP training data based on RMSE thresholds for energy, force, and stress.
+
+**Input files:** `energy_train.out`, `force_train.out`, `stress_train.out`, `train.xyz`
+
+These files are generated during NEP training. The script compares DFT vs NEP predictions and identifies structures with large errors.
+
+Structures with a `-1e6` missing-stress marker or a stress component whose absolute value exceeds `1e6` are excluded before RMSE calculation and are not written to either output dataset. If no valid structures remain, the script reports an error without writing outputs.
+
+```bash
+# Interactive mode
+gpumdkit.sh    # Select: 5) Analyzer → 502) Find outliers of extxyz
+```
+
+**Interactive prompts:**
+
+```text
+Enter energy RMSE threshold (meV/atom): 1
+Enter force RMSE threshold (meV/Å): 60
+Enter stress RMSE threshold (GPa): 0.03
+```
+
+**Output files:**
+
+- `selected.xyz` — structures exceeding the RMSE thresholds (outliers)
+- `remained.xyz` — structures within the thresholds
+- `selected_remained.png` — comparison plot
+
+**Use case:** After NEP training, use this to identify problematic structures that contribute most to the error. Remove or improve these structures to enhance the training set.
+
+---
+
+## Time Estimation
+
+### GPUMD Remaining Time
+
+`time_consuming_gpumd.sh` estimates the remaining time for a GPUMD simulation.
+
+**Input files:** `run.in`, `thermo.out` (in the current GPUMD working directory)
+
+```bash
+gpumdkit.sh -time gpumd
+```
+
+**Output example:**
+
+```text
+----------------- System Information ----------------
+total frames: 1050000
+-----------------------------------------------------
+Current Frame  Speed (steps/s)   Total Time       Time Left       Estimated End
+-------------   -------------   -------------   -------------   -----------------
+    13000          499.86         0h 35m 0s      0h 34m 34s    2025-12-27 18:12:04
+    14000          199.93        1h 27m 31s      1h 26m 21s    2025-12-27 19:03:56
+```
+
+### WPE-Enabled GPUMD Remaining Time
+
+`time_consuming_wpe.sh` estimates the remaining time for WPE-enabled GPUMD runs using buffered progress updates.
+
+**Input files:** `run.in` and `neighbor.out` or `thermo.out` (in the current GPUMD working directory)
+
+```bash
+gpumdkit.sh -time wpe
+```
+
+### NEP Remaining Time
+
+`time_consuming_nep.sh` estimates the remaining time for NEP training.
+
+**Input files:** `loss.out` (in the current NEP working directory)
+
+```bash
+gpumdkit.sh -time nep
+```
+
+**Output example:**
+
+```text
++-----------------+-----------+-----------------+---------------------+
+|       Step      | Time Diff |    Time Left    |    Finish Time      |
++-----------------+-----------+-----------------+---------------------+
+| 6700            | 1 s       | 0 h 15 m 33 s   | 2025-10-23 15:34:11 |
+| 6800            | 2 s       | 0 h 31 m 4 s    | 2025-10-23 15:49:44 |
+| 6900            | 2 s       | 0 h 31 m 2 s    | 2025-10-23 15:49:44 |
++-----------------+-----------+-----------------+---------------------+
+```
+
+---
+
+## Probability Density Analysis
+
+`probability_density_analysis.py` calculates 3D probability density of mobile ions for diffusion channel analysis.
+
+**Input files:** Reference structure (POSCAR), trajectory file (extxyz)
+
+**CLI mode:**
+
+```bash
+gpumdkit.sh -pda LLZO.vasp dump.xyz Li 0.25
+```
+
+**Arguments:**
+
+| Argument | Meaning |
+|----------|---------|
+| `LLZO.vasp` | Reference structure (POSCAR format) |
+| `dump.xyz` | Trajectory file (extxyz format) |
+| `Li` | Target mobile species |
+| `0.25` | Grid interval for the probability density (Å) |
+
+**Output:** `probability_density_0.25.vasp` — probability density grid in VASP format for visualization with VESTA or similar tools.
+
+**Visualization suggestions:**
+
+1. Open `probability_density_0.25.vasp` in VESTA
+2. Use "Edit → Data → Volumetric Data" to adjust isosurface levels
+3. Color the probability density by value to highlight preferred diffusion pathways
+4. Overlay with the crystal structure for context
+
+---
+
+## Example Workflows
+
+### Structure Quality Check
+
+```bash
+# 1. Check composition
+gpumdkit.sh -analyze_comp train.xyz
+
+# 2. Check energy/force range
+gpumdkit.sh -range train.xyz force hist
+
+# 3. Check minimum distances
+gpumdkit.sh -min_dist_pbc train.xyz
+
+# 4. Find outliers (after NEP training)
+# Interactive: 5) Analyzer → 502
+```
+
+### Structure Filtering Pipeline
+
+```bash
+# 1. Filter by minimum distance (writes filtered_dump.xyz)
+gpumdkit.sh -filter_dist_pbc dump.xyz 1.0
+
+# 2. Filter by box size (writes filtered_by_box.xyz)
+gpumdkit.sh -filter_box filtered_dump.xyz 13
+
+# 3. Filter by force threshold (writes filtered.xyz)
+gpumdkit.sh -filter_value filtered_by_box.xyz force 20
+```
+
+### Diffusion Channel Analysis
+
+```bash
+# 1. Calculate probability density
+gpumdkit.sh -pda LLZO.vasp dump.xyz Li 0.25
+
+# 2. Visualize with VESTA
+# Open probability_density_0.25.vasp
+```

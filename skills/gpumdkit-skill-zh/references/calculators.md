@@ -1,0 +1,349 @@
+# 计算器
+
+## 目录
+
+- 可用计算器
+- 命令参考
+- 常用工作流
+- 依赖
+
+## 可用计算器
+
+| 计算器 | 命令 | 描述 |
+|------------|---------|-------------|
+| 离子电导率 | `-calc ionic-cond` | 从 MSD 计算离子电导率 |
+| NEP 性质 | `-calc nep` | 使用 NEP 计算能量/力/应力 |
+| 描述符 | `-calc des` | 计算 NEP 描述符用于分析 |
+| DOAS | `-calc doas` | 原子态密度 |
+| NEB | `-calc neb` | 弹性带路径计算 |
+| 邻居列表 | `-calc nlist` | 构建邻居列表用于分析 |
+| 位移 | `-calc disp` | 计算原子位移 |
+| 平均结构 | `-calc avg-struct` | 轨迹的时间平均结构 |
+| 八面体倾斜 | `-calc oct-tilt` | 钙钛矿八面体倾斜角 |
+| 极化 | `-calc pol-abo3` | ABO3 局部极化 |
+| 最小化 | `-calc minimize` | 使用 NEP 进行结构弛豫 |
+| MSD | `-calc msd` | 从轨迹计算均方位移 |
+| XRD | `4 -> 413`（仅交互模式） | 从 extxyz 轨迹计算 X 射线衍射 |
+| 声子谱 | `4 -> 414`（仅交互模式） | 沿 `QPOINTS` 路径计算 NEP 声子谱 |
+
+## 命令参考
+
+### 离子电导率
+```bash
+# 从 MSD 数据计算离子电导率
+gpumdkit.sh -calc ionic-cond <element> <charge>
+
+# 示例：锂离子（Li+）
+gpumdkit.sh -calc ionic-cond Li 1
+
+# 示例：氧离子（O2-）
+gpumdkit.sh -calc ionic-cond O -2
+
+# 推荐的非交互式输入（当前目录）：
+# - msd.out（来自 GPUMD compute_msd，或 calc_msd.py 的前四列）
+# - thermo.out（用于温度和体积）
+# - model.xyz（用于离子数）
+# - run.in（可选；用于检测复制因子）
+```
+
+计算器读取第 1–4 列的时间和 `MSD_x/y/z`。`element` 参数用于计数离子，
+不选择 MSD 列；`all_groups` 输出需先提取目标组的时间和 MSD 列。电荷参数为
+以元电荷为单位的整数。结果为 Nernst–Einstein 电导率，不包含离子间位移关联。
+
+### NEP 性质预测
+```bash
+# 使用 NEP 模型计算性质
+gpumdkit.sh -calc nep <input.xyz> <output.xyz> <nep.txt>
+
+# 示例
+gpumdkit.sh -calc nep structures.xyz predictions.xyz nep.txt
+
+# 注意：先用 gpumdkit.sh -clean_xyz 清理输入以移除已有性质
+```
+
+### NEP 预测输出文件
+```bash
+# 为每个 frame 写出能量、力、应力和 virial 预测文件。
+# 输出后缀来自输入文件名（test.xyz -> *_test.out）。
+gpumdkit.sh -prediction <input.xyz> <nep.txt> [workers]
+
+# 默认单核
+gpumdkit.sh -prediction train.xyz nep.txt
+
+# 八个 CPU worker
+gpumdkit.sh -prediction train.xyz nep.txt 8
+```
+
+输出文件为当前目录中的 `energy_<input-stem>.out`、
+`force_<input-stem>.out`、`stress_<input-stem>.out` 和
+`virial_<input-stem>.out`。每行先写预测列，再写目标列。能量和 virial 单位为
+eV/atom，力为 eV/Angstrom，应力为 GPa。张量列使用 NEP 的
+`xx yy zz xy yz xz` 顺序，并遵循 NEP 输出文件的符号约定：`stress = virial / volume`，
+两者都以受压为正。输入 extxyz 的 `stress=` 字段符号相反（见 `nep-data.md`），与 NEP
+一样按 `virial = -stress * volume` 换算。如果只提供 stress 或 virial 中的一种，程序按此
+关系和相应单位换算自动推导另一种；
+只有两者都缺失时才写入 `-1e6` 哨兵值。energy 和 force 标签必须存在。计算过程中会显示
+`tqdm` 进度条。
+
+### DeepMD DPA 训练集预测
+```bash
+# 在当前目录写出 NEP 兼容的训练集预测文件。
+gpumdkit.sh -prediction_dpa <input.xyz> <dpa_model>
+```
+
+该命令通过 `deepmd.infer.DeepPot` 使用 DeepMD DPA 模型计算带标签的
+extended-XYZ 训练集，并写出 `energy_train.out`、`force_train.out`、
+`virial_train.out` 和 `stress_train.out`。输出先写预测值，再写目标值，
+需要 `deepmd-kit` 和 `numpy`。
+
+### 描述符
+```bash
+# 计算特定元素的 NEP 描述符
+gpumdkit.sh -calc des <input.xyz> <output.npy> <nep.txt> <element>
+
+# 示例
+gpumdkit.sh -calc des train.xyz descriptors.npy nep.txt Li
+
+# 可视化：gpumdkit.sh -plt des pca descriptors.npy
+# 或：gpumdkit.sh -plt des umap descriptors.npy
+```
+
+### 原子态密度（DOAS）
+```bash
+# 计算 DOAS
+gpumdkit.sh -calc doas <input.xyz> <nep.txt> <output.txt>
+
+# 示例
+gpumdkit.sh -calc doas structures.xyz nep.txt doas.out
+
+# 可视化：gpumdkit.sh -plt doas doas.out Li
+```
+
+### 均方位移
+```bash
+# 从轨迹计算 MSD
+gpumdkit.sh -calc msd <trajectory.xyz> <element> <dt_fs> [max_corr_steps]
+
+# 示例：Li，时间步长 10 fs
+gpumdkit.sh -calc msd dump.xyz Li 10
+
+# 输出：四列 msd.out：Time/ps、MSD_x、MSD_y、MSD_z
+# 该输出可用于：gpumdkit.sh -plt msd
+```
+
+GPUMD 原生的 `compute_msd` 写入另一种 `msd.out`。只选择一个分组时，它包含
+七列：时间、`MSD_x/y/z` 和 `SDC_x/y/z`；这种单分组格式是
+`gpumdkit.sh -plt sdc` 与 `gpumdkit.sh -plt msd_sdc` 所要求的。使用
+`all_groups` 或多个分组时，GPUMD 会追加其他分组的数据，因此不能假定每个
+`msd.out` 都有七列。独立的 `compute_sdc` 命令写入 `sdc.out`，该文件供
+`gpumdkit.sh -plt vac` 使用。
+
+使用固定晶胞、原子顺序一致的轨迹，并确保 `pos` 字段存储已核验的展开坐标。
+脚本读取 `pos` 和首帧晶胞，不读取独立的 `unwrapped_position` 属性。自动坐标
+判断不足以验证折回轨迹；按轴解包裹也不适用于一般倾斜或变化晶胞。
+命令覆盖当前目录的 `msd.out`。
+
+### X 射线衍射（仅交互模式）
+
+XRD 只通过交互式计算器菜单提供：
+
+```text
+gpumdkit.sh -> 4) Calculators -> 413) Calc XRD from extxyz trajectory
+```
+
+Python 页面依次询问 extxyz 轨迹、输出文件、单位为 Angstrom 的波长、
+`2theta` 最小值和最大值、覆盖该区间的 bins 数量、元素选择（`all` 或以
+逗号/空格分隔的元素符号）以及 CPU worker 数量（`0` 表示自动选择）。默认
+使用输入轨迹的 `Lattice`/`pbc`、全部原子、标准 LAMMPS 散射因子和
+Lorentz-polarization 因子。支持正交晶胞，不支持非正交晶胞。
+
+输出包含选定 `2theta` 区间内各 bin 中心处的平均 `Count` 和 `Count/Total`。
+实现只读取一次轨迹；晶胞不变时缓存 reciprocal mesh；按元素分组，并按帧顺序
+归并多 worker 线程。这些优化不会改变 XRD 公式或分箱区间。
+
+### 声子谱（仅交互模式）
+
+声子计算器通过交互式计算器菜单提供：
+
+```text
+gpumdkit.sh -> 4) Calculators -> 414) Calc phonon band structure
+```
+
+脚本依次询问原胞结构、兼容 Calorine 的 NEP 模型、line-mode `QPOINTS` 文件、
+对角超胞倍数、位移和输出文件。q 点路径、每段点数和标签均从提供的
+`QPOINTS` 文件读取，不应替换为硬编码路径。
+
+输出为单位为 THz 的逐行声子数据，默认通常写入 `phonon_NEP.dat`。该计算需要
+`ASE`、`Calorine`、`phonopy` 和 `NumPy`。
+
+### 邻居列表
+```bash
+# 为钙钛矿分析构建邻居列表
+gpumdkit.sh -calc nlist -i <input> -c <cutoff> -n <num_neighbors> -C <center_elements> -E <neighbor_elements>
+
+# 示例：BaTiO3 中的 Ti-O 邻居
+gpumdkit.sh -calc nlist -i model.xyz -c 4 -n 12 -C Ti -E O
+
+# 示例：PZT 中的 Pb/Sr-O 邻居
+gpumdkit.sh -calc nlist -i model.xyz -c 4 -n 12 -C Pb Sr -E O
+
+# 输出：nl-<center>-<neighbor>.dat
+```
+
+### 位移
+```bash
+# 从轨迹计算位移
+gpumdkit.sh -calc disp -i <trajectory.xyz> -n <neighbor_list> -o <output>
+
+# 示例
+gpumdkit.sh -calc disp -i movie.xyz -n nl-Pb-O.dat -o displacements.dat
+
+# 可选帧切片：-s <start> -t <stop> -p <step> -l <last_fraction>
+```
+
+### 平均结构
+```bash
+# 计算时间平均结构
+gpumdkit.sh -calc avg-struct -i <trajectory.xyz> -l <fraction> -o <output>
+
+# 示例：平均最后 20% 的帧
+gpumdkit.sh -calc avg-struct -i movie.xyz -l 0.2 -o averaged.xyz
+```
+
+### 八面体倾斜
+```bash
+# 计算八面体倾斜角
+gpumdkit.sh -calc oct-tilt -i <input.xyz> -n <B-O neighbor list> -o <output>
+
+# 示例
+gpumdkit.sh -calc oct-tilt -i model.xyz -n nl-Ti-O.dat -o octahedral_tilt.dat
+```
+
+### 极化（ABO3）
+```bash
+# 计算钙钛矿的局部极化
+gpumdkit.sh -calc pol-abo3 -i <input.xyz> \
+  --nl-ba <B-A neighbor list> \
+  --nl-bo <B-O neighbor list> \
+  --bec <Element=charge ...>
+
+# 语法示例；Born 有效电荷是与材料相关的输入
+gpumdkit.sh -calc pol-abo3 -i model.xyz \
+  --nl-ba nl-Ti-Pb.dat \
+  --nl-bo nl-Ti-O.dat \
+  --bec Pb=<Z_Pb> Sr=<Z_Sr> Ti=<Z_Ti> O=<Z_O>
+```
+
+### 结构最小化
+```bash
+# 使用 NEP 最小化结构
+gpumdkit.sh -calc minimize <structure> <nep.txt> [fmax] [max_steps]
+
+# 示例
+gpumdkit.sh -calc minimize POSCAR nep.txt 0.01 1000
+
+# 输出：minimize.xyz（优化轨迹）
+# 默认 fmax：0.01 eV/A，默认 max_steps：1000
+```
+
+### NEB 计算
+```bash
+# CLI 快捷方式
+gpumdkit.sh -calc neb <initial.xyz> <final.xyz> <n_images> <nep.txt>
+
+# 示例
+gpumdkit.sh -calc neb init.xyz fin.xyz 9 nep.txt
+
+# 直接 Python 执行（也可以）
+python ${GPUMDkit_path}/Scripts/calculators/neb_calculation.py init.xyz fin.xyz 9 nep.txt
+
+# 使用 NepTrainKit 的替代方案：
+python ${GPUMDkit_path}/Scripts/calculators/neb_calculation_neptrain.py init.xyz fin.xyz 9 nep.txt
+```
+
+`n_images` 是中间像的数量。输出：`neb.traj`（NEB 优化过程的 ASE 轨迹）、`neb.xyz`（extxyz 格式的最终路径）和 `images/`（各个像的结构）。
+
+## 常用工作流
+
+### 离子输运分析
+
+请在写入 `msd.out` 的工作目录中分别运行以下路径。
+
+路径 A：从 extxyz 轨迹推导四列 `msd.out`，并绘制 MSD：
+
+```bash
+gpumdkit.sh -calc msd dump.xyz Li 10
+gpumdkit.sh -plt msd
+```
+
+路径 B：先运行包含 `compute_msd` 的 GPUMD，再在其输出目录绘制 SDC；单个选定
+分组的 `msd.out` 为七列：
+
+```bash
+# 使用已经生成的 GPUMD compute_msd 输出
+gpumdkit.sh -plt msd
+gpumdkit.sh -plt sdc
+gpumdkit.sh -plt msd_sdc
+```
+
+两条路径选择其一；比较两种实现时请分开保存结果，避免覆盖 `msd.out`。在同一工作目录使用已经验证的
+`msd.out` 计算离子电导率；该计算还需要 `thermo.out`、`model.xyz` 和可选的
+`run.in`：
+
+```bash
+gpumdkit.sh -calc ionic-cond Li 1
+```
+
+`compute_sdc` 单独写入 `sdc.out`，供 `gpumdkit.sh -plt vac` 使用；它不是 SDC
+绘图脚本读取的 `msd.out`。
+
+### 描述符分析
+```bash
+# 1. 计算描述符
+gpumdkit.sh -calc des train.xyz descriptors.npy nep.txt Li
+# 2. PCA 可视化
+gpumdkit.sh -plt des pca descriptors.npy
+# 3. 或 UMAP 可视化
+gpumdkit.sh -plt des umap descriptors.npy
+```
+
+### 钙钛矿分析
+```bash
+# 1. 构建邻居列表
+gpumdkit.sh -calc nlist -i model.xyz -c 4 -n 12 -C Ti -E O
+gpumdkit.sh -calc nlist -i model.xyz -c 4 -n 12 -C Ti -E Pb
+# 2. 计算位移
+gpumdkit.sh -calc disp -i movie.xyz -n nl-Ti-O.dat -o disp.dat
+# 3. 计算倾斜
+gpumdkit.sh -calc oct-tilt -i movie.xyz -n nl-Ti-O.dat -o tilt.dat
+# 4. 计算极化
+gpumdkit.sh -calc pol-abo3 -i movie.xyz --nl-ba nl-Ti-Pb.dat --nl-bo nl-Ti-O.dat --bec Pb=<Z_Pb> Ti=<Z_Ti> O=<Z_O>
+```
+
+### 结构弛豫
+```bash
+# 用 NEP 最小化结构，完成后检查 minimize.xyz（优化轨迹）
+gpumdkit.sh -calc minimize POSCAR nep.txt <fmax> <max_steps>
+```
+
+## 依赖
+
+| 计算器 | 所需包 |
+|------------|------------------|
+| 全部 | `numpy`、`ase` |
+| ionic-cond | `scipy` |
+| nep、des、doas、minimize | `calorine` |
+| nlist、disp、oct-tilt、pol-abo3 | `ferrodispcalc` |
+| neb | `calorine`、`matplotlib` |
+| xrd | `numpy` |
+| phonon | `calorine`、`phonopy` |
+
+安装依赖：
+```bash
+pip install numpy ase scipy calorine matplotlib tqdm
+pip3 install git+https://github.com/MoseyQAQ/ferrodispcalc.git
+```
+
+## 详细文档
+
+用户指南请参见 `${GPUMDkit_path}/docs/tutorials/zh/计算器脚本.md`。

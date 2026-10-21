@@ -3,7 +3,7 @@
 GPUMDkit: A User-Friendly Toolkit for GPUMD and NEP
 Repository: https://github.com/zhyan0603/GPUMDkit
 Citation: Z. Yan et al., GPUMDkit: A User-Friendly Toolkit for GPUMD and NEP,
-          MGE Advances, 2026, e70074 (https://doi.org/10.1002/mgea.70074)
+          MGE Advances, 2026, 4, e70074 (https://doi.org/10.1002/mgea.70074)
 =============================================================================
 Script:     plt_arrhenius_sigma_xyz.py
 Category:   Plot Scripts
@@ -271,10 +271,10 @@ for temp, s_all, s_x, s_y, s_z in zip(group_Ts, group_sigmaTs_all, group_sigmaTs
 print(line)
 
 # Print activation energies
-print(f"\n{cell}, Ea_total: {Ea_all:.3f} eV")
-print(f"{cell}, Ea_x: {Ea_x:.3f} eV")
-print(f"{cell}, Ea_y: {Ea_y:.3f} eV")
-print(f"{cell}, Ea_z: {Ea_z:.3f} eV")
+print(f"\n{cell}, Ea_total: {Ea_all:.3f} eV, R2 = {r_all ** 2:.4f}")
+print(f"{cell}, Ea_x: {Ea_x:.3f} eV, R2 = {r_x ** 2:.4f}")
+print(f"{cell}, Ea_y: {Ea_y:.3f} eV, R2 = {r_y ** 2:.4f}")
+print(f"{cell}, Ea_z: {Ea_z:.3f} eV, R2 = {r_z ** 2:.4f}")
 
 # Plot each direction
 for label, sigmaT_data, intercept, slope, color, marker in labels_with_ea:
@@ -287,7 +287,7 @@ for label, sigmaT_data, intercept, slope, color, marker in labels_with_ea:
 
 # Set axis labels with proper formatting
 ax.set_xlabel('1000/T (1/K)', labelpad=7)
-ax.set_ylabel(r'ln($\sigma$T) (S$\cdot$K/cm)')
+ax.set_ylabel(r'log10($\sigma$T) (S$\cdot$K/cm)')
 
 # Add legend
 ax.legend(loc='lower left', frameon=False, fontsize=11)

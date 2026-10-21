@@ -2,26 +2,26 @@
 
 # Function to create POTCAR file using vaspkit
 create_potcar_vaspkit() {
-    echo "Creating POTCAR using vaspkit..."
+    echo " Creating POTCAR using vaspkit..."
 
     # Use vaspkit to generate POTCAR from existing POSCAR
     (echo 103) | vaspkit >> /dev/null 2>&1
 
     if [ -f "POTCAR" ]; then
-        echo "POTCAR successfully created using vaspkit"
+        echo " POTCAR successfully created using vaspkit"
     else
-        echo "Error: Failed to create POTCAR using vaspkit"
+        echo " Error: Failed to create POTCAR using vaspkit"
         return 1
     fi
 }
 
 # Check if POSCAR exists in current directory
 if [ -f "POSCAR" ]; then
-    echo "Found POSCAR in current directory, processing..."
+    echo " Found POSCAR in current directory, processing..."
 
     # Check if POTCAR already exists
     if [ -f "POTCAR" ]; then
-        echo "POTCAR already exists in current directory. Skipping creation."
+        echo " POTCAR already exists in current directory. Skipping creation."
     else
         create_potcar_vaspkit
     fi
@@ -61,5 +61,5 @@ else
             #echo "Created symbolic link: $folder/POTCAR -> ../$potcar_path"
         fi
     done
-    echo "All POTCAR files have been processed in iter* folders."
+    echo " All POTCAR files have been processed in iter* folders."
 fi

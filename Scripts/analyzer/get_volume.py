@@ -3,7 +3,7 @@
 GPUMDkit: A User-Friendly Toolkit for GPUMD and NEP
 Repository: https://github.com/zhyan0603/GPUMDkit
 Citation: Z. Yan et al., GPUMDkit: A User-Friendly Toolkit for GPUMD and NEP,
-          MGE Advances, 2026, e70074 (https://doi.org/10.1002/mgea.70074)
+          MGE Advances, 2026, 4, e70074 (https://doi.org/10.1002/mgea.70074)
 =============================================================================
 Script:     get_volume.py
 Category:   Analyzer Scripts
@@ -19,6 +19,7 @@ Last-modified: 2026-05-16
 """
 
 import os
+import sys
 import numpy as np
 
 # Function to calculate volume
@@ -52,7 +53,8 @@ def extract_volume_from_thermo(file_path):
 
         volume = calculate_volume(a_vectors, b_vectors, c_vectors)
     else:
-        raise ValueError("Unsupported number of columns in thermo.out. Expected 12 or 18.")
+        print(" Error: unsupported number of columns in thermo.out. Expected 12 or 18.")
+        sys.exit(1)
 
     return volume
 

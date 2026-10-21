@@ -3,7 +3,7 @@
 GPUMDkit: A User-Friendly Toolkit for GPUMD and NEP
 Repository: https://github.com/zhyan0603/GPUMDkit
 Citation: Z. Yan et al., GPUMDkit: A User-Friendly Toolkit for GPUMD and NEP,
-          MGE Advances, 2026, e70074 (https://doi.org/10.1002/mgea.70074)
+          MGE Advances, 2026, 4, e70074 (https://doi.org/10.1002/mgea.70074)
 =============================================================================
 Script:     cp2k_log2xyz.py
 Category:   Format Conversion Scripts
@@ -13,11 +13,12 @@ Usage:      python cp2k_log2xyz.py
 Output:
   cp2k_exyz.xyz (extended XYZ trajectory), Logfile.txt (processing summary)
 Author:     Chen HUA (huachen23@mails.ucas.ac.cn)
-Last-modified: 2026-05-16
+Last-modified: 2026-09-14
 =============================================================================
 """
 
 import re
+import sys
 from pathlib import Path
 import numpy as np
 
@@ -42,7 +43,7 @@ def extract_atoms_lattice_xyz(lines):
         if m := re.search(r'Lattice="([^"]+)"', '\n'.join(lines)):
             lat = [float(x) for x in m.group(1).split()]
         return atoms, lat
-    except: return [], []
+    except (ValueError, IndexError): return [], []
 
 def extract_atoms_lattice_inp(text):
     atoms, lat = [], [0.0]*9
@@ -204,7 +205,7 @@ def main():
     if not folders:
         with open(cwd / "Logfile.txt", "w") as f:
             f.write("No .log files found.\n")
-        print("No .log files found.")
+        print(" No .log files found.")
         return
 
     all_frames = []
@@ -297,12 +298,20 @@ def main():
 
     if all_frames:
         (cwd / "cp2k_exyz.xyz").write_text(''.join(all_frames))
-        print("\nProcessing complete.")
-        print("Log saved to: Logfile.txt")
-        print("Output written to: cp2k_exyz.xyz")
+        print("\n Processing complete.")
+        print(" Log saved to: Logfile.txt")
+        print(" Output written to: cp2k_exyz.xyz")
     else:
-        print("\nProcessing complete. No valid structures converted.")
-        print("Log saved to: Logfile.txt")
+        print("\n Processing complete. No valid structures converted.")
+        print(" Log saved to: Logfile.txt")
 
 if __name__ == '__main__':
+    if sys.argv[1:] and sys.argv[1] in ("-h", "--help"):
+        print(" Usage: gpumdkit.sh -cp2k2xyz")
+        print("    or: python cp2k_log2xyz.py")
+        print("")
+        print(" Scans the current directory (recursively) for CP2K .log files")
+        print(" and converts them to cp2k_exyz.xyz with Logfile.txt as summary.")
+        print("")
+        sys.exit(0)
     main()

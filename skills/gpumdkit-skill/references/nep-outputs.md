@@ -1,0 +1,104 @@
+# NEP Outputs, Restart, and Model Validation
+
+Use this reference to interpret training/prediction files and decide whether a model is ready for deployment.
+
+## Contents
+
+- Write behavior and cadence
+- Loss and model files
+- Prediction/parity files
+- Special-model outputs
+- Validation checklist
+
+## Write behavior and cadence
+
+Bundled write behavior:
+
+- `loss.out` is append mode;
+- other outputs are continuously overwritten;
+- training/test output files, `nep.txt`, and `nep.restart` are written at the `output_interval` generation cadence; the documented default is 100 generations;
+- model/checkpoint files requested by `save_potential` follow their own checkpoint interval and should not be confused with `output_interval`.
+
+Use a clean directory or archive old `loss.out` before a new training run.
+
+## Loss and model files
+
+| File | Meaning |
+|---|---|
+| `loss.out` | Generation, total/regularization loss, and train/test RMSE terms |
+| `nep.txt` | Current trained model parameters; deployable in GPUMD |
+| `nep.restart` | Optimization state updated at `output_interval` generations |
+| checkpointed `nep_*.txt`/restart | Periodic model/state files controlled by `save_potential` |
+
+From GPUMD 5.9, every run starts `loss.out` with `#` header lines:
+
+```text
+# format_version 1
+# output_interval 100
+# columns generation total L1 L2 rmse_energy_train ...
+```
+
+A restarted run appends another header, so readers must skip comment lines and may meet several headers in one file.
+
+Potential-model columns:
+
+```text
+generation total L1 L2 rmse_energy_train rmse_force_train rmse_virial_train rmse_energy_test rmse_force_test rmse_virial_test
+```
+
+qNEP models (nonzero `charge_mode`) insert `rmse_charge_train rmse_bec_train` after the training virial column and `rmse_charge_test rmse_bec_test` after the test virial column. Charge RMSE is in e/atom and BEC RMSE in e. With `lambda_d`, the potential columns are followed by `rmse_ediff_train rmse_ediff_test` in eV of total energy; each is 0 when no combination of that kind exists.
+
+Dipole model:
+
+```text
+generation total L1 L2 rmse_dipole_train rmse_dipole_test
+```
+
+Polarizability model:
+
+```text
+generation total L1 L2 rmse_polarizability_train rmse_polarizability_test
+```
+
+Versions before 5.9 wrote no header and named the same columns `gen L_t L_1 L_2 L_e_train ...`; the column order is unchanged.
+
+Energy/virial RMSE values are documented per atom; force RMSE is eV/Angstrom. Interpret dipole/polarizability RMSE in the dataset's recorded units.
+
+If `nep.restart` is present, optimization starts from it. Descriptor-related hyperparameters must match the state that produced it. Do not rename or reuse a restart without provenance checks.
+
+## Prediction and parity files
+
+| File | Columns/meaning |
+|---|---|
+| `energy_train.out`, `energy_test.out` | 2 columns: predicted then target energy, eV/atom |
+| `force_train.out`, `force_test.out` | 6 columns: predicted xyz then target xyz, eV/Angstrom; one row per atom |
+| `virial_train.out`, `virial_test.out` | 12 columns: predicted then target xx yy zz xy yz zx, eV/atom |
+| `stress_train.out`, `stress_test.out` | 12 columns: predicted then target xx yy zz xy yz zx, GPa; computed as `virial / volume`, so positive means compressed, the opposite sign of the input `stress=` field |
+| `descriptor.out` | Normalized descriptors in prediction mode when requested |
+
+For structures without target virial/stress, the output target sentinel is `-1e6`. Exclude sentinel values explicitly and report the exclusion; do not treat them as physical labels.
+
+Prediction mode evaluates only `train.xyz`. File row order follows the source configuration/atom order when evaluated as a full batch; preserve a mapping to source frames and verify row counts.
+
+## Special-model outputs
+
+| File | Meaning |
+|---|---|
+| `dipole_train.out`, `dipole_test.out` | 6 columns: predicted xyz then target xyz; values are normalized per atom |
+| `polarizability_train.out`, `polarizability_test.out` | 12 columns: predicted then target xx yy zz xy yz zx; normalized per atom |
+| `charge_train.out`, `charge_test.out` | Predicted qNEP charges |
+| `bec_train.out`, `bec_test.out` | 18 columns: predicted then target 11 12 13 21 22 23 31 32 33; one row per atom |
+
+Component ordering must be kept consistent with the training data convention. If a local executable emits a different layout, stop interpretation and resolve its version first.
+
+## Validation checklist
+
+- Confirm training completed or was intentionally stopped; preserve logs and restart.
+- Plot loss and parity outputs with `references/visualization.md`.
+- Compare train/test errors and inspect outliers by species, composition, phase, and configuration class.
+- Check energy offsets, force tails, virial/stress sentinel handling, and label units.
+- Evaluate errors for the intended downstream observable, not only global RMSE.
+- Test extrapolation/stability in the target MD domain and inspect short-range behavior/ZBL if relevant.
+- Run independent seeds/models when uncertainty or committee methods require them.
+- Record model file hash, training data revision, `nep.in`, executable/source revision, and acceptance decision.
+- Do not claim a universal RMSE threshold or production readiness without user-approved criteria.

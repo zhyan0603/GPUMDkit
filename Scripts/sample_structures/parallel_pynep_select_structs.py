@@ -3,19 +3,20 @@
 GPUMDkit: A User-Friendly Toolkit for GPUMD and NEP
 Repository: https://github.com/zhyan0603/GPUMDkit
 Citation: Z. Yan et al., GPUMDkit: A User-Friendly Toolkit for GPUMD and NEP,
-          MGE Advances, 2026, e70074 (https://doi.org/10.1002/mgea.70074)
+          MGE Advances, 2026, 4, e70074 (https://doi.org/10.1002/mgea.70074)
 =============================================================================
 Script:     parallel_pynep_select_structs.py
 Category:   Sample Structure Scripts
 Purpose:    Parallelized version of pynep_select_structs.py. Select diverse
             structures using farthest-point sampling on pynep descriptors
             with multi-processing for descriptor computation and I/O.
-Usage:      python parallel_pynep_select_structs.py <sampledata_file> <traindata_file> <nep_model_file> [threads]
+Usage:      gpumdkit.sh -pynep
+            python parallel_pynep_select_structs.py <sampledata_file> <traindata_file> <nep_model_file> <threads>
 Arguments:
   sampledata_file  Extxyz file with candidate structures
   traindata_file   Extxyz file with existing training structures
   nep_model_file   NEP model file (e.g., nep.txt)
-  threads          (optional) Number of parallel workers
+  threads          Number of parallel workers
 Output:
   selected.xyz     Selected diverse structures
   select.png       PCA visualization of descriptor space
@@ -25,17 +26,43 @@ Last-modified: 2026-05-16
 """
 
 import sys
-import numpy as np
-from ase.io import read, write
-import matplotlib.pyplot as plt
-from sklearn.decomposition import PCA
-from pynep.calculate import NEP
-from pynep.select import FarthestPointSample
 from concurrent.futures import ProcessPoolExecutor, as_completed
 import multiprocessing
 import argparse
-import time
 import os
+
+
+def read_prompt(message):
+    """Read one line from stdin with EOF-safe handling."""
+    try:
+        return input(message).strip()
+    except (EOFError, KeyboardInterrupt):
+        print("\n Input closed. Exiting.")
+        sys.exit(1)
+
+def print_dependency_notice():
+    print(" This function requires the pynep package.")
+    print(" This PyNEP sampling entry is deprecated. We recommend using NepTrain sampling instead.")
+
+
+def print_usage():
+    print(" Usage: gpumdkit.sh -pynep")
+    print("    or: python parallel_pynep_select_structs.py <sampledata_file> <traindata_file> <nep_model_file> <threads>")
+    print("")
+    print(" Arguments:")
+    print("   sampledata_file  Extxyz file with candidate structures")
+    print("   traindata_file   Extxyz file with existing training structures")
+    print("   nep_model_file   NEP model file (e.g., nep.txt)")
+    print("   threads          Number of parallel workers")
+    print("")
+    print(" Output:")
+    print("   selected.xyz     Selected diverse structures")
+    print("   select.png       PCA visualization of descriptor space")
+    print("")
+    print(" Example: gpumdkit.sh -pynep")
+    print("          dump.xyz train.xyz nep.txt 8")
+    print("")
+
 
 def get_num_frames(file_path):
     count = 0
@@ -118,11 +145,10 @@ def calculate_descriptors(data, desc_type, max_workers=None):
     
     return np.array(results)
 
-# Check command line arguments
-if len(sys.argv) < 4:
-    print(" Usage: python pynep_select_structs.py <sampledata_file> <traindata_file> <nep_model_file>")
-    print(" Examp: python pynep_select_structs.py dump.xyz train.xyz nep.txt")
-    sys.exit(1)
+args_in = sys.argv[1:]
+if len(args_in) != 4 or args_in[0] in ("-h", "--help"):
+    print_usage()
+    sys.exit(0 if args_in and args_in[0] in ("-h", "--help") else 1)
 
 # Parse command-line arguments
 parser = argparse.ArgumentParser(description='Select structures using NEP descriptors.')
@@ -131,6 +157,20 @@ parser.add_argument('traindata_file', type=str, help='Path to traindata file')
 parser.add_argument('nep_model_file', type=str, help='Path to NEP model file')
 parser.add_argument('threads', type=int, default=multiprocessing.cpu_count(), help='Number of threads for parallel processing')
 args = parser.parse_args()
+
+print_dependency_notice()
+
+try:
+    import numpy as np
+    from ase.io import read, write
+    import matplotlib.pyplot as plt
+    from sklearn.decomposition import PCA
+    from pynep.calculate import NEP
+    from pynep.select import FarthestPointSample
+except ImportError:
+    print(" Error: required Python dependencies are not installed or cannot be imported.")
+    print(" Please install pynep and the scientific Python stack, or use function 203) NepTrain sampling instead.")
+    sys.exit(1)
 
 # Function to load data from file
 def load_data(file_path):
@@ -152,17 +192,17 @@ print(calc)
 print(" Choose selection method:")
 print(" 1) Select structures based on minimum distance")
 print(" 2) Select structures based on number of structures")
-choice = input(" ------------>>\n ").strip()
+choice = read_prompt(" ------------>>\n ")
 
 sampler = FarthestPointSample()
 if choice == '1':
-    min_dist = float(input(" Enter min_dist (e.g., 0.01): ").strip())
+    min_dist = float(read_prompt(" Enter min_dist (e.g., 0.01): "))
     des_sample = calculate_descriptors(sampledata, 'sampledata', max_workers=args.threads)
     des_train = calculate_descriptors(traindata, 'traindata', max_workers=args.threads)
     selected = sampler.select(des_sample, des_train, min_distance=min_dist, max_select=None)
 elif choice == '2':
     try:
-        min_max_input = input(" Enter min_select and max_select (e.g., '50 100'): ").strip()
+        min_max_input = read_prompt(" Enter min_select and max_select (e.g., '50 100'): ")
         min_select, max_select = map(int, min_max_input.split())
         if min_select < 1 or max_select < min_select:
             print(" Error: min_select must be >= 1 and max_select must be >= min_select.")

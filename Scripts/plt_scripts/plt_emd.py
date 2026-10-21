@@ -209,7 +209,7 @@ class EMD_Processor:
         for key in self.KAPPA_KEYS:
             lines.append(f"{key}\t{data['Results'][key + '_ave']:.6g}\t"
                          f"{data['Results'][key + '_std']:.6g}\tW/(m·K)")
-        with open(os.path.join(self.directory, 'data_emd.txt'), 'w') as output:
+        with open(os.path.join(self.directory, 'data_emd.txt'), 'w', encoding='utf-8') as output:
             output.write('\n'.join(lines) + '\n')
 
     def _print_results(self, results):

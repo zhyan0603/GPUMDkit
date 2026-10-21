@@ -3,27 +3,27 @@
 GPUMDkit: A User-Friendly Toolkit for GPUMD and NEP
 Repository: https://github.com/zhyan0603/GPUMDkit
 Citation: Z. Yan et al., GPUMDkit: A User-Friendly Toolkit for GPUMD and NEP,
-          MGE Advances, 2026, e70074 (https://doi.org/10.1002/mgea.70074)
+          MGE Advances, 2026, 4, e70074 (https://doi.org/10.1002/mgea.70074)
 =============================================================================
 Script:     mtp2xyz.py
 Category:   Format Conversion Scripts
 Purpose:    Convert MTP (Machine Learning Interatomic Potential) input file
-            format to extended XYZ using dpdata.
-Usage:      python mtp2xyz.py <train.cfg> <Symbol1> <Symbol2> ...
+            format to extended XYZ using a custom cfg parser and ASE.
+Usage:      Interactive: gpumdkit.sh -> 1 -> 102
+            python mtp2xyz.py <train.cfg> <Symbol1> <Symbol2> ...
 Arguments:
   train.cfg   MTP training data file
   SymbolX     Chemical element symbols in order
 Output:
-  Converted structure in extxyz format (printed to terminal or saved)
+  XYZ/mtp2xyz.xyz   Converted structures in extxyz format
 Author:     Ke XU (kickhsu@gmail.com)
-Last-modified: 2026-05-16
+Last-modified: 2026-09-14
 =============================================================================
 """
 
 import os
 import sys
 import numpy as np
-from ase.atoms import Atoms
 from collections import defaultdict
 
 
@@ -85,27 +85,6 @@ def load_cfg(filename, type_to_symbol):
     return frames
 
 
-def dump_nep(frames):
-    with open('train.in', 'w') as f:
-        n_frames = len(frames)
-        f.write(str(n_frames) + '\n')
-        for atoms in frames:
-            has_virial = int('virial' in atoms.info)
-            f.write('{} {} \n'.format(len(atoms), has_virial))
-        for atoms in frames:
-            ret = str(atoms.info['energy'])
-            if 'virial' in atoms.info:
-                for v in atoms.info['virial'][[0, 1, 2, 5, 3, 4]]:
-                    ret += ' ' + str(v)
-            ret += '\n{:.8e} {:.8e} {:.8e} {:.8e} {:.8e} {:.8e} {:.8e} {:.8e} {:.8e}\n'.format(*atoms.get_cell().reshape(-1))
-            s = atoms.get_chemical_symbols()
-            p = atoms.get_positions()
-            forces = atoms.info['forces']
-            for i in range(len(atoms)):
-                ret += '{:2} {:>15.8e} {:>15.8e} {:>15.8e} {:>15.8e} {:>15.8e} {:>15.8e}\n'.format(s[i], *p[i], *forces[i])
-            f.write(ret)
-
-
 def dump_xyz(frames):
 
     Out_string = ""
@@ -132,7 +111,25 @@ def dump_xyz(frames):
 
 
 if __name__ == "__main__":
-    type_to_symbol = {i: s for i, s in enumerate(sys.argv[2:])}
-    frames = load_cfg(sys.argv[1], type_to_symbol)
-    #dump_nep(frames)
+    # Check arguments
+    args = sys.argv[1:]
+    if len(args) < 2 or args[0] in ("-h", "--help"):
+        print(" Usage: gpumdkit.sh -> 1 -> 102 (interactive)")
+        print("    or: python mtp2xyz.py <train.cfg> <Symbol1> <Symbol2> ...")
+        print("")
+        print(" Arguments:")
+        print("   train.cfg   MTP training data file")
+        print("   SymbolX     Chemical element symbols in order")
+        print("")
+        print(" Example: python mtp2xyz.py train.cfg Pd Ag")
+        print("")
+        sys.exit(0 if args and args[0] in ("-h", "--help") else 1)
+    if not os.path.isfile(args[0]):
+        print(f" Error: file '{args[0]}' does not exist.")
+        sys.exit(1)
+
+    from ase.atoms import Atoms
+
+    type_to_symbol = {i: s for i, s in enumerate(args[1:])}
+    frames = load_cfg(args[0], type_to_symbol)
     dump_xyz(frames)

@@ -180,7 +180,7 @@ HNEMD_KEYS = ('kx_in', 'kx_out', 'kx_tot', 'ky_in', 'ky_out', 'ky_tot', 'kz_tot'
 
 def print_usage():
     """Print usage instructions"""
-    print("Usage: gpumdkit -plt hnemd [scale_eff_size] [cutoff_freq] [--save] [--save-data] [--quantum]")
+    print("Usage: gpumdkit.sh -plt hnemd [scale_eff_size] [cutoff_freq] [--save] [--save-data] [--quantum]")
     print("Params:")
     print("  scale_eff_size: Optional, Scale factor for effective cross-sectional area (default: 1)")
     print("                   • For 3D bulk systems: use 1")
@@ -196,9 +196,10 @@ def print_usage():
     print("  --quantum     : Optional, also apply the quantum correction to the SHC spectral thermal")
     print("                  conductivity, κ_q(ω) = κ(ω)·x²eˣ/(eˣ-1)², x = hν/(k_B·T), T from run.in")
     print("                  (requires shc.out)")
+    print("  Legacy bare 'save', 'save_data', and 'quantum' are also accepted.")
     print("  --save/--save-data/--quantum may appear anywhere on the command line, e.g.:")
-    print("    gpumdkit -plt hnemd --save-data              (defaults for everything else)")
-    print("    gpumdkit -plt hnemd 1 60 --save --save-data --quantum")
+    print("    gpumdkit.sh -plt hnemd --save-data              (defaults for everything else)")
+    print("    gpumdkit.sh -plt hnemd 1 60 --save --save-data --quantum")
 
 class HNEMD_Processor:
     """Process HNEMD running averages and optional SHC spectra."""
@@ -401,7 +402,7 @@ class HNEMD_Processor:
         for key in HNEMD_KEYS:
             lines.append(f"{key}\t{res[key + '_ave']:.6g}\t{res[key + '_std']:.6g}\tW/(m·K)")
 
-        with open(os.path.join(self.directory, 'data_hnemd.txt'), 'w') as f:
+        with open(os.path.join(self.directory, 'data_hnemd.txt'), 'w', encoding='utf-8') as f:
             f.write("\n".join(lines) + "\n")
 
     def _export_shc_txt(self, Reformed_SHC_data):
@@ -436,7 +437,7 @@ class HNEMD_Processor:
         for key in result_keys:
             lines.append(f"kappa_{key}\t{res[key + '_ave']:.6g}\t{res[key + '_std']:.6g}\tW/(m·K)")
 
-        with open(os.path.join(self.directory, 'data_shc.txt'), 'w') as f:
+        with open(os.path.join(self.directory, 'data_shc.txt'), 'w', encoding='utf-8') as f:
             f.write("\n".join(lines) + "\n")
 
     @staticmethod

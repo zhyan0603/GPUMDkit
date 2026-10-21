@@ -3,14 +3,16 @@
 GPUMDkit: A User-Friendly Toolkit for GPUMD and NEP
 Repository: https://github.com/zhyan0603/GPUMDkit
 Citation: Z. Yan et al., GPUMDkit: A User-Friendly Toolkit for GPUMD and NEP,
-          MGE Advances, 2026, e70074 (https://doi.org/10.1002/mgea.70074)
+          MGE Advances, 2026, 4, e70074 (https://doi.org/10.1002/mgea.70074)
 =============================================================================
 Script:     filter_structures_by_distance.py
 Category:   Analyzer Scripts
 Purpose:    Filter structures by minimum interatomic distance without
             periodic boundary conditions (no PBC). Faster than the PBC
             version for large systems.
-Usage:      python filter_structures_by_distance.py <file_name> [distance_threshold]
+Usage:      gpumdkit.sh -filter_dist <file_name> [distance_threshold]
+            python filter_structures_by_distance.py <file_name> [distance_threshold]
+Example:    gpumdkit.sh -filter_dist train.xyz 1.5
 Arguments:
   file_name          Input extxyz file
   distance_threshold (optional) Minimum allowed interatomic distance
@@ -23,6 +25,24 @@ Last-modified: 2026-05-16
 """
 
 import sys
+
+args = sys.argv[1:]
+if len(args) < 1 or args[0] in ("-h", "--help"):
+    print(" Usage: gpumdkit.sh -filter_dist <file_name> [distance_threshold]")
+    print("    or: python filter_structures_by_distance.py <file_name> [distance_threshold]")
+    print("")
+    print(" Arguments:")
+    print("   file_name           Input extxyz trajectory file")
+    print("   distance_threshold  (optional) Minimum allowed interatomic distance (Angstrom)")
+    print("")
+    print(" Output:")
+    print("   filtered_<file_name>       Structures that pass the filter")
+    print("   filtered_out_<file_name>   Structures that fail the filter")
+    print("")
+    print(" Example: gpumdkit.sh -filter_dist train.xyz 1.5")
+    print("")
+    sys.exit(0 if args and args[0] in ("-h", "--help") else 1)
+
 import numpy as np
 from ase.io import read, write
 from scipy.spatial.distance import pdist

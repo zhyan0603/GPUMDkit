@@ -3,14 +3,15 @@
 GPUMDkit: A User-Friendly Toolkit for GPUMD and NEP
 Repository: https://github.com/zhyan0603/GPUMDkit
 Citation: Z. Yan et al., GPUMDkit: A User-Friendly Toolkit for GPUMD and NEP,
-          MGE Advances, 2026, e70074 (https://doi.org/10.1002/mgea.70074)
+          MGE Advances, 2026, 4, e70074 (https://doi.org/10.1002/mgea.70074)
 =============================================================================
 Script:     calc_minimize.py
 Category:   Calculator Scripts
 Purpose:    Perform structure relaxation using calorine (CPUNEP) from a
             POSCAR or extxyz file with configurable force convergence and
             max optimization steps.
-Usage:      python calc_minimize.py <structure_file> <nep.txt> [fmax=0.01] [max_steps=1000]
+Usage:      gpumdkit.sh -calc minimize <structure_file> <nep.txt> [fmax] [max_steps]
+            python calc_minimize.py <structure_file> <nep.txt> [fmax=0.01] [max_steps=1000]
 Arguments:
   structure_file  Input structure file (POSCAR or .xyz)
   nep.txt         Path to the NEP model file
@@ -24,6 +25,22 @@ Last-modified: 2026-05-16
 """
 
 import sys
+
+# Check command-line arguments before importing optional heavy dependencies.
+if __name__ == "__main__" and (len(sys.argv) < 3 or sys.argv[1] in ("-h", "--help")):
+    print(" Usage: gpumdkit.sh -calc minimize <structure_file> <nep.txt> [fmax] [max_steps]")
+    print("    or: python calc_minimize.py <structure_file> <nep.txt> [fmax] [max_steps]")
+    print("")
+    print(" Arguments:")
+    print("   structure_file  Input structure file (POSCAR or .xyz)")
+    print("   nep.txt         Path to the NEP model file")
+    print("   fmax            Force convergence threshold (eV/A, default: 0.01)")
+    print("   max_steps       Max optimization steps (default: 1000)")
+    print("")
+    print(" Example: gpumdkit.sh -calc minimize POSCAR nep.txt 0.01 1000")
+    print("")
+    sys.exit(0 if len(sys.argv) > 1 and sys.argv[1] in ("-h", "--help") else 1)
+
 from tqdm import tqdm
 import numpy as np
 from ase import Atoms
@@ -31,6 +48,14 @@ from ase.io import read, write
 from ase.optimize import BFGS
 from calorine.calculators import CPUNEP
 import os
+
+
+def print_dependency_notice():
+    print(" This function requires the calorine package.")
+    print(" If you use this function, we recommend citing:")
+    print(" Lindgren et al., J. Open Source Softw. 9, 6264 (2024).")
+    print(" https://doi.org/10.21105/joss.06264")
+
 
 class TrajectoryCallback:
     """Callback class to save trajectory during optimization."""
@@ -42,14 +67,7 @@ class TrajectoryCallback:
         self.trajectory.append(self.atoms.copy())
 
 def main():
-    # Parse command line arguments
-    if len(sys.argv) < 3:
-        print(" Usage: python calc_minimize.py <structure_file> <nep.txt> [fmax=0.01] [max_steps=1000]")
-        print(" Supported structure formats: POSCAR, .xyz")
-        print(" Optional arguments: ")
-        print("  fmax: Force convergence threshold in eV/Ang (default: 0.01)")
-        print("  max_steps: Maximum number of optimization steps (default: 1000)")
-        sys.exit(1)
+    print_dependency_notice()
 
     structure_file = sys.argv[1]  # Structure file (POSCAR or extxyz)
     model_path = sys.argv[2]  # Path to the model for CPUNEP

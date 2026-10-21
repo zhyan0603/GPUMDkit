@@ -3,7 +3,7 @@
 # GPUMDkit: A User-Friendly Toolkit for GPUMD and NEP
 # Repository: https://github.com/zhyan0603/GPUMDkit
 # Citation: Z. Yan et al., GPUMDkit: A User-Friendly Toolkit for GPUMD and NEP,
-#           MGE Advances, 2026, e70074 (https://doi.org/10.1002/mgea.70074)
+#           MGE Advances, 2026, 4, e70074 (https://doi.org/10.1002/mgea.70074)
 # =============================================================================
 # Script:     md_sample_batch_pretreatment_lmp.sh
 # Category:   Workflow Scripts
@@ -26,6 +26,10 @@ function f303_md_sample_batch_pretreatment_lmp(){
 
 	# Check if there are any .vasp files
 	if [ $num_vasp_files -gt 0 ]; then
+	    if [ $num_xyz_files -gt 0 ]; then
+	        echo " Notice: Found both .vasp and .xyz files in the current directory."
+	        echo " This workflow prioritizes .vasp files and will ignore .xyz files."
+	    fi
 	    # Create the struct directory and move .vasp files into it
 	    mkdir -p struct_md
 	    rename_seq=1
@@ -34,9 +38,9 @@ function f303_md_sample_batch_pretreatment_lmp(){
 		    new_vasp_name="POSCAR_${rename_seq}.vasp"
 		    new_xyz_name="model_${rename_seq}.xyz"
 			new_lmp_name="lammps_${rename_seq}.data"
-		    mv ${file} ./struct_md/${new_vasp_name}
-		    python ${GPUMDkit_path}/Scripts/format_conversion/pos2exyz.py ./struct_md/${new_vasp_name} ./struct_md/${new_xyz_name}
-			python ${GPUMDkit_path}/Scripts/format_conversion/exyz2lmp.py ./struct_md/${new_xyz_name} ./struct_md/${new_lmp_name}
+		    mv "${file}" "./struct_md/${new_vasp_name}"
+		    python "${GPUMDkit_path}/Scripts/format_conversion/pos2exyz.py" "./struct_md/${new_vasp_name}" "./struct_md/${new_xyz_name}"
+			python "${GPUMDkit_path}/Scripts/format_conversion/exyz2lmp.py" "./struct_md/${new_xyz_name}" "./struct_md/${new_lmp_name}"
 		    progress=$((rename_seq * 100 / total_vasp_num))
 		    echo -ne " Progress: ["
 		    for ((p=0; p<progress/2; p++)); do echo -ne "#"; done
@@ -46,11 +50,23 @@ function f303_md_sample_batch_pretreatment_lmp(){
 		done
 		num_lmp_files=$(find ./struct_md -maxdepth 1 -name "*.data" | wc -l)
 	else
-	    # Check if there is exactly one XYZ file
-	    if [ $num_xyz_files -eq 1 ]; then
-	        echo " No .vasp files found, but found one XYZ file."
-	        echo " Converting it to model.xyz using GPUMDkit..."
-	        python ${GPUMDkit_path}/Scripts/format_conversion/split_single_xyz.py *.xyz
+	    # Check available XYZ files
+	    if [ $num_xyz_files -ge 1 ]; then
+	        if [ $num_xyz_files -eq 1 ]; then
+	            xyz_file=$(find . -maxdepth 1 -name "*.xyz" | head -n 1)
+	            echo " No .vasp files found, but found one XYZ file: ${xyz_file#./}"
+	        else
+	            echo " No .vasp files found, but found multiple XYZ files:"
+	            select xyz_file in *.xyz; do
+	                if [ -n "$xyz_file" ]; then
+	                    break
+	                fi
+	                echo " Invalid selection. Please choose one XYZ file."
+	            done
+	            [ -n "$xyz_file" ] || { echo " Input closed. Exiting."; return 1; }
+	        fi
+	        echo " Splitting ${xyz_file#./} to model_*.xyz using GPUMDkit..."
+	        python ${GPUMDkit_path}/Scripts/format_conversion/split_single_xyz.py "$xyz_file"
 	        
 	        mkdir -p struct_md
 	        mv *.xyz ./struct_md
@@ -67,10 +83,9 @@ function f303_md_sample_batch_pretreatment_lmp(){
 			done
 	        num_lmp_files=$(find ./struct_md -maxdepth 1 -name "*.data" | wc -l)
 	        
-	        # Perform additional operations if needed after moving .vasp files
 	    else
-	        echo " No .vasp files found and the XYZ file is not unique."
-	        exit 1
+	        echo " No .vasp files or .xyz files found."
+	        return 1
 	    fi
 	fi
 
@@ -89,14 +104,14 @@ function f303_md_sample_batch_pretreatment_lmp(){
     # Create individual directories for each .vasp file and set up the links
     for i in $(seq 1 $num_lmp_files); do
         dir_name="sample_${i}"
-        mkdir -p ${dir_name}
-        cd ${dir_name}
+        mkdir -p "${dir_name}"
+        cd "${dir_name}"
         ln -s ../struct_md/lammps_${i}.data ./lammps.data
         ln -s ../md/{lmprun.in,nep.txt} ./
         cd ..
     done
 
-    # Create the presub.sh file for VASP self-consistency calculations
+    # Create the presub.sh file for LAMMPS MD sampling
     cat > presub.sh <<-EOF
 	#!/bin/bash
 
@@ -113,9 +128,7 @@ function f303_md_sample_batch_pretreatment_lmp(){
     # Make presub.sh executable
     chmod +x presub.sh
 
-    echo " >--------------------------------------------------<"
-    echo " ATTENTION: Place lmprun.in and nep.txt in 'md' Dir. "
-    echo " ATTENTION: Place lmprun.in and nep.txt in 'md' Dir. "
-    echo " ATTENTION: Place lmprun.in and nep.txt in 'md' Dir. "
-    echo " >--------------------------------------------------<"
+    echo " >---------------------------------------------------------<"
+    echo " | ATTENTION: Place lmprun.in and nep.txt in 'md' Dir.     |"
+    echo " >---------------------------------------------------------<"
 }

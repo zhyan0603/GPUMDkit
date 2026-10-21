@@ -3,7 +3,7 @@
 GPUMDkit: A User-Friendly Toolkit for GPUMD and NEP
 Repository: https://github.com/zhyan0603/GPUMDkit
 Citation: Z. Yan et al., GPUMDkit: A User-Friendly Toolkit for GPUMD and NEP,
-          MGE Advances, 2026, e70074 (https://doi.org/10.1002/mgea.70074)
+          MGE Advances, 2026, 4, e70074 (https://doi.org/10.1002/mgea.70074)
 =============================================================================
 Script:     plt_charge.py
 Category:   Plot Scripts
@@ -13,8 +13,11 @@ Usage:      gpumdkit.sh -plt charge [save]
             python plt_charge.py [save]
 Arguments:
   save      Save the plot as 'charge.png' instead of displaying it
+Input files (required in working directory):
+  train.xyz         Training structures in extxyz format
+  charge_train.out  Charge data from qNEP model
 Output:
-  Display of charge distribution plot
+  charge.png   Charge distribution plot (saved or displayed)
 Author:     Zihan YAN (yanzihan@westlake.edu.cn)
 Last-modified: 2026-05-16
 =============================================================================

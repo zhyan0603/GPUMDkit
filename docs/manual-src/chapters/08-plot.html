@@ -1,0 +1,61 @@
+<section class="chap" id="plot" data-group="Toolbox|工具箱">
+<div class="chap-head"><span class="chap-no"></span>
+<div><h2><span class="l-en">Plots and visualization</span><span class="l-zh">绘图与可视化</span></h2></div></div>
+<p class="lead l-en">From training curves to phonons: publication-ready figures, one option each.</p>
+<p class="lead l-zh">从训练曲线到声子谱：每种图一个选项，直接出论文级图片。</p>
+<div class="docs-row"><span class="dr-label"><span class="l-en">Detailed pages</span><span class="l-zh">详细页面</span></span><a class="chip" href="htmls/en/plot_scripts.html" data-doc="plot_scripts"><span class="l-en">Plot scripts</span><span class="l-zh">绘图脚本</span><svg><use href="#i-out"/></svg></a><a class="chip" href="htmls/en/plot_nep.html" data-doc="plot_nep"><span class="l-en">NEP training plots</span><span class="l-zh">NEP 训练绘图</span><svg><use href="#i-out"/></svg></a><a class="chip" href="htmls/en/plot_md_structure.html" data-doc="plot_md_structure"><span class="l-en">MD and structure plots</span><span class="l-zh">MD 与结构绘图</span><svg><use href="#i-out"/></svg></a><a class="chip" href="htmls/en/plot_diffusion.html" data-doc="plot_diffusion"><span class="l-en">Diffusion plots</span><span class="l-zh">扩散绘图</span><svg><use href="#i-out"/></svg></a><a class="chip" href="htmls/en/plot_heat_phonon.html" data-doc="plot_heat_phonon"><span class="l-en">Heat transport and phonon plots</span><span class="l-zh">热输运与声子绘图</span><svg><use href="#i-out"/></svg></a></div>
+<p class="l-en">Every plot is one option: <code class="inline">gpumdkit.sh -plt &lt;type&gt;</code>. Run it in the directory that holds the GPUMD or NEP outputs. Several plots accept <code class="inline">save</code> to write an image instead of opening a window; <code class="inline">gpumdkit.sh -plt -h</code> lists all types and arguments.</p>
+<p class="l-zh">每种图只需一个选项：<code class="inline">gpumdkit.sh -plt &lt;type&gt;</code>。请在存放 GPUMD 或 NEP 输出的目录中运行。部分绘图支持 <code class="inline">save</code> 参数，直接保存图片而不弹出窗口；<code class="inline">gpumdkit.sh -plt -h</code> 可列出全部类型及参数。</p>
+<div data-tabscope>
+<div class="tabs" data-tabs="figs"><button class="chip active" data-pane="fg-all"><span class="l-en">All</span><span class="l-zh">全部</span></button><button class="chip" data-pane="fg-train"><span class="l-en">NEP training</span><span class="l-zh">NEP 训练</span></button><button class="chip" data-pane="fg-diff"><span class="l-en">Diffusion</span><span class="l-zh">扩散</span></button><button class="chip" data-pane="fg-md"><span class="l-en">MD & structure</span><span class="l-zh">MD 与结构</span></button><button class="chip" data-pane="fg-heat"><span class="l-en">Heat & phonons</span><span class="l-zh">热输运与声子</span></button></div>
+<div class="figs">
+<figure class="fig" data-cat="train">
+<div class="im"><img src="Gallery/train.png" alt="NEP Training" loading="lazy"></div><figcaption><code>gpumdkit.sh -plt train</code></figcaption></figure>
+<figure class="fig" data-cat="train">
+<div class="im"><img src="Gallery/prediction.png" alt="Prediction-mode Parity Plot" loading="lazy"></div><figcaption><code>gpumdkit.sh -plt prediction</code></figcaption></figure>
+<figure class="fig" data-cat="train">
+<div class="im"><img src="Gallery/train_test.png" alt="Parity Plot (train vs test)" loading="lazy"></div><figcaption><code>gpumdkit.sh -plt train_test</code></figcaption></figure>
+<figure class="fig" data-cat="train">
+<div class="im"><img src="Gallery/parity_plot_density.png" alt="Parity Plot (Density)" loading="lazy"></div><figcaption><code>gpumdkit.sh -plt parity_density</code></figcaption></figure>
+<figure class="fig" data-cat="train">
+<div class="im"><img src="Gallery/force_errors.png" alt="Force Errors" loading="lazy"></div><figcaption><code>gpumdkit.sh -plt force_errors</code></figcaption></figure>
+<figure class="fig" data-cat="train">
+<div class="im"><img src="Gallery/dimer.png" alt="Dimer Plot" loading="lazy"></div><figcaption><code>gpumdkit.sh -plt dimer</code></figcaption></figure>
+<figure class="fig" data-cat="diff">
+<div class="im"><img src="Gallery/msd.png" alt="MSD Analysis" loading="lazy"></div><figcaption><code>gpumdkit.sh -plt msd</code></figcaption></figure>
+<figure class="fig" data-cat="diff">
+<div class="im"><img src="Gallery/msd_all.png" alt="MSD all" loading="lazy"></div><figcaption><code>gpumdkit.sh -plt msd_all</code></figcaption></figure>
+<figure class="fig" data-cat="diff">
+<div class="im"><img src="Gallery/msd_convergence.png" alt="MSD Convergence" loading="lazy"></div><figcaption><code>gpumdkit.sh -plt msd_conv</code></figcaption></figure>
+<figure class="fig" data-cat="diff">
+<div class="im"><img src="Gallery/sdc.png" alt="SDC" loading="lazy"></div><figcaption><code>gpumdkit.sh -plt sdc</code></figcaption></figure>
+<figure class="fig" data-cat="diff">
+<div class="im"><img src="Gallery/Arrhenius_D.png" alt="Arrhenius Plot" loading="lazy"></div><figcaption><code>gpumdkit.sh -plt D/sigma</code></figcaption></figure>
+<figure class="fig" data-cat="diff">
+<div class="im"><img src="Gallery/doas.png" alt="DOAS Analysis" loading="lazy"></div><figcaption><code>gpumdkit.sh -plt doas</code></figcaption></figure>
+<figure class="fig" data-cat="md">
+<div class="im"><img src="Gallery/thermo.png" alt="Thermodynamic Analysis" loading="lazy"></div><figcaption><code>gpumdkit.sh -plt thermo</code></figcaption></figure>
+<figure class="fig" data-cat="md">
+<div class="im"><img src="Gallery/rdf1.png" alt="RDF" loading="lazy"></div><figcaption><code>gpumdkit.sh -plt rdf</code></figcaption></figure>
+<figure class="fig" data-cat="md">
+<div class="im"><img src="Gallery/charge.png" alt="Charge Distribution" loading="lazy"></div><figcaption><code>gpumdkit.sh -plt charge</code></figcaption></figure>
+<figure class="fig" data-cat="heat">
+<div class="im"><img src="Gallery/emd.png" alt="EMD" loading="lazy"></div><figcaption><code>gpumdkit.sh -plt emd</code></figcaption></figure>
+<figure class="fig" data-cat="heat">
+<div class="im"><img src="Gallery/nemd.png" alt="NEMD" loading="lazy"></div><figcaption><code>gpumdkit.sh -plt nemd</code></figcaption></figure>
+<figure class="fig" data-cat="heat">
+<div class="im"><img src="Gallery/hnemd.png" alt="HEMD" loading="lazy"></div><figcaption><code>gpumdkit.sh -plt hnemd</code></figcaption></figure>
+<figure class="fig" data-cat="heat">
+<div class="im"><img src="Gallery/vac_pdos.png" alt="VAC &amp; PDOS" loading="lazy"></div><figcaption><code>gpumdkit.sh -plt pdos</code></figcaption></figure></div></div>
+<p class="l-en">Click a figure to enlarge it and copy the command. More examples are in the <a class="blue" href="gallery.html">gallery</a>.</p>
+<p class="l-zh">点击图片可放大并复制对应命令。更多示例见<a class="blue" href="gallery.html">图库</a>。</p>
+<div class="tbl-wrap">
+<table class="tbl">
+<thead>
+<tr><th><span class="l-en">Group</span><span class="l-zh">类别</span></th><th><span class="l-en">Types</span><span class="l-zh">类型</span></th></tr></thead>
+<tbody>
+<tr><td><span class="l-en">NEP training</span><span class="l-zh">NEP 训练</span></td><td><code>train</code> <code>prediction</code> <code>train_test</code> <code>parity_density</code> <code>train_density</code> <code>restart</code> <code>charge</code> <code>born_charge</code> <code>dimer</code> <code>force_errors</code> <code>des</code> <code>net_force</code></td></tr>
+<tr><td><span class="l-en">Diffusion & transport</span><span class="l-zh">扩散与输运</span></td><td><code>msd</code> <code>msd_conv</code> <code>msd_all</code> <code>sdc</code> <code>msd_sdc</code> <code>sigma</code> <code>D</code> <code>sigma_PT</code> <code>D_PT</code> <code>sigma_xyz</code> <code>D_xyz</code> <code>doas</code></td></tr>
+<tr><td><span class="l-en">MD & structure</span><span class="l-zh">MD 与结构</span></td><td><code>thermo</code> <code>thermo2/3</code> <code>rdf</code> <code>xrd</code> <code>xrd_comp</code> <code>rdf_pmf</code> <code>vac</code> <code>cohesive</code> <code>plane-grid</code></td></tr>
+<tr><td><span class="l-en">Heat transport</span><span class="l-zh">热输运</span></td><td><code>emd</code> <code>emd2</code> <code>nemd</code> <code>hnemd</code> <code>viscosity</code></td></tr>
+<tr><td><span class="l-en">Phonons</span><span class="l-zh">声子</span></td><td><code>pdos</code> <code>phonon</code> <code>phonon_comp</code></td></tr></tbody></table></div></section>

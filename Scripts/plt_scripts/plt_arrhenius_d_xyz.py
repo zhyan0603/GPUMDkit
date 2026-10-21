@@ -3,7 +3,7 @@
 GPUMDkit: A User-Friendly Toolkit for GPUMD and NEP
 Repository: https://github.com/zhyan0603/GPUMDkit
 Citation: Z. Yan et al., GPUMDkit: A User-Friendly Toolkit for GPUMD and NEP,
-          MGE Advances, 2026, e70074 (https://doi.org/10.1002/mgea.70074)
+          MGE Advances, 2026, 4, e70074 (https://doi.org/10.1002/mgea.70074)
 =============================================================================
 Script:     plt_arrhenius_d_xyz.py
 Category:   Plot Scripts
@@ -140,10 +140,10 @@ if len(raw_temps) > 0:
     ]
 
     # Print activation energies
-    print(f"Ea_all: {Ea_all:.3f} eV")
-    print(f"Ea_x: {Ea_x:.3f} eV")
-    print(f"Ea_y: {Ea_y:.3f} eV")
-    print(f"Ea_z: {Ea_z:.3f} eV")
+    print(f"Ea_all: {Ea_all:.3f} eV, R2 = {r_all ** 2:.4f}")
+    print(f"Ea_x: {Ea_x:.3f} eV, R2 = {r_x ** 2:.4f}")
+    print(f"Ea_y: {Ea_y:.3f} eV, R2 = {r_y ** 2:.4f}")
+    print(f"Ea_z: {Ea_z:.3f} eV, R2 = {r_z ** 2:.4f}")
 
     # Prepare data for plotting
     x_min, x_max = 1000/np.max(temps), 1000/np.min(temps)

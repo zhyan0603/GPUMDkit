@@ -3,20 +3,30 @@
 GPUMDkit: A User-Friendly Toolkit for GPUMD and NEP
 Repository: https://github.com/zhyan0603/GPUMDkit
 Citation: Z. Yan et al., GPUMDkit: A User-Friendly Toolkit for GPUMD and NEP,
-          MGE Advances, 2026, e70074 (https://doi.org/10.1002/mgea.70074)
+          MGE Advances, 2026, 4, e70074 (https://doi.org/10.1002/mgea.70074)
 =============================================================================
 Script:     calc_ion_conductivity.py
 Category:   Calculator Scripts
 Purpose:    Calculate diffusivity and ionic conductivity from MSD data
-            (msd.out) via the Nernst-Einstein equation.
-Usage:      python calc_ion_conductivity.py <element> <charge>
+            (msd.out) via the Nernst-Einstein equation. Automatically reads
+            temperature and volume from thermo.out, ion count from model.xyz,
+            and replication from run.in when available; falls back to
+            interactive prompts if files are missing.
+Usage:      gpumdkit.sh -calc ionic-cond <element> <charge>
+            python calc_ion_conductivity.py <element> <charge>
+Example:    gpumdkit.sh -calc ionic-cond Li 1
 Arguments:
   element  Chemical species (e.g., Li)
   charge   Ion charge (e.g., 1 for Li+)
+Input files (auto-detected):
+  thermo.out   Thermodynamic data (temperature, box dimensions)
+  model.xyz    Structure file (ion count)
+  run.in       GPUMD input (replication factor)
+  msd.out      Mean square displacement data
 Output:
   Calculated diffusivity and ionic conductivity (printed to terminal)
 Author:     Zihan YAN (yanzihan@westlake.edu.cn), Shengjie Tang (tangshengjie@westlake.edu.cn)
-Last-modified: 2026-05-16
+Last-modified: 2026-09-14
 =============================================================================
 """
 
@@ -24,6 +34,27 @@ import os
 import sys
 import numpy as np
 import scipy.constants as consts
+
+
+def read_prompt_number(message, cast=float):
+    """
+    Read a number from stdin with EOF and invalid-input handling.
+
+    Parameters:
+        message (str): Prompt shown to the user.
+        cast (type): float or int, the expected numeric type.
+
+    Returns:
+        The parsed number.
+    """
+    try:
+        return cast(input(message))
+    except (EOFError, KeyboardInterrupt):
+        print("\n Input closed. Exiting.")
+        sys.exit(1)
+    except ValueError:
+        print(" Error: please enter a valid number.")
+        sys.exit(1)
 
 
 # Function to calculate the volume of a triclinic box
@@ -68,6 +99,10 @@ def read_msd_file(msd_file):
     Returns:
         tuple: Time steps (dts) and MSD values for x, y, z, and total.
     """
+    if not os.path.isfile(msd_file):
+        print(f" Error: file '{msd_file}' does not exist.")
+        print(" Please run the MSD calculation first or check the working directory.")
+        sys.exit(1)
     data = np.loadtxt(msd_file)
     dts = data[:, 0]  # Time steps
     msd_x = data[:, 1]  # MSD in x-direction
@@ -94,8 +129,8 @@ def calculate_diffusivity_and_conductivity(filepath, structure_volume, species_c
     dts, msd_x, msd_y, msd_z, msd_total = read_msd_file(filepath)
 
     # Use a portion of the MSD data for fitting
-    start = int(len(dts) * 0.1)  # Start at 10% of the data
-    end = int(len(dts) * 0.4)  # End at 40% of the data
+    start = int(len(dts) * 0.4)  # Start at 40% of the data
+    end = int(len(dts) * 0.8)  # End at 80% of the data
 
     # Linear fit to obtain slopes for x, y, z, and total MSD
     k_x, _ = np.polyfit(dts[start:end], msd_x[start:end], 1)
@@ -124,7 +159,8 @@ def calculate_diffusivity_and_conductivity(filepath, structure_volume, species_c
 # Function to extract volume and temperature from thermo.out
 def extract_thermo_data():
     if not os.path.exists('./thermo.out'):
-        raise FileNotFoundError(" The file 'thermo.out' does not exist.")
+        print(" Error: the file 'thermo.out' does not exist.")
+        sys.exit(1)
 
     data = np.loadtxt('./thermo.out')
     num_columns = data.shape[1]
@@ -149,7 +185,8 @@ def extract_thermo_data():
 
         volume = calculate_volume(a_vectors, b_vectors, c_vectors)
     else:
-        raise ValueError(" Unsupported number of columns in thermo.out. Expected 12 or 18.")
+        print(" Error: unsupported number of columns in thermo.out. Expected 12 or 18.")
+        sys.exit(1)
 
     # Calculate averages after 50% of simulation time
     start_index = int(len(temperature) * 0.5)  # Can adjust this threshold
@@ -163,7 +200,8 @@ def extract_thermo_data():
 def count_ions(atom_type="Li"):
     # Check if model.xyz exists
     if not os.path.exists("model.xyz"):
-        raise FileNotFoundError("The file 'model.xyz' does not exist.")
+        print(" Error: the file 'model.xyz' does not exist.")
+        sys.exit(1)
 
     # Count ions from model.xyz
     num_ions = 0
@@ -200,20 +238,32 @@ def count_ions(atom_type="Li"):
 
 # Main function to orchestrate the process
 def main():
+    if len(sys.argv) < 3 or (len(sys.argv) > 1 and sys.argv[1] in ("-h", "--help")):
+        print(" Usage: gpumdkit.sh -calc ionic-cond <element> <charge>")
+        print("    or: python calc_ion_conductivity.py <element> <charge>")
+        print("")
+        print(" Arguments:")
+        print("   element    Chemical species (e.g., Li, Na)")
+        print("   charge     Ion charge (e.g., 1 for Li+)")
+        print("")
+        print(" Example: gpumdkit.sh -calc ionic-cond Li 1")
+        print("")
+        sys.exit(0 if len(sys.argv) > 1 and sys.argv[1] in ("-h", "--help") else 1)
+
     # Check if thermo.out and model.xyz exist to extract or prompt for values
     if os.path.exists("./thermo.out") and os.path.exists("model.xyz"):
         avg_temperature, avg_volume = extract_thermo_data()
-        atom_type = sys.argv[1] if len(sys.argv) > 1 else "Li"  # Default to Li if not passed as argument
+        atom_type = sys.argv[1]
         num_ions = count_ions(atom_type)
     else:
         # If files don't exist, prompt the user to enter values manually
         print(" Files 'thermo.out' and 'model.xyz' are not found.")
         print(" Please provide the following values:")
-        print(" --------------------------->")
-        avg_temperature = float(input(" Enter average temperature (in K): "))
-        avg_volume = float(input(" Enter system volume (in Å^3): "))
+        print(" ------------>>")
+        avg_temperature = read_prompt_number(" Enter average temperature (in K): ")
+        avg_volume = read_prompt_number(" Enter system volume (in Å^3): ")
         atom_type = sys.argv[1]
-        num_ions = int(input(" Enter number of ions: "))
+        num_ions = read_prompt_number(" Enter number of ions: ", cast=int)
 
     # Output the calculated or inputted values
     print(f" Number of ions: {num_ions}")
@@ -262,5 +312,3 @@ def main():
 # Run the main function
 if __name__ == "__main__":
     main()
-
-

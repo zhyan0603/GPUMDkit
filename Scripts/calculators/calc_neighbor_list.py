@@ -3,7 +3,7 @@
 GPUMDkit: A User-Friendly Toolkit for GPUMD and NEP
 Repository: https://github.com/zhyan0603/GPUMDkit
 Citation: Z. Yan et al., GPUMDkit: A User-Friendly Toolkit for GPUMD and NEP,
-          MGE Advances, 2026, e70074 (https://doi.org/10.1002/mgea.70074)
+          MGE Advances, 2026, 4, e70074 (https://doi.org/10.1002/mgea.70074)
 =============================================================================
 Script:     calc_neighbor_list.py
 Category:   Calculator Scripts
@@ -55,6 +55,7 @@ def parse_args():
         epilog=(
             "Examples :\n"
             "1. Find the Pb and Sr's nearest 12 oxygen atoms: \n"
+            ">>  gpumdkit.sh -calc nlist -c 4 -n 12 -C Pb Sr -E O\n"
             ">>  python calc_neighbor_list.py -c 4 -n 12 -C Pb Sr -E O\n"
         ),
     )

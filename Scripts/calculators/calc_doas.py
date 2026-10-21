@@ -3,14 +3,15 @@
 GPUMDkit: A User-Friendly Toolkit for GPUMD and NEP
 Repository: https://github.com/zhyan0603/GPUMDkit
 Citation: Z. Yan et al., GPUMDkit: A User-Friendly Toolkit for GPUMD and NEP,
-          MGE Advances, 2026, e70074 (https://doi.org/10.1002/mgea.70074)
+          MGE Advances, 2026, 4, e70074 (https://doi.org/10.1002/mgea.70074)
 =============================================================================
 Script:     calc_doas.py
 Category:   Calculator Scripts
 Purpose:    Calculate the density of atomistic states (DOAS) proposed by
             Wang et al. by reading and optimizing structures with NEP_CPU
             and computing per-atom energies.
-Usage:      python calc_doas.py <input.xyz> <nep.txt> <output.txt>
+Usage:      gpumdkit.sh -calc doas <input.xyz> <nep.txt> <output.txt>
+            python calc_doas.py <input.xyz> <nep.txt> <output.txt>
 Arguments:
   input.xyz   Input extxyz file
   nep.txt     Path to the NEP model file
@@ -21,7 +22,23 @@ Author:     Zihan YAN (yanzihan@westlake.edu.cn)
 Last-modified: 2026-05-16
 =============================================================================
 """
+import os
 import sys
+
+# Check command-line arguments before importing optional heavy dependencies.
+if __name__ == "__main__" and (len(sys.argv) < 4 or sys.argv[1] in ("-h", "--help")):
+    print(" Usage: gpumdkit.sh -calc doas <input.xyz> <nep_model> <output_file>")
+    print("    or: python calc_doas.py <input.xyz> <nep.txt> <output.txt>")
+    print("")
+    print(" Arguments:")
+    print("   input.xyz    Input extxyz file")
+    print("   nep_model    Path to the NEP model file")
+    print("   output_file  Output text file for grouped atomic energies")
+    print("")
+    print(" Example: gpumdkit.sh -calc doas input.xyz nep.txt energies.txt")
+    print("")
+    sys.exit(0 if len(sys.argv) > 1 and sys.argv[1] in ("-h", "--help") else 1)
+
 from tqdm import tqdm
 import numpy as np
 from ase import Atoms
@@ -30,10 +47,25 @@ from ase.optimize import BFGS
 from calorine.calculators import CPUNEP
 from collections import defaultdict
 
+
+def print_dependency_notice():
+    print(" This function requires the calorine package.")
+    print(" If you use this function, we recommend citing:")
+    print(" Lindgren et al., J. Open Source Softw. 9, 6264 (2024).")
+    print(" https://doi.org/10.21105/joss.06264")
+
+
 # Specify input and output files
 input_file = sys.argv[1]  # Input extxyz file
 model_path = sys.argv[2]  # Path to the model for CPUNEP
 output_file = sys.argv[3]  # Output text file for grouped atomic energies
+
+for required in (input_file, model_path):
+    if not os.path.isfile(required):
+        print(f" Error: file '{required}' does not exist.")
+        sys.exit(1)
+
+print_dependency_notice()
 
 # Read input file containing all structures
 structures = read(input_file, index=':')  # Read all frames
@@ -62,7 +94,8 @@ for atoms in tqdm(structures, desc="Optimizing structures", unit="frame"):
     # Verify that the sum of per-atom energies matches the total energy
     total_energy = atoms.get_potential_energy()
     if not np.isclose(atomic_energies.sum(), total_energy, rtol=1e-5):
-        raise ValueError(f"Sum of per-atom energies ({atomic_energies.sum()}) does not match total energy ({total_energy}).")
+        print(f" Error: sum of per-atom energies ({atomic_energies.sum()}) does not match total energy ({total_energy}).")
+        sys.exit(1)
 
     # Group energies by element
     symbols = atoms.get_chemical_symbols()

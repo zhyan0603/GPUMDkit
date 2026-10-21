@@ -1,4 +1,4 @@
-#!bin/bash
+#!/bin/bash
 
 function submit_gpumd_array(){
 cat > submit.slurm <<-EOF

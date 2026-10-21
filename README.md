@@ -4,80 +4,106 @@
 <p align="center">
   <strong>English</strong>
   &nbsp;·&nbsp;
-  <a href="./README_zh-CN.md">简体中文</a>
+  <a href="./docs/README_zh-CN.md">简体中文</a>
   &nbsp;·&nbsp;
-  <a href="https://zhyan0603.github.io/GPUMDkit/">Website</a> &nbsp;·&nbsp;
-  <a href="https://zhyan0603.github.io/GPUMDkit/htmls/tutorials.html">Documentation</a>
+  <a href="https://gpumdkit.cn/">Website</a> &nbsp;·&nbsp;
+  <a href="https://gpumdkit.cn/htmls/index.html">Documentation</a>
   &nbsp;·&nbsp;
-  <a href="https://zhyan0603.github.io/GPUMDkit/gallery.html">Gallery</a>
+  <a href="https://gpumdkit.cn/gallery.html">Gallery</a>
   &nbsp;
 </p>
 <p align="center">
-  <a href="https://github.com/zhyan0603/GPUMDkit/releases"><img src="https://img.shields.io/github/v/tag/zhyan0603/GPUMDkit?label=version&style=flat-square&color=brightgreen" alt="Version"></a>
-  <a href="https://github.com/zhyan0603/GPUMDkit/blob/main/LICENCE"><img src="https://img.shields.io/badge/license-GPL--3.0-blue" alt="License"></a>
-  <a href="https://github.com/zhyan0603/GPUMDkit/stargazers"><img src="https://img.shields.io/github/stars/zhyan0603/GPUMDkit?style=social" alt="Stars"></a>
-  <img src="https://img.shields.io/github/languages/code-size/zhyan0603/GPUMDkit" alt="Code Size">
-  <a href="https://github.com/zhyan0603/GPUMDkit/graphs/contributors"><img src="https://img.shields.io/github/contributors/zhyan0603/GPUMDkit?style=flat-square&color=brightgreen" alt="Contributors"></a>
+  <a href="https://github.com/zhyan0603/GPUMDkit/releases"><img src="https://img.shields.io/github/v/tag/zhyan0603/GPUMDkit?label=Version&style=flat-square&color=brightgreen" alt="Version"></a>
+  <a href="https://github.com/zhyan0603/GPUMDkit/blob/main/LICENCE"><img src="https://img.shields.io/badge/License-GPL--3.0-blue?style=flat-square" alt="License"></a>
+  <a href="https://anaconda.org/channels/gpumdkit/packages/gpumdkit/overview"><img src="https://img.shields.io/conda/dn/gpumdkit/gpumdkit?style=flat-square&color=red&label=Conda&logo=anaconda" alt="Conda Downloads"></a>
+  <a href="https://badge.dimensions.ai/details/doi/10.1002/mgea.70074"><img src="https://img.shields.io/badge/dynamic/json?url=https%3A%2F%2Fmetrics-api.dimensions.ai%2Fdoi%2F10.1002%2Fmgea.70074&query=%24.times_cited&label=Citations&style=flat-square&color=blue&cacheSeconds=86400" alt="Citations"></a>
+  <a href="https://github.com/zhyan0603/GPUMDkit/stargazers"><img src="https://img.shields.io/github/stars/zhyan0603/GPUMDkit?style=flat-square&color=yellow&label=Stars" alt="Stars"></a>
+  <a href="https://github.com/zhyan0603/GPUMDkit/graphs/contributors"><img src="https://img.shields.io/github/contributors/zhyan0603/GPUMDkit?style=flat-square&color=brightgreen&label=Contributors" alt="Contributors"></a>
 </p>
-<p style="text-align: justify;"><strong>GPUMDkit</strong> is a toolkit for the GPUMD (<em>Graphics Processing Units Molecular Dynamics</em>) and NEP (<em>neuroevolution potential</em>) program. It offers a user-friendly command-line interface to streamline common scripts and workflows, simplifying tasks such as script invocation, format conversion, structure sampling, NEP construction workflow, and various analysis, aiming to improve user productivity.</p>
+<p style="text-align: justify;"><strong>GPUMDkit</strong> is a toolkit for the GPUMD (<em>Graphics Processing Units Molecular Dynamics</em>) and NEP (<em>neuroevolution potential</em>) programs. It provides a unified command-line entry point for common scripts, format conversion, structure sampling, NEP data preparation, analysis, and visualization.</p>
 
 ## Features
-- **Simplified Script Invocation**: Easily run scripts for GPUMD and NEP.
-- **Workflow Automation**: Automate common tasks to save time and reduce manual intervention.
-- **User-Friendly Interface**: Intuitive shell commands designed to enhance user experience.
+- **Data Preparation**: Convert, label, sample, split, filter, and inspect atomistic datasets.
+- **Workflow Automation**: Prepare batch DFT/MD calculations and active-learning workflows.
+- **Calculation and Analysis**: Calculate and analyze structural, transport, and NEP-related properties.
+- **Visualization and Post-processing**: Visualize NEP training, molecular dynamics, diffusion, and thermal-transport results.
+- **Flexible Interface**: Use an interactive menu or direct command-line options.
 
 ## Installation
-To install `GPUMDkit`, follow these steps:
 
-1. Clone the repository or download the whole project.
-
-    ```
-    git clone https://github.com/zhyan0603/GPUMDkit.git
-    ```
-
-    use `-b` options if you want to download the specified branch, for example:
-
-    ```
-    git clone -b dev https://github.com/zhyan0603/GPUMDkit.git
-    ```
-
-2. Run the following command:
-   
-    ```
-    cd GPUMDkit; source ./install.sh
-    ```
-    
-
-## Dependencies
-
-Some advanced features of `GPUMDkit` require some Python packages:
+### Conda (Recommended)
 
 ```bash
-# Create a clean conda environment
-conda create -n gpumdkit python=3.12
+conda create -n gpumdkit -c gpumdkit -c conda-forge gpumdkit
 conda activate gpumdkit
-
-# Install the required packages
-pip install neptrain ase pymatgen dpdata
 ```
 
-Tip: Make sure the `gpumdkit` environment is activated before using `GPUMDkit` features.
+Some features require optional packages:
+
+```bash
+pip install neptrain calorine
+```
+
+### From Source
+
+```bash
+git clone https://github.com/zhyan0603/GPUMDkit.git
+cd GPUMDkit
+source ./install.sh
+```
+
+### GPUMDkit Agent Skill
+
+GPUMDkit includes English and Chinese Agent Skills for AI-assisted GPUMDkit,
+GPUMD, and NEP workflows. After installation, run:
+
+```bash
+gpumdkit.sh -skill
+```
+
+Then ask your agent to follow the printed instructions and install the relevant
+skills globally. Global installation is the normal recommendation; if the
+installation scope is not specified, the agent should ask whether to use the
+global or current-project directory before creating links.
 
 ## Update
 
-If your device has access to `github`, simply run this command:
+### Conda Installation
 
+If `GPUMDkit` was installed with Conda, update it using:
+
+```bash
+conda activate gpumdkit
+conda update -c gpumdkit -c conda-forge gpumdkit
 ```
+
+Optional dependencies installed with pip can be updated separately if needed:
+
+```bash
+pip install --upgrade neptrain calorine
+```
+
+### Source Installation
+
+If `GPUMDkit` was installed from the source repository, run:
+
+```bash
 gpumdkit.sh -update
 ```
 
-Otherwise you will need to download the new package manually.
+This command checks the currently installed Git branch and pulls the latest updates from the same branch.
 
-```
+Alternatively, download the latest source archive manually:
+
+```bash
 wget https://github.com/zhyan0603/GPUMDkit/archive/refs/heads/main.zip
 ```
 
 ## Usage
+
+For a guided first run, see the [Quick Start](./docs/tutorials/en/quick_start.md).
+Use the [Command Reference](./docs/tutorials/en/command_reference.md) when you
+already know the task and need exact syntax.
 
 There are two options, <u>*interactive mode*</u> and <u>*command-line mode*</u>
 
@@ -95,32 +121,32 @@ There are two options, <u>*interactive mode*</u> and <u>*command-line mode*</u>
 
 3. Follow the on-screen prompts to interactively select and run the desired function.
 
-    ```
-               ____ ____  _   _ __  __ ____  _    _ _
-              / ___|  _ \| | | |  \/  |  _ \| | _(_) |_
-             | |  _| |_) | | | | |\/| | | | | |/ / | __|
-             | |_| |  __/| |_| | |  | | |_| |   <| | |_
-              \____|_|    \___/|_|  |_|____/|_|\_\_|\__|
-    
-              GPUMDkit Version 1.5.5 (dev) (2026-05-10)
-        Core Developer: Zihan YAN (yanzihan@westlake.edu.cn)
-     Main Contributors: Denan LI, Xin WU, Zhoulin LIU & Chen HUA
-    
-     ---------------------- GPUMD ------------------------
-     1) Format Conversion          2) Sample Structures
-     3) Workflow                   4) Calculators
-     5) Analyzer                   6) Visualization
-     7) Utilities                  8) Developing...
-     0) Exit
-     ------------>>
-     Input the function number:
-    ```
+   ```
+                  ____ ____  _   _ __  __ ____  _    _ _
+                 / ___|  _ \| | | |  \/  |  _ \| | _(_) |_
+                | |  _| |_) | | | | |\/| | | | | |/ / | __|
+                | |_| |  __/| |_| | |  | | |_| |   <| | |_
+                 \____|_|    \___/|_|  |_|____/|_|\_\_|\__|
+
+                 GPUMDkit Version 1.5.8 (2026-09-23)
+           Core Developer: Zihan YAN (yanzihan@westlake.edu.cn)
+        Main Contributors: Denan LI, Xin WU, Zhoulin LIU & Chen HUA
+
+        ---------------------- GPUMD ------------------------
+        1) Format Conversion          2) Sample Structures
+        3) Workflow                   4) Calculators
+        5) Analyzer                   6) Visualization
+        7) Utilities                  8) Help
+        0) Exit
+        ------------>>
+        Input the function number:
+   ```
 
 #### Command-Line Mode
 
 ----
 
-For users familiar with the `GPUMDkit` , the command-line mode allows for faster execution by directly passing arguments to `gpumdkit.sh`. Here are some examples:
+For users familiar with the `GPUMDkit`, the command-line mode allows for faster execution by directly passing arguments to `gpumdkit.sh`. Here are some examples. For browser-based access to remote working directories, see the [Remote Web Console guide](docs/tutorials/en/remote_web_console.md).
 
 ##### Example 1: View help information
 
@@ -132,25 +158,29 @@ the help information:
 
 ```
 +-------------------------------------------------------------------------------------------------------+
-|                          GPUMDkit 1.5.5 (dev) (2026-05-10) Command Help                               |
+|                          GPUMDkit 1.5.8 (2026-09-23)       Command Help                               |
 +-------------------------------------------------------------------------------------------------------+
 |                                          MAIN FUNCTIONS                                               |
 +-------------------------------------------------------------------------------------------------------+
 | -h            Show this help table            | -plt <type>        Plot and visualization tools       |
 | -calc <type>  Calculator tools                | -time <gpumd|nep>  Time-consuming analyzer            |
 | -update       Update GPUMDkit                 | -clean             Clean extra files in current dir   |
+| -skill        Show GPUMDkit agent skill info  | -doctor            Check Python environment           |
+| -server       Start the GPUMDkit web server   |                                                       |
+| -prediction   Write NEP prediction .out files | -prediction_dpa  Write DPA prediction .out files      |
 +-------------------------------------------------------------------------------------------------------+
 |                                         FORMAT CONVERSION                                             |
 +-------------------------------------------------------------------------------------------------------+
-| -out2xyz      OUTCAR -> extxyz (shell)        | -out2exyz          OUTCAR -> extxyz (python)          |
+| -out2xyz      OUTCAR -> extxyz (shell)        | -out2xyz_bec       OUTCAR -> extxyz with BEC          |
+| -out2exyz     OUTCAR -> extxyz (python)       | -xyz2dp            extxyz -> DeepMD npy               |
 | -cp2k2xyz     CP2K log -> xyz                 | -xdat2exyz         XDATCAR -> extxyz                  |
 | -cif2pos      cif -> POSCAR                   | -cif2exyz          cif -> extxyz                      |
 | -pos2exyz     POSCAR -> extxyz                | -exyz2pos          extxyz -> POSCAR                   |
-| -pos2lmp      POSCAR -> LAMMPS data           | -lmp2exyz          LAMMPS dump -> extxyz              |
+| -pos2lmp      POSCAR -> LAMMPS data           | -lmp2exyz          LAMMPS dump/data -> extxyz         |
 | -traj2exyz    ASE traj -> extxyz              | -replicate         Replicate structure                |
 | -addgroup     Add group labels                | -addweight         Add structure weight in extxyz     |
 | -clean_xyz    Clean extra info in extxyz      | -get_frame         Extract specific frame             |
-| -frame_range  Extract frames by range         |                                                       |
+| -frame_range  Extract frames by range         | -dp2xyz            DeepMD npy -> extxyz               |
 +-------------------------------------------------------------------------------------------------------+
 |                                            ANALYSIS                                                   |
 +-------------------------------------------------------------------------------------------------------+
@@ -158,10 +188,11 @@ the help information:
 | -chem_species Analyze chemical species        | -cbc               Charge balance check               |
 | -min_dist     Min distance (no PBC)           | -min_dist_pbc      Min distance with PBC              |
 | -filter_dist  Filter by min_dist (no PBC)     | -filter_dist_pbc   Filter by min_dist (PBC)           |
-| -pda          Probability density analysis    | -hbond             Hydrogen-bond analysis             |
-| -pynep        FPS sampling by PyNEP           |                                                       |
+| -pda          Probability density analysis    | -filter_box        Filter by box-edge length          |
+| -pynep        Deprecated PyNEP sampling       | -nep_modifier      Modify NEP model interactively     |
+| -shift_energy Interactive energy shift        |                                                       |
 +-------------------------------------------------------------------------------------------------------+
-| Detailed usage: gpumdkit.sh -<option> -h    Plot details: gpumdkit.sh -plt <type> -h                  |
+| Python option help: gpumdkit.sh -<option> -h    Plot list: gpumdkit.sh -plt -h                        |
 +-------------------------------------------------------------------------------------------------------+
 ```
 
@@ -175,9 +206,9 @@ the help information:
 
 ```
  +-----------------------------------------------------------------------------------------------+
- |                     GPUMDkit 1.5.5 (dev) (2026-05-10) PLOT & VISUALIZATION TOOLS              |
+ |                     GPUMDkit 1.5.8 (2026-09-23)       PLOT & VISUALIZATION TOOLS              |
  +-----------------------------------------------------------------------------------------------+
- |  Usage: gpumdkit.sh -plt <type>                        Help: gpumdkit.sh -plt <type> -h       |
+ |  Usage: gpumdkit.sh -plt <type>                        List: gpumdkit.sh -plt -h              |
  +-----------------------------------------------------------------------------------------------+
  |                                    NEP Training & Evaluation                                  |
  +-----------------------------------------------------------------------------------------------+
@@ -186,38 +217,42 @@ the help information:
  |  train_density  - Training results density plot  restart        - Parameters in nep.restart   |
  |  charge         - Charge distribution            born_charge    - Born effective charges      |
  |  dimer          - Dimer energy/force curve       force_errors   - Force errors                |
- |  des            - Descriptors                    lr             - Learning rate for gnep      |
+ |  des            - Descriptors                    net_force      - Net force distribution      |
  +-----------------------------------------------------------------------------------------------+
  |                                     Diffusion & Transport                                     |
  +-----------------------------------------------------------------------------------------------+
  |  msd            - Mean square displacement       msd_conv       - MSD convergence             |
  |  msd_all        - MSD for all species            sdc            - Self diffusion coefficient  |
- |  msd_sdc        - MSD and SDC together           sigma          - Arrhenius ionic conductivity|
- |  D              - Arrhenius diffusivity          sigma_xyz      - Directional Arrhenius sigma |
- |  D_xyz          - Directional Arrhenius D                                                     |
+ |  msd_sdc        - MSD and SDC together           doas           - Density of atomistic states |
+ |  D              - Arrhenius diffusivity          sigma          - Arrhenius ionic conductivity|
+ |  D_xyz          - Directional Arrhenius D        sigma_xyz      - Directional Arrhenius sigma |
+ |  D_PT           - PT Arrhenius D                 sigma_PT       - PT Arrhenius sigma          |
  +-----------------------------------------------------------------------------------------------+
  |                                    MD & Structural Analysis                                   |
  +-----------------------------------------------------------------------------------------------+
  |  thermo         - thermo info in thermo.out      thermo2/3      - Thermo in different styles  |
  |  rdf            - Radial distribution function   rdf_pmf        - Potential of mean force     |
  |  vac            - Velocity autocorrelation       cohesive       - Cohesive energy curve       |
- |  net_force      - Net force distribution         plane-grid     - Displacement plane grid     |
- |  doas           - Density of atomistic states                                                 |
+ |  xrd            - X-ray diffraction              plane-grid     - Displacement plane grid     |
+ |  xrd_comp       - Compare XRD                                                                 |
  +-----------------------------------------------------------------------------------------------+
  |                                        Heat Transport                                         |
  +-----------------------------------------------------------------------------------------------+
- |  emd            - EMD results                    nemd           - NEMD results                |
- |  hnemd          - HNEMD results                  viscosity      - Viscosity                   |
+ |  emd            - EMD results                    emd2           - EMD all directions          |
+ |  nemd           - NEMD results                   hnemd          - HNEMD results               |
+ |  viscosity      - Viscosity                                                                   |
  +-----------------------------------------------------------------------------------------------+
  |                                          Phonons                                              |
  +-----------------------------------------------------------------------------------------------+
- |  pdos           - VAC and PDOS                                                                |
+ |  pdos           - VAC and PDOS                 phonon         - Phonon band structure         |
+ |  phonon_comp    - Compare phonon band structures                                              |
  +-----------------------------------------------------------------------------------------------+
+ See the codes in plt_scripts for more details
 ```
 
 ##### Example 3: Convert VASP OUTCARs to extxyz
 
-To convert a `VASP` `OUTCARs` to an extended XYZ format (`extxyz`) file, use the following command:
+To convert a `VASP` `OUTCAR` file to an extended XYZ format (`extxyz`) file, use the following command:
 
 ```
 gpumdkit.sh -out2xyz <dir_of_OUTCARs>
@@ -234,24 +269,24 @@ gpumdkit.sh -plt train
 ```
 
 <div align="center">
-    <img src="./docs/Gallery/train.png" alt="msd" width="75%" />
+    <img src="./docs/Gallery/train.png" alt="Training loss and parity plots" width="75%" />
 </div>
 
-##### Example 5: Plot the parity plots
+##### Example 5: Plot prediction-mode parity results
 
-To visualize the parity plots:
+To visualize the prediction-mode parity results for structures in `train.xyz`:
 
 ```
 gpumdkit.sh -plt test
 ```
 
 <div align="center">
-    <img src="./docs/Gallery/prediction.png" alt="msd" width="95%" />
+    <img src="./docs/Gallery/prediction.png" alt="NEP prediction-mode parity results" width="95%" />
 </div>
 
 ##### Example 6: Plot thermo evolution
 
-To visualize `thermo` evolution from `thermo.out` :
+To visualize `thermo` evolution from `thermo.out`:
 
 ```
 gpumdkit.sh -plt thermo
@@ -265,13 +300,37 @@ You can also save images as PNG if your device doesn't support visualization:
 gpumdkit.sh -plt thermo save
 ```
 
-Refer to our [documentation](https://zhyan0603.github.io/GPUMDkit/htmls/tutorials.html) for more detailed examples and command options.
+##### Example 7: Plot phonon band structures
+
+After calculating phonons through `gpumdkit.sh -> 4) Calculators -> 414) Calc phonon band structure`, plot the result using the `QPOINTS` path definition:
+
+```
+gpumdkit.sh -plt phonon phonon_NEP.dat QPOINTS save
+gpumdkit.sh -plt phonon phonon_DFT.dat
+gpumdkit.sh -plt phonon_comp phonon_DFT.dat phonon_NEP.dat save
+```
+
+`phonon` accepts an optional data-file argument and uses `phonon_NEP.dat` by
+default; when only the data file is supplied, it uses the default `QPOINTS`.
+
+Comparison labels are read from filenames such as `phonon_NEP.dat` and
+`phonon_DFT.dat`. Two or more phonon files can be supplied to
+`phonon_comp`; use `--qpoints FILE` when the path file is not named `QPOINTS`.
+Comparison files may use different q-path offsets at disconnected segments, but
+must otherwise have the same q-point sampling and number of bands.
+
+<div align="center">
+  <img src="./docs/Gallery/phonon.png" alt="Phonon band structure" width="42%" />
+  <img src="./docs/Gallery/phonon_comp.png" alt="Phonon band comparison" width="47%" />
+</div>
+
+Refer to our [documentation](https://gpumdkit.cn/) for more detailed examples and command options.
 
 #### Custom Commands
 
 `GPUMDkit` now supports custom commands via `~/.gpumdkit.in`.
 
-You can add your own shortcuts (e.g., `gpumdkit.sh -yourcommand`) by defining some functions in this file. This allows you to extend `GPUMDkit` with personal scripts. See [here](https://zhyan0603.github.io/GPUMDkit/htmls/custom_commands.html) for the detail usage.
+You can add your own shortcuts (e.g., `gpumdkit.sh -yourcommand`) by defining functions in this file. This allows you to extend `GPUMDkit` with personal scripts. See [custom command documentation](https://gpumdkit.cn/) for details.
 
 #### Tab Completion Support
 
@@ -297,4 +356,25 @@ Also, welcome to join our QQ group ([825696376](https://qun.qq.com/universal-sha
 
 **GPUMDkit** is an open-source tool freely available for everyone. If you find it helpful in your research or workflow, please ⭐ [star us on GitHub](https://github.com/zhyan0603/GPUMDkit). Additionally, if GPUMDkit contributes to your published work, please cite our paper:
 
-> Z. Yan\*, D. Li, X. Wu, Z. Liu, C. Hua, B. Situ, H. Yang, S. Tang, B. Tang, Z. Wang, S. Yi, H. Wang, D. Huang, K. Li, Q. Guo, Z. Chen, K. Xu, Y. Wang, Z. Wang, G. Tang, S. Liu, Z. Fan, and Y. Zhu\*. **GPUMDkit: A User-Friendly Toolkit for GPUMD and NEP**. [MGE Advances, 2026, e70074](https://doi.org/10.1002/mgea.70074). 
+> Z. Yan\*, D. Li, X. Wu, Z. Liu, C. Hua, B. Situ, H. Yang, S. Tang, B. Tang, Z. Wang, S. Yi, H. Wang, D. Huang, K. Li, Q. Guo, Z. Chen, K. Xu, Y. Wang, Z. Wang, G. Tang, S. Liu, Z. Fan, and Y. Zhu\*. **GPUMDkit: A User-Friendly Toolkit for GPUMD and NEP**. [MGE Advances, 2026, 4, e70074](https://doi.org/10.1002/mgea.70074).
+
+<details>
+<summary><b>BibTeX</b></summary>
+
+```bibtex
+@article{yan2026gpumdkit,
+  title   = {GPUMDkit: A User-Friendly Toolkit for GPUMD and NEP},
+  author  = {Yan, Zihan and Li, Denan and Wu, Xin and Liu, Zhoulin and Hua, Chen and Situ, Boyi and Yang, Hao and Tang, Shengjie and Tang, Benrui and Wang, Ziyang and Yi, Shangzhao and Wang, Huan and Huang, Dian and Li, Ke and Guo, Qilin and Chen, Zherui and Xu, Ke and Wang, Yanzhou and Wang, Ziliang and Tang, Gang and Liu, Shi and Fan, Zheyong and Zhu, Yizhou},
+  journal = {MGE Advances},
+  volume  = {4},
+  pages   = {e70074},
+  year    = {2026},
+  doi     = {10.1002/mgea.70074}
+}
+```
+
+</details>
+
+In your manuscript you may write something like:
+
+> Data processing and figure generation were performed using GPUMDkit [x].

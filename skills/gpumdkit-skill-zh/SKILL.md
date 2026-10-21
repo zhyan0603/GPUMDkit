@@ -1,0 +1,89 @@
+---
+name: gpumdkit-skill-zh
+description: 端到端使用 GPUMDkit、GPUMD 与 NEP。适用于安装和了解 GPUMDkit，转换、采样、划分、筛选、分析、计算或绘制原子尺度数据集，准备批处理或主动学习流程，创建 model.xyz、run.in 或 nep.in，设置、运行、验证和后处理 GPUMD 模拟，训练、微调或评估 NEP 模型，开展扩散、离子电导率、Arrhenius、热输运等研究，以及维护 GPUMDkit 的代码、文档和技能文件。
+---
+
+# GPUMDkit
+
+将本技能作为 GPUMDkit 工具、GPUMD 模拟、NEP 训练与评估、结果验证和后处理的统一入口。每次只加载当前任务真正需要的参考文件。
+
+## 必须遵守的规则
+
+- 在给出命令、修改输入、运行工具或解释结果之前，先阅读相应的参考文件。本地参考或帮助信息可用时，不要凭记忆作答。
+- 只要尚未确定的选择可能影响科学含义、数值稳定性、数据筛选、单位、计算成本或结果解释，就必须询问用户。不得自行编造“看起来合理”的参数。
+- 未获得用户输入或未找到明确的项目既有设置时，不得擅自决定势函数、元素/类型映射、电荷、温度、时间步长、系综、压力、约束、运行步数、采样间隔、拟合区间、截断半径、随机种子或收敛标准。
+- 明确区分文档默认值、项目约定、一般建议和用户决定。不得把默认值悄悄当成正式计算参数。
+- 未经用户明确授权，不得覆盖输入文件、丢弃结构、启动 GPUMD/NEP/DFT、提交作业或开始耗时、昂贵的计算。
+- 在已授权任务内，目录命名、不覆盖原文件的复制和常规整理可直接执行。沿用确认的设置；缺失科学参数先提出建议供审核，用户修改后同步更新输入与记录。
+- 准备文件不等于获准执行计算。已授权的阶段应在批准范围内继续完成，不反复询问同一项授权。
+- 不默认创建测试集，不复制训练数据充当测试数据。遵循用户的划分决定，并说明独立验证的限制。
+- 在生成或翻译 GPUMD `run.in` 之前，先确认 GPUMD 版本。对于 GPUMD 5.7 及更高版本，原先由已删除 dump 关键字承担的输出功能使用 `dump_xyz`；`dump_position`、`dump_velocity`、`dump_force` 和 `dump_exyz` 只能作为 `references/gpumd-outputs.md` 中明确标注的 5.7 之前迁移语法。
+- 遇到解析错误、NaN/Inf、输出缺失、模拟不稳定或无法解释的警告时，应立即停止。先报告证据，再询问是否调整科学参数或重试。
+- 保留原始数据和工作区中与当前任务无关的改动。记录数据转换、筛选条件、排除项、执行命令、软件版本和所作假设。
+- 在隔离的临时目录中运行冒烟测试，并在交付前移除所有临时文件、目录、缓存和测试生成输出。只能定位并删除本次工作创建的路径；不得使用可能误删用户数据的宽泛清理目标。
+
+## 参考文件路由
+
+根据任务读取一个或多个参考文件，不要默认加载全部内容。
+
+| 任务 | 必读参考 |
+|---|---|
+| 安装、查找命令、选择模块、常见 CLI 用法 | [overview.md](references/overview.md) |
+| 结构/数据格式转换、标签、权重、扩胞、帧提取 | [format-conversion.md](references/format-conversion.md) |
+| 均匀/随机/FPS 采样、训练集/测试集划分、结构扰动、力偏差筛选 | [sampling.md](references/sampling.md) |
+| 批量 SCF/MD 准备和手动 MD/FPS 主动学习编排 | [workflows.md](references/workflows.md) |
+| MSD、离子电导率、XRD、描述符、NEB、结构优化、极化 | [calculators.md](references/calculators.md) |
+| 组成、数值范围、原子间距、结构筛选、异常值、概率密度 | [analyzers.md](references/analyzers.md) |
+| NEP/MD/输运/结构绘图与拟合输出 | [visualization.md](references/visualization.md) |
+| 新增或调整 GPUMDkit 图形；绘图风格与审查清单 | [plotting-style.md](references/plotting-style.md) |
+| 任意 GPUMD 模拟任务；模拟流程和内置参考路由 | [gpumd.md](references/gpumd.md) |
+| GPUMD `model.xyz`、`run.in`、分组、单位和辅助输入 | [gpumd-inputs.md](references/gpumd-inputs.md) |
+| GPUMD 势函数与初始化、模拟盒控制、受力、约束、结构优化 | [gpumd-setup.md](references/gpumd-setup.md) |
+| GPUMD NVE/NVT/NPT、MTTK、QTB、热输运、PIMD、TI、冲击系综 | [gpumd-ensembles.md](references/gpumd-ensembles.md) |
+| GPUMD 计算关键字、参数格式、输出和兼容性 | [gpumd-computes.md](references/gpumd-computes.md) |
+| GPUMD 轨迹输出、`active`/`observer` 模式和写出行为 | [gpumd-outputs.md](references/gpumd-outputs.md) |
+| 任意 NEP 训练或预测任务；训练流程和内置参考路由 | [nep.md](references/nep.md) |
+| NEP `train.xyz`/`test.xyz` 数据格式、目标量、单位和审查 | [nep-data.md](references/nep-data.md) |
+| 当前 `nep.in` 参数、默认值、取值范围和模式 | [nep-parameters.md](references/nep-parameters.md) |
+| NEP 损失、模型、断点续训、parity 图和验证 | [nep-outputs.md](references/nep-outputs.md) |
+| 扩散或电导率的变温序列与 Arrhenius 活化能 | [arrhenius.md](references/arrhenius.md) |
+| GPUMDkit 代码、CLI、脚本、文档、测试或技能维护 | [contributing.md](references/contributing.md) |
+
+按当前阶段加载参考：
+
+- 已有 MSD 的变温分析：`arrhenius.md` 和 `visualization.md`；计算电导率或轨迹 MSD 时再读 `calculators.md`。
+- 模拟准备：`gpumd.md`，以及当前方案涉及的输入、系综、计算和输出参考。
+- 数据集准备：`nep-data.md`，以及本次使用的转换、筛选或采样参考。
+- 训练配置与评估：`nep.md`，以及相应的参数或输出参考。
+- 主动学习：先读 `workflows.md` 的 `iter00`/`iter01` 目录、阶段衔接和授权约定，再加载当前采样、选样、DFT 标注、训练或验证阶段需要的参考。
+- 代码或文档修改：`contributing.md` 和受影响模块的参考；调整绘图外观时加读 `plotting-style.md`。
+
+## 信息来源优先级
+
+按以下顺序采用证据：
+
+1. 本地可执行文件的版本、帮助、解析器信息及对应源码。
+2. 对应 release 或 commit 的官方文档。
+3. GPUMDkit CLI、模块帮助和目标脚本实现。
+4. 版本范围与本次任务一致的内置参考。
+5. 已确认可在同一可执行文件版本下正常工作的项目输入。
+
+若不同来源互相矛盾，应列出具体冲突、可执行文件版本和解析器证据，再询问本任务应以哪个版本为准。不要猜测特定版本的语法，也不要把旧的独立 GPUMD/NEP 技能当作权威来源。
+
+## 工作流程
+
+1. 判断任务类型，并加载满足任务所需的最小参考集合。
+2. 检查现有文件、可执行文件版本、本地帮助和项目约定。
+3. 用简洁问题列出仍缺少的决定。可以继续安全的只读检查，但不得自行补上科学参数。
+4. 在执行昂贵计算前，说明已经确认的文件方案、命令、预期输出和验证标准。
+5. 有文档支持时，优先使用 `gpumdkit.sh` 命令。只有参考文件明确指出该功能仅能从菜单/调试路径调用，或确实没有 CLI 入口时，才直接运行 `${GPUMDkit_path}/Scripts/` 下的脚本。
+6. 获得执行授权后，记录完整命令、工作目录、版本、退出状态和警告；合适时先运行经用户同意的小规模测试。
+7. 开始后续分析前，先验证文件结构和物理行为。将平衡阶段与正式采样阶段分开，并说明排除的数据。
+8. 交付结果时给出单位、数据来源、收敛或拟合证据、不确定性和适用限制。
+
+## 可移植性
+
+- 所有链接均相对于本技能目录解析，不依赖特定产品的激活工具。
+- 使用标准 Markdown、YAML frontmatter、Shell 命令和仓库相对资源，使其可被兼容 Agent Skills 的客户端读取。
+- `agents/openai.yaml` 只是可选的界面元数据，不得依赖其中内容决定行为。
+- 优先通过 `${GPUMDkit_path}` 访问仓库资源；若变量未设置，应从当前工作区定位仓库或询问用户，不要猜测路径。

@@ -3,12 +3,13 @@
 GPUMDkit: A User-Friendly Toolkit for GPUMD and NEP
 Repository: https://github.com/zhyan0603/GPUMDkit
 Citation: Z. Yan et al., GPUMDkit: A User-Friendly Toolkit for GPUMD and NEP,
-          MGE Advances, 2026, e70074 (https://doi.org/10.1002/mgea.70074)
+          MGE Advances, 2026, 4, e70074 (https://doi.org/10.1002/mgea.70074)
 =============================================================================
 Script:     traj2exyz.py
 Category:   Format Conversion Scripts
 Purpose:    Convert an ASE .traj trajectory file to extended XYZ format.
-Usage:      python traj2exyz.py <input.traj> <output.xyz>
+Usage:      gpumdkit.sh -traj2exyz <input.traj> <output.xyz>
+            python traj2exyz.py <input.traj> <output.xyz>
 Arguments:
   input.traj   Input ASE trajectory file
   output.xyz   Output extxyz file
@@ -20,6 +21,20 @@ Last-modified: 2026-05-16
 """
 
 import sys
+
+args = sys.argv[1:]
+if len(args) < 2 or args[0] in ("-h", "--help"):
+    print(" Usage: gpumdkit.sh -traj2exyz <input.traj> <output.xyz>")
+    print("    or: python traj2exyz.py <input.traj> <output.xyz>")
+    print("")
+    print(" Arguments:")
+    print("   input.traj   Input ASE trajectory file")
+    print("   output.xyz   Output extxyz file")
+    print("")
+    print(" Example: gpumdkit.sh -traj2exyz md.traj output.xyz")
+    print("")
+    sys.exit(0 if args and args[0] in ("-h", "--help") else 1)
+
 import os
 from ase.io import read, write
 
@@ -45,11 +60,6 @@ def convert_traj_to_extxyz(input_file, output_file):
         print(f" An unexpected error occurred: {e}")
 
 if __name__ == "__main__":
-    # Check if correct number of arguments are provided
-    if len(sys.argv) != 3:
-        print(" Usage: python traj2exyz.py <input.traj> <output.xyz>")
-        sys.stdout.flush()
-    else:
-        input_path = sys.argv[1]
-        output_path = sys.argv[2]
-        convert_traj_to_extxyz(input_path, output_path)
+    input_path = sys.argv[1]
+    output_path = sys.argv[2]
+    convert_traj_to_extxyz(input_path, output_path)

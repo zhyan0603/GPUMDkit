@@ -16,6 +16,8 @@ The calculator scripts provide functionality for:
 - Averaged structure generation from trajectory slices
 - Octahedral tilt calculation from B-O neighbor lists
 - Local polarization calculation for ABO3 systems
+- X-ray diffraction (XRD) from extended XYZ trajectories
+- Phonon force constants and band structures from a NEP model
 - Radial distribution function (RDF) calculations
 
 ---
@@ -44,6 +46,12 @@ gpumdkit.sh -calc ionic-cond <element> <charge>
 ```bash
 python calc_ion_conductivity.py <element> <charge>
 ```
+
+The calculator reads time and `MSD_x/y/z` from columns 1–4. The `element`
+argument counts ions; it does not select MSD columns. For `all_groups` output,
+extract the target group's time and MSD columns before running. Use an integer
+charge in units of the elementary charge. The result is Nernst–Einstein
+conductivity and does not include inter-ion displacement correlations.
 
 #### Parameters
 - `<element>`: Chemical species symbol (e.g., Li, Na, O)
@@ -93,12 +101,12 @@ Calculates energies, forces, and stresses for structures using a NEP model. You 
 
 ***Note that you must know what you are doing and this is not a substitute for DFT calculations.***
 
-Unless you have a well-trained NEP model and you want to use it as a DFT surrogate, you probably shouldn't use this feature. See [this article]([ https://doi.org/10.48550/arXiv.2504.15925](https://doi.org/10.48550/arXiv.2504.15925)) if you are interesting in it.
+Unless you have a well-trained NEP model and you want to use it as a DFT surrogate, you probably shouldn't use this feature. See [this article](https://doi.org/10.48550/arXiv.2504.15925) if you are interested in it.
 
 #### Input Files
 - A clean structure file in `extxyz` format with energy, force, and virial/stress. 
 
-  (use `gpumdkit.sh -clean_xyz train.xyz` to remove the original values)
+  (use `gpumdkit.sh -clean_xyz train.xyz clean_train.xyz` to remove the original values)
 
 - NEP model file (nep.txt)
 
@@ -127,6 +135,65 @@ gpumdkit.sh -calc nep structures.xyz predictions.xyz nep.txt
 ```bash
 pip install calorine
 ```
+
+---
+
+### prediction.py
+
+Evaluates all frames in an extended XYZ file with Calorine's `CPUNEP`
+calculator and writes NEP-compatible prediction/target files. The output
+suffix is derived from the input filename: `test.xyz` produces
+`energy_test.out`, `force_test.out`, `stress_test.out`, and `virial_test.out`.
+
+#### Usage
+
+```bash
+# Single-core prediction (default)
+gpumdkit.sh -prediction train.xyz nep.txt
+
+# Eight CPU workers
+gpumdkit.sh -prediction train.xyz nep.txt 8
+```
+
+The output files contain predicted columns followed by target columns. Energy
+is written in eV/atom, forces in eV/Angstrom, stress in GPa, and virial in
+eV/atom, using the NEP tensor order `xx yy zz xy yz xz` and the same sign
+convention for stress and virial (`stress = virial / volume`, positive when
+compressed). An input `stress=` field is positive when stretched and is converted
+with `virial = -stress * volume`, as NEP does. If only one of stress or virial is
+supplied, the other target is derived this way with the appropriate unit
+conversion. Only frames missing both use the `-1e6` NEP sentinel; energy
+and force targets are required. A `tqdm` progress bar is shown during prediction.
+
+The command requires `ase`, `calorine`, and `tqdm`.
+
+---
+
+### prediction_dpa.py
+
+Evaluates every frame in a labeled extended XYZ training set with a DeepMD
+DPA model through `deepmd.infer.DeepPot` and writes the four NEP-compatible
+training prediction files in the current directory:
+`energy_train.out`, `force_train.out`, `virial_train.out`, and
+`stress_train.out`.
+
+#### Usage
+
+```bash
+gpumdkit.sh -prediction_dpa train.xyz model.ckpt.pt
+```
+
+Direct execution is also supported:
+
+```bash
+python prediction_dpa.py train.xyz model.ckpt.pt
+```
+
+The output files contain predicted values followed by target values. Energy
+is written in eV/atom, forces in eV/Angstrom, stress in GPa, and virial in
+eV/atom, using the existing DPA prediction tensor and sign conventions.
+
+The command requires `deepmd-kit` and `numpy`.
 
 ---
 
@@ -168,7 +235,7 @@ gpumdkit.sh -calc des train.xyz descriptors.npy nep.txt Li
 - **Model comparison**: Compare descriptor distributions across different models
 
 #### Reference
-See [arXiv:2504.15925](https://doi.org/10.48550/arXiv.2504.15925) if you are interesting in it.
+See [arXiv:2504.15925](https://doi.org/10.48550/arXiv.2504.15925) if you are interested in it.
 
 ---
 
@@ -200,8 +267,8 @@ python calc_doas.py <input.xyz> <nep.txt> <doas.out>
 gpumdkit.sh -calc doas structures.xyz nep.txt doas.out
 
 # Visualize results
-gpumdkit.sh -plt doas doas.txt <species>
-gpumdkit.sh -plt doas doas.txt Li
+gpumdkit.sh -plt doas doas.out <species>
+gpumdkit.sh -plt doas doas.out Li
 ```
 
 #### Process
@@ -211,7 +278,7 @@ gpumdkit.sh -plt doas doas.txt Li
 4. Groups energies by element type
 5. Outputs distribution for each element
 
-You can also do the `minimize` and atomistic energy calculations in `gpumd`, which is prefered for large-scale structures.
+You can also do the `minimize` and atomistic energy calculations in `gpumd`, which is preferred for large-scale structures.
 
 ---
 
@@ -311,7 +378,12 @@ Performs nudged elastic band (NEB) calculations to find minimum energy pathways 
 
 #### Usage
 
-**Direct execution only:**
+**Command-line mode:**
+```bash
+gpumdkit.sh -calc neb <initial.xyz> <final.xyz> <n_images> <nep.txt>
+```
+
+**Direct execution:**
 ```bash
 python neb_calculation.py <initial.xyz> <final.xyz> <n_images> <nep.txt>
 ```
@@ -326,26 +398,33 @@ python neb_calculation.py <initial.xyz> <final.xyz> <n_images> <nep.txt>
 
 ```bash
 # Calculate Li migration pathway with 9 intermediate images
-python neb_calculation.py init.xyz fin.xyz 9 nep.txt
+gpumdkit.sh -calc neb init.xyz fin.xyz 9 nep.txt
 ```
 
 #### Interactive Options
-```
+```text
  Input the function number:
  4
- ------------>>
- 401) Calc ionic conductivity
- 402) Calc properties by nep
- 403) Calc descriptors of specific elements
- 404) Calc density of atomistic states (DOAS)
- 405) Calc nudged elastic band (NEB) by nep
- 406) Build neighbor list
- 407) Calc displacement from trajectory
- 408) Calc averaged structure
- 409) Calc octahedral tilt
- 410) Calc polarization for ABO3
- 000) Return to the main menu
- ------------>>
+ +----------------------------------------------------------+
+ |                     CALCULATOR TOOLS                     |
+ +----------------------------------------------------------+
+ | 401) Calc ionic conductivity                             |
+ | 402) Calc properties by nep                              |
+ | 403) Calc descriptors of specific elements               |
+ | 404) Calc density of atomistic states (DOAS)             |
+ | 405) Calc nudged elastic band (NEB) by nep               |
+ | 406) Build neighbor list                                 |
+ | 407) Calc displacement from trajectory                   |
+ | 408) Calc averaged structure                             |
+ | 409) Calc octahedral tilt                                |
+ | 410) Calc polarization for ABO3                          |
+ | 411) Minimize structure by nep                           |
+ | 412) Calc mean square displacement (MSD) from trajectory |
+ | 413) Calc XRD from extxyz trajectory                     |
+ | 414) Calc phonon band structure                          |
+ +----------------------------------------------------------+
+ | 000) Return to the main menu                             |
+ +----------------------------------------------------------+
  Input the function number:
  405
  >-------------------------------------------------<
@@ -354,8 +433,144 @@ python neb_calculation.py init.xyz fin.xyz 9 nep.txt
  | Developer: Zhoulin LIU (1776627910@qq.com)      |
  >-------------------------------------------------<
  Input <initial_struct> <final_struct> <n_image> <nep_model>
- Examp: IS.xyz FS.xyz 5 nep.txt
+ Example: IS.xyz FS.xyz 5 nep.txt
  ------------>>
+```
+
+---
+
+### calc_minimize.py
+
+Minimizes a structure using a NEP model through `calorine`.
+
+#### Usage
+
+**Command-line mode:**
+```bash
+gpumdkit.sh -calc minimize <structure_file> <nep.txt> [fmax] [max_steps]
+```
+
+**Direct execution:**
+```bash
+python calc_minimize.py <structure_file> <nep.txt> [fmax=0.01] [max_steps=1000]
+```
+
+#### Example
+
+```bash
+gpumdkit.sh -calc minimize POSCAR nep.txt 0.01 1000
+```
+
+The output file is `minimized.xyz`.
+
+---
+
+### calc_msd.py
+
+Calculates mean square displacement (MSD) from an extxyz trajectory for a selected element.
+
+#### Usage
+
+**Command-line mode:**
+```bash
+gpumdkit.sh -calc msd <extxyz_file> <element_symbol> <dt_fs> [max_corr_steps]
+```
+
+**Direct execution:**
+```bash
+python calc_msd.py <extxyz_file> <element_symbol> <dt_fs> [max_corr_steps]
+```
+
+#### Example
+
+```bash
+gpumdkit.sh -calc msd dump.xyz Li 10
+```
+
+Use a fixed-cell trajectory with stable atom order and verified unwrapped
+coordinates in the `pos` field. The script reads `pos` and the first frame's
+cell; it does not use a separate `unwrapped_position` property. Its automatic
+wrapping check is not sufficient to validate wrapped trajectories, and its
+axis-wise unwrapping does not handle general tilted or changing cells.
+The command overwrites `msd.out` in the current directory.
+
+The output file is `msd.out` with four columns: `Time(ps)`, `MSD_x`, `MSD_y`,
+and `MSD_z`. Use `gpumdkit.sh -plt msd` to plot it.
+
+GPUMD's native `compute_msd` writes a seven-column `msd.out` for one selected
+group (`time`, `MSD_x/y/z`, `SDC_x/y/z`), which is the input for `-plt sdc` and
+`-plt msd_sdc`. Multi-group output appends group data. `compute_sdc` writes a
+separate `sdc.out` for `-plt vac`.
+
+---
+
+### calc_xrd.py
+
+Calculates histogrammed X-ray diffraction intensities from an extended XYZ
+trajectory using the LAMMPS-compatible atomic scattering-factor table embedded
+in the script. This feature is intentionally interactive only; it has no CLI
+interface.
+
+Start it from the main menu with `4) Calculators -> 413) Calc XRD`.
+
+The Python page asks for:
+
+1. input extended XYZ trajectory;
+2. output XRD file;
+3. X-ray wavelength in Angstrom;
+4. `2theta` minimum and maximum in degrees;
+5. number of bins over exactly that `2theta` interval;
+6. atoms to include: `all` or comma/space-separated element symbols;
+7. CPU workers, where `0` selects automatic parallelism.
+
+The default calculation uses all atoms, the `Lattice`/`pbc` metadata from the
+trajectory, standard scattering factors, and the Lorentz-polarization factor.
+The cell must be orthogonal and contain periodic directions. The output starts
+with metadata headers and then contains `Bin`, `Coord`, `Count`, and
+`Count/Total` columns.
+
+The implementation streams the trajectory once, caches the reciprocal mesh for
+frames with the same cell, groups atoms by element, and uses ordered threaded
+workers when more than one CPU worker is selected. These are implementation
+optimizations and do not change the XRD formula or the selected `2theta`
+range.
+
+---
+
+### calc_phonon.py
+
+Calculates phonon force constants with a NEP model and evaluates the phonon
+band structure along a line-mode `QPOINTS` path. This calculator is interactive
+only.
+
+Start it from the main menu with:
+
+```text
+4) Calculators -> 414) Calc phonon band structure
+```
+
+The prompts use these defaults:
+
+```text
+Primitive cell structure [PRIMCELL.vasp]
+NEP model [nep.txt]
+QPOINTS file [QPOINTS]
+Supercell dimensions [1 1 1]
+Displacement distance [0.015]
+Output phonon file [phonon_NEP.dat]
+```
+
+The output is consumed by the plotting scripts:
+
+```bash
+gpumdkit.sh -plt phonon phonon_NEP.dat QPOINTS save
+gpumdkit.sh -plt phonon_comp phonon_DFT.dat phonon_NEP.dat save
+```
+
+Install `phonopy` before running the calculator:
+
+```bash
+pip install phonopy
 ```
 
 ---

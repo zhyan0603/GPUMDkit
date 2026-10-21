@@ -3,13 +3,13 @@
 GPUMDkit: A User-Friendly Toolkit for GPUMD and NEP
 Repository: https://github.com/zhyan0603/GPUMDkit
 Citation: Z. Yan et al., GPUMDkit: A User-Friendly Toolkit for GPUMD and NEP,
-          MGE Advances, 2026, e70074 (https://doi.org/10.1002/mgea.70074)
+          MGE Advances, 2026, 4, e70074 (https://doi.org/10.1002/mgea.70074)
 =============================================================================
 Script:     plt_prediction.py
 Category:   Plot Scripts
 Purpose:    Visualize NEP prediction results with parity plots for energy,
-            forces, and stresses, including marginal distributions and
-            residual histograms.
+            forces, and stress or virial data, including marginal
+            distributions and residual histograms. Valid stress is preferred.
 Usage:      gpumdkit.sh -plt prediction [save]
             python plt_prediction.py [save]
 Arguments:
@@ -17,10 +17,11 @@ Arguments:
 Output:
   prediction.png  (if save is used, or if backend is non-interactive)
 Author:     Zihan YAN (yanzihan@westlake.edu.cn)
-Last-modified: 2026-05-16
+Last-modified: 2026-08-28
 =============================================================================
 """
 
+import os
 import sys
 import numpy as np
 import matplotlib
@@ -54,11 +55,35 @@ plt.rcParams['text.color'] = 'black'
 # =========================
 energy_data = np.loadtxt('energy_train.out')
 force_data = np.loadtxt('force_train.out')
-stress_data = np.loadtxt('stress_train.out')
 
-# Filter invalid stress rows
-valid_rows = ~np.any(np.abs(stress_data[:, :12]) >= 1e6, axis=1)
-stress_data = stress_data[valid_rows]
+
+def load_valid_tensor(path):
+    """Load valid NEP tensor rows, excluding sentinel and non-finite values."""
+    if not os.path.isfile(path):
+        return None
+    data = np.atleast_2d(np.loadtxt(path))
+    if data.shape[1] < 12:
+        raise ValueError(f"{path} must contain at least 12 columns.")
+    data = data[:, :12]
+    valid_rows = np.isfinite(data).all(axis=1) & np.all(np.abs(data) < 1e6, axis=1)
+    return data[valid_rows]
+
+
+tensor_name = "Stress"
+tensor_axis_unit = "GPa"
+tensor_metric_unit = "GPa"
+tensor_metric_scale = 1.0
+tensor_data = None
+stress_data = load_valid_tensor('stress_train.out')
+virial_data = load_valid_tensor('virial_train.out')
+if stress_data is not None and stress_data.shape[0] > 0:
+    tensor_data = stress_data
+elif virial_data is not None and virial_data.shape[0] > 0:
+    tensor_name = "Virial"
+    tensor_axis_unit = "eV/atom"
+    tensor_metric_unit = "meV/atom"
+    tensor_metric_scale = 1000.0
+    tensor_data = virial_data
 
 # =========================
 # Utility functions
@@ -78,6 +103,23 @@ def r2_score_np(true, pred):
         return np.nan
     return 1.0 - ss_res / ss_tot
 
+def print_parity_metrics(energy, force, tensor, tensor_label, tensor_unit_label):
+    """Print energy, force, and tensor parity metrics as a three-line table."""
+    tensor_r2, tensor_mae, tensor_rmse = tensor if tensor is not None else (None, None, None)
+    tensor_r2_text = f"{tensor_r2:.4f}" if tensor_r2 is not None else "N/A"
+    tensor_mae_text = f"{tensor_mae:.4f}" if tensor_mae is not None else "N/A"
+    tensor_rmse_text = f"{tensor_rmse:.4f}" if tensor_rmse is not None else "N/A"
+    line = " " + "-" * 48
+    print(" Parity metrics (training set)")
+    print(f" Energy: meV/atom, Force: meV/Ang, {tensor_label}: {tensor_unit_label}")
+    print(line)
+    print(f" {'Metric':<8}{'Energy':>12}{'Force':>12}{tensor_label:>12}")
+    print(line)
+    print(f" {'R^2':<8}{energy[0]:>12.4f}{force[0]:>12.4f}{tensor_r2_text:>12}")
+    print(f" {'MAE':<8}{energy[1]:>12.2f}{force[1]:>12.2f}{tensor_mae_text:>12}")
+    print(f" {'RMSE':<8}{energy[2]:>12.2f}{force[2]:>12.2f}{tensor_rmse_text:>12}")
+    print(line)
+
 def get_limits(true, pred, padding=0.05):
     true = np.asarray(true).reshape(-1)
     pred = np.asarray(pred).reshape(-1)
@@ -90,32 +132,30 @@ def get_limits(true, pred, padding=0.05):
     return data_min - pad, data_max + pad
 
 def beautify_axes(ax):
-    # ax.grid(True, linestyle='-', linewidth=0.8, alpha=0.5, color='lightgray')
     ax.spines['top'].set_visible(False)
     ax.spines['right'].set_visible(False)
+    ax.tick_params(top=False, right=False)
     ax.tick_params(axis='both', colors='black')
 
 def add_marginal_distributions(ax, true, pred, color, bins=35):
     divider = make_axes_locatable(ax)
 
-    ax_top = divider.append_axes("top", size="18%", pad=0.06, sharex=ax)
-    ax_right = divider.append_axes("right", size="18%", pad=0.06, sharey=ax)
+    ax_top = divider.append_axes("top", size="18%", pad=0, sharex=ax)
+    ax_right = divider.append_axes("right", size="18%", pad=0, sharey=ax)
 
     ax_top.hist(true, bins=bins, color=color, alpha=0.55, edgecolor='gray', linewidth=0.6)
     ax_right.hist(pred, bins=bins, orientation='horizontal',
                   color=color, alpha=0.55, edgecolor='gray', linewidth=0.6)
 
     # Top marginal
-    ax_top.tick_params(axis='x', labelbottom=False, bottom=False)
-    ax_top.tick_params(axis='y', left=False, labelleft=False)
+    ax_top.tick_params(axis='both', which='both', length=0, labelbottom=False, labelleft=False)
     ax_top.spines['top'].set_visible(False)
     ax_top.spines['right'].set_visible(False)
     ax_top.spines['left'].set_visible(False)
     ax_top.grid(False)
 
     # Right marginal
-    ax_right.tick_params(axis='y', labelleft=False, left=False)
-    ax_right.tick_params(axis='x', bottom=False, labelbottom=False)
+    ax_right.tick_params(axis='both', which='both', length=0, labelbottom=False, labelleft=False)
     ax_right.spines['top'].set_visible(False)
     ax_right.spines['right'].set_visible(False)
     ax_right.spines['bottom'].set_visible(False)
@@ -176,6 +216,7 @@ def plot_parity_with_marginals(ax, true, pred, xlabel, ylabel, color, mae_text, 
 
     residuals = pred - true
     add_residual_inset(ax, residuals, color)
+    return r2_val
 
 # =========================
 # Figure and colors - Changed to 1x3 layout
@@ -196,7 +237,7 @@ energy_pred = energy_data[:, 0]
 energy_rmse = rmse(energy_pred, energy_true) * 1000.0
 energy_mae = mae(energy_pred, energy_true) * 1000.0
 
-plot_parity_with_marginals(
+energy_r2 = plot_parity_with_marginals(
     axs[0],
     energy_true,
     energy_pred,
@@ -221,7 +262,7 @@ force_pred_flat = force_pred.reshape(-1)
 force_rmse = rmse(force_pred_flat, force_true_flat) * 1000.0
 force_mae = mae(force_pred_flat, force_true_flat) * 1000.0
 
-plot_parity_with_marginals(
+force_r2 = plot_parity_with_marginals(
     axs[1],
     force_true_flat,
     force_pred_flat,
@@ -233,28 +274,38 @@ plot_parity_with_marginals(
 )
 
 # =========================
-# Stress panel
-# stress_data[:, 0:6] -> NEP
-# stress_data[:, 6:12] -> DFT
+# Stress/virial panel
+# tensor_data[:, 0:6] -> NEP
+# tensor_data[:, 6:12] -> DFT
 # =========================
-stress_true = stress_data[:, 6:12]
-stress_pred = stress_data[:, 0:6]
+if tensor_data is None or tensor_data.shape[0] == 0:
+    axs[2].axis('off')
+    tensor_metrics = None
+else:
+    tensor_true = tensor_data[:, 6:12]
+    tensor_pred = tensor_data[:, 0:6]
+    tensor_true_flat = tensor_true.reshape(-1)
+    tensor_pred_flat = tensor_pred.reshape(-1)
+    tensor_rmse = rmse(tensor_pred_flat, tensor_true_flat) * tensor_metric_scale
+    tensor_mae = mae(tensor_pred_flat, tensor_true_flat) * tensor_metric_scale
+    tensor_r2 = plot_parity_with_marginals(
+        axs[2],
+        tensor_true_flat,
+        tensor_pred_flat,
+        f'DFT {tensor_name.lower()} ({tensor_axis_unit})',
+        f'NEP {tensor_name.lower()} ({tensor_axis_unit})',
+        stress_color,
+        f'MAE = {tensor_mae:.4f} {tensor_metric_unit}',
+        f'RMSE = {tensor_rmse:.4f} {tensor_metric_unit}'
+    )
+    tensor_metrics = (tensor_r2, tensor_mae, tensor_rmse)
 
-stress_true_flat = stress_true.reshape(-1)
-stress_pred_flat = stress_pred.reshape(-1)
-
-stress_rmse = rmse(stress_pred_flat, stress_true_flat)
-stress_mae = mae(stress_pred_flat, stress_true_flat)
-
-plot_parity_with_marginals(
-    axs[2],
-    stress_true_flat,
-    stress_pred_flat,
-    'DFT stress (GPa)',
-    'NEP stress (GPa)',
-    stress_color,
-    f'MAE = {stress_mae:.4f} GPa',
-    f'RMSE = {stress_rmse:.4f} GPa'
+print_parity_metrics(
+    (energy_r2, energy_mae, energy_rmse),
+    (force_r2, force_mae, force_rmse),
+    tensor_metrics,
+    tensor_name,
+    tensor_metric_unit,
 )
 
 # =========================

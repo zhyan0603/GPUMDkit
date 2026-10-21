@@ -3,7 +3,7 @@
 # GPUMDkit: A User-Friendly Toolkit for GPUMD and NEP
 # Repository: https://github.com/zhyan0603/GPUMDkit
 # Citation: Z. Yan et al., GPUMDkit: A User-Friendly Toolkit for GPUMD and NEP,
-#           MGE Advances, 2026, e70074 (https://doi.org/10.1002/mgea.70074)
+#           MGE Advances, 2026, 4, e70074 (https://doi.org/10.1002/mgea.70074)
 # =============================================================================
 # Script:     out2xyz.sh
 # Category:   Format Conversion Scripts
@@ -15,7 +15,7 @@
 # Output:
 #   NEPdataset/train.xyz  (converted dataset in extxyz format)
 # Author:     Yuwen Zhang, Shunda Chen, Zihan YAN (yanzihan@westlake.edu.cn)
-# Last-modified: 2026-05-16
+# Last-modified: 2026-09-17
 # =============================================================================
 
 #--- DEFAULT ASSIGNMENTS ---------------------------------------------------------------------
@@ -46,15 +46,17 @@ non_converged_files=()
 
 echo " Checking the convergence of OUTCARs ..."
 
-for file in $(find "$read_dire" -name "OUTCAR"); do
+while IFS= read -r -d '' file; do
     NSW=$(grep "number of steps for IOM" "$file" | awk '{print $3}')
-    
+    NSW=${NSW:-0}
+
     if [ "$NSW" -ne 0 ]; then
         converged_files+=("$file")
         continue
     fi
-    
+
     NELM=$(grep "of ELM steps" "$file" | awk '{print $3}' | tr -d ';')
+    NELM=${NELM:-0}
     actual_steps=$(grep -c "Iteration" "$file")
 
     if grep -q "aborting loop because EDIFF is reached" "$file"; then
@@ -66,7 +68,7 @@ for file in $(find "$read_dire" -name "OUTCAR"); do
     else
         non_converged_files+=("$file")
     fi
-done
+done < <(find -L "$read_dire" -name "OUTCAR" -print0)
 
 total_converged=${#converged_files[@]}
 total_non_converged=${#non_converged_files[@]}
@@ -84,12 +86,15 @@ fi
 N_count=1
 for file in "${converged_files[@]}"; do
     configuration=$(basename "$(dirname "$file")")
+    configuration=${configuration//\\/\\\\}
+    configuration=${configuration//\"/\\\"}
     start_lines=($(sed -n '/aborting loop because EDIFF is reached/=' "$file"))
     end_lines=($(sed -n '/[^ML] energy  without entropy/=' "$file"))
     ion_numb_arra=($(grep "ions per type" "$file" | tail -n 1 | awk -F"=" '{print $2}'))
     ion_symb_arra=($(grep "TITEL" "$file" | awk '{print $4}' | awk -F"_" '{print $1}' ))
+
     if [ ${#ion_symb_arra[@]} -eq 0 ]; then
-        # VASP 6.6.0 omit "TITEL" lines
+        # VASP 6.6.0 omits "TITEL" lines.
         ion_symb_arra=($(grep "^ POSCAR:" "$file" | tail -n 1 | awk -F":" '{print $2}'))
     fi
     syst_numb_atom=$(grep "number of ions" "$file" | awk '{print $12}')
@@ -112,9 +117,9 @@ for file in "${converged_files[@]}"; do
 
         if [[ $viri_logi -eq 1 ]]; then
             viri=$(grep -A 20 "FORCE on cell =-STRESS" temp.file | grep "Total " | tail -n 1 | awk '{print $2,$5,$7,$5,$3,$6,$7,$6,$4}')
-            echo "Config_type=$configuration Weight=1.0 Lattice=\"$latt\" Energy=$ener Virial=\"$viri\" pbc=\"T T T\" Properties=species:S:1:pos:R:3:forces:R:3" >> "$writ_dire/$writ_file"
+            echo "Config_type=\"$configuration\" Weight=1.0 Lattice=\"$latt\" Energy=$ener Virial=\"$viri\" pbc=\"T T T\" Properties=species:S:1:pos:R:3:forces:R:3" >> "$writ_dire/$writ_file"
         else
-            echo "Config_type=$configuration Weight=1.0 Lattice=\"$latt\" Properties=species:S:1:pos:R:3:forces:R:3 Energy=$ener pbc=\"T T T\"" >> "$writ_dire/$writ_file"
+            echo "Config_type=\"$configuration\" Weight=1.0 Lattice=\"$latt\" Properties=species:S:1:pos:R:3:forces:R:3 Energy=$ener pbc=\"T T T\"" >> "$writ_dire/$writ_file"
         fi
 
         for((j=0;j<${#ion_numb_arra[*]};j++));do

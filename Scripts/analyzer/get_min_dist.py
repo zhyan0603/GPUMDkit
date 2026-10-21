@@ -3,14 +3,16 @@
 GPUMDkit: A User-Friendly Toolkit for GPUMD and NEP
 Repository: https://github.com/zhyan0603/GPUMDkit
 Citation: Z. Yan et al., GPUMDkit: A User-Friendly Toolkit for GPUMD and NEP,
-          MGE Advances, 2026, e70074 (https://doi.org/10.1002/mgea.70074)
+          MGE Advances, 2026, 4, e70074 (https://doi.org/10.1002/mgea.70074)
 =============================================================================
 Script:     get_min_dist.py
 Category:   Analyzer Scripts
 Purpose:    Compute the minimum interatomic distance for each element pair
             across all frames in an extxyz file (no PBC, faster for large
             systems).
-Usage:      python get_min_dist.py <file_name>
+Usage:      gpumdkit.sh -min_dist <file_name>
+            python get_min_dist.py <file_name>
+Example:    gpumdkit.sh -min_dist train.xyz
 Arguments:
   file_name  Input extxyz file
 Output:
@@ -20,7 +22,24 @@ Last-modified: 2026-05-16
 =============================================================================
 """
 
+import os
 import sys
+
+args = sys.argv[1:]
+if len(args) < 1 or args[0] in ("-h", "--help"):
+    print(" Usage: gpumdkit.sh -min_dist <file_name>")
+    print("    or: python get_min_dist.py <file_name>")
+    print("")
+    print(" Arguments:")
+    print("   file_name   Input extxyz trajectory file")
+    print("")
+    print(" Output:")
+    print("   Table of minimum distances for each element pair and overall minimum")
+    print("")
+    print(" Example: gpumdkit.sh -min_dist train.xyz")
+    print("")
+    sys.exit(0 if args and args[0] in ("-h", "--help") else 1)
+
 import numpy as np
 from ase.io import read
 from scipy.spatial.distance import pdist, squareform
@@ -28,14 +47,19 @@ from scipy.spatial.distance import pdist, squareform
 # Read the file name from command line arguments
 file_name = sys.argv[1]
 
+if not os.path.isfile(file_name):
+    print(f" Error: file '{file_name}' does not exist.")
+    sys.exit(1)
+
 # Read all frames from the extxyz file
 frames = read(file_name, index=':')
 
-# Get the original order of atom types from the first frame
-first_frame_symbols = frames[0].get_chemical_symbols()
-# Get unique symbols while preserving order
+# Get unique symbols across all frames while preserving first appearance order.
 unique_symbols = []
-[unique_symbols.append(s) for s in first_frame_symbols if s not in unique_symbols]
+for frame in frames:
+    for symbol in frame.get_chemical_symbols():
+        if symbol not in unique_symbols:
+            unique_symbols.append(symbol)
 
 # Dictionary to store minimum distances between atom pairs
 min_distances = {}
@@ -66,7 +90,7 @@ for frame in frames:
                 pair_distances = pair_distances[pair_distances > 0]
 
             # Update minimum distance if we have valid distances
-            if len(pair_distances) > 0:
+            if pair_distances.size > 0:
                 min_dist = np.min(pair_distances)
                 pair_key = f"{sym1}-{sym2}"
                 if pair_key not in min_distances or min_dist < min_distances[pair_key]:

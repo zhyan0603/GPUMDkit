@@ -245,9 +245,9 @@ def txt_block(name, unit, x_name, x_unit, x, arr, trailing_labels=("average",)):
 
 def print_usage():
     """Print usage instructions"""
-    print("Usage: gpumdkit -plt nemd [real_length] [scale_eff_size] [cutoff_freq] [--save] [--save-data] [--quantum]")
+    print("Usage: gpumdkit.sh -plt nemd [real_length] [scale_eff_size] [cutoff_freq] [--save] [--save-data] [--quantum]")
     print("Params:")
-    print("  real_length   : Real length of heat tranfer zone in nm (set to 'Auto', with auto-calculation)")
+    print("  real_length   : Real length of heat transfer zone in nm (set to 'Auto', with auto-calculation)")
     print("  scale_eff_size: Optional, Scale factor for effective cross-sectional area (default: 1)")
     print("                   • For 3D bulk systems: use 1")
     print("                   • For low-dimensional systems with vacuum layer: S_box / S_eff")
@@ -262,9 +262,10 @@ def print_usage():
     print("  --quantum     : Optional, also apply the quantum correction to the SHC spectral thermal")
     print("                  conductance, g_q(ω) = g(ω)·x²eˣ/(eˣ-1)², x = hν/(k_B·T), T from heat_lan in run.in")
     print("                  (requires shc.out)")
+    print("  Legacy bare 'save', 'save_data', and 'quantum' are also accepted.")
     print("  --save/--save-data/--quantum may appear anywhere on the command line, e.g.:")
-    print("    gpumdkit -plt nemd --save-data              (defaults for everything else)")
-    print("    gpumdkit -plt nemd Auto 1 60 --save --save-data --quantum")
+    print("    gpumdkit.sh -plt nemd --save-data              (defaults for everything else)")
+    print("    gpumdkit.sh -plt nemd Auto 1 60 --save --save-data --quantum")
 
 class NEMD_Processor:
     def __init__(self, _directory, _real_length=None, _scale_eff_size=1, _cutoff_freq=60, _scale_vacuum=1,
@@ -458,7 +459,7 @@ class NEMD_Processor:
         lines.append(f"G\t{Reformed_NEMD_data['G'][0, -2]:.6g}\t{Reformed_NEMD_data['G'][0, -1]:.6g}\tMW/(m²·K)")
         lines.append(f"k\t{Reformed_NEMD_data['k'][0, -2]:.6g}\t{Reformed_NEMD_data['k'][0, -1]:.6g}\tW/(m·K)")
 
-        with open(os.path.join(self.directory, 'data_nemd.txt'), 'w') as f:
+        with open(os.path.join(self.directory, 'data_nemd.txt'), 'w', encoding='utf-8') as f:
             f.write("\n".join(lines) + "\n")
 
     def _export_shc_txt(self, Reformed_SHC_data):
@@ -493,7 +494,7 @@ class NEMD_Processor:
         for key in result_keys:
             lines.append(f"G_{key}\t{res[key + '_ave']:.6g}\t{res[key + '_std']:.6g}\tMW/(m²·K)")
 
-        with open(os.path.join(self.directory, 'data_shc.txt'), 'w') as f:
+        with open(os.path.join(self.directory, 'data_shc.txt'), 'w', encoding='utf-8') as f:
             f.write("\n".join(lines) + "\n")
 
     @staticmethod

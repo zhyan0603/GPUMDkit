@@ -1,0 +1,569 @@
+<!DOCTYPE html>
+<html lang="zh-CN" data-theme="light">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>格式转换 — GPUMDkit</title>
+  <meta name="description" content="格式转换模块用于在常见原子模拟文件格式之间转换，同时提供 group 标签、权重、帧提取等元数据处理功能。">
+  <meta property="og:title" content="GPUMDkit — A User-friendly Toolkit for GPUMD and NEP">
+  <meta property="og:description" content="Format conversion, sampling, workflows, analysis and plotting for GPUMD and NEP, in one command.">
+  <meta property="og:image" content="https://gpumdkit.cn/Gallery/gpumdkit_logo_lateral.png">
+  <meta property="og:url" content="https://gpumdkit.cn/">
+  <meta name="twitter:card" content="summary_large_image">
+  <link rel="canonical" href="https://gpumdkit.cn/htmls/zh/格式转换.html">
+  <link rel="icon" href="../../Gallery/gpumdkit_logo.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <!-- web fonts load without blocking rendering; system fonts are used if they are unreachable -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
+  <noscript><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet"></noscript>
+  <link rel="stylesheet" href="../../assets/css/gk.css">
+  <link rel="stylesheet" href="../../assets/css/gk-manual.css">
+  <script>
+    /* mark JS as available (reveal animations are only armed then) and apply the saved theme before first paint */
+    document.documentElement.classList.add("js"); try { localStorage.setItem("gk-lang", "zh"); } catch (e) {}
+    try { var t = localStorage.getItem("gk-theme"); if (t) document.documentElement.setAttribute("data-theme", t); } catch (e) {}
+  </script>
+</head>
+<body data-page="doc" data-root="../../" data-lang="zh" data-alt="../en/format_conversion.html">
+
+<!-- ======================================================= icon sprite -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <symbol id="i-logo" viewBox="0 0 100 100"><path d="M85.3 31.2A40 40 0 1 0 89.4 43" fill="none" stroke="#1867ae" stroke-width="9"/><text x="49" y="52" text-anchor="middle" dominant-baseline="central" font-family="Helvetica Neue,Helvetica,Arial,sans-serif" font-weight="800" font-size="52" fill="#1867ae">G</text><circle cx="87.4" cy="35.7" r="5" fill="#c18852"/></symbol>
+    <symbol id="i-copy" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="11" height="11" rx="2.5"/><path d="M5 15V6a2 2 0 0 1 2-2h9"/></symbol>
+    <symbol id="i-check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="m5 12.5 4.5 4.5L19 7.5"/></symbol>
+    <symbol id="i-search" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="m20 20-4-4"/></symbol>
+    <symbol id="i-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"><circle cx="12" cy="12" r="4.2"/><path d="M12 2.5v2M12 19.5v2M4.6 4.6 6 6M18 18l1.4 1.4M2.5 12h2M19.5 12h2M4.6 19.4 6 18M18 6l1.4-1.4"/></symbol>
+    <symbol id="i-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M20.5 14.2A8.5 8.5 0 0 1 9.8 3.5 8.5 8.5 0 1 0 20.5 14.2Z"/></symbol>
+    <symbol id="i-github" viewBox="0 0 16 16" fill="currentColor"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0 0 16 8c0-4.42-3.58-8-8-8z"/></symbol>
+    <symbol id="i-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></symbol>
+    <symbol id="i-out" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17 17 7M8 7h9v9"/></symbol>
+    <symbol id="i-star" viewBox="0 0 24 24" fill="currentColor"><path d="m12 2.8 2.8 5.8 6.4.9-4.6 4.5 1.1 6.3L12 17.3l-5.7 3 1.1-6.3-4.6-4.5 6.4-.9Z"/></symbol>
+    <symbol id="i-fork" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"><circle cx="6" cy="5" r="2.2"/><circle cx="18" cy="5" r="2.2"/><circle cx="12" cy="19" r="2.2"/><path d="M6 7.2v1.8a3 3 0 0 0 3 3h6a3 3 0 0 0 3-3V7.2M12 12v4.8"/></symbol>
+    <symbol id="i-menu" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 7h16M4 12h16M4 17h16"/></symbol>
+    <symbol id="i-close" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M6 6l12 12M18 6 6 18"/></symbol>
+    <symbol id="i-left" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m15 5-7 7 7 7"/></symbol>
+    <symbol id="i-right" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 5 7 7-7 7"/></symbol>
+    <symbol id="i-lock" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="5" y="11" width="14" height="9" rx="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></symbol>
+    <symbol id="i-conv" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M7 4 3 8l4 4"/><path d="M3 8h14"/><path d="m17 12 4 4-4 4"/><path d="M21 16H7"/></symbol>
+    <symbol id="i-samp" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="6" cy="7" r="1.6"/><circle cx="12.5" cy="5" r="1.6"/><circle cx="18" cy="9" r="1.6"/><circle cx="8" cy="15" r="1.6"/><circle cx="16" cy="17" r="1.6"/><circle cx="12" cy="11.5" r="6.8" stroke-dasharray="2 3"/></symbol>
+    <symbol id="i-flow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="2"/><rect x="14" y="14" width="7" height="7" rx="2"/><path d="M6.5 10v3.5a2 2 0 0 0 2 2H14"/></symbol>
+    <symbol id="i-calc" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="3" width="14" height="18" rx="2.5"/><path d="M8.5 7h7M8.5 11.5h.01M12 11.5h.01M15.5 11.5h.01M8.5 15h.01M12 15h.01M15.5 15h.01M8.5 18h.01M12 18h.01M15.5 18h.01"/></symbol>
+    <symbol id="i-anal" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="10.5" cy="10.5" r="6.5"/><path d="m20 20-4.8-4.8"/><path d="M7.5 12l2-2.5 2 1.5 2-3"/></symbol>
+    <symbol id="i-plot" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3v18h18"/><path d="m7 15 4-5 3 3 5-7"/></symbol>
+    <symbol id="i-term" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="16" rx="3"/><path d="m7 9 3 3-3 3M12.5 15H17"/></symbol>
+    <symbol id="i-doc" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"><path d="M6 3h8.5L19 7.5V21H6z"/><path d="M14 3v5h5M9 12.5h7M9 16.5h5" stroke-linecap="round"/></symbol>
+    <symbol id="i-chat" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20 15a2 2 0 0 1-2 2H8l-4 4V6a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2z"/><path d="M8.5 9.5h7M8.5 13h4.5"/></symbol>
+    <symbol id="i-shield" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3 5 6v6c0 4.4 3 7.6 7 9 4-1.4 7-4.6 7-9V6z"/><path d="m9 12 2 2 4-4"/></symbol>
+    <symbol id="i-globe" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c2.8 3 2.8 15 0 18M12 3c-2.8 3-2.8 15 0 18"/></symbol>
+    <symbol id="i-spark" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v4M12 17v4M3 12h4M17 12h4M6 6l2.5 2.5M15.5 15.5 18 18M6 18l2.5-2.5M15.5 8.5 18 6"/></symbol>
+    <symbol id="i-atom" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="1.8" fill="currentColor"/><ellipse cx="12" cy="12" rx="9" ry="3.6"/><ellipse cx="12" cy="12" rx="9" ry="3.6" transform="rotate(60 12 12)"/><ellipse cx="12" cy="12" rx="9" ry="3.6" transform="rotate(120 12 12)"/></symbol>
+    <symbol id="i-db" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><ellipse cx="12" cy="6" rx="7" ry="3"/><path d="M5 6v12c0 1.7 3.1 3 7 3s7-1.3 7-3V6M5 12c0 1.7 3.1 3 7 3s7-1.3 7-3"/></symbol>
+    <symbol id="i-brain" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="6" cy="7" r="2"/><circle cx="6" cy="17" r="2"/><circle cx="12" cy="12" r="2"/><circle cx="18" cy="7" r="2"/><circle cx="18" cy="17" r="2"/><path d="M8 7.8 10.3 11M8 16.2l2.3-3.2M13.7 11 16 7.8M13.7 13l2.3 3.2"/></symbol>
+    <symbol id="i-filter" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 5h16l-6 7.5V19l-4 2v-8.5z"/></symbol>
+    <symbol id="i-image" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="16" rx="3"/><circle cx="9" cy="10" r="2"/><path d="m21 16-5-5-9 9"/></symbol>
+  </defs>
+</svg>
+
+<div class="ambient" aria-hidden="true"><div class="orb a"></div><div class="orb b"></div><div class="orb c"></div><div class="noise"></div></div>
+<div class="progress" aria-hidden="true"></div>
+
+<!-- ======================================================= navigation -->
+<header class="nav" id="nav">
+  <div class="container">
+    <a href="../../index.html" class="brand" aria-label="GPUMDkit home"><svg><use href="#i-logo"/></svg><span><span class="gpumd">GPUMD</span><span class="kit">kit</span></span></a>
+    <nav class="nav-links" id="nav-links">
+      <a href="../../index.html#features" data-i18n="nav.features">Features</a>
+      <a href="../../index.html#terminal" data-i18n="nav.terminal">Try it</a>
+      <a href="../../index.html#workflow" data-i18n="nav.workflow">Workflow</a>
+      <a href="../../gallery.html" data-i18n="nav.gallery">Gallery</a>
+      <a href="../../publications.html" data-i18n="nav.pubs">Publications</a>
+      <a href="../../manual.html" class="active" aria-current="page" data-i18n="nav.manual">Manual</a>
+    </nav>
+    <div class="nav-tools">
+      <button class="search-btn" data-palette aria-label="Search commands and docs"><svg><use href="#i-search"/></svg><span class="label" data-i18n="nav.search">Search commands…</span><kbd>⌘K</kbd></button>
+      <button class="icon-btn lang-btn" data-lang-toggle aria-label="Switch language">中文</button>
+      <button class="icon-btn" data-theme-toggle aria-label="Toggle dark mode"><svg class="theme-icon-light"><use href="#i-moon"/></svg><svg class="theme-icon-dark"><use href="#i-sun"/></svg></button>
+      <a class="icon-btn gh-btn" href="https://github.com/zhyan0603/GPUMDkit" target="_blank" rel="noopener" aria-label="GitHub"><svg><use href="#i-github"/></svg></a>
+      <button class="icon-btn menu-btn" id="menu-btn" aria-label="Menu"><svg><use href="#i-menu"/></svg></button>
+    </div>
+  </div>
+</header>
+
+<main>
+<section class="man-hero doc-hero"><div class="container"><div class="crumb"><a href="../../manual.html">手册</a><span>/</span><span>工具箱</span><span>/</span><span>格式转换</span></div><h1 class="h-section">格式转换</h1><p class="lead">格式转换模块用于在常见原子模拟文件格式之间转换，同时提供 group 标签、权重、帧提取等元数据处理功能。</p></div></section>
+<div class="container man doc"><aside class="man-side" aria-label="Pages"><h6>开始</h6><a href="index.html" class=""><span>GPUMDkit 教程</span></a><a href="快速入门.html" class=""><span>快速入门</span></a><a href="远程网页控制台.html" class=""><span>远程网页控制台</span></a><a href="模拟与后处理.html" class=""><span>GPUMDkit Agent Skill</span></a><h6>工具箱</h6><a href="格式转换.html" class="on"><span>格式转换</span></a><a href="结构采样.html" class=""><span>结构采样</span></a><a href="工作流脚本.html" class=""><span>工作流脚本</span></a><a href="计算器脚本.html" class=""><span>计算器脚本</span></a><a href="分析工具.html" class=""><span>分析工具</span></a><a href="绘图脚本.html" class=""><span>绘图脚本</span></a><a href="NEP训练绘图.html" class="sub"><span>NEP 训练与模型分析</span></a><a href="MD与结构绘图.html" class="sub"><span>MD 与结构</span></a><a href="扩散绘图.html" class="sub"><span>扩散与离子输运</span></a><a href="热输运与声子绘图.html" class="sub"><span>热输运与声子</span></a><a href="极性材料分析.html" class=""><span>极性材料分析</span></a><h6>指南</h6><a href="主动学习工作流.html" class=""><span>主动学习工作流</span></a><a href="自定义命令.html" class=""><span>自定义命令</span></a><h6>参考</h6><a href="命令参考.html" class=""><span>命令参考</span></a><h6>贡献</h6><a href="贡献指南.html" class=""><span>为 GPUMDkit 贡献代码</span></a></aside><article class="man-body chap doc-body"><h2 id="功能简介">功能简介</h2>
+<p>本模块在计算材料科学中常用的结构和轨迹文件格式之间进行转换。支持 VASP、LAMMPS、CP2K、ABACUS、CIF、ASE 轨迹和 extxyz 格式。还提供添加 group 标签、权重、提取帧和扩胞等工具。</p>
+<h2 id="准备工作">准备工作</h2>
+<p><strong>脚本位置：</strong> <code>Scripts/format_conversion/</code></p>
+<p>请在希望存放结果的目录中运行 GPUMDkit：相对路径以当前目录为起点，而且即使输入文件在别处，大多数转换工具也会把结果写到当前目录。建议先用一小份数据试运行，以免覆盖已有结果。安装方法见<a href="快速入门.html">快速入门</a>。</p>
+<h2 id="支持的格式">支持的格式</h2>
+<ul>
+<li><strong>VASP</strong>：<code>POSCAR</code>、<code>CONTCAR</code>、<code>OUTCAR</code>、<code>XDATCAR</code></li>
+<li><strong>LAMMPS</strong>：data 文件和 dump 轨迹</li>
+<li><strong>CP2K</strong>：输出 log、坐标、力和晶胞文件</li>
+<li><strong>ABACUS</strong>：SCF/MD 输出</li>
+<li><strong>CIF</strong>：晶体结构文件</li>
+<li><strong>ASE trajectory</strong>：<code>.traj</code></li>
+<li><strong>DeepMD</strong>：<code>npy</code> 数据集</li>
+<li><strong>extxyz</strong>：GPUMD 和 NEP 常用的结构格式</li>
+</ul>
+<h2 id="完整示例">完整示例</h2>
+<p>下面的每条命令都在一个小型示意文件 <code>train.xyz</code>（9 帧、每帧 16 个原子）上运行。每条命令都会写出<strong>新</strong>文件，不会改动输入文件。</p>
+<div class="code"><div class="cap"><i></i><i></i><i></i><span>bash</span></div><pre><code>gpumdkit.sh -get_frame train.xyz 3</code></pre><button class="copy-btn" data-copy-pre aria-label="Copy"><svg class="cp"><use href="#i-copy"/></svg><svg class="ok"><use href="#i-check"/></svg></button></div>
+<div class="code"><div class="cap"><i></i><i></i><i></i><span>text</span></div><pre><code>Frame 3 has been successfully written to frame_3.xyz.</code></pre><button class="copy-btn" data-copy-pre aria-label="Copy"><svg class="cp"><use href="#i-copy"/></svg><svg class="ok"><use href="#i-check"/></svg></button></div>
+<div class="code"><div class="cap"><i></i><i></i><i></i><span>bash</span></div><pre><code>gpumdkit.sh -replicate train.xyz big.xyz 2 1 1</code></pre><button class="copy-btn" data-copy-pre aria-label="Copy"><svg class="cp"><use href="#i-copy"/></svg><svg class="ok"><use href="#i-check"/></svg></button></div>
+<div class="code"><div class="cap"><i></i><i></i><i></i><span>text</span></div><pre><code>Supercell: 2x1x1, Total atoms: 32
+Supercell created and saved to big.xyz</code></pre><button class="copy-btn" data-copy-pre aria-label="Copy"><svg class="cp"><use href="#i-copy"/></svg><svg class="ok"><use href="#i-check"/></svg></button></div>
+<div class="code"><div class="cap"><i></i><i></i><i></i><span>bash</span></div><pre><code>gpumdkit.sh -addweight train.xyz w.xyz 2.0</code></pre><button class="copy-btn" data-copy-pre aria-label="Copy"><svg class="cp"><use href="#i-copy"/></svg><svg class="ok"><use href="#i-check"/></svg></button></div>
+<div class="code"><div class="cap"><i></i><i></i><i></i><span>text</span></div><pre><code>Weights in train.xyz have been updated and saved to w.xyz</code></pre><button class="copy-btn" data-copy-pre aria-label="Copy"><svg class="cp"><use href="#i-copy"/></svg><svg class="ok"><use href="#i-check"/></svg></button></div>
+<div class="code"><div class="cap"><i></i><i></i><i></i><span>bash</span></div><pre><code>gpumdkit.sh -frame_range train.xyz 0 0.5</code></pre><button class="copy-btn" data-copy-pre aria-label="Copy"><svg class="cp"><use href="#i-copy"/></svg><svg class="ok"><use href="#i-check"/></svg></button></div>
+<div class="code"><div class="cap"><i></i><i></i><i></i><span>text</span></div><pre><code> Extracted 4 frames from fraction 0.0 to 0.5
+ Corresponding to frames 0 to 3
+ Saved to train_0.00_0.50.xyz</code></pre><button class="copy-btn" data-copy-pre aria-label="Copy"><svg class="cp"><use href="#i-copy"/></svg><svg class="ok"><use href="#i-check"/></svg></button></div>
+<div class="code"><div class="cap"><i></i><i></i><i></i><span>bash</span></div><pre><code>gpumdkit.sh -clean_xyz train.xyz clean.xyz</code></pre><button class="copy-btn" data-copy-pre aria-label="Copy"><svg class="cp"><use href="#i-copy"/></svg><svg class="ok"><use href="#i-check"/></svg></button></div>
+<div class="code"><div class="cap"><i></i><i></i><i></i><span>text</span></div><pre><code> Cleaned 9 frames, saved to clean.xyz</code></pre><button class="copy-btn" data-copy-pre aria-label="Copy"><svg class="cp"><use href="#i-copy"/></svg><svg class="ok"><use href="#i-check"/></svg></button></div>
+<p><code>-get_frame</code> 的帧序号从 1 开始，<code>-frame_range</code> 接收的是文件的<strong>比例</strong>，所以 <code>0 0.5</code> 表示前一半。在把结果用于训练之前，可以用 <code>head -n 2</code> 检查头部信息行。</p>
+<h2 id="交互模式">交互模式</h2>
+<p>运行 <code>gpumdkit.sh</code> 并选择 <code>1) Format Conversion</code>。<code>101</code>–<code>110</code> 按编号选择，其下方的转换工具按关键字选择（例如 <code>pos2exyz</code>）。各入口的说明见下表。</p>
+<details>
+<summary>显示完整菜单</summary>
+<div class="code"><div class="cap"><i></i><i></i><i></i><span>text</span></div><pre><code>+-------------------------------------------------------------+
+|                   FORMAT CONVERSION TOOLS                   |
++-------------------------------------------------------------+
+| 101) VASP to extxyz            106) Add group labels        |
+| 102) MTP to extxyz             107) Add weight to extxyz    |
+| 103) CP2K to extxyz            108) Extract frame extxyz    |
+| 104) ABACUS to extxyz          109) Clean XYZ info          |
+| 105) extxyz to POSCAR          110) Replicate structure     |
++-------------------------------------------------------------+
+| out2exyz) OUTCAR to extxyz     xdat2exyz) XDATCAR to extxyz |
+| pos2exyz) POSCAR to extxyz     pos2lmp)   POSCAR to LAMMPS  |
+| cif2pos)  CIF to POSCAR        lmp2exyz)  LAMMPS to extxyz  |
+| cif2exyz) CIF to extxyz        traj2exyz) ASE traj to extxyz|
+| dp2xyz)   DeepMD to extxyz                                  |
+| xyz2dp)   extxyz to DeepMD npy                              |
++-------------------------------------------------------------+
+| 000) Return to main menu                                    |
++-------------------------------------------------------------+
+Input the function number or converter keyword:</code></pre><button class="copy-btn" data-copy-pre aria-label="Copy"><svg class="cp"><use href="#i-copy"/></svg><svg class="ok"><use href="#i-check"/></svg></button></div>
+</details>
+<h3 id="每个入口的作用">每个入口的作用</h3>
+<div class="tbl-wrap"><table class="tbl">
+<thead>
+<tr>
+<th>入口</th>
+<th>调用脚本</th>
+<th>功能</th>
+<th>适用场景</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>101</code></td>
+<td><code>out2xyz.sh</code></td>
+<td>VASP OUTCAR 转 extxyz，shell 版本</td>
+<td>批量转换 VASP 计算目录</td>
+</tr>
+<tr>
+<td><code>102</code></td>
+<td><code>mtp2xyz.py</code></td>
+<td>MTP cfg 转 extxyz</td>
+<td>转换 MTP 数据</td>
+</tr>
+<tr>
+<td><code>103</code></td>
+<td><code>cp2k_log2xyz.py</code> / <code>cp2k2xyz.py</code></td>
+<td>CP2K 转 extxyz</td>
+<td>可选择 log/inp 路线或 pos/frc/cell 路线</td>
+</tr>
+<tr>
+<td><code>104</code></td>
+<td><code>abacus2xyz_scf.sh</code> / <code>abacus2xyz_md.sh</code></td>
+<td>ABACUS 转 extxyz</td>
+<td>转换 ABACUS SCF 或 MD 输出</td>
+</tr>
+<tr>
+<td><code>105</code></td>
+<td><code>exyz2pos.py</code></td>
+<td>extxyz 转 POSCAR</td>
+<td>将 extxyz 每一帧写成 POSCAR</td>
+</tr>
+<tr>
+<td><code>106</code></td>
+<td><code>add_groups.py</code></td>
+<td>添加 group 标签</td>
+<td>为 GPUMD 相关流程添加原子分组标签</td>
+</tr>
+<tr>
+<td><code>107</code></td>
+<td><code>add_weight.py</code></td>
+<td>添加权重</td>
+<td>修改训练集结构权重</td>
+</tr>
+<tr>
+<td><code>108</code></td>
+<td><code>get_frame.py</code></td>
+<td>提取单帧</td>
+<td>从 extxyz 轨迹导出某一帧</td>
+</tr>
+<tr>
+<td><code>109</code></td>
+<td><code>clean_xyz.py</code></td>
+<td>清理 XYZ 信息</td>
+<td>删除多余 extxyz 属性</td>
+</tr>
+<tr>
+<td><code>110</code></td>
+<td><code>replicate.py</code></td>
+<td>扩胞</td>
+<td>按倍数或目标原子数扩胞</td>
+</tr>
+<tr>
+<td><code>out2exyz</code></td>
+<td><code>out2exyz.py</code></td>
+<td>OUTCAR 转 extxyz，Python 版本</td>
+<td>VASP OUTCAR 转换的另一个入口</td>
+</tr>
+<tr>
+<td><code>pos2exyz</code></td>
+<td><code>pos2exyz.py</code></td>
+<td>POSCAR 转 extxyz</td>
+<td>转换单个结构</td>
+</tr>
+<tr>
+<td><code>cif2pos</code></td>
+<td><code>cif2pos.py</code></td>
+<td>CIF 转 POSCAR</td>
+<td>从 CIF 准备 VASP 输入</td>
+</tr>
+<tr>
+<td><code>cif2exyz</code></td>
+<td><code>cif2exyz.py</code></td>
+<td>CIF 转 extxyz</td>
+<td>从 CIF 准备 GPUMDkit 输入</td>
+</tr>
+<tr>
+<td><code>xdat2exyz</code></td>
+<td><code>xdatcar2exyz.py</code></td>
+<td>XDATCAR 转 extxyz</td>
+<td>转换 VASP MD 轨迹</td>
+</tr>
+<tr>
+<td><code>pos2lmp</code></td>
+<td><code>pos2lmp.py</code></td>
+<td>POSCAR 转 LAMMPS data</td>
+<td>准备 LAMMPS 输入</td>
+</tr>
+<tr>
+<td><code>lmp2exyz</code></td>
+<td><code>lmp2exyz.py</code></td>
+<td>LAMMPS dump 或 data 文件转 extxyz</td>
+<td>转换 LAMMPS 轨迹或结构</td>
+</tr>
+<tr>
+<td><code>traj2exyz</code></td>
+<td><code>traj2exyz.py</code></td>
+<td>ASE traj 转 extxyz</td>
+<td>转换 ASE 轨迹</td>
+</tr>
+<tr>
+<td><code>dp2xyz</code></td>
+<td><code>dp2xyz.py</code></td>
+<td>DeepMD npy 转 extxyz</td>
+<td>为 GPUMD/NEP 流程转换 DeepMD 数据集</td>
+</tr>
+<tr>
+<td><code>xyz2dp</code></td>
+<td><code>xyz2dp.py</code></td>
+<td>extxyz 转 DeepMD npy</td>
+<td>从带标签的 extxyz 准备 DeepMD 数据集</td>
+</tr>
+</tbody>
+</table></div>
+<h2 id="快速命令表">快速命令表</h2>
+<div class="tbl-wrap"><table class="tbl">
+<thead>
+<tr>
+<th>来源</th>
+<th>目标</th>
+<th>命令</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>OUTCAR 目录</td>
+<td>extxyz</td>
+<td><code>gpumdkit.sh -out2xyz &lt;dir&gt;</code></td>
+</tr>
+<tr>
+<td>包含 BEC 数据的 OUTCAR 目录</td>
+<td>extxyz</td>
+<td><code>gpumdkit.sh -out2xyz_bec &lt;dir&gt;</code></td>
+</tr>
+<tr>
+<td>OUTCAR 目录</td>
+<td>extxyz</td>
+<td><code>gpumdkit.sh -out2exyz &lt;dir&gt;</code></td>
+</tr>
+<tr>
+<td>POSCAR</td>
+<td>extxyz</td>
+<td><code>gpumdkit.sh -pos2exyz POSCAR model.xyz</code></td>
+</tr>
+<tr>
+<td>extxyz</td>
+<td>POSCAR 文件</td>
+<td><code>gpumdkit.sh -exyz2pos train.xyz</code></td>
+</tr>
+<tr>
+<td>XDATCAR</td>
+<td>extxyz</td>
+<td><code>gpumdkit.sh -xdat2exyz XDATCAR dump.xyz</code></td>
+</tr>
+<tr>
+<td>POSCAR</td>
+<td>LAMMPS data</td>
+<td><code>gpumdkit.sh -pos2lmp POSCAR lammps.data</code></td>
+</tr>
+<tr>
+<td>LAMMPS dump 或 data 文件</td>
+<td>extxyz</td>
+<td><code>gpumdkit.sh -lmp2exyz dump.lammpstrj Li Y Cl</code></td>
+</tr>
+<tr>
+<td>CIF</td>
+<td>POSCAR</td>
+<td><code>gpumdkit.sh -cif2pos input.cif POSCAR.vasp</code></td>
+</tr>
+<tr>
+<td>CIF</td>
+<td>extxyz</td>
+<td><code>gpumdkit.sh -cif2exyz input.cif model.xyz</code></td>
+</tr>
+<tr>
+<td>ASE traj</td>
+<td>extxyz</td>
+<td><code>gpumdkit.sh -traj2exyz input.traj output.xyz</code></td>
+</tr>
+<tr>
+<td>DeepMD npy 目录</td>
+<td>extxyz</td>
+<td><code>gpumdkit.sh -dp2xyz database train.xyz</code></td>
+</tr>
+<tr>
+<td>extxyz</td>
+<td>DeepMD npy 数据集</td>
+<td><code>gpumdkit.sh -xyz2dp train.xyz Li P S</code></td>
+</tr>
+<tr>
+<td>extxyz</td>
+<td>clean extxyz</td>
+<td><code>gpumdkit.sh -clean_xyz input.xyz clean.xyz</code></td>
+</tr>
+</tbody>
+</table></div>
+<h2 id="看懂输入和输出文件名">看懂输入和输出文件名</h2>
+<p>第一次转换时，可以先使用只有两个参数的 POSCAR 路线，文件流向最直观：</p>
+<div class="code"><div class="cap"><i></i><i></i><i></i><span>text</span></div><pre><code>$ gpumdkit.sh -pos2exyz -h
+ Usage: gpumdkit.sh -pos2exyz &lt;POSCAR&gt; &lt;output.xyz&gt;
+
+ Arguments:
+   POSCAR       One or more VASP POSCAR files (supports wildcards)
+   output.xyz   Output extxyz file</code></pre><button class="copy-btn" data-copy-pre aria-label="Copy"><svg class="cp"><use href="#i-copy"/></svg><svg class="ok"><use href="#i-check"/></svg></button></div>
+<p><code>POSCAR</code> 是输入结构文件名，<code>output.xyz</code> 是命令创建的 extxyz 文件。通配符由 shell 展开；批量转换前应先确认实际匹配到的文件名。转换完成后可以先做一个轻量格式检查：</p>
+<div class="code"><div class="cap"><i></i><i></i><i></i><span>bash</span></div><pre><code>head -n 2 output.xyz</code></pre><button class="copy-btn" data-copy-pre aria-label="Copy"><svg class="cp"><use href="#i-copy"/></svg><svg class="ok"><use href="#i-check"/></svg></button></div>
+<p>第一行是原子数，第二行包含晶胞和已有性质等 extxyz 元数据。</p>
+<h2 id="常见例子">常见例子</h2>
+<h3 id="将-deepmd-数据集转换为-extxyz">将 DeepMD 数据集转换为 extxyz</h3>
+<p>使用 <code>-dp2xyz</code> 递归扫描 DeepMD 数据集目录，并写出 extxyz 文件：</p>
+<div class="code"><div class="cap"><i></i><i></i><i></i><span>bash</span></div><pre><code>gpumdkit.sh -dp2xyz database train.xyz</code></pre><button class="copy-btn" data-copy-pre aria-label="Copy"><svg class="cp"><use href="#i-copy"/></svg><svg class="ok"><use href="#i-check"/></svg></button></div>
+<p>输入目录必须包含 <code>type.raw</code>、<code>type_map.raw</code> 和 <code>set.000/</code> 等 DeepMD 数据集文件。该命令依赖 <code>dpdata</code> 和 <code>ase</code>。</p>
+<h3 id="将带标签的-extxyz-转换为-deepmd-数据集">将带标签的 extxyz 转换为 DeepMD 数据集</h3>
+<p>给出输入文件和 DeepMD <code>type_map.raw</code> 的元素顺序：</p>
+<div class="code"><div class="cap"><i></i><i></i><i></i><span>bash</span></div><pre><code>gpumdkit.sh -xyz2dp train.xyz Li P S</code></pre><button class="copy-btn" data-copy-pre aria-label="Copy"><svg class="cp"><use href="#i-copy"/></svg><svg class="ok"><use href="#i-check"/></svg></button></div>
+<p>不带参数运行 <code>gpumdkit.sh -xyz2dp</code> 时，会交互式询问这些信息。输入文件必须包含能量和力标签。输出写入当前目录下的 <code>deepmd_data/</code>。该命令依赖 <code>dpdata</code>。</p>
+<h3 id="转换-vasp-结果">转换 VASP 结果</h3>
+<p><strong>功能：</strong> 在目录中搜索 VASP OUTCAR 文件，并将它们转换为单个 extxyz 文件，用于 NEP 训练或分析。</p>
+<p><strong>命令行模式：</strong></p>
+<div class="code"><div class="cap"><i></i><i></i><i></i><span>bash</span></div><pre><code>gpumdkit.sh -out2xyz ./vasp_results/</code></pre><button class="copy-btn" data-copy-pre aria-label="Copy"><svg class="cp"><use href="#i-copy"/></svg><svg class="ok"><use href="#i-check"/></svg></button></div>
+<p>上面是 shell 版本。也可以选择 Python 版本；同一批数据只需选择其中一种：</p>
+<div class="code"><div class="cap"><i></i><i></i><i></i><span>bash</span></div><pre><code>gpumdkit.sh -out2exyz ./vasp_results/</code></pre><button class="copy-btn" data-copy-pre aria-label="Copy"><svg class="cp"><use href="#i-copy"/></svg><svg class="ok"><use href="#i-check"/></svg></button></div>
+<p>对于包含完整 VASP <code>BORN EFFECTIVE CHARGES</code> 数据块的 OUTCAR 文件，可以使用
+带 BEC 的 shell 转换器：</p>
+<div class="code"><div class="cap"><i></i><i></i><i></i><span>bash</span></div><pre><code>gpumdkit.sh -out2xyz_bec ./vasp_results/</code></pre><button class="copy-btn" data-copy-pre aria-label="Copy"><svg class="cp"><use href="#i-copy"/></svg><svg class="ok"><use href="#i-check"/></svg></button></div>
+<p>该入口为每个 OUTCAR 写出一个最终构型；当 BEC 数据块完整时，追加逐原子的
+<code>bec:R:9</code> 属性。没有 BEC 数据块的 OUTCAR 仍会转换，但对应原子行不包含该属性，
+同时会显示警告。</p>
+<p><strong>交互模式：</strong> 在格式转换菜单中选择 <code>101</code>，会看到：</p>
+<div class="code"><div class="cap"><i></i><i></i><i></i><span>text</span></div><pre><code>Input the directory containing OUTCARs
+Example: ./
+------------&gt;&gt;</code></pre><button class="copy-btn" data-copy-pre aria-label="Copy"><svg class="cp"><use href="#i-copy"/></svg><svg class="ok"><use href="#i-check"/></svg></button></div>
+<p><strong>输出位置：</strong> 两种命令都从指定的 <code>vasp_results/</code> 读取数据，但将结果写入<strong>终端当前目录</strong>：</p>
+<div class="tbl-wrap"><table class="tbl">
+<thead>
+<tr>
+<th>入口</th>
+<th>输出文件</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>-out2xyz</code> 或菜单 <code>101</code></td>
+<td><code>NEPdataset/train.xyz</code></td>
+</tr>
+<tr>
+<td><code>-out2xyz_bec</code></td>
+<td><code>NEPdataset/train.xyz</code></td>
+</tr>
+<tr>
+<td><code>-out2exyz</code></td>
+<td><code>train.xyz</code></td>
+</tr>
+</tbody>
+</table></div>
+<div class="admonition warning">
+<p class="admonition-title">重复转换前检查输出目录</p>
+<p>shell 版本和 BEC shell 版本会删除并重建当前目录下已有的 <code>NEPdataset/</code>；Python 版本会覆盖当前目录下的 <code>train.xyz</code>。请先备份结果，或在新的工作目录中运行并指定输入目录的实际路径。</p>
+</div>
+<p>转换后可用 <code>head -n 2 NEPdataset/train.xyz</code>（shell/BEC 版本）或 <code>head -n 2 train.xyz</code>（Python 版本）查看原子数和 extxyz 元数据。文件生成成功不等于数据可直接用于训练，还需检查计算收敛情况、单位和标签。</p>
+<h3 id="添加-group-标签">添加 group 标签</h3>
+<p><strong>功能：</strong> 为结构文件添加原子 group 标签。一些 GPUMD 相关流程需要 group 标签，例如特定元素的 MSD 或扩散性质计算。</p>
+<p><strong>命令行模式：</strong></p>
+<div class="code"><div class="cap"><i></i><i></i><i></i><span>bash</span></div><pre><code>gpumdkit.sh -addgroup POSCAR Li Y Cl</code></pre><button class="copy-btn" data-copy-pre aria-label="Copy"><svg class="cp"><use href="#i-copy"/></svg><svg class="ok"><use href="#i-check"/></svg></button></div>
+<p>该命令可以读取 ASE 支持的任意结构文件，输出 <code>model.xyz</code>；每个原子的 group 编号是其元素在列表中的位置（此例中 Li = 0、Y = 1、Cl = 2）。结构中的所有元素都必须列出。</p>
+<p><strong>交互模式：</strong> 在格式转换菜单中选择 <code>106</code>，会看到：</p>
+<div class="code"><div class="cap"><i></i><i></i><i></i><span>text</span></div><pre><code>Input &lt;POSCAR&gt; &lt;element1&gt; &lt;element2&gt; ...
+Example: POSCAR Li Y Cl
+------------&gt;&gt;</code></pre><button class="copy-btn" data-copy-pre aria-label="Copy"><svg class="cp"><use href="#i-copy"/></svg><svg class="ok"><use href="#i-check"/></svg></button></div>
+<p><strong>输出：</strong> 当前目录下的 <code>model.xyz</code>。</p>
+<h2 id="常用脚本说明">常用脚本说明</h2>
+<h3 id="poscar-转-extxyz">POSCAR 转 extxyz</h3>
+<div class="code"><div class="cap"><i></i><i></i><i></i><span>bash</span></div><pre><code>gpumdkit.sh -pos2exyz POSCAR model.xyz</code></pre><button class="copy-btn" data-copy-pre aria-label="Copy"><svg class="cp"><use href="#i-copy"/></svg><svg class="ok"><use href="#i-check"/></svg></button></div>
+<p>适合把单个 VASP 结构转成 extxyz 文件。</p>
+<p>交互模式关键词：<code>pos2exyz</code></p>
+<div class="code"><div class="cap"><i></i><i></i><i></i><span>text</span></div><pre><code>Input &lt;POSCAR&gt; &lt;output.xyz&gt;
+Example: POSCAR model.xyz
+------------&gt;&gt;</code></pre><button class="copy-btn" data-copy-pre aria-label="Copy"><svg class="cp"><use href="#i-copy"/></svg><svg class="ok"><use href="#i-check"/></svg></button></div>
+<h3 id="extxyz-转-poscar">extxyz 转 POSCAR</h3>
+<div class="code"><div class="cap"><i></i><i></i><i></i><span>bash</span></div><pre><code>gpumdkit.sh -exyz2pos structures.xyz</code></pre><button class="copy-btn" data-copy-pre aria-label="Copy"><svg class="cp"><use href="#i-copy"/></svg><svg class="ok"><use href="#i-check"/></svg></button></div>
+<p>会将 extxyz 中所有帧转换成当前目录下的 <code>POSCAR_1.vasp</code>、<code>POSCAR_2.vasp</code>
+等文件。程序按照输入轨迹中元素首次出现的顺序对每帧原子分组；例如
+<code>Li La Zr O Li O La Zr O</code> 会使用 <code>Li La Zr O</code>。速度信息不会导出。</p>
+<p>交互模式入口：<code>105</code></p>
+<div class="code"><div class="cap"><i></i><i></i><i></i><span>text</span></div><pre><code>Input the name of extxyz
+Example: ./train.xyz
+------------&gt;&gt;</code></pre><button class="copy-btn" data-copy-pre aria-label="Copy"><svg class="cp"><use href="#i-copy"/></svg><svg class="ok"><use href="#i-check"/></svg></button></div>
+<h3 id="lammps-dump-或-data-文件转-extxyz">LAMMPS dump 或 data 文件转 extxyz</h3>
+<div class="code"><div class="cap"><i></i><i></i><i></i><span>bash</span></div><pre><code>gpumdkit.sh -lmp2exyz dump.lammpstrj Li Y Cl   # 文本 dump：转换所有帧
+gpumdkit.sh -lmp2exyz model.data Li Y Cl       # data 文件：一个结构</code></pre><button class="copy-btn" data-copy-pre aria-label="Copy"><svg class="cp"><use href="#i-copy"/></svg><svg class="ok"><use href="#i-check"/></svg></button></div>
+<p>元素顺序必须对应 LAMMPS 中的 atom type ID：type 1 是 Li、type 2 是 Y、type 3 是 Cl 时，输入 <code>Li Y Cl</code>。结果写入 <code>dump.xyz</code>；如果没有读到任何结构，则不会写出文件。文件类型会自动识别，压缩文件（<code>.gz</code>、<code>.bz2</code>、<code>.xz</code>）也可以直接使用。</p>
+<p>对于 data 文件（<code>units metal</code>），会把盒子原点移到零点并把原子放回盒内，符合 GPUMD 的要求。data 文件中若有速度（换算为 Å/fs）、质量和电荷，也会一并保留；注意 GPUMD 会把 <code>model.xyz</code> 中的速度作为初始速度。不支持带 <code>element</code> 或 <code>mass</code> 列的 dump，请只输出 type 编号。</p>
+<p>交互模式关键词：<code>lmp2exyz</code></p>
+<div class="code"><div class="cap"><i></i><i></i><i></i><span>text</span></div><pre><code>Input &lt;dump_or_data_file&gt; &lt;element1&gt; &lt;element2&gt; ...
+Example: dump.lammpstrj Li O
+------------&gt;&gt;</code></pre><button class="copy-btn" data-copy-pre aria-label="Copy"><svg class="cp"><use href="#i-copy"/></svg><svg class="ok"><use href="#i-check"/></svg></button></div>
+<h3 id="cif-转换">CIF 转换</h3>
+<div class="code"><div class="cap"><i></i><i></i><i></i><span>bash</span></div><pre><code>gpumdkit.sh -cif2pos input.cif POSCAR.vasp
+gpumdkit.sh -cif2exyz input.cif model.xyz</code></pre><button class="copy-btn" data-copy-pre aria-label="Copy"><svg class="cp"><use href="#i-copy"/></svg><svg class="ok"><use href="#i-check"/></svg></button></div>
+<p>如果后续需要 VASP 计算，使用 <code>-cif2pos</code>；如果后续要进入 GPUMDkit 分析，使用 <code>-cif2exyz</code>。</p>
+<h3 id="添加权重">添加权重</h3>
+<div class="code"><div class="cap"><i></i><i></i><i></i><span>bash</span></div><pre><code>gpumdkit.sh -addweight train.xyz train_weighted.xyz 5</code></pre><button class="copy-btn" data-copy-pre aria-label="Copy"><svg class="cp"><use href="#i-copy"/></svg><svg class="ok"><use href="#i-check"/></svg></button></div>
+<p>用于给训练集结构添加或修改权重。</p>
+<h3 id="扩胞">扩胞</h3>
+<div class="code"><div class="cap"><i></i><i></i><i></i><span>bash</span></div><pre><code>gpumdkit.sh -replicate POSCAR supercell.vasp 2 2 2
+gpumdkit.sh -replicate POSCAR supercell.vasp 256</code></pre><button class="copy-btn" data-copy-pre aria-label="Copy"><svg class="cp"><use href="#i-copy"/></svg><svg class="ok"><use href="#i-check"/></svg></button></div>
+<p>第一种按晶胞倍数扩胞，第二种按目标原子数自动选择扩胞方式。</p>
+<h3 id="提取单帧">提取单帧</h3>
+<div class="code"><div class="cap"><i></i><i></i><i></i><span>bash</span></div><pre><code>gpumdkit.sh -get_frame dump.xyz 1000</code></pre><button class="copy-btn" data-copy-pre aria-label="Copy"><svg class="cp"><use href="#i-copy"/></svg><svg class="ok"><use href="#i-check"/></svg></button></div>
+<p>把轨迹的第 <code>1000</code> 帧写入 <code>frame_1000.xyz</code>，帧编号从 <code>1</code> 开始。</p>
+<h3 id="拆分多帧-extxyz">拆分多帧 extxyz</h3>
+<p><code>split_single_xyz.py</code> 将多帧 extxyz 文件拆分为单帧文件。</p>
+<div class="code"><div class="cap"><i></i><i></i><i></i><span>bash</span></div><pre><code>python "${GPUMDkit_path}/Scripts/format_conversion/split_single_xyz.py" dump.xyz</code></pre><button class="copy-btn" data-copy-pre aria-label="Copy"><svg class="cp"><use href="#i-copy"/></svg><svg class="ok"><use href="#i-check"/></svg></button></div>
+<p>生成 <code>model_1.xyz</code>、<code>model_2.xyz</code>、... 等单帧文件。</p>
+<h3 id="mtp-转换">MTP 转换</h3>
+<p>将 MTP <code>.cfg</code> 格式转换为 extxyz：</p>
+<div class="code"><div class="cap"><i></i><i></i><i></i><span>bash</span></div><pre><code>gpumdkit.sh    # 选择：1) 格式转换 → 102</code></pre><button class="copy-btn" data-copy-pre aria-label="Copy"><svg class="cp"><use href="#i-copy"/></svg><svg class="ok"><use href="#i-check"/></svg></button></div>
+<p>交互提示：</p>
+<div class="code"><div class="cap"><i></i><i></i><i></i><span>text</span></div><pre><code>Input &lt;filename.cfg&gt; &lt;Symbol1 Symbol2 Symbol3 ...&gt;
+Example: train.cfg Pd Ag
+------------&gt;&gt;</code></pre><button class="copy-btn" data-copy-pre aria-label="Copy"><svg class="cp"><use href="#i-copy"/></svg><svg class="ok"><use href="#i-check"/></svg></button></div>
+<h3 id="abacus-转换">ABACUS 转换</h3>
+<p>将 ABACUS 输出转换为 extxyz：</p>
+<div class="code"><div class="cap"><i></i><i></i><i></i><span>bash</span></div><pre><code>gpumdkit.sh    # 选择：1) 格式转换 → 104</code></pre><button class="copy-btn" data-copy-pre aria-label="Copy"><svg class="cp"><use href="#i-copy"/></svg><svg class="ok"><use href="#i-check"/></svg></button></div>
+<p>菜单提供两个选项：</p>
+<ol>
+<li>SCF 输出（<code>running_scf.log</code>）</li>
+<li>MD 输出（<code>running_md.log</code>）</li>
+</ol>
+<h2 id="常见问题">常见问题</h2>
+<div class="tbl-wrap"><table class="tbl">
+<thead>
+<tr>
+<th>问题</th>
+<th>建议</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>LAMMPS 转换后元素不对</td>
+<td>检查 dump 文件后的元素顺序</td>
+</tr>
+<tr>
+<td>extxyz 元数据太多</td>
+<td>使用 <code>-clean_xyz input.xyz clean.xyz</code></td>
+</tr>
+<tr>
+<td>转换后的结构看起来偏移</td>
+<td>检查源文件中的周期性边界条件/晶胞信息</td>
+</tr>
+<tr>
+<td>提取帧不对</td>
+<td>注意 <code>-get_frame</code> 的帧编号从 1 开始</td>
+</tr>
+</tbody>
+</table></div>
+<h2 id="说明">说明</h2>
+<p>部分转换工具需要额外的 Python 包（例如 DeepMD 转换需要 <code>dpdata</code>），缺少时会在运行该功能时提示。</p><div class="doc-pn"><a href="模拟与后处理.html"><small>上一页</small><b>GPUMDkit Agent Skill</b></a><a class="next" href="结构采样.html"><small>下一页</small><b>结构采样</b></a></div><a class="doc-edit" href="https://github.com/zhyan0603/GPUMDkit/edit/main/docs/tutorials/zh/格式转换.md" target="_blank" rel="noopener">编辑此页</a></article><nav class="doc-toc" aria-label="本页目录"><h6>本页目录</h6><a href="#功能简介" class="l2">功能简介</a><a href="#准备工作" class="l2">准备工作</a><a href="#支持的格式" class="l2">支持的格式</a><a href="#完整示例" class="l2">完整示例</a><a href="#交互模式" class="l2">交互模式</a><a href="#每个入口的作用" class="l3">每个入口的作用</a><a href="#快速命令表" class="l2">快速命令表</a><a href="#看懂输入和输出文件名" class="l2">看懂输入和输出文件名</a><a href="#常见例子" class="l2">常见例子</a><a href="#将-deepmd-数据集转换为-extxyz" class="l3">将 DeepMD 数据集转换为 extxyz</a><a href="#将带标签的-extxyz-转换为-deepmd-数据集" class="l3">将带标签的 extxyz 转换为 DeepMD 数据集</a><a href="#转换-vasp-结果" class="l3">转换 VASP 结果</a><a href="#添加-group-标签" class="l3">添加 group 标签</a><a href="#常用脚本说明" class="l2">常用脚本说明</a><a href="#poscar-转-extxyz" class="l3">POSCAR 转 extxyz</a><a href="#extxyz-转-poscar" class="l3">extxyz 转 POSCAR</a><a href="#lammps-dump-或-data-文件转-extxyz" class="l3">LAMMPS dump 或 data 文件转 extxyz</a><a href="#cif-转换" class="l3">CIF 转换</a><a href="#添加权重" class="l3">添加权重</a><a href="#扩胞" class="l3">扩胞</a><a href="#提取单帧" class="l3">提取单帧</a><a href="#拆分多帧-extxyz" class="l3">拆分多帧 extxyz</a><a href="#mtp-转换" class="l3">MTP 转换</a><a href="#abacus-转换" class="l3">ABACUS 转换</a><a href="#常见问题" class="l2">常见问题</a><a href="#说明" class="l2">说明</a></nav></div>
+</main>
+
+<!-- ======================================================= footer -->
+<footer class="footer">
+  <div class="container">
+    <div class="footer-grid">
+      <div>
+        <a href="../../index.html" class="brand"><svg><use href="#i-logo"/></svg><span><span class="gpumd">GPUMD</span><span class="kit">kit</span></span></a>
+        <p data-i18n="foot.about">A user-friendly toolkit for the GPUMD and NEP programs, built by the GPUMDkit team and contributors.</p>
+      </div>
+      <div><h5 data-i18n="foot.links">Quick links</h5><ul>
+        <li><a href="../../manual.html" data-doc="index" data-i18n="nav.docs">Docs</a></li>
+        <li><a href="../../gallery.html" data-i18n="nav.gallery">Gallery</a></li>
+        <li><a href="../../publications.html" data-i18n="nav.pubs">Publications</a></li>
+        <li><a href="https://github.com/zhyan0603/GPUMDkit/archive/refs/heads/main.zip" data-i18n="foot.dl">Download</a></li></ul></div>
+      <div><h5 data-i18n="foot.gpumd">GPUMD project</h5><ul>
+        <li><a href="https://github.com/brucefan1983/GPUMD" target="_blank" rel="noopener">GPUMD repository</a></li>
+        <li><a href="https://gpumd.org/" target="_blank" rel="noopener">GPUMD documentation</a></li>
+        <li><a href="https://github.com/brucefan1983/GPUMD-Tutorials" target="_blank" rel="noopener">GPUMD-Tutorials</a></li>
+        <li><a href="https://github.com/brucefan1983/GPUMD/tree/master/tools" target="_blank" rel="noopener">GPUMD-Tools</a></li></ul></div>
+      <div><h5 data-i18n="foot.eco">GPUMD ecosystem</h5><ul>
+        <li><a href="https://gitlab.com/brucefan1983/nep-data" target="_blank" rel="noopener">nep-data</a></li>
+        <li><a href="https://gitlab.com/materials-modeling/calorine" target="_blank" rel="noopener">calorine</a></li>
+        <li><a href="https://github.com/aboys-cb/NepTrainKit" target="_blank" rel="noopener">NepTrainKit</a></li>
+        <li><a href="https://github.com/Jonsnow-willow/GPUMD-Wizard" target="_blank" rel="noopener">GPUMD-Wizard</a></li></ul></div>
+    </div>
+    <div class="footer-bottom">
+      <span data-i18n="foot.copy">© 2026 GPUMDkit Team. Released under GPL-3.0.</span>
+      <span><span id="busuanzi_container_site_pv"><span data-i18n="foot.views">Views</span>: <span id="busuanzi_value_site_pv"></span></span> · <span id="busuanzi_container_site_uv"><span data-i18n="foot.visitors">Visitors</span>: <span id="busuanzi_value_site_uv"></span></span></span>
+    </div>
+  </div>
+</footer>
+
+<script src="../../assets/js/gk-data.js"></script>
+<script src="../../assets/js/gk-docs.js"></script>
+<script src="../../assets/js/gk-i18n.js"></script>
+<script src="../../assets/js/gk-core.js"></script>
+<script src="../../assets/js/gk-doc.js"></script>
+<script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+</body>
+</html>

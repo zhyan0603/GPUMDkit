@@ -1,0 +1,89 @@
+---
+name: gpumdkit-skill
+description: Use GPUMDkit, GPUMD, and NEP end to end. Use when installing or exploring GPUMDkit; converting, sampling, splitting, filtering, analyzing, calculating, or plotting atomistic datasets; preparing batch or active-learning workflows; creating model.xyz, run.in, or nep.in; setting up, running, validating, or post-processing GPUMD simulations; training, fine-tuning, or evaluating NEP models; performing diffusion, ionic-conductivity, Arrhenius, thermal-transport, or related workflows; or maintaining GPUMDkit code, documentation, and skills.
+---
+
+# GPUMDkit
+
+Use this skill as the single entry point for GPUMDkit utilities, GPUMD simulations, NEP training and evaluation, validation, and post-processing. Load only the references required by the current task.
+
+## Mandatory rules
+
+- Read the relevant reference file before giving commands, editing inputs, running tools, or interpreting results. Do not rely on memory when a local reference or help command is available.
+- Ask the user whenever an unresolved choice can affect scientific meaning, numerical stability, data selection, units, cost, or interpretation. Never invent a plausible parameter.
+- Do not choose potentials, species/type mappings, charges, temperatures, time steps, ensembles, pressures, constraints, run lengths, sampling intervals, fit windows, cutoffs, seeds, or convergence criteria without user input or an explicitly identified existing project setting.
+- Distinguish documented defaults, project conventions, recommendations, and user decisions. Do not silently turn a default into a production choice.
+- Do not overwrite inputs, discard structures, launch GPUMD/NEP/DFT, submit scheduler jobs, or start long/expensive calculations unless the user explicitly authorizes that action.
+- Routine directory naming, non-overwriting copies and organization within an authorized task may proceed directly. Reuse confirmed settings; propose missing scientific parameters for approval and update inputs/records when the user changes them.
+- Preparation is not execution authorization. Complete already-authorized stages within scope without repeatedly asking for the same authorization.
+- Do not create a test set by default or copy training data as test data. Follow the user's split decision and report independent-validation limits.
+- Before generating or translating a GPUMD `run.in`, identify the GPUMD version. For GPUMD 5.7 and later, use `dump_xyz` for the output roles formerly handled by the removed dump keywords; keep `dump_position`, `dump_velocity`, `dump_force`, and `dump_exyz` only as explicitly labeled pre-5.7 migration syntax in `references/gpumd-outputs.md`.
+- Stop on parser errors, NaN/Inf values, missing outputs, unstable behavior, or unexplained warnings. Report the evidence and ask before changing scientific parameters or retrying.
+- Preserve original data and unrelated worktree changes. Record transformations, filters, exclusions, commands, versions, and assumptions.
+- Run smoke tests in isolated temporary directories and remove every temporary file, directory, cache, and generated test output before handoff. Resolve and delete only paths created by the current work; never use a broad cleanup target that could remove user data.
+
+## Reference router
+
+Read one or more references according to the task. Do not load every file by default.
+
+| Task | Required reference |
+|---|---|
+| Installation, command discovery, module selection, common CLI usage | [overview.md](references/overview.md) |
+| Structure/data conversion, labels, weights, replication, frame extraction | [format-conversion.md](references/format-conversion.md) |
+| Uniform/random/FPS sampling, train/test splitting, perturbation, force-deviation selection | [sampling.md](references/sampling.md) |
+| Batch SCF/MD preparation and manual MD/FPS active-learning orchestration | [workflows.md](references/workflows.md) |
+| MSD, ionic conductivity, XRD, descriptors, NEB, minimization, polarization | [calculators.md](references/calculators.md) |
+| Composition, ranges, distances, filtering, outliers, probability density | [analyzers.md](references/analyzers.md) |
+| NEP/MD/transport/structure plots and fit outputs | [visualization.md](references/visualization.md) |
+| Creating or restyling GPUMDkit plots; project plotting style and review checklist | [plotting-style.md](references/plotting-style.md) |
+| Any GPUMD simulation task; workflow and bundled-reference routing | [gpumd.md](references/gpumd.md) |
+| GPUMD `model.xyz`, `run.in`, groups, units, auxiliary inputs | [gpumd-inputs.md](references/gpumd-inputs.md) |
+| GPUMD potential/setup, box controls, forces, constraints, minimization | [gpumd-setup.md](references/gpumd-setup.md) |
+| GPUMD NVE/NVT/NPT, MTTK, QTB, heat, PIMD, TI, shock ensembles | [gpumd-ensembles.md](references/gpumd-ensembles.md) |
+| GPUMD compute keywords, signatures, outputs, compatibility | [gpumd-computes.md](references/gpumd-computes.md) |
+| GPUMD dumps, active/observer modes, output write behavior | [gpumd-outputs.md](references/gpumd-outputs.md) |
+| Any NEP training/prediction task; workflow and bundled-reference routing | [nep.md](references/nep.md) |
+| NEP `train.xyz`/`test.xyz` schemas, targets, units, audits | [nep-data.md](references/nep-data.md) |
+| All current `nep.in` parameters, defaults, ranges, and modes | [nep-parameters.md](references/nep-parameters.md) |
+| NEP loss/model/restart/parity outputs and validation | [nep-outputs.md](references/nep-outputs.md) |
+| Diffusion or conductivity temperature series and Arrhenius activation energy | [arrhenius.md](references/arrhenius.md) |
+| GPUMDkit code, CLI, scripts, docs, tests, or skill maintenance | [contributing.md](references/contributing.md) |
+
+Load references for the current stage:
+
+- Existing MSD temperature series: `arrhenius.md` and `visualization.md`; add `calculators.md` when calculating conductivity or trajectory MSD.
+- Simulation preparation: `gpumd.md` and the input, ensemble, compute, and output references for the planned protocol.
+- Dataset preparation: `nep-data.md` plus the conversion, filtering, or sampling references used by the task.
+- Training configuration and evaluation: `nep.md` plus the relevant parameter or output reference.
+- Active learning: `workflows.md` for the `iter00`/`iter01` layout, stage handoffs and authorization; then load references for the current sampling, selection, DFT-labeling, training or validation stage.
+- Code or documentation changes: `contributing.md` and the affected module reference; add `plotting-style.md` for plot appearance changes.
+
+## Source priority
+
+Use evidence in this order:
+
+1. Local executable version, help, parser messages, and matching source code.
+2. Official documentation for that release or commit.
+3. GPUMDkit CLI/module help and target script implementation.
+4. Bundled references whose version scope matches the task.
+5. Existing project inputs verified with the same executable version.
+
+If sources disagree, show the exact conflict, executable version, and parser evidence, then ask which software version governs the task. Do not guess version-specific syntax. Treat old standalone GPUMD/NEP skills as non-authoritative.
+
+## Operating workflow
+
+1. Classify the request and load the smallest sufficient set of references.
+2. Inspect available files, executable versions, local help, and existing project conventions.
+3. List missing decisions as concise questions. Continue safe read-only inspection, but do not fill scientific gaps yourself.
+4. Present the resolved file plan, commands, expected outputs, and validation criteria before expensive execution.
+5. Prefer `gpumdkit.sh` CLI commands when documented. Use direct scripts under `${GPUMDkit_path}/Scripts/` only when the reference identifies a menu-only/debug path or no CLI route exists.
+6. When execution is authorized, capture the exact command, working directory, version, exit status, and warnings. Use a user-approved smoke test first when appropriate.
+7. Validate file structure and physical behavior before downstream analysis. Separate equilibration from production and report exclusions.
+8. Deliver results with units, provenance, convergence/fit evidence, uncertainty, and limitations.
+
+## Portability
+
+- Resolve all links relative to this skill directory. The skill does not require a product-specific activation tool.
+- Use standard Markdown, YAML frontmatter, shell commands, and repository-relative resources so any Agent Skills-compatible client can load it.
+- Treat `agents/openai.yaml` as optional interface metadata; never depend on it for instructions or behavior.
+- Use `${GPUMDkit_path}` for repository resources when available. If it is unset, locate the repository with the user or from the current workspace instead of guessing a path.

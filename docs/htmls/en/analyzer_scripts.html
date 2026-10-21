@@ -1,0 +1,555 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Analyzer Scripts — GPUMDkit</title>
+  <meta name="description" content="Analyzer scripts provide structure statistics, distance checks, filters, composition analysis, outlier detection, and time estimation for extxyz datasets.">
+  <meta property="og:title" content="GPUMDkit — A User-friendly Toolkit for GPUMD and NEP">
+  <meta property="og:description" content="Format conversion, sampling, workflows, analysis and plotting for GPUMD and NEP, in one command.">
+  <meta property="og:image" content="https://gpumdkit.cn/Gallery/gpumdkit_logo_lateral.png">
+  <meta property="og:url" content="https://gpumdkit.cn/">
+  <meta name="twitter:card" content="summary_large_image">
+  <link rel="canonical" href="https://gpumdkit.cn/htmls/en/analyzer_scripts.html">
+  <link rel="icon" href="../../Gallery/gpumdkit_logo.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <!-- web fonts load without blocking rendering; system fonts are used if they are unreachable -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
+  <noscript><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet"></noscript>
+  <link rel="stylesheet" href="../../assets/css/gk.css">
+  <link rel="stylesheet" href="../../assets/css/gk-manual.css">
+  <script>
+    /* mark JS as available (reveal animations are only armed then) and apply the saved theme before first paint */
+    document.documentElement.classList.add("js"); try { localStorage.setItem("gk-lang", "en"); } catch (e) {}
+    try { var t = localStorage.getItem("gk-theme"); if (t) document.documentElement.setAttribute("data-theme", t); } catch (e) {}
+  </script>
+</head>
+<body data-page="doc" data-root="../../" data-lang="en" data-alt="../zh/分析工具.html">
+
+<!-- ======================================================= icon sprite -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <symbol id="i-logo" viewBox="0 0 100 100"><path d="M85.3 31.2A40 40 0 1 0 89.4 43" fill="none" stroke="#1867ae" stroke-width="9"/><text x="49" y="52" text-anchor="middle" dominant-baseline="central" font-family="Helvetica Neue,Helvetica,Arial,sans-serif" font-weight="800" font-size="52" fill="#1867ae">G</text><circle cx="87.4" cy="35.7" r="5" fill="#c18852"/></symbol>
+    <symbol id="i-copy" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="11" height="11" rx="2.5"/><path d="M5 15V6a2 2 0 0 1 2-2h9"/></symbol>
+    <symbol id="i-check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="m5 12.5 4.5 4.5L19 7.5"/></symbol>
+    <symbol id="i-search" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="m20 20-4-4"/></symbol>
+    <symbol id="i-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"><circle cx="12" cy="12" r="4.2"/><path d="M12 2.5v2M12 19.5v2M4.6 4.6 6 6M18 18l1.4 1.4M2.5 12h2M19.5 12h2M4.6 19.4 6 18M18 6l1.4-1.4"/></symbol>
+    <symbol id="i-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M20.5 14.2A8.5 8.5 0 0 1 9.8 3.5 8.5 8.5 0 1 0 20.5 14.2Z"/></symbol>
+    <symbol id="i-github" viewBox="0 0 16 16" fill="currentColor"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0 0 16 8c0-4.42-3.58-8-8-8z"/></symbol>
+    <symbol id="i-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></symbol>
+    <symbol id="i-out" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17 17 7M8 7h9v9"/></symbol>
+    <symbol id="i-star" viewBox="0 0 24 24" fill="currentColor"><path d="m12 2.8 2.8 5.8 6.4.9-4.6 4.5 1.1 6.3L12 17.3l-5.7 3 1.1-6.3-4.6-4.5 6.4-.9Z"/></symbol>
+    <symbol id="i-fork" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"><circle cx="6" cy="5" r="2.2"/><circle cx="18" cy="5" r="2.2"/><circle cx="12" cy="19" r="2.2"/><path d="M6 7.2v1.8a3 3 0 0 0 3 3h6a3 3 0 0 0 3-3V7.2M12 12v4.8"/></symbol>
+    <symbol id="i-menu" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 7h16M4 12h16M4 17h16"/></symbol>
+    <symbol id="i-close" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M6 6l12 12M18 6 6 18"/></symbol>
+    <symbol id="i-left" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m15 5-7 7 7 7"/></symbol>
+    <symbol id="i-right" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 5 7 7-7 7"/></symbol>
+    <symbol id="i-lock" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="5" y="11" width="14" height="9" rx="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></symbol>
+    <symbol id="i-conv" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M7 4 3 8l4 4"/><path d="M3 8h14"/><path d="m17 12 4 4-4 4"/><path d="M21 16H7"/></symbol>
+    <symbol id="i-samp" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="6" cy="7" r="1.6"/><circle cx="12.5" cy="5" r="1.6"/><circle cx="18" cy="9" r="1.6"/><circle cx="8" cy="15" r="1.6"/><circle cx="16" cy="17" r="1.6"/><circle cx="12" cy="11.5" r="6.8" stroke-dasharray="2 3"/></symbol>
+    <symbol id="i-flow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="2"/><rect x="14" y="14" width="7" height="7" rx="2"/><path d="M6.5 10v3.5a2 2 0 0 0 2 2H14"/></symbol>
+    <symbol id="i-calc" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="3" width="14" height="18" rx="2.5"/><path d="M8.5 7h7M8.5 11.5h.01M12 11.5h.01M15.5 11.5h.01M8.5 15h.01M12 15h.01M15.5 15h.01M8.5 18h.01M12 18h.01M15.5 18h.01"/></symbol>
+    <symbol id="i-anal" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="10.5" cy="10.5" r="6.5"/><path d="m20 20-4.8-4.8"/><path d="M7.5 12l2-2.5 2 1.5 2-3"/></symbol>
+    <symbol id="i-plot" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3v18h18"/><path d="m7 15 4-5 3 3 5-7"/></symbol>
+    <symbol id="i-term" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="16" rx="3"/><path d="m7 9 3 3-3 3M12.5 15H17"/></symbol>
+    <symbol id="i-doc" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"><path d="M6 3h8.5L19 7.5V21H6z"/><path d="M14 3v5h5M9 12.5h7M9 16.5h5" stroke-linecap="round"/></symbol>
+    <symbol id="i-chat" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20 15a2 2 0 0 1-2 2H8l-4 4V6a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2z"/><path d="M8.5 9.5h7M8.5 13h4.5"/></symbol>
+    <symbol id="i-shield" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3 5 6v6c0 4.4 3 7.6 7 9 4-1.4 7-4.6 7-9V6z"/><path d="m9 12 2 2 4-4"/></symbol>
+    <symbol id="i-globe" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c2.8 3 2.8 15 0 18M12 3c-2.8 3-2.8 15 0 18"/></symbol>
+    <symbol id="i-spark" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v4M12 17v4M3 12h4M17 12h4M6 6l2.5 2.5M15.5 15.5 18 18M6 18l2.5-2.5M15.5 8.5 18 6"/></symbol>
+    <symbol id="i-atom" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="1.8" fill="currentColor"/><ellipse cx="12" cy="12" rx="9" ry="3.6"/><ellipse cx="12" cy="12" rx="9" ry="3.6" transform="rotate(60 12 12)"/><ellipse cx="12" cy="12" rx="9" ry="3.6" transform="rotate(120 12 12)"/></symbol>
+    <symbol id="i-db" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><ellipse cx="12" cy="6" rx="7" ry="3"/><path d="M5 6v12c0 1.7 3.1 3 7 3s7-1.3 7-3V6M5 12c0 1.7 3.1 3 7 3s7-1.3 7-3"/></symbol>
+    <symbol id="i-brain" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="6" cy="7" r="2"/><circle cx="6" cy="17" r="2"/><circle cx="12" cy="12" r="2"/><circle cx="18" cy="7" r="2"/><circle cx="18" cy="17" r="2"/><path d="M8 7.8 10.3 11M8 16.2l2.3-3.2M13.7 11 16 7.8M13.7 13l2.3 3.2"/></symbol>
+    <symbol id="i-filter" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 5h16l-6 7.5V19l-4 2v-8.5z"/></symbol>
+    <symbol id="i-image" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="16" rx="3"/><circle cx="9" cy="10" r="2"/><path d="m21 16-5-5-9 9"/></symbol>
+  </defs>
+</svg>
+
+<div class="ambient" aria-hidden="true"><div class="orb a"></div><div class="orb b"></div><div class="orb c"></div><div class="noise"></div></div>
+<div class="progress" aria-hidden="true"></div>
+
+<!-- ======================================================= navigation -->
+<header class="nav" id="nav">
+  <div class="container">
+    <a href="../../index.html" class="brand" aria-label="GPUMDkit home"><svg><use href="#i-logo"/></svg><span><span class="gpumd">GPUMD</span><span class="kit">kit</span></span></a>
+    <nav class="nav-links" id="nav-links">
+      <a href="../../index.html#features" data-i18n="nav.features">Features</a>
+      <a href="../../index.html#terminal" data-i18n="nav.terminal">Try it</a>
+      <a href="../../index.html#workflow" data-i18n="nav.workflow">Workflow</a>
+      <a href="../../gallery.html" data-i18n="nav.gallery">Gallery</a>
+      <a href="../../publications.html" data-i18n="nav.pubs">Publications</a>
+      <a href="../../manual.html" class="active" aria-current="page" data-i18n="nav.manual">Manual</a>
+    </nav>
+    <div class="nav-tools">
+      <button class="search-btn" data-palette aria-label="Search commands and docs"><svg><use href="#i-search"/></svg><span class="label" data-i18n="nav.search">Search commands…</span><kbd>⌘K</kbd></button>
+      <button class="icon-btn lang-btn" data-lang-toggle aria-label="Switch language">中文</button>
+      <button class="icon-btn" data-theme-toggle aria-label="Toggle dark mode"><svg class="theme-icon-light"><use href="#i-moon"/></svg><svg class="theme-icon-dark"><use href="#i-sun"/></svg></button>
+      <a class="icon-btn gh-btn" href="https://github.com/zhyan0603/GPUMDkit" target="_blank" rel="noopener" aria-label="GitHub"><svg><use href="#i-github"/></svg></a>
+      <button class="icon-btn menu-btn" id="menu-btn" aria-label="Menu"><svg><use href="#i-menu"/></svg></button>
+    </div>
+  </div>
+</header>
+
+<main>
+<section class="man-hero doc-hero"><div class="container"><div class="crumb"><a href="../../manual.html">Manual</a><span>/</span><span>Toolbox</span><span>/</span><span>Analyzer Scripts</span></div><h1 class="h-section">Analyzer Scripts</h1><p class="lead">Analyzer scripts provide structure statistics, distance checks, filters, composition analysis, outlier detection, and time estimation for extxyz datasets.</p></div></section>
+<div class="container man doc"><aside class="man-side" aria-label="Pages"><h6>Start</h6><a href="index.html" class=""><span>GPUMDkit Tutorials</span></a><a href="quick_start.html" class=""><span>Quick Start</span></a><a href="remote_web_console.html" class=""><span>Remote Web Console</span></a><a href="simulation_and_postprocessing.html" class=""><span>GPUMDkit Agent Skill</span></a><h6>Toolbox</h6><a href="format_conversion.html" class=""><span>Format Conversion</span></a><a href="structure_sampling.html" class=""><span>Structure Sampling</span></a><a href="workflow_scripts.html" class=""><span>Workflow Scripts</span></a><a href="calculator_scripts.html" class=""><span>Calculator Scripts</span></a><a href="analyzer_scripts.html" class="on"><span>Analyzer Scripts</span></a><a href="plot_scripts.html" class=""><span>Plot Scripts</span></a><a href="plot_nep.html" class="sub"><span>NEP Training and Model Analysis</span></a><a href="plot_md_structure.html" class="sub"><span>MD and Structure</span></a><a href="plot_diffusion.html" class="sub"><span>Diffusion and Ionic Transport</span></a><a href="plot_heat_phonon.html" class="sub"><span>Heat Transport and Phonons</span></a><a href="polar_material_analysis.html" class=""><span>Polar Material Analysis</span></a><h6>Guides</h6><a href="active_learning_workflow.html" class=""><span>Active Learning Workflow</span></a><a href="custom_commands.html" class=""><span>Custom Commands</span></a><h6>Reference</h6><a href="command_reference.html" class=""><span>Command Reference</span></a><h6>Contribute</h6><a href="contributing_to_gpumdkit.html" class=""><span>Contributing to GPUMDkit</span></a></aside><article class="man-body chap doc-body"><h2 id="what-it-does">What it does</h2>
+<p>This module helps you inspect, filter, and validate structure datasets. You can check composition, analyze property ranges, detect short contacts, filter structures by various criteria, find outliers in NEP training data, and estimate remaining simulation time.</p>
+<h2 id="before-you-start">Before you start</h2>
+<p><strong>Script location:</strong> <code>Scripts/analyzer/</code></p>
+<p>Make sure GPUMDkit is installed. See <a href="quick_start.html">Quick Start</a> for installation instructions.</p>
+<h2 id="overview">Overview</h2>
+<div class="tbl-wrap"><table class="tbl">
+<thead>
+<tr>
+<th>Task</th>
+<th>Command</th>
+<th>Purpose</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Composition</td>
+<td><code>gpumdkit.sh -analyze_comp train.xyz</code></td>
+<td>Group structures by chemical composition</td>
+</tr>
+<tr>
+<td>Chemical species</td>
+<td><code>gpumdkit.sh -chem_species train.xyz</code></td>
+<td>List species in a file</td>
+</tr>
+<tr>
+<td>Property range</td>
+<td><code>gpumdkit.sh -range train.xyz force</code></td>
+<td>Inspect energy/force/virial range</td>
+</tr>
+<tr>
+<td>Energy reference shifting</td>
+<td><code>gpumdkit.sh -shift_energy</code></td>
+<td>Interactively shift extxyz energy references</td>
+</tr>
+<tr>
+<td>Minimum distance</td>
+<td><code>gpumdkit.sh -min_dist dump.xyz</code></td>
+<td>Fast distance check without PBC</td>
+</tr>
+<tr>
+<td>Minimum distance with PBC</td>
+<td><code>gpumdkit.sh -min_dist_pbc dump.xyz</code></td>
+<td>Accurate distance check with PBC</td>
+</tr>
+<tr>
+<td>Charge balance</td>
+<td><code>gpumdkit.sh -cbc train.xyz</code></td>
+<td>Oxidation-state balance check</td>
+</tr>
+<tr>
+<td>Distance filter</td>
+<td><code>gpumdkit.sh -filter_dist_pbc dump.xyz 1.0</code></td>
+<td>Remove structures with short contacts</td>
+</tr>
+<tr>
+<td>Box filter</td>
+<td><code>gpumdkit.sh -filter_box dump.xyz 13</code></td>
+<td>Remove structures with too-large box edges</td>
+</tr>
+<tr>
+<td>Property filter</td>
+<td><code>gpumdkit.sh -filter_value train.xyz force 20</code></td>
+<td>Filter by energy/force/virial threshold</td>
+</tr>
+<tr>
+<td>Pair-distance range</td>
+<td><code>gpumdkit.sh -filter_range dump.xyz Li Li 1.8 2.0</code></td>
+<td>Extract structures by pair distance</td>
+</tr>
+<tr>
+<td>Outlier detection</td>
+<td>Menu 502</td>
+<td>Find high-RMSE structures in training set</td>
+</tr>
+<tr>
+<td>Probability density</td>
+<td><code>gpumdkit.sh -pda &lt;ref&gt; &lt;traj&gt; &lt;element&gt; &lt;interval&gt;</code></td>
+<td>3D probability density for diffusion channels</td>
+</tr>
+<tr>
+<td>GPUMD time</td>
+<td><code>gpumdkit.sh -time gpumd</code></td>
+<td>Estimate remaining GPUMD run time</td>
+</tr>
+<tr>
+<td>WPE GPUMD time</td>
+<td><code>gpumdkit.sh -time wpe</code></td>
+<td>Estimate remaining time for WPE-enabled GPUMD runs</td>
+</tr>
+<tr>
+<td>NEP time</td>
+<td><code>gpumdkit.sh -time nep</code></td>
+<td>Estimate remaining NEP training time</td>
+</tr>
+</tbody>
+</table></div>
+<h2 id="check-before-you-filter">Check before you filter</h2>
+<p>Run a check such as <code>-min_dist_pbc</code> or <code>-range</code> before a <code>-filter_*</code> command, so you can see why structures would be removed. Use the PBC-aware distance check for periodic cells; the non-PBC version is only a quick comparison. The numbers in the examples below only illustrate the syntax: choose distance, box, and force thresholds for your own system and data.</p>
+<p>---|---|---|
+| Are periodic images relevant? | <code>gpumdkit.sh -min_dist_pbc &lt;input.xyz&gt;</code> | Use the PBC-aware route for periodic cells; the non-PBC route is only a fast comparison. |
+| Is a value unusually large or small? | <code>gpumdkit.sh -range &lt;input.xyz&gt; energy\|force\|virial</code> | The acceptable range depends on the target system and reference data. |
+| Are contacts too short? | <code>gpumdkit.sh -min_dist_pbc &lt;input.xyz&gt;</code> | Choose a distance threshold from the chemistry and purpose of the dataset. |
+| Which structures should be removed? | inspect the check result first, then <code>-filter_*</code> | Filtering thresholds are not universal defaults. |</p>
+<p>Numbers in the examples below demonstrate command syntax only. Do not treat a
+distance, box-edge, or force cutoff shown in an example as a recommended value
+for another material or workflow.</p>
+<hr />
+<h2 id="a-worked-example">A Worked Example</h2>
+<p>The commands below were run on a small illustrative file, <code>train.xyz</code>: nine frames of a 16-atom Li cell, three of which have four Li atoms replaced by F, and one frame in which two atoms are only 0.4 Å apart (a typical "bad" structure from a failed MD step). The numbers belong to this toy file, not to a real dataset.</p>
+<p><strong>1. What is in the file?</strong></p>
+<div class="code"><div class="cap"><i></i><i></i><i></i><span>bash</span></div><pre><code>gpumdkit.sh -analyze_comp train.xyz</code></pre><button class="copy-btn" data-copy-pre aria-label="Copy"><svg class="cp"><use href="#i-copy"/></svg><svg class="ok"><use href="#i-check"/></svg></button></div>
+<div class="code"><div class="cap"><i></i><i></i><i></i><span>text</span></div><pre><code> Index    Compositions           N atoms      Count
+ ---------------------------------------------------
+ 1        Li16                   16           6
+ 2        Li12F4                 16           3
+ ---------------------------------------------------
+ Enter index to export (e.g., '1,2', '2-3', 'all'), or press Enter to skip:</code></pre><button class="copy-btn" data-copy-pre aria-label="Copy"><svg class="cp"><use href="#i-copy"/></svg><svg class="ok"><use href="#i-check"/></svg></button></div>
+<p>The table counts frames per composition. The last line is an interactive prompt: type an index such as <code>2</code> to write the frames of that composition to a file, or press Enter to leave the file untouched.</p>
+<p><strong>2. How large are the labels?</strong></p>
+<div class="code"><div class="cap"><i></i><i></i><i></i><span>bash</span></div><pre><code>gpumdkit.sh -range train.xyz energy
+gpumdkit.sh -range train.xyz force</code></pre><button class="copy-btn" data-copy-pre aria-label="Copy"><svg class="cp"><use href="#i-copy"/></svg><svg class="ok"><use href="#i-check"/></svg></button></div>
+<div class="code"><div class="cap"><i></i><i></i><i></i><span>text</span></div><pre><code> Energy range: -30.400 to -25.400
+ Force range: 0.199 to 3.254</code></pre><button class="copy-btn" data-copy-pre aria-label="Copy"><svg class="cp"><use href="#i-copy"/></svg><svg class="ok"><use href="#i-check"/></svg></button></div>
+<p>An energy of -25.4 eV in a set where the others are near -30.4 eV is a flag, and so is a maximum force of 3.25 eV/Å. Neither is an error by itself; look at the structures behind them.</p>
+<p><strong>3. Are any atoms too close?</strong></p>
+<div class="code"><div class="cap"><i></i><i></i><i></i><span>bash</span></div><pre><code>gpumdkit.sh -min_dist_pbc train.xyz</code></pre><button class="copy-btn" data-copy-pre aria-label="Copy"><svg class="cp"><use href="#i-copy"/></svg><svg class="ok"><use href="#i-check"/></svg></button></div>
+<div class="code"><div class="cap"><i></i><i></i><i></i><span>text</span></div><pre><code> Minimum interatomic distances (with PBC):
+ +---------------------------+
+ | Atom Pair |  Distance (Å) |
+ +---------------------------+
+ |   Li-Li   |     0.400     |
+ |   Li-F    |     2.447     |
+ |   F-F     |     2.776     |
+ +---------------------------+
+ Overall min_distance: 0.400 Å</code></pre><button class="copy-btn" data-copy-pre aria-label="Copy"><svg class="cp"><use href="#i-copy"/></svg><svg class="ok"><use href="#i-check"/></svg></button></div>
+<p>A Li-Li distance of 0.4 Å is far below any physical bond length, so some frame contains overlapping atoms.</p>
+<p><strong>4. Remove them and keep a record of what was removed.</strong></p>
+<div class="code"><div class="cap"><i></i><i></i><i></i><span>bash</span></div><pre><code>gpumdkit.sh -filter_dist_pbc train.xyz 1.5</code></pre><button class="copy-btn" data-copy-pre aria-label="Copy"><svg class="cp"><use href="#i-copy"/></svg><svg class="ok"><use href="#i-check"/></svg></button></div>
+<div class="code"><div class="cap"><i></i><i></i><i></i><span>text</span></div><pre><code> Total structures processed: 9
+ Structures filtered out: 1
+ Structures retained: 8
+ Filtered structures saved to: filtered_train.xyz
+ Filtered-out structures saved to: filtered_out_train.xyz</code></pre><button class="copy-btn" data-copy-pre aria-label="Copy"><svg class="cp"><use href="#i-copy"/></svg><svg class="ok"><use href="#i-check"/></svg></button></div>
+<p>The threshold <code>1.5</code> is only an example: choose one that fits the elements in your own system. Keep <code>filtered_out_train.xyz</code> and look at it before you discard the structures for good.</p>
+<p><strong>5. Check the result.</strong></p>
+<div class="code"><div class="cap"><i></i><i></i><i></i><span>bash</span></div><pre><code>gpumdkit.sh -min_dist_pbc filtered_train.xyz</code></pre><button class="copy-btn" data-copy-pre aria-label="Copy"><svg class="cp"><use href="#i-copy"/></svg><svg class="ok"><use href="#i-check"/></svg></button></div>
+<p>Run the same checks again on the cleaned file before it goes into a training set.</p>
+<h2 id="interactive-mode">Interactive Mode</h2>
+<p>Run <code>gpumdkit.sh</code> and choose <code>5) Analyzer</code>. Most functions also have the command-line shortcuts listed in the overview table and in the sections below.</p>
+<details>
+<summary>Show the full menu</summary>
+<div class="code"><div class="cap"><i></i><i></i><i></i><span>text</span></div><pre><code>+------------------------------------------------------+
+|                    ANALYZER TOOLS                    |
++------------------------------------------------------+
+| 501) Analyze composition of extxyz                   |
+| 502) Find outliers of extxyz                         |
+| 503) Analyze chemical species of extxyz              |
+| 504) Check charge balance of extxyz                  |
+| 505) Analyze energy/force/virial range               |
+| 506) Filter structures by minimum distance           |
+| 507) Get minimum interatomic distance                |
+| 508) Probability density analysis                    |
+| 509) Shift energy reference interactively            |
++------------------------------------------------------+
+| 000) Return to the main menu                         |
++------------------------------------------------------+
+Input the function number:</code></pre><button class="copy-btn" data-copy-pre aria-label="Copy"><svg class="cp"><use href="#i-copy"/></svg><svg class="ok"><use href="#i-check"/></svg></button></div>
+</details>
+<hr />
+<h2 id="composition-analysis">Composition Analysis</h2>
+<p><code>analyze_composition.py</code> analyzes the composition of your extxyz file and lets you export subsets.</p>
+<p><strong>What it does:</strong> Groups structures by chemical composition and shows how many structures belong to each composition. You can export subsets by composition.</p>
+<p><strong>CLI mode:</strong></p>
+<div class="code"><div class="cap"><i></i><i></i><i></i><span>bash</span></div><pre><code>gpumdkit.sh -analyze_comp train.xyz</code></pre><button class="copy-btn" data-copy-pre aria-label="Copy"><svg class="cp"><use href="#i-copy"/></svg><svg class="ok"><use href="#i-check"/></svg></button></div>
+<p><strong>Interactive mode:</strong> Choose <code>501</code> from the analyzer menu.</p>
+<p><strong>Output example:</strong></p>
+<div class="code"><div class="cap"><i></i><i></i><i></i><span>text</span></div><pre><code>Index    Compositions           N atoms      Count
+---------------------------------------------------
+1        Li56O96Zr16La24        192          51
+---------------------------------------------------
+Enter index to export (e.g., '1,2', '2-3', 'all'), or press Enter to skip:</code></pre><button class="copy-btn" data-copy-pre aria-label="Copy"><svg class="cp"><use href="#i-copy"/></svg><svg class="ok"><use href="#i-check"/></svg></button></div>
+<p>This is useful when <code>train.xyz</code> contains structures from different systems or different cell sizes. You can export a subset by composition from the interactive prompt.</p>
+<hr />
+<h2 id="chemical-species">Chemical Species</h2>
+<p><code>analyze_chem_species.py</code> lists all unique chemical species in an extxyz file.</p>
+<p><strong>Input file:</strong> <code>train.xyz</code> (extxyz format)</p>
+<div class="code"><div class="cap"><i></i><i></i><i></i><span>bash</span></div><pre><code>gpumdkit.sh -chem_species train.xyz</code></pre><button class="copy-btn" data-copy-pre aria-label="Copy"><svg class="cp"><use href="#i-copy"/></svg><svg class="ok"><use href="#i-check"/></svg></button></div>
+<hr />
+<h2 id="property-range-analysis">Property Range Analysis</h2>
+<p><code>energy_force_virial_analyzer.py</code> calculates and visualizes the range of properties from an extxyz file.</p>
+<p><strong>Input file:</strong> <code>train.xyz</code> (extxyz format)</p>
+<p><strong>Supported properties:</strong> <code>energy</code>, <code>force</code>, <code>virial</code></p>
+<div class="code"><div class="cap"><i></i><i></i><i></i><span>bash</span></div><pre><code>gpumdkit.sh -range train.xyz force
+gpumdkit.sh -range train.xyz energy
+gpumdkit.sh -range train.xyz virial
+gpumdkit.sh -range train.xyz force hist    # Show histogram</code></pre><button class="copy-btn" data-copy-pre aria-label="Copy"><svg class="cp"><use href="#i-copy"/></svg><svg class="ok"><use href="#i-check"/></svg></button></div>
+<p><strong>Output example:</strong></p>
+<div class="code"><div class="cap"><i></i><i></i><i></i><span>text</span></div><pre><code>Force range: 0.03210566767721861 to 9.230115912468435</code></pre><button class="copy-btn" data-copy-pre aria-label="Copy"><svg class="cp"><use href="#i-copy"/></svg><svg class="ok"><use href="#i-check"/></svg></button></div>
+<p>With <code>hist</code> option:</p>
+<div align="center">
+  <img src="../../Gallery/range_force.png" alt="Force range histogram" width="52%" />
+</div>
+
+<hr />
+<h2 id="energy-reference-shifting">Energy Reference Shifting</h2>
+<p><code>align_energy_reference.py</code> interactively shifts the <code>energy=</code> values in a
+multi-frame extxyz file. Atom lines and all other header fields are copied to
+the output file unchanged.</p>
+<p>Start the interface directly:</p>
+<div class="code"><div class="cap"><i></i><i></i><i></i><span>bash</span></div><pre><code>gpumdkit.sh -shift_energy</code></pre><button class="copy-btn" data-copy-pre aria-label="Copy"><svg class="cp"><use href="#i-copy"/></svg><svg class="ok"><use href="#i-check"/></svg></button></div>
+<p>Or choose <code>5) Analyzer -&gt; 509</code> from the main menu. The interface first shows
+the detected elements and <code>config_type</code> groups, then offers three modes:</p>
+<ol>
+<li>Reference-group alignment: align selected groups to the mean energy of a
+   reference group.</li>
+<li>Zero atomic baseline alignment: optimize a baseline for each group so its
+   shifted energies target zero.</li>
+<li>DFT-to-NEP alignment: calculate NEP energies and align the original DFT
+   energies to them.</li>
+</ol>
+<p>Modes 1 and 2 fit the baselines with a natural evolution strategy (NES)
+optimizer. Its default settings suit most datasets; advanced settings can be
+changed in the interface. The DFT-to-NEP mode requires the
+<code>calorine</code> package and a compatible NEP model file.</p>
+<hr />
+<h2 id="minimum-distance-checks">Minimum Distance Checks</h2>
+<h3 id="without-pbc-fast">Without PBC (Fast)</h3>
+<p><code>get_min_dist.py</code> calculates minimum interatomic distances without considering periodic boundary conditions. Fast but may be inaccurate for periodic systems.</p>
+<p><strong>What it does:</strong> Reports the minimum distance for each element pair across all frames, ignoring periodic boundary conditions. Elements are collected from the entire dataset in first-appearance order; pairs absent from a frame are skipped. The PBC version follows the same element-pair coverage.</p>
+<p><strong>CLI mode:</strong></p>
+<div class="code"><div class="cap"><i></i><i></i><i></i><span>bash</span></div><pre><code>gpumdkit.sh -min_dist dump.xyz</code></pre><button class="copy-btn" data-copy-pre aria-label="Copy"><svg class="cp"><use href="#i-copy"/></svg><svg class="ok"><use href="#i-check"/></svg></button></div>
+<p><strong>Interactive mode:</strong> Choose <code>507</code> from the analyzer menu.</p>
+<p><strong>Output example:</strong></p>
+<div class="code"><div class="cap"><i></i><i></i><i></i><span>text</span></div><pre><code>+---------------------------+
+|   PBC ignored for speed   |
+| use -min_dist_pbc for PBC |
++---------------------------+
+Minimum interatomic distances:
++---------------------------+
+| Atom Pair |  Distance (Å) |
++---------------------------+
+|   Li-Li   |     1.696     |
+|   Li-O    |     1.587     |
+|   O-O     |     2.480     |
++---------------------------+
+Overall min_distance: 1.587 Å</code></pre><button class="copy-btn" data-copy-pre aria-label="Copy"><svg class="cp"><use href="#i-copy"/></svg><svg class="ok"><use href="#i-check"/></svg></button></div>
+<p><strong>Notes:</strong> Use this for a quick check. For periodic systems, prefer <code>-min_dist_pbc</code> for accurate results.</p>
+<h3 id="with-pbc-accurate">With PBC (Accurate)</h3>
+<p><code>get_min_dist_pbc.py</code> calculates minimum interatomic distances considering periodic boundary conditions.</p>
+<p><strong>What it does:</strong> Reports the minimum distance between each pair of elements, accounting for periodic boundary conditions.</p>
+<p><strong>CLI mode:</strong></p>
+<div class="code"><div class="cap"><i></i><i></i><i></i><span>bash</span></div><pre><code>gpumdkit.sh -min_dist_pbc dump.xyz</code></pre><button class="copy-btn" data-copy-pre aria-label="Copy"><svg class="cp"><use href="#i-copy"/></svg><svg class="ok"><use href="#i-check"/></svg></button></div>
+<p><strong>Interactive mode:</strong> Choose <code>507</code> from the analyzer menu and answer <code>y</code> when asked whether to consider PBC.</p>
+<p><strong>Output example:</strong></p>
+<div class="code"><div class="cap"><i></i><i></i><i></i><span>text</span></div><pre><code>Minimum interatomic distances (with PBC):
++---------------------------+
+| Atom Pair |  Distance (Å) |
++---------------------------+
+|   Li-Li   |     1.696     |
+|   Li-O    |     1.587     |
+|   O-O     |     2.355     |
++---------------------------+
+Overall min_distance: 1.587 Å</code></pre><button class="copy-btn" data-copy-pre aria-label="Copy"><svg class="cp"><use href="#i-copy"/></svg><svg class="ok"><use href="#i-check"/></svg></button></div>
+<hr />
+<h2 id="filtering-structures">Filtering Structures</h2>
+<h3 id="filter-by-minimum-distance">Filter by Minimum Distance</h3>
+<p><code>filter_structures_by_distance_pbc.py</code> removes structures with any interatomic distance below a threshold.</p>
+<p><strong>Input file:</strong> <code>dump.xyz</code> (extxyz format)</p>
+<div class="code"><div class="cap"><i></i><i></i><i></i><span>bash</span></div><pre><code>gpumdkit.sh -filter_dist_pbc dump.xyz 1.0</code></pre><button class="copy-btn" data-copy-pre aria-label="Copy"><svg class="cp"><use href="#i-copy"/></svg><svg class="ok"><use href="#i-check"/></svg></button></div>
+<p>This removes structures with any interatomic distance below <code>1.0 Å</code> and writes the rest to <code>filtered_dump.xyz</code>.</p>
+<h3 id="filter-by-box-size">Filter by Box Size</h3>
+<p><code>filter_exyz_by_box.py</code> filters structures by box-edge length.</p>
+<p><strong>Input file:</strong> <code>dump.xyz</code> (extxyz format)</p>
+<div class="code"><div class="cap"><i></i><i></i><i></i><span>bash</span></div><pre><code>gpumdkit.sh -filter_box dump.xyz 13</code></pre><button class="copy-btn" data-copy-pre aria-label="Copy"><svg class="cp"><use href="#i-copy"/></svg><svg class="ok"><use href="#i-check"/></svg></button></div>
+<p>This keeps structures whose box edges are all at most <code>13 Å</code> and writes them to <code>filtered_by_box.xyz</code>.</p>
+<h3 id="filter-by-property-value">Filter by Property Value</h3>
+<p><code>filter_exyz_by_value.py</code> filters structures by energy, force, or virial threshold.</p>
+<p><strong>Input file:</strong> <code>train.xyz</code> (extxyz format)</p>
+<p><strong>Supported properties:</strong> <code>energy</code>, <code>force</code>, <code>virial</code></p>
+<div class="code"><div class="cap"><i></i><i></i><i></i><span>bash</span></div><pre><code>gpumdkit.sh -filter_value train.xyz force 20
+gpumdkit.sh -filter_value train.xyz energy &lt;max_energy&gt;</code></pre><button class="copy-btn" data-copy-pre aria-label="Copy"><svg class="cp"><use href="#i-copy"/></svg><svg class="ok"><use href="#i-check"/></svg></button></div>
+<p>A structure is kept when every value is at most the threshold: each force component in magnitude (eV/Å) for <code>force</code>, the total energy stored in the file (eV, not per atom) for <code>energy</code>, and each virial component for <code>virial</code>. Frames that do not store the chosen property cannot be checked and are kept; the script reports how many. The kept structures are written to <code>filtered.xyz</code>.</p>
+<h3 id="filter-by-pair-distance-range">Filter by Pair-Distance Range</h3>
+<p><code>filter_dist_range.py</code> extracts structures where a specific element-pair distance falls within a given range.</p>
+<p><strong>Input file:</strong> <code>dump.xyz</code> (extxyz format)</p>
+<div class="code"><div class="cap"><i></i><i></i><i></i><span>bash</span></div><pre><code>gpumdkit.sh -filter_range dump.xyz Li Li 1.8 2.0</code></pre><button class="copy-btn" data-copy-pre aria-label="Copy"><svg class="cp"><use href="#i-copy"/></svg><svg class="ok"><use href="#i-check"/></svg></button></div>
+<p>This extracts structures where the Li-Li minimum distance is between <code>1.8 Å</code> and <code>2.0 Å</code>. Output: <code>filtered_Li_Li_1.8_2.0.xyz</code>.</p>
+<hr />
+<h2 id="charge-balance-check">Charge Balance Check</h2>
+<p><code>charge_balance_check.py</code> checks the oxidation-state balance of structures.</p>
+<p><strong>Input file:</strong> <code>train.xyz</code> (extxyz format)</p>
+<div class="code"><div class="cap"><i></i><i></i><i></i><span>bash</span></div><pre><code>gpumdkit.sh -cbc train.xyz</code></pre><button class="copy-btn" data-copy-pre aria-label="Copy"><svg class="cp"><use href="#i-copy"/></svg><svg class="ok"><use href="#i-check"/></svg></button></div>
+<p><strong>Output files:</strong></p>
+<ul>
+<li><code>balanced.xyz</code> — structures with balanced charges</li>
+<li><code>unbalanced.xyz</code> — structures with unbalanced charges</li>
+<li><code>indices.txt</code> — indices of balanced structures</li>
+</ul>
+<p>This is intended for systems where common oxidation states are meaningful.</p>
+<hr />
+<h2 id="outlier-detection">Outlier Detection</h2>
+<p><code>find_outliers.py</code> finds outlier structures in NEP training data based on RMSE thresholds for energy, force, and stress.</p>
+<p><strong>Input files:</strong> <code>energy_train.out</code>, <code>force_train.out</code>, <code>stress_train.out</code>, <code>train.xyz</code></p>
+<p>These files are generated during NEP training. The script compares DFT vs NEP predictions and identifies structures with large errors.</p>
+<p>Structures with a <code>-1e6</code> missing-stress marker or a stress component whose absolute value exceeds <code>1e6</code> are excluded before RMSE calculation and are not written to either output dataset. If no valid structures remain, the script reports an error without writing outputs.</p>
+<div class="code"><div class="cap"><i></i><i></i><i></i><span>bash</span></div><pre><code># Interactive mode
+gpumdkit.sh    # Select: 5) Analyzer → 502) Find outliers of extxyz</code></pre><button class="copy-btn" data-copy-pre aria-label="Copy"><svg class="cp"><use href="#i-copy"/></svg><svg class="ok"><use href="#i-check"/></svg></button></div>
+<p><strong>Interactive prompts:</strong></p>
+<div class="code"><div class="cap"><i></i><i></i><i></i><span>text</span></div><pre><code>Enter energy RMSE threshold (meV/atom): 1
+Enter force RMSE threshold (meV/Å): 60
+Enter stress RMSE threshold (GPa): 0.03</code></pre><button class="copy-btn" data-copy-pre aria-label="Copy"><svg class="cp"><use href="#i-copy"/></svg><svg class="ok"><use href="#i-check"/></svg></button></div>
+<p><strong>Output files:</strong></p>
+<ul>
+<li><code>selected.xyz</code> — structures exceeding the RMSE thresholds (outliers)</li>
+<li><code>remained.xyz</code> — structures within the thresholds</li>
+<li><code>selected_remained.png</code> — comparison plot</li>
+</ul>
+<p><strong>Use case:</strong> After NEP training, use this to identify problematic structures that contribute most to the error. Remove or improve these structures to enhance the training set.</p>
+<hr />
+<h2 id="time-estimation">Time Estimation</h2>
+<h3 id="gpumd-remaining-time">GPUMD Remaining Time</h3>
+<p><code>time_consuming_gpumd.sh</code> estimates the remaining time for a GPUMD simulation.</p>
+<p><strong>Input files:</strong> <code>run.in</code>, <code>thermo.out</code> (in the current GPUMD working directory)</p>
+<div class="code"><div class="cap"><i></i><i></i><i></i><span>bash</span></div><pre><code>gpumdkit.sh -time gpumd</code></pre><button class="copy-btn" data-copy-pre aria-label="Copy"><svg class="cp"><use href="#i-copy"/></svg><svg class="ok"><use href="#i-check"/></svg></button></div>
+<p><strong>Output example:</strong></p>
+<div class="code"><div class="cap"><i></i><i></i><i></i><span>text</span></div><pre><code>----------------- System Information ----------------
+total frames: 1050000
+-----------------------------------------------------
+Current Frame  Speed (steps/s)   Total Time       Time Left       Estimated End
+-------------   -------------   -------------   -------------   -----------------
+    13000          499.86         0h 35m 0s      0h 34m 34s    2025-12-27 18:12:04
+    14000          199.93        1h 27m 31s      1h 26m 21s    2025-12-27 19:03:56</code></pre><button class="copy-btn" data-copy-pre aria-label="Copy"><svg class="cp"><use href="#i-copy"/></svg><svg class="ok"><use href="#i-check"/></svg></button></div>
+<h3 id="wpe-enabled-gpumd-remaining-time">WPE-Enabled GPUMD Remaining Time</h3>
+<p><code>time_consuming_wpe.sh</code> estimates the remaining time for WPE-enabled GPUMD runs using buffered progress updates.</p>
+<p><strong>Input files:</strong> <code>run.in</code> and <code>neighbor.out</code> or <code>thermo.out</code> (in the current GPUMD working directory)</p>
+<div class="code"><div class="cap"><i></i><i></i><i></i><span>bash</span></div><pre><code>gpumdkit.sh -time wpe</code></pre><button class="copy-btn" data-copy-pre aria-label="Copy"><svg class="cp"><use href="#i-copy"/></svg><svg class="ok"><use href="#i-check"/></svg></button></div>
+<h3 id="nep-remaining-time">NEP Remaining Time</h3>
+<p><code>time_consuming_nep.sh</code> estimates the remaining time for NEP training.</p>
+<p><strong>Input files:</strong> <code>loss.out</code> (in the current NEP working directory)</p>
+<div class="code"><div class="cap"><i></i><i></i><i></i><span>bash</span></div><pre><code>gpumdkit.sh -time nep</code></pre><button class="copy-btn" data-copy-pre aria-label="Copy"><svg class="cp"><use href="#i-copy"/></svg><svg class="ok"><use href="#i-check"/></svg></button></div>
+<p><strong>Output example:</strong></p>
+<div class="code"><div class="cap"><i></i><i></i><i></i><span>text</span></div><pre><code>+-----------------+-----------+-----------------+---------------------+
+|       Step      | Time Diff |    Time Left    |    Finish Time      |
++-----------------+-----------+-----------------+---------------------+
+| 6700            | 1 s       | 0 h 15 m 33 s   | 2025-10-23 15:34:11 |
+| 6800            | 2 s       | 0 h 31 m 4 s    | 2025-10-23 15:49:44 |
+| 6900            | 2 s       | 0 h 31 m 2 s    | 2025-10-23 15:49:44 |
++-----------------+-----------+-----------------+---------------------+</code></pre><button class="copy-btn" data-copy-pre aria-label="Copy"><svg class="cp"><use href="#i-copy"/></svg><svg class="ok"><use href="#i-check"/></svg></button></div>
+<hr />
+<h2 id="probability-density-analysis">Probability Density Analysis</h2>
+<p><code>probability_density_analysis.py</code> calculates 3D probability density of mobile ions for diffusion channel analysis.</p>
+<p><strong>Input files:</strong> Reference structure (POSCAR), trajectory file (extxyz)</p>
+<p><strong>CLI mode:</strong></p>
+<div class="code"><div class="cap"><i></i><i></i><i></i><span>bash</span></div><pre><code>gpumdkit.sh -pda LLZO.vasp dump.xyz Li 0.25</code></pre><button class="copy-btn" data-copy-pre aria-label="Copy"><svg class="cp"><use href="#i-copy"/></svg><svg class="ok"><use href="#i-check"/></svg></button></div>
+<p><strong>Arguments:</strong></p>
+<div class="tbl-wrap"><table class="tbl">
+<thead>
+<tr>
+<th>Argument</th>
+<th>Meaning</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>LLZO.vasp</code></td>
+<td>Reference structure (POSCAR format)</td>
+</tr>
+<tr>
+<td><code>dump.xyz</code></td>
+<td>Trajectory file (extxyz format)</td>
+</tr>
+<tr>
+<td><code>Li</code></td>
+<td>Target mobile species</td>
+</tr>
+<tr>
+<td><code>0.25</code></td>
+<td>Grid interval for the probability density (Å)</td>
+</tr>
+</tbody>
+</table></div>
+<p><strong>Output:</strong> <code>probability_density_0.25.vasp</code> — probability density grid in VASP format for visualization with VESTA or similar tools.</p>
+<p><strong>Visualization suggestions:</strong></p>
+<ol>
+<li>Open <code>probability_density_0.25.vasp</code> in VESTA</li>
+<li>Use "Edit → Data → Volumetric Data" to adjust isosurface levels</li>
+<li>Color the probability density by value to highlight preferred diffusion pathways</li>
+<li>Overlay with the crystal structure for context</li>
+</ol>
+<hr />
+<h2 id="example-workflows">Example Workflows</h2>
+<h3 id="structure-quality-check">Structure Quality Check</h3>
+<div class="code"><div class="cap"><i></i><i></i><i></i><span>bash</span></div><pre><code># 1. Check composition
+gpumdkit.sh -analyze_comp train.xyz
+
+# 2. Check energy/force range
+gpumdkit.sh -range train.xyz force hist
+
+# 3. Check minimum distances
+gpumdkit.sh -min_dist_pbc train.xyz
+
+# 4. Find outliers (after NEP training)
+# Interactive: 5) Analyzer → 502</code></pre><button class="copy-btn" data-copy-pre aria-label="Copy"><svg class="cp"><use href="#i-copy"/></svg><svg class="ok"><use href="#i-check"/></svg></button></div>
+<h3 id="structure-filtering-pipeline">Structure Filtering Pipeline</h3>
+<div class="code"><div class="cap"><i></i><i></i><i></i><span>bash</span></div><pre><code># 1. Filter by minimum distance (writes filtered_dump.xyz)
+gpumdkit.sh -filter_dist_pbc dump.xyz 1.0
+
+# 2. Filter by box size (writes filtered_by_box.xyz)
+gpumdkit.sh -filter_box filtered_dump.xyz 13
+
+# 3. Filter by force threshold (writes filtered.xyz)
+gpumdkit.sh -filter_value filtered_by_box.xyz force 20</code></pre><button class="copy-btn" data-copy-pre aria-label="Copy"><svg class="cp"><use href="#i-copy"/></svg><svg class="ok"><use href="#i-check"/></svg></button></div>
+<h3 id="diffusion-channel-analysis">Diffusion Channel Analysis</h3>
+<div class="code"><div class="cap"><i></i><i></i><i></i><span>bash</span></div><pre><code># 1. Calculate probability density
+gpumdkit.sh -pda LLZO.vasp dump.xyz Li 0.25
+
+# 2. Visualize with VESTA
+# Open probability_density_0.25.vasp</code></pre><button class="copy-btn" data-copy-pre aria-label="Copy"><svg class="cp"><use href="#i-copy"/></svg><svg class="ok"><use href="#i-check"/></svg></button></div><div class="doc-pn"><a href="calculator_scripts.html"><small>Previous</small><b>Calculator Scripts</b></a><a class="next" href="plot_scripts.html"><small>Next</small><b>Plot Scripts</b></a></div><a class="doc-edit" href="https://github.com/zhyan0603/GPUMDkit/edit/main/docs/tutorials/en/analyzer_scripts.md" target="_blank" rel="noopener">Edit this page</a></article><nav class="doc-toc" aria-label="On this page"><h6>On this page</h6><a href="#what-it-does" class="l2">What it does</a><a href="#before-you-start" class="l2">Before you start</a><a href="#overview" class="l2">Overview</a><a href="#check-before-you-filter" class="l2">Check before you filter</a><a href="#a-worked-example" class="l2">A Worked Example</a><a href="#interactive-mode" class="l2">Interactive Mode</a><a href="#composition-analysis" class="l2">Composition Analysis</a><a href="#chemical-species" class="l2">Chemical Species</a><a href="#property-range-analysis" class="l2">Property Range Analysis</a><a href="#energy-reference-shifting" class="l2">Energy Reference Shifting</a><a href="#minimum-distance-checks" class="l2">Minimum Distance Checks</a><a href="#without-pbc-fast" class="l3">Without PBC (Fast)</a><a href="#with-pbc-accurate" class="l3">With PBC (Accurate)</a><a href="#filtering-structures" class="l2">Filtering Structures</a><a href="#filter-by-minimum-distance" class="l3">Filter by Minimum Distance</a><a href="#filter-by-box-size" class="l3">Filter by Box Size</a><a href="#filter-by-property-value" class="l3">Filter by Property Value</a><a href="#filter-by-pair-distance-range" class="l3">Filter by Pair-Distance Range</a><a href="#charge-balance-check" class="l2">Charge Balance Check</a><a href="#outlier-detection" class="l2">Outlier Detection</a><a href="#time-estimation" class="l2">Time Estimation</a><a href="#gpumd-remaining-time" class="l3">GPUMD Remaining Time</a><a href="#wpe-enabled-gpumd-remaining-time" class="l3">WPE-Enabled GPUMD Remaining Time</a><a href="#nep-remaining-time" class="l3">NEP Remaining Time</a><a href="#probability-density-analysis" class="l2">Probability Density Analysis</a><a href="#example-workflows" class="l2">Example Workflows</a><a href="#structure-quality-check" class="l3">Structure Quality Check</a><a href="#structure-filtering-pipeline" class="l3">Structure Filtering Pipeline</a><a href="#diffusion-channel-analysis" class="l3">Diffusion Channel Analysis</a></nav></div>
+</main>
+
+<!-- ======================================================= footer -->
+<footer class="footer">
+  <div class="container">
+    <div class="footer-grid">
+      <div>
+        <a href="../../index.html" class="brand"><svg><use href="#i-logo"/></svg><span><span class="gpumd">GPUMD</span><span class="kit">kit</span></span></a>
+        <p data-i18n="foot.about">A user-friendly toolkit for the GPUMD and NEP programs, built by the GPUMDkit team and contributors.</p>
+      </div>
+      <div><h5 data-i18n="foot.links">Quick links</h5><ul>
+        <li><a href="../../manual.html" data-doc="index" data-i18n="nav.docs">Docs</a></li>
+        <li><a href="../../gallery.html" data-i18n="nav.gallery">Gallery</a></li>
+        <li><a href="../../publications.html" data-i18n="nav.pubs">Publications</a></li>
+        <li><a href="https://github.com/zhyan0603/GPUMDkit/archive/refs/heads/main.zip" data-i18n="foot.dl">Download</a></li></ul></div>
+      <div><h5 data-i18n="foot.gpumd">GPUMD project</h5><ul>
+        <li><a href="https://github.com/brucefan1983/GPUMD" target="_blank" rel="noopener">GPUMD repository</a></li>
+        <li><a href="https://gpumd.org/" target="_blank" rel="noopener">GPUMD documentation</a></li>
+        <li><a href="https://github.com/brucefan1983/GPUMD-Tutorials" target="_blank" rel="noopener">GPUMD-Tutorials</a></li>
+        <li><a href="https://github.com/brucefan1983/GPUMD/tree/master/tools" target="_blank" rel="noopener">GPUMD-Tools</a></li></ul></div>
+      <div><h5 data-i18n="foot.eco">GPUMD ecosystem</h5><ul>
+        <li><a href="https://gitlab.com/brucefan1983/nep-data" target="_blank" rel="noopener">nep-data</a></li>
+        <li><a href="https://gitlab.com/materials-modeling/calorine" target="_blank" rel="noopener">calorine</a></li>
+        <li><a href="https://github.com/aboys-cb/NepTrainKit" target="_blank" rel="noopener">NepTrainKit</a></li>
+        <li><a href="https://github.com/Jonsnow-willow/GPUMD-Wizard" target="_blank" rel="noopener">GPUMD-Wizard</a></li></ul></div>
+    </div>
+    <div class="footer-bottom">
+      <span data-i18n="foot.copy">© 2026 GPUMDkit Team. Released under GPL-3.0.</span>
+      <span><span id="busuanzi_container_site_pv"><span data-i18n="foot.views">Views</span>: <span id="busuanzi_value_site_pv"></span></span> · <span id="busuanzi_container_site_uv"><span data-i18n="foot.visitors">Visitors</span>: <span id="busuanzi_value_site_uv"></span></span></span>
+    </div>
+  </div>
+</footer>
+
+<script src="../../assets/js/gk-data.js"></script>
+<script src="../../assets/js/gk-docs.js"></script>
+<script src="../../assets/js/gk-i18n.js"></script>
+<script src="../../assets/js/gk-core.js"></script>
+<script src="../../assets/js/gk-doc.js"></script>
+<script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+</body>
+</html>

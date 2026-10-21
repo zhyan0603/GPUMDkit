@@ -3,12 +3,13 @@
 GPUMDkit: A User-Friendly Toolkit for GPUMD and NEP
 Repository: https://github.com/zhyan0603/GPUMDkit
 Citation: Z. Yan et al., GPUMDkit: A User-Friendly Toolkit for GPUMD and NEP,
-          MGE Advances, 2026, e70074 (https://doi.org/10.1002/mgea.70074)
+          MGE Advances, 2026, 4, e70074 (https://doi.org/10.1002/mgea.70074)
 =============================================================================
 Script:     pos2exyz.py
 Category:   Format Conversion Scripts
 Purpose:    Convert one or more VASP POSCAR files to extended XYZ format.
-Usage:      python pos2exyz.py <POSCAR> <output.xyz>
+Usage:      gpumdkit.sh -pos2exyz <POSCAR> <output.xyz>
+            python pos2exyz.py <POSCAR> <output.xyz>
 Arguments:
   POSCAR       One or more VASP POSCAR files
   output.xyz   Output extxyz file
@@ -20,6 +21,20 @@ Last-modified: 2026-05-16
 """
 
 import sys
+
+args = sys.argv[1:]
+if len(args) < 2 or args[0] in ("-h", "--help"):
+    print(" Usage: gpumdkit.sh -pos2exyz <POSCAR> <output.xyz>")
+    print("    or: python pos2exyz.py <POSCAR> <output.xyz>")
+    print("")
+    print(" Arguments:")
+    print("   POSCAR       One or more VASP POSCAR files (supports wildcards)")
+    print("   output.xyz   Output extxyz file")
+    print("")
+    print(" Example: gpumdkit.sh -pos2exyz POSCAR output.xyz")
+    print("")
+    sys.exit(0 if args and args[0] in ("-h", "--help") else 1)
+
 import glob
 from ase.io import read, write
 
@@ -42,13 +57,6 @@ def convert_poscar_to_extxyz(poscar_filenames, extxyz_filename):
     write(extxyz_filename, all_frames, format='extxyz', append=False)
 
 if __name__ == '__main__':
-    # Check if the number of arguments is correct
-    if len(sys.argv) < 3:
-        print("Usage: python pos2exyz.py <POSCAR> <extxyz_filename>")
-        print("Example 1: python pos2exyz.py POSCAR model.xyz")
-        # print("Example 2: python pos2exyz.py 'POSCAR*' train.xyz")
-        sys.exit(1)
-
     poscar_filename_pattern = sys.argv[1]
     extxyz_filename = sys.argv[2]
 

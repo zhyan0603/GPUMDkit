@@ -1,0 +1,104 @@
+# NEP 输出、重启与模型验证
+
+使用本参考文件解读训练/预测文件，并判断模型是否可以部署。
+
+## 目录
+
+- 写入行为与频率
+- 损失与模型文件
+- 预测/拟合图文件
+- 特殊模型输出
+- 验证清单
+
+## 写入行为与频率
+
+内置版本的写入行为：
+
+- `loss.out` 为追加模式；
+- 其他输出文件会被持续覆盖；
+- 训练/测试输出文件、`nep.txt` 和 `nep.restart` 按 `output_interval` 的代数频率写出；文档默认值为 100 代；
+- `save_potential` 请求的模型/检查点文件使用自身的检查点间隔，不应与 `output_interval` 混淆。
+
+在新一轮训练之前，使用干净的目录或归档旧的 `loss.out`。
+
+## 损失与模型文件
+
+| 文件 | 含义 |
+|---|---|
+| `loss.out` | 迭代轮次（generation）、总损失、正则化损失以及训练集/测试集 RMSE 各项 |
+| `nep.txt` | 当前训练好的模型参数；可在 GPUMD 中部署 |
+| `nep.restart` | 按 `output_interval` 代更新的优化状态 |
+| 检查点 `nep_*.txt`/restart | 由 `save_potential` 控制的周期性模型/状态文件 |
+
+从 GPUMD 5.9 起，每次运行都会在 `loss.out` 开头写入 `#` 说明行：
+
+```text
+# format_version 1
+# output_interval 100
+# columns generation total L1 L2 rmse_energy_train ...
+```
+
+重启后的运行会再追加一组说明行，因此读取时必须跳过注释行，并且一个文件中可能出现多组说明行。
+
+势函数模型的列：
+
+```text
+generation total L1 L2 rmse_energy_train rmse_force_train rmse_virial_train rmse_energy_test rmse_force_test rmse_virial_test
+```
+
+qNEP 模型（`charge_mode` 非零）会在训练集维里列之后插入 `rmse_charge_train rmse_bec_train`，在测试集维里列之后插入 `rmse_charge_test rmse_bec_test`。电荷 RMSE 单位为 e/atom，BEC RMSE 单位为 e。使用 `lambda_d` 时，势函数列之后还有 `rmse_ediff_train rmse_ediff_test`，单位为总能量的 eV；没有对应组合时为 0。
+
+偶极矩模型：
+
+```text
+generation total L1 L2 rmse_dipole_train rmse_dipole_test
+```
+
+极化率模型：
+
+```text
+generation total L1 L2 rmse_polarizability_train rmse_polarizability_test
+```
+
+5.9 之前的版本不写说明行，同样的列名为 `gen L_t L_1 L_2 L_e_train ...`，列顺序不变。
+
+能量/维里 RMSE 值记录为每原子；力 RMSE 单位为 eV/Angstrom。偶极矩/极化率 RMSE 请按数据集记录的单位解读。
+
+如果存在 `nep.restart`，优化将从中断处继续。描述符相关超参数必须与产生该重启文件的状态一致。在没有来源检查的情况下，不要重命名或复用重启文件。
+
+## 预测与拟合图文件
+
+| 文件 | 列/含义 |
+|---|---|
+| `energy_train.out`, `energy_test.out` | 2 列：预测值然后目标值，单位为 eV/atom |
+| `force_train.out`, `force_test.out` | 6 列：预测 xyz 然后目标 xyz，单位为 eV/Angstrom；每个原子一行 |
+| `virial_train.out`, `virial_test.out` | 12 列：预测值然后目标值 xx yy zz xy yz zx，单位为 eV/atom |
+| `stress_train.out`, `stress_test.out` | 12 列：预测值然后目标值 xx yy zz xy yz zx，单位为 GPa；按 `virial / volume` 计算，因此受压为正，与输入 `stress=` 字段的符号相反 |
+| `descriptor.out` | 预测模式下请求时输出归一化描述符 |
+
+对于没有目标维里/应力的结构，输出目标哨兵值为 `-1e6`。请显式排除哨兵值并报告排除操作；不要将它们视为物理标签。
+
+预测模式仅评估 `train.xyz`。当以完整批次评估时，文件行顺序与源构型/原子顺序一致；保留到源帧的映射并验证行数。
+
+## 特殊模型输出
+
+| 文件 | 含义 |
+|---|---|
+| `dipole_train.out`, `dipole_test.out` | 6 列：预测 xyz 然后目标 xyz；值为逐原子归一化 |
+| `polarizability_train.out`, `polarizability_test.out` | 12 列：预测值然后目标值 xx yy zz xy yz zx；逐原子归一化 |
+| `charge_train.out`, `charge_test.out` | 预测的 qNEP 电荷 |
+| `bec_train.out`, `bec_test.out` | 18 列：预测值然后目标值 11 12 13 21 22 23 31 32 33；每个原子一行 |
+
+分量顺序必须与训练数据约定保持一致。如果本地可执行文件输出了不同的布局，请停止解读并先确认其版本。
+
+## 验证清单
+
+- 确认训练已完成或被有意中止；保留日志和重启文件。
+- 使用 `references/visualization.md` 绘制损失和拟合图输出。
+- 比较训练/测试误差，按元素种类、组成、相态和构型类别检查异常值。
+- 检查能量偏移、力的尾部行为、维里/应力哨兵值处理和标签单位。
+- 针对预期的下游可观测量评估误差，而不仅看全局 RMSE。
+- 在目标 MD 工况下测试外推/稳定性，如果相关则检查短程行为/ZBL。
+- 当不确定性或委员会方法需要时，运行不同的随机种子/模型。
+- 记录模型文件哈希、训练数据版本、`nep.in`、可执行文件/源代码版本和验收决定。
+- 在没有用户批准标准的情况下，不要声称存在通用的 RMSE 阈值或可用于正式计算状态。

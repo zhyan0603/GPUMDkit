@@ -12,8 +12,38 @@ The analyzer scripts provide functionality for:
 - Composition analysis of multi-component systems
 - Time estimation for GPUMD and NEP calculations
 - Dataset quality checks and outlier detection
+- Atomic energy reference shifting for extxyz datasets
 
 Access analyzers through `gpumdkit.sh` using various flags or run scripts directly.
+
+### Energy reference shifting
+
+`align_energy_reference.py` opens an interactive interface for shifting the
+`energy=` values in a multi-frame extxyz file. It preserves atom lines and all
+other header fields in the output file.
+
+```bash
+gpumdkit.sh -shift_energy
+```
+
+The same tool is available from `5) Analyzer -> 509`. It supports reference-
+group alignment, zero atomic baseline alignment, and DFT-to-NEP alignment.
+
+### Direct CLI helpers
+
+These helpers are useful before selecting a filtering threshold or a downstream
+analysis path:
+
+| Command | Script | Purpose |
+|---|---|---|
+| `gpumdkit.sh -chem_species <input.xyz>` | `analyze_chem_species.py` | List the element symbols present in an extxyz file. |
+| `gpumdkit.sh -min_dist <input.xyz>` | `get_min_dist.py` | Fast minimum-distance check without PBC. |
+| `gpumdkit.sh -min_dist_pbc <input.xyz>` | `get_min_dist_pbc.py` | Minimum-distance check including periodic images. |
+| `gpumdkit.sh -pda <ref> <traj> <species> <interval>` | `probability_density_analysis.py` | Write a CHGCAR-like probability-density file. |
+
+Use the PBC-aware command for periodic cells. Distance, property, and box
+thresholds are system-dependent choices; inspect the corresponding check output
+before applying a `-filter_*` command.
 
 ---
 
@@ -23,7 +53,7 @@ Access analyzers through `gpumdkit.sh` using various flags or run scripts direct
 
 ---
 
-This script analyze the composition of your `extxyz` file.
+This script analyzes the composition of your `extxyz` file.
 
 #### Usage
 
@@ -164,6 +194,8 @@ This means you need to extract the structures with the `min_dist` of Li-Li in th
 
 This script is used to calculate the min_dist of the structures.
 
+Both minimum-distance scripts collect elements across all frames in first-appearance order and skip element pairs absent from a frame.
+
 #### Usage
 
 ```
@@ -268,6 +300,8 @@ gpumdkit.sh -min_dist_pbc dump.xyz
 
 This script is used to find outliers in training data based on RMSE thresholds for energy, force, and stress.
 
+Structures containing a `-1e6` missing-stress marker or a stress component with an absolute value above `1e6` are excluded from RMSE calculation and both output datasets. If none remain, the script reports an error without writing outputs.
+
 #### Usage
 
 ```sh
@@ -279,11 +313,20 @@ python find_outliers.py
 ```
  Input the function number:
  5
- ------------>>
- 501) Analyze composition of extxyz
- 502) Find outliers of extxyz
- 000) Return to the main menu
- ------------>>
+ +------------------------------------------------------+
+ |                    ANALYZER TOOLS                    |
+ +------------------------------------------------------+
+ | 501) Analyze composition of extxyz                   |
+ | 502) Find outliers of extxyz                         |
+ | 503) Analyze chemical species of extxyz              |
+ | 504) Check charge balance of extxyz                  |
+ | 505) Analyze energy/force/virial range               |
+ | 506) Filter structures by minimum distance           |
+ | 507) Get minimum interatomic distance                |
+ | 508) Probability density analysis                    |
+ +------------------------------------------------------+
+ | 000) Return to the main menu                         |
+ +------------------------------------------------------+
  Input the function number:
  502
  >-------------------------------------------------<
@@ -298,33 +341,7 @@ python find_outliers.py
  Enter stress RMSE threshold (GPa): 0.03
 ```
 
-After that, you will get `selected.xyz`, `remained.xyz`, and `slected_remained.png`
-
-
-
-### filter_exyz_by_value.py
-
----
-
-This script filter the structures by min_dist.
-
-#### Usage
-
-```sh
-python filter_exyz_by_value.py <extxyz_file> <min_dist>
-```
-
-#### Example
-
-```sh
-python filter_exyz_by_value.py dump.xyz 1.4
-```
-
-#### Command-Line Mode Example
-
-```
-gpumdkit.sh -filter_value dump.xyz 1.4
-```
+After that, you will get `selected.xyz`, `remained.xyz`, and `selected_remained.png`
 
 
 
@@ -332,12 +349,12 @@ gpumdkit.sh -filter_value dump.xyz 1.4
 
 ---
 
-This script filter the structures by box limit.
+This script filters the structures by box limit.
 
 #### Usage
 
 ```
-python filter_exyz_by_box.py <extxyz_file> <min_dist>
+python filter_exyz_by_box.py <extxyz_file> <edge_limit>
 ```
 
 #### Example
@@ -352,13 +369,15 @@ python filter_exyz_by_box.py dump.xyz 20
 gpumdkit.sh -filter_box dump.xyz 20
 ```
 
+The retained structures are written to `filtered_by_box.xyz`.
+
 
 
 ### filter_exyz_by_value.py
 
 ---
 
-This script filter the structures by specified value.
+This script filters the structures by specified value.
 
 #### Usage
 
@@ -416,6 +435,28 @@ gpumdkit.sh -time gpumd
      14000          199.93        1h 27m 31s      1h 26m 21s    2025-12-27 19:03:56
      15000          199.94        1h 27m 31s      1h 26m 16s    2025-12-27 19:03:56
 ```
+
+
+
+### time_consuming_wpe.sh
+
+---
+
+This script estimates the remaining time for WPE-enabled GPUMD runs using buffered progress updates.
+
+#### Usage
+
+```
+bash time_consuming_wpe.sh
+```
+
+#### Command-Line Mode Example
+
+```
+gpumdkit.sh -time wpe
+```
+
+It reads `run.in` and monitors `neighbor.out` or `thermo.out` in the current GPUMD working directory.
 
 
 

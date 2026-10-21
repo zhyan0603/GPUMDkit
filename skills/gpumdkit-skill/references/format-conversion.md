@@ -1,0 +1,230 @@
+# Format Conversion
+
+## Contents
+
+- Supported formats
+- Command reference
+- Detailed CLI flags
+- Examples
+- Notes and dependencies
+
+## Supported Formats
+
+| Format | Extensions | Description |
+|--------|-----------|-------------|
+| VASP | POSCAR, OUTCAR, XDATCAR | Vienna Ab initio Simulation Package |
+| LAMMPS | .data, dump.* | Large-scale Atomic/Molecular Massively Parallel Simulator |
+| CP2K | .log, pos.xyz, frc.xyz, cell.cell | Quantum chemistry and solid state physics |
+| ABACUS | running_scf.log, running_md.log | Atomic-orbital Based Ab-initio Computation at UStc |
+| CIF | .cif | Crystallographic Information File |
+| MTP | .cfg | Moment Tensor Potential format |
+| ASE | .traj | Atomic Simulation Environment trajectory |
+| extxyz | .xyz | Extended XYZ (primary working format) |
+| DeepMD | `npy` dataset | DeepMD-kit training dataset format |
+
+## Command Reference
+
+### VASP Conversions
+
+`-out2xyz` (also menu `101`) writes `NEPdataset/train.xyz` in the terminal's current directory and deletes/recreates any existing `NEPdataset/`. `-out2xyz_bec` follows the same output convention, writes one final configuration per OUTCAR, and includes `bec:R:9` when a complete VASP `BORN EFFECTIVE CHARGES` block is present. `-out2exyz` writes and overwrites `train.xyz` in the current directory. The input-directory argument does not change the output location; back up previous results or use a new working directory before repeating a conversion. Choose one converter route.
+
+```bash
+# OUTCAR to extxyz (directory, shell version)
+gpumdkit.sh -out2xyz <directory>
+
+# OUTCAR to extxyz (Python version)
+gpumdkit.sh -out2exyz <directory>
+
+# OUTCAR to extxyz with Born effective charges
+gpumdkit.sh -out2xyz_bec <directory>
+
+# XDATCAR to extxyz
+gpumdkit.sh -xdat2exyz XDATCAR output.xyz
+
+# POSCAR to extxyz
+gpumdkit.sh -pos2exyz POSCAR model.xyz
+
+# extxyz to POSCAR (all frames)
+gpumdkit.sh -exyz2pos structures.xyz
+```
+
+`exyz2pos` writes `POSCAR_1.vasp`, `POSCAR_2.vasp`, and so on in the current
+directory. It groups atoms by element using the first-seen element order in the
+input trajectory, and does not export velocities. Do not pass `-o` or `-v`.
+
+### LAMMPS Conversions
+
+```bash
+# LAMMPS dump or data file to extxyz
+# IMPORTANT: Element symbols must match atom type IDs in dump file
+gpumdkit.sh -lmp2exyz dump.lammpstrj Li Y Cl
+
+# POSCAR to LAMMPS data
+gpumdkit.sh -pos2lmp POSCAR lammps.data
+```
+
+### CIF Conversions
+
+```bash
+# CIF to POSCAR
+gpumdkit.sh -cif2pos input.cif POSCAR.vasp
+
+# CIF to extxyz
+gpumdkit.sh -cif2exyz input.cif model.xyz
+```
+
+### Other Conversions
+
+```bash
+# ASE trajectory to extxyz
+gpumdkit.sh -traj2exyz input.traj output.xyz
+```
+
+### Menu-Only or Legacy Conversions
+
+```bash
+# MTP cfg to extxyz
+python3 ${GPUMDkit_path}/Scripts/format_conversion/mtp2xyz.py train.cfg Pd Ag
+
+# Run in the CP2K results root: recursively read logs and structure files
+# Outputs in the current directory: cp2k_exyz.xyz and Logfile.txt
+gpumdkit.sh -cp2k2xyz
+
+# ABACUS conversion is available through the interactive menu:
+# gpumdkit.sh  # Select: 1) Format Conversion -> 104
+```
+
+### dp2xyz
+
+Converts DeepMD npy datasets to extxyz format. Recursively scans a directory for datasets containing `type.raw`, `type_map.raw`, and `set.000/`.
+
+**Usage:**
+```
+gpumdkit.sh -dp2xyz database train.xyz
+```
+Dependencies: `dpdata`, `ase`.
+Author: Denan LI (lidenan@westlake.edu.cn)
+
+### xyz2dp
+
+Converts labeled extxyz data to a DeepMD npy dataset. The user supplies the
+element order used by the DeepMD `type_map.raw` file.
+
+**Usage:**
+```
+gpumdkit.sh -xyz2dp
+gpumdkit.sh -xyz2dp train.xyz Li P S
+```
+
+Running without arguments starts the interactive prompts; with arguments the
+input file and type-map order are forwarded to the script directly. The same
+conversion can be called directly with Python:
+
+```
+python3 ${GPUMDkit_path}/Scripts/format_conversion/xyz2dp.py train.xyz Li P S
+```
+
+The input should contain labeled extxyz energy and force data. The output is
+written under `deepmd_data/` in the current directory. This command requires
+`dpdata`. The requested element order is preserved exactly in every generated
+`type_map.raw` file. Use `gpumdkit.sh -xyz2dp -h` to print usage without
+starting the interactive prompts.
+
+### Structure Manipulation
+
+```bash
+# Add group labels when a downstream GPUMD workflow uses group-aware commands
+gpumdkit.sh -addgroup POSCAR Li Y Cl
+
+# Add weights to structures
+gpumdkit.sh -addweight input.xyz output.xyz 2.0
+
+# Replicate structure (by factors)
+gpumdkit.sh -replicate POSCAR supercell.vasp 2 2 2
+
+# Replicate structure (by target atom count)
+gpumdkit.sh -replicate POSCAR supercell.vasp 256
+
+# Extract specific frame (1-based index)
+gpumdkit.sh -get_frame trajectory.xyz 1000
+
+# Clean extxyz metadata
+gpumdkit.sh -clean_xyz input.xyz clean.xyz
+```
+
+## Detailed CLI Flag Reference
+
+| CLI Flag | Conversion | Syntax |
+|----------|-----------|--------|
+| `-out2xyz` | OUTCAR -> extxyz (shell) | `gpumdkit.sh -out2xyz <dir>` |
+| `-out2xyz_bec` | OUTCAR -> extxyz with BEC labels (shell) | `gpumdkit.sh -out2xyz_bec <dir>` |
+| `-out2exyz` | OUTCAR -> extxyz (python) | `gpumdkit.sh -out2exyz <dir>` |
+| `-pos2exyz` | POSCAR -> extxyz | `gpumdkit.sh -pos2exyz <poscar> <xyz>` |
+| `-exyz2pos` | extxyz -> POSCAR | `gpumdkit.sh -exyz2pos <xyz>` |
+| `-pos2lmp` | POSCAR -> LAMMPS data | `gpumdkit.sh -pos2lmp <poscar> <lmp>` |
+| `-lmp2exyz` | LAMMPS dump/data -> extxyz | `gpumdkit.sh -lmp2exyz <dump_or_data> <elem...>` |
+| `-cif2pos` | CIF -> POSCAR | `gpumdkit.sh -cif2pos <cif> <output>` |
+| `-cif2exyz` | CIF -> extxyz | `gpumdkit.sh -cif2exyz <cif> <output>` |
+| `-xdat2exyz` | XDATCAR -> extxyz | `gpumdkit.sh -xdat2exyz XDATCAR dump.xyz` |
+| `-traj2exyz` | ASE traj -> extxyz | `gpumdkit.sh -traj2exyz <traj> <xyz>` |
+| `-dp2xyz` | DeepMD npy → extxyz (via dpdata) | `gpumdkit.sh -dp2xyz <input_dir/> [output.xyz]` |
+| `-xyz2dp` | extxyz → DeepMD npy (via dpdata) | `gpumdkit.sh -xyz2dp` (interactive) or `gpumdkit.sh -xyz2dp <in.xyz> <type1> ...` |
+| `-addgroup` | Add group labels | `gpumdkit.sh -addgroup <poscar> <elem...>` |
+| `-addweight` | Add weight | `gpumdkit.sh -addweight <in> <out> <weight>` |
+| `-replicate` | Replicate structure | `gpumdkit.sh -replicate <in> <out> a b c` |
+| `-get_frame` | Extract frame (1-based index) | `gpumdkit.sh -get_frame <xyz> <index>` |
+| `-clean_xyz` | Clean extxyz info | `gpumdkit.sh -clean_xyz <in> <out>` |
+
+## Examples
+
+### Example 1: Convert VASP MD Output
+```bash
+# Convert all OUTCAR files in current directory
+gpumdkit.sh -out2xyz .
+
+# Inspect the output atom count and extxyz metadata
+head -n 2 NEPdataset/train.xyz
+```
+
+### Example 2: Prepare LAMMPS Simulation
+```bash
+# Convert POSCAR to LAMMPS data
+gpumdkit.sh -pos2lmp POSCAR system.data
+
+# After LAMMPS simulation, convert dump back
+gpumdkit.sh -lmp2exyz dump.lammpstrj Li P S
+```
+
+### Example 3: Batch Conversion
+```bash
+# vasp_results/ contains multiple calculation subdirectories; convert recursively once
+gpumdkit.sh -out2xyz ./vasp_results/
+# Combined output: NEPdataset/train.xyz in the current directory
+```
+
+### Example 4: Structure Replication
+```bash
+# Replicate to 2x2x2 supercell
+gpumdkit.sh -replicate POSCAR supercell_222.vasp 2 2 2
+
+# Replicate to target ~256 atoms
+gpumdkit.sh -replicate POSCAR supercell_256.vasp 256
+```
+
+## Notes
+
+1. **extxyz is the primary format**: Most GPUMDkit tools work with extxyz files
+2. **Group labels are optional metadata**: Add them only for group-aware GPUMD calculations or downstream tools; chemical species determine atom types
+3. **Frame indexing for `-get_frame` is 1-based**: First frame is index 1
+4. **Element ordering matters for LAMMPS**: Must match atom type IDs in dump file
+5. **exyz2pos exports all frames**: Creates separate POSCAR for each frame
+
+## Dependencies
+
+Most Python scripts require:
+- `ase` (Atomic Simulation Environment)
+- `numpy`
+
+## Detailed Documentation
+
+See `${GPUMDkit_path}/docs/tutorials/en/format_conversion.md` or the Chinese counterpart for the user-facing guide.

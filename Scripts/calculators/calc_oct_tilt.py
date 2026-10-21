@@ -3,7 +3,7 @@
 GPUMDkit: A User-Friendly Toolkit for GPUMD and NEP
 Repository: https://github.com/zhyan0603/GPUMDkit
 Citation: Z. Yan et al., GPUMDkit: A User-Friendly Toolkit for GPUMD and NEP,
-          MGE Advances, 2026, e70074 (https://doi.org/10.1002/mgea.70074)
+          MGE Advances, 2026, 4, e70074 (https://doi.org/10.1002/mgea.70074)
 =============================================================================
 Script:     calc_oct_tilt.py
 Category:   Calculator Scripts
@@ -56,6 +56,7 @@ def parse_args():
         epilog=(
             "Examples :\n"
             "1. Single-frame model.xyz:\n"
+            ">>  gpumdkit.sh -calc oct-tilt -i model.xyz -n nl-Ti-O.dat -o oct_tilt.dat\n"
             ">>  python calc_oct_tilt.py -i model.xyz -n nl-Ti-O.dat -o oct_tilt.dat\n"
             "2. Multi-frame movie.xyz with slice:\n"
             ">>  python calc_oct_tilt.py -i movie.xyz -n nl-Ti-O.dat -s 100 -t 500 -p 2 -o oct_tilt_slice.dat\n"
