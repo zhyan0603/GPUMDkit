@@ -95,6 +95,11 @@
 <section class="man-hero doc-hero"><div class="container"><div class="crumb"><a href="../../manual.html">Manual</a><span>/</span><a href="plot_scripts.html">Plot Scripts</a><span>/</span><span>Heat Transport and Phonons</span></div><h1 class="h-section">Heat Transport and Phonons</h1><p class="lead">Plots for EMD, NEMD, and HNEMD thermal transport, viscosity, phonon dispersion, and PDOS.</p></div></section>
 <div class="container man doc"><aside class="man-side" aria-label="Pages"><h6>Start</h6><a href="index.html" class=""><span>GPUMDkit Tutorials</span></a><a href="quick_start.html" class=""><span>Quick Start</span></a><a href="remote_web_console.html" class=""><span>Remote Web Console</span></a><a href="simulation_and_postprocessing.html" class=""><span>GPUMDkit Agent Skill</span></a><h6>Toolbox</h6><a href="format_conversion.html" class=""><span>Format Conversion</span></a><a href="structure_sampling.html" class=""><span>Structure Sampling</span></a><a href="workflow_scripts.html" class=""><span>Workflow Scripts</span></a><a href="calculator_scripts.html" class=""><span>Calculator Scripts</span></a><a href="analyzer_scripts.html" class=""><span>Analyzer Scripts</span></a><a href="plot_scripts.html" class=""><span>Plot Scripts</span></a><a href="plot_nep.html" class="sub"><span>NEP Training and Model Analysis</span></a><a href="plot_md_structure.html" class="sub"><span>MD and Structure</span></a><a href="plot_diffusion.html" class="sub"><span>Diffusion and Ionic Transport</span></a><a href="plot_heat_phonon.html" class="on sub"><span>Heat Transport and Phonons</span></a><a href="polar_material_analysis.html" class=""><span>Polar Material Analysis</span></a><h6>Guides</h6><a href="active_learning_workflow.html" class=""><span>Active Learning Workflow</span></a><a href="custom_commands.html" class=""><span>Custom Commands</span></a><h6>Reference</h6><a href="command_reference.html" class=""><span>Command Reference</span></a><h6>Contribute</h6><a href="contributing_to_gpumdkit.html" class=""><span>Contributing to GPUMDkit</span></a></aside><article class="man-body chap doc-body"><h2 id="heat-transport">Heat Transport</h2>
 <p>The save options are <code>--save</code> (figure) and <code>--save-data</code> (processed data); the older forms <code>save</code> and <code>save_data</code> are still accepted.</p>
+<p>For <code>emd</code>, <code>nemd</code>, and <code>hnemd</code>, a missing <code>model.xyz</code> is generated automatically
+from an existing legacy <code>xyz.in</code>. For <code>nemd</code>/<code>hnemd</code>, <code>scale_eff_size</code> accepts a
+number or a safe arithmetic expression such as <code>'100/2'</code>. Optional <code>--quantum</code>
+(legacy <code>quantum</code>) adds a quantum-corrected SHC spectrum using the temperature
+from <code>run.in</code>; it requires <code>shc.out</code>.</p>
 <h3 id="emd-plt_emdpy">emd (<code>plt_emd.py</code>)</h3>
 <p>Analyzes and plots thermal conductivity from equilibrium molecular dynamics (EMD).</p>
 <p><strong>Input Files:</strong> EMD output files from GPUMD</p>
@@ -154,15 +159,20 @@ trajectory standard error.</p>
 <td>Optional, save the plot as <code>nemd.png</code></td>
 </tr>
 <tr>
+<td><code>--quantum</code></td>
+<td>Optional, also apply the SHC quantum correction using T from <code>run.in</code></td>
+</tr>
+<tr>
 <td><code>--save-data</code></td>
-<td>Optional, additionally export tab-separated <code>data_nemd.txt</code> and, when SHC data exist, <code>data_shc.txt</code></td>
+<td>Optional, save <code>data_nemd.npz</code> and tab-separated <code>data_nemd.txt</code>; when SHC data exist, also save <code>data_shc.npz</code> and <code>data_shc.txt</code></td>
 </tr>
 </tbody>
 </table></div>
-<div class="code"><div class="cap"><i></i><i></i><i></i><span>bash</span></div><pre><code>gpumdkit.sh -plt nemd [real_length] [scale_eff_size] [cutoff_freq] [--save] [--save-data]
+<div class="code"><div class="cap"><i></i><i></i><i></i><span>bash</span></div><pre><code>gpumdkit.sh -plt nemd [real_length] [scale_eff_size] [cutoff_freq] [--save] [--save-data] [--quantum]
 gpumdkit.sh -plt nemd --save-data                         # use defaults and export data
 gpumdkit.sh -plt nemd Auto 1 60 --save --save-data       # save the figure and data</code></pre><button class="copy-btn" data-copy-pre aria-label="Copy"><svg class="cp"><use href="#i-copy"/></svg><svg class="ok"><use href="#i-check"/></svg></button></div>
-<p><code>data_nemd.npz</code> (and <code>data_shc.npz</code> when SHC data exist) are always written.</p>
+<p>NEMD writes NPZ and TXT data only with <code>--save-data</code>; neither is written by
+default. This option is independent of <code>--save</code>.</p>
 <div align="center">
   <img src="../../Gallery/nemd.png" alt="NEMD results" width="70%" />
 </div>
@@ -193,12 +203,16 @@ gpumdkit.sh -plt nemd Auto 1 60 --save --save-data       # save the figure and d
 <td>Optional, save the plot as <code>hnemd.png</code></td>
 </tr>
 <tr>
+<td><code>--quantum</code></td>
+<td>Optional, also apply the SHC quantum correction using T from <code>run.in</code></td>
+</tr>
+<tr>
 <td><code>--save-data</code></td>
 <td>Optional, save processed arrays as <code>data_hnemd.npz</code> and tab-separated <code>data_hnemd.txt</code>; when SHC data exist, also save <code>data_shc.npz</code> and <code>data_shc.txt</code></td>
 </tr>
 </tbody>
 </table></div>
-<div class="code"><div class="cap"><i></i><i></i><i></i><span>bash</span></div><pre><code>gpumdkit.sh -plt hnemd [scale_eff_size] [cutoff_freq] [--save] [--save-data]
+<div class="code"><div class="cap"><i></i><i></i><i></i><span>bash</span></div><pre><code>gpumdkit.sh -plt hnemd [scale_eff_size] [cutoff_freq] [--save] [--save-data] [--quantum]
 gpumdkit.sh -plt hnemd --save-data             # use defaults and export data
 gpumdkit.sh -plt hnemd 1 60 --save --save-data # save the figure and data</code></pre><button class="copy-btn" data-copy-pre aria-label="Copy"><svg class="cp"><use href="#i-copy"/></svg><svg class="ok"><use href="#i-check"/></svg></button></div>
 <div align="center">

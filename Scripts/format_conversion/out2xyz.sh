@@ -86,6 +86,8 @@ fi
 N_count=1
 for file in "${converged_files[@]}"; do
     configuration=$(basename "$(dirname "$file")")
+    configuration=${configuration//\\/\\\\}
+    configuration=${configuration//\"/\\\"}
     start_lines=($(sed -n '/aborting loop because EDIFF is reached/=' "$file"))
     end_lines=($(sed -n '/[^ML] energy  without entropy/=' "$file"))
     ion_numb_arra=($(grep "ions per type" "$file" | tail -n 1 | awk -F"=" '{print $2}'))
@@ -115,9 +117,9 @@ for file in "${converged_files[@]}"; do
 
         if [[ $viri_logi -eq 1 ]]; then
             viri=$(grep -A 20 "FORCE on cell =-STRESS" temp.file | grep "Total " | tail -n 1 | awk '{print $2,$5,$7,$5,$3,$6,$7,$6,$4}')
-            echo "Config_type=$configuration Weight=1.0 Lattice=\"$latt\" Energy=$ener Virial=\"$viri\" pbc=\"T T T\" Properties=species:S:1:pos:R:3:forces:R:3" >> "$writ_dire/$writ_file"
+            echo "Config_type=\"$configuration\" Weight=1.0 Lattice=\"$latt\" Energy=$ener Virial=\"$viri\" pbc=\"T T T\" Properties=species:S:1:pos:R:3:forces:R:3" >> "$writ_dire/$writ_file"
         else
-            echo "Config_type=$configuration Weight=1.0 Lattice=\"$latt\" Properties=species:S:1:pos:R:3:forces:R:3 Energy=$ener pbc=\"T T T\"" >> "$writ_dire/$writ_file"
+            echo "Config_type=\"$configuration\" Weight=1.0 Lattice=\"$latt\" Properties=species:S:1:pos:R:3:forces:R:3 Energy=$ener pbc=\"T T T\"" >> "$writ_dire/$writ_file"
         fi
 
         for((j=0;j<${#ion_numb_arra[*]};j++));do
