@@ -464,6 +464,12 @@ gpumdkit.sh -plt sigma_xyz [save]
 
 ---
 
+For `emd`, `nemd`, and `hnemd`, a missing `model.xyz` is generated automatically
+from an existing legacy `xyz.in`. For `nemd`/`hnemd`, `scale_eff_size` accepts a
+number or a safe arithmetic expression such as `'100/2'`. Optional `--quantum`
+(legacy `quantum`) adds a quantum-corrected SHC spectrum using the temperature
+from `run.in`; it requires `shc.out`.
+
 #### plt_emd.py
 
 Analyzes and plots thermal conductivity from equilibrium molecular dynamics (EMD).
@@ -516,7 +522,7 @@ Visualizes non-equilibrium molecular dynamics (NEMD) thermal transport propertie
 **Usage:**
 
 ```bash
-gpumdkit.sh -plt nemd [real_length] [scale_eff_size] [cutoff_freq] [--save] [--save-data]
+gpumdkit.sh -plt nemd [real_length] [scale_eff_size] [cutoff_freq] [--save] [--save-data] [--quantum]
 ```
 
 **Params:**
@@ -530,13 +536,14 @@ scale_eff_size: Optional, Scale factor for effective cross-sectional area (defau
                  - S_eff: real or effective area of the system
 cutoff_freq   : Optional, Cutoff frequency for SHC calculation in THz (default: 60)
 --save        : Optional, save the plot as 'nemd.png'
---save-data   : Optional, additionally export tab-separated 'data_nemd.txt'
-                and, when SHC data exist, 'data_shc.txt'
+--save-data   : Optional, save 'data_nemd.npz' and tab-separated 'data_nemd.txt';
+                when SHC data exist, also save 'data_shc.npz' and 'data_shc.txt'
+--quantum     : Optional, also apply the SHC quantum correction (T from run.in)
 ```
 
-The historical `data_nemd.npz` (and `data_shc.npz` when SHC data exist) are
-still written as before. `--save` and `--save-data` are independent; the
-legacy bare tokens `save` and `save_data` remain accepted.
+Data files are written only with `--save-data`; NEMD does not write NPZ or TXT
+by default. `--save` and `--save-data` are independent; the legacy bare tokens
+`save` and `save_data` remain accepted.
 
 <div align="center">
     <img src="../../docs/Gallery/nemd.png" alt="NEMD results" width="70%" />
@@ -551,7 +558,7 @@ Plots homogeneous non-equilibrium molecular dynamics (HNEMD) results.
 **Usage:**
 
 ```bash
-gpumdkit.sh -plt hnemd [scale_eff_size] [cutoff_freq] [--save] [--save-data]
+gpumdkit.sh -plt hnemd [scale_eff_size] [cutoff_freq] [--save] [--save-data] [--quantum]
 ```
 
 **Params:**
@@ -567,6 +574,7 @@ cutoff_freq   : Optional, Cutoff frequency for SHC calculation in THz (default: 
 --save-data   : Optional, save processed arrays as 'data_hnemd.npz' and
                 tab-separated 'data_hnemd.txt'; when SHC data exist, also
                 save 'data_shc.npz' and 'data_shc.txt'
+--quantum     : Optional, also apply the SHC quantum correction (T from run.in)
 ```
 
 `--save` and `--save-data` are independent. The legacy bare tokens `save` and
