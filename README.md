@@ -321,7 +321,7 @@ must otherwise have the same q-point sampling and number of bands.
 
 <div align="center">
   <img src="./docs/Gallery/phonon.png" alt="Phonon band structure" width="42%" />
-  <img src="./docs/Gallery/phonon_comp.png" alt="Phonon band comparison" width="47%" />
+  <img src="./docs/Gallery/phonon_comp.png" alt="Phonon band comparison" width="42%" />
 </div>
 
 Refer to our [documentation](https://gpumdkit.cn/) for more detailed examples and command options.

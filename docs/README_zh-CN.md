@@ -319,7 +319,7 @@ q-path 偏移会在比较前分别归一化，但对比文件仍必须使用相�
 
 <div align="center">
   <img src="./Gallery/phonon.png" alt="Phonon band structure" width="42%" />
-  <img src="./Gallery/phonon_comp.png" alt="Phonon band comparison" width="47%" />
+  <img src="./Gallery/phonon_comp.png" alt="Phonon band comparison" width="42%" />
 </div>
 
 更多详细示例和命令选项请参考我们的[文档](https://gpumdkit.cn/)。

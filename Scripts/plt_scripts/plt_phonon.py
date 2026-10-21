@@ -263,8 +263,17 @@ def plot_phonon(
     set_qpoint_ticks(axis, tick_positions, labels)
     axis.set_xlabel("Wave vector path")
     axis.set_ylabel("Frequency (THz)")
+
+    # Second y axis in wavenumbers (1 THz = 33.35641 cm^-1)
+    conversion = 33.35641
+    right_axis = axis.twinx()
+    lower, upper = axis.get_ylim()
+    right_axis.set_ylim(lower * conversion, upper * conversion)
+    right_axis.set_ylabel(r"Frequency (cm$^{-1}$)")
+    axis.tick_params(axis="y", right=False)
+    right_axis.tick_params(left=False)
     # Subplot geometry (figure fractions); tune these to adjust margins
-    figure.subplots_adjust(left=0.16, right=0.97, top=0.97, bottom=0.13)
+    figure.subplots_adjust(left=0.15, right=0.85, top=0.97, bottom=0.13)
 
     if save or get_backend().lower() in {"agg", "cairo", "pdf", "ps", "svg"}:
         figure.savefig("phonon.png", dpi=300)
