@@ -155,7 +155,7 @@ gpumdkit.sh -plt force_errors
 
 #### plt_nep_restart.py
 
-Visualizes parameters stored in `nep.restart` file.
+Visualizes parameters stored in `nep.restart` file. The file holds, for every parameter, the mean μ (top panel) and the standard deviation σ (bottom panel) of the search distribution used by the SNES optimizer.
 
 **Input File:** `nep.restart`
 
@@ -883,8 +883,8 @@ gpumdkit.sh -plt dimer Li Li nep.txt
 ```
 
 <div align="center">
-    <img src="../../docs/Gallery/dimer_nep.png" alt="Dimer NEP" width="45%" />
-    <img src="../../docs/Gallery/dimer.png" alt="Dimer comparison" width="45%" />
+    <img src="../../docs/Gallery/dimer_nep.png" alt="Li-Li dimer curves from a NEP model without ZBL" width="45%" />
+    <img src="../../docs/Gallery/dimer.png" alt="Li-Li dimer curves from a NEP model with ZBL" width="45%" />
 </div>
 
 **Reference:** [J. Chem. Inf. Model. 2026, 66, 3, 1406-1413](https://doi.org/10.1021/acs.jcim.5c02335)

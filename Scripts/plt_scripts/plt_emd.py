@@ -3,7 +3,7 @@
 GPUMDkit: A User-Friendly Toolkit for GPUMD and NEP
 Repository: https://github.com/zhyan0603/GPUMDkit
 Citation: Z. Yan et al., GPUMDkit: A User-Friendly Toolkit for GPUMD and NEP,
-          MGE Advances, 2026, e70074 (https://doi.org/10.1002/mgea.70074)
+          MGE Advances, 2026, 4, e70074 (https://doi.org/10.1002/mgea.70074)
 =============================================================================
 Script:     plt_emd.py
 Category:   Plot Scripts
@@ -17,7 +17,7 @@ Arguments:
   save       Save the plot as 'emd.png' instead of displaying it
 Output:
   emd.png    (if save is used)
-Author:     Xin Wu (xinwuchn97@gmial.com)
+Author:     Xin Wu (xinwuchn97@gmail.com)
 Last-modified: 2026-10-21
 =============================================================================
 """
