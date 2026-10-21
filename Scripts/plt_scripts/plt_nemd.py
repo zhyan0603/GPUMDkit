@@ -30,6 +30,8 @@ import numpy as np
 from ase.io import read
 import os
 import sys
+import ast
+import operator as op
 
 # Figure Properties
 aw, fs = 1.2, 12
@@ -46,6 +48,42 @@ def set_fig_properties(ax_list, tl=4, tw=1.2, tlm=4):
 
 trap = np.trapezoid if hasattr(np, "trapezoid") else getattr(np, "trapz")
 
+_ARITH_OPS = {
+    ast.Add: op.add, ast.Sub: op.sub, ast.Mult: op.mul, ast.Div: op.truediv,
+    ast.FloorDiv: op.floordiv, ast.Mod: op.mod, ast.Pow: op.pow,
+    ast.UAdd: op.pos, ast.USub: op.neg,
+}
+
+def eval_number(expr):
+    """Parse a plain number or a simple arithmetic expression (e.g. '100/2') into a float.
+
+    Only numeric literals and +, -, *, /, //, %, ** are allowed (parsed via ast,
+    not eval()), so this is safe against arbitrary code in the input string.
+    """
+    def _eval(node):
+        if isinstance(node, ast.Expression):
+            return _eval(node.body)
+        if isinstance(node, ast.Constant) and isinstance(node.value, (int, float)):
+            return node.value
+        if isinstance(node, ast.BinOp) and type(node.op) in _ARITH_OPS:
+            left, right = _eval(node.left), _eval(node.right)
+            if isinstance(node.op, ast.Pow) and abs(right) > 20:
+                # Guard against e.g. "10**99999999": CPython would try to compute
+                # an exact, arbitrary-precision integer with millions of digits.
+                raise ValueError(f"Exponent too large in {expr!r}")
+            return _ARITH_OPS[type(node.op)](left, right)
+        if isinstance(node, ast.UnaryOp) and type(node.op) in _ARITH_OPS:
+            return _ARITH_OPS[type(node.op)](_eval(node.operand))
+        raise ValueError(f"Unsupported expression: {expr!r}")
+    try:
+        tree = ast.parse(expr, mode='eval')
+    except SyntaxError:
+        raise ValueError(f"Unsupported expression: {expr!r}")
+    try:
+        return float(_eval(tree))
+    except (ZeroDivisionError, OverflowError, TypeError) as e:
+        raise ValueError(f"Could not evaluate {expr!r}: {e}")
+
 def print_usage():
     """Print usage instructions"""
     print("Usage: gpumdkit -plt nemd [real_length] [scale_eff_size] [cutoff_freq] [--save] [--save-data]")
@@ -56,6 +94,8 @@ def print_usage():
     print("                   • For low-dimensional systems with vacuum layer: S_box / S_eff")
     print("                     - S_box: box area perpendicular to heat transfer direction")
     print("                     - S_eff: real or effective area of the system")
+    print("                   • May be a plain number or a simple arithmetic expression,")
+    print("                     e.g. '100/2' (evaluates to 50)")
     print("  cutoff_freq   : Optional, Cutoff frequency for SHC calculation in THz (default: 60)")
     print("  --save        : Optional, save the plot as 'nemd.png' (default: show it interactively)")
     print("  --save-data   : Optional, also save the processed data as 'data_nemd.npz'/'data_shc.npz'")
@@ -533,7 +573,7 @@ if __name__ == "__main__":
         else:
             real_length = None
 
-        scale_eff_size = float(positional[1]) if len(positional) > 1 else 1
+        scale_eff_size = eval_number(positional[1]) if len(positional) > 1 else 1
         cutoff_freq = float(positional[2]) if len(positional) > 2 else 60
         if len(positional) > 3:
             raise ValueError
