@@ -17,7 +17,7 @@ Arguments:
 Output:
   Display of dimer interaction curve
 Author:     Zihan YAN (yanzihan@westlake.edu.cn)
-Last-modified: 2026-05-16
+Last-modified: 2026-10-21
 =============================================================================
 """
 
@@ -35,9 +35,27 @@ def print_dependency_notice():
     print(" https://doi.org/10.21105/joss.06264")
 
 
+# Plot style (self-contained; keep in sync across plt_*.py scripts)
 plt.rcParams.update({
     "font.family": "sans-serif",
     "font.sans-serif": ["Arial", "DejaVu Sans", "Liberation Sans"],
+    "mathtext.fontset": "dejavusans",
+    "font.size": 9,
+    "axes.labelsize": 10,
+    "axes.linewidth": 0.9,
+    "xtick.labelsize": 9,
+    "ytick.labelsize": 9,
+    "xtick.direction": "out",
+    "ytick.direction": "out",
+    "xtick.major.size": 3.5,
+    "ytick.major.size": 3.5,
+    "xtick.minor.size": 2.0,
+    "ytick.minor.size": 2.0,
+    "xtick.major.width": 0.9,
+    "ytick.major.width": 0.9,
+    "legend.frameon": False,
+    "legend.fontsize": 9,
+    "figure.dpi": 100,
 })
 
 # Check the number of command-line arguments
@@ -55,7 +73,7 @@ nep_path = sys.argv[3]  # Directory of the NEP potential file
 print_dependency_notice()
 
 # Set the range and step size for distances
-start_distance = 0.1  # Starting distance in Angstrom
+start_distance = 0.5  # Starting distance in Angstrom
 end_distance = 6.0    # Ending distance in Angstrom
 step_size = 0.01      # Step size in Angstrom
 
@@ -107,22 +125,24 @@ with open(f'dimer_{symbol1}_{symbol2}.txt', 'w') as f:
         f.write(f"{distance:.2f} {energies_shifted[i]:.6f} {forces[i]:.6f}\n")
 
 # Create two subplots (top and bottom)
-fig, axs = plt.subplots(2, 1, figsize=(6, 6), dpi=150)
+fig, axs = plt.subplots(2, 1, figsize=(4.4, 4.8))
 
 # Plot energy difference vs. distance
-axs[0].plot(distances, energies_shifted, marker='o')
-axs[0].set_xlabel(r'Dimer Distance ($\mathrm{{\AA}}$)')
-axs[0].set_ylabel(r'$\Delta$E (eV)')
+axs[0].axhline(0.0, color='0.75', linestyle='--', linewidth=0.8, zorder=0)
+axs[0].plot(distances, energies_shifted, color='C0', linewidth=1.4)
+axs[0].set_xlabel(r'Dimer Distance ($\mathrm{\AA}$)')
+axs[0].set_ylabel(r'$\Delta E$ (eV)')
 title = f"{symbol1}-{symbol2} Dimer Interaction"
 axs[0].set_title(title)
 
-# Plot force vs. distance
-axs[1].plot(distances, forces, marker='o', color='C1')
-axs[1].set_xlabel(r'Dimer Distance ($\mathrm{{\AA}}$)')
-axs[1].set_ylabel(r'Fx (eV/$\mathrm{{\AA}}$)')
+# Plot force vs. distance (same distance range)
+axs[1].axhline(0.0, color='0.75', linestyle='--', linewidth=0.8, zorder=0)
+axs[1].plot(distances, forces, color='C1', linewidth=1.4)
+axs[1].set_xlabel(r'Dimer Distance ($\mathrm{\AA}$)')
+axs[1].set_ylabel(r'$F_x$ (eV/$\mathrm{\AA}$)')
 
-# Adjust layout and display the plot
-plt.tight_layout()
+# Subplot geometry (figure fractions); tune these to adjust margins and spacing
+fig.subplots_adjust(left=0.17, right=0.97, top=0.94, bottom=0.10, hspace=0.38)
 
 if len(sys.argv) > 4 and sys.argv[4] == 'save':
     plt.savefig(f'dimer-{symbol1}-{symbol2}.png', dpi=300)

@@ -28,6 +28,11 @@ import matplotlib
 import matplotlib.pyplot as plt
 from mpl_toolkits.axes_grid1 import make_axes_locatable
 
+try:  # KDE marginals if SciPy is available, otherwise histograms
+    from scipy.stats import gaussian_kde
+except ImportError:
+    gaussian_kde = None
+
 # If running on a server without GUI, keep this commented unless needed
 # matplotlib.use('Agg')
 
@@ -140,12 +145,32 @@ def beautify_axes(ax):
 def add_marginal_distributions(ax, true, pred, color, bins=35):
     divider = make_axes_locatable(ax)
 
-    ax_top = divider.append_axes("top", size="18%", pad=0, sharex=ax)
-    ax_right = divider.append_axes("right", size="18%", pad=0, sharey=ax)
+    ax_top = divider.append_axes("top", size="14%", pad=0, sharex=ax)
+    ax_right = divider.append_axes("right", size="14%", pad=0, sharey=ax)
 
-    ax_top.hist(true, bins=bins, color=color, alpha=0.55, edgecolor='gray', linewidth=0.6)
-    ax_right.hist(pred, bins=bins, orientation='horizontal',
-                  color=color, alpha=0.55, edgecolor='gray', linewidth=0.6)
+    if gaussian_kde is not None:
+        for values, grid, horizontal in ((true, np.linspace(*ax.get_xlim(), 256), False),
+                                         (pred, np.linspace(*ax.get_ylim(), 256), True)):
+            try:
+                density = gaussian_kde(values)(grid)
+            except (np.linalg.LinAlgError, ValueError):  # e.g. zero variance
+                density = None
+            if density is None:
+                (ax_right if horizontal else ax_top).hist(
+                    values, bins=bins, color=color, alpha=0.55, edgecolor='gray', linewidth=0.6,
+                    orientation='horizontal' if horizontal else 'vertical')
+            elif horizontal:
+                ax_right.fill_betweenx(grid, density, color=color, alpha=0.55, linewidth=0)
+                ax_right.plot(density, grid, color=color, linewidth=1.0)
+            else:
+                ax_top.fill_between(grid, density, color=color, alpha=0.55, linewidth=0)
+                ax_top.plot(grid, density, color=color, linewidth=1.0)
+        ax_top.set_ylim(bottom=0)
+        ax_right.set_xlim(left=0)
+    else:
+        ax_top.hist(true, bins=bins, color=color, alpha=0.55, edgecolor='gray', linewidth=0.6)
+        ax_right.hist(pred, bins=bins, orientation='horizontal',
+                      color=color, alpha=0.55, edgecolor='gray', linewidth=0.6)
 
     # Top marginal
     ax_top.tick_params(axis='both', which='both', length=0, labelbottom=False, labelleft=False)
@@ -176,6 +201,13 @@ def add_residual_inset(ax, residuals, color):
 
     ax_inset.text(mean_res + x_shift, y_top * 0.82, f'{mean_res:.2f}',
                   color=color, fontsize=9, fontweight='bold')
+
+    # Symmetric limits with three ticks (-t, 0, t) so the tick labels never overlap
+    limit = np.max(np.abs(residuals))
+    tick = float(f'{0.7 * limit:.1g}')
+    ax_inset.set_xlim(-1.05 * limit, 1.05 * limit)
+    ax_inset.set_xticks([-tick, 0.0, tick])
+    ax_inset.set_xticklabels([f'{-tick:g}', '0', f'{tick:g}'])
 
     ax_inset.set_xlabel('Residual', fontsize=9, labelpad=1)
     ax_inset.set_ylabel('')

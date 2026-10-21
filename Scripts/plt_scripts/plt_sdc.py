@@ -16,7 +16,7 @@ Arguments:
 Output:
   SDC.png   (if save is used, or if backend is non-interactive)
 Author:     Zihan YAN (yanzihan@westlake.edu.cn)
-Last-modified: 2026-05-16
+Last-modified: 2026-10-21
 =============================================================================
 """
 
@@ -24,10 +24,29 @@ import sys
 import numpy as np
 import matplotlib.pyplot as plt
 
+# Plot style (self-contained; keep in sync across plt_*.py scripts)
 plt.rcParams.update({
     "font.family": "sans-serif",
     "font.sans-serif": ["Arial", "DejaVu Sans", "Liberation Sans"],
+    "mathtext.fontset": "dejavusans",
+    "font.size": 9,
+    "axes.labelsize": 10,
+    "axes.linewidth": 0.9,
+    "xtick.labelsize": 9,
+    "ytick.labelsize": 9,
+    "xtick.direction": "out",
+    "ytick.direction": "out",
+    "xtick.major.size": 3.5,
+    "ytick.major.size": 3.5,
+    "xtick.minor.size": 2.0,
+    "ytick.minor.size": 2.0,
+    "xtick.major.width": 0.9,
+    "ytick.major.width": 0.9,
+    "legend.frameon": False,
+    "legend.fontsize": 9,
+    "figure.dpi": 100,
 })
+COLORS = ['C0', 'C1', 'C2']
 
 # Function to read data from file
 def read_data(file_name):
@@ -40,18 +59,18 @@ input_file = './msd.out'
 time, sdc_x, sdc_y, sdc_z = read_data(input_file)
 
 # Create main figure
-fig, ax = plt.subplots(figsize=(4.5, 3.5), dpi=150)
+fig, ax = plt.subplots(figsize=(4.2, 3.5))
 
 # Main plot: full range, original data
-ax.plot(time, sdc_x, label='x', color='C0')
-ax.plot(time, sdc_y, label='y', color='C1')
-ax.plot(time, sdc_z, label='z', color='C2')
+ax.plot(time, sdc_x, label='x', color='C0', linewidth=1.0)
+ax.plot(time, sdc_y, label='y', color='C1', linewidth=1.0)
+ax.plot(time, sdc_z, label='z', color='C2', linewidth=1.0)
 
-# Legend: one row, bottom right, no frame border
-ax.legend(ncol=3, loc='lower right', frameon=False)
+# Legend: one row at the top, where the curves leave room
+ax.legend(ncol=3, loc='upper right', handlelength=1.4, columnspacing=1.0, handletextpad=0.5)
 
 ax.set_xlabel('dt (ps)')
-ax.set_ylabel(r'SDC ($\AA^2$/ps)')
+ax.set_ylabel(r'SDC ($\mathrm{\AA}^2$/ps)')
 
 # ────────────────────────────────────────────────
 # Inset: last 80% of the data + smoothing overlay
@@ -89,16 +108,17 @@ sdc_y_smooth = moving_average(sdc_y_zoom, window_size)
 sdc_z_smooth = moving_average(sdc_z_zoom, window_size)
 
 # Plot raw data (transparent) in inset
-ax_inset.plot(time_zoom, sdc_x_zoom, color='C0', alpha=0.35, lw=1.0)
-ax_inset.plot(time_zoom, sdc_y_zoom, color='C1', alpha=0.35, lw=1.0)
-ax_inset.plot(time_zoom, sdc_z_zoom, color='C2', alpha=0.35, lw=1.0)
+ax_inset.plot(time_zoom, sdc_x_zoom, color='C0', alpha=0.35, lw=0.8)
+ax_inset.plot(time_zoom, sdc_y_zoom, color='C1', alpha=0.35, lw=0.8)
+ax_inset.plot(time_zoom, sdc_z_zoom, color='C2', alpha=0.35, lw=0.8)
 
 # Overlay smoothed lines (solid, opaque)
-ax_inset.plot(time_zoom, sdc_x_smooth, color='C0', lw=1.6, label='x smooth')
-ax_inset.plot(time_zoom, sdc_y_smooth, color='C1', lw=1.6, label='y smooth')
-ax_inset.plot(time_zoom, sdc_z_smooth, color='C2', lw=1.6, label='z smooth')
+ax_inset.plot(time_zoom, sdc_x_smooth, color='C0', lw=1.4, label='x smooth')
+ax_inset.plot(time_zoom, sdc_y_smooth, color='C1', lw=1.4, label='y smooth')
+ax_inset.plot(time_zoom, sdc_z_smooth, color='C2', lw=1.4, label='z smooth')
 
-plt.tight_layout()
+# Subplot geometry (figure fractions); tune these to adjust margins
+fig.subplots_adjust(left=0.15, right=0.975, top=0.97, bottom=0.135)
 
 # Save or show
 if len(sys.argv) > 1 and sys.argv[1] == 'save':

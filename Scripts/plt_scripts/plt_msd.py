@@ -16,7 +16,7 @@ Arguments:
 Output:
   msd.png   (if save is used, or if backend is non-interactive)
 Author:     Zihan YAN (yanzihan@westlake.edu.cn)
-Last-modified: 2026-05-16
+Last-modified: 2026-10-20
 =============================================================================
 """
 
@@ -24,10 +24,29 @@ import sys
 import numpy as np
 import matplotlib.pyplot as plt
 
+# Plot style (self-contained; keep in sync across plt_*.py scripts)
 plt.rcParams.update({
     "font.family": "sans-serif",
     "font.sans-serif": ["Arial", "DejaVu Sans", "Liberation Sans"],
+    "mathtext.fontset": "dejavusans",
+    "font.size": 9,
+    "axes.labelsize": 10,
+    "axes.linewidth": 0.9,
+    "xtick.labelsize": 9,
+    "ytick.labelsize": 9,
+    "xtick.direction": "out",
+    "ytick.direction": "out",
+    "xtick.major.size": 3.5,
+    "ytick.major.size": 3.5,
+    "xtick.minor.size": 2.0,
+    "ytick.minor.size": 2.0,
+    "xtick.major.width": 0.9,
+    "ytick.major.width": 0.9,
+    "legend.frameon": False,
+    "legend.fontsize": 9,
+    "figure.dpi": 100,
 })
+COLORS = ['C0', 'C1', 'C2', 'C3', 'C4', 'C5']
 
 # Function to read data from the given file
 def read_data(file_name):
@@ -59,24 +78,28 @@ slope_z = calculate_slope(time, msd_z)
 #msd_mean = (msd_x + msd_y + msd_z)/3
 
 # Create a plot for the MSD data
-plt.figure(figsize=(4.5, 3.5), dpi=150)
-plt.plot(time, msd_x, label='x')
-plt.plot(time, msd_y, label='y')
-plt.plot(time, msd_z, label='z')
-#plt.plot(time, msd_mean, label='mean', color='C4')
-#plt.plot(time, msd_total, label='total', color='C5')
+fig, ax = plt.subplots(figsize=(4.2, 3.5))
+n_fit = len(time)
+fit_start, fit_end = time[int(0.4 * n_fit)], time[int(0.8 * n_fit) - 1]  # slope-fit window (40%-80%)
+ax.axvspan(fit_start, fit_end, color='0.5', alpha=0.08, linewidth=0)
+for t_edge, text in ((fit_start, '40%'), (fit_end, '80%')):
+    ax.axvline(t_edge, color='0.6', linestyle='--', linewidth=0.8, zorder=0)
+    ax.text(t_edge, 0.98, text + ' ', transform=ax.get_xaxis_transform(), fontsize=8, color='0.4', ha='right', va='top')
+for label, msd, slope, color in (('x', msd_x, slope_x, COLORS[0]),
+                                 ('y', msd_y, slope_y, COLORS[1]),
+                                 ('z', msd_z, slope_z, COLORS[2])):
+    ax.plot(time, msd, color=color, linewidth=1.6, label=f'{label}: {slope:.3f}')
+#ax.plot(time, msd_mean, label='mean', color='C4')
+#ax.plot(time, msd_total, label='total', color='C5')
 
-plt.text(0.5, 0.3, f'Slope (x): {slope_x:.3f} Å$^2$/ps', fontsize=10, color='C0', verticalalignment='top', transform=plt.gca().transAxes)
-plt.text(0.5, 0.21, f'Slope (y): {slope_y:.3f} Å$^2$/ps', fontsize=10, color='C1', verticalalignment='top', transform=plt.gca().transAxes)
-plt.text(0.5, 0.12, f'Slope (z): {slope_z:.3f} Å$^2$/ps', fontsize=10, color='C2', verticalalignment='top', transform=plt.gca().transAxes)
+# Add labels
+ax.set_xlabel('dt (ps)')
+ax.set_ylabel(r'MSD ($\mathrm{\AA}^2$)')
+ax.margins(x=0.02)
+ax.legend(loc='upper left', title=r'Slope ($\mathrm{\AA}^2$/ps)', title_fontsize=9)
 
-# Add titles and labels
-#plt.title('MSD vs dt')
-plt.xlabel('dt (ps)')
-plt.ylabel(r'MSD ($\AA^2$)')
-plt.legend()
-plt.tight_layout()
-#plt.grid(True)
+# Subplot geometry (figure fractions); tune these to adjust margins and spacing
+fig.subplots_adjust(left=0.135, right=0.975, top=0.97, bottom=0.135)
 
 if len(sys.argv) > 1 and sys.argv[1] == 'save':
     plt.savefig('msd.png', dpi=300)

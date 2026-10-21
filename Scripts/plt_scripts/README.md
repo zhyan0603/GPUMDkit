@@ -191,15 +191,16 @@ gpumdkit.sh -plt thermo
 
 ---
 
-#### plt_thermo2.py & plt_thermo3.py
+#### plt_thermo2.py
 
-Alternative thermodynamic visualization (different styles).
+Previous default thermodynamic visualization, kept as an alternative style.
+`thermo3` has become the default `thermo`; `gpumdkit.sh -plt thermo3` still
+works for now, prints a reminder, and will be removed in a future release.
 
 **Usage:**
 
 ```bash
-gpumdkit.sh -plt thermo2 
-gpumdkit.sh -plt thermo3
+gpumdkit.sh -plt thermo2
 ```
 
 ---
@@ -686,6 +687,13 @@ factor versus cohesive energy.
 gpumdkit.sh -plt cohesive [save]
 ```
 
+The sampled energy curve is drawn as open circles, and a vertical dashed line
+marks the scaling factor `a_min` at which the energy is lowest. `a_min` is read
+directly from the data, so its precision is the step of the scaling factor in
+`compute_cohesive`.
+
+<img src="../../docs/Gallery/cohesive.png" alt="Cohesive energy curve" width="55%" />
+
 ---
 
 #### plt_rdf.py
@@ -705,7 +713,7 @@ The `rdf` plotter does not select a single column. Use `rdf_pmf` when a
 specific RDF output column is needed for PMF analysis.
 
 **RDF output:**
-<img src="../../docs/Gallery/rdf1.png" alt="Complete RDF" width="100%" />
+<img src="../../docs/Gallery/rdf1.png" alt="Complete RDF" width="65%" />
 
 ---
 
@@ -756,8 +764,10 @@ The saved image is `xrd.png` in the current working directory.
 
 Compares XRD curves from several temperature folders in the current working
 directory. Each folder must be named `<temperature>K` and contain an
-`xrd.out` file written by calculator 413. The curves are stacked from high
-temperature at the top to low temperature at the bottom.
+`xrd.out` file written by calculator 413. All curves are drawn in one panel,
+shifted along y so that the highest peak never reaches the curve above, with
+low temperature at the bottom. Each curve is labelled with its temperature and
+colored by a temperature colorbar.
 
 Generate each `xrd.out` with calculator 413 before running the comparison.
 
@@ -916,8 +926,7 @@ gpumdkit.sh -plt net_force train.xyz
 | Command        | Input File(s)               | Description                        |
 | -------------- | --------------------------- | ---------------------------------- |
 | `thermo`       | `thermo.out`                | Thermodynamic properties evolution |
-| `thermo2`      | `thermo.out`                | Thermo plot, style 2               |
-| `thermo3`      | `thermo.out`                | Thermo plot, style 3               |
+| `thermo2`      | `thermo.out`                | Previous thermo plot style         |
 | `train`        | `loss.out`, `*_train.out`   | NEP training plot                  |
 | `prediction`   | `*_train.out`               | NEP prediction-mode plot           |
 | `train_test`   | `*_train.out`, `*_test.out` | parity plots of train&test         |
@@ -999,7 +1008,7 @@ For quick reference, here's the complete command list:
  +-----------------------------------------------------------------------------------------------+
  |                                    MD & Structural Analysis                                   |
  +-----------------------------------------------------------------------------------------------+
- |  thermo         - thermo info in thermo.out      thermo2/3      - Thermo in different styles  |
+ |  thermo         - thermo info in thermo.out      thermo2        - Previous thermo style       |
  |  rdf            - Radial distribution function   rdf_pmf        - Potential of mean force     |
  |  vac            - Velocity autocorrelation       cohesive       - Cohesive energy curve       |
  |  xrd            - X-ray diffraction              plane-grid     - Displacement plane grid     |

@@ -102,8 +102,7 @@ plotters.
 | Command | Input Files | Description |
 |---------|-------------|-------------|
 | `thermo` | `thermo.out` | Thermodynamic properties |
-| `thermo2` | `thermo.out` | Alternative thermo style |
-| `thermo3` | `thermo.out` | Third thermo style |
+| `thermo2` | `thermo.out` | Previous thermo style (the former default; `thermo3` is a deprecated alias of `thermo`) |
 | `rdf` | `rdf.out` | All available RDF value columns |
 | `rdf_pmf` | `rdf.out` | RDF + potential of mean force |
 | `xrd` | `xrd.out` or specified XRD output | X-ray diffraction intensity |

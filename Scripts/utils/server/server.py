@@ -101,7 +101,7 @@ RUN_ACTIONS = {
         "timeout": 900,
     },
     "plt_thermo": {
-        "argv": ["-plt", "thermo3", "save"],
+        "argv": ["-plt", "thermo", "save"],
         "requires": ["thermo.out"],
         "produces": "thermo.png",
         "timeout": 900,
@@ -204,7 +204,7 @@ DESCRIPTIONS = {
     "plt_sdc": "Plot SDC (x, y, z) from msd.out",
     "plt_msd_sdc": "Plot MSD and SDC together",
     "plt_vac": "Plot VAC from sdc.out",
-    "plt_thermo": "Plot thermodynamic properties from thermo.out with thermo3",
+    "plt_thermo": "Plot thermodynamic properties from thermo.out",
     "plt_train": "Plot NEP training loss and parity panels",
     "plt_train_density": "Plot training parity density panels",
     "plt_train_test": "Compare train vs test energy/force/stress",

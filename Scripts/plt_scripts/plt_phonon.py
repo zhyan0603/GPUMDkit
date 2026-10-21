@@ -19,7 +19,7 @@ Output:
   phonon.png   Phonon band-structure figure when saving is requested or the
                selected Matplotlib backend cannot display figures.
 Author:     Zihan YAN (yanzihan@westlake.edu.cn)
-Last-modified: 2026-09-14
+Last-modified: 2026-10-20
 =============================================================================
 """
 
@@ -231,40 +231,43 @@ def plot_phonon(
     plt.rcParams.update({
         "font.family": "sans-serif",
         "font.sans-serif": ["Arial", "DejaVu Sans", "Liberation Sans"],
-        "axes.linewidth": 1.2,
-        "xtick.major.width": 1.2,
-        "ytick.major.width": 1.2,
-        "xtick.direction": "in",
-        "ytick.direction": "in",
-        "font.size": 12,
-        "axes.labelsize": 14,
-        "xtick.labelsize": 13,
-        "ytick.labelsize": 13,
+        "mathtext.fontset": "dejavusans",
+        "font.size": 9,
+        "axes.labelsize": 10,
+        "axes.linewidth": 0.9,
+        "xtick.labelsize": 9,
+        "ytick.labelsize": 9,
+        "xtick.direction": "out",
+        "ytick.direction": "out",
+        "xtick.major.size": 3.5,
+        "ytick.major.size": 3.5,
+        "xtick.major.width": 0.9,
+        "ytick.major.width": 0.9,
+        "legend.frameon": False,
+        "figure.dpi": 150,
     })
-    figure, axis = plt.subplots(figsize=(5.0, 4.0), dpi=150)
+    figure, axis = plt.subplots(figsize=(4.4, 3.6))
     for segment_index in range(len(q_lengths) // npoints):
         start_index = segment_index * npoints
         stop_index = (segment_index + 1) * npoints
         axis.plot(
             q_lengths[start_index:stop_index],
             frequencies[start_index:stop_index],
-            color="cornflowerblue",
-            linewidth=1.2,
-            alpha=0.8,
+            color="C0",
+            linewidth=1.0,
         )
     for position in tick_positions[1:-1]:
-        axis.axvline(position, color="0.8", linewidth=0.8)
-    axis.axhline(0.0, color="gray", linewidth=1.0, linestyle="--")
+        axis.axvline(position, color="0.75", linewidth=0.8, zorder=0)
+    axis.axhline(0.0, color="0.55", linewidth=1.2, linestyle="--", zorder=0)
     axis.set_xlim(q_lengths[0], q_lengths[-1])
     set_qpoint_ticks(axis, tick_positions, labels)
     axis.set_xlabel("Wave vector path")
     axis.set_ylabel("Frequency (THz)")
-    axis.tick_params(axis="x", top=True)
-    axis.tick_params(axis="y", right=True)
-    figure.tight_layout()
+    # Subplot geometry (figure fractions); tune these to adjust margins
+    figure.subplots_adjust(left=0.16, right=0.97, top=0.97, bottom=0.13)
 
     if save or get_backend().lower() in {"agg", "cairo", "pdf", "ps", "svg"}:
-        figure.savefig("phonon.png", dpi=300, bbox_inches="tight")
+        figure.savefig("phonon.png", dpi=300)
         print(" Saved phonon plot to 'phonon.png'.")
     else:
         plt.show()

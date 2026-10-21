@@ -97,7 +97,7 @@ Running `gpumdkit.sh -plt` prints the plotting command menu:
 +-----------------------------------------------------------------------------------------------+
 |                                    MD & Structural Analysis                                   |
 +-----------------------------------------------------------------------------------------------+
-|  thermo         - thermo info in thermo.out      thermo2/3      - Thermo in different styles  |
+|  thermo         - thermo info in thermo.out      thermo2        - Previous thermo style       |
 |  rdf            - Radial distribution function   rdf_pmf        - Potential of mean force     |
 |  vac            - Velocity autocorrelation       cohesive       - Cohesive energy curve       |
 |  xrd            - X-ray diffraction              plane-grid     - Displacement plane grid     |
@@ -171,7 +171,7 @@ Two files are written next to the data: `thermo.png` and `average_results.txt`, 
 | `charge` | `train.xyz`, `charge_train.out` | Charge distribution | [NEP](plot_nep.md) |
 | `born_charge` / `bec` | `bec_train.out`, optional `bec_test.out` | Born effective charges | [NEP](plot_nep.md) |
 | `thermo` | `thermo.out` | Thermodynamic properties | [MD & structure](plot_md_structure.md) |
-| `thermo2` / `thermo3` | `thermo.out` | Thermodynamic plots in alternative styles | [MD & structure](plot_md_structure.md) |
+| `thermo2` | `thermo.out` | Previous thermodynamic plot style (`thermo3` is now the default `thermo`) | [MD & structure](plot_md_structure.md) |
 | `msd` | four-column `msd.out` from `-calc msd`, or first four columns of GPUMD `compute_msd` output | Mean square displacement | [Diffusion](plot_diffusion.md) |
 | `msd_all` | `msd.out` (all_groups) | MSD for all species | [Diffusion](plot_diffusion.md) |
 | `msd_conv` | `msd_step*.out` | MSD convergence check | [Diffusion](plot_diffusion.md) |

@@ -18,7 +18,7 @@ Arguments:
 Output:
   RDF + PMF plot displayed or saved
 Author:     Qilin Guo (guoqilin@buaa.edu.cn), Zihan YAN (yanzihan@westlake.edu.cn)
-Last-modified: 2026-05-16
+Last-modified: 2026-10-21
 =============================================================================
 """
 
@@ -33,10 +33,31 @@ import numpy as np
 from matplotlib.pyplot import Axes
 from scipy.signal import find_peaks, savgol_filter
 
+# Plot style (self-contained; keep in sync across plt_*.py scripts)
 plt.rcParams.update({
     "font.family": "sans-serif",
     "font.sans-serif": ["Arial", "DejaVu Sans", "Liberation Sans"],
+    "mathtext.fontset": "dejavusans",
+    "font.size": 9,
+    "axes.labelsize": 10,
+    "axes.linewidth": 0.9,
+    "xtick.labelsize": 9,
+    "ytick.labelsize": 9,
+    "xtick.direction": "out",
+    "ytick.direction": "out",
+    "xtick.major.size": 3.5,
+    "ytick.major.size": 3.5,
+    "xtick.minor.size": 2.0,
+    "ytick.minor.size": 2.0,
+    "xtick.major.width": 0.9,
+    "ytick.major.width": 0.9,
+    "legend.frameon": False,
+    "legend.fontsize": 9,
+    "figure.dpi": 100,
 })
+RDF_COLOR = 'C0'
+PMF_COLOR = 'C3'
+REF_STYLE = dict(color='0.6', linestyle='--', linewidth=0.8, zorder=0)
 
 # Use Agg backend in headless environments
 if "DISPLAY" not in os.environ:
@@ -98,22 +119,14 @@ def plot_rdf_pmf(
     save: bool = False
 ) -> None:
     """Generate clean RDF + PMF plot with adjustable margins"""
-    fig, (ax1, ax2) = plt.subplots(
-        2, 1, figsize=(7.5, 6.5), sharex=True, gridspec_kw={"hspace": 0.18}
-    )
+    fig, (ax1, ax2) = plt.subplots(2, 1, figsize=(4.4, 4.6), sharex=True)
+    marks = [info["r_peak1"], info["r_min"], info["r_peak2"]]
 
     # ─── RDF panel ───────────────────────────────────────
-    ax1.plot(r, g, lw=2.0, color="#1f77b4")
-
-    # Light gray dashed lines
-    for pos, style in [
-        (info["r_peak1"], (0, (5, 2))),
-        (info["r_min"],   (0, (3, 1.5))),
-        (info["r_peak2"], (0, (5, 2))),
-    ]:
-        ax1.axvline(pos, color="0.68", ls=style, lw=1.0, alpha=0.8)
-
-    ax1.axhline(1.0, color="gray", ls="--", lw=0.9, alpha=0.5)
+    ax1.plot(r, g, linewidth=1.4, color=RDF_COLOR)
+    for pos in marks:
+        ax1.axvline(pos, **REF_STYLE)
+    ax1.axhline(1.0, **REF_STYLE)
 
     # Key positions in top-right corner (multi-line, no box)
     pos_text = (
@@ -121,72 +134,43 @@ def plot_rdf_pmf(
         f"1st min : {info['r_min']:.2f} Å\n"
         f"2nd peak: {info['r_peak2']:.2f} Å"
     )
-    ax1.text(0.98, 0.96, pos_text,
-             transform=ax1.transAxes,
-             ha="right", va="top",
-             fontsize=10.0,
-             color="0.2")
-
-    ax1.set_ylabel("g(r)", fontsize=11)
-    ax1.set_xlabel("Radial distance r (Å)", fontsize=11)
-    ax1.grid(True, alpha=0.16, which="both")
-    ax1.minorticks_on()
-    ax1.tick_params(which="both", direction="in", top=True, right=True, labelsize=9.5)
+    ax1.text(0.98, 0.96, pos_text, transform=ax1.transAxes,
+             ha="right", va="top", fontsize=9, color="0.2", linespacing=1.4)
+    ax1.set_ylabel(r"$g(r)$")
 
     # ─── PMF panel ───────────────────────────────────────
-    ax2.plot(r, pmf, lw=2.0, color="#d62728")
-
-    # Same dashed lines
-    for pos, style in [
-        (info["r_peak1"], (0, (5, 2))),
-        (info["r_min"],   (0, (3, 1.5))),
-        (info["r_peak2"], (0, (5, 2))),
-    ]:
-        ax2.axvline(pos, color="0.68", ls=style, lw=1.0, alpha=0.8)
-
-    ax2.axhline(0, color="gray", ls="--", lw=0.9, alpha=0.5)
+    ax2.plot(r, pmf, linewidth=1.4, color=PMF_COLOR)
+    for pos in marks:
+        ax2.axvline(pos, **REF_STYLE)
+    ax2.axhline(0, **REF_STYLE)
 
     # ΔG bracket
-    ax2.vlines(info["r_min"], info["pmf_peak1"], info["pmf_min"],
-               color="0.35", lw=1.4)
+    ax2.vlines(info["r_min"], info["pmf_peak1"], info["pmf_min"], color="0.35", linewidth=1.2)
     ax2.hlines([info["pmf_peak1"], info["pmf_min"]],
-               info["r_min"] - 0.20, info["r_min"] + 0.20,
-               color="0.35", lw=1.4)
+               info["r_min"] - 0.20, info["r_min"] + 0.20, color="0.35", linewidth=1.2)
 
     # ΔG text in top-right (no box)
     ax2.text(0.98, 0.96,
              f"ΔG = {info['delta_G']:.2f} kJ/mol\n(T = {temperature:.0f} K)",
-             transform=ax2.transAxes,
-             ha="right", va="top",
-             fontsize=10.5,
-             color="#d62728")
+             transform=ax2.transAxes, ha="right", va="top",
+             fontsize=9, color=PMF_COLOR, linespacing=1.4)
+    ax2.set_ylabel("PMF (kJ/mol)")
+    ax2.set_xlabel(r"$r$ ($\mathrm{\AA}$)")
 
-    ax2.set_ylabel("PMF (kJ/mol)", fontsize=11)
-    ax2.set_xlabel("Radial distance r (Å)", fontsize=11)
-    ax2.grid(True, alpha=0.16, which="both")
-    ax2.minorticks_on()
-    ax2.tick_params(which="both", direction="in", top=True, right=True, labelsize=9.5)
-
-    # Reasonable view range for PMF
-    view_mask = r < info["r_peak2"] + 5
+    # View range for the PMF: from the first RDF peak outwards, so that the steep
+    # repulsive wall (g(r) ~ 0 is clipped to a huge PMF) does not set the y scale
+    view_mask = (r >= info["r_peak1"]) & (r < info["r_peak2"] + 5)
     y_vals = pmf[view_mask]
     y_min, y_max = np.min(y_vals), np.max(y_vals)
     margin = (y_max - y_min) * 0.12
     ax2.set_ylim(y_min - margin, y_max + margin * 1.5)
+    ax2.set_xlim(r[0], r[-1])
 
-    # Adjust overall margins (this controls whitespace around the figure)
-    plt.subplots_adjust(
-        left=0.10,    # left margin
-        right=0.96,   # right margin
-        top=0.96,     # top margin
-        bottom=0.10,  # bottom margin
-        hspace=0.18   # height space between subplots
-    )
-
-    # plt.tight_layout(rect=[0, 0, 1, 0.98])  # slight extra safety
+    # Subplot geometry (figure fractions); tune these to adjust margins and spacing
+    fig.subplots_adjust(left=0.16, right=0.97, top=0.97, bottom=0.11, hspace=0.08)
 
     if save:
-        plt.savefig("rdf_pmf.png", dpi=400, bbox_inches="tight")
+        plt.savefig("rdf_pmf.png", dpi=300)
         print("Figure saved → rdf_pmf.png")
     else:
         plt.show()

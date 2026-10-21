@@ -23,16 +23,17 @@ gpumdkit.sh -plt thermo
 
 ---
 
-### thermo2 / thermo3 (`plt_thermo2.py`, `plt_thermo3.py`)
+### thermo2 (`plt_thermo2.py`)
 
-Alternative thermodynamic visualization with different styles.
+The previous default thermodynamic plot, kept as an alternative style.
 
 **Input File:** `thermo.out`
 
 ```bash
 gpumdkit.sh -plt thermo2
-gpumdkit.sh -plt thermo3
 ```
+
+> **Note:** `thermo3` has become the default `thermo` plot. `gpumdkit.sh -plt thermo3` still works for now and prints a reminder, but it will be removed in a future release; use `gpumdkit.sh -plt thermo` instead.
 
 
 ## Structural Analysis
@@ -54,7 +55,7 @@ specific RDF output column is needed for PMF analysis.
 **RDF output:**
 
 <div align="center">
-  <img src="../../Gallery/rdf1.png" alt="Complete RDF" width="90%" />
+  <img src="../../Gallery/rdf1.png" alt="Complete RDF" width="65%" />
 </div>
 
 ---
@@ -86,8 +87,10 @@ directory.
 
 Compares XRD curves from several temperature folders in the current working
 directory. Each folder must be named `<temperature>K` and contain an
-`xrd.out` file written by calculator 413. Curves are stacked from high
-temperature at the top to low temperature at the bottom.
+`xrd.out` file written by calculator 413. All curves are drawn in one panel,
+shifted along y so that the highest peak never reaches the curve above, with
+low temperature at the bottom. Each curve is labelled with its temperature and
+colored by a temperature colorbar.
 
 Run the comparison from the directory containing the `*K` subdirectories.
 This command does not take a directory argument:
@@ -145,6 +148,16 @@ Plots cohesive energy curve from `cohesive.out`. Useful for analyzing lattice st
 ```bash
 gpumdkit.sh -plt cohesive
 ```
+
+The sampled energy curve is drawn as open circles, and a vertical dashed line
+marks the scaling factor at which the energy is lowest. This value, `a_min`,
+is read directly from the data, so its precision is the step of the scaling
+factor in `compute_cohesive`. The values below come from an LLZO NEP model
+scaled isotropically with `compute_cohesive 0.9 1.1 6`.
+
+<div align="center">
+  <img src="../../Gallery/cohesive.png" alt="Cohesive energy curve" width="55%" />
+</div>
 
 ---
 

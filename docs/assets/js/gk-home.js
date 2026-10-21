@@ -371,7 +371,7 @@
           const img = $("img", d); img.addEventListener("load", scroll); scroll();
           return print([`<span class="t-ok"> ✓</span> ${esc(it.title)} <span class="t-dim">(click the figure to enlarge)</span>`], { raw: true, delay: 0 });
         }
-        if (D.plots && Object.keys(D.plots).some(k => k.split("/").includes(ty) || k === ty || (k.startsWith("thermo2") && /^thermo[23]$/.test(ty))))
+        if (D.plots && Object.keys(D.plots).some(k => k.split("/").includes(ty) || k === ty || (ty === "thermo3" && k === "thermo")))
           return print(note(`(web demo) "${ty}" plots your own output files; run it in a folder with the data. See gpumdkit.sh -plt -h.`), { raw: true });
         await print([` Unknown plot type: ${ty}`, " Available types are listed below."], { delay: 20 });
         return print(D.plt || []);
@@ -426,7 +426,7 @@
       else if (words[0] === "gpumdkit.sh") {
         const cur = words[words.length - 1], prev = words[words.length - 2];
         if (words.length === 2) cands = Object.keys(D.flags || {}).concat(["-help"]).filter(x => x.startsWith(cur));
-        else if (prev === "-plt") cands = Object.keys(D.plots || {}).flatMap(k => k === "thermo2/3" ? ["thermo2", "thermo3"] : [k]).concat(["test"]).filter(x => x.startsWith(cur));
+        else if (prev === "-plt") cands = Object.keys(D.plots || {}).concat(["test"]).filter(x => x.startsWith(cur));
         else if (prev === "-calc") cands = Object.keys(D.calcs || {}).filter(x => x.startsWith(cur));
         else if (prev === "-time") cands = ["gpumd", "wpe", "nep", "gnep"].filter(x => x.startsWith(cur));
         prefix = words.slice(0, -1).join(" ") + " ";

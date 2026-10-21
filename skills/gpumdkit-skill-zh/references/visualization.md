@@ -101,8 +101,7 @@ gpumdkit.sh -plt doas doas.out Li
 | 命令 | 输入文件 | 描述 |
 |---------|-------------|-------------|
 | `thermo` | `thermo.out` | 热力学性质 |
-| `thermo2` | `thermo.out` | 替代热力学样式 |
-| `thermo3` | `thermo.out` | 第三种热力学样式 |
+| `thermo2` | `thermo.out` | 此前的热力学样式（原默认样式；`thermo3` 是 `thermo` 的已弃用别名） |
 | `rdf` | `rdf.out` | 所有可用的 RDF 数值列 |
 | `rdf_pmf` | `rdf.out` | RDF + 平均力势 |
 | `xrd` | `xrd.out` 或指定的 XRD 输出 | XRD 强度曲线 |
