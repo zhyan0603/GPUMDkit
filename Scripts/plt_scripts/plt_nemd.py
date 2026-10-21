@@ -10,13 +10,14 @@ Category:   Plot Scripts
 Purpose:    Post-processing for NEMD (Non-Equilibrium Molecular Dynamics)
             thermal conductivity calculations, including temperature profile,
             thermostat energy, and optional SHC spectral analysis.
-Usage:      gpumdkit.sh -plt nemd [real_length] [scale_eff_size] [cutoff_freq] [save]
-            python plt_nemd.py [real_length] [scale_eff_size] [cutoff_freq] [save]
+Usage:      gpumdkit.sh -plt nemd [real_length] [scale_eff_size] [cutoff_freq] [save] [quantum]
+            python plt_nemd.py [real_length] [scale_eff_size] [cutoff_freq] [save] [quantum]
 Arguments:
   real_length     Real length of heat transfer zone in nm (set to 'Auto' for auto)
   scale_eff_size  Scale factor for effective cross-sectional area (default: 1)
   cutoff_freq     Cutoff frequency for SHC in THz (default: 60)
   save            Save the plot as 'nemd.png' instead of displaying it
+  quantum         Also apply the quantum correction to the SHC spectrum
 Output:
   nemd.png    (if save is used, or if backend is non-interactive)
 Author:     Xin Wu (xinwuchn97@gmial.com)
@@ -30,8 +31,11 @@ import numpy as np
 from ase.io import read
 import os
 import sys
+import builtins  # `from pylab import *` shadows any() with numpy.any, which mishandles generators
 import ast
 import operator as op
+from math import isfinite
+from ase.data import atomic_masses, chemical_symbols
 
 # Figure Properties
 aw, fs = 1.2, 12
@@ -47,6 +51,76 @@ def set_fig_properties(ax_list, tl=4, tw=1.2, tlm=4):
         ax.tick_params(which='minor', length=tlm)
 
 trap = np.trapezoid if hasattr(np, "trapezoid") else getattr(np, "trapz")
+
+def quantum_correction_factor(nu, T):
+    """Mode heat-capacity ratio C_quantum / C_classical = x^2 e^x / (e^x - 1)^2, x = h*nu / (k_B*T).
+
+    nu in THz, T in K. Written with e^{-x} so it does not overflow for large x; equals 1 at nu = 0.
+    """
+    h_over_kB = 6.62607015e-34 / 1.380649e-23  # K*s
+    x = h_over_kB * np.asarray(nu, dtype=float) * 1e12 / T
+    with np.errstate(divide='ignore', invalid='ignore'):
+        factor = x**2 * np.exp(-x) / np.expm1(-x)**2
+    return np.where(x == 0, 1.0, factor)
+
+TIME_UNIT_FS = 10.18051  # GPUMD 3.3.1 internal time unit.
+
+def element_from_mass(mass):
+    """Return the element symbol whose standard atomic mass is closest to mass (amu)."""
+    return chemical_symbols[int(np.argmin(np.abs(atomic_masses[1:] - mass))) + 1]
+
+def xyz_in_to_model(source, target):
+    """Convert a GPUMD 3.3.1 empirical-potential xyz.in to extended XYZ (model.xyz).
+
+    Elements are inferred from the per-atom masses; masses, groups and velocities are preserved.
+    """
+    with open(source, encoding="utf-8-sig") as inp:
+        header = inp.readline().split()
+        if len(header) != 6:
+            raise ValueError("Line 1 must contain N MN rc triclinic has_velocity num_grouping_methods.")
+        n, triclinic, has_velocity, ng = map(int, (header[0], *header[3:]))
+        if n < 1 or triclinic not in (0, 1) or has_velocity not in (0, 1) or not 0 <= ng <= 10:
+            raise ValueError("Invalid atom count, box flag, velocity flag or group count.")
+
+        box = inp.readline().split()
+        if len(box) != (12 if triclinic else 6) or builtins.any(v not in ("0", "1") for v in box[:3]):
+            raise ValueError("Line 2 must contain three PBC flags followed by the cell.")
+        if builtins.any(not isfinite(float(v)) for v in box[3:]):
+            raise ValueError("Cell components must be finite.")
+        lattice = box[3:] if triclinic else [box[3], "0", "0", "0", box[4], "0", "0", "0", box[5]]
+        boundary = " ".join("T" if v == "1" else "F" for v in box[:3])
+        properties = "species:S:1:pos:R:3:mass:R:1"
+        if has_velocity:
+            properties += ":vel:R:3"
+        if ng:
+            properties += f":group:I:{ng}"
+        rows = [str(n), f'Lattice="{" ".join(lattice)}" Properties={properties} pbc="{boundary}"']
+
+        type_elements = {}
+        for index in range(n):
+            fields = inp.readline().split()
+            if len(fields) != 5 + 3 * has_velocity + ng:
+                raise ValueError(f"Line {index + 3}: incorrect number of atom columns.")
+            atom_type = int(fields[0])
+            values = [float(v) for v in fields[1:5 + 3 * has_velocity]]
+            if builtins.any(not isfinite(v) for v in values) or values[3] <= 0:
+                raise ValueError(f"Line {index + 3}: invalid coordinates, mass or velocity.")
+            labels = fields[5 + 3 * has_velocity:]
+            if builtins.any(not 0 <= int(v) < n for v in labels):
+                raise ValueError(f"Line {index + 3}: invalid group label.")
+            element = element_from_mass(values[3])
+            type_elements.setdefault(atom_type, set()).add((element, values[3]))
+            row = [element, *fields[1:5]]
+            if has_velocity:
+                # Legacy xyz.in stores internal velocities; model.xyz uses A/fs.
+                row += [f"{float(v) / TIME_UNIT_FS:.16g}" for v in fields[5:8]]
+            rows.append(" ".join(row + labels))
+        if inp.read().strip():
+            raise ValueError("Extra data after the declared number of atoms.")
+
+    with open(target, "w", encoding="utf-8") as out:
+        out.write("\n".join(rows) + "\n")
+    return n, type_elements
 
 _ARITH_OPS = {
     ast.Add: op.add, ast.Sub: op.sub, ast.Mult: op.mul, ast.Div: op.truediv,
@@ -86,7 +160,7 @@ def eval_number(expr):
 
 def print_usage():
     """Print usage instructions"""
-    print("Usage: gpumdkit -plt nemd [real_length] [scale_eff_size] [cutoff_freq] [--save] [--save-data]")
+    print("Usage: gpumdkit -plt nemd [real_length] [scale_eff_size] [cutoff_freq] [--save] [--save-data] [--quantum]")
     print("Params:")
     print("  real_length   : Real length of heat tranfer zone in nm (set to 'Auto', with auto-calculation)")
     print("  scale_eff_size: Optional, Scale factor for effective cross-sectional area (default: 1)")
@@ -100,13 +174,16 @@ def print_usage():
     print("  --save        : Optional, save the plot as 'nemd.png' (default: show it interactively)")
     print("  --save-data   : Optional, also save the processed data as 'data_nemd.npz'/'data_shc.npz'")
     print("                  and their .txt equivalents (independent of --save; can be used on its own)")
-    print("  --save/--save-data may appear anywhere on the command line, e.g.:")
+    print("  --quantum     : Optional, also apply the quantum correction to the SHC spectral thermal")
+    print("                  conductance, g_q(ω) = g(ω)·x²eˣ/(eˣ-1)², x = hν/(k_B·T), T from heat_lan in run.in")
+    print("                  (requires shc.out)")
+    print("  --save/--save-data/--quantum may appear anywhere on the command line, e.g.:")
     print("    gpumdkit -plt nemd --save-data              (defaults for everything else)")
-    print("    gpumdkit -plt nemd Auto 1 60 --save --save-data")
+    print("    gpumdkit -plt nemd Auto 1 60 --save --save-data --quantum")
 
 class NEMD_Processor:
     def __init__(self, _directory, _real_length=None, _scale_eff_size=1, _cutoff_freq=60, _scale_vacuum=1,
-                 _save=False, _save_data=False):
+                 _save=False, _save_data=False, _quantum=False):
         """
         Initialize NEMD processor
 
@@ -129,6 +206,8 @@ class NEMD_Processor:
             Save the plot as 'nemd.png' instead of showing it interactively
         save_data : bool
             Also save the processed data as 'data_nemd.npz'/'data_shc.npz' (and their .txt equivalents)
+        quantum : bool
+            Also compute the quantum-corrected SHC spectral thermal conductance
         """
         self.directory = _directory
         self.scale_vacuum = _scale_vacuum
@@ -137,13 +216,26 @@ class NEMD_Processor:
         self.cutoff_freq = _cutoff_freq
         self.save = _save
         self.save_data = _save_data
+        self.quantum = _quantum
         self.path = {
             'run': os.path.join(self.directory, 'run.in'),
             'compute': os.path.join(self.directory, 'compute.out'),
             'model': os.path.join(self.directory, 'model.xyz'),
-            'shc': os.path.join(self.directory, 'shc.out')
+            'shc': os.path.join(self.directory, 'shc.out'),
+            'xyz_in': os.path.join(self.directory, 'xyz.in')
         }
         self.has_shc = os.path.exists(self.path['shc'])
+
+    def prepare_model(self):
+        """Use model.xyz if present; otherwise convert a legacy (GPUMD 3.x) xyz.in into model.xyz"""
+        if os.path.exists(self.path['model']) or not os.path.exists(self.path['xyz_in']):
+            return
+        print("[INFO] model.xyz not found, converting xyz.in -> model.xyz ...")
+        n, type_elements = xyz_in_to_model(self.path['xyz_in'], self.path['model'])
+        for atom_type in sorted(type_elements):
+            mapping = ", ".join(f"{element} (mass {mass:g})" for element, mass in sorted(type_elements[atom_type]))
+            print(f"       type {atom_type} -> {mapping}")
+        print(f"[INFO] Wrote {self.path['model']}: {n} atoms.\n")
 
     def process_SHC(self, deltaT):
         """
@@ -178,8 +270,8 @@ class NEMD_Processor:
                         part_ratio = -1
                     else:
                         part_ratio = 1
-                # if 'nvt_' in line:
-                #     Temp = int(line.split()[2])
+                if 'heat_lan' in line:
+                    Temp = float(line.split()[2])  # ensemble heat_lan T T_coup delta_T source sink
 
         N_shc_data = 2 * Max_cor_step - 1 + N_omega
         N_repeat = len(raw_shc_data) // N_shc_data
@@ -219,6 +311,14 @@ class NEMD_Processor:
         Reformed_SHC_data["Kt"] = Reformed_SHC_data["Ki"] + Reformed_SHC_data["Ko"]
         Reformed_SHC_data["L"] = model.get_cell()[direction, direction] * part_ratio
 
+        result_cols = [("in", "k_g_wi"), ("out", "k_g_wo"), ("tot", "k_g_wt")]
+        if self.quantum:
+            self.temperature = Temp
+            qc_factor = quantum_correction_factor(Reformed_SHC_data["nu"], Temp)
+            for key, col in list(result_cols):
+                Reformed_SHC_data[f"{col}_qc"] = Reformed_SHC_data[col] * qc_factor
+                result_cols.append((f"{key}_qc", f"{col}_qc"))
+
         # Average them and save in Reformed_SHC_data['Results']
         for key, value in Reformed_SHC_data.items():
             if key not in ["L"]:
@@ -226,7 +326,7 @@ class NEMD_Processor:
 
         if 'Results' not in Reformed_SHC_data:
             Reformed_SHC_data['Results'] = {}
-        for key, col in zip(["in", "out", "tot"], ["k_g_wi", "k_g_wo", "k_g_wt"]):
+        for key, col in result_cols:
             values = [trap(Reformed_SHC_data[col][:, i], dx=Reformed_SHC_data["nu"][0, 0]) for i in range(N_repeat)]
             Reformed_SHC_data['Results'][f"{key}_ave"] = np.mean(values)
             Reformed_SHC_data['Results'][f"{key}_std"] = np.std(values) / np.sqrt(N_repeat)
@@ -238,6 +338,8 @@ class NEMD_Processor:
 
     def process(self):
         """Main processing function for NEMD method"""
+        self.prepare_model()
+
         raw_NEMD_data = np.loadtxt(self.path['compute'])
         Reformed_NEMD_data = {}
 
@@ -333,6 +435,8 @@ class NEMD_Processor:
             self._print_shc_results(res_s)
         else:
             print("\n[INFO] No SHC data found (shc.out not present), skipping SHC analysis.")
+            if self.quantum:
+                print("[WARNING] --quantum needs shc.out, quantum correction skipped.")
             Reformed_SHC_data = None
             res_s = None
 
@@ -362,6 +466,11 @@ class NEMD_Processor:
         print(f"G_in  (integrated) = {results['in_ave']:.6f} ± {results['in_std']:.6f} MW/(m²·K)")
         print(f"G_out (integrated) = {results['out_ave']:.6f} ± {results['out_std']:.6f} MW/(m²·K)")
         print(f"G_tot (integrated) = {results['tot_ave']:.6f} ± {results['tot_std']:.6f} MW/(m²·K)")
+        if self.quantum:
+            print(f"\nQuantum-corrected (T = {self.temperature:g} K):")
+            print(f"G_in  (integrated) = {results['in_qc_ave']:.6f} ± {results['in_qc_std']:.6f} MW/(m²·K)")
+            print(f"G_out (integrated) = {results['out_qc_ave']:.6f} ± {results['out_qc_std']:.6f} MW/(m²·K)")
+            print(f"G_tot (integrated) = {results['tot_qc_ave']:.6f} ± {results['tot_qc_std']:.6f} MW/(m²·K)")
         print("=" * 70 + "\n")
 
     @staticmethod
@@ -415,20 +524,30 @@ class NEMD_Processor:
             "# ==== plt_nemd.py SHC data export ====",
             f"# Directory: {self.directory}",
             f"# Cutoff frequency: {self.cutoff_freq} THz",
+        ]
+        if self.quantum:
+            lines.append(f"# Quantum correction: T = {self.temperature:g} K ('*_qc' blocks)")
+        lines += [
             "# Columns are TAB-separated; lines starting with '#' are comments/headers.",
             "",
         ]
 
+        spectral_keys = ["k_g_wi", "k_g_wo", "k_g_wt"]
+        result_keys = ["in", "out", "tot"]
+        if self.quantum:
+            spectral_keys += [f"{key}_qc" for key in spectral_keys]
+            result_keys += [f"{key}_qc" for key in result_keys]
+
         lines += self._txt_block("Kt", "eV/ps", "t_corr", "ps", Reformed_SHC_data['t'][:, -2],
                                  Reformed_SHC_data['Kt'], trailing_labels=("average", "std"))
-        for key, unit in (("k_g_wi", "MW/(m²·K·THz)"), ("k_g_wo", "MW/(m²·K·THz)"), ("k_g_wt", "MW/(m²·K·THz)")):
-            lines += self._txt_block(key, unit, "nu", "THz", Reformed_SHC_data['nu'][:, -2],
+        for key in spectral_keys:
+            lines += self._txt_block(key, "MW/(m²·K·THz)", "nu", "THz", Reformed_SHC_data['nu'][:, -2],
                                      Reformed_SHC_data[key], trailing_labels=("average", "std"))
 
         res = Reformed_SHC_data["Results"]
         lines.append("# ==== Summary results (frequency-integrated) ====")
         lines.append("# quantity\taverage\tstd\tunit")
-        for key in ["in", "out", "tot"]:
+        for key in result_keys:
             lines.append(f"G_{key}\t{res[key + '_ave']:.6g}\t{res[key + '_std']:.6g}\tMW/(m²·K)")
 
         with open(os.path.join(self.directory, 'data_shc.txt'), 'w') as f:
@@ -497,10 +616,14 @@ class NEMD_Processor:
     def _plot_shc_spectral_panel(self, Reformed_SHC_data):
         """(d) SHC spectral thermal conductance, split into in-/out-of-plane components"""
         set_fig_properties([gca()])
-        for col, color, label in (("k_g_wi", "C1", "In-plane component"),
-                                   ("k_g_wo", "C2", "Out-of-plane component"),
-                                   ("k_g_wt", "C0", "Total")):
-            plot(Reformed_SHC_data['nu'][:, -2], Reformed_SHC_data[col][:, -2], linewidth=2, color=color, label=label)
+        series = [("k_g_wi", "C1", "In-plane component", "-"),
+                  ("k_g_wo", "C2", "Out-of-plane component", "-"),
+                  ("k_g_wt", "C0", "Total", "-")]
+        if self.quantum:
+            series.append(("k_g_wt_qc", "C3", "Total (quantum-corrected)", "--"))
+        for col, color, label, ls in series:
+            plot(Reformed_SHC_data['nu'][:, -2], Reformed_SHC_data[col][:, -2], linewidth=2, color=color, label=label,
+                 linestyle=ls)
             plt.fill_between(Reformed_SHC_data['nu'][:, -2],
                              Reformed_SHC_data[col][:, -2] - Reformed_SHC_data[col][:, -1],
                              Reformed_SHC_data[col][:, -2] + Reformed_SHC_data[col][:, -1],
@@ -556,11 +679,12 @@ if __name__ == "__main__":
         print_usage()
         sys.exit(0)
 
-    # --save/--save-data are independent flags: they can appear anywhere,
+    # --save/--save-data/--quantum are independent flags: they can appear anywhere,
     # in any combination, without disturbing the positional numeric arguments below.
     save = '--save' in argv or 'save' in argv
     save_data = '--save-data' in argv or 'save_data' in argv
-    positional = [a for a in argv if a not in ('--save', 'save', '--save-data', 'save_data')]
+    quantum = '--quantum' in argv or 'quantum' in argv
+    positional = [a for a in argv if a not in ('--save', 'save', '--save-data', 'save_data', '--quantum', 'quantum')]
 
     try:
         if len(positional) > 0:
@@ -583,6 +707,7 @@ if __name__ == "__main__":
 
     directory = os.getcwd()
 
-    processor = NEMD_Processor(directory, real_length, scale_eff_size, cutoff_freq, _save=save, _save_data=save_data)
+    processor = NEMD_Processor(directory, real_length, scale_eff_size, cutoff_freq, _save=save, _save_data=save_data,
+                               _quantum=quantum)
     processor.process()
-    # python plt_nemd.py [real_length] [scale_eff_size] [cutoff_freq] [--save] [--save-data]
+    # python plt_nemd.py [real_length] [scale_eff_size] [cutoff_freq] [--save] [--save-data] [--quantum]

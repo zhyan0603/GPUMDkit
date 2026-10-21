@@ -27,6 +27,9 @@ import pandas as pd
 import numpy as np
 import os
 import sys
+import builtins  # `from pylab import *` shadows any() with numpy.any, which mishandles generators
+from math import isfinite
+from ase.data import atomic_masses, chemical_symbols
 
 # Figure Properties
 aw, fs = 1.2, 12
@@ -40,6 +43,65 @@ def set_fig_properties(ax_list, tl=4, tw=1.2, tlm=4):
     for ax in ax_list:
         ax.tick_params(which='both', length=tl, width=tw, direction='in', right=True, top=True)
         ax.tick_params(which='minor', length=tlm)
+
+TIME_UNIT_FS = 10.18051  # GPUMD 3.3.1 internal time unit.
+
+def element_from_mass(mass):
+    """Return the element symbol whose standard atomic mass is closest to mass (amu)."""
+    return chemical_symbols[int(np.argmin(np.abs(atomic_masses[1:] - mass))) + 1]
+
+def xyz_in_to_model(source, target):
+    """Convert a GPUMD 3.3.1 empirical-potential xyz.in to extended XYZ (model.xyz).
+
+    Elements are inferred from the per-atom masses; masses, groups and velocities are preserved.
+    """
+    with open(source, encoding="utf-8-sig") as inp:
+        header = inp.readline().split()
+        if len(header) != 6:
+            raise ValueError("Line 1 must contain N MN rc triclinic has_velocity num_grouping_methods.")
+        n, triclinic, has_velocity, ng = map(int, (header[0], *header[3:]))
+        if n < 1 or triclinic not in (0, 1) or has_velocity not in (0, 1) or not 0 <= ng <= 10:
+            raise ValueError("Invalid atom count, box flag, velocity flag or group count.")
+
+        box = inp.readline().split()
+        if len(box) != (12 if triclinic else 6) or builtins.any(v not in ("0", "1") for v in box[:3]):
+            raise ValueError("Line 2 must contain three PBC flags followed by the cell.")
+        if builtins.any(not isfinite(float(v)) for v in box[3:]):
+            raise ValueError("Cell components must be finite.")
+        lattice = box[3:] if triclinic else [box[3], "0", "0", "0", box[4], "0", "0", "0", box[5]]
+        boundary = " ".join("T" if v == "1" else "F" for v in box[:3])
+        properties = "species:S:1:pos:R:3:mass:R:1"
+        if has_velocity:
+            properties += ":vel:R:3"
+        if ng:
+            properties += f":group:I:{ng}"
+        rows = [str(n), f'Lattice="{" ".join(lattice)}" Properties={properties} pbc="{boundary}"']
+
+        type_elements = {}
+        for index in range(n):
+            fields = inp.readline().split()
+            if len(fields) != 5 + 3 * has_velocity + ng:
+                raise ValueError(f"Line {index + 3}: incorrect number of atom columns.")
+            atom_type = int(fields[0])
+            values = [float(v) for v in fields[1:5 + 3 * has_velocity]]
+            if builtins.any(not isfinite(v) for v in values) or values[3] <= 0:
+                raise ValueError(f"Line {index + 3}: invalid coordinates, mass or velocity.")
+            labels = fields[5 + 3 * has_velocity:]
+            if builtins.any(not 0 <= int(v) < n for v in labels):
+                raise ValueError(f"Line {index + 3}: invalid group label.")
+            element = element_from_mass(values[3])
+            type_elements.setdefault(atom_type, set()).add((element, values[3]))
+            row = [element, *fields[1:5]]
+            if has_velocity:
+                # Legacy xyz.in stores internal velocities; model.xyz uses A/fs.
+                row += [f"{float(v) / TIME_UNIT_FS:.16g}" for v in fields[5:8]]
+            rows.append(" ".join(row + labels))
+        if inp.read().strip():
+            raise ValueError("Extra data after the declared number of atoms.")
+
+    with open(target, "w", encoding="utf-8") as out:
+        out.write("\n".join(rows) + "\n")
+    return n, type_elements
 
 def print_usage():
     """Print usage instructions"""
@@ -75,11 +137,26 @@ class EMD_Processor:
         self.save_data = _save_data
         self.path = {
             'run': os.path.join(self.directory, 'run.in'),
-            'hac': os.path.join(self.directory, 'hac.out')
+            'hac': os.path.join(self.directory, 'hac.out'),
+            'model': os.path.join(self.directory, 'model.xyz'),
+            'xyz_in': os.path.join(self.directory, 'xyz.in')
         }
+
+    def prepare_model(self):
+        """Use model.xyz if present; otherwise convert a legacy (GPUMD 3.x) xyz.in into model.xyz"""
+        if os.path.exists(self.path['model']) or not os.path.exists(self.path['xyz_in']):
+            return
+        print("[INFO] model.xyz not found, converting xyz.in -> model.xyz ...")
+        n, type_elements = xyz_in_to_model(self.path['xyz_in'], self.path['model'])
+        for atom_type in sorted(type_elements):
+            mapping = ", ".join(f"{element} (mass {mass:g})" for element, mass in sorted(type_elements[atom_type]))
+            print(f"       type {atom_type} -> {mapping}")
+        print(f"[INFO] Wrote {self.path['model']}: {n} atoms.\n")
 
     def process(self):
         """Main processing function for EMD method"""
+        self.prepare_model()
+
         # Initialization
         Reformed_EMD_data = {}
         col_name = ['time', 'jx_in', 'jx_out', 'jy_in', 'jy_out', 'jz_tot',
