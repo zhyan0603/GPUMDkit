@@ -101,8 +101,7 @@ gpumdkit.sh -plt doas doas.out Li
 | 命令 | 输入文件 | 描述 |
 |---------|-------------|-------------|
 | `thermo` | `thermo.out` | 热力学性质 |
-| `thermo2` | `thermo.out` | 替代热力学样式 |
-| `thermo3` | `thermo.out` | 第三种热力学样式 |
+| `thermo2` | `thermo.out` | 此前的热力学样式（原默认样式；`thermo3` 是 `thermo` 的已弃用别名） |
 | `rdf` | `rdf.out` | 所有可用的 RDF 数值列 |
 | `rdf_pmf` | `rdf.out` | RDF + 平均力势 |
 | `xrd` | `xrd.out` 或指定的 XRD 输出 | XRD 强度曲线 |
@@ -164,11 +163,14 @@ gpumdkit.sh -plt hnemd <scale_eff_size> <cutoff_freq> --save --save-data
 gpumdkit.sh -plt viscosity save
 ```
 
-`--save-data` 会为 EMD、NEMD 和 HNEMD 导出制表符分隔的文本文件，同时为
-EMD 和 HNEMD 写出对应的 `.npz` 数组。NEMD 保留历史版本的
-`data_nemd.npz`（存在 SHC 数据时还有 `data_shc.npz`）输出，并在请求时
-额外生成 `data_nemd.txt`/`data_shc.txt`。`--save` 和 `--save-data` 相互独立；
-为兼容旧用法，仍接受不带连字符的 `save` 和 `save_data`。
+`--save-data` 为 EMD、NEMD 和 HNEMD 写出对应的 `.npz` 数组和制表符分隔的
+`.txt` 文件。NEMD 默认不写这两类数据文件。`--save` 和 `--save-data` 相互
+独立；为兼容旧用法，仍接受不带连字符的 `save` 和 `save_data`。
+
+`emd`、`nemd` 和 `hnemd` 在缺少 `model.xyz` 时，会自动将已有的旧版
+`xyz.in` 转换为 `model.xyz`。`nemd`/`hnemd` 的 `scale_eff_size` 接受数值或
+安全算术表达式，例如 `'100/2'`。可选的 `--quantum`（旧写法 `quantum`）使用
+`run.in` 中的温度额外计算量子修正的 SHC 频谱，需要 `shc.out`。
 
 ### 声子（3 种绘图类型）
 
@@ -267,7 +269,7 @@ gpumdkit.sh -plt nemd <real_length> <scale_eff_size> <cutoff_freq> --save
 | 绘图类型 | 数据文件 |
 |-----------|----------|
 | `emd` | `data_emd.npz`、`data_emd.txt` |
-| `nemd` | `data_nemd.txt`；存在 SHC 数据时还有 `data_shc.txt`；历史 `.npz` 文件仍可用 |
+| `nemd` | `data_nemd.npz`、`data_nemd.txt`；存在 SHC 数据时还有 `data_shc.npz`、`data_shc.txt` |
 | `hnemd` | `data_hnemd.npz`、`data_hnemd.txt`；存在 SHC 数据时还有 `data_shc.npz`、`data_shc.txt` |
 
 ## 依赖

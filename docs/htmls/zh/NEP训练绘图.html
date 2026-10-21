@@ -160,7 +160,7 @@ gpumdkit.sh -plt test         # 替代命令</code></pre><button class="copy-btn
 
 <hr />
 <h3 id="restart-plt_nep_restartpy">restart (<code>plt_nep_restart.py</code>)</h3>
-<p>可视化 <code>nep.restart</code> 文件中存储的参数。</p>
+<p>可视化 <code>nep.restart</code> 文件中存储的参数。该文件为每个参数保存 SNES 优化器搜索分布的均值 μ（上图）和标准差 σ（下图）。</p>
 <p><strong>输入文件：</strong> <code>nep.restart</code></p>
 <div class="code"><div class="cap"><i></i><i></i><i></i><span>bash</span></div><pre><code>gpumdkit.sh -plt restart</code></pre><button class="copy-btn" data-copy-pre aria-label="Copy"><svg class="cp"><use href="#i-copy"/></svg><svg class="ok"><use href="#i-check"/></svg></button></div>
 <div align="center">
@@ -211,10 +211,11 @@ gpumdkit.sh -plt des umap descriptors.npy</code></pre><button class="copy-btn" d
 <div class="code"><div class="cap"><i></i><i></i><i></i><span>bash</span></div><pre><code>gpumdkit.sh -plt dimer &lt;element1&gt; &lt;element2&gt; &lt;nep.txt&gt; [save]
 gpumdkit.sh -plt dimer Li Li nep.txt</code></pre><button class="copy-btn" data-copy-pre aria-label="Copy"><svg class="cp"><use href="#i-copy"/></svg><svg class="ok"><use href="#i-check"/></svg></button></div>
 <div align="center">
-  <img src="../../Gallery/dimer_nep.png" alt="Dimer NEP curve" width="45%" />
-  <img src="../../Gallery/dimer.png" alt="Dimer comparison" width="45%" />
+  <img src="../../Gallery/dimer_nep.png" alt="不含 ZBL 的 NEP 模型的 Li-Li 二聚体曲线" width="45%" />
+  <img src="../../Gallery/dimer.png" alt="含 ZBL 的 NEP 模型的 Li-Li 二聚体曲线" width="45%" />
 </div>
 
+<p>上图为同一 NEP 模型不含 ZBL（左）和含 ZBL（右）时，0.5 到 6 Å 的 Li-Li 二聚体曲线。不含 ZBL 时，近距离处的能量和力出现振荡，因为该区域超出了训练数据范围；含 ZBL 时，短程排斥则平滑上升。</p>
 <p><strong>参考文献：</strong> <a href="https://doi.org/10.1021/acs.jcim.5c02335" target="_blank" rel="noopener">J. Chem. Inf. Model. 2026, 66, 3, 1406-1413</a></p>
 <hr />
 <h3 id="doas-plt_doaspy">doas (<code>plt_doas.py</code>)</h3>

@@ -23,16 +23,17 @@ gpumdkit.sh -plt thermo
 
 ---
 
-### thermo2 / thermo3 (`plt_thermo2.py`, `plt_thermo3.py`)
+### thermo2 (`plt_thermo2.py`)
 
-不同风格的热力学量可视化。
+此前默认的热力学量图，作为备选样式保留。
 
 **输入文件：** `thermo.out`
 
 ```bash
 gpumdkit.sh -plt thermo2
-gpumdkit.sh -plt thermo3
 ```
+
+> **注意：** 原 `thermo3` 已成为默认的 `thermo` 图。`gpumdkit.sh -plt thermo3` 目前仍可使用并会给出提示，之后的版本将移除，请改用 `gpumdkit.sh -plt thermo`。
 
 
 ## 结构分析
@@ -54,7 +55,7 @@ gpumdkit.sh -plt rdf save          # 将图保存为 rdf.png
 **RDF 输出：**
 
 <div align="center">
-  <img src="../../Gallery/rdf1.png" alt="Complete RDF" width="90%" />
+  <img src="../../Gallery/rdf1.png" alt="Complete RDF" width="65%" />
 </div>
 
 ---
@@ -83,8 +84,10 @@ gpumdkit.sh -plt xrd path/to/xrd.out save
 ### xrd_comp (`plt_xrd_comp.py`)
 
 比较当前工作目录下多个温度目录中的 XRD 曲线。每个目录必须命名为
-`<temperature>K`，并包含由计算器 413 写出的 `xrd.out`。图像按照高温在上、
-低温在下的顺序堆叠显示。
+`<temperature>K`，并包含由计算器 413 写出的 `xrd.out`。所有曲线画在同一个
+坐标系中，沿 y 方向依次错开，错开的距离等于最高峰的高度，因此峰不会碰到上方
+的曲线，低温在下、高温在上。每条曲线旁标注温度，并按温度用渐变色着色，右侧附
+带温度色条。
 
 请在包含多个 `*K` 子目录的目录中执行以下命令；该命令不接受目录参数：
 
@@ -139,6 +142,14 @@ gpumdkit.sh -plt vac
 ```bash
 gpumdkit.sh -plt cohesive
 ```
+
+空心圆为采样得到的能量曲线，竖直虚线标出能量最低处对应的缩放因子 `a_min`。
+`a_min` 直接取自数据，因此精度等于 `compute_cohesive` 中缩放因子的步长。
+下图为对 LLZO 的 NEP 模型使用 `compute_cohesive 0.9 1.1 6` 做各向同性缩放的结果。
+
+<div align="center">
+  <img src="../../Gallery/cohesive.png" alt="内聚能曲线" width="55%" />
+</div>
 
 ---
 

@@ -155,7 +155,7 @@ gpumdkit.sh -plt force_errors
 
 #### plt_nep_restart.py
 
-Visualizes parameters stored in `nep.restart` file.
+Visualizes parameters stored in `nep.restart` file. The file holds, for every parameter, the mean μ (top panel) and the standard deviation σ (bottom panel) of the search distribution used by the SNES optimizer.
 
 **Input File:** `nep.restart`
 
@@ -191,15 +191,16 @@ gpumdkit.sh -plt thermo
 
 ---
 
-#### plt_thermo2.py & plt_thermo3.py
+#### plt_thermo2.py
 
-Alternative thermodynamic visualization (different styles).
+Previous default thermodynamic visualization, kept as an alternative style.
+`thermo3` has become the default `thermo`; `gpumdkit.sh -plt thermo3` still
+works for now, prints a reminder, and will be removed in a future release.
 
 **Usage:**
 
 ```bash
-gpumdkit.sh -plt thermo2 
-gpumdkit.sh -plt thermo3
+gpumdkit.sh -plt thermo2
 ```
 
 ---
@@ -463,6 +464,12 @@ gpumdkit.sh -plt sigma_xyz [save]
 
 ---
 
+For `emd`, `nemd`, and `hnemd`, a missing `model.xyz` is generated automatically
+from an existing legacy `xyz.in`. For `nemd`/`hnemd`, `scale_eff_size` accepts a
+number or a safe arithmetic expression such as `'100/2'`. Optional `--quantum`
+(legacy `quantum`) adds a quantum-corrected SHC spectrum using the temperature
+from `run.in`; it requires `shc.out`.
+
 #### plt_emd.py
 
 Analyzes and plots thermal conductivity from equilibrium molecular dynamics (EMD).
@@ -515,7 +522,7 @@ Visualizes non-equilibrium molecular dynamics (NEMD) thermal transport propertie
 **Usage:**
 
 ```bash
-gpumdkit.sh -plt nemd [real_length] [scale_eff_size] [cutoff_freq] [--save] [--save-data]
+gpumdkit.sh -plt nemd [real_length] [scale_eff_size] [cutoff_freq] [--save] [--save-data] [--quantum]
 ```
 
 **Params:**
@@ -529,13 +536,14 @@ scale_eff_size: Optional, Scale factor for effective cross-sectional area (defau
                  - S_eff: real or effective area of the system
 cutoff_freq   : Optional, Cutoff frequency for SHC calculation in THz (default: 60)
 --save        : Optional, save the plot as 'nemd.png'
---save-data   : Optional, additionally export tab-separated 'data_nemd.txt'
-                and, when SHC data exist, 'data_shc.txt'
+--save-data   : Optional, save 'data_nemd.npz' and tab-separated 'data_nemd.txt';
+                when SHC data exist, also save 'data_shc.npz' and 'data_shc.txt'
+--quantum     : Optional, also apply the SHC quantum correction (T from run.in)
 ```
 
-The historical `data_nemd.npz` (and `data_shc.npz` when SHC data exist) are
-still written as before. `--save` and `--save-data` are independent; the
-legacy bare tokens `save` and `save_data` remain accepted.
+Data files are written only with `--save-data`; NEMD does not write NPZ or TXT
+by default. `--save` and `--save-data` are independent; the legacy bare tokens
+`save` and `save_data` remain accepted.
 
 <div align="center">
     <img src="../../docs/Gallery/nemd.png" alt="NEMD results" width="70%" />
@@ -550,7 +558,7 @@ Plots homogeneous non-equilibrium molecular dynamics (HNEMD) results.
 **Usage:**
 
 ```bash
-gpumdkit.sh -plt hnemd [scale_eff_size] [cutoff_freq] [--save] [--save-data]
+gpumdkit.sh -plt hnemd [scale_eff_size] [cutoff_freq] [--save] [--save-data] [--quantum]
 ```
 
 **Params:**
@@ -566,6 +574,7 @@ cutoff_freq   : Optional, Cutoff frequency for SHC calculation in THz (default: 
 --save-data   : Optional, save processed arrays as 'data_hnemd.npz' and
                 tab-separated 'data_hnemd.txt'; when SHC data exist, also
                 save 'data_shc.npz' and 'data_shc.txt'
+--quantum     : Optional, also apply the SHC quantum correction (T from run.in)
 ```
 
 `--save` and `--save-data` are independent. The legacy bare tokens `save` and
@@ -686,6 +695,13 @@ factor versus cohesive energy.
 gpumdkit.sh -plt cohesive [save]
 ```
 
+The sampled energy curve is drawn as open circles, and a vertical dashed line
+marks the scaling factor `a_min` at which the energy is lowest. `a_min` is read
+directly from the data, so its precision is the step of the scaling factor in
+`compute_cohesive`.
+
+<img src="../../docs/Gallery/cohesive.png" alt="Cohesive energy curve" width="55%" />
+
 ---
 
 #### plt_rdf.py
@@ -705,7 +721,7 @@ The `rdf` plotter does not select a single column. Use `rdf_pmf` when a
 specific RDF output column is needed for PMF analysis.
 
 **RDF output:**
-<img src="../../docs/Gallery/rdf1.png" alt="Complete RDF" width="100%" />
+<img src="../../docs/Gallery/rdf1.png" alt="Complete RDF" width="65%" />
 
 ---
 
@@ -756,8 +772,10 @@ The saved image is `xrd.png` in the current working directory.
 
 Compares XRD curves from several temperature folders in the current working
 directory. Each folder must be named `<temperature>K` and contain an
-`xrd.out` file written by calculator 413. The curves are stacked from high
-temperature at the top to low temperature at the bottom.
+`xrd.out` file written by calculator 413. All curves are drawn in one panel,
+shifted along y so that the highest peak never reaches the curve above, with
+low temperature at the bottom. Each curve is labelled with its temperature and
+colored by a temperature colorbar.
 
 Generate each `xrd.out` with calculator 413 before running the comparison.
 
@@ -865,8 +883,8 @@ gpumdkit.sh -plt dimer Li Li nep.txt
 ```
 
 <div align="center">
-    <img src="../../docs/Gallery/dimer_nep.png" alt="Dimer NEP" width="45%" />
-    <img src="../../docs/Gallery/dimer.png" alt="Dimer comparison" width="45%" />
+    <img src="../../docs/Gallery/dimer_nep.png" alt="Li-Li dimer curves from a NEP model without ZBL" width="45%" />
+    <img src="../../docs/Gallery/dimer.png" alt="Li-Li dimer curves from a NEP model with ZBL" width="45%" />
 </div>
 
 **Reference:** [J. Chem. Inf. Model. 2026, 66, 3, 1406-1413](https://doi.org/10.1021/acs.jcim.5c02335)
@@ -916,8 +934,7 @@ gpumdkit.sh -plt net_force train.xyz
 | Command        | Input File(s)               | Description                        |
 | -------------- | --------------------------- | ---------------------------------- |
 | `thermo`       | `thermo.out`                | Thermodynamic properties evolution |
-| `thermo2`      | `thermo.out`                | Thermo plot, style 2               |
-| `thermo3`      | `thermo.out`                | Thermo plot, style 3               |
+| `thermo2`      | `thermo.out`                | Previous thermo plot style         |
 | `train`        | `loss.out`, `*_train.out`   | NEP training plot                  |
 | `prediction`   | `*_train.out`               | NEP prediction-mode plot           |
 | `train_test`   | `*_train.out`, `*_test.out` | parity plots of train&test         |
@@ -975,7 +992,7 @@ For quick reference, here's the complete command list:
 
 ```
  +-----------------------------------------------------------------------------------------------+
- |                     GPUMDkit 1.5.8 (2026-09-23)       PLOT & VISUALIZATION TOOLS              |
+ |                     GPUMDkit 1.5.8 (2026-10-20)       PLOT & VISUALIZATION TOOLS              |
  +-----------------------------------------------------------------------------------------------+
  |  Usage: gpumdkit.sh -plt <type>                        List: gpumdkit.sh -plt -h              |
  +-----------------------------------------------------------------------------------------------+
@@ -999,7 +1016,7 @@ For quick reference, here's the complete command list:
  +-----------------------------------------------------------------------------------------------+
  |                                    MD & Structural Analysis                                   |
  +-----------------------------------------------------------------------------------------------+
- |  thermo         - thermo info in thermo.out      thermo2/3      - Thermo in different styles  |
+ |  thermo         - thermo info in thermo.out      thermo2        - Previous thermo style       |
  |  rdf            - Radial distribution function   rdf_pmf        - Potential of mean force     |
  |  vac            - Velocity autocorrelation       cohesive       - Cohesive energy curve       |
  |  xrd            - X-ray diffraction              plane-grid     - Displacement plane grid     |

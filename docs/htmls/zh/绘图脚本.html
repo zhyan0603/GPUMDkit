@@ -205,71 +205,75 @@ terminal 中显式输入这些选项。</p>
 <details>
 <summary>显示完整绘图命令菜单</summary>
 <p>运行 <code>gpumdkit.sh -plt</code> 会显示绘图命令菜单：</p>
-<div class="code"><div class="cap"><i></i><i></i><i></i><span>text</span></div><pre><code>+-----------------------------------------------------------------------------------------------+
-|                     GPUMDkit &lt;version&gt; PLOT &amp; VISUALIZATION TOOLS              |
-+-----------------------------------------------------------------------------------------------+
-|  Usage: gpumdkit.sh -plt &lt;type&gt;                        List: gpumdkit.sh -plt -h              |
-+-----------------------------------------------------------------------------------------------+
-|                                    NEP Training &amp; Evaluation                                  |
-+-----------------------------------------------------------------------------------------------+
-|  train          - NEP training results           prediction     - NEP prediction results      |
-|  train_test     - NEP train and test results     parity_density - Parity density plot         |
-|  train_density  - Training results density plot  restart        - Parameters in nep.restart   |
-|  charge         - Charge distribution            born_charge    - Born effective charges      |
-|  dimer          - Dimer energy/force curve       force_errors   - Force errors                |
-|  des            - Descriptors                    net_force      - Net force distribution      |
-+-----------------------------------------------------------------------------------------------+
-|                                     Diffusion &amp; Transport                                     |
-+-----------------------------------------------------------------------------------------------+
-|  msd            - Mean square displacement       msd_conv       - MSD convergence             |
-|  msd_all        - MSD for all species            sdc            - Self diffusion coefficient  |
-|  msd_sdc        - MSD and SDC together           sigma          - Arrhenius ionic conductivity|
-|  D              - Arrhenius diffusivity          sigma_xyz      - Directional Arrhenius sigma |
-|  D_xyz          - Directional Arrhenius D                                                     |
-|  D_PT           - PT Arrhenius D                 sigma_PT       - PT Arrhenius sigma          |
-|  doas           - Density of atomistic states                                                 |
-+-----------------------------------------------------------------------------------------------+
-|                                    MD &amp; Structural Analysis                                   |
-+-----------------------------------------------------------------------------------------------+
-|  thermo         - thermo info in thermo.out      thermo2/3      - Thermo in different styles  |
-|  rdf            - Radial distribution function   rdf_pmf        - Potential of mean force     |
-|  vac            - Velocity autocorrelation       cohesive       - Cohesive energy curve       |
-|  xrd            - X-ray diffraction              plane-grid     - Displacement plane grid     |
-|  xrd_comp       - Compare XRD                                                                 |
-+-----------------------------------------------------------------------------------------------+
-|                                        Heat Transport                                         |
-+-----------------------------------------------------------------------------------------------+
-|  emd            - EMD results                    emd2           - EMD all directions          |
-|  nemd           - NEMD results                   hnemd          - HNEMD results               |
-|  viscosity      - Viscosity                                                                   |
-+-----------------------------------------------------------------------------------------------+
-|                                          Phonons                                              |
-+-----------------------------------------------------------------------------------------------+
-|  pdos           - VAC and PDOS                 phonon         - Phonon band structure         |
-|  phonon_comp    - Compare phonon band structures                                              |
-+-----------------------------------------------------------------------------------------------+</code></pre><button class="copy-btn" data-copy-pre aria-label="Copy"><svg class="cp"><use href="#i-copy"/></svg><svg class="ok"><use href="#i-check"/></svg></button></div>
+<div class="code"><div class="cap"><i></i><i></i><i></i><span>text</span></div><pre><code> +-----------------------------------------------------------------------------------------------+
+ |                     GPUMDkit &lt;version&gt;                PLOT &amp; VISUALIZATION TOOLS              |
+ +-----------------------------------------------------------------------------------------------+
+ |  Usage: gpumdkit.sh -plt &lt;type&gt;                        List: gpumdkit.sh -plt -h              |
+ +-----------------------------------------------------------------------------------------------+
+ |                                    NEP Training &amp; Evaluation                                  |
+ +-----------------------------------------------------------------------------------------------+
+ |  train          - NEP training results           prediction     - NEP prediction results      |
+ |  train_test     - NEP train and test results     parity_density - Parity density plot         |
+ |  train_density  - Training results density plot  restart        - Parameters in nep.restart   |
+ |  charge         - Charge distribution            born_charge    - Born effective charges      |
+ |  dimer          - Dimer energy/force curve       force_errors   - Force errors                |
+ |  des            - Descriptors                    net_force      - Net force distribution      |
+ +-----------------------------------------------------------------------------------------------+
+ |                                     Diffusion &amp; Transport                                     |
+ +-----------------------------------------------------------------------------------------------+
+ |  msd            - Mean square displacement       msd_conv       - MSD convergence             |
+ |  msd_all        - MSD for all species            sdc            - Self diffusion coefficient  |
+ |  msd_sdc        - MSD and SDC together           doas           - Density of atomistic states |
+ |  D              - Arrhenius diffusivity          sigma          - Arrhenius ionic conductivity|
+ |  D_xyz          - Directional Arrhenius D        sigma_xyz      - Directional Arrhenius sigma |
+ |  D_PT           - PT Arrhenius D                 sigma_PT       - PT Arrhenius sigma          |
+ +-----------------------------------------------------------------------------------------------+
+ |                                    MD &amp; Structural Analysis                                   |
+ +-----------------------------------------------------------------------------------------------+
+ |  thermo         - thermo info in thermo.out      thermo2        - Previous thermo style       |
+ |  rdf            - Radial distribution function   rdf_pmf        - Potential of mean force     |
+ |  vac            - Velocity autocorrelation       cohesive       - Cohesive energy curve       |
+ |  xrd            - X-ray diffraction              plane-grid     - Displacement plane grid     |
+ |  xrd_comp       - Compare XRD                                                                 |
+ +-----------------------------------------------------------------------------------------------+
+ |                                        Heat Transport                                         |
+ +-----------------------------------------------------------------------------------------------+
+ |  emd            - EMD results                    emd2           - EMD all directions          |
+ |  nemd           - NEMD results                   hnemd          - HNEMD results               |
+ |  viscosity      - Viscosity                                                                   |
+ +-----------------------------------------------------------------------------------------------+
+ |                                          Phonons                                              |
+ +-----------------------------------------------------------------------------------------------+
+ |  pdos           - VAC and PDOS                   phonon       - Phonon band structure         |
+ |  phonon_comp    - Compare phonon band structures                                              |
+ +-----------------------------------------------------------------------------------------------+
+ See the codes in plt_scripts for more details</code></pre><button class="copy-btn" data-copy-pre aria-label="Copy"><svg class="cp"><use href="#i-copy"/></svg><svg class="ok"><use href="#i-check"/></svg></button></div>
 </details>
 <h2 id="完整示例thermo-输出">完整示例：Thermo 输出</h2>
-<p>请在存放 <code>thermo.out</code> 的目录中运行绘图。本示例使用一个<strong>玩具</strong> 12 列文件（温度、动能和势能、三个压力、三个剪切压力以及盒子边长）；真实运行得到的是你自己的曲线。</p>
+<p>请在存放 <code>thermo.out</code> 的目录中运行绘图。本示例使用一次真实 NPT 运行（<code>npt_mttk</code>，900 K，50 万步，每 10 步写一行）的 <code>thermo.out</code>：共 18 列，包含温度、动能和势能、六个压力分量以及晶胞矢量的九个分量。</p>
 <div class="code"><div class="cap"><i></i><i></i><i></i><span>bash</span></div><pre><code>gpumdkit.sh -plt thermo save</code></pre><button class="copy-btn" data-copy-pre aria-label="Copy"><svg class="cp"><use href="#i-copy"/></svg><svg class="ok"><use href="#i-check"/></svg></button></div>
 <div class="code"><div class="cap"><i></i><i></i><i></i><span>text</span></div><pre><code>+------------------------------------------+
 | Average values after 50% simulation time |
 | You can change it by the following line: |
 |    start_index = int(len(time) * 0.5)    |
 +------------------------------------------+
-Temperature: 300.267 K
-Pressure X: 0.031 GPa
-Pressure Y: -0.020 GPa
-Pressure Z: -0.004 GPa
-Lattice Length X: 10.530 Angstrom
-Lattice Length Y: 10.530 Angstrom
-Lattice Length Z: 10.530 Angstrom
-Volume: 1167.500 Angstrom^3</code></pre><button class="copy-btn" data-copy-pre aria-label="Copy"><svg class="cp"><use href="#i-copy"/></svg><svg class="ok"><use href="#i-check"/></svg></button></div>
+Temperature: 899.877 K
+Pressure X: 0.011 GPa
+Pressure Y: 0.015 GPa
+Pressure Z: 0.013 GPa
+Lattice Length X: 8.918 Angstrom
+Lattice Length Y: 8.938 Angstrom
+Lattice Length Z: 12.880 Angstrom
+Volume: 1025.207 Angstrom^3
+Angle Alpha: 91.99°
+Angle Beta: 90.65°
+Angle Gamma: 90.25°
+Average lattice matrix: 8.918, 0.000, 0.000, -0.039, 8.938, 0.000, -0.145, -0.448, 12.871</code></pre><button class="copy-btn" data-copy-pre aria-label="Copy"><svg class="cp"><use href="#i-copy"/></svg><svg class="ok"><use href="#i-check"/></svg></button></div>
 <div align="center">
-  <img src="../../Gallery/toy_thermo.jpg" alt="玩具 thermo.out 的 thermo 图" width="70%" />
+  <img src="../../Gallery/thermo.png" alt="900 K NPT 运行的 thermo 图" width="70%" />
 </div>
 
-<p>数据旁边会写出两个文件：<code>thermo.png</code> 和保存上述平均值的 <code>average_results.txt</code>。平均值取自运行的<strong>后半段</strong>；如果你的平衡过程需要不同的截取点，请修改脚本中的 <code>start_index</code>。对这个 12 列文件，最后一个面板（晶胞角度）为空。不加 <code>save</code> 时，同一张图会在窗口中打开。</p>
+<p>数据旁边会写出两个文件：<code>thermo.png</code> 和保存上述平均值的 <code>average_results.txt</code>。平均值取自运行的<strong>后半段</strong>；如果你的平衡过程需要不同的截取点，请修改脚本中的 <code>start_index</code>。图中浅色曲线为原始数据，粗线是取运行总长 2% 作窗口的滑动平均。不加 <code>save</code> 时，同一张图会在窗口中打开。</p>
 <h2 id="绘图分类">绘图分类</h2>
 <ul>
 <li><a href="NEP训练绘图.html">NEP 训练与模型分析</a> — NEP 训练和预测结果、电荷、描述符、dimer 曲线以及原子能量的绘图。</li>
@@ -313,6 +317,12 @@ Volume: 1167.500 Angstrom^3</code></pre><button class="copy-btn" data-copy-pre a
 <td><a href="NEP训练绘图.html">NEP</a></td>
 </tr>
 <tr>
+<td><code>train_density</code></td>
+<td><code>*_train.out</code></td>
+<td>基于密度的训练 parity plot（优先使用应力而非维里）</td>
+<td><a href="NEP训练绘图.html">NEP</a></td>
+</tr>
+<tr>
 <td><code>force_errors</code></td>
 <td><code>force_train.out</code></td>
 <td>力误差指标</td>
@@ -343,9 +353,9 @@ Volume: 1167.500 Angstrom^3</code></pre><button class="copy-btn" data-copy-pre a
 <td><a href="MD与结构绘图.html">MD 与结构</a></td>
 </tr>
 <tr>
-<td><code>thermo2</code> / <code>thermo3</code></td>
+<td><code>thermo2</code></td>
 <td><code>thermo.out</code></td>
-<td>其他样式的热力学量绘图</td>
+<td>此前的热力学量图样式（原 <code>thermo3</code> 已成为默认的 <code>thermo</code>）</td>
 <td><a href="MD与结构绘图.html">MD 与结构</a></td>
 </tr>
 <tr>

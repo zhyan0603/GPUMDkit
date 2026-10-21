@@ -19,7 +19,7 @@ if [ -z "$GPUMDkit_path" ]; then
     exit 1
 fi
 
-VERSION="1.5.8 (2026-10-14)"
+VERSION="1.5.8 (2026-10-20)"
 
 plt_path="${GPUMDkit_path}/Scripts/plt_scripts"
 analyzer_path="${GPUMDkit_path}/Scripts/analyzer"
@@ -321,7 +321,10 @@ if [ ! -z "$1" ]; then
                 case $2 in
                     "thermo") python "${plt_path}/plt_thermo.py" "${@:3}" ;;
                     "thermo2") python "${plt_path}/plt_thermo2.py" "${@:3}" ;;
-                    "thermo3") python "${plt_path}/plt_thermo3.py" "${@:3}" ;;
+                    "thermo3")
+                        echo " Note: 'thermo3' is now the default 'thermo'; please use 'gpumdkit.sh -plt thermo'."
+                        echo " The previous 'thermo' style is available as 'thermo2'."
+                        python "${plt_path}/plt_thermo.py" "${@:3}" ;;
                     "train") python "${plt_path}/plt_train.py" "${@:3}" ;;
                     "train_density") python "${plt_path}/plt_train_density.py" "${@:3}" ;;
                     "prediction"|"test") python "${plt_path}/plt_prediction.py" "${@:3}" ;;

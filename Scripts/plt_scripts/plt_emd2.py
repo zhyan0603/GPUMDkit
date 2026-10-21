@@ -15,7 +15,7 @@ Arguments:
   save       Save the plot as 'emd2.png' instead of displaying it
 Output:
   emd2.png   (if save is used)
-Author:     Xin Wu (xinwuchn97@gmial.com)
+Author:     Xin Wu (xinwuchn97@gmail.com)
 Last-modified: 2026-08-19
 =============================================================================
 """

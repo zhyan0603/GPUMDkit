@@ -66,38 +66,11 @@ Input the function number:
 
 </details>
 
-## A Worked Example: From a Trajectory to a Conductivity
+## A Worked Example: From MSD to a Conductivity
 
-The commands below were run on a **toy** trajectory, `traj.xyz`: 400 frames of a 54-atom Li/S cell in which the 27 Li atoms take random steps. It only demonstrates the file flow; its numbers have no physical meaning, and a real study needs a converged MD run and checks of its own.
+The commands below use the output of a real GPUMD run: a Li<sub>7</sub>La<sub>3</sub>Zr<sub>2</sub>O<sub>12</sub> cell with 12 288 atoms (3584 Li), NPT at 1000 K for 1 000 000 steps, with `compute_msd 10 5000 group 0 0` (group 0 is the Li atoms). Run them in the folder that holds `msd.out`, `thermo.out` (18 columns), `model.xyz`, and `run.in`. A real study needs its own converged run and checks.
 
-**1. Mean square displacement.** The frames are 10 fs apart (`dt_fs` must match how your trajectory was written):
-
-```bash
-gpumdkit.sh -calc msd traj.xyz Li 10
-```
-
-```text
-  Trajectory file  : traj.xyz
-  Target element   : Li
-  Time step (dt)   : 10.0000 fs
-  Max corr. steps  : all frames
-
-   Loaded 400 frames, 27 Li atoms per frame
-   Cell lengths (a, b, c) : 10.5300  10.5300  10.5300  Ang
- Coordinate status : Wrapped (PBC detected)
- Unwrapping coordinates...
-   MSD computed for 398 lag times
-   Lag-time range  : 0.010000 ps  ->  3.980000 ps
- MSD calculation completed. Results saved to 'msd.out'.
-```
-
-`msd.out` starts with a three-line header and then holds four columns (time in ps, `MSD_x`, `MSD_y`, `MSD_z` in Å²):
-
-```text
-# msd.out by GPUMDkit
-# Element: Li  |  dt: 10.0000 fs  |  Frames: 400  |  Atoms: 27
-#     Time(ps)    MSD_x(Ang^2)    MSD_y(Ang^2)    MSD_z(Ang^2)
-```
+**1. The MSD file.** With a single group, `compute_msd` writes seven columns: time (ps), `MSD_x/y/z` (Å²), and `SDC_x/y/z` (Å²/ps). `gpumdkit.sh -calc msd` produces the four-column form from a trajectory; here GPUMD's own file is used directly.
 
 **2. Look at the curve before using it.**
 
@@ -106,10 +79,10 @@ gpumdkit.sh -plt msd
 ```
 
 <div align="center">
-  <img src="../../Gallery/toy_msd.png" alt="MSD of the toy trajectory" width="48%" />
+  <img src="../../Gallery/msd.png" alt="MSD of Li in Li7La3Zr2O12 at 1000 K" width="48%" />
 </div>
 
-The slopes in the legend come from the middle 40%–80% of the curve. The noisy tail at long lag times is normal: the fewer time origins a lag has, the worse its statistics, so do not fit there. A real, converged curve should look close to a straight line in the fitted window.
+The slopes in the legend come from the middle 40%–80% of the curve (the shaded window). Here the three directions agree at 0.19 Å²/ps and the curve is close to a straight line inside the window, as a converged diffusive regime should look. The fewer time origins a long lag time has, the worse its statistics, so do not fit there.
 
 **3. Conductivity.** Besides `msd.out` the calculator needs `thermo.out` (temperature and box, 12 or 18 columns) and `model.xyz` (to count the ions):
 
@@ -118,25 +91,25 @@ gpumdkit.sh -calc ionic-cond Li 1
 ```
 
 ```text
- +---------------------------------------------------------+
- | Warning: run.in file not found, assuming no replication |
- +---------------------------------------------------------+
- Number of ions: 27
- Average Volume: 1167.576 Å^3
- Average Temperature: 299.667 K
+ Number of ions: 3584
+ Average Volume: 143914.280 Å^3
+ Average Temperature: 1000.019 K
+ ------------------------------
  Diffusivity (D):
-   D_x: 2.506e-05 cm^2/s
-   D_y: 4.431e-05 cm^2/s
-   D_z: 2.317e-05 cm^2/s
-   D_total: 3.085e-05 cm^2/s
+   D_x: 9.545e-06 cm^2/s
+   D_y: 9.509e-06 cm^2/s
+   D_z: 9.526e-06 cm^2/s
+   D_total: 9.527e-06 cm^2/s
+ ------------------------------
  Ionic Conductivity:
-   Sigma_x: 3.595e+03 mS/cm
-   Sigma_y: 6.358e+03 mS/cm
-   Sigma_z: 3.325e+03 mS/cm
-   Sigma_total: 4.426e+03 mS/cm
+   Sigma_x: 4.419e+02 mS/cm
+   Sigma_y: 4.403e+02 mS/cm
+   Sigma_z: 4.411e+02 mS/cm
+   Sigma_total: 4.411e+02 mS/cm
+ ------------------------------
 ```
 
-The warning appears when there is no `run.in` next to the data. If your simulation used a `replicate` line, keep that `run.in` in the folder so the number of ions and the volume are scaled consistently. Temperature and volume are averaged over the second half of `thermo.out`.
+If there is no `run.in` next to the data, a warning is printed and no replication is assumed. If your simulation used a `replicate` line, keep that `run.in` in the folder so the number of ions and the volume are scaled consistently. Temperature and volume are averaged over the second half of `thermo.out`.
 
 ## Ionic Conductivity
 
@@ -195,19 +168,7 @@ Enter number of ions:
 
 ### Example Output
 
-```text
-Diffusivity (D):
-  D_x: 4.153e-07 cm^2/s
-  D_y: 4.174e-07 cm^2/s
-  D_z: 2.610e-07 cm^2/s
-  D_total: 3.646e-07 cm^2/s
-------------------------------
-Ionic Conductivity:
-  Sigma_x: 2.576e-02 mS/cm
-  Sigma_y: 2.589e-02 mS/cm
-  Sigma_z: 1.619e-02 mS/cm
-  Sigma_total: 2.261e-02 mS/cm
-```
+The output has the same layout as in step 3 of the worked example above.
 
 ## Mean Square Displacement
 

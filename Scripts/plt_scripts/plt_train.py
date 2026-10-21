@@ -17,7 +17,7 @@ Arguments:
 Output:
   train.png  (if save is used, or if backend is non-interactive)
 Author:     Zihan YAN (yanzihan@westlake.edu.cn)
-Last-modified: 2026-07-11
+Last-modified: 2026-10-20
 =============================================================================
 """
 
@@ -26,14 +26,49 @@ import sys
 import matplotlib.pyplot as plt
 import numpy as np
 
+# Plot style (self-contained; keep in sync across plt_*.py scripts)
 plt.rcParams.update({
     "font.family": "sans-serif",
     "font.sans-serif": ["Arial", "DejaVu Sans", "Liberation Sans"],
+    "mathtext.fontset": "dejavusans",
+    "font.size": 9,
+    "axes.labelsize": 10,
+    "axes.linewidth": 0.9,
+    "xtick.labelsize": 9,
+    "ytick.labelsize": 9,
+    "xtick.direction": "out",
+    "ytick.direction": "out",
+    "xtick.major.size": 3.5,
+    "ytick.major.size": 3.5,
+    "xtick.minor.size": 2.0,
+    "ytick.minor.size": 2.0,
+    "xtick.major.width": 0.9,
+    "ytick.major.width": 0.9,
+    "legend.frameon": False,
+    "legend.fontsize": 9,
+    "figure.dpi": 100,
 })
-# from cycler import cycler
+COLORS = ['C0', 'C1', 'C2', 'C3', 'C4', 'C5']
+REF_STYLE = dict(color='0.55', linestyle='--', linewidth=1.2, zorder=0)
+PT_STYLE = dict(marker='o', linestyle='none', markersize=4.5, markeredgewidth=0, rasterized=True)
 
-# custom_colors = ['#9BBBE1', '#EAB883', '#A9CA70', '#DD7C4F', '#F09BA0', '#B58C9A']
-# plt.rcParams['axes.prop_cycle'] = cycler(color=custom_colors)
+def panel_label(ax, text, x=-0.14, y=1.0):
+    """Place a panel label outside the upper-left corner of an axes."""
+    ax.text(x, y, text, transform=ax.transAxes, fontsize=12, va='bottom', ha='right')
+
+def metrics_text(ax, r2, mae, rmse, unit, ndigits):
+    """Write R2/MAE/RMSE in the lower-right corner of a parity panel."""
+    ax.text(0.96, 0.05,
+            r'$R^2$ = ' + f'{r2:.4f}\nMAE = {mae:.{ndigits}f} {unit}\nRMSE = {rmse:.{ndigits}f} {unit}',
+            transform=ax.transAxes, fontsize=9, va='bottom', ha='right', linespacing=1.5)
+
+def parity_panel(ax, pred, actual, labels, colors, lim):
+    """Draw a square parity panel with a reference diagonal and legend."""
+    ax.plot(lim, lim, **REF_STYLE)
+    for i, (label, color) in enumerate(zip(labels, colors)):
+        ax.plot(actual[:, i], pred[:, i], color=color, label=label, **PT_STYLE)
+    ax.set_xlim(lim)
+    ax.set_ylim(lim)
 
 # Load data
 loss = np.loadtxt('loss.out', comments='#')
@@ -97,67 +132,56 @@ def calculate_limits(train_data, padding=0.08):
     return data_min - padding * data_range, data_max + padding * data_range
 
 # Create a subplot with 2 rows and 2 columns
-fig, axs = plt.subplots(2, 2, figsize=(9, 7), dpi=100)
+fig, axs = plt.subplots(2, 2, figsize=(7.2, 6.1))
 
 if loss.shape[1] == 6:  # torchnep
     xlabel = 'Epoch'
     plot_cols = slice(1, 5)
-    legend_labels = ['Loss', 'Energy-train', 'Force-train', 'Virial-train']
+    legend_labels = ['Loss', 'Energy', 'Force', 'Virial']
 elif loss.shape[1] >= 9:  # nep/gnep
     step = loss[1, 0] - loss[0, 0]  
     if step == 100: 
         xlabel = 'Generation/100'
         plot_cols = slice(1, 7)
-        legend_labels = ['Total', 'L1-Reg', 'L2-Reg', 'Energy-train', 'Force-train', 'Virial-train']
+        legend_labels = ['Total', 'L1', 'L2', 'Energy', 'Force', 'Virial']
     elif step == 1: 
         xlabel = 'Epoch'
         plot_cols = slice(1, 5)
-        legend_labels = ['Total', 'Energy-train', 'Force-train', 'Virial-train']
+        legend_labels = ['Total', 'Energy', 'Force', 'Virial']
     else:
         raise ValueError(f"Unsupported step size: {step}")
 else:
     raise ValueError(f"Unsupported loss format with {loss.shape[1]} columns")
 
 # Plotting the loss figure
-axs[0, 0].loglog(loss[:, plot_cols], '-', linewidth=2)
-axs[0, 0].set_xlabel(xlabel, fontsize=10)
-axs[0, 0].set_ylabel('Loss functions', fontsize=10)
-axs[0, 0].tick_params(axis='both', labelsize=10)
-axs[0, 0].legend(legend_labels, prop={'size': 8}, loc='lower left')
-axs[0, 0].axis('tight')
-#axs[0, 0].text(-0.07, 1.03, "(a)", transform=axs[0, 0].transAxes, fontsize=12, va='top', ha='right')
+for i, (col, label) in enumerate(zip(range(loss[:, plot_cols].shape[1]), legend_labels)):
+    axs[0, 0].loglog(loss[:, plot_cols][:, col], '-', linewidth=1.4, color=COLORS[i % len(COLORS)], label=label)
+axs[0, 0].set_xlabel(xlabel)
+axs[0, 0].set_ylabel('Loss functions')
+axs[0, 0].margins(x=0.02)
+axs[0, 0].legend(loc='lower left', ncol=2, fontsize=8.5, handlelength=1.4, handletextpad=0.5, columnspacing=1.0, labelspacing=0.25)
+panel_label(axs[0, 0], '(a)', x=-0.11)
 
 # Plotting the energy_data figure
-xmin_energy, xmax_energy = calculate_limits(energy_data[:, 1])
-axs[0, 1].set_xlim(xmin_energy, xmax_energy)
-axs[0, 1].set_ylim(xmin_energy, xmax_energy)
-axs[0, 1].plot(energy_data[:, 1], energy_data[:, 0], '.', markersize=10)
-axs[0, 1].plot([xmin_energy, xmax_energy], [xmin_energy, xmax_energy], linewidth=2, color='grey', linestyle='--')
-axs[0, 1].set_xlabel('DFT energy (eV/atom)', fontsize=10)
-axs[0, 1].set_ylabel('NEP energy (eV/atom)', fontsize=10)
-axs[0, 1].tick_params(axis='both', labelsize=10)
-axs[0, 1].legend(['energy'], loc='upper left')
-axs[0, 1].axis('tight')
+energy_lim = calculate_limits(energy_data[:, 1])
+parity_panel(axs[0, 1], energy_data[:, [0]], energy_data[:, [1]], ['energy'], COLORS[:1], energy_lim)
+axs[0, 1].set_xlabel('DFT Energy (eV/atom)')
+axs[0, 1].set_ylabel('NEP Energy (eV/atom)')
+axs[0, 1].legend(loc='upper left', markerscale=1.0, handletextpad=0.2)
 
 # Calculate and display RMSE, MAE, and R2 for energy
 energy_rmse = calculate_rmse(energy_data[:, 0], energy_data[:, 1]) * 1000
 energy_mae = calculate_mae(energy_data[:, 0], energy_data[:, 1]) * 1000
 energy_r2 = calculate_r2(energy_data[:, 0], energy_data[:, 1])
-axs[0, 1].text(0.7, 0.12, r'R$  ^2  $'+f': {energy_r2:.4f}\nMAE: {energy_mae:.2f} meV/atom\nRMSE: {energy_rmse:.2f} meV/atom',
-               transform=axs[0, 1].transAxes, fontsize=10, verticalalignment='center', horizontalalignment='center')
-#axs[0, 1].text(-0.07, 1.03, "(b)", transform=axs[0, 1].transAxes, fontsize=12, va='top', ha='right')
+metrics_text(axs[0, 1], energy_r2, energy_mae, energy_rmse, 'meV/atom', 2)
+panel_label(axs[0, 1], '(b)')
 
 # Plotting the force_data figure
-xmin_force, xmax_force = calculate_limits(force_data[:, 3:6].reshape(-1))
-axs[1, 0].set_xlim(xmin_force, xmax_force)
-axs[1, 0].set_ylim(xmin_force, xmax_force)
-axs[1, 0].plot(force_data[:, 3:6], force_data[:, 0:3], '.', markersize=10)
-axs[1, 0].plot([xmin_force, xmax_force], [xmin_force, xmax_force], linewidth=2, color='grey', linestyle='--')
-axs[1, 0].set_xlabel(r'DFT force (eV/$  \mathrm{\AA}  $)', fontsize=10)
-axs[1, 0].set_ylabel(r'NEP force (eV/$  \mathrm{\AA}  $)', fontsize=10)
-axs[1, 0].tick_params(axis='both', labelsize=10)
-axs[1, 0].legend(['fx', 'fy', 'fz'], loc='upper left')
-axs[1, 0].axis('tight')
+force_lim = calculate_limits(force_data[:, 3:6].reshape(-1))
+parity_panel(axs[1, 0], force_data[:, 0:3], force_data[:, 3:6], ['fx', 'fy', 'fz'], COLORS[:3], force_lim)
+axs[1, 0].set_xlabel(r'DFT Force (eV/$\mathrm{\AA}$)')
+axs[1, 0].set_ylabel(r'NEP Force (eV/$\mathrm{\AA}$)')
+axs[1, 0].legend(loc='upper left', markerscale=1.0, handletextpad=0.2)
 
 # Calculate and display RMSE, MAE, and R² for forces
 force_pred_flat = force_data[:, 0:3].flatten()
@@ -168,27 +192,20 @@ force_r2 = calculate_r2(force_pred_flat, force_actual_flat)
 mean_force_rmse = force_rmse
 mean_force_mae = force_mae
 mean_force_r2 = force_r2
-axs[1, 0].text(0.7, 0.12,
-               r'R$  ^2  $'+f': {mean_force_r2:.4f}\nMAE: {mean_force_mae:.2f} meV/'+r'$  \mathrm{{\AA}}  $'
-               +f'\nRMSE: {mean_force_rmse:.2f} meV/'+r'$  \mathrm{{\AA}}  $',
-               transform=axs[1, 0].transAxes, fontsize=10, verticalalignment='center', horizontalalignment='center')
-#axs[1, 0].text(-0.07, 1.03, "(c)", transform=axs[1, 0].transAxes, fontsize=12, va='top', ha='right')
+metrics_text(axs[1, 0], mean_force_r2, mean_force_mae, mean_force_rmse, r'meV/$\mathrm{\AA}$', 2)
+panel_label(axs[1, 0], '(c)', x=-0.11)
 
 # Plotting the stress/virial figure
 if tensor_data is None or tensor_data.shape[0] == 0:
     axs[1, 1].axis('off')
     tensor_metrics = None
 else:
-    xmin_tensor, xmax_tensor = calculate_limits(tensor_data[:, 6:12].reshape(-1))
-    axs[1, 1].set_xlim(xmin_tensor, xmax_tensor)
-    axs[1, 1].set_ylim(xmin_tensor, xmax_tensor)
-    axs[1, 1].plot(tensor_data[:, 6:12], tensor_data[:, 0:6], '.', markersize=10)
-    axs[1, 1].plot([xmin_tensor, xmax_tensor], [xmin_tensor, xmax_tensor], linewidth=2, color='grey', linestyle='--')
-    axs[1, 1].set_xlabel(f'DFT {tensor_name.lower()} ({tensor_axis_unit})', fontsize=10)
-    axs[1, 1].set_ylabel(f'NEP {tensor_name.lower()} ({tensor_axis_unit})', fontsize=10)
-    axs[1, 1].tick_params(axis='both', labelsize=10)
-    axs[1, 1].legend(['xx', 'yy', 'zz', 'xy', 'yz', 'zx'], loc='upper left')
-    axs[1, 1].axis('tight')
+    tensor_lim = calculate_limits(tensor_data[:, 6:12].reshape(-1))
+    parity_panel(axs[1, 1], tensor_data[:, 0:6], tensor_data[:, 6:12],
+                 ['xx', 'yy', 'zz', 'xy', 'yz', 'zx'], COLORS, tensor_lim)
+    axs[1, 1].set_xlabel(f'DFT {tensor_name} ({tensor_axis_unit})')
+    axs[1, 1].set_ylabel(f'NEP {tensor_name} ({tensor_axis_unit})')
+    axs[1, 1].legend(loc='upper left', ncol=2, markerscale=1.0, handletextpad=0.2, columnspacing=1.0)
     # Calculate and display RMSE, MAE, and R² for stress/virial data
     tensor_pred_flat = tensor_data[:, 0:6].flatten()
     tensor_actual_flat = tensor_data[:, 6:12].flatten()
@@ -196,8 +213,8 @@ else:
     tensor_mae = calculate_mae(tensor_pred_flat, tensor_actual_flat) * tensor_metric_scale
     tensor_r2 = calculate_r2(tensor_pred_flat, tensor_actual_flat)
     tensor_metrics = (tensor_r2, tensor_mae, tensor_rmse)
-    axs[1, 1].text(0.7, 0.12, r'R$  ^2  $'+f': {tensor_r2:.4f}\nMAE: {tensor_mae:.4f} {tensor_metric_unit}\nRMSE: {tensor_rmse:.4f} {tensor_metric_unit}',
-                 transform=axs[1, 1].transAxes, fontsize=10, verticalalignment='center', horizontalalignment='center')
+    metrics_text(axs[1, 1], tensor_r2, tensor_mae, tensor_rmse, tensor_metric_unit, 4)
+    panel_label(axs[1, 1], '(d)')
 
 print_parity_metrics(
     (energy_r2, energy_mae, energy_rmse),
@@ -207,9 +224,8 @@ print_parity_metrics(
     tensor_metric_unit,
 )
 
-# Adjust layout for better spacing
-plt.tight_layout()
-#fig.subplots_adjust(top=0.968,bottom=0.088,left=0.086,right=0.983,hspace=0.22,wspace=0.24)
+# Subplot geometry (figure fractions); tune these to adjust margins and spacing
+fig.subplots_adjust(left=0.11, right=0.98, top=0.94, bottom=0.09, hspace=0.30, wspace=0.34)
 if len(sys.argv) > 1 and sys.argv[1] == 'save':
     plt.savefig('train.png', dpi=300)
 else:

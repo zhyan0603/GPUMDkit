@@ -18,7 +18,7 @@ Arguments:
 Output:
   msd_all.png  (if save is used, or if backend is non-interactive)
 Author:     Zihan YAN (yanzihan@westlake.edu.cn)
-Last-modified: 2026-05-16
+Last-modified: 2026-10-21
 =============================================================================
 """
 
@@ -26,9 +26,27 @@ import sys
 import numpy as np
 import matplotlib.pyplot as plt
 
+# Plot style (self-contained; keep in sync across plt_*.py scripts)
 plt.rcParams.update({
     "font.family": "sans-serif",
     "font.sans-serif": ["Arial", "DejaVu Sans", "Liberation Sans"],
+    "mathtext.fontset": "dejavusans",
+    "font.size": 9,
+    "axes.labelsize": 10,
+    "axes.linewidth": 0.9,
+    "xtick.labelsize": 9,
+    "ytick.labelsize": 9,
+    "xtick.direction": "out",
+    "ytick.direction": "out",
+    "xtick.major.size": 3.5,
+    "ytick.major.size": 3.5,
+    "xtick.minor.size": 2.0,
+    "ytick.minor.size": 2.0,
+    "xtick.major.width": 0.9,
+    "ytick.major.width": 0.9,
+    "legend.frameon": False,
+    "legend.fontsize": 9,
+    "figure.dpi": 100,
 })
 
 # Function to read data from the given file
@@ -67,7 +85,7 @@ else:
     groups_to_plot = list(range(len(elements_to_plot)))
 
 # Create a plot for the MSD data
-plt.figure(figsize=(4.5, 3.5), dpi=150)
+fig, ax = plt.subplots(figsize=(4.2, 3.5))
 colors = ['C0', 'C1', 'C2', 'C3', 'C4', 'C5', 'C6', 'C7', 'C8', 'C9']  # Color cycle for groups
 
 # Plot total MSD for each specified group
@@ -75,13 +93,16 @@ for group_idx, element in zip(groups_to_plot, elements_to_plot):
     msd_x, msd_y, msd_z = msd_data[group_idx].T
     msd_total = msd_x + msd_y + msd_z
     color = colors[group_idx % len(colors)]
-    plt.plot(time, msd_total, label=f'{element} total-MSD', color=color)
+    ax.plot(time, msd_total, label=element, color=color, linewidth=1.6)
 
 # Add titles and labels
-plt.xlabel('dt (ps)')
-plt.ylabel(r'MSD ($\AA^2$)')
-plt.legend()
-plt.tight_layout()
+ax.set_xlabel('dt (ps)')
+ax.set_ylabel(r'MSD ($\mathrm{\AA}^2$)')
+ax.margins(x=0.02)
+ax.legend(loc='upper left')
+
+# Subplot geometry (figure fractions); tune these to adjust margins
+fig.subplots_adjust(left=0.135, right=0.975, top=0.97, bottom=0.135)
 
 if should_save:
     plt.savefig('msd_all.png', dpi=300)

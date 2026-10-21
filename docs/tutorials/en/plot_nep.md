@@ -119,7 +119,7 @@ gpumdkit.sh -plt force_errors
 
 ### restart (`plt_nep_restart.py`)
 
-Visualizes parameters stored in the `nep.restart` file.
+Visualizes parameters stored in the `nep.restart` file. The file holds, for every parameter, the mean μ (top panel) and the standard deviation σ (bottom panel) of the search distribution used by the SNES optimizer.
 
 **Input File:** `nep.restart`
 
@@ -206,9 +206,11 @@ gpumdkit.sh -plt dimer Li Li nep.txt
 ```
 
 <div align="center">
-  <img src="../../Gallery/dimer_nep.png" alt="Dimer NEP curve" width="45%" />
-  <img src="../../Gallery/dimer.png" alt="Dimer comparison" width="45%" />
+  <img src="../../Gallery/dimer_nep.png" alt="Li-Li dimer curves from a NEP model without ZBL" width="45%" />
+  <img src="../../Gallery/dimer.png" alt="Li-Li dimer curves from a NEP model with ZBL" width="45%" />
 </div>
+
+Li-Li dimer curves from the same NEP model without ZBL (left) and with ZBL (right), from 0.5 to 6 Å. Without ZBL the energy and force oscillate at short distance because that region lies outside the training data; with ZBL the short-range repulsion rises smoothly.
 
 **Reference:** [J. Chem. Inf. Model. 2026, 66, 3, 1406-1413](https://doi.org/10.1021/acs.jcim.5c02335)
 

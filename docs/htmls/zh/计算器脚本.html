@@ -219,52 +219,35 @@
 +----------------------------------------------------------+
 Input the function number:</code></pre><button class="copy-btn" data-copy-pre aria-label="Copy"><svg class="cp"><use href="#i-copy"/></svg><svg class="ok"><use href="#i-check"/></svg></button></div>
 </details>
-<h2 id="完整示例从轨迹到电导率">完整示例：从轨迹到电导率</h2>
-<p>下面的命令在一个<strong>玩具</strong>轨迹 <code>traj.xyz</code> 上运行：400 帧、54 个原子的 Li/S 晶胞，其中 27 个 Li 原子做随机游走。它只演示文件的流转，数值没有物理意义；真实研究需要收敛的 MD 运行以及你自己的检查。</p>
-<p><strong>1. 均方位移。</strong> 相邻帧间隔 10 fs（<code>dt_fs</code> 必须与你的轨迹写出方式一致）：</p>
-<div class="code"><div class="cap"><i></i><i></i><i></i><span>bash</span></div><pre><code>gpumdkit.sh -calc msd traj.xyz Li 10</code></pre><button class="copy-btn" data-copy-pre aria-label="Copy"><svg class="cp"><use href="#i-copy"/></svg><svg class="ok"><use href="#i-check"/></svg></button></div>
-<div class="code"><div class="cap"><i></i><i></i><i></i><span>text</span></div><pre><code>  Trajectory file  : traj.xyz
-  Target element   : Li
-  Time step (dt)   : 10.0000 fs
-  Max corr. steps  : all frames
-
-   Loaded 400 frames, 27 Li atoms per frame
-   Cell lengths (a, b, c) : 10.5300  10.5300  10.5300  Ang
- Coordinate status : Wrapped (PBC detected)
- Unwrapping coordinates...
-   MSD computed for 398 lag times
-   Lag-time range  : 0.010000 ps  -&gt;  3.980000 ps
- MSD calculation completed. Results saved to 'msd.out'.</code></pre><button class="copy-btn" data-copy-pre aria-label="Copy"><svg class="cp"><use href="#i-copy"/></svg><svg class="ok"><use href="#i-check"/></svg></button></div>
-<p><code>msd.out</code> 以三行表头开始，之后是四列（时间 ps，<code>MSD_x</code>、<code>MSD_y</code>、<code>MSD_z</code>，单位 Å²）：</p>
-<div class="code"><div class="cap"><i></i><i></i><i></i><span>text</span></div><pre><code># msd.out by GPUMDkit
-# Element: Li  |  dt: 10.0000 fs  |  Frames: 400  |  Atoms: 27
-#     Time(ps)    MSD_x(Ang^2)    MSD_y(Ang^2)    MSD_z(Ang^2)</code></pre><button class="copy-btn" data-copy-pre aria-label="Copy"><svg class="cp"><use href="#i-copy"/></svg><svg class="ok"><use href="#i-check"/></svg></button></div>
+<h2 id="完整示例从-msd-到电导率">完整示例：从 MSD 到电导率</h2>
+<p>下面的命令使用一次真实 GPUMD 运行的输出：含 12 288 个原子（其中 3584 个 Li）的 Li<sub>7</sub>La<sub>3</sub>Zr<sub>2</sub>O<sub>12</sub> 晶胞，1000 K 下 NPT 运行 1 000 000 步，并使用 <code>compute_msd 10 5000 group 0 0</code>（组 0 为 Li 原子）。请在存放 <code>msd.out</code>、<code>thermo.out</code>（18 列）、<code>model.xyz</code> 和 <code>run.in</code> 的目录中运行。真实研究需要你自己的收敛运行和检查。</p>
+<p><strong>1. MSD 文件。</strong> 只有一个分组时，<code>compute_msd</code> 写出七列：时间（ps）、<code>MSD_x/y/z</code>（Å²）和 <code>SDC_x/y/z</code>（Å²/ps）。<code>gpumdkit.sh -calc msd</code> 可从轨迹得到四列形式；这里直接使用 GPUMD 自己的输出文件。</p>
 <p><strong>2. 先看曲线再使用。</strong></p>
 <div class="code"><div class="cap"><i></i><i></i><i></i><span>bash</span></div><pre><code>gpumdkit.sh -plt msd</code></pre><button class="copy-btn" data-copy-pre aria-label="Copy"><svg class="cp"><use href="#i-copy"/></svg><svg class="ok"><use href="#i-check"/></svg></button></div>
 <div align="center">
-  <img src="../../Gallery/toy_msd.png" alt="玩具轨迹的 MSD" width="48%" />
+  <img src="../../Gallery/msd.png" alt="1000 K 下 Li7La3Zr2O12 中 Li 的 MSD" width="48%" />
 </div>
 
-<p>图例中的斜率取自曲线中间 40%–80% 的区间。长时间滞后处曲线抖动是正常的：滞后越长，可用的时间起点越少，统计越差，所以不要在那里拟合。真实且收敛的曲线，在拟合区间内应接近直线。</p>
+<p>图例中的斜率取自曲线中间 40%–80% 的区间（阴影窗口）。这里三个方向一致，均为 0.19 Å²/ps，窗口内曲线接近直线，符合收敛的扩散区间应有的样子。滞后时间越长，可用的时间起点越少，统计越差，所以不要在那里拟合。</p>
 <p><strong>3. 电导率。</strong> 除 <code>msd.out</code> 外，计算器还需要 <code>thermo.out</code>（温度和盒子，12 或 18 列）以及用于统计离子数的 <code>model.xyz</code>：</p>
 <div class="code"><div class="cap"><i></i><i></i><i></i><span>bash</span></div><pre><code>gpumdkit.sh -calc ionic-cond Li 1</code></pre><button class="copy-btn" data-copy-pre aria-label="Copy"><svg class="cp"><use href="#i-copy"/></svg><svg class="ok"><use href="#i-check"/></svg></button></div>
-<div class="code"><div class="cap"><i></i><i></i><i></i><span>text</span></div><pre><code> +---------------------------------------------------------+
- | Warning: run.in file not found, assuming no replication |
- +---------------------------------------------------------+
- Number of ions: 27
- Average Volume: 1167.576 Å^3
- Average Temperature: 299.667 K
+<div class="code"><div class="cap"><i></i><i></i><i></i><span>text</span></div><pre><code> Number of ions: 3584
+ Average Volume: 143914.280 Å^3
+ Average Temperature: 1000.019 K
+ ------------------------------
  Diffusivity (D):
-   D_x: 2.506e-05 cm^2/s
-   D_y: 4.431e-05 cm^2/s
-   D_z: 2.317e-05 cm^2/s
-   D_total: 3.085e-05 cm^2/s
+   D_x: 9.545e-06 cm^2/s
+   D_y: 9.509e-06 cm^2/s
+   D_z: 9.526e-06 cm^2/s
+   D_total: 9.527e-06 cm^2/s
+ ------------------------------
  Ionic Conductivity:
-   Sigma_x: 3.595e+03 mS/cm
-   Sigma_y: 6.358e+03 mS/cm
-   Sigma_z: 3.325e+03 mS/cm
-   Sigma_total: 4.426e+03 mS/cm</code></pre><button class="copy-btn" data-copy-pre aria-label="Copy"><svg class="cp"><use href="#i-copy"/></svg><svg class="ok"><use href="#i-check"/></svg></button></div>
-<p>数据旁边没有 <code>run.in</code> 时会出现这条警告。如果你的模拟使用了 <code>replicate</code>，请把对应的 <code>run.in</code> 放在同一目录，这样离子数和体积的缩放才一致。温度和体积取自 <code>thermo.out</code> 后半段的平均值。</p>
+   Sigma_x: 4.419e+02 mS/cm
+   Sigma_y: 4.403e+02 mS/cm
+   Sigma_z: 4.411e+02 mS/cm
+   Sigma_total: 4.411e+02 mS/cm
+ ------------------------------</code></pre><button class="copy-btn" data-copy-pre aria-label="Copy"><svg class="cp"><use href="#i-copy"/></svg><svg class="ok"><use href="#i-check"/></svg></button></div>
+<p>数据旁边没有 <code>run.in</code> 时会打印一条警告，并假定没有扩胞。如果你的模拟使用了 <code>replicate</code>，请把对应的 <code>run.in</code> 放在同一目录，这样离子数和体积的缩放才一致。温度和体积取自 <code>thermo.out</code> 后半段的平均值。</p>
 <h2 id="离子电导率">离子电导率</h2>
 <p><code>calc_ion_conductivity.py</code> 从 <code>msd.out</code> 计算离子扩散系数和离子电导率。</p>
 <div class="code"><div class="cap"><i></i><i></i><i></i><span>bash</span></div><pre><code>gpumdkit.sh -calc ionic-cond Li 1</code></pre><button class="copy-btn" data-copy-pre aria-label="Copy"><svg class="cp"><use href="#i-copy"/></svg><svg class="ok"><use href="#i-check"/></svg></button></div>
@@ -331,18 +314,7 @@ Please provide the following values:
 Enter average temperature (in K):
 Enter system volume (in A^3):
 Enter number of ions:</code></pre><button class="copy-btn" data-copy-pre aria-label="Copy"><svg class="cp"><use href="#i-copy"/></svg><svg class="ok"><use href="#i-check"/></svg></button></div>
-<p>输出示例：</p>
-<div class="code"><div class="cap"><i></i><i></i><i></i><span>text</span></div><pre><code>Diffusivity (D):
-  D_x: 4.153e-07 cm^2/s
-  D_y: 4.174e-07 cm^2/s
-  D_z: 2.610e-07 cm^2/s
-  D_total: 3.646e-07 cm^2/s
-------------------------------
-Ionic Conductivity:
-  Sigma_x: 2.576e-02 mS/cm
-  Sigma_y: 2.589e-02 mS/cm
-  Sigma_z: 1.619e-02 mS/cm
-  Sigma_total: 2.261e-02 mS/cm</code></pre><button class="copy-btn" data-copy-pre aria-label="Copy"><svg class="cp"><use href="#i-copy"/></svg><svg class="ok"><use href="#i-check"/></svg></button></div>
+<p>输出的格式与上文完整示例第 3 步相同。</p>
 <h2 id="从轨迹计算-msd">从轨迹计算 MSD</h2>
 <p><code>calc_msd.py</code> 可以直接从 extxyz 轨迹中计算指定元素的 MSD。</p>
 <div class="code"><div class="cap"><i></i><i></i><i></i><span>bash</span></div><pre><code>gpumdkit.sh -calc msd dump.xyz Li 10
@@ -654,7 +626,7 @@ gpumdkit.sh -plt doas doas.out Li</code></pre><button class="copy-btn" data-copy
 </table></div>
 <p>部分脚本需要安装 <code>ferrodispcalc</code>：</p>
 <div class="code"><div class="cap"><i></i><i></i><i></i><span>bash</span></div><pre><code>pip3 install git+https://github.com/MoseyQAQ/ferrodispcalc.git</code></pre><button class="copy-btn" data-copy-pre aria-label="Copy"><svg class="cp"><use href="#i-copy"/></svg><svg class="ok"><use href="#i-check"/></svg></button></div>
-<p>一个典型顺序是先用 <code>nlist</code> 建立近邻列表，再用该近邻列表计算位移、倾转或极化。对于平均结构，可以直接从轨迹出发，用长度容差控制哪些帧参与平均。</p><div class="doc-pn"><a href="工作流脚本.html"><small>上一页</small><b>工作流脚本</b></a><a class="next" href="分析工具.html"><small>下一页</small><b>分析工具</b></a></div><a class="doc-edit" href="https://github.com/zhyan0603/GPUMDkit/edit/main/docs/tutorials/zh/计算器脚本.md" target="_blank" rel="noopener">编辑此页</a></article><nav class="doc-toc" aria-label="本页目录"><h6>本页目录</h6><a href="#功能概览" class="l2">功能概览</a><a href="#完整示例从轨迹到电导率" class="l2">完整示例：从轨迹到电导率</a><a href="#离子电导率" class="l2">离子电导率</a><a href="#从轨迹计算-msd" class="l2">从轨迹计算 MSD</a><a href="#x-射线衍射xrd" class="l2">X 射线衍射（XRD）</a><a href="#声子谱" class="l2">声子谱</a><a href="#nep-预测性质" class="l2">NEP 预测性质</a><a href="#nep-预测输出文件" class="l3">NEP 预测输出文件</a><a href="#dpa-预测输出文件" class="l3">DPA 预测输出文件</a><a href="#nep-描述符" class="l2">NEP 描述符</a><a href="#doas" class="l2">DOAS</a><a href="#neb-和结构优化" class="l2">NEB 和结构优化</a><a href="#使用-ovito-计算-rdf" class="l2">使用 OVITO 计算 RDF</a><a href="#铁电和极性材料工具" class="l2">铁电和极性材料工具</a></nav></div>
+<p>一个典型顺序是先用 <code>nlist</code> 建立近邻列表，再用该近邻列表计算位移、倾转或极化。对于平均结构，可以直接从轨迹出发，用长度容差控制哪些帧参与平均。</p><div class="doc-pn"><a href="工作流脚本.html"><small>上一页</small><b>工作流脚本</b></a><a class="next" href="分析工具.html"><small>下一页</small><b>分析工具</b></a></div><a class="doc-edit" href="https://github.com/zhyan0603/GPUMDkit/edit/main/docs/tutorials/zh/计算器脚本.md" target="_blank" rel="noopener">编辑此页</a></article><nav class="doc-toc" aria-label="本页目录"><h6>本页目录</h6><a href="#功能概览" class="l2">功能概览</a><a href="#完整示例从-msd-到电导率" class="l2">完整示例：从 MSD 到电导率</a><a href="#离子电导率" class="l2">离子电导率</a><a href="#从轨迹计算-msd" class="l2">从轨迹计算 MSD</a><a href="#x-射线衍射xrd" class="l2">X 射线衍射（XRD）</a><a href="#声子谱" class="l2">声子谱</a><a href="#nep-预测性质" class="l2">NEP 预测性质</a><a href="#nep-预测输出文件" class="l3">NEP 预测输出文件</a><a href="#dpa-预测输出文件" class="l3">DPA 预测输出文件</a><a href="#nep-描述符" class="l2">NEP 描述符</a><a href="#doas" class="l2">DOAS</a><a href="#neb-和结构优化" class="l2">NEB 和结构优化</a><a href="#使用-ovito-计算-rdf" class="l2">使用 OVITO 计算 RDF</a><a href="#铁电和极性材料工具" class="l2">铁电和极性材料工具</a></nav></div>
 </main>
 
 <!-- ======================================================= footer -->

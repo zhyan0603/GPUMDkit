@@ -118,7 +118,7 @@ gpumdkit.sh -plt force_errors
 
 ### restart (`plt_nep_restart.py`)
 
-可视化 `nep.restart` 文件中存储的参数。
+可视化 `nep.restart` 文件中存储的参数。该文件为每个参数保存 SNES 优化器搜索分布的均值 μ（上图）和标准差 σ（下图）。
 
 **输入文件：** `nep.restart`
 
@@ -205,9 +205,11 @@ gpumdkit.sh -plt dimer Li Li nep.txt
 ```
 
 <div align="center">
-  <img src="../../Gallery/dimer_nep.png" alt="Dimer NEP curve" width="45%" />
-  <img src="../../Gallery/dimer.png" alt="Dimer comparison" width="45%" />
+  <img src="../../Gallery/dimer_nep.png" alt="不含 ZBL 的 NEP 模型的 Li-Li 二聚体曲线" width="45%" />
+  <img src="../../Gallery/dimer.png" alt="含 ZBL 的 NEP 模型的 Li-Li 二聚体曲线" width="45%" />
 </div>
+
+上图为同一 NEP 模型不含 ZBL（左）和含 ZBL（右）时，0.5 到 6 Å 的 Li-Li 二聚体曲线。不含 ZBL 时，近距离处的能量和力出现振荡，因为该区域超出了训练数据范围；含 ZBL 时，短程排斥则平滑上升。
 
 **参考文献：** [J. Chem. Inf. Model. 2026, 66, 3, 1406-1413](https://doi.org/10.1021/acs.jcim.5c02335)
 

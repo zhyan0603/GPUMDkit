@@ -16,7 +16,7 @@ Arguments:
 Output:
   MSD_SDC.png  (if save is used, or if backend is non-interactive)
 Author:     Zihan YAN (yanzihan@westlake.edu.cn)
-Last-modified: 2026-05-16
+Last-modified: 2026-10-21
 =============================================================================
 """
 
@@ -24,10 +24,29 @@ import sys
 import numpy as np
 import matplotlib.pyplot as plt
 
+# Plot style (self-contained; keep in sync across plt_*.py scripts)
 plt.rcParams.update({
     "font.family": "sans-serif",
     "font.sans-serif": ["Arial", "DejaVu Sans", "Liberation Sans"],
+    "mathtext.fontset": "dejavusans",
+    "font.size": 9,
+    "axes.labelsize": 10,
+    "axes.linewidth": 0.9,
+    "xtick.labelsize": 9,
+    "ytick.labelsize": 9,
+    "xtick.direction": "out",
+    "ytick.direction": "out",
+    "xtick.major.size": 3.5,
+    "ytick.major.size": 3.5,
+    "xtick.minor.size": 2.0,
+    "ytick.minor.size": 2.0,
+    "xtick.major.width": 0.9,
+    "ytick.major.width": 0.9,
+    "legend.frameon": False,
+    "legend.fontsize": 9,
+    "figure.dpi": 100,
 })
+COLORS = ['C0', 'C1', 'C2']
 
 # Function to read all required data from file
 def read_data(file_name):
@@ -60,7 +79,7 @@ input_file = './msd.out'
 time, msd_x, msd_y, msd_z, sdc_x, sdc_y, sdc_z = read_data(input_file)
 
 # Create a figure with 1 row and 2 columns
-fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(8, 3.5), dpi=150)
+fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(7.4, 3.3))
 
 # ==========================================
 # Left Subplot (ax1): MSD vs dt
@@ -69,29 +88,32 @@ slope_x = calculate_slope(time, msd_x)
 slope_y = calculate_slope(time, msd_y)
 slope_z = calculate_slope(time, msd_z)
 
-ax1.plot(time, msd_x, label='x', color='C0')
-ax1.plot(time, msd_y, label='y', color='C1')
-ax1.plot(time, msd_z, label='z', color='C2')
-
-ax1.text(0.5, 0.3, f'Slope (x): {slope_x:.3f} Å$^2$/ps', fontsize=10, color='C0', verticalalignment='top', transform=ax1.transAxes)
-ax1.text(0.5, 0.21, f'Slope (y): {slope_y:.3f} Å$^2$/ps', fontsize=10, color='C1', verticalalignment='top', transform=ax1.transAxes)
-ax1.text(0.5, 0.12, f'Slope (z): {slope_z:.3f} Å$^2$/ps', fontsize=10, color='C2', verticalalignment='top', transform=ax1.transAxes)
+n_fit = len(time)
+fit_start, fit_end = time[int(0.4 * n_fit)], time[int(0.8 * n_fit) - 1]  # slope-fit window (40%-80%)
+ax1.axvspan(fit_start, fit_end, color='0.5', alpha=0.08, linewidth=0)
+for t_edge, text in ((fit_start, '40%'), (fit_end, '80%')):
+    ax1.axvline(t_edge, color='0.6', linestyle='--', linewidth=0.8, zorder=0)
+    ax1.text(t_edge, 0.98, text + ' ', transform=ax1.get_xaxis_transform(), fontsize=8, color='0.4', ha='right', va='top')
+for label, msd, slope, color in (('x', msd_x, slope_x, COLORS[0]),
+                                 ('y', msd_y, slope_y, COLORS[1]),
+                                 ('z', msd_z, slope_z, COLORS[2])):
+    ax1.plot(time, msd, color=color, linewidth=1.6, label=f'{label}: {slope:.3f}')
 
 ax1.set_xlabel('dt (ps)')
-ax1.set_ylabel(r'MSD ($\AA^2$)')
-ax1.legend()
+ax1.set_ylabel(r'MSD ($\mathrm{\AA}^2$)')
+ax1.margins(x=0.02)
+ax1.legend(loc='upper left', title=r'Slope ($\mathrm{\AA}^2$/ps)', title_fontsize=9)
 
 # ==========================================
 # Right Subplot (ax2): SDC vs dt
 # ==========================================
-ax2.plot(time, sdc_x, label='x', color='C0')
-ax2.plot(time, sdc_y, label='y', color='C1')
-ax2.plot(time, sdc_z, label='z', color='C2')
+ax2.plot(time, sdc_x, label='x', color='C0', linewidth=1.0)
+ax2.plot(time, sdc_y, label='y', color='C1', linewidth=1.0)
+ax2.plot(time, sdc_z, label='z', color='C2', linewidth=1.0)
 
-# Legend: one row, bottom right, no frame border
-# ax2.legend(ncol=3, loc='lower right', frameon=False)
 ax2.set_xlabel('dt (ps)')
-ax2.set_ylabel(r'SDC ($\AA^2$/ps)')
+ax2.set_ylabel(r'SDC ($\mathrm{\AA}^2$/ps)')
+ax2.legend(ncol=3, loc='upper right', handlelength=1.4, columnspacing=1.0, handletextpad=0.5)
 
 # ────────────────────────────────────────────────
 # Inset (ax2): last 80% of the data + smoothing overlay
@@ -117,19 +139,20 @@ sdc_y_smooth = moving_average(sdc_y_zoom, window_size)
 sdc_z_smooth = moving_average(sdc_z_zoom, window_size)
 
 # Plot raw data (transparent) in inset
-ax_inset.plot(time_zoom, sdc_x_zoom, color='C0', alpha=0.35, lw=1.0)
-ax_inset.plot(time_zoom, sdc_y_zoom, color='C1', alpha=0.35, lw=1.0)
-ax_inset.plot(time_zoom, sdc_z_zoom, color='C2', alpha=0.35, lw=1.0)
+ax_inset.plot(time_zoom, sdc_x_zoom, color='C0', alpha=0.35, lw=0.8)
+ax_inset.plot(time_zoom, sdc_y_zoom, color='C1', alpha=0.35, lw=0.8)
+ax_inset.plot(time_zoom, sdc_z_zoom, color='C2', alpha=0.35, lw=0.8)
 
 # Overlay smoothed lines (solid, opaque)
-ax_inset.plot(time_zoom, sdc_x_smooth, color='C0', lw=1.6, label='x smooth')
-ax_inset.plot(time_zoom, sdc_y_smooth, color='C1', lw=1.6, label='y smooth')
-ax_inset.plot(time_zoom, sdc_z_smooth, color='C2', lw=1.6, label='z smooth')
+ax_inset.plot(time_zoom, sdc_x_smooth, color='C0', lw=1.4, label='x smooth')
+ax_inset.plot(time_zoom, sdc_y_smooth, color='C1', lw=1.4, label='y smooth')
+ax_inset.plot(time_zoom, sdc_z_smooth, color='C2', lw=1.4, label='z smooth')
 
 # ==========================================
 # Final Layout and Save/Show logic
 # ==========================================
-plt.tight_layout()
+# Subplot geometry (figure fractions); tune these to adjust margins and spacing
+fig.subplots_adjust(left=0.085, right=0.985, top=0.97, bottom=0.15, wspace=0.28)
 
 save_name = 'msd_sdc.png'
 

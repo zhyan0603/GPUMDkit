@@ -103,11 +103,13 @@
 </div>
 
 <hr />
-<h3 id="thermo2-thermo3-plt_thermo2py-plt_thermo3py">thermo2 / thermo3 (<code>plt_thermo2.py</code>, <code>plt_thermo3.py</code>)</h3>
-<p>Alternative thermodynamic visualization with different styles.</p>
+<h3 id="thermo2-plt_thermo2py">thermo2 (<code>plt_thermo2.py</code>)</h3>
+<p>The previous default thermodynamic plot, kept as an alternative style.</p>
 <p><strong>Input File:</strong> <code>thermo.out</code></p>
-<div class="code"><div class="cap"><i></i><i></i><i></i><span>bash</span></div><pre><code>gpumdkit.sh -plt thermo2
-gpumdkit.sh -plt thermo3</code></pre><button class="copy-btn" data-copy-pre aria-label="Copy"><svg class="cp"><use href="#i-copy"/></svg><svg class="ok"><use href="#i-check"/></svg></button></div>
+<div class="code"><div class="cap"><i></i><i></i><i></i><span>bash</span></div><pre><code>gpumdkit.sh -plt thermo2</code></pre><button class="copy-btn" data-copy-pre aria-label="Copy"><svg class="cp"><use href="#i-copy"/></svg><svg class="ok"><use href="#i-check"/></svg></button></div>
+<blockquote>
+<p><strong>Note:</strong> <code>thermo3</code> has become the default <code>thermo</code> plot. <code>gpumdkit.sh -plt thermo3</code> still works for now and prints a reminder, but it will be removed in a future release; use <code>gpumdkit.sh -plt thermo</code> instead.</p>
+</blockquote>
 <h2 id="structural-analysis">Structural Analysis</h2>
 <h3 id="rdf-plt_rdfpy">rdf (<code>plt_rdf.py</code>)</h3>
 <p>Plots all RDF value columns in <code>rdf.out</code> (the radius column is used as the x-axis).</p>
@@ -118,7 +120,7 @@ gpumdkit.sh -plt rdf save          # Save the figure as rdf.png</code></pre><but
 specific RDF output column is needed for PMF analysis.</p>
 <p><strong>RDF output:</strong></p>
 <div align="center">
-  <img src="../../Gallery/rdf1.png" alt="Complete RDF" width="90%" />
+  <img src="../../Gallery/rdf1.png" alt="Complete RDF" width="65%" />
 </div>
 
 <hr />
@@ -139,8 +141,10 @@ directory.</p>
 <h3 id="xrd_comp-plt_xrd_comppy">xrd_comp (<code>plt_xrd_comp.py</code>)</h3>
 <p>Compares XRD curves from several temperature folders in the current working
 directory. Each folder must be named <code>&lt;temperature&gt;K</code> and contain an
-<code>xrd.out</code> file written by calculator 413. Curves are stacked from high
-temperature at the top to low temperature at the bottom.</p>
+<code>xrd.out</code> file written by calculator 413. All curves are drawn in one panel,
+shifted along y so that the highest peak never reaches the curve above, with
+low temperature at the bottom. Each curve is labelled with its temperature and
+colored by a temperature colorbar.</p>
 <p>Run the comparison from the directory containing the <code>*K</code> subdirectories.
 This command does not take a directory argument:</p>
 <div class="code"><div class="cap"><i></i><i></i><i></i><span>bash</span></div><pre><code>cd /path/to/xrd_series
@@ -169,6 +173,15 @@ read from this file by the plotting script). This is separate from the
 <p><strong>Input File:</strong> <code>cohesive.out</code> (isotropic scaling factor vs cohesive energy)</p>
 <p><strong>Output:</strong> Interactive plot or <code>cohesive.png</code> (with <code>save</code> option)</p>
 <div class="code"><div class="cap"><i></i><i></i><i></i><span>bash</span></div><pre><code>gpumdkit.sh -plt cohesive</code></pre><button class="copy-btn" data-copy-pre aria-label="Copy"><svg class="cp"><use href="#i-copy"/></svg><svg class="ok"><use href="#i-check"/></svg></button></div>
+<p>The sampled energy curve is drawn as open circles, and a vertical dashed line
+marks the scaling factor at which the energy is lowest. This value, <code>a_min</code>,
+is read directly from the data, so its precision is the step of the scaling
+factor in <code>compute_cohesive</code>. The values below come from an LLZO NEP model
+scaled isotropically with <code>compute_cohesive 0.9 1.1 6</code>.</p>
+<div align="center">
+  <img src="../../Gallery/cohesive.png" alt="Cohesive energy curve" width="55%" />
+</div>
+
 <hr />
 <h3 id="net_force-plt_net_forcepy">net_force (<code>plt_net_force.py</code>)</h3>
 <p>Plots distribution of net forces on structures, useful for identifying problematic configurations.</p>
@@ -189,7 +202,7 @@ gpumdkit.sh -calc disp -i movie.xyz -n nl-Pb_Sr-O.dat -o displacements.dat
 gpumdkit.sh -calc avg-struct -i movie.xyz -l 0.2 -o averaged_structure.xyz</code></pre><button class="copy-btn" data-copy-pre aria-label="Copy"><svg class="cp"><use href="#i-copy"/></svg><svg class="ok"><use href="#i-check"/></svg></button></div>
 <p><strong>Usage:</strong></p>
 <div class="code"><div class="cap"><i></i><i></i><i></i><span>bash</span></div><pre><code>gpumdkit.sh -plt plane-grid -i averaged_structure.xyz -d displacements.dat -e Pb Sr
-gpumdkit.sh -plt plane-grid -i averaged_structure.xyz -d displacements.dat -e Pb Sr --select-xy 0 1</code></pre><button class="copy-btn" data-copy-pre aria-label="Copy"><svg class="cp"><use href="#i-copy"/></svg><svg class="ok"><use href="#i-check"/></svg></button></div><div class="doc-pn"><a href="plot_nep.html"><small>Previous</small><b>NEP Training and Model Analysis</b></a><a class="next" href="plot_diffusion.html"><small>Next</small><b>Diffusion and Ionic Transport</b></a></div><a class="doc-edit" href="https://github.com/zhyan0603/GPUMDkit/edit/main/docs/tutorials/en/plot_md_structure.md" target="_blank" rel="noopener">Edit this page</a></article><nav class="doc-toc" aria-label="On this page"><h6>On this page</h6><a href="#thermodynamic-properties" class="l2">Thermodynamic Properties</a><a href="#thermo-plt_thermopy" class="l3">thermo (plt_thermo.py)</a><a href="#thermo2-thermo3-plt_thermo2py-plt_thermo3py" class="l3">thermo2 / thermo3 (plt_thermo2.py, plt_thermo3.py)</a><a href="#structural-analysis" class="l2">Structural Analysis</a><a href="#rdf-plt_rdfpy" class="l3">rdf (plt_rdf.py)</a><a href="#xrd-plt_xrdpy" class="l3">xrd (plt_xrd.py)</a><a href="#xrd_comp-plt_xrd_comppy" class="l3">xrd_comp (plt_xrd_comp.py)</a><a href="#rdf_pmf-plt_rdf_pmfpy" class="l3">rdf_pmf (plt_rdf_pmf.py)</a><a href="#vac-plt_vacpy" class="l3">vac (plt_vac.py)</a><a href="#cohesive-plt_cohesivepy" class="l3">cohesive (plt_cohesive.py)</a><a href="#net_force-plt_net_forcepy" class="l3">net_force (plt_net_force.py)</a><a href="#plane-grid-plot-for-polar-materials" class="l2">Plane-Grid Plot for Polar Materials</a></nav></div>
+gpumdkit.sh -plt plane-grid -i averaged_structure.xyz -d displacements.dat -e Pb Sr --select-xy 0 1</code></pre><button class="copy-btn" data-copy-pre aria-label="Copy"><svg class="cp"><use href="#i-copy"/></svg><svg class="ok"><use href="#i-check"/></svg></button></div><div class="doc-pn"><a href="plot_nep.html"><small>Previous</small><b>NEP Training and Model Analysis</b></a><a class="next" href="plot_diffusion.html"><small>Next</small><b>Diffusion and Ionic Transport</b></a></div><a class="doc-edit" href="https://github.com/zhyan0603/GPUMDkit/edit/main/docs/tutorials/en/plot_md_structure.md" target="_blank" rel="noopener">Edit this page</a></article><nav class="doc-toc" aria-label="On this page"><h6>On this page</h6><a href="#thermodynamic-properties" class="l2">Thermodynamic Properties</a><a href="#thermo-plt_thermopy" class="l3">thermo (plt_thermo.py)</a><a href="#thermo2-plt_thermo2py" class="l3">thermo2 (plt_thermo2.py)</a><a href="#structural-analysis" class="l2">Structural Analysis</a><a href="#rdf-plt_rdfpy" class="l3">rdf (plt_rdf.py)</a><a href="#xrd-plt_xrdpy" class="l3">xrd (plt_xrd.py)</a><a href="#xrd_comp-plt_xrd_comppy" class="l3">xrd_comp (plt_xrd_comp.py)</a><a href="#rdf_pmf-plt_rdf_pmfpy" class="l3">rdf_pmf (plt_rdf_pmf.py)</a><a href="#vac-plt_vacpy" class="l3">vac (plt_vac.py)</a><a href="#cohesive-plt_cohesivepy" class="l3">cohesive (plt_cohesive.py)</a><a href="#net_force-plt_net_forcepy" class="l3">net_force (plt_net_force.py)</a><a href="#plane-grid-plot-for-polar-materials" class="l2">Plane-Grid Plot for Polar Materials</a></nav></div>
 </main>
 
 <!-- ======================================================= footer -->

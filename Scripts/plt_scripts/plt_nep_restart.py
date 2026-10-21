@@ -13,7 +13,7 @@ Usage:      gpumdkit.sh -plt restart
 Output:
   Display of NEP restart parameters plot
 Author:     Zihan YAN (yanzihan@westlake.edu.cn)
-Last-modified: 2026-05-16
+Last-modified: 2026-10-21
 =============================================================================
 """
 
@@ -22,11 +22,31 @@ import sys
 import numpy as np
 import matplotlib.pyplot as plt
 
+# Plot style (self-contained; keep in sync across plt_*.py scripts)
 plt.rcParams.update({
     "font.family": "sans-serif",
     "font.sans-serif": ["Arial", "DejaVu Sans", "Liberation Sans"],
+    "mathtext.fontset": "dejavusans",
+    "font.size": 9,
+    "axes.labelsize": 10,
+    "axes.linewidth": 0.9,
+    "xtick.labelsize": 9,
+    "ytick.labelsize": 9,
+    "xtick.direction": "out",
+    "ytick.direction": "out",
+    "xtick.major.size": 3.5,
+    "ytick.major.size": 3.5,
+    "xtick.minor.size": 2.0,
+    "ytick.minor.size": 2.0,
+    "xtick.major.width": 0.9,
+    "ytick.major.width": 0.9,
+    "legend.frameon": False,
+    "legend.fontsize": 9,
+    "figure.dpi": 100,
 })
 
+# nep.restart stores, for every parameter, the mean (mu) and the standard deviation (sigma)
+# of the SNES search distribution (column 1 and column 2, respectively)
 # Function to read two-column data from a file
 def read_data(file_path):
     data = np.loadtxt(file_path)
@@ -36,26 +56,28 @@ def read_data(file_path):
 col1, col2 = read_data('./nep.restart')
 
 # Create subplots
-fig, axes = plt.subplots(2, 1, figsize=(6, 4.2), sharex=True)
+fig, axes = plt.subplots(2, 1, figsize=(5.6, 4.0), sharex=True)
 
 # First subplot
-axes[0].plot(range(len(col1)), col1, label='Column 1', color='C0')
-axes[0].hlines(0, 0, len(col1), color='grey', linestyle='--')
-axes[0].set_ylabel('Column 1')
-axes[0].legend()
+axes[0].plot(range(len(col1)), col1, label='Mean', color='C0', linewidth=0.8)
+axes[0].hlines(0, 0, len(col1), color='0.55', linestyle='--', linewidth=1.0, zorder=0)
+axes[0].set_ylabel(r'$\mu$')
+axes[0].legend(loc='upper left', handlelength=1.4)
 axes[0].set_title('Parameters in nep.restart')
+axes[0].margins(x=0.01)
 #axes[0].grid(True)
 
 # Second subplot
-axes[1].plot(range(len(col2)), col2, label='Column 2', color='C1')
-axes[1].set_ylabel('Column 2')
+axes[1].plot(range(len(col2)), col2, label='Std. dev.', color='C1', linewidth=0.8)
+axes[1].set_ylabel(r'$\sigma$')
 axes[1].set_xlabel('Index')
-axes[1].legend()
+axes[1].legend(loc='upper left', handlelength=1.4)
 #axes[1].grid(True)
 
 # Adjust layout
-#plt.tight_layout()
-fig.subplots_adjust(top=0.918,bottom=0.142,left=0.139,right=0.975,hspace=0.0,wspace=0.24)
+# Subplot geometry (figure fractions); tune these to adjust margins and spacing
+fig.subplots_adjust(left=0.125, right=0.975, top=0.93, bottom=0.12, hspace=0.0)
+fig.align_ylabels(axes)
 
 # Show the plot
 if len(sys.argv) > 1 and sys.argv[1] == 'save':
