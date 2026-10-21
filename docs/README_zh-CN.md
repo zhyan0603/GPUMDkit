@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="./Gallery/gpumdkit_logo.png" width="25%" alt="GPUMDkit Logo">
+  <img src="./Gallery/gpumdkit_logo_lateral.png" width="55%" alt="GPUMDkit Logo">
 </p>
 <p align="center">
   <a href="../README.md">English</a>
@@ -21,6 +21,10 @@
   <a href="https://github.com/zhyan0603/GPUMDkit/graphs/contributors"><img src="https://img.shields.io/github/contributors/zhyan0603/GPUMDkit?style=flat-square&color=brightgreen&label=Contributors" alt="Contributors"></a>
 </p>
 <p style="text-align: justify;"><strong>GPUMDkit</strong> 是面向 GPUMD（<em>Graphics Processing Units Molecular Dynamics</em>）和 NEP（<em>neuroevolution potential</em>）程序的工具包。它提供统一的命令行入口，用于调用常用脚本、完成格式转换、结构采样、NEP 数据准备、分析和可视化。</p>
+
+<p align="center">
+  <a href="https://gpumdkit.cn/"><img src="./Gallery/gpumdkit_hero_zh.webp" width="100%" alt="GPUMDkit：面向 GPUMD 与 NEP 的用户友好工具包，在 gpumdkit.sh 菜单中完成数据准备、训练与模拟、分析与绘图"></a>
+</p>
 
 
 ## 功能特点

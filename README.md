@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="./docs/Gallery/gpumdkit_logo.png" width="25%" alt="GPUMDkit Logo">
+  <img src="./docs/Gallery/gpumdkit_logo_lateral.png" width="55%" alt="GPUMDkit Logo">
 </p>
 <p align="center">
   <strong>English</strong>
@@ -21,6 +21,10 @@
   <a href="https://github.com/zhyan0603/GPUMDkit/graphs/contributors"><img src="https://img.shields.io/github/contributors/zhyan0603/GPUMDkit?style=flat-square&color=brightgreen&label=Contributors" alt="Contributors"></a>
 </p>
 <p style="text-align: justify;"><strong>GPUMDkit</strong> is a toolkit for the GPUMD (<em>Graphics Processing Units Molecular Dynamics</em>) and NEP (<em>neuroevolution potential</em>) programs. It provides a unified command-line entry point for common scripts, format conversion, structure sampling, NEP data preparation, analysis, and visualization.</p>
+
+<p align="center">
+  <a href="https://gpumdkit.cn/"><img src="./docs/Gallery/gpumdkit_hero.webp" width="100%" alt="GPUMDkit, a user-friendly toolkit for GPUMD and NEP: prepare data, train and simulate, then analyze and plot from the gpumdkit.sh menu"></a>
+</p>
 
 ## Features
 - **Data Preparation**: Convert, label, sample, split, filter, and inspect atomistic datasets.
