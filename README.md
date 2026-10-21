@@ -128,7 +128,7 @@ There are two options, <u>*interactive mode*</u> and <u>*command-line mode*</u>
                 | |_| |  __/| |_| | |  | | |_| |   <| | |_
                  \____|_|    \___/|_|  |_|____/|_|\_\_|\__|
 
-                 GPUMDkit Version 1.5.8 (2026-09-23)
+                 GPUMDkit Version 1.5.8 (2026-10-20)
            Core Developer: Zihan YAN (yanzihan@westlake.edu.cn)
         Main Contributors: Denan LI, Xin WU, Zhoulin LIU & Chen HUA
 
@@ -157,43 +157,43 @@ gpumdkit.sh -h
 the help information:
 
 ```
-+-------------------------------------------------------------------------------------------------------+
-|                          GPUMDkit 1.5.8 (2026-09-23)       Command Help                               |
-+-------------------------------------------------------------------------------------------------------+
-|                                          MAIN FUNCTIONS                                               |
-+-------------------------------------------------------------------------------------------------------+
-| -h            Show this help table            | -plt <type>        Plot and visualization tools       |
-| -calc <type>  Calculator tools                | -time <gpumd|nep>  Time-consuming analyzer            |
-| -update       Update GPUMDkit                 | -clean             Clean extra files in current dir   |
-| -skill        Show GPUMDkit agent skill info  | -doctor            Check Python environment           |
-| -server       Start the GPUMDkit web server   |                                                       |
-| -prediction   Write NEP prediction .out files | -prediction_dpa  Write DPA prediction .out files      |
-+-------------------------------------------------------------------------------------------------------+
-|                                         FORMAT CONVERSION                                             |
-+-------------------------------------------------------------------------------------------------------+
-| -out2xyz      OUTCAR -> extxyz (shell)        | -out2xyz_bec       OUTCAR -> extxyz with BEC          |
-| -out2exyz     OUTCAR -> extxyz (python)       | -xyz2dp            extxyz -> DeepMD npy               |
-| -cp2k2xyz     CP2K log -> xyz                 | -xdat2exyz         XDATCAR -> extxyz                  |
-| -cif2pos      cif -> POSCAR                   | -cif2exyz          cif -> extxyz                      |
-| -pos2exyz     POSCAR -> extxyz                | -exyz2pos          extxyz -> POSCAR                   |
-| -pos2lmp      POSCAR -> LAMMPS data           | -lmp2exyz          LAMMPS dump/data -> extxyz         |
-| -traj2exyz    ASE traj -> extxyz              | -replicate         Replicate structure                |
-| -addgroup     Add group labels                | -addweight         Add structure weight in extxyz     |
-| -clean_xyz    Clean extra info in extxyz      | -get_frame         Extract specific frame             |
-| -frame_range  Extract frames by range         | -dp2xyz            DeepMD npy -> extxyz               |
-+-------------------------------------------------------------------------------------------------------+
-|                                            ANALYSIS                                                   |
-+-------------------------------------------------------------------------------------------------------+
-| -range        Energy/force/virial statistics  | -analyze_comp      Analyze composition                |
-| -chem_species Analyze chemical species        | -cbc               Charge balance check               |
-| -min_dist     Min distance (no PBC)           | -min_dist_pbc      Min distance with PBC              |
-| -filter_dist  Filter by min_dist (no PBC)     | -filter_dist_pbc   Filter by min_dist (PBC)           |
-| -pda          Probability density analysis    | -filter_box        Filter by box-edge length          |
-| -pynep        Deprecated PyNEP sampling       | -nep_modifier      Modify NEP model interactively     |
-| -shift_energy Interactive energy shift        |                                                       |
-+-------------------------------------------------------------------------------------------------------+
-| Python option help: gpumdkit.sh -<option> -h    Plot list: gpumdkit.sh -plt -h                        |
-+-------------------------------------------------------------------------------------------------------+
+ +-------------------------------------------------------------------------------------------------------+
+ |                          GPUMDkit 1.5.8 (2026-10-20)       Command Help                               |
+ +-------------------------------------------------------------------------------------------------------+
+ |                                          MAIN FUNCTIONS                                               |
+ +-------------------------------------------------------------------------------------------------------+
+ | -h            Show this help table            | -plt <type>        Plot and visualization tools       |
+ | -calc <type>  Calculator tools                | -time <gpumd|wpe|nep|gnep>  Time-consuming analyzer   |
+ | -update       Update GPUMDkit                 | -clean             Clean extra files in current dir   |
+ | -skill        Show GPUMDkit agent skill info  | -doctor            Check Python environment           |
+ | -prediction   Write NEP prediction .out files | -prediction_dpa    Write DPA prediction .out files    |
+ | -server       Start the GPUMDkit web server   |                                                       |
+ +-------------------------------------------------------------------------------------------------------+
+ |                                         FORMAT CONVERSION                                             |
+ +-------------------------------------------------------------------------------------------------------+
+ | -out2xyz      OUTCAR -> extxyz (shell)        | -out2xyz_bec       OUTCAR -> extxyz with BEC          |
+ | -out2exyz     OUTCAR -> extxyz (python)       | -xyz2dp            extxyz -> DeepMD npy               |
+ | -cp2k2xyz     CP2K log -> xyz                 | -xdat2exyz         XDATCAR -> extxyz                  |
+ | -cif2pos      cif -> POSCAR                   | -cif2exyz          cif -> extxyz                      |
+ | -pos2exyz     POSCAR -> extxyz                | -exyz2pos          extxyz -> POSCAR                   |
+ | -pos2lmp      POSCAR -> LAMMPS data           | -lmp2exyz          LAMMPS dump/data -> extxyz         |
+ | -traj2exyz    ASE traj -> extxyz              | -replicate         Replicate structure                |
+ | -addgroup     Add group labels                | -addweight         Add structure weight in extxyz     |
+ | -clean_xyz    Clean extra info in extxyz      | -get_frame         Extract specific frame             |
+ | -frame_range  Extract frames by range         | -dp2xyz            DeepMD npy -> extxyz               |
+ +-------------------------------------------------------------------------------------------------------+
+ |                                            ANALYSIS                                                   |
+ +-------------------------------------------------------------------------------------------------------+
+ | -range        Energy/force/virial statistics  | -analyze_comp      Analyze composition                |
+ | -chem_species Analyze chemical species        | -cbc               Charge balance check               |
+ | -min_dist     Min distance (no PBC)           | -min_dist_pbc      Min distance with PBC              |
+ | -filter_dist  Filter by min_dist (no PBC)     | -filter_dist_pbc   Filter by min_dist (PBC)           |
+ | -pda          Probability density analysis    | -filter_box        Filter by box-edge length          |
+ | -pynep        Deprecated PyNEP sampling       | -nep_modifier      Modify NEP model interactively     |
+ | -shift_energy Interactive energy shift        |                                                       |
+ +-------------------------------------------------------------------------------------------------------+
+ | Python option help: gpumdkit.sh -<option> -h    Plot list: gpumdkit.sh -plt -h                        |
+ +-------------------------------------------------------------------------------------------------------+
 ```
 
 ##### Example 2: View help information for -plt
@@ -206,7 +206,7 @@ the help information:
 
 ```
  +-----------------------------------------------------------------------------------------------+
- |                     GPUMDkit 1.5.8 (2026-09-23)       PLOT & VISUALIZATION TOOLS              |
+ |                     GPUMDkit 1.5.8 (2026-10-20)       PLOT & VISUALIZATION TOOLS              |
  +-----------------------------------------------------------------------------------------------+
  |  Usage: gpumdkit.sh -plt <type>                        List: gpumdkit.sh -plt -h              |
  +-----------------------------------------------------------------------------------------------+
@@ -244,7 +244,7 @@ the help information:
  +-----------------------------------------------------------------------------------------------+
  |                                          Phonons                                              |
  +-----------------------------------------------------------------------------------------------+
- |  pdos           - VAC and PDOS                 phonon         - Phonon band structure         |
+ |  pdos           - VAC and PDOS                   phonon       - Phonon band structure         |
  |  phonon_comp    - Compare phonon band structures                                              |
  +-----------------------------------------------------------------------------------------------+
  See the codes in plt_scripts for more details
@@ -277,7 +277,7 @@ gpumdkit.sh -plt train
 To visualize the prediction-mode parity results for structures in `train.xyz`:
 
 ```
-gpumdkit.sh -plt test
+gpumdkit.sh -plt prediction
 ```
 
 <div align="center">
@@ -340,7 +340,7 @@ You can add your own shortcuts (e.g., `gpumdkit.sh -yourcommand`) by defining fu
 
 - Type `gpumdkit.sh -<Tab>` to see all available options.
 - Type `gpumdkit.sh -plt <Tab>` to list plotting sub-options like `thermo`, `train`, etc.
-- Type `gpumdkit.sh -time <Tab>` to see calculator options like `gpumd`, `nep`.
+- Type `gpumdkit.sh -time <Tab>` to list the programs whose progress can be monitored: `gpumd`, `wpe`, `nep`, `gnep`.
 
 ## Join Us 
 

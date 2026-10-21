@@ -6,41 +6,38 @@ Read this reference when creating a plotting script, changing the appearance of 
 
 GPUMDkit figures are compact, publication-oriented scientific plots. They favor a white background, restrained Matplotlib colors, direct physical labels with units, and enough annotation to interpret a result without decorative UI elements. The data and its uncertainty are visually dominant.
 
-There are two established families, and both are valid:
+Most plot scripts share one house style. It is written inline at the top of every script (a short `plt.rcParams.update({...})` block), so each script stays copyable on its own; do not move it into a shared module.
 
-- General analysis and NEP plots use Matplotlib's object-oriented API, a sans-serif font stack, compact multi-panel layouts, and `tight_layout()`.
-- Thermal-transport and phonon plots retain the older `pylab` style, inward ticks on all four sides, minor ticks, thicker final/average curves, and frameless legends.
-
-Do not force an existing script from one family into the other. Match neighboring scripts in the same scientific workflow.
+A few scripts keep their earlier look on purpose, for example `plt_xrd`, `plt_parity_density`, `plt_net_force`, `plt_vac`, `plt_pdos`, and the heat-transport scripts (`plt_emd`, `plt_emd2`, `plt_hnemd`, `plt_nemd`, `plt_viscosity`). Do not restyle them unless the maintainer asks, and do not copy their older conventions (inward ticks on all four sides, `pylab` imports, `tight_layout()`) into new scripts. When editing one of them, match the script itself.
 
 ## Visual Vocabulary
 
 ### Typography
 
-- Prefer `sans-serif` with `Arial`, `DejaVu Sans`, and `Liberation Sans` as fallbacks.
-- Use math text and explicit units in axis labels, for example `Å$^2$/ps`, `eV/atom`, and `W/mK`.
-- Keep label and tick sizes internally consistent within a figure. Existing figures commonly use roughly 10-13 pt, but this is an observation, not a mandatory global value.
+- Use `sans-serif` with `Arial`, `DejaVu Sans`, and `Liberation Sans` as fallbacks, and `mathtext.fontset` set to `dejavusans`.
+- House sizes: 9 pt tick labels, legends, and annotations; 10 pt axis labels; 12 pt panel labels such as `(a)` placed outside the upper-left corner of the panel.
+- Capitalize the first word of axis labels and give explicit units, for example `DFT Energy (eV/atom)` and `Diffusion Coefficient (Å$^2$/ps)`.
 - Use concise legends and annotations. Put fit statistics or derived values close to the relevant panel or curve.
 
 ### Color and line hierarchy
 
-- Use Matplotlib cycle colors (`C0`, `C1`, `C2`, ...) for related components. Directional data conventionally maps `x`, `y`, and `z` to `C0`, `C1`, and `C2` when the target script already follows that mapping.
-- Use grey or black for references, raw replicas, and identity/zero lines. A grey dashed line is the common parity reference.
-- Show noisy replicas or distributions with low alpha; emphasize the mean, cumulative result, fit, or final trajectory with a thicker opaque line.
-- Use translucent bands for uncertainty and open markers when fitted points must remain distinct from fit lines.
+- Use saturated Matplotlib cycle colors (`C0`, `C1`, `C2`, ...) for related components. Directional data conventionally maps `x`, `y`, and `z` to `C0`, `C1`, and `C2` when the target script already follows that mapping. Avoid pale or yellowish choices unless the script already uses them (for example the directional Arrhenius plots keep their own palette).
+- Do not use alpha on scatter points, legend handles, or ordinary data lines; open markers keep points distinct from fit lines. Use alpha only for filled uncertainty bands, KDE fills, and faint replicas drawn behind a thicker opaque mean, cumulative result, fit, or final trajectory.
+- Use grey for references, raw replicas, and identity/zero lines. A grey dashed line (`0.55`, 1.2 pt) is the common parity reference.
 - Preserve a script's existing color semantics. Never change colors in a way that changes the meaning of components between related figures.
 
 ### Axes and layout
 
-- Choose the layout from the scientific comparison: compact single panels, aligned 1xN comparisons, or 2x2 training summaries are all established patterns.
-- Use `tight_layout()` or a deliberate `subplots_adjust(...)` when tight layout cannot preserve the intended panel geometry.
-- Keep axes uncluttered. Grid lines are usually absent; legends are often frameless in transport plots.
+- Choose the layout from the scientific comparison: compact single panels (about 4.2 x 3.5 in), aligned 1xN comparisons, or 2x2 training summaries (about 7.2 x 6.1 in) are all established patterns.
+- Set margins and spacing with one explicit `fig.subplots_adjust(...)` line, commented so that users can tune it, instead of `tight_layout()`. Keep the left and bottom margins close to the right and top ones, and remember that matplotlib's `wspace` is the gap between columns and `hspace` the gap between rows.
+- Ticks point outward on all axes; the frame is a thin 0.9 pt line. Keep axes uncluttered: no grid, and frameless legends placed where they hide no data (lower left is the usual choice).
 - Parity panels use equal data limits and a diagonal reference. Log axes are appropriate for losses or quantities spanning orders of magnitude.
 - Use inset axes only for a distinct scale or diagnostic that materially helps interpretation, such as a residual distribution or early-time behavior.
 
 ### Saving
 
 - Preserve the existing flexible `save` argument position of each script; do not impose a global argument contract.
+- Call `savefig(..., dpi=300)` without `bbox_inches="tight"`, so the geometry set by `subplots_adjust(...)` is kept in the saved file.
 - Preserve existing scripts' display/save DPI. New plots use 150 DPI for display and at least 300 DPI for saved figures; Gallery examples use a separate 100 DPI export.
 - Keep the established output filename and capitalization for an existing command. For a new command, use a stable, descriptive filename tied to the plot type.
 - Interactive display remains the default where neighboring scripts behave that way; saving is opt-in through the routed command.
@@ -56,7 +53,7 @@ Do not force an existing script from one family into the other. Match neighborin
 
 ## Workflow for a New Plot
 
-1. Identify the closest script in the same scientific family; reuse its figure grammar and CLI/save behavior.
+1. Identify the closest script in the same scientific family; reuse its figure grammar and CLI/save behavior, and copy the inline style block from a restyled script (for example `plt_train.py` or `plt_arrhenius_d.py`).
 2. Confirm inputs, columns, units, component mapping, fit/smoothing choices, and output name with project evidence or the user.
 3. Follow the header, help, error-message, dependency, and import-order rules in `contributing.md`.
 4. Separate data loading and validation from plotting helpers where that improves readability; add docstrings to helper functions.

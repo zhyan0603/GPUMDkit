@@ -71,49 +71,49 @@ gpumdkit.sh -plt train save
 Running `gpumdkit.sh -plt` prints the plotting command menu:
 
 ```text
-+-----------------------------------------------------------------------------------------------+
-|                     GPUMDkit <version> PLOT & VISUALIZATION TOOLS              |
-+-----------------------------------------------------------------------------------------------+
-|  Usage: gpumdkit.sh -plt <type>                        List: gpumdkit.sh -plt -h              |
-+-----------------------------------------------------------------------------------------------+
-|                                    NEP Training & Evaluation                                  |
-+-----------------------------------------------------------------------------------------------+
-|  train          - NEP training results           prediction     - NEP prediction results      |
-|  train_test     - NEP train and test results     parity_density - Parity density plot         |
-|  train_density  - Training results density plot  restart        - Parameters in nep.restart   |
-|  charge         - Charge distribution            born_charge    - Born effective charges      |
-|  dimer          - Dimer energy/force curve       force_errors   - Force errors                |
-|  des            - Descriptors                    net_force      - Net force distribution      |
-+-----------------------------------------------------------------------------------------------+
-|                                     Diffusion & Transport                                     |
-+-----------------------------------------------------------------------------------------------+
-|  msd            - Mean square displacement       msd_conv       - MSD convergence             |
-|  msd_all        - MSD for all species            sdc            - Self diffusion coefficient  |
-|  msd_sdc        - MSD and SDC together           sigma          - Arrhenius ionic conductivity|
-|  D              - Arrhenius diffusivity          sigma_xyz      - Directional Arrhenius sigma |
-|  D_xyz          - Directional Arrhenius D                                                     |
-|  D_PT           - PT Arrhenius D                 sigma_PT       - PT Arrhenius sigma          |
-|  doas           - Density of atomistic states                                                 |
-+-----------------------------------------------------------------------------------------------+
-|                                    MD & Structural Analysis                                   |
-+-----------------------------------------------------------------------------------------------+
-|  thermo         - thermo info in thermo.out      thermo2        - Previous thermo style       |
-|  rdf            - Radial distribution function   rdf_pmf        - Potential of mean force     |
-|  vac            - Velocity autocorrelation       cohesive       - Cohesive energy curve       |
-|  xrd            - X-ray diffraction              plane-grid     - Displacement plane grid     |
-|  xrd_comp       - Compare XRD                                                                 |
-+-----------------------------------------------------------------------------------------------+
-|                                        Heat Transport                                         |
-+-----------------------------------------------------------------------------------------------+
-|  emd            - EMD results                    emd2           - EMD all directions          |
-|  nemd           - NEMD results                   hnemd          - HNEMD results               |
-|  viscosity      - Viscosity                                                                   |
-+-----------------------------------------------------------------------------------------------+
-|                                          Phonons                                              |
-+-----------------------------------------------------------------------------------------------+
-|  pdos           - VAC and PDOS                 phonon         - Phonon band structure         |
-|  phonon_comp    - Compare phonon band structures                                              |
-+-----------------------------------------------------------------------------------------------+
+ +-----------------------------------------------------------------------------------------------+
+ |                     GPUMDkit <version>                PLOT & VISUALIZATION TOOLS              |
+ +-----------------------------------------------------------------------------------------------+
+ |  Usage: gpumdkit.sh -plt <type>                        List: gpumdkit.sh -plt -h              |
+ +-----------------------------------------------------------------------------------------------+
+ |                                    NEP Training & Evaluation                                  |
+ +-----------------------------------------------------------------------------------------------+
+ |  train          - NEP training results           prediction     - NEP prediction results      |
+ |  train_test     - NEP train and test results     parity_density - Parity density plot         |
+ |  train_density  - Training results density plot  restart        - Parameters in nep.restart   |
+ |  charge         - Charge distribution            born_charge    - Born effective charges      |
+ |  dimer          - Dimer energy/force curve       force_errors   - Force errors                |
+ |  des            - Descriptors                    net_force      - Net force distribution      |
+ +-----------------------------------------------------------------------------------------------+
+ |                                     Diffusion & Transport                                     |
+ +-----------------------------------------------------------------------------------------------+
+ |  msd            - Mean square displacement       msd_conv       - MSD convergence             |
+ |  msd_all        - MSD for all species            sdc            - Self diffusion coefficient  |
+ |  msd_sdc        - MSD and SDC together           doas           - Density of atomistic states |
+ |  D              - Arrhenius diffusivity          sigma          - Arrhenius ionic conductivity|
+ |  D_xyz          - Directional Arrhenius D        sigma_xyz      - Directional Arrhenius sigma |
+ |  D_PT           - PT Arrhenius D                 sigma_PT       - PT Arrhenius sigma          |
+ +-----------------------------------------------------------------------------------------------+
+ |                                    MD & Structural Analysis                                   |
+ +-----------------------------------------------------------------------------------------------+
+ |  thermo         - thermo info in thermo.out      thermo2        - Previous thermo style       |
+ |  rdf            - Radial distribution function   rdf_pmf        - Potential of mean force     |
+ |  vac            - Velocity autocorrelation       cohesive       - Cohesive energy curve       |
+ |  xrd            - X-ray diffraction              plane-grid     - Displacement plane grid     |
+ |  xrd_comp       - Compare XRD                                                                 |
+ +-----------------------------------------------------------------------------------------------+
+ |                                        Heat Transport                                         |
+ +-----------------------------------------------------------------------------------------------+
+ |  emd            - EMD results                    emd2           - EMD all directions          |
+ |  nemd           - NEMD results                   hnemd          - HNEMD results               |
+ |  viscosity      - Viscosity                                                                   |
+ +-----------------------------------------------------------------------------------------------+
+ |                                          Phonons                                              |
+ +-----------------------------------------------------------------------------------------------+
+ |  pdos           - VAC and PDOS                   phonon       - Phonon band structure         |
+ |  phonon_comp    - Compare phonon band structures                                              |
+ +-----------------------------------------------------------------------------------------------+
+ See the codes in plt_scripts for more details
 ```
 
 </details>
@@ -121,7 +121,7 @@ Running `gpumdkit.sh -plt` prints the plotting command menu:
 
 ## A Worked Example: Thermo Output
 
-Run the plot in the folder that holds `thermo.out`. This example used a **toy** 12-column file (temperature, kinetic and potential energy, three pressures, three shear pressures and the box lengths); a real run gives your own curves.
+Run the plot in the folder that holds `thermo.out`. This example uses the `thermo.out` of a real NPT run (`npt_mttk` at 900 K, 500 000 steps, one row every 10 steps): an 18-column file holding temperature, kinetic and potential energy, six pressure components, and the nine components of the cell vectors.
 
 ```bash
 gpumdkit.sh -plt thermo save
@@ -133,21 +133,25 @@ gpumdkit.sh -plt thermo save
 | You can change it by the following line: |
 |    start_index = int(len(time) * 0.5)    |
 +------------------------------------------+
-Temperature: 300.267 K
-Pressure X: 0.031 GPa
-Pressure Y: -0.020 GPa
-Pressure Z: -0.004 GPa
-Lattice Length X: 10.530 Angstrom
-Lattice Length Y: 10.530 Angstrom
-Lattice Length Z: 10.530 Angstrom
-Volume: 1167.500 Angstrom^3
+Temperature: 899.877 K
+Pressure X: 0.011 GPa
+Pressure Y: 0.015 GPa
+Pressure Z: 0.013 GPa
+Lattice Length X: 8.918 Angstrom
+Lattice Length Y: 8.938 Angstrom
+Lattice Length Z: 12.880 Angstrom
+Volume: 1025.207 Angstrom^3
+Angle Alpha: 91.99°
+Angle Beta: 90.65°
+Angle Gamma: 90.25°
+Average lattice matrix: 8.918, 0.000, 0.000, -0.039, 8.938, 0.000, -0.145, -0.448, 12.871
 ```
 
 <div align="center">
-  <img src="../../Gallery/toy_thermo.jpg" alt="Thermo plot of a toy thermo.out" width="70%" />
+  <img src="../../Gallery/thermo.png" alt="Thermo plot of an NPT run at 900 K" width="70%" />
 </div>
 
-Two files are written next to the data: `thermo.png` and `average_results.txt`, the averages above. The averages use the **second half** of the run; edit `start_index` in the script if your equilibration needs a different cut. The last panel (cell angles) stays empty for this 12-column file. Without `save` the same figure opens in a window.
+Two files are written next to the data: `thermo.png` and `average_results.txt`, the averages above. The averages use the **second half** of the run; edit `start_index` in the script if your equilibration needs a different cut. In the figure, the light curves are the raw data and the thick lines are running averages over 2% of the run. Without `save` the same figure opens in a window.
 
 ## Plot topics
 

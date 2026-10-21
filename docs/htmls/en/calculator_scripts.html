@@ -219,52 +219,35 @@
 +----------------------------------------------------------+
 Input the function number:</code></pre><button class="copy-btn" data-copy-pre aria-label="Copy"><svg class="cp"><use href="#i-copy"/></svg><svg class="ok"><use href="#i-check"/></svg></button></div>
 </details>
-<h2 id="a-worked-example-from-a-trajectory-to-a-conductivity">A Worked Example: From a Trajectory to a Conductivity</h2>
-<p>The commands below were run on a <strong>toy</strong> trajectory, <code>traj.xyz</code>: 400 frames of a 54-atom Li/S cell in which the 27 Li atoms take random steps. It only demonstrates the file flow; its numbers have no physical meaning, and a real study needs a converged MD run and checks of its own.</p>
-<p><strong>1. Mean square displacement.</strong> The frames are 10 fs apart (<code>dt_fs</code> must match how your trajectory was written):</p>
-<div class="code"><div class="cap"><i></i><i></i><i></i><span>bash</span></div><pre><code>gpumdkit.sh -calc msd traj.xyz Li 10</code></pre><button class="copy-btn" data-copy-pre aria-label="Copy"><svg class="cp"><use href="#i-copy"/></svg><svg class="ok"><use href="#i-check"/></svg></button></div>
-<div class="code"><div class="cap"><i></i><i></i><i></i><span>text</span></div><pre><code>  Trajectory file  : traj.xyz
-  Target element   : Li
-  Time step (dt)   : 10.0000 fs
-  Max corr. steps  : all frames
-
-   Loaded 400 frames, 27 Li atoms per frame
-   Cell lengths (a, b, c) : 10.5300  10.5300  10.5300  Ang
- Coordinate status : Wrapped (PBC detected)
- Unwrapping coordinates...
-   MSD computed for 398 lag times
-   Lag-time range  : 0.010000 ps  -&gt;  3.980000 ps
- MSD calculation completed. Results saved to 'msd.out'.</code></pre><button class="copy-btn" data-copy-pre aria-label="Copy"><svg class="cp"><use href="#i-copy"/></svg><svg class="ok"><use href="#i-check"/></svg></button></div>
-<p><code>msd.out</code> starts with a three-line header and then holds four columns (time in ps, <code>MSD_x</code>, <code>MSD_y</code>, <code>MSD_z</code> in Å²):</p>
-<div class="code"><div class="cap"><i></i><i></i><i></i><span>text</span></div><pre><code># msd.out by GPUMDkit
-# Element: Li  |  dt: 10.0000 fs  |  Frames: 400  |  Atoms: 27
-#     Time(ps)    MSD_x(Ang^2)    MSD_y(Ang^2)    MSD_z(Ang^2)</code></pre><button class="copy-btn" data-copy-pre aria-label="Copy"><svg class="cp"><use href="#i-copy"/></svg><svg class="ok"><use href="#i-check"/></svg></button></div>
+<h2 id="a-worked-example-from-msd-to-a-conductivity">A Worked Example: From MSD to a Conductivity</h2>
+<p>The commands below use the output of a real GPUMD run: a Li<sub>7</sub>La<sub>3</sub>Zr<sub>2</sub>O<sub>12</sub> cell with 12 288 atoms (3584 Li), NPT at 1000 K for 1 000 000 steps, with <code>compute_msd 10 5000 group 0 0</code> (group 0 is the Li atoms). Run them in the folder that holds <code>msd.out</code>, <code>thermo.out</code> (18 columns), <code>model.xyz</code>, and <code>run.in</code>. A real study needs its own converged run and checks.</p>
+<p><strong>1. The MSD file.</strong> With a single group, <code>compute_msd</code> writes seven columns: time (ps), <code>MSD_x/y/z</code> (Å²), and <code>SDC_x/y/z</code> (Å²/ps). <code>gpumdkit.sh -calc msd</code> produces the four-column form from a trajectory; here GPUMD's own file is used directly.</p>
 <p><strong>2. Look at the curve before using it.</strong></p>
 <div class="code"><div class="cap"><i></i><i></i><i></i><span>bash</span></div><pre><code>gpumdkit.sh -plt msd</code></pre><button class="copy-btn" data-copy-pre aria-label="Copy"><svg class="cp"><use href="#i-copy"/></svg><svg class="ok"><use href="#i-check"/></svg></button></div>
 <div align="center">
-  <img src="../../Gallery/toy_msd.png" alt="MSD of the toy trajectory" width="48%" />
+  <img src="../../Gallery/msd.png" alt="MSD of Li in Li7La3Zr2O12 at 1000 K" width="48%" />
 </div>
 
-<p>The slopes in the legend come from the middle 40%–80% of the curve. The noisy tail at long lag times is normal: the fewer time origins a lag has, the worse its statistics, so do not fit there. A real, converged curve should look close to a straight line in the fitted window.</p>
+<p>The slopes in the legend come from the middle 40%–80% of the curve (the shaded window). Here the three directions agree at 0.19 Å²/ps and the curve is close to a straight line inside the window, as a converged diffusive regime should look. The fewer time origins a long lag time has, the worse its statistics, so do not fit there.</p>
 <p><strong>3. Conductivity.</strong> Besides <code>msd.out</code> the calculator needs <code>thermo.out</code> (temperature and box, 12 or 18 columns) and <code>model.xyz</code> (to count the ions):</p>
 <div class="code"><div class="cap"><i></i><i></i><i></i><span>bash</span></div><pre><code>gpumdkit.sh -calc ionic-cond Li 1</code></pre><button class="copy-btn" data-copy-pre aria-label="Copy"><svg class="cp"><use href="#i-copy"/></svg><svg class="ok"><use href="#i-check"/></svg></button></div>
-<div class="code"><div class="cap"><i></i><i></i><i></i><span>text</span></div><pre><code> +---------------------------------------------------------+
- | Warning: run.in file not found, assuming no replication |
- +---------------------------------------------------------+
- Number of ions: 27
- Average Volume: 1167.576 Å^3
- Average Temperature: 299.667 K
+<div class="code"><div class="cap"><i></i><i></i><i></i><span>text</span></div><pre><code> Number of ions: 3584
+ Average Volume: 143914.280 Å^3
+ Average Temperature: 1000.019 K
+ ------------------------------
  Diffusivity (D):
-   D_x: 2.506e-05 cm^2/s
-   D_y: 4.431e-05 cm^2/s
-   D_z: 2.317e-05 cm^2/s
-   D_total: 3.085e-05 cm^2/s
+   D_x: 9.545e-06 cm^2/s
+   D_y: 9.509e-06 cm^2/s
+   D_z: 9.526e-06 cm^2/s
+   D_total: 9.527e-06 cm^2/s
+ ------------------------------
  Ionic Conductivity:
-   Sigma_x: 3.595e+03 mS/cm
-   Sigma_y: 6.358e+03 mS/cm
-   Sigma_z: 3.325e+03 mS/cm
-   Sigma_total: 4.426e+03 mS/cm</code></pre><button class="copy-btn" data-copy-pre aria-label="Copy"><svg class="cp"><use href="#i-copy"/></svg><svg class="ok"><use href="#i-check"/></svg></button></div>
-<p>The warning appears when there is no <code>run.in</code> next to the data. If your simulation used a <code>replicate</code> line, keep that <code>run.in</code> in the folder so the number of ions and the volume are scaled consistently. Temperature and volume are averaged over the second half of <code>thermo.out</code>.</p>
+   Sigma_x: 4.419e+02 mS/cm
+   Sigma_y: 4.403e+02 mS/cm
+   Sigma_z: 4.411e+02 mS/cm
+   Sigma_total: 4.411e+02 mS/cm
+ ------------------------------</code></pre><button class="copy-btn" data-copy-pre aria-label="Copy"><svg class="cp"><use href="#i-copy"/></svg><svg class="ok"><use href="#i-check"/></svg></button></div>
+<p>If there is no <code>run.in</code> next to the data, a warning is printed and no replication is assumed. If your simulation used a <code>replicate</code> line, keep that <code>run.in</code> in the folder so the number of ions and the volume are scaled consistently. Temperature and volume are averaged over the second half of <code>thermo.out</code>.</p>
 <h2 id="ionic-conductivity">Ionic Conductivity</h2>
 <p><code>calc_ion_conductivity.py</code> calculates ionic diffusivity and conductivity from <code>msd.out</code>.</p>
 <h3 id="required-and-optional-files">Required and Optional Files</h3>
@@ -338,17 +321,7 @@ Enter average temperature (in K):
 Enter system volume (in A^3):
 Enter number of ions:</code></pre><button class="copy-btn" data-copy-pre aria-label="Copy"><svg class="cp"><use href="#i-copy"/></svg><svg class="ok"><use href="#i-check"/></svg></button></div>
 <h3 id="example-output">Example Output</h3>
-<div class="code"><div class="cap"><i></i><i></i><i></i><span>text</span></div><pre><code>Diffusivity (D):
-  D_x: 4.153e-07 cm^2/s
-  D_y: 4.174e-07 cm^2/s
-  D_z: 2.610e-07 cm^2/s
-  D_total: 3.646e-07 cm^2/s
-------------------------------
-Ionic Conductivity:
-  Sigma_x: 2.576e-02 mS/cm
-  Sigma_y: 2.589e-02 mS/cm
-  Sigma_z: 1.619e-02 mS/cm
-  Sigma_total: 2.261e-02 mS/cm</code></pre><button class="copy-btn" data-copy-pre aria-label="Copy"><svg class="cp"><use href="#i-copy"/></svg><svg class="ok"><use href="#i-check"/></svg></button></div>
+<p>The output has the same layout as in step 3 of the worked example above.</p>
 <h2 id="mean-square-displacement">Mean Square Displacement</h2>
 <p><code>calc_msd.py</code> computes MSD directly from an extxyz trajectory.</p>
 <div class="code"><div class="cap"><i></i><i></i><i></i><span>bash</span></div><pre><code>gpumdkit.sh -calc msd dump.xyz Li 10
@@ -678,7 +651,7 @@ gpumdkit.sh -plt doas doas.out Li</code></pre><button class="copy-btn" data-copy
 </table></div>
 <p>Some scripts require <code>ferrodispcalc</code>:</p>
 <div class="code"><div class="cap"><i></i><i></i><i></i><span>bash</span></div><pre><code>pip3 install git+https://github.com/MoseyQAQ/ferrodispcalc.git</code></pre><button class="copy-btn" data-copy-pre aria-label="Copy"><svg class="cp"><use href="#i-copy"/></svg><svg class="ok"><use href="#i-check"/></svg></button></div>
-<p>A typical sequence is to build neighbor lists with <code>nlist</code>, then reuse those lists for displacement, tilt, or polarization calculations. For averaged structures, you can start directly from the trajectory and use the length tolerance to control which frames are included.</p><div class="doc-pn"><a href="workflow_scripts.html"><small>Previous</small><b>Workflow Scripts</b></a><a class="next" href="analyzer_scripts.html"><small>Next</small><b>Analyzer Scripts</b></a></div><a class="doc-edit" href="https://github.com/zhyan0603/GPUMDkit/edit/main/docs/tutorials/en/calculator_scripts.md" target="_blank" rel="noopener">Edit this page</a></article><nav class="doc-toc" aria-label="On this page"><h6>On this page</h6><a href="#overview" class="l2">Overview</a><a href="#a-worked-example-from-a-trajectory-to-a-conductivity" class="l2">A Worked Example: From a Trajectory to a Conductivity</a><a href="#ionic-conductivity" class="l2">Ionic Conductivity</a><a href="#required-and-optional-files" class="l3">Required and Optional Files</a><a href="#usage" class="l3">Usage</a><a href="#example-output" class="l3">Example Output</a><a href="#mean-square-displacement" class="l2">Mean Square Displacement</a><a href="#x-ray-diffraction-xrd" class="l2">X-ray Diffraction (XRD)</a><a href="#phonon-band-structure" class="l2">Phonon Band Structure</a><a href="#nep-property-prediction" class="l2">NEP Property Prediction</a><a href="#nep-prediction-output-files" class="l3">NEP Prediction Output Files</a><a href="#dpa-prediction-output-files" class="l3">DPA Prediction Output Files</a><a href="#nep-descriptors" class="l2">NEP Descriptors</a><a href="#density-of-atomistic-states" class="l2">Density of Atomistic States</a><a href="#neb-with-a-nep-model" class="l2">NEB with a NEP Model</a><a href="#structure-minimization" class="l2">Structure Minimization</a><a href="#rdf-calculation-with-ovito" class="l2">RDF Calculation with OVITO</a><a href="#ferroelectric-and-polar-material-tools" class="l2">Ferroelectric and Polar Material Tools</a></nav></div>
+<p>A typical sequence is to build neighbor lists with <code>nlist</code>, then reuse those lists for displacement, tilt, or polarization calculations. For averaged structures, you can start directly from the trajectory and use the length tolerance to control which frames are included.</p><div class="doc-pn"><a href="workflow_scripts.html"><small>Previous</small><b>Workflow Scripts</b></a><a class="next" href="analyzer_scripts.html"><small>Next</small><b>Analyzer Scripts</b></a></div><a class="doc-edit" href="https://github.com/zhyan0603/GPUMDkit/edit/main/docs/tutorials/en/calculator_scripts.md" target="_blank" rel="noopener">Edit this page</a></article><nav class="doc-toc" aria-label="On this page"><h6>On this page</h6><a href="#overview" class="l2">Overview</a><a href="#a-worked-example-from-msd-to-a-conductivity" class="l2">A Worked Example: From MSD to a Conductivity</a><a href="#ionic-conductivity" class="l2">Ionic Conductivity</a><a href="#required-and-optional-files" class="l3">Required and Optional Files</a><a href="#usage" class="l3">Usage</a><a href="#example-output" class="l3">Example Output</a><a href="#mean-square-displacement" class="l2">Mean Square Displacement</a><a href="#x-ray-diffraction-xrd" class="l2">X-ray Diffraction (XRD)</a><a href="#phonon-band-structure" class="l2">Phonon Band Structure</a><a href="#nep-property-prediction" class="l2">NEP Property Prediction</a><a href="#nep-prediction-output-files" class="l3">NEP Prediction Output Files</a><a href="#dpa-prediction-output-files" class="l3">DPA Prediction Output Files</a><a href="#nep-descriptors" class="l2">NEP Descriptors</a><a href="#density-of-atomistic-states" class="l2">Density of Atomistic States</a><a href="#neb-with-a-nep-model" class="l2">NEB with a NEP Model</a><a href="#structure-minimization" class="l2">Structure Minimization</a><a href="#rdf-calculation-with-ovito" class="l2">RDF Calculation with OVITO</a><a href="#ferroelectric-and-polar-material-tools" class="l2">Ferroelectric and Polar Material Tools</a></nav></div>
 </main>
 
 <!-- ======================================================= footer -->
