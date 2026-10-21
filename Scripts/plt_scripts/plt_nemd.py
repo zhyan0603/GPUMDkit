@@ -21,59 +21,57 @@ Arguments:
 Output:
   nemd.png    (if save is used, or if backend is non-interactive)
 Author:     Xin Wu (xinwuchn97@gmial.com)
-Last-modified: 2026-05-16
+Last-modified: 2026-10-21
 =============================================================================
 """
 
-from pylab import *
-import pandas as pd
-import numpy as np
-from ase.io import read
-import os
-import sys
-import builtins  # `from pylab import *` shadows any() with numpy.any, which mishandles generators
 import ast
 import operator as op
+import os
+import sys
+from functools import lru_cache
+from io import StringIO
 from math import isfinite
-from ase.data import atomic_masses, chemical_symbols
 
-# Figure Properties
-aw, fs = 1.2, 12
-matplotlib.rc('font', size=fs)
-matplotlib.rc('font', family='sans-serif')
-matplotlib.rc('font', **{'sans-serif': ['Arial', 'DejaVu Sans', 'Liberation Sans']})
-matplotlib.rc('axes', linewidth=aw)
+import matplotlib.pyplot as plt
+import numpy as np
+from ase.io import read
+
+FS = 12
+TIME_UNIT_FS = 10.18051  # GPUMD 3.3.1 internal time unit.
+trap = np.trapezoid if hasattr(np, "trapezoid") else np.trapz
+plt.rcParams.update({
+    'font.size': FS, 'font.family': 'sans-serif',
+    'font.sans-serif': ['Arial', 'DejaVu Sans', 'Liberation Sans'], 'axes.linewidth': 1.2,
+})
+
 
 def set_fig_properties(ax_list, tl=4, tw=1.2, tlm=4):
-    """Set figure properties for axes"""
+    """Apply matching tick properties to all axes."""
     for ax in ax_list:
         ax.tick_params(which='both', length=tl, width=tw, direction='in', right=True, top=True)
         ax.tick_params(which='minor', length=tlm)
 
-trap = np.trapezoid if hasattr(np, "trapezoid") else getattr(np, "trapz")
 
 def quantum_correction_factor(nu, T):
-    """Mode heat-capacity ratio C_quantum / C_classical = x^2 e^x / (e^x - 1)^2, x = h*nu / (k_B*T).
-
-    nu in THz, T in K. Written with e^{-x} so it does not overflow for large x; equals 1 at nu = 0.
-    """
+    """Return the mode heat-capacity ratio for frequency in THz and temperature in K."""
     h_over_kB = 6.62607015e-34 / 1.380649e-23  # K*s
     x = h_over_kB * np.asarray(nu, dtype=float) * 1e12 / T
     with np.errstate(divide='ignore', invalid='ignore'):
         factor = x**2 * np.exp(-x) / np.expm1(-x)**2
     return np.where(x == 0, 1.0, factor)
 
-TIME_UNIT_FS = 10.18051  # GPUMD 3.3.1 internal time unit.
 
+@lru_cache(maxsize=None)
 def element_from_mass(mass):
-    """Return the element symbol whose standard atomic mass is closest to mass (amu)."""
+    """Infer an element from its closest standard atomic mass."""
+    from ase.data import atomic_masses, chemical_symbols
+
     return chemical_symbols[int(np.argmin(np.abs(atomic_masses[1:] - mass))) + 1]
 
-def xyz_in_to_model(source, target):
-    """Convert a GPUMD 3.3.1 empirical-potential xyz.in to extended XYZ (model.xyz).
 
-    Elements are inferred from the per-atom masses; masses, groups and velocities are preserved.
-    """
+def xyz_in_to_model(source, target):
+    """Convert legacy GPUMD xyz.in to extended XYZ, preserving masses, velocities and groups."""
     with open(source, encoding="utf-8-sig") as inp:
         header = inp.readline().split()
         if len(header) != 6:
@@ -83,9 +81,9 @@ def xyz_in_to_model(source, target):
             raise ValueError("Invalid atom count, box flag, velocity flag or group count.")
 
         box = inp.readline().split()
-        if len(box) != (12 if triclinic else 6) or builtins.any(v not in ("0", "1") for v in box[:3]):
+        if len(box) != (12 if triclinic else 6) or any(v not in ("0", "1") for v in box[:3]):
             raise ValueError("Line 2 must contain three PBC flags followed by the cell.")
-        if builtins.any(not isfinite(float(v)) for v in box[3:]):
+        if any(not isfinite(float(v)) for v in box[3:]):
             raise ValueError("Cell components must be finite.")
         lattice = box[3:] if triclinic else [box[3], "0", "0", "0", box[4], "0", "0", "0", box[5]]
         boundary = " ".join("T" if v == "1" else "F" for v in box[:3])
@@ -103,10 +101,10 @@ def xyz_in_to_model(source, target):
                 raise ValueError(f"Line {index + 3}: incorrect number of atom columns.")
             atom_type = int(fields[0])
             values = [float(v) for v in fields[1:5 + 3 * has_velocity]]
-            if builtins.any(not isfinite(v) for v in values) or values[3] <= 0:
+            if any(not isfinite(v) for v in values) or values[3] <= 0:
                 raise ValueError(f"Line {index + 3}: invalid coordinates, mass or velocity.")
             labels = fields[5 + 3 * has_velocity:]
-            if builtins.any(not 0 <= int(v) < n for v in labels):
+            if any(not 0 <= int(v) < n for v in labels):
                 raise ValueError(f"Line {index + 3}: invalid group label.")
             element = element_from_mass(values[3])
             type_elements.setdefault(atom_type, set()).add((element, values[3]))
@@ -122,18 +120,28 @@ def xyz_in_to_model(source, target):
         out.write("\n".join(rows) + "\n")
     return n, type_elements
 
+
+def prepare_model(paths):
+    """Convert legacy xyz.in only when model.xyz is absent."""
+    if os.path.exists(paths['model']) or not os.path.exists(paths['xyz_in']):
+        return
+    print("[INFO] model.xyz not found, converting xyz.in -> model.xyz ...")
+    n, types = xyz_in_to_model(paths['xyz_in'], paths['model'])
+    for atom_type, elements in sorted(types.items()):
+        mapping = ", ".join(f"{element} (mass {mass:g})" for element, mass in sorted(elements))
+        print(f"       type {atom_type} -> {mapping}")
+    print(f"[INFO] Wrote {paths['model']}: {n} atoms.\n")
+
+
 _ARITH_OPS = {
     ast.Add: op.add, ast.Sub: op.sub, ast.Mult: op.mul, ast.Div: op.truediv,
     ast.FloorDiv: op.floordiv, ast.Mod: op.mod, ast.Pow: op.pow,
     ast.UAdd: op.pos, ast.USub: op.neg,
 }
 
-def eval_number(expr):
-    """Parse a plain number or a simple arithmetic expression (e.g. '100/2') into a float.
 
-    Only numeric literals and +, -, *, /, //, %, ** are allowed (parsed via ast,
-    not eval()), so this is safe against arbitrary code in the input string.
-    """
+def eval_number(expr):
+    """Safely evaluate numeric literals and simple arithmetic expressions."""
     def _eval(node):
         if isinstance(node, ast.Expression):
             return _eval(node.body)
@@ -157,6 +165,83 @@ def eval_number(expr):
         return float(_eval(tree))
     except (ZeroDivisionError, OverflowError, TypeError) as e:
         raise ValueError(f"Could not evaluate {expr!r}: {e}")
+
+
+def read_commands(path):
+    """Read exact command tokens, excluding blank lines and comments."""
+    with open(path, encoding="utf-8-sig") as source:
+        return [tokens for line in source if (tokens := line.split("#", 1)[0].split())]
+
+
+def last_command(commands, name):
+    for command in reversed(commands):
+        if command[0] == name:
+            return command
+    raise ValueError(f"Missing {name!r} command in run.in.")
+
+
+def load_repeated(path, n_rows, names):
+    """Load consecutive runs as (sample, repeat) arrays without a DataFrame."""
+    if n_rows < 1:
+        raise ValueError("The number of samples per run must be positive.")
+    raw = np.loadtxt(path, ndmin=2)
+    if raw.shape[1] != len(names):
+        raise ValueError(f"{path}: expected {len(names)} columns, got {raw.shape[1]}.")
+    if not len(raw) or len(raw) % n_rows:
+        raise ValueError(f"{path}: incomplete data; expected a multiple of {n_rows} rows.")
+    runs = raw.reshape(-1, n_rows, len(names)).transpose(1, 0, 2)
+    return {name: runs[:, :, i] for i, name in enumerate(names)}
+
+
+def add_statistics(values, sem=False):
+    """Append the repeat mean and, optionally, its standard error."""
+    columns = [values, values.mean(axis=1)]
+    if sem:
+        columns.append(values.std(axis=1) / np.sqrt(values.shape[1]))
+    return np.column_stack(columns)
+
+
+def load_shc(path, command):
+    """Split each SHC block into correlation and spectral arrays."""
+    n_corr = 2 * int(command[2]) - 1
+    n_omega = int(command[4])
+    raw = load_repeated(path, n_corr + n_omega, ('grid', 'in', 'out'))
+    data = {'t': raw['grid'][:n_corr], 'omega': raw['grid'][n_corr:]}
+    data['nu'] = data['omega'] / (2 * np.pi)
+    for key, component in (('Ki', 'in'), ('Ko', 'out')):
+        data[key] = raw[component][:n_corr]
+        data['jw' + component[0]] = raw[component][n_corr:]
+    return data, data['t'].shape[1]
+
+
+def shc_geometry(model_path, command, scale_eff_size):
+    """Apply the existing atom-fraction normalization for a selected group."""
+    model = read(model_path)
+    fraction = 1.0
+    if 'group' in command:
+        index = command.index('group')
+        method, group_id = map(int, command[index + 1:index + 3])
+        if group_id < 0:
+            raise ValueError("SHC analysis requires a single group_id; group -1 outputs multiple groups.")
+        labels = model.get_array('group')
+        labels = labels if labels.ndim == 1 else labels[:, method]
+        fraction = np.count_nonzero(labels == group_id) / len(labels)
+        if not fraction:
+            raise ValueError(f"SHC group {group_id} contains no atoms.")
+    volume = model.get_volume() * fraction / scale_eff_size
+    length = model.cell[int(command[3]), int(command[3])] * fraction
+    return volume, length
+
+
+def txt_block(name, unit, x_name, x_unit, x, arr, trailing_labels=("average",)):
+    """Format a data block with the existing tab-separated export layout."""
+    labels = [f"repeat_{i + 1}" for i in range(arr.shape[1] - len(trailing_labels))]
+    header = [f"{x_name}({x_unit})", *labels, *trailing_labels]
+    output = StringIO()
+    np.savetxt(output, np.column_stack((x, arr)), delimiter="\t", fmt="%.6g")
+    return [f"# ---- {name} ({unit}) ----", "# " + "\t".join(header),
+            *output.getvalue().splitlines(), ""]
+
 
 def print_usage():
     """Print usage instructions"""
@@ -184,31 +269,7 @@ def print_usage():
 class NEMD_Processor:
     def __init__(self, _directory, _real_length=None, _scale_eff_size=1, _cutoff_freq=60, _scale_vacuum=1,
                  _save=False, _save_data=False, _quantum=False):
-        """
-        Initialize NEMD processor
-
-        Parameters:
-        -----------
-        directory : str
-            Path to the directory containing GPUMD output files
-        scale_vacuum : float
-            Scale factor for vacuum along heat transfer direction (default: 1)
-            For NEMD, box size along heat transfer may be longer than actual value
-        scale_eff_size : float
-            Scale factor for effective cross-sectional area (for low-dimensional systems)
-            Scale = S_box / S_eff, where S_box is the box area perpendicular to heat transfer
-        real_length : float or None
-            Real/effective length in nm (if specified, overrides automatic calculation)
-            Use this if N_bath != 1 or if automatic length is inaccurate
-        cutoff_freq : float
-            Cutoff frequency for SHC calculation (THz), material-dependent
-        save : bool
-            Save the plot as 'nemd.png' instead of showing it interactively
-        save_data : bool
-            Also save the processed data as 'data_nemd.npz'/'data_shc.npz' (and their .txt equivalents)
-        quantum : bool
-            Also compute the quantum-corrected SHC spectral thermal conductance
-        """
+        """Configure NEMD processing; lengths are in nm and frequencies in THz."""
         self.directory = _directory
         self.scale_vacuum = _scale_vacuum
         self.scale_eff_size = _scale_eff_size
@@ -217,233 +278,126 @@ class NEMD_Processor:
         self.save = _save
         self.save_data = _save_data
         self.quantum = _quantum
-        self.path = {
-            'run': os.path.join(self.directory, 'run.in'),
-            'compute': os.path.join(self.directory, 'compute.out'),
-            'model': os.path.join(self.directory, 'model.xyz'),
-            'shc': os.path.join(self.directory, 'shc.out'),
-            'xyz_in': os.path.join(self.directory, 'xyz.in')
-        }
+        self.path = {key: os.path.join(_directory, filename) for key, filename in (
+            ('run', 'run.in'), ('compute', 'compute.out'), ('model', 'model.xyz'),
+            ('shc', 'shc.out'), ('xyz_in', 'xyz.in'),
+        )}
         self.has_shc = os.path.exists(self.path['shc'])
 
     def prepare_model(self):
-        """Use model.xyz if present; otherwise convert a legacy (GPUMD 3.x) xyz.in into model.xyz"""
-        if os.path.exists(self.path['model']) or not os.path.exists(self.path['xyz_in']):
-            return
-        print("[INFO] model.xyz not found, converting xyz.in -> model.xyz ...")
-        n, type_elements = xyz_in_to_model(self.path['xyz_in'], self.path['model'])
-        for atom_type in sorted(type_elements):
-            mapping = ", ".join(f"{element} (mass {mass:g})" for element, mass in sorted(type_elements[atom_type]))
-            print(f"       type {atom_type} -> {mapping}")
-        print(f"[INFO] Wrote {self.path['model']}: {n} atoms.\n")
+        """Convert a legacy xyz.in when model.xyz is absent."""
+        prepare_model(self.path)
 
     def process_SHC(self, deltaT):
-        """
-        Process spectral heat current (SHC) data for NEMD
+        """Compute classical and optional quantum-corrected spectral conductance."""
+        commands = read_commands(self.path['run'])
+        command = last_command(commands, 'compute_shc')
+        data, n_repeat = load_shc(self.path['shc'], command)
+        # NEMD historically scales this volume by scale_vacuum, not scale_eff_size.
+        volume, length = shc_geometry(self.path['model'], command, self.scale_vacuum)
+        convert = 1.602176634e7
+        denom = volume * deltaT
+        data['k_g_wi'] = data['jwi'] * convert / denom
+        data['k_g_wo'] = data['jwo'] * convert / denom
+        data['k_g_wt'] = data['k_g_wi'] + data['k_g_wo']
+        # Preserve the original total-only cutoff and negative-value floor.
+        data['k_g_wt'][data['nu'] > float(self.cutoff_freq)] = 0
+        data['k_g_wt'][data['k_g_wt'] < 0] = 0.001
+        data['Kt'] = data['Ki'] + data['Ko']
+        data['L'] = length
 
-        Parameters:
-        -----------
-        deltaT : array
-            Temperature difference across the system
-
-        Returns:
-        --------
-        dict : Reformed SHC data including spectral thermal conductance
-        """
-        Reformed_SHC_data = {}
-
-        col_shc_name = ['t_omega', 'Ki_jwi', 'Ko_jwo']
-        raw_shc_data = np.loadtxt(self.path['shc'])
-        raw_shc_data = pd.DataFrame(raw_shc_data, columns=col_shc_name)
-
-        with open(self.path['run'], 'r') as file:
-            for line in file:
-                if line.lstrip().startswith('#'):
-                    continue
-                if 'compute_shc' in line:
-                    Max_cor_step = int(line.split()[2])
-                    N_omega = int(line.split()[4])
-                    direction = int(line.split()[3])
-                    if 'group' in line:
-                        grouping_th = int(line.split()[7])
-                        group_shc_th = int(line.split()[8])
-                        part_ratio = -1
-                    else:
-                        part_ratio = 1
-                if 'heat_lan' in line:
-                    Temp = float(line.split()[2])  # ensemble heat_lan T T_coup delta_T source sink
-
-        N_shc_data = 2 * Max_cor_step - 1 + N_omega
-        N_repeat = len(raw_shc_data) // N_shc_data
-
-        for col in raw_shc_data.columns:
-            Reformed_SHC_data[col] = raw_shc_data[col].values.reshape(N_shc_data, N_repeat, order='F')
-
-        Reformed_SHC_data = {
-            "t": Reformed_SHC_data["t_omega"][:2 * Max_cor_step - 1, :],
-            "omega": Reformed_SHC_data["t_omega"][2 * Max_cor_step - 1:, :],
-            "nu": Reformed_SHC_data["t_omega"][2 * Max_cor_step - 1:, :] / (2 * np.pi),
-            "Ki": Reformed_SHC_data["Ki_jwi"][:2 * Max_cor_step - 1, :],
-            "jwi": Reformed_SHC_data["Ki_jwi"][2 * Max_cor_step - 1:, :],
-            "Ko": Reformed_SHC_data["Ko_jwo"][:2 * Max_cor_step - 1, :],
-            "jwo": Reformed_SHC_data["Ko_jwo"][2 * Max_cor_step - 1:, :]
-        }
-
-        # Calculate g(omega) from jw for NEMD
-        model = read(self.path['model'])
-        if part_ratio == -1:
-            group_arr = model.get_array('group')
-            if group_arr.ndim == 1:
-                group = group_arr
-            else:
-                group = group_arr[:, grouping_th]
-            part_ratio = np.sum(group == group_shc_th) / group.size
-
-        vol = model.get_volume() * part_ratio / self.scale_vacuum
-        convert = 1.602176634e7  # ev*A/ps/THz * 1/A^3 *1/K * A ==> MW/(m·K·THz)
-        denom = vol * deltaT
-
-        Reformed_SHC_data["k_g_wi"] = Reformed_SHC_data["jwi"] * convert / denom
-        Reformed_SHC_data["k_g_wo"] = Reformed_SHC_data["jwo"] * convert / denom
-        Reformed_SHC_data["k_g_wt"] = Reformed_SHC_data["k_g_wi"] + Reformed_SHC_data["k_g_wo"]
-        Reformed_SHC_data["k_g_wt"][Reformed_SHC_data["nu"] > float(self.cutoff_freq)] = 0
-        Reformed_SHC_data["k_g_wt"][Reformed_SHC_data["k_g_wt"] < 0] = 0.001
-        Reformed_SHC_data["Kt"] = Reformed_SHC_data["Ki"] + Reformed_SHC_data["Ko"]
-        Reformed_SHC_data["L"] = model.get_cell()[direction, direction] * part_ratio
-
-        result_cols = [("in", "k_g_wi"), ("out", "k_g_wo"), ("tot", "k_g_wt")]
+        result_cols = [('in', 'k_g_wi'), ('out', 'k_g_wo'), ('tot', 'k_g_wt')]
         if self.quantum:
-            self.temperature = Temp
-            qc_factor = quantum_correction_factor(Reformed_SHC_data["nu"], Temp)
+            heat = last_command([c for c in commands if c[:2] == ['ensemble', 'heat_lan']], 'ensemble')
+            self.temperature = float(heat[2])
+            factor = quantum_correction_factor(data['nu'], self.temperature)
             for key, col in list(result_cols):
-                Reformed_SHC_data[f"{col}_qc"] = Reformed_SHC_data[col] * qc_factor
-                result_cols.append((f"{key}_qc", f"{col}_qc"))
+                data[f'{col}_qc'] = data[col] * factor
+                result_cols.append((f'{key}_qc', f'{col}_qc'))
 
-        # Average them and save in Reformed_SHC_data['Results']
-        for key, value in Reformed_SHC_data.items():
-            if key not in ["L"]:
-                Reformed_SHC_data[key] = np.column_stack((value, value.mean(axis=1), value.std(axis=1) / sqrt(N_repeat)))
-
-        if 'Results' not in Reformed_SHC_data:
-            Reformed_SHC_data['Results'] = {}
+        # Integration uses the original frequency spacing, including its first-bin convention.
+        results = {}
         for key, col in result_cols:
-            values = [trap(Reformed_SHC_data[col][:, i], dx=Reformed_SHC_data["nu"][0, 0]) for i in range(N_repeat)]
-            Reformed_SHC_data['Results'][f"{key}_ave"] = np.mean(values)
-            Reformed_SHC_data['Results'][f"{key}_std"] = np.std(values) / np.sqrt(N_repeat)
+            values = trap(data[col], dx=data['nu'][0, 0], axis=0)
+            results[f'{key}_ave'] = values.mean()
+            results[f'{key}_std'] = values.std() / np.sqrt(n_repeat)
+        data = {key: value if key == 'L' else add_statistics(value, sem=True)
+                for key, value in data.items()}
+        data['Results'] = results
 
         if self.save_data:
-            np.savez(os.path.join(self.directory, 'data_shc.npz'), **Reformed_SHC_data)
-            self._export_shc_txt(Reformed_SHC_data)
-        return Reformed_SHC_data
+            np.savez(os.path.join(self.directory, 'data_shc.npz'), **data)
+            self._export_shc_txt(data)
+        return data
 
     def process(self):
-        """Main processing function for NEMD method"""
+        """Process NEMD data, print results and plot the available panels."""
         self.prepare_model()
+        direction = None
+        found_nemd = False
+        for command in read_commands(self.path['run']):
+            if command[0] == 'time_step':
+                time_step = float(command[1])
+            elif command[:2] == ['ensemble', 'heat_lan']:
+                n_temp_group = int(command[6]) + 1
+            elif command[0] == 'compute' and 'temperature' in command[1:]:
+                output_interval = int(command[2]) * int(command[3])
+                found_nemd = True
+            elif command[0] == 'compute_shc':
+                direction = int(command[3])
+            elif found_nemd and command[0] == 'run':
+                nemd_run = int(command[1])
 
-        raw_NEMD_data = np.loadtxt(self.path['compute'])
-        Reformed_NEMD_data = {}
+        n_rows = nemd_run // output_interval
+        names = [f'temp_{i}' for i in range(n_temp_group)] + ['E_in', 'E_out']
+        data = load_repeated(self.path['compute'], n_rows, names)
+        n_repeat = data['E_in'].shape[1]
+        time_upper = nemd_run * time_step * 1e-6  # ns
+        for key, values in data.items():
+            values = add_statistics(values)
+            if key.startswith('temp_'):
+                values = np.vstack((values, values[n_rows // 2:].mean(axis=0)))
+            data[key] = values
 
-        # Get parameters from run.in
-        direction = None  # heat transfer axis; set by compute_shc, else auto-detected below
-        with open(self.path['run'], 'r') as file:
-            found_nemd = False
-            for line in file:
-                if line.lstrip().startswith('#'):
-                    continue
-                if 'time_step' in line:
-                    time_step = int(line.split()[1])
-                if 'heat_lan' in line:
-                    N_temp_group = int(int(line.split()[6]) + 1)
-                if 'temperature' in line:
-                    output_interval = int(int(line.split()[2]) * int(line.split()[3]))
-                    found_nemd = True
-                if 'compute_shc' in line:
-                    direction = int(line.split()[3])
-                if found_nemd and 'run' in line:
-                    NEMD_run = int(line.split()[1])
-
-        N_nemd_data = NEMD_run // output_interval
-        N_repeat = len(raw_NEMD_data) // N_nemd_data
-        col_name = [f"temp_{i}" for i in range(N_temp_group)] + ["E_in", "E_out"]
-        raw_NEMD_data = pd.DataFrame(raw_NEMD_data, columns=col_name)
-
-        if len(raw_NEMD_data) % N_nemd_data != 0:
-            raise ValueError(f"The MD calculation seems to be not completed, please check it!")
-        Time_upper = NEMD_run * time_step * 1e-6  # ns
-
-        # Classify and process data initially
-        for col in raw_NEMD_data.columns:
-            Reformed_NEMD_data[col] = raw_NEMD_data[col].values.reshape(N_nemd_data, N_repeat, order='F')
-            Reformed_NEMD_data[col] = np.column_stack((Reformed_NEMD_data[col], Reformed_NEMD_data[col].mean(axis=1)))
-            if 'temp' in col:
-                Reformed_NEMD_data[col] = np.vstack([Reformed_NEMD_data[col],
-                                                     np.mean(Reformed_NEMD_data[col][N_nemd_data // 2:], axis=0)])
-
-        delta_T = Reformed_NEMD_data['temp_1'][-1, :N_repeat] - Reformed_NEMD_data[f'temp_{N_temp_group - 1}'][-1, :N_repeat].reshape(1, -1)
-
-        mid = int(N_nemd_data / 2)
-        denom = (N_nemd_data / 2) * (time_step * 0.001) * output_interval
-        Q_in = (Reformed_NEMD_data['E_in'][mid, :N_repeat] - Reformed_NEMD_data['E_in'][-1, :N_repeat]) / denom
-        Q_out = (Reformed_NEMD_data['E_out'][-1, :N_repeat] - Reformed_NEMD_data['E_out'][mid, :N_repeat]) / denom
+        delta_T = (data['temp_1'][-1, :n_repeat]
+                   - data[f'temp_{n_temp_group - 1}'][-1, :n_repeat]).reshape(1, -1)
+        mid = n_rows // 2
+        denom = (n_rows / 2) * (time_step * 0.001) * output_interval
+        Q_in = (data['E_in'][mid, :n_repeat] - data['E_in'][-1, :n_repeat]) / denom
+        Q_out = (data['E_out'][-1, :n_repeat] - data['E_out'][mid, :n_repeat]) / denom
         Q = ((Q_in + Q_out) / 2).reshape(1, -1)  # eV/ps
 
         model = read(self.path['model'])
-        group_arr = model.get_array('group')
-        if group_arr.ndim == 1:
-            group = group_arr
-        else:
-            group = group_arr[:, 0]
-
+        groups = model.get_array('group')
+        group = groups if groups.ndim == 1 else groups[:, 0]
+        heat_pos = model.positions[group == 1].mean(axis=0)
+        cold_pos = model.positions[group == n_temp_group - 1].mean(axis=0)
         if direction is None:
-            # No compute_shc in run.in: infer the heat transfer axis as the
-            # Cartesian direction where the source/sink groups are most separated
-            heat_pos = model.positions[(group == 1)].mean(axis=0)
-            cold_pos = model.positions[(group == N_temp_group - 1)].mean(axis=0)
             direction = int(np.argmax(np.abs(heat_pos - cold_pos)))
+        coords_heat, coords_cold = heat_pos[direction], cold_pos[direction]
+        xticks_length = np.linspace(coords_heat, coords_cold, n_temp_group - 1) * 0.1
+        length = self.real_length if self.real_length is not None else abs(coords_heat - coords_cold) * 0.1
+        data['L'] = length
 
-        coords_heat = model.positions[(group == 1), direction].mean()
-        coords_cold = model.positions[(group == N_temp_group - 1), direction].mean()
-        xticks_length = np.linspace(coords_heat, coords_cold, N_temp_group - 1) * 0.1
-
-        if self.real_length is not None:
-            Length = self.real_length
-        else:
-            Length = abs(coords_heat - coords_cold) * 0.1  # nm
-        Reformed_NEMD_data['L'] = Length
-
-        A = model.get_volume() / model.get_cell()[direction, direction] / self.scale_eff_size  # A^2
-        convert = 1.602176634e7  # eV/ps * 1/A^2 * 1/K * A ==> MW/m^2/K
-        G = convert * Q / delta_T / A
-        k = G * Length * 1e-3  # W/(m·K)
-        Reformed_NEMD_data['G'] = np.hstack((G, G.mean(axis=1, keepdims=True),
-                                             G.std(axis=1, keepdims=True) / sqrt(N_repeat)))  # MW/m^2/K
-        Reformed_NEMD_data['k'] = np.hstack((k, k.mean(axis=1, keepdims=True),
-                                             k.std(axis=1, keepdims=True) / sqrt(N_repeat)))  # W/m/K
-
+        area = model.get_volume() / model.get_cell()[direction, direction] / self.scale_eff_size  # A^2
+        G = 1.602176634e7 * Q / delta_T / area  # MW/(m^2 K)
+        data['G'] = add_statistics(G, sem=True)
+        data['k'] = add_statistics(G * length * 1e-3, sem=True)  # W/(m K)
         if self.save_data:
-            np.savez(os.path.join(self.directory, 'data_nemd.npz'), **Reformed_NEMD_data)
-            self._export_txt(Reformed_NEMD_data, N_nemd_data, N_temp_group, xticks_length, Time_upper, Length)
+            np.savez(os.path.join(self.directory, 'data_nemd.npz'), **data)
+            self._export_txt(data, n_rows, n_temp_group, xticks_length, time_upper, length)
+        self._print_nemd_results(data, length)
 
-        # Print NEMD results
-        self._print_nemd_results(Reformed_NEMD_data, Length)
-
-        # Process SHC if available
         if self.has_shc:
             print("\n[INFO] SHC data detected, processing spectral heat current...")
-            Reformed_SHC_data = self.process_SHC(deltaT=delta_T)
-            res_s = Reformed_SHC_data['Results']
-            self._print_shc_results(res_s)
+            shc_data = self.process_SHC(deltaT=delta_T)
+            self._print_shc_results(shc_data['Results'])
         else:
             print("\n[INFO] No SHC data found (shc.out not present), skipping SHC analysis.")
             if self.quantum:
                 print("[WARNING] --quantum needs shc.out, quantum correction skipped.")
-            Reformed_SHC_data = None
-            res_s = None
-
-        # Visualization
-        self._plot_results(Reformed_NEMD_data, Reformed_SHC_data,
-                           Time_upper, N_nemd_data, N_repeat,
-                           xticks_length, Length)
+            shc_data = None
+        self._plot_results(data, shc_data, time_upper, n_rows, n_repeat, xticks_length, length)
 
     def _print_nemd_results(self, Reformed_NEMD_data, Length):
         """Print NEMD thermal conductivity results"""
@@ -451,7 +405,6 @@ class NEMD_Processor:
         print("NEMD Thermal Conductivity Results")
         print("=" * 70)
         print(f"\nEffective length: {Length:.4f} nm")
-        # print(f"Scale_vacuum: {self.scale_vacuum}")
         print(f"Scale_eff_size: {self.scale_eff_size}\n")
         print(f"Thermal conductance G = {Reformed_NEMD_data['G'][0, -2]:.6f} ± {Reformed_NEMD_data['G'][0, -1]:.6f} MW/(m²·K)")
         print(f"Thermal conductivity κ = {Reformed_NEMD_data['k'][0, -2]:.6f} ± {Reformed_NEMD_data['k'][0, -1]:.6f} W/(m·K)")
@@ -473,16 +426,7 @@ class NEMD_Processor:
             print(f"G_tot (integrated) = {results['tot_qc_ave']:.6f} ± {results['tot_qc_std']:.6f} MW/(m²·K)")
         print("=" * 70 + "\n")
 
-    @staticmethod
-    def _txt_block(name, unit, x_name, x_unit, x, arr, trailing_labels=("average",)):
-        """Format one 2D array as a TAB-separated text block: x-column + repeat columns + trailing_labels"""
-        n_repeat = arr.shape[1] - len(trailing_labels)
-        header = [f"{x_name}({x_unit})"] + [f"repeat_{i + 1}" for i in range(n_repeat)] + list(trailing_labels)
-        lines = [f"# ---- {name} ({unit}) ----", "# " + "\t".join(header)]
-        for row in np.column_stack((x, arr)):
-            lines.append("\t".join(f"{v:.6g}" for v in row))
-        lines.append("")
-        return lines
+    _txt_block = staticmethod(txt_block)
 
     def _export_txt(self, Reformed_NEMD_data, N_nemd_data, N_temp_group, xticks_length, Time_upper, Length):
         """Export NEMD data as a compact, Excel/Origin-friendly TAB-separated .txt file"""
@@ -505,8 +449,7 @@ class NEMD_Processor:
         time_ns = np.linspace(0, Time_upper, N_nemd_data)
         for i in range(N_temp_group):
             key = f'temp_{i}'
-            if key in Reformed_NEMD_data:
-                lines += self._txt_block(key, "K", "t", "ns", time_ns, Reformed_NEMD_data[key][:N_nemd_data])
+            lines += self._txt_block(key, "K", "t", "ns", time_ns, Reformed_NEMD_data[key][:N_nemd_data])
         lines += self._txt_block("E_in", "eV", "t", "ns", time_ns, Reformed_NEMD_data["E_in"])
         lines += self._txt_block("E_out", "eV", "t", "ns", time_ns, Reformed_NEMD_data["E_out"])
 
@@ -556,83 +499,76 @@ class NEMD_Processor:
     @staticmethod
     def _plot_temperature_profile(Reformed_NEMD_data, N_repeat, xticks_length, Length):
         """(a) Temperature profile along the heat transfer direction"""
-        set_fig_properties([gca()])
-        x_values = []
-        y_values = []
-        for i in range(len(xticks_length)):
-            key = f'temp_{i + 1}'
-            if key in Reformed_NEMD_data:
-                last_row = Reformed_NEMD_data[key][-1]
-                for j in range(N_repeat):
-                    plt.scatter(xticks_length[i], last_row[j], color="C0", alpha=0.3, s=30)
-                plt.scatter(xticks_length[i], last_row[-1], color="C1", s=60)
-                x_values.append(xticks_length[i])
-                y_values.append(last_row[-1])
-        plt.plot(x_values, y_values, '-', color="C0", alpha=0.4, linewidth=2)
-        text(0.95, 0.9, f'G={Reformed_NEMD_data["G"][0, -2]:.3f}±{Reformed_NEMD_data["G"][0, -1]:.2f} MW/(m$^2$·K)',
+        set_fig_properties([plt.gca()])
+        profile = np.array([Reformed_NEMD_data[f'temp_{i + 1}'][-1]
+                            for i in range(len(xticks_length))])
+        plt.scatter(np.repeat(xticks_length, N_repeat), profile[:, :N_repeat].ravel(),
+                    color="C0", alpha=0.3, s=30)
+        plt.scatter(xticks_length, profile[:, -1], color="C1", s=60)
+        plt.plot(xticks_length, profile[:, -1], '-', color="C0", alpha=0.4, linewidth=2)
+        plt.text(0.95, 0.9, f'G={Reformed_NEMD_data["G"][0, -2]:.3f}±{Reformed_NEMD_data["G"][0, -1]:.2f} MW/(m$^2$·K)',
              ha='right', va='top', transform=plt.gca().transAxes)
-        text(0.95, 0.8, f'κ={Reformed_NEMD_data["k"][0, -2]:.3f}±{Reformed_NEMD_data["k"][0, -1]:.3f} W/(m·K)',
+        plt.text(0.95, 0.8, f'κ={Reformed_NEMD_data["k"][0, -2]:.3f}±{Reformed_NEMD_data["k"][0, -1]:.3f} W/(m·K)',
              ha='right', va='top', transform=plt.gca().transAxes)
-        text(0.08, 0.08, f'Effective length={Length:.2f} nm', ha='left', va='bottom',
+        plt.text(0.08, 0.08, f'Effective length={Length:.2f} nm', ha='left', va='bottom',
              transform=plt.gca().transAxes)
-        xlabel("Length (nm)")
-        ylabel("Temperature (K)")
-        title("(a) Temperature profile")
+        plt.xlabel("Length (nm)")
+        plt.ylabel("Temperature (K)")
+        plt.title("(a) Temperature profile")
 
     @staticmethod
     def _plot_thermostat_energy(Reformed_NEMD_data, Time_upper, N_nemd_data, N_repeat):
         """(b) Cumulative energy injected/extracted by the source/sink thermostats"""
-        set_fig_properties([gca()])
+        set_fig_properties([plt.gca()])
         Time = np.linspace(0, Time_upper, N_nemd_data)
         slope_in = abs(Reformed_NEMD_data["E_in"][-1, -1] - Reformed_NEMD_data["E_in"][0, -1]) / Time_upper
         slope_out = abs(Reformed_NEMD_data["E_out"][-1, -1] - Reformed_NEMD_data["E_out"][0, -1]) / Time_upper
 
-        for i in range(N_repeat):
-            plt.plot(Time, Reformed_NEMD_data["E_in"][:, i] / 1000, color="C0", alpha=0.3, lw=2)
-            plt.plot(Time, Reformed_NEMD_data["E_out"][:, i] / 1000, color="C1", alpha=0.3, lw=2)
+        plt.plot(Time, Reformed_NEMD_data["E_in"][:, :N_repeat] / 1000, color="C0", alpha=0.3, lw=2)
+        plt.plot(Time, Reformed_NEMD_data["E_out"][:, :N_repeat] / 1000, color="C1", alpha=0.3, lw=2)
         plt.plot(Time, Reformed_NEMD_data["E_in"][:, -1] / 1000, color="C0", lw=2, label="Source")
         plt.plot(Time, Reformed_NEMD_data["E_out"][:, -1] / 1000, color="C1", lw=2, label="Sink")
 
-        text(0.08, 0.10, f"slope$_{{in}}$={slope_in:.2f}", ha='left', va='bottom',
+        plt.text(0.08, 0.10, f"slope$_{{in}}$={slope_in:.2f}", ha='left', va='bottom',
              transform=plt.gca().transAxes, fontsize=13, color="C0")
-        text(0.08, 0.88, f"slope$_{{out}}$={slope_out:.2f}", ha='left', va='top',
+        plt.text(0.08, 0.88, f"slope$_{{out}}$={slope_out:.2f}", ha='left', va='top',
              transform=plt.gca().transAxes, fontsize=13, color="C1")
 
-        xlim(0, Time_upper)
-        xlabel("Time (ns)")
-        ylabel(r"Energy ($\times 10^3$ eV)")
-        legend(frameon=False, loc='center right')
-        title("(b) Thermostat energy")
+        plt.xlim(0, Time_upper)
+        plt.xlabel("Time (ns)")
+        plt.ylabel(r"Energy ($\times 10^3$ eV)")
+        plt.legend(frameon=False, loc='center right')
+        plt.title("(b) Thermostat energy")
 
     @staticmethod
     def _plot_kt_panel(Reformed_SHC_data):
         """(c) Force-virial correlation function K_tot(t)"""
-        set_fig_properties([gca()])
-        plot(Reformed_SHC_data['t'][:, -2], Reformed_SHC_data['Kt'][:, -2] / Reformed_SHC_data['L'], lw=2)
-        ylabel('K (eV/ps)')
-        xlabel('Correlation time (ps)')
-        title('(c) K$_{tot}$(t)')
+        set_fig_properties([plt.gca()])
+        plt.plot(Reformed_SHC_data['t'][:, -2], Reformed_SHC_data['Kt'][:, -2] / Reformed_SHC_data['L'], lw=2)
+        plt.ylabel('K (eV/ps)')
+        plt.xlabel('Correlation time (ps)')
+        plt.title('(c) K$_{tot}$(t)')
 
     def _plot_shc_spectral_panel(self, Reformed_SHC_data):
         """(d) SHC spectral thermal conductance, split into in-/out-of-plane components"""
-        set_fig_properties([gca()])
+        set_fig_properties([plt.gca()])
         series = [("k_g_wi", "C1", "In-plane component", "-"),
                   ("k_g_wo", "C2", "Out-of-plane component", "-"),
                   ("k_g_wt", "C0", "Total", "-")]
         if self.quantum:
             series.append(("k_g_wt_qc", "C3", "Total (quantum-corrected)", "--"))
         for col, color, label, ls in series:
-            plot(Reformed_SHC_data['nu'][:, -2], Reformed_SHC_data[col][:, -2], linewidth=2, color=color, label=label,
+            plt.plot(Reformed_SHC_data['nu'][:, -2], Reformed_SHC_data[col][:, -2], linewidth=2, color=color, label=label,
                  linestyle=ls)
             plt.fill_between(Reformed_SHC_data['nu'][:, -2],
                              Reformed_SHC_data[col][:, -2] - Reformed_SHC_data[col][:, -1],
                              Reformed_SHC_data[col][:, -2] + Reformed_SHC_data[col][:, -1],
                              facecolor=color, alpha=0.3)
-        legend(frameon=False, fontsize=fs)
-        xlim(0, self.cutoff_freq)
-        ylabel(r'$g$($\omega$) (MW/(m$^2$·K·THz))')
-        xlabel(r'$\omega/2\pi$ (THz)')
-        title('(d) Spectral thermal conductance')
+        plt.legend(frameon=False, fontsize=FS)
+        plt.xlim(0, self.cutoff_freq)
+        plt.ylabel(r'$g$($\omega$) (MW/(m$^2$·K·THz))')
+        plt.xlabel(r'$\omega/2\pi$ (THz)')
+        plt.title('(d) Spectral thermal conductance')
 
     def _plot_results(self, Reformed_NEMD_data, Reformed_SHC_data,
                       Time_upper, N_nemd_data, N_repeat,
@@ -640,35 +576,34 @@ class NEMD_Processor:
         """Visualize NEMD and SHC results"""
 
         if self.has_shc:
-            figure(figsize=(10, 8))
-            subplot2grid((2, 5), (0, 0), colspan=3)
+            plt.figure(figsize=(10, 8))
+            plt.subplot2grid((2, 5), (0, 0), colspan=3)
         else:
-            figure(figsize=(10, 4))
-            subplot(1, 2, 1)
+            plt.figure(figsize=(10, 4))
+            plt.subplot(1, 2, 1)
         self._plot_temperature_profile(Reformed_NEMD_data, N_repeat, xticks_length, Length)
 
         if self.has_shc:
-            subplot2grid((2, 5), (0, 3), colspan=2)
+            plt.subplot2grid((2, 5), (0, 3), colspan=2)
         else:
-            subplot(1, 2, 2)
+            plt.subplot(1, 2, 2)
         self._plot_thermostat_energy(Reformed_NEMD_data, Time_upper, N_nemd_data, N_repeat)
 
         if self.has_shc:
-            subplot2grid((2, 4), (1, 0), colspan=1)
+            plt.subplot2grid((2, 4), (1, 0), colspan=1)
             self._plot_kt_panel(Reformed_SHC_data)
 
-            subplot2grid((2, 4), (1, 1), colspan=3)
+            plt.subplot2grid((2, 4), (1, 1), colspan=3)
             self._plot_shc_spectral_panel(Reformed_SHC_data)
 
             plt.subplots_adjust(wspace=1, hspace=0.3)
         else:
-            tight_layout()
+            plt.tight_layout()
 
         if self.save:
-            savefig('nemd.png', dpi=300, bbox_inches='tight')
+            plt.savefig('nemd.png', dpi=300, bbox_inches='tight')
         else:
-            show()
-
+            plt.show()
 
 
 if __name__ == "__main__":
@@ -710,4 +645,3 @@ if __name__ == "__main__":
     processor = NEMD_Processor(directory, real_length, scale_eff_size, cutoff_freq, _save=save, _save_data=save_data,
                                _quantum=quantum)
     processor.process()
-    # python plt_nemd.py [real_length] [scale_eff_size] [cutoff_freq] [--save] [--save-data] [--quantum]
