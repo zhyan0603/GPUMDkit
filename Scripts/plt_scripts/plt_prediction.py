@@ -190,7 +190,22 @@ def add_residual_inset(ax, residuals, color):
     # Moved upward to avoid overlapping with main x-axis labels
     ax_inset = ax.inset_axes([0.60, 0.20, 0.28, 0.18])
 
-    ax_inset.hist(residuals, bins=28, color=color, alpha=0.70, edgecolor='gray', linewidth=0.6)
+    limit = np.max(np.abs(residuals))
+    grid = np.linspace(-1.05 * limit, 1.05 * limit, 256)
+
+    density = None
+    if gaussian_kde is not None:
+        try:
+            density = gaussian_kde(residuals)(grid)
+        except (np.linalg.LinAlgError, ValueError):
+            pass
+
+    if density is not None:
+        ax_inset.fill_between(grid, density, color=color, alpha=0.70, linewidth=0)
+        ax_inset.plot(grid, density, color=color, linewidth=1.0)
+        ax_inset.set_ylim(bottom=0)
+    else:
+        ax_inset.hist(residuals, bins=28, color=color, alpha=0.70, edgecolor='gray', linewidth=0.6)
 
     mean_res = np.mean(residuals)
     ax_inset.axvline(mean_res, color='k', linestyle='--', linewidth=1.0)
@@ -203,7 +218,6 @@ def add_residual_inset(ax, residuals, color):
                   color=color, fontsize=9, fontweight='bold')
 
     # Symmetric limits with three ticks (-t, 0, t) so the tick labels never overlap
-    limit = np.max(np.abs(residuals))
     tick = float(f'{0.7 * limit:.1g}')
     ax_inset.set_xlim(-1.05 * limit, 1.05 * limit)
     ax_inset.set_xticks([-tick, 0.0, tick])
