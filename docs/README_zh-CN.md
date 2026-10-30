@@ -367,7 +367,7 @@ q-path 偏移会在比较前分别归一化，但对比文件仍必须使用相�
 
 ```bibtex
 @article{yan2026gpumdkit,
-  title   = {{GPUMDkit}: A User-Friendly Toolkit for {GPUMD} and {NEP}},
+  title   = { {GPUMDkit}: A User-Friendly Toolkit for {GPUMD} and {NEP} },
   author  = {Yan, Zihan and Li, Denan and Wu, Xin and Liu, Zhoulin and Hua, Chen and Situ, Boyi and Yang, Hao and Tang, Shengjie and Tang, Benrui and Wang, Ziyang and Yi, Shangzhao and Wang, Huan and Huang, Dian and Li, Ke and Guo, Qilin and Chen, Zherui and Xu, Ke and Wang, Yanzhou and Wang, Ziliang and Tang, Gang and Liu, Shi and Fan, Zheyong and Zhu, Yizhou},
   journal = {MGE Advances},
   volume  = {4},
