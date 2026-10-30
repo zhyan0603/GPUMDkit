@@ -274,6 +274,8 @@ gpumdkit.sh -plt train
     <img src="./Gallery/train.png" alt="Training loss and parity plots" width="75%" />
 </div>
 
+`-plt train` 和 `-plt train_density` 使用 `loss.out` 中的实际代数，支持自定义输出间隔及重复的注释表头，并在重启训练时累计衔接代数。旧版无表头文件仍可使用。
+
 ##### 示例 5：绘制 prediction 模式的 parity 结果
 
 绘制 prediction 模式对 `train.xyz` 中结构生成的 parity 结果：
@@ -365,7 +367,7 @@ q-path 偏移会在比较前分别归一化，但对比文件仍必须使用相�
 
 ```bibtex
 @article{yan2026gpumdkit,
-  title   = {GPUMDkit: A User-Friendly Toolkit for GPUMD and NEP},
+  title   = {{GPUMDkit}: A User-Friendly Toolkit for {GPUMD} and {NEP}},
   author  = {Yan, Zihan and Li, Denan and Wu, Xin and Liu, Zhoulin and Hua, Chen and Situ, Boyi and Yang, Hao and Tang, Shengjie and Tang, Benrui and Wang, Ziyang and Yi, Shangzhao and Wang, Huan and Huang, Dian and Li, Ke and Guo, Qilin and Chen, Zherui and Xu, Ke and Wang, Yanzhou and Wang, Ziliang and Tang, Gang and Liu, Shi and Fan, Zheyong and Zhu, Yizhou},
   journal = {MGE Advances},
   volume  = {4},

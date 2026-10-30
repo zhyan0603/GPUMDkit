@@ -276,6 +276,8 @@ gpumdkit.sh -plt train
     <img src="./docs/Gallery/train.png" alt="Training loss and parity plots" width="75%" />
 </div>
 
+`-plt train` and `-plt train_density` use the actual generations in `loss.out`, support custom output intervals and repeated comment headers, and accumulate generations across restarted training runs. Legacy files without headers remain supported.
+
 ##### Example 5: Plot prediction-mode parity results
 
 To visualize the prediction-mode parity results for structures in `train.xyz`:
@@ -367,7 +369,7 @@ Also, welcome to join our QQ group ([825696376](https://qun.qq.com/universal-sha
 
 ```bibtex
 @article{yan2026gpumdkit,
-  title   = {GPUMDkit: A User-Friendly Toolkit for GPUMD and NEP},
+  title   = {{GPUMDkit}: A User-Friendly Toolkit for {GPUMD} and {NEP}},
   author  = {Yan, Zihan and Li, Denan and Wu, Xin and Liu, Zhoulin and Hua, Chen and Situ, Boyi and Yang, Hao and Tang, Shengjie and Tang, Benrui and Wang, Ziyang and Yi, Shangzhao and Wang, Huan and Huang, Dian and Li, Ke and Guo, Qilin and Chen, Zherui and Xu, Ke and Wang, Yanzhou and Wang, Ziliang and Tang, Gang and Liu, Shi and Fan, Zheyong and Zhu, Yizhou},
   journal = {MGE Advances},
   volume  = {4},
