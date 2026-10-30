@@ -1,0 +1,62 @@
+name: Deploy website
+
+on:
+  push:
+    branches: [dev]
+    paths:
+      - 'docs/*.html'
+      - 'docs/*.json'
+      - 'docs/*.xml'
+      - 'docs/*.tsv'
+      - 'docs/CNAME'
+      - 'docs/_config.yml'
+      - 'docs/assets/**'
+      - 'docs/Gallery/**'
+      - 'docs/htmls/**'
+      - 'docs/tutorials/**'
+      - 'docs/manual-src/**'
+      - '.github/workflows/deploy-pages.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  build:
+    if: github.ref == 'refs/heads/dev'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      pages: read
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+      - name: Configure Pages
+        uses: actions/configure-pages@v5
+      - name: Build with Jekyll
+        uses: actions/jekyll-build-pages@v1
+        with:
+          source: ./docs
+          destination: ./docs/_site
+      - name: Upload website
+        uses: actions/upload-pages-artifact@v4
+        with:
+          path: ./docs/_site
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    permissions:
+      pages: write
+      id-token: write
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
