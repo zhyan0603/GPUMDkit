@@ -184,8 +184,12 @@ Nernst–Einstein 关系外推 300 K 电导率。 使用结果前，应核验扩
 <p>创建 Arrhenius 离子电导率图（log10(σ·T) vs 1000/T）。</p>
 <p><strong>输入文件：</strong> 每个 <code>*K/</code> 目录中的 <code>thermo.out</code> 和 <code>msd.out</code>；首个温度目录中的
 <code>model.xyz</code> 以及可选的 <code>run.in</code></p>
-<div class="code"><div class="cap"><i></i><i></i><i></i><span>bash</span></div><pre><code>gpumdkit.sh -plt arrhenius_sigma
-gpumdkit.sh -plt sigma         # 替代命令</code></pre><button class="copy-btn" data-copy-pre aria-label="Copy"><svg class="cp"><use href="#i-copy"/></svg><svg class="ok"><use href="#i-check"/></svg></button></div>
+<p>Nernst-Einstein 换算需要可迁移离子的元素及其电荷数 <code>z</code>。可直接写在命令后
+（例如 <code>Li 1</code>、<code>Na 1</code>、<code>H 1</code> 或 <code>Mg 2</code>）；若省略，脚本会提示在一行内同时输入两者
+（例如 <code>Li 1</code>）。脚本只统计首个 <code>model.xyz</code> 中该元素的原子数，并乘以 <code>replicate</code> 倍数。
+若 <code>run.in</code> 含 <code>compute_msd</code>，当其 MSD 分组与该元素不完全一致时会给出警告。</p>
+<div class="code"><div class="cap"><i></i><i></i><i></i><span>bash</span></div><pre><code>gpumdkit.sh -plt arrhenius_sigma Li 1
+gpumdkit.sh -plt sigma Li 1 save   # 替代命令；省略 "Li 1" 时会交互提示输入</code></pre><button class="copy-btn" data-copy-pre aria-label="Copy"><svg class="cp"><use href="#i-copy"/></svg><svg class="ok"><use href="#i-check"/></svg></button></div>
 <div align="center">
   <img src="../../Gallery/Arrhenius_sigma.png" alt="Arrhenius ionic conductivity" width="58%" />
 </div>
@@ -197,8 +201,10 @@ gpumdkit.sh -plt sigma         # 替代命令</code></pre><button class="copy-bt
 300 K 位于相变温度同一侧的分支外推。</p>
 <p><strong>输入文件：</strong> 每个 <code>*K/</code> 目录中的 <code>thermo.out</code> 和 <code>msd.out</code>；首个温度目录中的
 <code>model.xyz</code> 以及可选的 <code>run.in</code></p>
-<div class="code"><div class="cap"><i></i><i></i><i></i><span>bash</span></div><pre><code>gpumdkit.sh -plt sigma_PT 380
-gpumdkit.sh -plt sigma_PT 380 save</code></pre><button class="copy-btn" data-copy-pre aria-label="Copy"><svg class="cp"><use href="#i-copy"/></svg><svg class="ok"><use href="#i-check"/></svg></button></div>
+<p>元素和电荷写在相变温度之前，用法与 <code>sigma</code> 相同；若省略
+（<code>gpumdkit.sh -plt sigma_PT 380</code>），脚本会提示输入。</p>
+<div class="code"><div class="cap"><i></i><i></i><i></i><span>bash</span></div><pre><code>gpumdkit.sh -plt sigma_PT Li 1 380
+gpumdkit.sh -plt sigma_PT Li 1 380 save</code></pre><button class="copy-btn" data-copy-pre aria-label="Copy"><svg class="cp"><use href="#i-copy"/></svg><svg class="ok"><use href="#i-check"/></svg></button></div>
 <p>图例会直接标出两段活化能，例如 <code>HighT (xx eV)</code> 和 <code>LowT (xx eV)</code>。</p>
 <div align="center">
   <img src="../../Gallery/Arrhenius_sigma_PT.png" alt="Phase-transition Arrhenius ionic conductivity" width="58%" />
@@ -209,8 +215,10 @@ gpumdkit.sh -plt sigma_PT 380 save</code></pre><button class="copy-btn" data-cop
 <p>从各温度目录的 MSD 和热力学数据计算 x/y/z 方向的离子电导率，绘制方向性
 Arrhenius 关系图，并用 Nernst-Einstein 关系提取每个方向的活化能。</p>
 <p><strong>输入文件：</strong> 每个 <code>*K/</code> 目录中的 <code>thermo.out</code> 和 <code>msd.out</code>；首个温度目录中的
-<code>model.xyz</code></p>
-<div class="code"><div class="cap"><i></i><i></i><i></i><span>bash</span></div><pre><code>gpumdkit.sh -plt sigma_xyz</code></pre><button class="copy-btn" data-copy-pre aria-label="Copy"><svg class="cp"><use href="#i-copy"/></svg><svg class="ok"><use href="#i-check"/></svg></button></div><div class="doc-pn"><a href="MD与结构绘图.html"><small>上一页</small><b>MD 与结构</b></a><a class="next" href="热输运与声子绘图.html"><small>下一页</small><b>热输运与声子</b></a></div><a class="doc-edit" href="https://github.com/zhyan0603/GPUMDkit/edit/main/docs/tutorials/zh/扩散绘图.md" target="_blank" rel="noopener">编辑此页</a></article><nav class="doc-toc" aria-label="本页目录"><h6>本页目录</h6><a href="#扩散和离子输运" class="l2">扩散和离子输运</a><a href="#msd-plt_msdpy" class="l3">msd (plt_msd.py)</a><a href="#msd_all-plt_msd_allpy" class="l3">msd_all (plt_msd_all.py)</a><a href="#msd_conv-plt_msd_convergence_checkpy" class="l3">msd_conv (plt_msd_convergence_check.py)</a><a href="#sdc-plt_sdcpy" class="l3">sdc (plt_sdc.py)</a><a href="#msd_sdc-plt_msd_sdcpy" class="l3">msd_sdc (plt_msd_sdc.py)</a><a href="#d-plt_arrhenius_dpy" class="l3">D (plt_arrhenius_d.py)</a><a href="#d_pt-plt_arrhenius_d_ptpy" class="l3">D_PT (plt_arrhenius_d_PT.py)</a><a href="#d_xyz-plt_arrhenius_d_xyzpy" class="l3">D_xyz (plt_arrhenius_d_xyz.py)</a><a href="#sigma-plt_arrhenius_sigmapy" class="l3">sigma (plt_arrhenius_sigma.py)</a><a href="#sigma_pt-plt_arrhenius_sigma_ptpy" class="l3">sigma_PT (plt_arrhenius_sigma_PT.py)</a><a href="#sigma_xyz-plt_arrhenius_sigma_xyzpy" class="l3">sigma_xyz (plt_arrhenius_sigma_xyz.py)</a></nav></div>
+<code>model.xyz</code> 以及可选的 <code>run.in</code></p>
+<p>元素和电荷参数的用法与 <code>sigma</code> 相同。</p>
+<div class="code"><div class="cap"><i></i><i></i><i></i><span>bash</span></div><pre><code>gpumdkit.sh -plt sigma_xyz Li 1
+gpumdkit.sh -plt sigma_xyz Li 1 save</code></pre><button class="copy-btn" data-copy-pre aria-label="Copy"><svg class="cp"><use href="#i-copy"/></svg><svg class="ok"><use href="#i-check"/></svg></button></div><div class="doc-pn"><a href="MD与结构绘图.html"><small>上一页</small><b>MD 与结构</b></a><a class="next" href="热输运与声子绘图.html"><small>下一页</small><b>热输运与声子</b></a></div><a class="doc-edit" href="https://github.com/zhyan0603/GPUMDkit/edit/main/docs/tutorials/zh/扩散绘图.md" target="_blank" rel="noopener">编辑此页</a></article><nav class="doc-toc" aria-label="本页目录"><h6>本页目录</h6><a href="#扩散和离子输运" class="l2">扩散和离子输运</a><a href="#msd-plt_msdpy" class="l3">msd (plt_msd.py)</a><a href="#msd_all-plt_msd_allpy" class="l3">msd_all (plt_msd_all.py)</a><a href="#msd_conv-plt_msd_convergence_checkpy" class="l3">msd_conv (plt_msd_convergence_check.py)</a><a href="#sdc-plt_sdcpy" class="l3">sdc (plt_sdc.py)</a><a href="#msd_sdc-plt_msd_sdcpy" class="l3">msd_sdc (plt_msd_sdc.py)</a><a href="#d-plt_arrhenius_dpy" class="l3">D (plt_arrhenius_d.py)</a><a href="#d_pt-plt_arrhenius_d_ptpy" class="l3">D_PT (plt_arrhenius_d_PT.py)</a><a href="#d_xyz-plt_arrhenius_d_xyzpy" class="l3">D_xyz (plt_arrhenius_d_xyz.py)</a><a href="#sigma-plt_arrhenius_sigmapy" class="l3">sigma (plt_arrhenius_sigma.py)</a><a href="#sigma_pt-plt_arrhenius_sigma_ptpy" class="l3">sigma_PT (plt_arrhenius_sigma_PT.py)</a><a href="#sigma_xyz-plt_arrhenius_sigma_xyzpy" class="l3">sigma_xyz (plt_arrhenius_sigma_xyz.py)</a></nav></div>
 </main>
 
 <!-- ======================================================= footer -->

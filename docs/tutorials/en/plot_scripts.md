@@ -186,7 +186,7 @@ Two files are written next to the data: `thermo.png` and `average_results.txt`, 
 | `D_PT` | `*K/msd.out` plus a transition temperature | Piecewise Arrhenius diffusivity around a phase transition | [Diffusion](plot_diffusion.md) |
 | `sigma_PT` | `*K/{thermo.out, msd.out}` plus first-directory `model.xyz`, optional `run.in`, and a transition temperature | Piecewise Arrhenius ionic conductivity around a phase transition | [Diffusion](plot_diffusion.md) |
 | `D_xyz` | `*K/msd.out` | Directional Arrhenius diffusivity (x/y/z) | [Diffusion](plot_diffusion.md) |
-| `sigma_xyz` | `*K/{thermo.out, msd.out}` plus first-directory `model.xyz` | Directional Arrhenius ionic conductivity (x/y/z) | [Diffusion](plot_diffusion.md) |
+| `sigma_xyz` | `*K/{thermo.out, msd.out}` plus first-directory `model.xyz` and optional `run.in` | Directional Arrhenius ionic conductivity (x/y/z) | [Diffusion](plot_diffusion.md) |
 | `rdf` | `rdf.out` | Radial distribution function | [MD & structure](plot_md_structure.md) |
 | `rdf_pmf` | `rdf.out` | RDF + potential of mean force | [MD & structure](plot_md_structure.md) |
 | `xrd` | `xrd.out` | X-ray diffraction intensity | [MD & structure](plot_md_structure.md) |

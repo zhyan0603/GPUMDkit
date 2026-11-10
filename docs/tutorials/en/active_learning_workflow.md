@@ -88,10 +88,10 @@ If you train a committee of NEP models, GPUMD's `active` keyword writes `active.
 Pass the selected structures (`selected.xyz`) to function 301:
 
 ~~~bash
-gpumdkit.sh  # Select: 3) Workflow -> 301 -> VASP or CP2K
+gpumdkit.sh  # Select: 3) Workflow -> 301 -> VASP, CP2K, or ABACUS
 ~~~
 
-The VASP branch creates `struct_fp/`, `fp/`, one directory per structure, and `presub.sh`; then put your `INCAR`, `POTCAR`, and `KPOINTS` into `fp/`. The CP2K branch (301 -> 2) asks for an extxyz file, an input template, and a directory prefix.
+The VASP branch creates `struct_fp/`, `fp/`, one directory per structure, and `presub.sh`; then put your `INCAR`, `POTCAR`, and `KPOINTS` into `fp/`. The CP2K branch (301 -> 2) asks for an extxyz file, an input template, and a directory prefix. The ABACUS branch (301 -> 3) asks for an extxyz file, a directory prefix, a pseudopotential directory, and an optional orbital directory; then put `INPUT` (and `KPT`) into `fp/`.
 
 Before submitting, check the number of structures, atom and species order, cells, DFT inputs, and the job script. GPUMDkit does not submit jobs.
 

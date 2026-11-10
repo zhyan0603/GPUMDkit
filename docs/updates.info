@@ -6,20 +6,20 @@ CONTACT="yanzihan@westlake.edu.cn"
 
 # New features (one per line, in an array; keep at most the five newest entries)
 NEW_FEATURES=(
+    "add ABACUS SCF batch pretreatment from extxyz (menu 301 -> 3), writing STRU files with per-element pseudopotentials and orbitals"
     "convert legacy xyz.in to model.xyz automatically for EMD, NEMD, and HNEMD post-processing"
     "add optional --quantum SHC correction to NEMD and HNEMD while retaining classical spectra"
     "convert LAMMPS data files, including compressed ones, with -lmp2exyz"
     "add Tab filename completion and line editing at interactive-mode input prompts"
-    "add -time wpe progress monitoring for WPE-enabled GPUMD runs with buffered updates"
 )
 
 # Bug fixes (one per line, in an array; keep at most the five newest entries)
 BUG_FIXES=(
+    "take the mobile ion element and charge for -plt sigma, sigma_xyz, and sigma_PT (prompted when omitted) instead of counting only Li/Na with z = 1"
     "write each frame's own NEP energy, forces, and stress in menu 402 (-calc nep) instead of repeating the last frame's results"
     "plot NEP loss curves with actual generations, custom output intervals, and restarted training histories"
     "read both legacy numeric and header-prefixed nep.restart files in the restart plot"
     "preserve complete out2xyz Config_type metadata for paths containing spaces or quotes"
-    "accept fractional NEMD time_step values and write NPZ/TXT data only with --save-data"
 )
 
 # === Formatted Output Logic ===

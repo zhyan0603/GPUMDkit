@@ -64,7 +64,7 @@ gpumdkit.sh -plt dimer Li Li nep.txt
 | `D` / `arrhenius_d` | `*K/` directories | Arrhenius diffusivity |
 | `sigma_PT` | `thermo.out` and `msd.out` per `*K/`, first `*K/` also has `model.xyz` and optional `run.in`, plus a transition temperature | Piecewise Arrhenius ionic conductivity around a phase transition |
 | `D_PT` | `*K/` directories plus a transition temperature | Piecewise Arrhenius diffusivity around a phase transition |
-| `sigma_xyz` | `*K/` directories | Directional Arrhenius conductivity |
+| `sigma_xyz` | `thermo.out` and `msd.out` per `*K/`; first `*K/` also has `model.xyz` and optional `run.in` | Directional Arrhenius conductivity |
 | `D_xyz` | `*K/` directories | Directional Arrhenius diffusivity |
 | `doas` | `doas.out` | Density of atomistic states |
 
@@ -82,9 +82,9 @@ gpumdkit.sh -plt msd_all msd.out Li P S
 # Diffusivity: each temperature directory contains msd.out
 # Conductivity: each contains thermo.out and msd.out; the first also contains
 # model.xyz and may contain run.in for replicate detection
-gpumdkit.sh -plt arrhenius_sigma
+gpumdkit.sh -plt arrhenius_sigma <element> <charge>
 gpumdkit.sh -plt arrhenius_d
-gpumdkit.sh -plt sigma_PT 380
+gpumdkit.sh -plt sigma_PT <element> <charge> 380
 gpumdkit.sh -plt D_PT 380
 
 # DOAS visualization (requires prior calculation)

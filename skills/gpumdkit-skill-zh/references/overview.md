@@ -134,7 +134,7 @@ gpumdkit.sh -calc ionic-cond Li 1
 完成各温度点的检查后，进入包含 `500K/`、`600K/` 等温度子目录的父目录，再进行跨温度分析：
 
 ```bash
-gpumdkit.sh -plt sigma
+gpumdkit.sh -plt sigma <element> <charge>
 gpumdkit.sh -plt D
 ```
 

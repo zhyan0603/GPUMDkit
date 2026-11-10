@@ -7,7 +7,7 @@
 
 Workflow scripts automate repetitive tasks in computational materials research:
 
-- **SCF batch preprocessing**: Set up VASP/CP2K single-point energy calculations
+- **SCF batch preprocessing**: Set up VASP/CP2K/ABACUS single-point energy calculations
 - **MD sampling**: Prepare molecular dynamics simulations with GPUMD/LAMMPS
 - **Active learning support**: Reusable SCF/MD preparation steps for a manually reviewed iteration
 
@@ -58,6 +58,20 @@ For CP2K, enter `3) Workflow`, then `301) SCF batch pretreatment`, and choose th
 ```
 
 The repository provides `Scripts/workflow/cp2k_template.inp` as a starting template.
+
+For ABACUS, choose the ABACUS branch (`301 -> 3`). The script asks for:
+
+```text
+<extxyz_file> <prefix> <pseudo_dir> [orbital_dir]
+```
+
+`pseudo_dir` must hold one `.upf` file per element and `orbital_dir` (LCAO only)
+one `.orb` file per element, each named with the element symbol first (for
+example `Li_ONCV_PBE-1.0.upf`). Each `<prefix>_<index>/` gets its own `STRU`
+(only that frame's elements, Angstrom coordinates) and links to the shared
+`fp/INPUT` and `fp/KPT`. Write `fp/INPUT` yourself with at least `calculation scf`,
+`cal_force 1`, `cal_stress 1`, and `pseudo_dir` (plus `basis_type lcao` and
+`orbital_dir` for LCAO). Convert the finished runs with menu `104`.
 
 
 

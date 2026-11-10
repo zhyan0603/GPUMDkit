@@ -10,26 +10,94 @@ Category:   Plot Scripts
 Purpose:    Calculate ionic conductivity from MSD and thermo data in
             temperature folders, generate an Arrhenius plot (log10(sigma*T)
             vs 1000/T), and extract activation energy.
-Usage:      gpumdkit.sh -plt sigma [save]
-            python plt_arrhenius_sigma.py [save]
+Usage:      gpumdkit.sh -plt sigma [<element> <charge>] [save]
+            python3 plt_arrhenius_sigma.py [<element> <charge>] [save]
 Arguments:
+  element   Mobile ion species counted in model.xyz (e.g., Li, Na, H)
+  charge    Ion charge number z for Nernst-Einstein (e.g., 1 for Li+, 2 for Mg2+)
+            (element and charge are asked for interactively when omitted)
   save      Save the plot as 'Arrhenius_sigma.png' instead of displaying it
 Output:
   Arrhenius_sigma.png  (if save is used)
 Author:     Zihan YAN (yanzihan@westlake.edu.cn)
-Last-modified: 2026-10-21
+Last-modified: 2026-11-06
 =============================================================================
 """
 
 import re
 import os
 import sys
+import math
+
+args = sys.argv[1:]
+if args and args[0] in ("-h", "--help"):
+    print(" Usage: gpumdkit.sh -plt sigma [<element> <charge>] [save]")
+    print("    or: python3 plt_arrhenius_sigma.py [<element> <charge>] [save]")
+    print("")
+    print(" Arguments:")
+    print("   element   Mobile ion species counted in model.xyz (e.g., Li, Na, H)")
+    print("   charge    Ion charge number z (e.g., 1 for Li+, 2 for Mg2+)")
+    print("   save      Save the plot as 'Arrhenius_sigma.png'")
+    print("")
+    print(" If <element> <charge> are omitted, they are asked for interactively.")
+    print(" Example: gpumdkit.sh -plt sigma Li 1 save")
+    print("")
+    sys.exit(0)
+
+def prompt_ion_species():
+    """Ask once for '<element> <charge>' when they are not given on the command line."""
+    print(" Input <element> <charge> of the mobile ion")
+    print(" Example: Li 1   (others: Na 1, H 1, Mg 2)")
+    print(" ------------>>")
+    try:
+        answer = input(" ").split()
+    except (EOFError, KeyboardInterrupt):
+        print("\n Error: no <element> <charge> provided.")
+        sys.exit(1)
+    if len(answer) != 2:
+        print(" Error: expected exactly two values, e.g., 'Li 1'.")
+        sys.exit(1)
+    return answer[0], answer[1]
+
+
+def is_number(text):
+    """Return True when text parses as a float."""
+    try:
+        float(text)
+        return True
+    except ValueError:
+        return False
+
+
+explicit_species = len(args) >= 2 and not is_number(args[0]) and args[0] != "save" and is_number(args[1])
+rest_args = args[2:] if explicit_species else args
+
+if len(rest_args) > 1 or (rest_args and rest_args[0] != 'save'):
+    print(" Error: unexpected arguments.")
+    print(" Usage: gpumdkit.sh -plt sigma [<element> <charge>] [save]")
+    print(" Example: gpumdkit.sh -plt sigma Li 1 save")
+    sys.exit(1)
+
+if explicit_species:
+    ion_element, charge_text = args[0], args[1]
+else:
+    ion_element, charge_text = prompt_ion_species()
+
+try:
+    ion_charge = float(charge_text)
+except ValueError:
+    ion_charge = float("nan")
+if not math.isfinite(ion_charge) or ion_charge == 0:
+    print(f" Error: charge must be a non-zero number, got '{charge_text}'.")
+    sys.exit(1)
+
 import numpy as np
 import matplotlib.pyplot as plt
 from matplotlib import get_backend
 from matplotlib.lines import Line2D
 import scipy.constants as consts
 from ase.io import read
+from ase.data import chemical_symbols
 from scipy.stats import linregress
 import matplotlib.ticker as ticker
 import warnings
@@ -59,6 +127,69 @@ plt.rcParams.update({
 })
 
 k = 8.617333262145e-5
+
+if ion_element not in chemical_symbols[1:]:
+    print(f" Error: '{ion_element}' is not a valid element symbol (e.g., Li, Na, H).")
+    sys.exit(1)
+
+def count_mobile_ions(atoms, element):
+    """Count the requested species and stop with a hint if it is absent."""
+    symbols = atoms.get_chemical_symbols()
+    count = symbols.count(element)
+    if count == 0:
+        present = ", ".join(sorted(set(symbols)))
+        print(f" Error: no {element} atoms found in model.xyz (elements present: {present}).")
+        sys.exit(1)
+    return count
+
+def check_msd_group(run_in_path, atoms, element):
+    """Warn when compute_msd in run.in does not track exactly the counted species."""
+    if not os.path.isfile(run_in_path):
+        return
+    tokens = None
+    with open(run_in_path, "r", encoding="utf-8", errors="ignore") as run_file:
+        for line in run_file:
+            parts = line.split("#", 1)[0].split()
+            if parts and parts[0] == "compute_msd":
+                tokens = parts
+    if tokens is None:
+        return
+    symbols = np.array(atoms.get_chemical_symbols())
+    if "all_groups" in tokens:
+        print(f" [Warning] compute_msd uses all_groups; only msd.out columns 1-3 are used. "
+              f"Check that they belong to a group containing only {element}.")
+        return
+    if "group" not in tokens:
+        if np.any(symbols != element):
+            print(f" [Warning] compute_msd has no group option, so msd.out averages over all atoms, "
+                  f"not only {element}. Restrict compute_msd to a {element} group for a valid conductivity.")
+        return
+    index = tokens.index("group")
+    try:
+        method, group_id = int(tokens[index + 1]), int(tokens[index + 2])
+    except (IndexError, ValueError):
+        print(" [Warning] Could not parse the compute_msd group option; skipping the species check.")
+        return
+    groups = atoms.arrays.get("group")
+    if groups is None:
+        print(" [Warning] compute_msd uses a group but model.xyz has no group property; skipping the species check.")
+        return
+    groups = np.asarray(groups)
+    if groups.ndim == 1:
+        groups = groups[:, None]
+    if method >= groups.shape[1]:
+        print(f" [Warning] model.xyz has no grouping method {method}; skipping the species check.")
+        return
+    in_group = groups[:, method] == group_id
+    group_symbols = sorted(set(symbols[in_group]))
+    n_group = int(np.count_nonzero(in_group))
+    n_element = int(np.count_nonzero(symbols == element))
+    if group_symbols != [element]:
+        print(f" [Warning] compute_msd group (method {method}, id {group_id}) contains "
+              f"{', '.join(group_symbols) or 'no atoms'}, not only {element}.")
+    elif n_group != n_element:
+        print(f" [Warning] compute_msd group (method {method}, id {group_id}) contains {n_group} of "
+              f"{n_element} {element} atoms, but the conductivity counts all {n_element}.")
 
 def fit_arrhenius(T, sigma_T):
     """Fit Arrhenius equation to calculate activation energy"""
@@ -102,12 +233,14 @@ xyz_file = os.path.join(base_dir, temp_folders[0], 'model.xyz')
 if not os.path.exists(xyz_file):
     raise FileNotFoundError(f"Missing {temp_folders[0]}/model.xyz file")
 
-# Count Li or Na ions
+# Count the requested mobile ions
 atoms = read(xyz_file, format='extxyz')
-num_ions = sum(1 for atom in atoms if atom.symbol in ['Li', 'Na'])
+num_ions = count_mobile_ions(atoms, ion_element)
+print(f"[Info] Counting {num_ions} {ion_element} atoms in {temp_folders[0]}/model.xyz, charge z = {ion_charge:g}")
 
 # Check for replicate parameter in run.in
 run_in_path = os.path.join(base_dir, temp_folders[0], 'run.in')
+check_msd_group(run_in_path, atoms, ion_element)
 rep_factor = 1
 if os.path.exists(run_in_path):
     with open(run_in_path, 'r') as f:
@@ -171,7 +304,7 @@ for temp_folder in temp_folders:
         D = k_diff * 1e-4 / 6  # Convert A/ps to cm/s
 
         # Calculate conductivity
-        z = 1  # Species charge
+        z = ion_charge  # Species charge from the command line
         vol_cm3 = volume * 1e-24  # Convert volume to cm^3
         conversion_factor = (num_ions / (vol_cm3 * consts.N_A) * z**2 * (consts.N_A * consts.e)**2 / (consts.R * temp))
         conductivity = conversion_factor * D
@@ -268,7 +401,7 @@ if len(raw_group_Ts) > 0:
     # Subplot geometry (figure fractions); tune these to adjust margins
     fig.subplots_adjust(left=0.17, right=0.96, top=0.83, bottom=0.14)
 
-    if len(sys.argv) > 1 and sys.argv[1] == 'save':
+    if rest_args and rest_args[-1] == 'save':
         plt.savefig('Arrhenius_sigma.png', dpi=300)
     else:
         if get_backend().lower() in ['agg', 'cairo', 'pdf', 'ps', 'svg']:
@@ -277,3 +410,6 @@ if len(raw_group_Ts) > 0:
             plt.savefig('Arrhenius_sigma.png', dpi=300)
         else:
             plt.show()
+else:
+    print(" Error: no temperature folder produced a valid conductivity; nothing to plot.")
+    sys.exit(1)

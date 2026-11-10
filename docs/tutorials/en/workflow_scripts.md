@@ -147,6 +147,69 @@ directory:
 python "${GPUMDkit_path}/Scripts/workflow/scf_batch_pretreatment_cp2k.py" train.xyz template.inp calc
 ~~~
 
+### ABACUS SCF preparation (301 -> 3)
+
+Prepare one extxyz file with lattice information, a directory with one
+pseudopotential (`.upf`) file per element, and, for LCAO, a directory with one
+numerical orbital (`.orb`) file per element. Each file name must start with its
+element symbol, for example `Li_ONCV_PBE-1.0.upf` or
+`Li_gga_8au_100Ry_4s1p.orb`; `S_...` and `Si_...` are told apart. Run through
+the menu:
+
+~~~bash
+gpumdkit.sh
+# choose 3 -> 301 -> ABACUS
+~~~
+
+The prompt is:
+
+~~~text
+<extxyz_file> <prefix> <pseudo_dir> [orbital_dir]
+~~~
+
+For example:
+
+~~~text
+train.xyz LiF_iter01 ./pp ./orb
+~~~
+
+Omit `orbital_dir` for plane-wave calculations. The script creates:
+
+~~~text
+current directory/
+├── fp/                 # put the shared INPUT (and KPT) here
+├── LiF_iter01_1/
+│   ├── STRU            # this frame; species, masses, and file names filled in
+│   ├── INPUT -> ../fp/INPUT
+│   └── KPT -> ../fp/KPT
+├── LiF_iter01_2/
+└── presub.sh
+~~~
+
+Each `STRU` lists only the elements present in that frame, so structures with
+different compositions need no grouping. Lattice vectors and Cartesian
+positions are written in Angstrom with `LATTICE_CONSTANT 1.889726125457828`.
+The script stops if an element has no matching file or several.
+
+Then write `fp/INPUT` yourself; the script prints the keywords it needs:
+
+~~~text
+INPUT_PARAMETERS
+calculation   scf
+cal_force     1
+cal_stress    1
+pseudo_dir    /absolute/path/to/pp
+orbital_dir   /absolute/path/to/orb   # LCAO only, with basis_type lcao
+~~~
+
+Choose the functional, cutoff, smearing, and k-point settings for your system.
+Provide `fp/KPT`, or set `kspacing` in `INPUT` and leave the `KPT` link
+dangling. With a source installation you can also call the script directly:
+
+~~~bash
+python "${GPUMDkit_path}/Scripts/workflow/scf_batch_pretreatment_abacus.py" train.xyz LiF_iter01 ./pp ./orb
+~~~
+
 ## 2. Prepare MD sampling directories {#md-sampling-pretreatment}
 
 ### GPUMD (302)
@@ -260,4 +323,4 @@ Workflow scripts depend on your cluster, templates, and software versions, so tr
 
 ## 4. Convert the results
 
-After the DFT runs finish, convert them with `gpumdkit.sh -out2xyz <dir>` (VASP, writes `NEPdataset/train.xyz`), `-out2xyz_bec <dir>` (VASP with Born effective charges), or `-cp2k2xyz` (CP2K, run from the results root, writes `cp2k_exyz.xyz`). See [Format Conversion](format_conversion.md) for details, and [Active Learning Workflow](active_learning_workflow.md) for how these steps fit into a full NEP data iteration.
+After the DFT runs finish, convert them with `gpumdkit.sh -out2xyz <dir>` (VASP, writes `NEPdataset/train.xyz`), `-out2xyz_bec <dir>` (VASP with Born effective charges), `-cp2k2xyz` (CP2K, run from the results root, writes `cp2k_exyz.xyz`), or menu `104` -> SCF (ABACUS, reads each `OUT.*/running_scf.log`, writes `NEPdataset/train.xyz`). See [Format Conversion](format_conversion.md) for details, and [Active Learning Workflow](active_learning_workflow.md) for how these steps fit into a full NEP data iteration.

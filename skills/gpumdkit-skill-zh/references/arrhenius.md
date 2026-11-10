@@ -121,12 +121,15 @@ gpumdkit.sh -calc ionic-cond <element> <charge>
 
 ### 电导率 Arrhenius 拟合
 
-对于满足当前脚本假设的单一移动一价 Li 或 Na 物种：
+对于元素和电荷数已由用户确认的单一可迁移物种：
 
 ```bash
-gpumdkit.sh -plt arrhenius_sigma save
-gpumdkit.sh -plt sigma_xyz save
+gpumdkit.sh -plt arrhenius_sigma <element> <charge> save
+gpumdkit.sh -plt sigma_xyz <element> <charge> save
+gpumdkit.sh -plt sigma_PT <element> <charge> <transition_temperature> save
 ```
+
+务必显式传入 `<element> <charge>`；省略时脚本会从标准输入提示输入，在非交互运行中会失败。
 
 这些命令拟合 `log10(sigma*T)` 对 `1000/T` 并报告活化能。使用前请检查下方的当前限制。
 
@@ -149,7 +152,7 @@ gpumdkit.sh -plt sigma_xyz save
 
 - `plt_arrhenius_d.py` 和方向性变体仅发现整数 `<temperature>K` 目录，并需要可用的 `msd.out` 文件。
 - Arrhenius 脚本使用固定的 40%-80% MSD 拟合区间。
-- `plt_arrhenius_sigma.py` 和 `plt_arrhenius_sigma_xyz.py` 仅从第一个温度的 `model.xyz` 计数 Li 和 Na，并硬编码电荷量 `z = 1`。
+- 电导率脚本只统计第一个温度 `model.xyz` 中指定元素的原子数，并使用给定的电荷数 `z`。当 `run.in` 中 `compute_msd` 的分组包含其他物种或只包含该元素的一部分时，脚本仅给出警告而不停止；报告结果前须先解决此类警告。
 - 电导率绘图从第一个温度的 `run.in` 读取复制信息，并假设整个系列的离子数相同。
 - 电导率脚本外推到 300 K。在将其作为结果呈现之前，询问用户该外推在科学上是否可接受。
 - 对于其他物种、多价离子、混合移动物种、变化的组成或关联电导率，不要将自动电导率 Arrhenius 脚本当作通用工具使用。使用单温度验证计算和用户批准的拟合方法，或请求代码更改。

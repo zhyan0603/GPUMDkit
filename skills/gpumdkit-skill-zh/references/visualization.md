@@ -64,7 +64,7 @@ gpumdkit.sh -plt dimer Li Li nep.txt
 | `D` / `arrhenius_d` | `*K/` 目录 | Arrhenius 扩散系数 |
 | `sigma_PT` | 每个 `*K/` 中的 `thermo.out` 和 `msd.out`，首个 `*K/` 还需 `model.xyz`、可选 `run.in`，以及相变温度 | 相变温度两侧的分段 Arrhenius 离子电导率 |
 | `D_PT` | `*K/` 目录以及相变温度 | 相变温度两侧的分段 Arrhenius 扩散系数 |
-| `sigma_xyz` | `*K/` 目录 | 方向性 Arrhenius 电导率 |
+| `sigma_xyz` | 每个 `*K/` 中的 `thermo.out` 和 `msd.out`；首个 `*K/` 还需 `model.xyz`，`run.in` 可选 | 方向性 Arrhenius 电导率 |
 | `D_xyz` | `*K/` 目录 | 方向性 Arrhenius 扩散系数 |
 | `doas` | `doas.out` | 原子态密度 |
 
@@ -82,9 +82,9 @@ gpumdkit.sh -plt msd_all msd.out Li P S
 # 扩散系数：每个温度目录包含 msd.out
 # 电导率：每个目录包含 thermo.out 和 msd.out；首个目录还包含 model.xyz，
 # 并可用 run.in 检测 replicate
-gpumdkit.sh -plt arrhenius_sigma
+gpumdkit.sh -plt arrhenius_sigma <element> <charge>
 gpumdkit.sh -plt arrhenius_d
-gpumdkit.sh -plt sigma_PT 380
+gpumdkit.sh -plt sigma_PT <element> <charge> 380
 gpumdkit.sh -plt D_PT 380
 
 # DOAS 可视化（需先计算）

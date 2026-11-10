@@ -39,6 +39,28 @@ echo " Code path: ${GPUMDkit_path}/Scripts/workflow/scf_batch_pretreatment_cp2k.
 echo " ---------------------------------------------------"
 }
 
+# ABACUS scf batch pretreatment
+function abacus_batch_pretreatment(){
+echo " >-------------------------------------------------<"
+echo " | Calling the script in Scripts/workflow          |"
+echo " | Script: scf_batch_pretreatment_abacus.py        |"
+echo " | Developer: Zihan YAN (yanzihan@westlake.edu.cn) |"
+echo " >-------------------------------------------------<"
+echo " >-------------------- NOTICE  --------------------<"
+echo " | Keep one .upf file per element in <pseudo_dir>, |"
+echo " | and one .orb file per element in [orbital_dir]  |"
+echo " | for LCAO. Names must start with the element.    |"
+echo " >-------------------------------------------------<"
+echo " Input <extxyz_file> <prefix> <pseudo_dir> [orbital_dir]"
+echo " Example: train.xyz LiF_iter01 ./pp ./orb"
+echo " ------------>>"
+read_menu_array input_results || return 1
+echo " ---------------------------------------------------"
+python "${GPUMDkit_path}/Scripts/workflow/scf_batch_pretreatment_abacus.py" "${input_results[@]}"
+echo " Code path: ${GPUMDkit_path}/Scripts/workflow/scf_batch_pretreatment_abacus.py"
+echo " ---------------------------------------------------"
+}
+
 # SCF batch pretreatment (main function)
 function f301_scf_batch_pretreatment(){ 
     echo " +-------------------------------------------------------------+"
@@ -46,9 +68,10 @@ function f301_scf_batch_pretreatment(){
     echo " +-------------------------------------------------------------+"
     echo " | 1) VASP SCF batch pretreatment                              |"
     echo " | 2) CP2K SCF batch pretreatment                              |"
+    echo " | 3) ABACUS SCF batch pretreatment                            |"
     echo " +-------------------------------------------------------------+"
     echo " Input the function number:"
-    valid_menu_choices=("1" "2")
+    valid_menu_choices=("1" "2" "3")
     read_menu_choice num_choice || return 1
     while ! echo "${valid_menu_choices[@]}" | grep -wq "$num_choice"
     do
@@ -63,6 +86,9 @@ function f301_scf_batch_pretreatment(){
             ;;
         "2")
             cp2k_batch_pretreatment
+            ;;
+        "3")
+            abacus_batch_pretreatment
             ;;          
     esac
 }
