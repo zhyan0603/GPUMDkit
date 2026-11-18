@@ -19,7 +19,7 @@ if [ -z "$GPUMDkit_path" ]; then
     exit 1
 fi
 
-VERSION="1.5.8 (2026-10-20)"
+VERSION="1.6.0 (2026-11-17)"
 
 plt_path="${GPUMDkit_path}/Scripts/plt_scripts"
 analyzer_path="${GPUMDkit_path}/Scripts/analyzer"
@@ -77,7 +77,7 @@ function main(){
         "8"
     ) 
     read_menu_choice choice || return 1
-    while ! echo "${valid_menu_choices[@]}" | grep -wq "$choice" 
+    while ! printf '%s\n' "${valid_menu_choices[@]}" | grep -Fxq -- "$choice"
     do
       echo " ------------>>"
       echo " Please reinput function number:"
@@ -411,7 +411,9 @@ if [ ! -z "$1" ]; then
                     pol-abo3)
                         run_python_script "Denan LI (lidenan@westlake.edu.cn)" "${calc_path}/calc_polarization_abo3.py" "${@:3}" ;;
                     *)
-                        echo " See the codes in calculators folder for more details"
+                        echo " Unknown calculator type: $2"
+                        echo " Available types are listed below."
+                        calculator_help_table
                         echo " Code path: ${calc_path}"; exit 1 ;;
                 esac
             else
@@ -585,4 +587,6 @@ echo -e "\
       "
 menu
 main
+menu_status=$?
 citation
+exit "$menu_status"

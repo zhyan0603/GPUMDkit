@@ -1,25 +1,25 @@
 # === User Configuration Section: Only modify these variables ===
-VERSION="1.5.8"
-RELEASE_DATE="2026-09-23"
+VERSION="1.6.0"
+RELEASE_DATE="2026-11-17"
 HOME_PAGE="https://gpumdkit.cn"
 CONTACT="yanzihan@westlake.edu.cn"
 
 # New features (one per line, in an array; keep at most the five newest entries)
 NEW_FEATURES=(
-    "add ABACUS SCF batch pretreatment from extxyz (menu 301 -> 3), writing STRU files with per-element pseudopotentials and orbitals"
+    "complete file and directory names with Tab for every argument, add wpe to menu 701 and -time completion, and list the calculator types after an unknown -calc type"
+    "add ABACUS SCF batch pretreatment from extxyz (menu 301 -> 3), writing STRU files from one basis directory with a unique .upf and .orb per element"
     "convert legacy xyz.in to model.xyz automatically for EMD, NEMD, and HNEMD post-processing"
     "add optional --quantum SHC correction to NEMD and HNEMD while retaining classical spectra"
     "convert LAMMPS data files, including compressed ones, with -lmp2exyz"
-    "add Tab filename completion and line editing at interactive-mode input prompts"
 )
 
 # Bug fixes (one per line, in an array; keep at most the five newest entries)
 BUG_FIXES=(
-    "take the mobile ion element and charge for -plt sigma, sigma_xyz, and sigma_PT (prompted when omitted) instead of counting only Li/Na with z = 1"
-    "write each frame's own NEP energy, forces, and stress in menu 402 (-calc nep) instead of repeating the last frame's results"
-    "plot NEP loss curves with actual generations, custom output intervals, and restarted training histories"
-    "read both legacy numeric and header-prefixed nep.restart files in the restart plot"
-    "preserve complete out2xyz Config_type metadata for paths containing spaces or quotes"
+    "read force and forces extxyz fields in range analysis and value filtering, and convert ABACUS SCF and MD with Python in menu 104, retaining all converged SCF frames and their original Cartesian axes"
+    "use unwrapped_position for -calc msd when present and otherwise always apply minimum-image unwrapping along periodic axes, and respect periodic axes in distance tools"
+    "keep batch MD outputs isolated, reject ambiguous inputs, protect POSCAR files, and convert rotated or left-handed cells consistently for LAMMPS"
+    "validate Web console requests and make clean prompts, menu validation, filename completion, and timestamp formatting safer"
+    "preserve frames without stress in outlier screening (stress threshold optional), correct CP2K cell templates and MTP virials, and handle ABACUS paths and optional settings"
 )
 
 # === Formatted Output Logic ===
@@ -46,10 +46,10 @@ if [ -t 1 ] && [ "$(tput colors 2>/dev/null || echo 0)" -ge 8 ]; then
 else
     # Plain text output (no colors, simple symbols)
     printf "GPUMDKit Update Information\n"
-    printf "----------------------------------------------\n"
+    printf '%s\n' "----------------------------------------------"
     printf "Version: %s\n" "$VERSION"
     printf "Release Date: %s\n" "$RELEASE_DATE"
-    printf "----------------------------------------------\n"
+    printf '%s\n' "----------------------------------------------"
     printf "\nWhat's New:\n"
     for feature in "${NEW_FEATURES[@]}"; do
         printf "  - %s\n" "$feature"
@@ -58,7 +58,7 @@ else
     for fix in "${BUG_FIXES[@]}"; do
         printf "  - %s\n" "$fix"
     done
-    printf "----------------------------------------------\n"
+    printf '%s\n' "----------------------------------------------"
     printf "\nHomePage: %s\n" "$HOME_PAGE"
     printf "Contact: %s\n" "$CONTACT"
 fi

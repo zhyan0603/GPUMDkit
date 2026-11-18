@@ -155,7 +155,7 @@ echo " Input the function number:"
 
 valid_menu_choices=("000" "201" "202" "203" "204" "205" "206")
 read_menu_choice num_choice || return 1
-while ! echo "${valid_menu_choices[@]}" | grep -wq "$num_choice"
+while ! printf '%s\n' "${valid_menu_choices[@]}" | grep -Fxq -- "$num_choice"
 do
   echo " ------------>>"
   echo " Please reinput function number..."

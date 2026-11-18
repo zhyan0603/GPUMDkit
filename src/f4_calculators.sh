@@ -80,12 +80,12 @@ echo " | This function calls the script in calculators   |"
 echo " | Script: neb_calculation.py                      |"
 echo " | Developer: Zhoulin LIU (1776627910@qq.com)      |"
 echo " >-------------------------------------------------<"
-echo " Input <initial_struct> <final_struct> <n_image> <nep_model>"
+echo " Input <initial_struct> <final_struct> <n_image> <nep_model> [max_steps]"
 echo " Example: IS.xyz FS.xyz 5 nep.txt"
 echo " ------------>>"
 read_menu_array input_calc_neb || return 1
 echo " ---------------------------------------------------"
-python "${GPUMDkit_path}/Scripts/calculators/neb_calculation.py" "${input_calc_neb[@]}"
+python "${GPUMDkit_path}/Scripts/calculators/neb_calculation.py" "${input_calc_neb[@]}" || return 1
 echo " Code path: ${GPUMDkit_path}/Scripts/calculators/neb_calculation.py"
 echo " ---------------------------------------------------"
 }
@@ -207,7 +207,7 @@ echo " Example: dump.xyz Li 10"
 echo " ------------>>"
 read_menu_array input_calc_msd || return 1
 echo " ---------------------------------------------------"
-python "${GPUMDkit_path}/Scripts/calculators/calc_msd.py" "${input_calc_msd[@]}"
+python "${GPUMDkit_path}/Scripts/calculators/calc_msd.py" "${input_calc_msd[@]}" || return 1
 echo " Code path: ${GPUMDkit_path}/Scripts/calculators/calc_msd.py"
 echo " ---------------------------------------------------"
 }
@@ -266,7 +266,7 @@ echo " Input the function number:"
 
 valid_menu_choices=("000" "401" "402" "403" "404" "405" "406" "407" "408" "409" "410" "411" "412" "413" "414")
 read_menu_choice num_choice || return 1
-while ! echo "${valid_menu_choices[@]}" | grep -wq "$num_choice"
+while ! printf '%s\n' "${valid_menu_choices[@]}" | grep -Fxq -- "$num_choice"
 do
   echo " ------------>>"
   echo " Please reinput function number..."

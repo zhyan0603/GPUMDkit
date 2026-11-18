@@ -10,19 +10,21 @@ function f701_time_consuming_analyzer(){
 echo " >-------------------------------------------------<"
 echo " | Calling scripts in Scripts/analyzer             |"
 echo " | Script: time_consuming_gpumd.sh                 |"
+echo " |         time_consuming_wpe.sh                   |"
 echo " |         time_consuming_nep.sh                   |"
 echo " | Developer: Zihan YAN (yanzihan@westlake.edu.cn) |"
 echo " >-------------------------------------------------<"
-echo " Input mode: gpumd, nep or gnep"
+echo " Input mode: gpumd, wpe, nep or gnep"
 echo " Example: gpumd"
 echo " ------------>>"
 read_menu_choice time_mode || return 1
 echo " ---------------------------------------------------"
 case $time_mode in
-    gpumd) bash ${analyzer_path}/time_consuming_gpumd.sh ;;
-    nep|gnep) bash ${analyzer_path}/time_consuming_nep.sh ;;
+    gpumd) bash "${analyzer_path}/time_consuming_gpumd.sh" ;;
+    wpe) bash "${analyzer_path}/time_consuming_wpe.sh" ;;
+    nep|gnep) bash "${analyzer_path}/time_consuming_nep.sh" ;;
     *)
-        echo " Please input 'gpumd', 'nep' or 'gnep'." ;;
+        echo " Please input 'gpumd', 'wpe', 'nep' or 'gnep'." ;;
 esac
 echo " Code path: ${analyzer_path}/time_consuming_*.sh"
 echo " ---------------------------------------------------"
@@ -32,7 +34,7 @@ function f7_utilities(){
 echo " +------------------------------------------------------+"
 echo " |                    UTILITY TOOLS                     |"
 echo " +------------------------------------------------------+"
-echo " | 701) Time consuming analyzer (gpumd/nep)             |"
+echo " | 701) Time consuming analyzer (gpumd/wpe/nep)         |"
 echo " +------------------------------------------------------+"
 echo " | 000) Return to the main menu                         |"
 echo " +------------------------------------------------------+"
@@ -40,7 +42,7 @@ echo " Input the function number:"
 
 valid_menu_choices=("000" "701")
 read_menu_choice num_choice || return 1
-while ! echo "${valid_menu_choices[@]}" | grep -wq "$num_choice"
+while ! printf '%s\n' "${valid_menu_choices[@]}" | grep -Fxq -- "$num_choice"
 do
   echo " ------------>>"
   echo " Please reinput function number..."
