@@ -174,9 +174,9 @@ if shifted == "yes":
             coeff_matrix[idx][j] = sum(1 for atom in atoms_info if atom[0] == element)
         energy_matrix[idx][0] = energies[idx]
 
-    print('Normalizing energy....')
+    print(' Normalizing energy....')
     if np.linalg.matrix_rank(coeff_matrix) < len(all_elements):
-        print("Warning! The coeff_matrix is underdetermined, adding constraints....")
+        print(" Warning! The coeff_matrix is underdetermined, adding constraints....")
         import itertools
         for i in itertools.combinations(range(len(all_elements)), 2):
             additional_matrix = np.zeros(len(all_elements))
@@ -192,8 +192,8 @@ if shifted == "yes":
 
     # Calculate shifted energies
     shifted_energy = (energy_matrix - np.matmul(coeff_matrix, atomic_shifted_energy)).flatten()
-    print("Averaged energies now: %f eV." % shifted_energy[:len(pos_data)].mean())
-    print("Absolute maximum energy now: %f eV." % max(abs(shifted_energy[:len(pos_data)])))
+    print(" Averaged energies now: %f eV." % shifted_energy[:len(pos_data)].mean())
+    print(" Absolute maximum energy now: %f eV." % max(abs(shifted_energy[:len(pos_data)])))
 
     # Write shifted XYZ file
     write_xyz("shifted.xyz", pos_data, forces_list, shifted_energy.tolist(), lattices)
@@ -201,6 +201,6 @@ if shifted == "yes":
 # Always write the original XYZ file
 write_xyz("original.xyz", pos_data, forces_list, energies, lattices)
 
-print("Done! 'original.xyz' file is generated.")
+print(" Done! 'original.xyz' file is generated.")
 if shifted == "yes":
-    print("Done! 'shifted.xyz' file is generated.")
+    print(" Done! 'shifted.xyz' file is generated.")

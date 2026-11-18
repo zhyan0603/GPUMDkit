@@ -16,7 +16,7 @@ Arguments:
 Output:
   <lammps_data_file>  (LAMMPS data format structure)
 Author:     Zihan YAN (yanzihan@westlake.edu.cn)
-Last-modified: 2026-05-16
+Last-modified: 2026-11-10
 =============================================================================
 """
 
@@ -43,6 +43,26 @@ def convert_extxyz_to_lammps_data(extxyz_file, lammps_data_file):
 
     # Read the EXTXYZ file
     atoms = read(extxyz_file, format='extxyz')
+
+    # The box lines below assume the LAMMPS orientation (a along x, b in the xy
+    # plane), i.e. a lower-triangular cell. Rotate any other cell together with
+    # its atoms; a cell already in that form is written unchanged.
+    import numpy as np
+    det = np.linalg.det(atoms.cell)
+    if abs(det) < 1e-8:
+        print(" Error: LAMMPS requires a non-singular 3D cell.")
+        sys.exit(1)
+    if det < 0:
+        # Swapping a and b only relabels the lattice vectors: the same periodic
+        # structure, now described by a right-handed cell as LAMMPS requires.
+        atoms.set_cell(atoms.cell[[1, 0, 2]], scale_atoms=False)
+        atoms.set_pbc(atoms.pbc[[1, 0, 2]])
+        print(" Note: the left-handed cell was made right-handed by swapping the a and b vectors.")
+    if np.abs(np.triu(np.asarray(atoms.cell), k=1)).max() > 1e-8 or np.any(np.diag(atoms.cell) <= 0):
+        rotated_cell, rotation = atoms.cell.standard_form()
+        atoms.set_positions(atoms.positions @ rotation.T, apply_constraint=False)
+        atoms.set_cell(rotated_cell, scale_atoms=False)
+        print(" Note: the cell was rotated to the LAMMPS orientation (a along x, b in the xy plane).")
     
     # Get element symbols and masses
     symbols = atoms.get_chemical_symbols()

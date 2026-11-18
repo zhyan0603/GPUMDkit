@@ -24,7 +24,6 @@ Last-modified: 2026-09-14
 import os
 import sys
 import numpy as np
-from collections import defaultdict
 
 
 def load_cfg(filename, type_to_symbol):
@@ -48,9 +47,10 @@ def load_cfg(filename, type_to_symbol):
                     for j in range(3):
                         cell[i, j] = float(line.split()[j])
             if 'AtomData' in line:
-                d = defaultdict(int)
-                for (i, x) in enumerate(line.split()[1:]):
-                    d[x] = i
+                d = {name: i for i, name in enumerate(line.split()[1:])}
+                if not {'fx', 'fy', 'fz'}.issubset(d):
+                    print(f" Error: CFG frame {len(frames) + 1} is missing force columns.")
+                    sys.exit(1)
 
                 for _ in range(natoms):
                     line = f.readline()
@@ -59,22 +59,30 @@ def load_cfg(filename, type_to_symbol):
                     symbols[i] = type_to_symbol[int(fields[d['type']])]
                     positions[i] = [float(fields[d[attr]]) for attr in ['cartes_x', 'cartes_y' ,'cartes_z']]
                     forces[i] = [float(fields[d[attr]]) for attr in ['fx', 'fy' ,'fz']]
-                    energies[i] = float(fields[d['site_en']])
+                    if 'site_en' in d:
+                        energies[i] = float(fields[d['site_en']])
 
                 atoms = Atoms(symbols=symbols, cell=cell, positions=positions, pbc=True)
-                if d['fx'] != 0:
-                    atoms.info['forces'] = forces
-                if d['site_en'] != 0:
+                atoms.info['forces'] = forces
+                if 'site_en' in d:
                     atoms.info['energies'] = energies
 
             if 'Energy' in line and 'Weight' not in line:
                 line = f.readline()
                 atoms.info['energy'] = float(line.split()[0])
             if 'PlusStress' in line:
-                line = f.readline()
-                plus_stress = np.array(list(map(float, line.split())))
-                atoms.info['virial'] = plus_stress
+                columns = line.split()[1:]
+                values = f.readline().split()
+                if set(columns) != {'xx', 'yy', 'zz', 'yz', 'xz', 'xy'} or len(values) != 6:
+                    print(f" Error: invalid PlusStress in CFG frame {len(frames) + 1}.")
+                    sys.exit(1)
+                stress = dict(zip(columns, map(float, values)))
+                atoms.info['virial'] = [stress[key] for key in
+                                        ('xx', 'xy', 'xz', 'xy', 'yy', 'yz', 'xz', 'yz', 'zz')]
             if 'END_CFG' in line:
+                if 'energy' not in atoms.info:
+                    print(f" Error: CFG frame {len(frames) + 1} is missing energy.")
+                    sys.exit(1)
                 frames.append(atoms)
             if 'EnergyWeight' in line:
                 line = f.readline()
@@ -94,7 +102,8 @@ def dump_xyz(frames):
         Out_string += "energy=" + str(atoms.info['energy']) + " "
         Out_string += "config_type=mtp2nep "
         Out_string += "pbc=\"T T T\" "
-        Out_string += "virial=\"" + " ".join(list(map(str, atoms.info['virial']))) + "\" "
+        if 'virial' in atoms.info:
+            Out_string += 'virial="' + " ".join(map(str, atoms.info['virial'])) + '" '
         Out_string += "Lattice=\"" + " ".join(list(map(str, atoms.get_cell().reshape(-1)))) + "\" "
         Out_string += "Properties=species:S:1:pos:R:3:force:R:3\n"
 

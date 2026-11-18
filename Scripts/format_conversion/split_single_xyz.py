@@ -33,7 +33,14 @@ def split_xyz_to_individual_models(input_xyz_filename):
     """
 
     # Read all frames from input XYZ file
-    frames = read(input_xyz_filename, format='extxyz', index=':')
+    try:
+        frames = read(input_xyz_filename, format='extxyz', index=':')
+    except Exception as exc:
+        print(f" Error: cannot read '{input_xyz_filename}': {exc}")
+        sys.exit(1)
+    if not frames:
+        print(f" Error: no frames found in '{input_xyz_filename}'.")
+        sys.exit(1)
 
     # Iterate over each frame and write to separate model files
     for i, frame in enumerate(frames):

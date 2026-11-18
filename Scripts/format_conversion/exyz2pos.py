@@ -9,7 +9,7 @@ Script:     exyz2pos.py
 Category:   Format Conversion Scripts
 Purpose:    Convert extended XYZ file(s) to VASP POSCAR format(s).
 Usage:      gpumdkit.sh -exyz2pos <input.xyz>
-            python3 exyz2pos.py <input.xyz>
+            python exyz2pos.py <input.xyz>
 Arguments:
   input.xyz  Input extxyz file
 Output:
@@ -29,7 +29,7 @@ import sys
 
 def print_help():
     print(" Usage: gpumdkit.sh -exyz2pos <input.xyz>")
-    print("    or: python3 exyz2pos.py <input.xyz>")
+    print("    or: python exyz2pos.py <input.xyz>")
     print(" Input:")
     print("   input.xyz       Input extxyz trajectory file")
     print(" Output:")

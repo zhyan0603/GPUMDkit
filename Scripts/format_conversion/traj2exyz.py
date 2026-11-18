@@ -44,7 +44,7 @@ def convert_traj_to_extxyz(input_file, output_file):
     """
     if not os.path.exists(input_file):
         print(f" Error: The file '{input_file}' does not exist.")
-        return
+        sys.exit(1)
 
     try:
         print(f" Reading frames from: {input_file} ...")
@@ -58,6 +58,7 @@ def convert_traj_to_extxyz(input_file, output_file):
         
     except Exception as e:
         print(f" An unexpected error occurred: {e}")
+        sys.exit(1)
 
 if __name__ == "__main__":
     input_path = sys.argv[1]

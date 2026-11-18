@@ -142,4 +142,7 @@ for file in "${converged_files[@]}"; do
 done
 
 echo -ne "\n Conversion complete.\n"
-dos2unix "$writ_dire/$writ_file"
+# Strip carriage returns if the tool is available; it is not needed otherwise
+if command -v dos2unix >/dev/null 2>&1; then
+    dos2unix "$writ_dire/$writ_file"
+fi
