@@ -62,26 +62,22 @@ The repository provides `Scripts/workflow/cp2k_template.inp` as a starting templ
 For ABACUS, choose the ABACUS branch (`301 -> 3`). The script asks for:
 
 ```text
-<extxyz_file> <prefix> <pseudo_dir> [orbital_dir]
+<extxyz_file> <prefix> <basis_dir>
 ```
 
-`pseudo_dir` must hold one `.upf` file per element and `orbital_dir` (LCAO only)
-one `.orb` file per element, each named with the element symbol first (for
+For LCAO, `basis_dir` must contain exactly one `.upf` and one `.orb` per element
+present in the extxyz, each named with the element symbol first (for
 example `Li_ONCV_PBE-1.0.upf`). Each `<prefix>_<index>/` gets its own `STRU`
 (only that frame's elements, Angstrom coordinates) and links to the shared
 `fp/INPUT` and `fp/KPT`. Write `fp/INPUT` yourself with at least `calculation scf`,
-`cal_force 1`, `cal_stress 1`, and `pseudo_dir` (plus `basis_type lcao` and
-`orbital_dir` for LCAO). Convert the finished runs with menu `104`.
+`cal_force 1`, `cal_stress 1` and `basis_type lcao`. Set both `pseudo_dir` and
+`orbital_dir` to the basis directory. Convert the finished runs with menu `104`.
 
 
 
 ### 302) MD sample batch pretreatment (GPUMD)
 
-This entry prepares GPUMD MD sampling folders. Start from `.vasp` structures, or from one selected `.xyz` trajectory/structure file if no `.vasp` files are present.
-
-- If `.vasp` files are present, they are converted to extxyz files and processed.
-- If both `.vasp` and `.xyz` files are present, only `.vasp` files are processed.
-- If multiple `.xyz` files are detected without `.vasp` files, the script asks which one to use.
+In a fresh working directory, provide one `.xyz` file (one or more frames) or one or more `.vasp` files. Mixed formats and multiple XYZ files are rejected before any files are moved.
 
 After running, put `nep.txt` and `run_*.in` files into the generated `md/` directory. The sample folders link `run_1.in`, `run_2.in`, ... as their `run.in`.
 

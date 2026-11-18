@@ -9,7 +9,7 @@ Script:     exyz2pos_scf.py
 Category:   Workflow Scripts
 Purpose:    Convert extxyz frames to validated POSCAR files for VASP 301,
             grouping frames by their element sets when needed.
-Usage:      python3 exyz2pos_scf.py <input.xyz> <struct_fp_dir>
+Usage:      python exyz2pos_scf.py <input.xyz> <struct_fp_dir>
 Arguments:
   input.xyz      Input extended XYZ trajectory
   struct_fp_dir  Directory in which POSCAR files will be created
@@ -28,7 +28,7 @@ from pathlib import Path
 
 
 def print_help():
-    print(" Usage: python3 exyz2pos_scf.py <input.xyz> <struct_fp_dir>")
+    print(" Usage: python exyz2pos_scf.py <input.xyz> <struct_fp_dir>")
     print(" Input:")
     print("   input.xyz       Input extended XYZ trajectory")
     print("   struct_fp_dir  Directory for generated POSCAR files")

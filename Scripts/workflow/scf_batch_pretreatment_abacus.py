@@ -9,22 +9,21 @@ Script:     scf_batch_pretreatment_abacus.py
 Category:   Workflow Scripts
 Purpose:    Batch pretreatment of extxyz structures for ABACUS SCF
             calculations. Writes one STRU file per frame, matches each
-            element to a pseudopotential (and optional orbital) file by
+            element to a pseudopotential and orbital file by
             filename prefix, and links the shared fp/INPUT and fp/KPT.
-Usage:      python scf_batch_pretreatment_abacus.py <extxyz_file> <prefix> <pseudo_dir> [orbital_dir]
+Usage:      python scf_batch_pretreatment_abacus.py <extxyz_file> <prefix> <basis_dir>
             (invoked interactively via gpumdkit.sh menu 301 -> 3)
 Arguments:
   extxyz_file  Input extxyz file with lattice information
   prefix       Prefix for output directories (<prefix>_<index>)
-  pseudo_dir   Directory with exactly one .upf file per element
-  orbital_dir  Directory with exactly one .orb file per element (LCAO only)
+  basis_dir    Directory with exactly one .upf and one .orb per element
 Output:
   <prefix>_<index>/STRU          ABACUS structure file
   <prefix>_<index>/INPUT, KPT    Links to ../fp/INPUT and ../fp/KPT
   fp/                            Directory for the shared INPUT and KPT
   presub.sh                      Example loop for running ABACUS
 Author:     Zihan YAN (yanzihan@westlake.edu.cn)
-Last-modified: 2026-11-05
+Last-modified: 2026-11-17
 =============================================================================
 """
 
@@ -32,17 +31,16 @@ import os
 import sys
 
 args = sys.argv[1:]
-if len(args) not in (3, 4) or args[0] in ("-h", "--help"):
-    print(" Usage: python scf_batch_pretreatment_abacus.py <extxyz_file> <prefix> <pseudo_dir> [orbital_dir]")
+if len(args) != 3 or args[0] in ("-h", "--help"):
+    print(" Usage: python scf_batch_pretreatment_abacus.py <extxyz_file> <prefix> <basis_dir>")
     print("  (invoked interactively via gpumdkit.sh menu 301 -> 3)")
     print("")
     print(" Arguments:")
     print("   extxyz_file  Input extxyz file with lattice information")
     print("   prefix       Prefix for output directories (<prefix>_<index>)")
-    print("   pseudo_dir   Directory with exactly one .upf file per element")
-    print("   orbital_dir  Directory with exactly one .orb file per element (LCAO only)")
+    print("   basis_dir    Directory with exactly one .upf and one .orb per element")
     print("")
-    print(" Example: python scf_batch_pretreatment_abacus.py train.xyz LiF_iter01 ./pp ./orb")
+    print(" Example: python scf_batch_pretreatment_abacus.py train.xyz LiF_iter01 ./basis")
     print("")
     sys.exit(0 if args and args[0] in ("-h", "--help") else 1)
 
@@ -50,12 +48,12 @@ from ase.data import atomic_masses, atomic_numbers
 from ase.io import read
 
 # ABACUS reads LATTICE_CONSTANT in Bohr; this value makes the lattice vectors
-# and Cartesian positions below Angstrom, which abacus2xyz_scf.sh also expects.
+# and Cartesian positions below Angstrom.
 ANGSTROM_TO_BOHR = 1.889726125457828
 
 
 def match_element_file(directory, element, extensions):
-    """Return the single file in directory whose name starts with element."""
+    """Return candidate files whose names start with the element symbol."""
     candidates = []
     for name in sorted(os.listdir(directory)):
         if not os.path.isfile(os.path.join(directory, name)):
@@ -113,9 +111,8 @@ def write_stru(path, atoms, pp_map, orb_map):
     for element in species:
         mass = atomic_masses[atomic_numbers[element]]
         lines.append(f"{element} {mass:.6f} {pp_map[element]}")
-    if orb_map is not None:
-        lines += ["", "NUMERICAL_ORBITAL"]
-        lines += [orb_map[element] for element in species]
+    lines += ["", "NUMERICAL_ORBITAL"]
+    lines += [orb_map[element] for element in species]
     lines += ["", "LATTICE_CONSTANT", f"{ANGSTROM_TO_BOHR:.15f}", "", "LATTICE_VECTORS"]
     for vector in atoms.get_cell():
         lines.append(" ".join(f"{value:18.10f}" for value in vector))
@@ -137,38 +134,16 @@ def replace_link(target, link_path):
     os.symlink(target, link_path)
 
 
-def check_input_file(input_path):
-    """Warn about INPUT keywords that the later abacus2xyz step relies on."""
-    if not os.path.isfile(input_path):
-        return
-    values = {}
-    with open(input_path) as handle:
-        for raw in handle:
-            line = raw.split("#")[0].split("//")[0].strip()
-            parts = line.split()
-            if len(parts) >= 2:
-                values[parts[0].lower()] = parts[1]
-    if values.get("calculation", "scf").lower() != "scf":
-        print(f" Warning: fp/INPUT sets calculation {values['calculation']}; use scf for labeling.")
-    for key in ("cal_force", "cal_stress"):
-        if values.get(key, "0").lower() not in ("1", "true", "t"):
-            print(f" Warning: fp/INPUT does not set {key} 1; abacus2xyz needs forces and stress.")
-    if "pseudo_dir" not in values:
-        print(" Warning: fp/INPUT does not set pseudo_dir.")
-
-
 def main():
     """Validate inputs, write STRU directories, and print next steps."""
-    extxyz_file, prefix, pseudo_dir = args[0], args[1], args[2]
-    orbital_dir = args[3] if len(args) == 4 else None
+    extxyz_file, prefix, basis_dir = args
 
     if not os.path.isfile(extxyz_file):
         print(f" Error: file '{extxyz_file}' does not exist.")
         sys.exit(1)
-    for directory in (pseudo_dir, orbital_dir):
-        if directory is not None and not os.path.isdir(directory):
-            print(f" Error: directory '{directory}' does not exist.")
-            sys.exit(1)
+    if not os.path.isdir(basis_dir):
+        print(f" Error: basis directory '{basis_dir}' does not exist.")
+        sys.exit(1)
 
     try:
         frames = read(extxyz_file, index=":")
@@ -190,15 +165,12 @@ def main():
             if element not in elements:
                 elements.append(element)
 
-    pp_map = build_species_map(elements, pseudo_dir, (".upf",), "pseudopotential (.upf)")
-    orb_map = None
-    if orbital_dir is not None:
-        orb_map = build_species_map(elements, orbital_dir, (".orb",), "orbital (.orb)")
+    pp_map = build_species_map(elements, basis_dir, (".upf",), "pseudopotential (.upf)")
+    orb_map = build_species_map(elements, basis_dir, (".orb",), "orbital (.orb)")
 
     print(f" Found {len(frames)} structures with elements: {' '.join(elements)}")
     for element in elements:
-        extra = f"  {orb_map[element]}" if orb_map is not None else ""
-        print(f"   {element:<3} {pp_map[element]}{extra}")
+        print(f"   {element:<3} {pp_map[element]}  {orb_map[element]}")
 
     os.makedirs("fp", exist_ok=True)
     for index, atoms in enumerate(frames, start=1):
@@ -221,19 +193,9 @@ def main():
         )
     os.chmod("presub.sh", 0o755)
 
-    print(f" Created {len(frames)} directories: {prefix}_1 ... {prefix}_{len(frames)}")
-    print(" Prepare the shared fp/INPUT (and fp/KPT unless INPUT sets kspacing).")
-    print(" INPUT must contain at least:")
-    print("   calculation   scf")
-    print("   cal_force     1")
-    print("   cal_stress    1")
-    print(f"   pseudo_dir    {os.path.abspath(pseudo_dir)}")
-    if orbital_dir is not None:
-        print("   basis_type    lcao")
-        print(f"   orbital_dir   {os.path.abspath(orbital_dir)}")
-    print(" Use absolute paths, or paths relative to each calculation directory.")
-    check_input_file(os.path.join("fp", "INPUT"))
-    print(" After the runs, convert results with gpumdkit.sh menu 104 (ABACUS SCF).")
+    print(f"\n Prepared {len(frames)} ABACUS calculation directories with prefix '{prefix}'.")
+    print(" Before running ABACUS, provide your own fp/INPUT and fp/KPT (unless using kspacing).")
+    print(f" Set pseudo_dir and orbital_dir in fp/INPUT to {os.path.abspath(basis_dir)}")
 
 
 if __name__ == "__main__":

@@ -15,70 +15,69 @@
 # Last-modified: 2026-05-16
 # =============================================================================
 
+# Shared by menus 302 and 303. Set num_xyz_files to this run's frame count.
+function prepare_md_structures(){
+    local -a xyz_files=() vasp_files=() ordered_vasp_files=()
+    local file i=1
+
+    for file in ./*.xyz; do
+        [ ! -f "$file" ] || xyz_files+=("$file")
+    done
+    for file in ./*.vasp; do
+        [ ! -f "$file" ] || vasp_files+=("$file")
+    done
+    if [ "${#vasp_files[@]}" -gt 0 ]; then
+        if [ "${#xyz_files[@]}" -ne 0 ]; then
+            echo " Error: provide one .xyz file or one or more .vasp files."
+            return 1
+        fi
+    elif [ "${#xyz_files[@]}" -ne 1 ]; then
+        echo " Error: provide one .xyz file or one or more .vasp files."
+        return 1
+    fi
+    for file in ./sample_[0-9]*; do
+        if [[ "$file" =~ ^\./sample_[0-9]+$ ]] && [ -e "$file" ]; then
+            echo " Error: $file already exists. Run in a fresh directory."
+            return 1
+        fi
+    done
+    if ! mkdir struct_md; then
+        echo " Error: cannot create struct_md. Run in a fresh directory."
+        return 1
+    fi
+
+    if [ "${#vasp_files[@]}" -gt 0 ]; then
+        while IFS= read -r file; do
+            python "${GPUMDkit_path}/Scripts/format_conversion/pos2exyz.py" "$file" "struct_md/model_${i}.xyz" || return 1
+            ordered_vasp_files+=("$file")
+            i=$((i + 1))
+        done < <(printf '%s\n' "${vasp_files[@]}" | sort -V)
+        num_xyz_files=$((i - 1))
+        for ((i=0; i<num_xyz_files; i++)); do
+            mv "${ordered_vasp_files[i]}" "struct_md/POSCAR_$((i + 1)).vasp" || return 1
+        done
+    else
+        file=${xyz_files[0]#./}
+        echo " Splitting $file into model_*.xyz files..."
+        (cd struct_md && python "${GPUMDkit_path}/Scripts/format_conversion/split_single_xyz.py" "../$file") || return 1
+        local -a models=(struct_md/model_*.xyz)
+        num_xyz_files=${#models[@]}
+        if [ -e "struct_md/$file" ]; then
+            echo " Kept the source '$file' in the working directory because its name matches a generated model."
+        else
+            mv "./$file" struct_md/ || return 1
+        fi
+    fi
+}
+
 function f302_md_sample_batch_pretreatment_gpumd(){
+    local num_xyz_files
     echo " ------------>>"
     echo " Starting MD sample batch pretreatment..."
-
-    # Find all .vasp and .xyz files in the current directory
-
-    num_vasp_files=$(find . -maxdepth 1 -name "*.vasp" | wc -l)
-    num_xyz_files=$(find . -maxdepth 1 -name "*.xyz" | wc -l)
-
-	# Check if there are any .vasp files
-	if [ $num_vasp_files -gt 0 ]; then
-	    if [ $num_xyz_files -gt 0 ]; then
-	        echo " Notice: Found both .vasp and .xyz files in the current directory."
-	        echo " This workflow prioritizes .vasp files and will ignore .xyz files."
-	    fi
-	    # Create the struct directory and move .vasp files into it
-	    mkdir -p struct_md
-	    rename_seq=1
-	    total_vasp_num=$(ls -v *.vasp| wc -l)
-		for file in $(ls -v *.vasp); do
-		    new_vasp_name="POSCAR_${rename_seq}.vasp"
-		    new_xyz_name="model_${rename_seq}.xyz"
-		    mv "${file}" "./struct_md/${new_vasp_name}"
-		    python "${GPUMDkit_path}/Scripts/format_conversion/pos2exyz.py" "./struct_md/${new_vasp_name}" "./struct_md/${new_xyz_name}"
-		    progress=$((rename_seq * 100 / total_vasp_num))
-		    echo -ne " Progress: ["
-		    for ((p=0; p<progress/2; p++)); do echo -ne "#"; done
-		    for ((p=progress/2; p<50; p++)); do echo -ne "."; done
-		    echo -ne "] $progress% ($rename_seq/$total_vasp_num)\r"
-		    rename_seq=$((rename_seq + 1))
-		done
-		num_xyz_files=$(find ./struct_md -maxdepth 1 -name "*.xyz" | wc -l)
-	else
-	    # Check available XYZ files
-	    if [ $num_xyz_files -ge 1 ]; then
-	        if [ $num_xyz_files -eq 1 ]; then
-	            xyz_file=$(find . -maxdepth 1 -name "*.xyz" | head -n 1)
-	            echo " No .vasp files found, but found one XYZ file: ${xyz_file#./}"
-	        else
-	            echo " No .vasp files found, but found multiple XYZ files:"
-	            select xyz_file in *.xyz; do
-	                if [ -n "$xyz_file" ]; then
-	                    break
-	                fi
-	                echo " Invalid selection. Please choose one XYZ file."
-	            done
-	            [ -n "$xyz_file" ] || { echo " Input closed. Exiting."; return 1; }
-	        fi
-	        echo " Splitting ${xyz_file#./} to model_*.xyz using GPUMDkit..."
-	        python ${GPUMDkit_path}/Scripts/format_conversion/split_single_xyz.py "$xyz_file"
-	        
-	        mkdir -p struct_md
-	        mv *.xyz ./struct_md
-	        num_xyz_files=$(find ./struct_md -maxdepth 1 -name "*.xyz" | wc -l | awk '{print $1-1}')
-	        
-	    else
-	        echo " No .vasp files or .xyz files found."
-	        return 1
-	    fi
-	fi
+    prepare_md_structures || return 1
 
     echo " $num_xyz_files model.xyz files were generated."
 
-    # Ask user for directory name prefix
     echo " >-------------------------------------------------<"
     echo " | This function calls the script in Scripts       |"
     echo " | Script: md_sample_batch_pretreatment_gpumd.sh   |"
@@ -88,7 +87,7 @@ function f302_md_sample_batch_pretreatment_gpumd(){
     # Create md directory
     mkdir -p md
 
-    # Create individual directories for each .vasp file and set up the links
+    # Create one sample directory per structure and set up the links
     for i in $(seq 1 $num_xyz_files); do
         dir_name="sample_${i}"
         mkdir -p "${dir_name}"
