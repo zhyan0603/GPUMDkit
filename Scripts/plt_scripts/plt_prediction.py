@@ -144,6 +144,7 @@ def beautify_axes(ax):
 
 def add_marginal_distributions(ax, true, pred, color, bins=35):
     divider = make_axes_locatable(ax)
+    divider.set_aspect(True)
 
     ax_top = divider.append_axes("top", size="14%", pad=0, sharex=ax)
     ax_right = divider.append_axes("right", size="14%", pad=0, sharey=ax)
@@ -267,7 +268,7 @@ def plot_parity_with_marginals(ax, true, pred, xlabel, ylabel, color, mae_text, 
 # =========================
 # Figure and colors - Changed to 1x3 layout
 # =========================
-fig, axs = plt.subplots(1, 3, figsize=(12, 4.0), dpi=100)
+fig, axs = plt.subplots(1, 3, figsize=(11.6, 3.65), dpi=100)
 
 energy_color = '#1f77b4'   # blue
 force_color = '#2ca02c'    # green
@@ -366,15 +367,14 @@ for i, ax in enumerate(axs.flat):
             ha='left',
             va='bottom')
 
-plt.tight_layout()
-plt.subplots_adjust(wspace=0.2)
+plt.subplots_adjust(left=0.078, right=0.986, bottom=0.155, top=0.963, wspace=0.32)
 
 if len(sys.argv) > 1 and sys.argv[1] == 'save':
-    plt.savefig('prediction.png', dpi=300, bbox_inches='tight')
+    plt.savefig('prediction.png', dpi=300)
 else:
     from matplotlib import get_backend
     if get_backend().lower() in ['agg', 'cairo', 'pdf', 'ps', 'svg']:
         print("Non-interactive backend detected. Plot saved as 'prediction.png'.")
-        plt.savefig('prediction.png', dpi=300, bbox_inches='tight')
+        plt.savefig('prediction.png', dpi=300)
     else:
         plt.show()

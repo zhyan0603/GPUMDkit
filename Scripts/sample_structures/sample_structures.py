@@ -21,11 +21,12 @@ Output:
   sampled_structures.xyz
 Author:     Zihan YAN (yanzihan@westlake.edu.cn)
 Modified by: Dr. Huan Wang (huan.wang@whut.edu.cn)
-Last-modified: 2026-05-16
+Last-modified: 2026-11-10
 =============================================================================
 """
 
 import argparse
+import sys
 import numpy as np
 import textwrap
 from ase.io import read, write
@@ -88,6 +89,16 @@ def main():
     num_samples = args.num_samples
     skip_initial = args.skip_initial
 
+    if not file_path.is_file():
+        print(f" Error: file '{file_path}' does not exist.")
+        sys.exit(1)
+    if num_samples <= 0:
+        print(" Error: num_samples must be a positive integer.")
+        sys.exit(1)
+    if skip_initial < 0:
+        print(" Error: skip_num must be a non-negative integer.")
+        sys.exit(1)
+
     # Read all frames
     frames = read(file_path, index=':')
 
@@ -96,8 +107,18 @@ def main():
 
     # Adjust the frames list if skip_initial is specified
     if skip_initial:
+        if skip_initial >= num_frames:
+            print(f" Error: skip_num ({skip_initial}) must be smaller than the number of frames ({num_frames}).")
+            sys.exit(1)
         frames = frames[skip_initial:]
         num_frames = len(frames)  # Update the number of frames after skipping
+
+    # A frame is never written twice: asking for more than is available
+    # returns every available frame.
+    if num_samples > num_frames:
+        print(f" Note: {num_samples} samples requested but only {num_frames} frames are available;"
+              f" all {num_frames} frames are written.")
+        num_samples = num_frames
 
     # Generate evenly spaced indices
     if sampling_method == 'uniform':
@@ -116,7 +137,7 @@ def main():
     # Write the sampled frames to sample.xyz
     write('sampled_structures.xyz', sampled_frames)
 
-    print(' All sampled frames written to sampled_structures.xyz')
+    print(f' {len(sampled_frames)} sampled frames written to sampled_structures.xyz')
 
 
 if __name__ == "__main__":

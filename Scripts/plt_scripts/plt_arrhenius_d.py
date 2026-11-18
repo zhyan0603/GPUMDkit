@@ -21,7 +21,7 @@ Output:
   Arrhenius_D.png  (if save is used, or if backend is non-interactive)
 
 Author:     Zihan YAN (yanzihan@westlake.edu.cn)
-Last-modified: 2026-10-21
+Last-modified: 2026-11-10
 =============================================================================    
 """
 
@@ -108,6 +108,10 @@ for folder in os.listdir(current_dir):
                 raw_D_alls.append(D_all)
         except ValueError:
             continue  # Skip if folder name doesn't convert to int properly
+
+if len(raw_temps) == 0:
+    print(" Error: no '<T>K' folder containing msd.out (e.g., 300K/msd.out) found in the current directory.")
+    sys.exit(1)
 
 # Sort by temperature
 if len(raw_temps) > 0:

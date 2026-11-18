@@ -390,13 +390,17 @@ gpumdkit.sh -plt D_xyz [save]
 
 ---
 
-These conductivity plots use the first temperature's `model.xyz` to count Li
-and Na together, assume unit charge, and apply the same ion count and replication
-across temperatures. Use them for one mobile Li or Na species with matching MSD
-columns; other species, mixed carriers, or changing composition require a separate
-calculation. They fit the 40%–80% MSD interval and extrapolate conductivity to
-300 K using the Nernst–Einstein relation. Validate the diffusive interval and the
-extrapolation range before interpreting the results.
+These conductivity plots count the atoms of the given mobile element in the
+first temperature's `model.xyz`, use the given charge number, and apply the same
+ion count and replication across temperatures. Use them for one mobile species
+with matching MSD columns; mixed carriers or changing composition require a
+separate calculation. They fit the 40%–80% MSD interval and extrapolate
+conductivity to 300 K using the Nernst–Einstein relation. The temperature is
+taken from the folder name and the volume is the mean over the whole
+`thermo.out`, whereas `gpumdkit.sh -calc ionic-cond` averages the temperature
+and volume over the last half of `thermo.out`, so the two conductivities can
+differ slightly. Validate the diffusive interval and the extrapolation range
+before interpreting the results.
 
 #### plt_arrhenius_sigma.py
 

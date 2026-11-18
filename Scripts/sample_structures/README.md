@@ -83,7 +83,7 @@ Sampling_method: 'uniform' or 'random'
 Example: train.xyz uniform 50
 ```
 
-The output file is `sampled_structures.xyz`.
+The output file is `sampled_structures.xyz`. A frame is never written twice: if more frames are requested than are available, all available frames are written and a note is printed.
 
 
 

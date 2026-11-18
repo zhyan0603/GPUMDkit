@@ -17,7 +17,7 @@ Arguments:
 Output:
   Arrhenius_D_xyz.png  (if save is used)
 Author:     Zihan YAN (yanzihan@westlake.edu.cn)
-Last-modified: 2026-10-21
+Last-modified: 2026-11-10
 =============================================================================
 """
 
@@ -125,6 +125,10 @@ for folder in os.listdir(current_dir):
             continue  # Skip if folder name doesn't convert to int properly
 
 # Sort by temperature
+if len(raw_temps) == 0:
+    print(" Error: no '<T>K' folder containing msd.out (e.g., 300K/msd.out) found in the current directory.")
+    sys.exit(1)
+
 if len(raw_temps) > 0:
     sorted_indices = np.argsort(raw_temps)
     temps = np.array(raw_temps)[sorted_indices]

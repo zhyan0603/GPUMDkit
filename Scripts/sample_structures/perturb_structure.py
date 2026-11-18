@@ -371,9 +371,9 @@ def main():
     except SystemExit as exc:
         if exc.code == 0:
             sys.exit(0)
-        print(f"Default values: pert_num=20, cell_pert_fraction=0.03, atom_pert_distance=0.2, atom_pert_style=uniform")
-        print("atom_pert_style options: 'normal', 'uniform', 'const'")
-        print("dpdata documentation: https://docs.deepmodeling.com/projects/dpdata/en/master/index.html \n")
+        print(f" Default values: pert_num=20, cell_pert_fraction=0.03, atom_pert_distance=0.2, atom_pert_style=uniform")
+        print(" atom_pert_style options: 'normal', 'uniform', 'const'")
+        print(" dpdata documentation: https://docs.deepmodeling.com/projects/dpdata/en/master/index.html \n")
         sys.exit(exc.code)
 
     print_dependency_notice()

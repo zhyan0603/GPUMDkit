@@ -22,7 +22,7 @@ Output:
   select.png       PCA visualization of descriptor space
   pca_sample.txt / pca_train.txt / pca_selected.txt  PCA projections
 Author:     Benrui TANG (tang070205@proton.me)
-Last-modified: 2026-07-14
+Last-modified: 2026-11-10
 =============================================================================
 """
 
@@ -150,8 +150,14 @@ def farthest_point_sample(
         to_add.append(0)
         now_data = [new_data[0]]
     distances = np.min(cdist(new_data, now_data, metric=metric), axis=1)
-    while np.max(distances) > min_distance or len(to_add) < min_select:
-        index = np.argmax(distances)
+    # A selected candidate is masked with -inf so that it cannot be chosen
+    # again, even when min_select or max_select exceeds the candidate count.
+    distances[to_add] = -np.inf
+
+    while len(to_add) < min(len(new_data), max_select) and (
+        np.max(distances) > min_distance or len(to_add) < min_select
+    ):
+        index = int(np.argmax(distances))
         to_add.append(index)
         if len(to_add) >= max_select:
             break
@@ -159,6 +165,7 @@ def farthest_point_sample(
             distances,
             cdist([new_data[index]], new_data, metric=metric)[0],
         )
+        distances[to_add] = -np.inf
     return to_add
 
 
@@ -285,6 +292,15 @@ def main():
             min_select=min_select,
             max_select=max_select,
         )
+    if not selected:
+        print(" Error: no structure was selected; selected.xyz was not written.")
+        print(" Lower min_dist or check the candidate structures.")
+        sys.exit(1)
+    if choice == '2' and len(selected) < min_select:
+        print(f" Note: only {len(selected)} candidate structures are available,"
+              f" fewer than min_select ({min_select}).")
+    print(f" Selected {len(selected)} of {len(sampledata)} candidate structures.")
+
     write('selected.xyz', [sampledata[index] for index in selected])
 
     try:
