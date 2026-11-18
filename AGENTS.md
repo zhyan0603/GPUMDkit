@@ -35,6 +35,7 @@ Key references under `skills/gpumdkit-skill/references/`:
 ## Rules
 
 - Never invent consequential scientific or execution choices; ask the user.
+- Prioritize failures on supported inputs and silent scientific errors. Report external-version differences and user-side input or preprocessing issues, and ask the maintainer before adding compatibility or fallback behavior.
 - Simulations, training, DFT, scheduler jobs, destructive operations, and expensive runs require explicit authorization.
 - Preserve unrelated changes. Before repository edits, read `contributing.md`; keep changes minimal, update both documentation languages for user-visible features, and run its validation checklist.
 - Run smoke tests in isolated temporary directories. Before handoff, remove every temporary file, directory, cache, and generated test output created by the work, including artifacts from failed commands; delete only verified explicit paths and finish with a read-only inventory confirming that nothing remains.

@@ -15,11 +15,11 @@ NEW_FEATURES=(
 
 # Bug fixes (one per line, in an array; keep at most the five newest entries)
 BUG_FIXES=(
-    "read force and forces extxyz fields in range analysis and value filtering, and convert ABACUS SCF and MD with Python in menu 104, retaining all converged SCF frames and their original Cartesian axes"
+    "read force and forces extxyz fields in range analysis and value filtering, and convert ABACUS SCF and MD with Python in menu 104, preserving the Cartesian axes, skipping explicitly unconverged SCF runs, and reading force tables with or without a column header"
     "use unwrapped_position for -calc msd when present and otherwise always apply minimum-image unwrapping along periodic axes, and respect periodic axes in distance tools"
     "keep batch MD outputs isolated, reject ambiguous inputs, protect POSCAR files, and convert rotated or left-handed cells consistently for LAMMPS"
     "validate Web console requests and make clean prompts, menu validation, filename completion, and timestamp formatting safer"
-    "preserve frames without stress in outlier screening (stress threshold optional), correct CP2K cell templates and MTP virials, and handle ABACUS paths and optional settings"
+    "preserve frames without stress in outlier screening (stress threshold optional), correct CP2K cell templates and MTP virials, handle ABACUS paths and optional settings, and report when active learning skips minimum-distance filtering because there are no atom pairs"
 )
 
 # === Formatted Output Logic ===

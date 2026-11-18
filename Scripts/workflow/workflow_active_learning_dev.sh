@@ -90,22 +90,21 @@ if [ -z "$actual_min_dist" ]; then
     exit 1
 fi
 
-if [ "$actual_min_dist" != "N/A" ] && [ "$(awk -v a="$actual_min_dist" -v b="$min_dist" 'BEGIN {print (a < b)}')" -eq 1 ]; then
+cd "${work_dir}/01.select" || exit 1
+if [ "$actual_min_dist" = "N/A" ]; then
+    echo "No interatomic pairs found (min_distance is N/A); skipping minimum-distance filtering."
+elif [ "$(awk -v a="$actual_min_dist" -v b="$min_dist" 'BEGIN {print (a < b)}')" -eq 1 ]; then
     echo "The actual minimum distance ($actual_min_dist) between two atoms is less than the specified value ($min_dist)."
     echo "Filtering the structs based on the min_dist you specified."
-    cd ${work_dir}/01.select
     gpumdkit.sh -filter_dist md_sampled_structs.xyz ${min_dist}
-    echo "$(date +"%Y-%m-%d %H:%M:%S")" "Analysis the box in md_sampled_structs.xyz"
     mv filtered_md_sampled_structs.xyz md_sampled_structs.xyz
-    gpumdkit.sh -filter_box md_sampled_structs.xyz "${box_limit}" || exit 1
-    echo "The box limit is $box_limit. filtered structs are saved in filtered_by_box.xyz"
 else
-    echo "The actual minimum distance ($actual_min_dist) between two atoms is greater than the specified value ($min_dist)."
-    echo "$(date +"%Y-%m-%d %H:%M:%S")" "Analysis the box in md_sampled_structs.xyz"
-    cd ${work_dir}/01.select
-    gpumdkit.sh -filter_box md_sampled_structs.xyz "${box_limit}" || exit 1
-    echo "The box limit is $box_limit. filtered structs are saved in filtered_by_box.xyz"
+    echo "The actual minimum distance ($actual_min_dist) meets the specified minimum ($min_dist)."
 fi
+
+echo "$(date +"%Y-%m-%d %H:%M:%S")" "Analysis the box in md_sampled_structs.xyz"
+gpumdkit.sh -filter_box md_sampled_structs.xyz "${box_limit}" || exit 1
+echo "The box limit is $box_limit. filtered structs are saved in filtered_by_box.xyz"
 
 if [ ! -s filtered_by_box.xyz ]; then
     echo " Error: no structures passed the cell-size filter."

@@ -40,24 +40,49 @@ def read_input(folder):
                 if len(line.split()) >= 2 and not line.lstrip().startswith("#"))
 
 
+def parse_force_rows(force_section, natoms):
+    """Extract natoms force rows from an ABACUS TOTAL-FORCE section."""
+    rows = []
+    for line in force_section.splitlines():
+        parts = line.split()
+        if len(parts) == 4 and re.fullmatch(r"[A-Za-z]+\d*", parts[0]):
+            try:
+                [float(val) for val in parts[1:4]]
+            except ValueError:
+                if rows:
+                    break
+                continue
+            rows.append(parts)
+            if len(rows) == natoms:
+                break
+        elif rows:
+            break
+    return rows
+
+
 def read_scf_log(folder, scf_nmax):
     import numpy as np
     from ase.units import Bohr
 
     log = folder / "running_scf.log"
     contents = log.read_text(errors="replace")
+    lower = contents.lower()
     energies = re.findall(r"FINAL_ETOT_IS\s+([^\s]+)", contents)
-    if not energies or (scf_nmax is not None and contents.count("ALGORITHM") == scf_nmax):
+    if not energies or "convergence has not been achieved" in lower:
+        return None
+    if ("charge density convergence is achieved" not in lower
+            and scf_nmax is not None and contents.count("ALGORITHM") >= scf_nmax):
         return None
 
     natoms = int(re.findall(r"TOTAL ATOM NUMBER\s*=\s*(\d+)", contents)[-1])
-    force_section = contents.rsplit("TOTAL-FORCE (eV/Angstrom)", 1)[-1]
-    force_table = re.search(r"(?m)^\s*atom\s+x\s+y\s+z[^\S\n]*\n", force_section)
-    if "TOTAL-FORCE (eV/Angstrom)" not in contents or force_table is None:
+    if "TOTAL-FORCE (eV/Angstrom)" not in contents:
         raise ValueError("no forces found in running_scf.log")
-    forces = [line.split() for line in force_section[force_table.end():].splitlines()[:natoms]]
-    symbols = [row[0].rstrip("0123456789") for row in forces]
-    forces = [row[1:4] for row in forces]
+    force_section = contents.rsplit("TOTAL-FORCE (eV/Angstrom)", 1)[-1]
+    force_rows = parse_force_rows(force_section, natoms)
+    if len(force_rows) != natoms:
+        raise ValueError("no forces found in running_scf.log")
+    symbols = [row[0].rstrip("0123456789") for row in force_rows]
+    forces = [row[1:4] for row in force_rows]
 
     # Use the cell and positions from the same Cartesian basis as the logged forces and stress.
     lattice_constant = re.findall(r"lattice constant \(Bohr\)\s*=\s*(\S+)", contents)

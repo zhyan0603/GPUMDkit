@@ -64,6 +64,12 @@ To maintain code quality and consistency across the project, please adhere to th
 - Use meaningful variable and function names.
 - Add comments where necessary to explain complex logic.
 
+### Compatibility and Review Priority
+
+- Prioritize failures on supported inputs and silent changes to scientific results.
+- Report issues caused by an external software version, malformed or mismatched user input, or user-side preprocessing. Give a clear error or document the expected input where appropriate.
+- Treat workarounds for those cases as optional compatibility changes. Ask the maintainer whether to support the case before adding a fallback or expanding the supported inputs.
+
 ### Documentation
 
 - Ensure that help messages (e.g., `-h` flags) are clear and accurate.

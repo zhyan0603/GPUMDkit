@@ -77,11 +77,13 @@ if __name__ == '__main__':
 
     poscar_filenames = []
     for pattern in poscar_patterns:
-        matched = [pattern] if os.path.isfile(pattern) else sorted(glob.glob(pattern), key=natural_key)
+        matched = [pattern] if os.path.isfile(pattern) else glob.glob(pattern)
         if not matched:
             print(f" Error: no files matched the pattern: {pattern}")
             sys.exit(1)
         poscar_filenames.extend(matched)
+    # Sort after collecting so both quoted and shell-expanded wildcards use natural order.
+    poscar_filenames.sort(key=natural_key)
 
     if os.path.exists(extxyz_filename) and any(
         os.path.samefile(extxyz_filename, name) for name in poscar_filenames
