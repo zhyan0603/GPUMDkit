@@ -64,7 +64,7 @@ def __select_traj(traj: list[Atoms] | Atoms, select: list[int] | slice | None = 
         selected_traj = [traj]
     else:
         selected_traj: list[Atoms] = traj[select]
-    print(f"Number of Selected Frames: {len(selected_traj)}")
+    print(f" Number of Selected Frames: {len(selected_traj)}")
     return selected_traj
 
 def calculate_averaged_structure(traj: list[Atoms], select: list[int] | slice | None = None) -> Atoms:
@@ -165,7 +165,7 @@ def parse_args():
 def get_nframe(file_name):
     with open(file_name, "r") as f:
         nframe = sum(1 for line in f if "Lattice=" in line)
-    print(f"Detected {nframe} frames in {file_name}.")
+    print(f" Detected {nframe} frames in {file_name}.")
     return nframe
 
 

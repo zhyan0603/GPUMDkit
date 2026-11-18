@@ -9,6 +9,8 @@ Script:     calc_msd.py
 Category:   Calculator Scripts
 Purpose:    Compute directional MSD (x, y, z) from an extxyz trajectory via
             the Wiener-Khinchin FFT algorithm for a target element.
+            For wrapped trajectories in a fixed cell, periodic jumps are removed
+            with the minimum-image convention along periodic directions.
 Usage:      gpumdkit.sh -calc msd <extxyz_file> <element_symbol> <dt_fs> [max_corr_steps]
             python calc_msd.py <extxyz_file> <element_symbol> <dt_fs> [max_corr_steps]
 Arguments:
@@ -19,7 +21,7 @@ Arguments:
 Output:
   msd.out  (4-column: Time/ps, MSD_x, MSD_y, MSD_z)
 Author:     Zihan YAN (yanzihan@westlake.edu.cn)
-Last-modified: 2026-05-16
+Last-modified: 2026-11-10
 =============================================================================
 """
 
@@ -55,6 +57,7 @@ def parse_args():
         print("   element_symbol    Chemical symbol (e.g., Li, O, Na)")
         print("   dt_fs             Time step between consecutive frames (fs)")
         print("   max_corr_steps    Max correlation lag steps (optional)")
+        print("   Default: use unwrapped_position if present, otherwise unwrap pos by minimum image.")
         print("")
         print(" Example: gpumdkit.sh -calc msd dump.xyz Li 1.0 500")
         print("")
@@ -91,7 +94,7 @@ def parse_args():
     except ValueError:
         print(" Error: dt_fs must be a number, got: '%s'" % dt_str)
         sys.exit(1)
-    if dt_fs <= 0:
+    if not np.isfinite(dt_fs) or dt_fs <= 0:
         print(" Error: dt_fs must be positive, got: %s" % dt_fs)
         sys.exit(1)
 
@@ -126,7 +129,9 @@ def read_extxyz_file(filename, element_symbol):
     Returns
     -------
     all_positions : ndarray, shape (n_frames, n_atoms, 3)
-    cell_info     : ndarray, shape (3, 3), or None
+    cells         : ndarray, shape (n_frames, 3, 3)
+    pbc           : ndarray, shape (n_frames, 3)
+    position_key  : str
     """
     try:
         from ase.io import read
@@ -145,12 +150,18 @@ def read_extxyz_file(filename, element_symbol):
         print(" Error: No frames found in '%s'." % filename)
         sys.exit(1)
 
+    position_key = "positions"
+    if all("unwrapped_position" in atoms.arrays for atoms in atoms_list):
+        position_key = "unwrapped_position"
+
     all_positions = []
-    cell_info = None
+    cells = []
+    pbc = []
+    n_target = None
 
     for frame_idx, atoms in enumerate(atoms_list):
-        if frame_idx == 0:
-            cell_info = np.array(atoms.get_cell())
+        cells.append(atoms.cell.array)
+        pbc.append(atoms.pbc)
 
         symbols = atoms.get_chemical_symbols()
         element_indices = [i for i, s in enumerate(symbols) if s == element_symbol]
@@ -161,71 +172,34 @@ def read_extxyz_file(filename, element_symbol):
                   % (element_symbol, frame_idx))
             sys.exit(1)
 
-        all_positions.append(atoms.positions[element_indices])
+        if n_target is None:
+            n_target = len(element_indices)
+        elif len(element_indices) != n_target:
+            print(" Error: frame %d contains %d %s atoms, but frame 0 contains %d."
+                  % (frame_idx, len(element_indices), element_symbol, n_target))
+            print(" The number of target atoms must be the same in every frame.")
+            sys.exit(1)
+
+        all_positions.append(atoms.arrays[position_key][element_indices])
 
     all_positions = np.array(all_positions)   # shape: (n_frames, n_atoms, 3)
-    return all_positions, cell_info
+    cells = np.array(cells)                   # shape: (n_frames, 3, 3)
+    return all_positions, cells, np.asarray(pbc), position_key
 
 
-# ==============================================================================
-# Coordinate wrapping utilities
-# ==============================================================================
+def unwrap_coordinates(positions, cell, pbc):
+    """Accumulate the shortest periodic image of each consecutive displacement."""
+    from ase.geometry import find_mic
 
-def check_wrapped_coordinates(positions, cell):
-    """
-    Heuristically check whether Cartesian coordinates are PBC-wrapped.
+    delta = np.diff(positions, axis=0)
+    vectors = delta.reshape(-1, 3)
+    for start in range(0, len(vectors), 8192):
+        block = vectors[start:start + 8192]
+        block[:] = find_mic(block, cell, pbc=pbc)[0]
 
-    Returns True if any coordinate is negative, exceeds 1.5x the cell
-    length, or if the per-dimension coordinate span exceeds the cell length.
-    """
-    if cell is None or positions.size == 0:
-        return False
-
-    cell_lengths = np.array([np.linalg.norm(cell[i]) for i in range(3)])
-
-    for dim in range(3):
-        col = positions[:, :, dim]
-        if np.any(col < 0) or np.any(col > cell_lengths[dim] * 1.5):
-            return True
-        if col.max() - col.min() > cell_lengths[dim] * 1.5:
-            return True
-
-    return False
-
-
-def unwrap_coordinates(positions, cell):
-    """
-    Unwrap PBC-wrapped coordinates using the minimum-image convention.
-
-    For each atom and each consecutive frame pair, if the displacement
-    along any axis exceeds half the cell length, all subsequent frames
-    are shifted by one full cell vector to remove the jump.
-
-    Parameters
-    ----------
-    positions : ndarray, shape (n_frames, n_atoms, 3)
-    cell      : ndarray, shape (3, 3)
-
-    Returns
-    -------
-    ndarray, shape (n_frames, n_atoms, 3)
-    """
-    if positions.shape[0] < 2 or cell is None:
-        return positions
-
-    cell_lengths = np.array([np.linalg.norm(cell[i]) for i in range(3)])
-    unwrapped = np.copy(positions)
-
-    for atom_idx in range(positions.shape[1]):
-        for frame in range(1, positions.shape[0]):
-            displacement = positions[frame, atom_idx] - positions[frame - 1, atom_idx]
-            for dim in range(3):
-                half = cell_lengths[dim] / 2.0
-                if displacement[dim] > half:
-                    unwrapped[frame:, atom_idx, dim] -= cell_lengths[dim]
-                elif displacement[dim] < -half:
-                    unwrapped[frame:, atom_idx, dim] += cell_lengths[dim]
-
+    unwrapped = np.empty_like(positions)
+    unwrapped[0] = positions[0]
+    unwrapped[1:] = positions[0] + np.cumsum(delta, axis=0)
     return unwrapped
 
 
@@ -294,7 +268,7 @@ def calculate_msd_from_extxyz(extxyz_file, element_symbol, dt_fs, max_corr_steps
     """
     Full MSD calculation pipeline:
       1. Read trajectory
-      2. Check / unwrap coordinates
+      2. Unwrap coordinates (minimum image between consecutive frames)
       3. Compute directional MSD via FFT
       4. Truncate to max_corr_steps if specified
       5. Write msd.out (time, MSD_x, MSD_y, MSD_z)
@@ -316,42 +290,35 @@ def calculate_msd_from_extxyz(extxyz_file, element_symbol, dt_fs, max_corr_steps
     # ------------------------------------------------------------------
     print(" ")
     print(" Reading file: %s" % extxyz_file)
-    all_positions, cell = read_extxyz_file(extxyz_file, element_symbol)
+    all_positions, cells, pbc, position_key = read_extxyz_file(extxyz_file, element_symbol)
     n_frames, n_atoms, _ = all_positions.shape
     print("   Loaded %d frames, %d %s atoms per frame"
           % (n_frames, n_atoms, element_symbol))
 
-    if cell is not None:
-        cell_lengths = np.array([np.linalg.norm(cell[i]) for i in range(3)])
-        print("   Cell lengths (a, b, c) : %.4f  %.4f  %.4f  Ang"
-              % (cell_lengths[0], cell_lengths[1], cell_lengths[2]))
-    else:
-        print(" Warning: No cell information found. PBC unwrapping will be skipped.")
-
-    # ------------------------------------------------------------------
-    # Coordinate wrapping check
-    # ------------------------------------------------------------------
-    print(" ")
-    if cell is not None:
-        is_wrapped = check_wrapped_coordinates(all_positions, cell)
-        if is_wrapped:
-            print(" Coordinate status : Wrapped (PBC detected)")
-            print(" Unwrapping coordinates...")
-            all_positions = unwrap_coordinates(all_positions, cell)
-            print(" Coordinate unwrapping completed.")
-        else:
-            print(" Coordinate status : Unwrapped (no action needed)")
-    else:
-        print(" Coordinate status : Skipped (no cell information)")
-
-    # ------------------------------------------------------------------
-    # MSD calculation
-    # ------------------------------------------------------------------
-    print(" ")
     if n_frames < 3:
         print(" Error: At least 3 frames are required for MSD, "
               " but only %d found." % n_frames)
         sys.exit(1)
+
+    if position_key == "unwrapped_position":
+        print(" Coordinate mode: using the unwrapped_position column.")
+    elif not pbc.any():
+        print(" Coordinate mode: Cartesian coordinates as stored.")
+    else:
+        if np.any(pbc != pbc[0]) or not np.allclose(cells, cells[0], rtol=0, atol=1e-6):
+            print(" Error: wrapped MSD requires a fixed cell and fixed periodic directions.")
+            print(" For variable-cell trajectories, provide an unwrapped_position column.")
+            sys.exit(1)
+        periodic_cell = cells[0][pbc[0]]
+        if np.linalg.matrix_rank(periodic_cell) != len(periodic_cell):
+            print(" Error: invalid cell vectors for the periodic directions.")
+            sys.exit(1)
+        # Always unwrap: for coordinates that are already continuous, the
+        # minimum-image step leaves them unchanged as long as consecutive
+        # displacements are shorter than half the cell. Deciding from the
+        # coordinate range instead would miss partially wrapped trajectories.
+        print(" Coordinate mode: minimum-image unwrapping in periodic directions.")
+        all_positions = unwrap_coordinates(all_positions, cells[0], pbc[0])
 
     print(" Calculating MSD (Wiener-Khinchin FFT)...")
     msd_xyz = msd_fft(all_positions)             # shape: (n_frames-2, 3)
@@ -401,8 +368,7 @@ def calculate_msd_from_extxyz(extxyz_file, element_symbol, dt_fs, max_corr_steps
 if __name__ == "__main__":
     t0 = time.perf_counter()
 
-    extxyz_file, element_symbol, dt_fs, max_corr_steps = parse_args()
-    calculate_msd_from_extxyz(extxyz_file, element_symbol, dt_fs, max_corr_steps)
+    calculate_msd_from_extxyz(*parse_args())
 
     print(" Total elapsed time: %.2f s" % (time.perf_counter() - t0))
     print(" "+ "=" * 60)

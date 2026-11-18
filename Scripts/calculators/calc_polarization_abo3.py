@@ -34,13 +34,11 @@ import math
 import numpy as np
 import sys
 
+# Imported lazily so that -h works without the optional package
 try:
     from ferrodispcalc.compute import calculate_polarization
 except ImportError:
-    raise ImportError(
-        "The 'ferrodispcalc' package is required to run this script.\n"
-        "Install using: `pip3 install git+https://github.com/MoseyQAQ/ferrodispcalc.git`"
-    )
+    calculate_polarization = None
 
 
 class HelpFormatter(argparse.RawTextHelpFormatter):
@@ -121,7 +119,7 @@ def parse_bec_list(bec_terms):
 def get_nframe(file_name):
     with open(file_name, "r") as f:
         nframe = sum(1 for line in f if "Lattice=" in line)
-    print(f"Detected {nframe} frames in {file_name}.")
+    print(f" Detected {nframe} frames in {file_name}.")
     return nframe
 
 
@@ -147,11 +145,15 @@ def save_polarization(file_name, polarization):
     if polarization.ndim > 2:
         save_data = polarization.reshape(-1, 3)
     np.savetxt(file_name, save_data)
-    print(f"Saved polarization data to {file_name}, shape={save_data.shape}.")
+    print(f" Saved polarization data to {file_name}, shape={save_data.shape}.")
 
 
 def main():
     args = parse_args()
+    if calculate_polarization is None:
+        print(" Error: the 'ferrodispcalc' package is required to run this script.")
+        print(" Install it with: pip install git+https://github.com/MoseyQAQ/ferrodispcalc.git")
+        sys.exit(1)
     nframe = get_nframe(args.input)
     apply_last_to_slice(args, nframe)
     select = slice(args.start, args.stop, args.step)

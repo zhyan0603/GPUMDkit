@@ -110,4 +110,4 @@ with open(output_file, 'w') as f:
             f.write(f"{energy}\n")
         f.write("\n")  # Blank line to separate elements
 
-print(f"Results saved to {output_file}")
+print(f" Results saved to {output_file}")

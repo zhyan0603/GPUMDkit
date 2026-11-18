@@ -28,14 +28,13 @@ Last-modified: 2026-05-16
 
 from ase.io import read
 import argparse
+import sys
 
+# Imported lazily so that -h works without the optional package
 try:
     from ferrodispcalc.neighborlist import build_neighbor_list, save_neighbor_list
 except ImportError:
-    raise ImportError(
-        "The 'ferrodispcalc' package is required to run this script.\n"
-        "Install using: `pip3 install git+https://github.com/MoseyQAQ/ferrodispcalc.git`"
-    )
+    build_neighbor_list = save_neighbor_list = None
 
 
 class HelpFormatter(argparse.RawTextHelpFormatter):
@@ -95,6 +94,10 @@ def parse_args():
 
 def main():
     args = parse_args()
+    if build_neighbor_list is None:
+        print(" Error: the 'ferrodispcalc' package is required to run this script.")
+        print(" Install it with: pip install git+https://github.com/MoseyQAQ/ferrodispcalc.git")
+        sys.exit(1)
     atoms = read(args.input, index=args.index)
     nl = build_neighbor_list(
         atoms=atoms,

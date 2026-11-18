@@ -26,7 +26,7 @@ Input files (auto-detected):
 Output:
   Calculated diffusivity and ionic conductivity (printed to terminal)
 Author:     Zihan YAN (yanzihan@westlake.edu.cn), Shengjie Tang (tangshengjie@westlake.edu.cn)
-Last-modified: 2026-09-14
+Last-modified: 2026-11-10
 =============================================================================
 """
 
@@ -208,8 +208,11 @@ def count_ions(atom_type="Li"):
     with open("model.xyz", 'r') as f:
         lines = f.readlines()
         num_atoms = int(lines[0].strip())  # First line is number of atoms
-        for line in lines[2:]:  # Skip header lines
+        # Read exactly the atom lines, so trailing blank lines are harmless
+        for line in lines[2:2 + num_atoms]:
             parts = line.split()
+            if not parts:
+                continue
             if parts[0] == atom_type:
                 num_ions += 1
 

@@ -380,12 +380,14 @@ Performs nudged elastic band (NEB) calculations to find minimum energy pathways 
 
 **Command-line mode:**
 ```bash
-gpumdkit.sh -calc neb <initial.xyz> <final.xyz> <n_images> <nep.txt>
+gpumdkit.sh -calc neb <initial.xyz> <final.xyz> <n_images> <nep.txt> [max_steps]
 ```
+
+The optional `max_steps` sets the optimizer step limit. The script reports whether NEB converged.
 
 **Direct execution:**
 ```bash
-python neb_calculation.py <initial.xyz> <final.xyz> <n_images> <nep.txt>
+python neb_calculation.py <initial.xyz> <final.xyz> <n_images> <nep.txt> [max_steps]
 ```
 
 #### Parameters
@@ -432,7 +434,7 @@ gpumdkit.sh -calc neb init.xyz fin.xyz 9 nep.txt
  | Script: neb_calculation.py                      |
  | Developer: Zhoulin LIU (1776627910@qq.com)      |
  >-------------------------------------------------<
- Input <initial_struct> <final_struct> <n_image> <nep_model>
+ Input <initial_struct> <final_struct> <n_image> <nep_model> [max_steps]
  Example: IS.xyz FS.xyz 5 nep.txt
  ------------>>
 ```
@@ -487,11 +489,14 @@ python calc_msd.py <extxyz_file> <element_symbol> <dt_fs> [max_corr_steps]
 gpumdkit.sh -calc msd dump.xyz Li 10
 ```
 
-Use a fixed-cell trajectory with stable atom order and verified unwrapped
-coordinates in the `pos` field. The script reads `pos` and the first frame's
-cell; it does not use a separate `unwrapped_position` property. Its automatic
-wrapping check is not sufficient to validate wrapped trajectories, and its
-axis-wise unwrapping does not handle general tilted or changing cells.
+Keep the atom order consistent across frames. By default, the script uses
+`unwrapped_position` when that column is present in every frame. Otherwise,
+for a fixed cell, it unwraps the target atoms in `pos` with the minimum-image
+convention along periodic directions. This works for wrapped, partially
+wrapped, and already continuous coordinates. Store frames often enough that
+each atom moves less than half the cell length between consecutive frames.
+
+Periodic variable-cell trajectories require an `unwrapped_position` column.
 The command overwrites `msd.out` in the current directory.
 
 The output file is `msd.out` with four columns: `Time(ps)`, `MSD_x`, `MSD_y`,
