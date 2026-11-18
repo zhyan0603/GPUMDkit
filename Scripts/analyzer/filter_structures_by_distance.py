@@ -20,10 +20,11 @@ Output:
   filtered_<file_name>       Structures that pass the filter
   filtered_out_<file_name>   Structures that fail the filter
 Author:     Zihan YAN (yanzihan@westlake.edu.cn)
-Last-modified: 2026-05-16
+Last-modified: 2026-11-10
 =============================================================================
 """
 
+import os
 import sys
 
 args = sys.argv[1:]
@@ -59,9 +60,19 @@ def print_progress_bar(iteration, total, length=50):
 # Read the file name from command line arguments
 file_name = sys.argv[1]
 
+if not os.path.isfile(file_name):
+    print(f" Error: file '{file_name}' does not exist.")
+    sys.exit(1)
+
 # Check if the distance threshold is provided
 if len(sys.argv) > 2:
-    distance_threshold = float(sys.argv[2])
+    try:
+        distance_threshold = float(sys.argv[2])
+        if not np.isfinite(distance_threshold):
+            raise ValueError
+    except ValueError:
+        print(f" Error: distance_threshold must be a number, got '{sys.argv[2]}'.")
+        sys.exit(1)
 else:
     distance_threshold = None
 
@@ -79,7 +90,7 @@ for i, frame in enumerate(frames):
     # Compute distances between all pairs of atoms
     distances = pdist(positions)
     # Find the minimum distance in the current frame
-    min_distance = np.min(distances)
+    min_distance = np.min(distances) if distances.size else float('inf')  # a single atom has no pair
     
     # Check if the minimum distance meets the threshold
     if distance_threshold is None or min_distance >= distance_threshold:
@@ -94,11 +105,14 @@ filtered_count = len(filtered_frames)
 filtered_out_count = total_frames - filtered_count
 
 # Output the filtered frames to a new XYZ file
-output_file_name = 'filtered_' + file_name
+# Outputs are written to the current directory, named after the input file
+# without its directory part, so that an input given with a path also works.
+base_name = os.path.basename(file_name)
+output_file_name = 'filtered_' + base_name
 write(output_file_name, filtered_frames)
 
 # Output the filtered-out frames to a new XYZ file
-filtered_out_file_name = 'filtered_out_' + file_name
+filtered_out_file_name = 'filtered_out_' + base_name
 if filtered_out_count > 0:  # Only write if there are filtered-out structures
    write(filtered_out_file_name, filtered_out_frames)
 

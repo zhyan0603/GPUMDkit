@@ -11,7 +11,7 @@ Purpose:    Interactively shift atomic energy references in an extxyz file.
             Three alignment modes are available: reference-group alignment,
             zero atomic baseline alignment, and DFT-to-NEP alignment.
 Usage:      gpumdkit.sh -shift_energy
-            python3 align_energy_reference.py
+            python align_energy_reference.py
 Arguments:  None. Run without arguments to open the interactive interface.
 Output:     A new extxyz file with updated energy= values.
 Author:     Zherui Chen (chenzherui0124@foxmail.com)

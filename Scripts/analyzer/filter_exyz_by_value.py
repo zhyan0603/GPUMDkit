@@ -45,7 +45,7 @@ from ase.io import read, write
 
 
 def get_property(atoms, name):
-    """Return a frame property from atoms.info or its calculator, ignoring key case.
+    """Return a frame property from atoms.info, calculator, or force arrays, ignoring key case.
 
     ASE 3.23+ moves extxyz keys such as energy= into atoms.calc, while
     capitalized keys such as Energy= stay in atoms.info.
@@ -57,6 +57,10 @@ def get_property(atoms, name):
         for key, value in source.items():
             if key.lower() == name:
                 return value
+    if name == "forces":
+        for key in ("forces", "force"):
+            if key in atoms.arrays:
+                return atoms.arrays[key]
     return None
 
 

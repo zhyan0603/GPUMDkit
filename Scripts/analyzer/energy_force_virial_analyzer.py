@@ -44,7 +44,7 @@ from ase.io import read
 import matplotlib.pyplot as plt
 
 def get_property(frame, name):
-    """Return a frame property from frame.info or its calculator, ignoring key case.
+    """Return a frame property from frame.info, calculator, or force arrays, ignoring key case.
 
     ASE 3.23+ moves extxyz keys such as energy= into frame.calc, while
     capitalized keys such as Energy= stay in frame.info.
@@ -56,6 +56,10 @@ def get_property(frame, name):
         for key, value in source.items():
             if key.lower() == name:
                 return value
+    if name == "forces":
+        for key in ("forces", "force"):
+            if key in frame.arrays:
+                return frame.arrays[key]
     return None
 
 def calculate_range(frames, property_name):

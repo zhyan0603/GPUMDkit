@@ -18,10 +18,11 @@ Arguments:
 Output:
   Table of minimum distances for each element pair and overall minimum
 Author:     Zihan YAN (yanzihan@westlake.edu.cn)
-Last-modified: 2026-05-16
+Last-modified: 2026-11-10
 =============================================================================
 """
 
+import os
 import sys
 
 args = sys.argv[1:]
@@ -40,36 +41,15 @@ if len(args) < 1 or args[0] in ("-h", "--help"):
     sys.exit(0 if args and args[0] in ("-h", "--help") else 1)
 
 import numpy as np
+from ase.geometry import get_distances
 from ase.io import read
-
-# The following function is a part of NepTrainKit (https://github.com/aboys-cb/NepTrainKit)
-# Thanks to Chengbing Chen for providing this function.
-def calculate_pairwise_distances(lattice_params, atom_coords, fractional=True):
-    """
-    Calculate the distances between all pairs of atoms in a crystal, considering periodic boundary conditions.
-
-    Parameters:
-    lattice_params: Lattice parameters, a 3x3 numpy array representing the lattice vectors (a, b, c).
-    atom_coords: Atomic coordinates, an Nx3 numpy array.
-    fractional: Whether the coordinates are fractional (True) or Cartesian (False).
-
-    Returns:
-    distances: An NxN numpy array containing the distances between all pairs of atoms.
-    """
-    if fractional:
-        atom_coords = np.dot(atom_coords, lattice_params)
-
-    diff = atom_coords[np.newaxis, :, :] - atom_coords[:, np.newaxis, :]
-    shifts = np.array(np.meshgrid([-1, 0, 1], [-1, 0, 1], [-1, 0, 1])).T.reshape(-1, 3)
-    lattice_shifts = np.dot(shifts, lattice_params)
-    all_diffs = diff[:, :, np.newaxis, :] + lattice_shifts[np.newaxis, np.newaxis, :, :]
-    all_distances = np.sqrt(np.sum(all_diffs ** 2, axis=-1))
-    distances = np.min(all_distances, axis=-1)
-    np.fill_diagonal(distances, 0)
-    return distances
 
 # Read the file name from command line arguments
 file_name = sys.argv[1]
+
+if not os.path.isfile(file_name):
+    print(f" Error: file '{file_name}' does not exist.")
+    sys.exit(1)
 
 # Read all frames from the extxyz file
 frames = read(file_name, index=':')
@@ -86,38 +66,27 @@ min_distances = {}
 # Variable to track overall minimum distance
 overall_min_distance = float('inf')
 
-# Iterate over each frame
 for frame in frames:
-    # Get atomic positions and chemical symbols
-    symbols = frame.get_chemical_symbols()
-    # Get cell parameters and atomic positions
-    lattice_params = frame.get_cell()
-    atom_coords = frame.get_positions()
-    # Calculate distances using custom function
-    distances = calculate_pairwise_distances(lattice_params, atom_coords, fractional=False)
-    
-    # Calculate minimum distance for each atom pair type
+    symbols = np.asarray(frame.get_chemical_symbols())
+    positions = frame.positions
+    indices = {symbol: np.flatnonzero(symbols == symbol) for symbol in unique_symbols}
     for i, sym1 in enumerate(unique_symbols):
+        idx1 = indices[sym1]
         for sym2 in unique_symbols[i:]:
-            # Get indices of atoms for both types
-            idx1 = [i for i, s in enumerate(symbols) if s == sym1]
-            idx2 = [i for i, s in enumerate(symbols) if s == sym2]
-            
-            # Get all distances between these atom types
-            pair_distances = distances[np.ix_(idx1, idx2)]
-            
-            # Exclude zero distances (same atom) if sym1 == sym2
-            if sym1 == sym2:
-                pair_distances = pair_distances[pair_distances > 0]
-            
-            # Update minimum distance if we have valid distances
-            if pair_distances.size > 0:
-                min_dist = np.min(pair_distances)
-                pair_key = f"{sym1}-{sym2}"
-                if pair_key not in min_distances or min_dist < min_distances[pair_key]:
-                    min_distances[pair_key] = min_dist
-                # Update overall minimum distance
-                overall_min_distance = min(overall_min_distance, min_dist)
+            idx2 = indices[sym2]
+            if not len(idx1) or not len(idx2):
+                continue
+            block_size = max(1, 8192 // len(idx2))
+            pair_min = np.inf
+            for start in range(0, len(idx1), block_size):
+                rows = idx1[start:start + block_size]
+                _, distances = get_distances(positions[rows], positions[idx2], frame.cell, frame.pbc)
+                distances[rows[:, None] == idx2] = np.inf
+                pair_min = min(pair_min, distances.min())
+            if np.isfinite(pair_min):
+                key = f"{sym1}-{sym2}"
+                min_distances[key] = min(min_distances.get(key, np.inf), pair_min)
+                overall_min_distance = min(overall_min_distance, pair_min)
 
 # Print results in table format
 print(" Minimum interatomic distances (with PBC):")

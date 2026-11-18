@@ -53,6 +53,6 @@ for atoms in atoms_list:
 sorted_elements = sorted(element_set, key=lambda x: atomic_numbers[x])
 
 # Display results
-print(f'Total unique elements: {len(sorted_elements)}')
-print('Element list (Periodic Table order):')
+print(f' Total unique elements: {len(sorted_elements)}')
+print(' Element list (Periodic Table order):')
 print(' '.join(sorted_elements))
