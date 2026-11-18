@@ -95,12 +95,12 @@ gpumdkit.sh  # Select: 3) Workflow -> 301 -> 3) ABACUS
 The prompt expects:
 
 ```text
-<extxyz_file> <prefix> <pseudo_dir> [orbital_dir]
+<extxyz_file> <prefix> <basis_dir>
 ```
 
-Input is one extxyz file with lattice information. `pseudo_dir` must contain
-exactly one `.upf` file per element and the optional `orbital_dir` (LCAO only)
-exactly one `.orb` file per element; file names must start with the element
+Input is one extxyz file with lattice information. For LCAO, `basis_dir`
+must contain exactly one `.upf` and one `.orb` per element present in the
+extxyz. File names must start with the element
 symbol (`S_*` and `Si_*` are distinguished). The script stops when an element has
 zero or several matches. Pseudopotential and orbital choices are scientific
 inputs: ask the user, do not pick files for them.
@@ -110,9 +110,9 @@ masses, Angstrom lattice vectors and Cartesian positions with
 `LATTICE_CONSTANT 1.889726125457828`), links `INPUT -> ../fp/INPUT` and
 `KPT -> ../fp/KPT`, creates `fp/`, and writes a `presub.sh` template. It does
 not write `INPUT`; the user supplies `fp/INPUT` with at least `calculation scf`,
-`cal_force 1`, `cal_stress 1`, `pseudo_dir` (absolute or relative to each
-calculation directory), plus `basis_type lcao` and `orbital_dir` for LCAO, and
-either `fp/KPT` or `kspacing`. Mixed compositions need no grouping. Convert
+`cal_force 1`, `cal_stress 1`, `basis_type lcao`, and both `pseudo_dir` and
+`orbital_dir` pointing to `basis_dir` (absolute or relative to each calculation
+directory). Provide either `fp/KPT` or `kspacing`. Mixed compositions need no grouping. Convert
 finished runs with menu `104` -> SCF, which reads `OUT.*/running_scf.log` and
 `../STRU` and writes `NEPdataset/train.xyz`. It prepares files only and does not
 submit ABACUS.
@@ -121,8 +121,8 @@ submit ABACUS.
 
 ### GPUMD MD Batch
 
-1. Put `.vasp` structures or one selected extxyz file in a dedicated working
-   directory.
+1. In a fresh directory, provide one `.xyz` file or one or more `.vasp` files.
+   Mixed formats and multiple XYZ files are rejected.
 2. Run:
 
 ```bash

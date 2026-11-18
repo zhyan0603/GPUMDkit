@@ -202,43 +202,40 @@ fp/
 <p>从源码安装时，也可以在数据目录中直接调用脚本：</p>
 <div class="code"><div class="cap"><i></i><i></i><i></i><span>bash</span></div><pre><code>python "${GPUMDkit_path}/Scripts/workflow/scf_batch_pretreatment_cp2k.py" train.xyz template.inp calc</code></pre><button class="copy-btn" data-copy-pre aria-label="Copy"><svg class="cp"><use href="#i-copy"/></svg><svg class="ok"><use href="#i-check"/></svg></button></div>
 <h3 id="abacus-单点预处理301-3">ABACUS 单点预处理（301 -&gt; 3）</h3>
-<p>准备一个带晶格信息的 extxyz 文件、一个赝势目录（每种元素一个 <code>.upf</code> 文件），
-LCAO 计算还需要一个轨道目录（每种元素一个 <code>.orb</code> 文件）。文件名必须以元素符号
-开头，例如 <code>Li_ONCV_PBE-1.0.upf</code> 或 <code>Li_gga_8au_100Ry_4s1p.orb</code>；脚本能区分
-<code>S_...</code> 和 <code>Si_...</code>。通过菜单运行：</p>
-<div class="code"><div class="cap"><i></i><i></i><i></i><span>bash</span></div><pre><code>gpumdkit.sh
-# 选择 3 -&gt; 301 -&gt; ABACUS</code></pre><button class="copy-btn" data-copy-pre aria-label="Copy"><svg class="cp"><use href="#i-copy"/></svg><svg class="ok"><use href="#i-check"/></svg></button></div>
-<p>交互输入为：</p>
-<div class="code"><div class="cap"><i></i><i></i><i></i><span>text</span></div><pre><code>&lt;extxyz_file&gt; &lt;prefix&gt; &lt;pseudo_dir&gt; [orbital_dir]</code></pre><button class="copy-btn" data-copy-pre aria-label="Copy"><svg class="cp"><use href="#i-copy"/></svg><svg class="ok"><use href="#i-check"/></svg></button></div>
-<p>例如：</p>
-<div class="code"><div class="cap"><i></i><i></i><i></i><span>text</span></div><pre><code>train.xyz LiF_iter01 ./pp ./orb</code></pre><button class="copy-btn" data-copy-pre aria-label="Copy"><svg class="cp"><use href="#i-copy"/></svg><svg class="ok"><use href="#i-check"/></svg></button></div>
-<p>平面波计算省略 <code>orbital_dir</code>。脚本生成：</p>
+<h4 id="运行-301-前">运行 301 前</h4>
+<ol>
+<li><strong>结构文件</strong>。把结构放在同一个 extxyz 中，例如 <code>frames.xyz</code>。每帧都需要有效的三维晶胞。如果原始结构是 POSCAR，可用 <code>gpumdkit.sh -pos2exyz POSCAR frame.xyz</code> 转换。</li>
+<li><strong>基组目录</strong>。把整批用到的每种元素对应的一份 <code>.upf</code> 赝势和一份配套的 <code>.orb</code> 数值轨道直接放在同一个目录里。请从配套的库中选取文件，文件名以区分大小写的元素符号开头。某个元素缺文件或匹配到多份时，脚本会在生成计算目录前报错退出。</li>
+</ol>
+<p>以 Li–La–Zr–O 为例，可以这样放置文件：</p>
+<div class="code"><div class="cap"><i></i><i></i><i></i><span>text</span></div><pre><code>work/
+├── frames.xyz
+└── basis/
+    ├── Li.upf
+    ├── Li_gga_9au_100Ry_4s1p.orb
+    ├── La_ONCV_PBE-1.2.upf
+    ├── La_gga_9au_100Ry_4s2p2d1f.orb
+    ├── Zr_ONCV_PBE-1.0.upf
+    ├── Zr_gga_10au_100Ry_4s2p2d1f.orb
+    ├── O.upf
+    └── O_gga_6au_100Ry_2s2p1d.orb</code></pre><button class="copy-btn" data-copy-pre aria-label="Copy"><svg class="cp"><use href="#i-copy"/></svg><svg class="ok"><use href="#i-check"/></svg></button></div>
+<p>启动 <code>gpumdkit.sh</code>，选择 <strong>3 → 301 → 3</strong>，依次输入结构文件、计算目录前缀和基组目录。</p>
+<div class="code"><div class="cap"><i></i><i></i><i></i><span>text</span></div><pre><code>frames.xyz LLZO ./basis</code></pre><button class="copy-btn" data-copy-pre aria-label="Copy"><svg class="cp"><use href="#i-copy"/></svg><svg class="ok"><use href="#i-check"/></svg></button></div>
+<p>脚本生成：</p>
 <div class="code"><div class="cap"><i></i><i></i><i></i><span>text</span></div><pre><code>current directory/
 ├── fp/                 # 在此放置共享的 INPUT（和 KPT）
-├── LiF_iter01_1/
+├── LLZO_1/
 │   ├── STRU            # 该帧结构，已写入元素、质量和文件名
 │   ├── INPUT -&gt; ../fp/INPUT
 │   └── KPT -&gt; ../fp/KPT
-├── LiF_iter01_2/
+├── LLZO_2/
 └── presub.sh</code></pre><button class="copy-btn" data-copy-pre aria-label="Copy"><svg class="cp"><use href="#i-copy"/></svg><svg class="ok"><use href="#i-check"/></svg></button></div>
 <p>每个 <code>STRU</code> 只列出该帧实际包含的元素，因此不同组分的结构无需分组。晶格矢量和
-笛卡尔坐标以 Å 写出，并设置 <code>LATTICE_CONSTANT 1.889726125457828</code>。如果某种元素
-没有匹配文件或匹配到多个文件，脚本会报错退出。</p>
-<p>随后自行编写 <code>fp/INPUT</code>；脚本会打印所需的关键词：</p>
-<div class="code"><div class="cap"><i></i><i></i><i></i><span>text</span></div><pre><code>INPUT_PARAMETERS
-calculation   scf
-cal_force     1
-cal_stress    1
-pseudo_dir    /absolute/path/to/pp
-orbital_dir   /absolute/path/to/orb   # 仅 LCAO，并设置 basis_type lcao</code></pre><button class="copy-btn" data-copy-pre aria-label="Copy"><svg class="cp"><use href="#i-copy"/></svg><svg class="ok"><use href="#i-check"/></svg></button></div>
-<p>泛函、截断能、展宽和 k 点等设置请根据体系自行选择。提供 <code>fp/KPT</code>，或在
-<code>INPUT</code> 中设置 <code>kspacing</code>，此时 <code>KPT</code> 链接可以悬空。从源码安装时，也可以直接
-调用脚本：</p>
-<div class="code"><div class="cap"><i></i><i></i><i></i><span>bash</span></div><pre><code>python "${GPUMDkit_path}/Scripts/workflow/scf_batch_pretreatment_abacus.py" train.xyz LiF_iter01 ./pp ./orb</code></pre><button class="copy-btn" data-copy-pre aria-label="Copy"><svg class="cp"><use href="#i-copy"/></svg><svg class="ok"><use href="#i-check"/></svg></button></div>
+笛卡尔坐标以 Å 写出，并设置 <code>LATTICE_CONSTANT 1.889726125457828</code>。</p>
 <h2 id="md">2. 准备 MD 采样目录</h2>
 <h3 id="gpumd302">GPUMD（302）</h3>
-<p>把 <code>.vasp</code> 文件或一个 extxyz 文件放在专用工作目录中。输入选择规则与 VASP
-预处理相同：<code>.vasp</code> 优先；没有 <code>.vasp</code> 且有多个 <code>.xyz</code> 时会让用户选择。</p>
+<p>在新的工作目录中放入一个 <code>.xyz</code> 文件，或一组 <code>.vasp</code> 文件。混放两种格式
+或提供多个 <code>.xyz</code> 时，脚本会提示并在移动文件前退出。</p>
 <div class="code"><div class="cap"><i></i><i></i><i></i><span>bash</span></div><pre><code>gpumdkit.sh
 # 选择 3 -&gt; 302</code></pre><button class="copy-btn" data-copy-pre aria-label="Copy"><svg class="cp"><use href="#i-copy"/></svg><svg class="ok"><use href="#i-check"/></svg></button></div>
 <p>典型输入：</p>
@@ -261,8 +258,7 @@ orbital_dir   /absolute/path/to/orb   # 仅 LCAO，并设置 basis_type lcao</co
 会链接到它们：<code>sample_1/run.in</code> 指向 <code>md/run_1.in</code>，<code>sample_2/run.in</code> 指向
 <code>md/run_2.in</code>，依此类推。</p>
 <h3 id="lammps303">LAMMPS（303）</h3>
-<p>把 <code>.vasp</code> 文件或一个 extxyz 文件放在专用工作目录中；两种格式同时存在时
-优先处理 <code>.vasp</code>。</p>
+<p>输入规则与 GPUMD（302）相同。</p>
 <div class="code"><div class="cap"><i></i><i></i><i></i><span>bash</span></div><pre><code>gpumdkit.sh
 # 选择 3 -&gt; 303</code></pre><button class="copy-btn" data-copy-pre aria-label="Copy"><svg class="cp"><use href="#i-copy"/></svg><svg class="ok"><use href="#i-check"/></svg></button></div>
 <p>运行后会在 <code>struct_md/</code> 中创建 LAMMPS data 文件，并创建样本目录、<code>md/</code>

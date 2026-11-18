@@ -35,7 +35,7 @@ gpumdkit.sh -get_frame train.xyz 3
 ```
 
 ```text
-Frame 3 has been successfully written to frame_3.xyz.
+ Frame 3 has been successfully written to frame_3.xyz.
 ```
 
 ```bash
@@ -43,8 +43,8 @@ gpumdkit.sh -replicate train.xyz big.xyz 2 1 1
 ```
 
 ```text
-Supercell: 2x1x1, Total atoms: 32
-Supercell created and saved to big.xyz
+ Supercell: 2x1x1, Total atoms: 32
+ Supercell created and saved to big.xyz
 ```
 
 ```bash
@@ -52,7 +52,7 @@ gpumdkit.sh -addweight train.xyz w.xyz 2.0
 ```
 
 ```text
-Weights in train.xyz have been updated and saved to w.xyz
+ Weights in train.xyz have been updated and saved to w.xyz
 ```
 
 ```bash
@@ -113,7 +113,7 @@ Input the function number or converter keyword:
 | `101` | `out2xyz.sh` | VASP OUTCAR to extxyz, shell version | convert VASP calculation directories |
 | `102` | `mtp2xyz.py` | MTP cfg to extxyz | convert MTP training data |
 | `103` | `cp2k_log2xyz.py` / `cp2k2xyz.py` | CP2K to extxyz | choose CP2K log/inp route or pos/frc/cell route |
-| `104` | `abacus2xyz_scf.sh` / `abacus2xyz_md.sh` | ABACUS to extxyz | convert ABACUS SCF or MD output |
+| `104` | `abacus2xyz_scf.py` / `abacus2xyz_md.py` | ABACUS to extxyz | convert SCF or MD output to `NEPdataset/train.xyz` |
 | `105` | `exyz2pos.py` | extxyz to POSCAR | write each extxyz frame as a POSCAR-style file |
 | `106` | `add_groups.py` | add group labels | add atom group labels for GPUMD-related workflows |
 | `107` | `add_weight.py` | add weights | assign training weights in extxyz |
@@ -130,6 +130,8 @@ Input the function number or converter keyword:
 | `traj2exyz` | `traj2exyz.py` | ASE traj to extxyz | convert ASE trajectory |
 | `dp2xyz` | `dp2xyz.py` | DeepMD npy to extxyz | convert DeepMD datasets for GPUMD/NEP workflows |
 | `xyz2dp` | `xyz2dp.py` | extxyz to DeepMD npy | prepare DeepMD datasets from labeled extxyz |
+
+For ABACUS SCF, the converter reads the lattice, coordinates, energy, forces, and available stress from `running_scf.log`. It uses `abacus.json` when the log is absent.
 
 ## Quick Command Reference
 
@@ -157,16 +159,20 @@ data flow explicit:
 
 ```text
 $ gpumdkit.sh -pos2exyz -h
- Usage: gpumdkit.sh -pos2exyz <POSCAR> <output.xyz>
+ Usage: gpumdkit.sh -pos2exyz <POSCAR> [<POSCAR2> ...] <output.xyz>
 
  Arguments:
    POSCAR       One or more VASP POSCAR files (supports wildcards)
-   output.xyz   Output extxyz file
+   output.xyz   Output extxyz file (always the last argument)
 ```
 
 `POSCAR` is the input structure name; `output.xyz` is the extxyz file created by
-the command. Shell wildcards are expanded by your shell, so check the matched
-filenames before converting a group of files. After conversion, a lightweight
+the command. Several POSCAR files can be given before the output name, for
+example `gpumdkit.sh -pos2exyz POSCAR_*.vasp output.xyz`. The output must end
+in `.xyz` or `.extxyz`. A quoted pattern such as
+`"POSCAR_*.vasp"` is read in natural order (`POSCAR_2` before `POSCAR_10`),
+whereas an unquoted one follows the order given by your shell, so check the
+matched filenames before converting a group of files. After conversion, a lightweight
 format check is:
 
 ```bash

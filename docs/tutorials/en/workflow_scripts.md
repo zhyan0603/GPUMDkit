@@ -149,74 +149,57 @@ python "${GPUMDkit_path}/Scripts/workflow/scf_batch_pretreatment_cp2k.py" train.
 
 ### ABACUS SCF preparation (301 -> 3)
 
-Prepare one extxyz file with lattice information, a directory with one
-pseudopotential (`.upf`) file per element, and, for LCAO, a directory with one
-numerical orbital (`.orb`) file per element. Each file name must start with its
-element symbol, for example `Li_ONCV_PBE-1.0.upf` or
-`Li_gga_8au_100Ry_4s1p.orb`; `S_...` and `Si_...` are told apart. Run through
-the menu:
+#### Before running 301
 
-~~~bash
-gpumdkit.sh
-# choose 3 -> 301 -> ABACUS
-~~~
+1. **Structure file**. Put the structures into one extxyz, for example `frames.xyz`. Every frame needs a valid three-dimensional cell. If you start from a POSCAR, convert it with `gpumdkit.sh -pos2exyz POSCAR frame.xyz`.
+2. **Basis directory**. Put exactly one `.upf` pseudopotential and one compatible `.orb` numerical orbital for every element in the batch directly in one directory. Choose the pairs from a compatible library. Filenames must start with the case-sensitive element symbol. A missing file or multiple matches for an element stops preparation before any calculation directories are created.
 
-The prompt is:
+For a Li–La–Zr–O batch, the files can be arranged as follows:
 
 ~~~text
-<extxyz_file> <prefix> <pseudo_dir> [orbital_dir]
+work/
+├── frames.xyz
+└── basis/
+    ├── Li.upf
+    ├── Li_gga_9au_100Ry_4s1p.orb
+    ├── La_ONCV_PBE-1.2.upf
+    ├── La_gga_9au_100Ry_4s2p2d1f.orb
+    ├── Zr_ONCV_PBE-1.0.upf
+    ├── Zr_gga_10au_100Ry_4s2p2d1f.orb
+    ├── O.upf
+    └── O_gga_6au_100Ry_2s2p1d.orb
 ~~~
 
-For example:
+Start `gpumdkit.sh` and choose **3 → 301 → 3**. Enter the structure file, the output directory prefix and the basis directory.
 
 ~~~text
-train.xyz LiF_iter01 ./pp ./orb
+frames.xyz LLZO ./basis
 ~~~
 
-Omit `orbital_dir` for plane-wave calculations. The script creates:
+The script creates:
 
 ~~~text
 current directory/
 ├── fp/                 # put the shared INPUT (and KPT) here
-├── LiF_iter01_1/
+├── LLZO_1/
 │   ├── STRU            # this frame; species, masses, and file names filled in
 │   ├── INPUT -> ../fp/INPUT
 │   └── KPT -> ../fp/KPT
-├── LiF_iter01_2/
+├── LLZO_2/
 └── presub.sh
 ~~~
 
 Each `STRU` lists only the elements present in that frame, so structures with
 different compositions need no grouping. Lattice vectors and Cartesian
 positions are written in Angstrom with `LATTICE_CONSTANT 1.889726125457828`.
-The script stops if an element has no matching file or several.
-
-Then write `fp/INPUT` yourself; the script prints the keywords it needs:
-
-~~~text
-INPUT_PARAMETERS
-calculation   scf
-cal_force     1
-cal_stress    1
-pseudo_dir    /absolute/path/to/pp
-orbital_dir   /absolute/path/to/orb   # LCAO only, with basis_type lcao
-~~~
-
-Choose the functional, cutoff, smearing, and k-point settings for your system.
-Provide `fp/KPT`, or set `kspacing` in `INPUT` and leave the `KPT` link
-dangling. With a source installation you can also call the script directly:
-
-~~~bash
-python "${GPUMDkit_path}/Scripts/workflow/scf_batch_pretreatment_abacus.py" train.xyz LiF_iter01 ./pp ./orb
-~~~
 
 ## 2. Prepare MD sampling directories {#md-sampling-pretreatment}
 
 ### GPUMD (302)
 
-Put `.vasp` files or one extxyz file in a dedicated working directory. The input
-selection rules are the same as for VASP preparation: `.vasp` files take
-precedence, and multiple `.xyz` files without `.vasp` require a choice.
+In a fresh working directory, provide one `.xyz` file or one or more `.vasp`
+files. The script rejects mixed formats and multiple XYZ files before moving
+any inputs.
 
 ~~~bash
 gpumdkit.sh
@@ -257,8 +240,7 @@ sample directory links to them: `sample_1/run.in` points to `md/run_1.in`,
 
 ### LAMMPS (303)
 
-Put `.vasp` files or one extxyz file in a dedicated working directory. When both
-formats are present, `.vasp` files take precedence.
+Use the same input rules as for GPUMD (302).
 
 ~~~bash
 gpumdkit.sh

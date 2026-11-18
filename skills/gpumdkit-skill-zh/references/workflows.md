@@ -89,12 +89,12 @@ gpumdkit.sh  # 选择：3) Workflow -> 301 -> 3) ABACUS
 交互提示需要：
 
 ```text
-<extxyz_file> <prefix> <pseudo_dir> [orbital_dir]
+<extxyz_file> <prefix> <basis_dir>
 ```
 
-输入为一个带晶格信息的 extxyz 文件。`pseudo_dir` 中每种元素必须恰好有一个
-`.upf` 文件，可选的 `orbital_dir`（仅 LCAO）中每种元素必须恰好有一个 `.orb`
-文件；文件名必须以元素符号开头（能区分 `S_*` 和 `Si_*`）。某种元素没有匹配或
+输入为一个带晶格信息的 extxyz 文件。对于 LCAO，`basis_dir` 中每种用到的元素
+必须恰好有一个 `.upf` 文件和一个 `.orb` 文件。文件名必须以元素符号开头
+（能区分 `S_*` 和 `Si_*`）。某种元素没有匹配或
 匹配到多个文件时，脚本报错退出。赝势和轨道的选择属于科学输入：应询问用户，
 不能替用户挑选文件。
 
@@ -102,8 +102,9 @@ gpumdkit.sh  # 选择：3) Workflow -> 301 -> 3) ABACUS
 笛卡尔坐标以 Å 表示，`LATTICE_CONSTANT 1.889726125457828`），创建链接
 `INPUT -> ../fp/INPUT` 和 `KPT -> ../fp/KPT`，创建 `fp/`，并写出 `presub.sh`
 模板。工具不写 `INPUT`；用户需在 `fp/INPUT` 中至少提供 `calculation scf`、
-`cal_force 1`、`cal_stress 1`、`pseudo_dir`（绝对路径，或相对各计算目录的路径），
-LCAO 还需 `basis_type lcao` 和 `orbital_dir`，并提供 `fp/KPT` 或设置 `kspacing`。
+`cal_force 1`、`cal_stress 1` 和 `basis_type lcao`，并将 `pseudo_dir` 和
+`orbital_dir` 都设为基组目录（绝对路径，或相对各计算目录的路径）。
+提供 `fp/KPT` 或设置 `kspacing`。
 不同组分无需分组。计算完成后用菜单 `104` -> SCF 转换，它读取
 `OUT.*/running_scf.log` 和 `../STRU`，输出 `NEPdataset/train.xyz`。只准备文件，
 不提交 ABACUS。
@@ -112,7 +113,7 @@ LCAO 还需 `basis_type lcao` 和 `orbital_dir`，并提供 `fp/KPT` 或设置 `
 
 ### GPUMD MD 批处理
 
-1. 把 `.vasp` 结构或一个选定的 extxyz 文件放入专用工作目录。
+1. 在新目录中提供一个 `.xyz` 文件，或一组 `.vasp` 文件。脚本会拒绝混合格式和多个 XYZ 文件。
 2. 运行：
 
 ```bash

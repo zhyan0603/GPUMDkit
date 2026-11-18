@@ -1,5 +1,26 @@
 [
     {
+        "title": "Distilling an atomistic foundation model is all you need for large-scale molecular dynamics of semiconductor interfaces",
+        "authors": "Feiyu Zhou, Wei Qiu, Fei Shuang, Yilun Liu, Shengying Yue, Penghua Ying",
+        "journal": "arXiv:2611.14948",
+        "year": "2026",
+        "link": "https://arxiv.org/abs/2611.14948"
+    },
+    {
+        "title": "A bulk-surface-coupled neuroevolution potential reveals dynamic low coordinated Pd sites and interfacial water structuring on Pd/GaN",
+        "authors": "Liang Qiu, Ying Li, Zhaosong Wu, Yilin Dong, Baowen Zhou",
+        "journal": "Nanoscale 2026, 18, 23130–23138",
+        "year": "2026",
+        "link": "https://doi.org/10.1039/d6nr02319c"
+    },
+    {
+        "title": "Multi-carrier thermal transport in UO2 at extreme temperatures: Origin of the anomalous thermal conductivity upturn",
+        "authors": "Fengnian Zhuang, Gaosheng Yan, Hong Chen, Yi Zhang, Wenshan Yu, Minglong Xu, Shengping Shen",
+        "journal": "Int. J. Heat Mass Transf. 2026, 273, 129815",
+        "year": "2026",
+        "link": "https://doi.org/10.1016/j.ijheatmasstransfer.2026.129815"
+    },
+    {
         "title": "A Transferable Machine-Learned Potential Enabling Large-Scale Copper-Carbon Simulations from Equilibrium to Extreme Conditions",
         "authors": "Feiyu Zhou, Wei Qiu, Yan Chen, Jiahui Liu, Yilun Liu, Shengying Yue, Penghua Ying",
         "journal": "arXiv:2610.18545",

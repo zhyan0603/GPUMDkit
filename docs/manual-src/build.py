@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Assemble docs/manual.html and the tutorial pages in docs/htmls/ (needs `markdown` + pymdown-extensions).
 
-    python3 docs/manual-src/build.py
+    python docs/manual-src/build.py
 
 Edit the pieces, not manual.html:
   layout.html          page frame: <head>, navigation and footer (copied from gallery.html)

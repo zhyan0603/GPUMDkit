@@ -144,11 +144,14 @@ appends additional group data, so do not assume that every `msd.out` has seven
 columns. The separate `compute_sdc` command writes `sdc.out`, which is used by
 `gpumdkit.sh -plt vac`.
 
-Use a fixed-cell trajectory with stable atom order and verified unwrapped
-coordinates in the `pos` field. The script reads `pos` and the first frame's
-cell; it does not use a separate `unwrapped_position` property. Its automatic
-wrapping check is not sufficient to validate wrapped trajectories, and its
-axis-wise unwrapping does not handle general tilted or changing cells.
+Keep the atom order consistent across frames. By default, the script uses
+`unwrapped_position` when that column is present in every frame. Otherwise,
+for a fixed cell, it unwraps the target atoms in `pos` with the minimum-image
+convention along periodic directions. This works for wrapped, partially
+wrapped, and already continuous coordinates. Store frames often enough that
+each atom moves less than half the cell length between consecutive frames.
+
+Periodic variable-cell trajectories require an `unwrapped_position` column.
 The command overwrites `msd.out` in the current directory.
 
 ### X-ray Diffraction (interactive only)
@@ -262,7 +265,7 @@ gpumdkit.sh -calc minimize POSCAR nep.txt 0.01 1000
 ### NEB Calculation
 ```bash
 # CLI shortcut
-gpumdkit.sh -calc neb <initial.xyz> <final.xyz> <n_images> <nep.txt>
+gpumdkit.sh -calc neb <initial.xyz> <final.xyz> <n_images> <nep.txt> [max_steps]
 
 # Example
 gpumdkit.sh -calc neb init.xyz fin.xyz 9 nep.txt

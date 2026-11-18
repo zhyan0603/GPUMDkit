@@ -18,10 +18,10 @@ python "${GPUMDkit_path}/Scripts/sample_structures/sample_structures.py" dump.xy
 ```
 
 ```text
- All sampled frames written to sampled_structures.xyz
+ 5 sampled frames written to sampled_structures.xyz
 ```
 
-The same step from the interactive menu is `gpumdkit.sh` → `2` → `201` and the input line `dump.xyz uniform 5`. The script always writes `sampled_structures.xyz`, so rename the result before running it again.
+The same step from the interactive menu is `gpumdkit.sh` → `2` → `201` and the input line `dump.xyz uniform 5`. The script always writes `sampled_structures.xyz`, so rename the result before running it again. A frame is never written twice: if you ask for more frames than are available, all available frames are written and a note is printed.
 
 **Skip the first frames and pick at random:**
 

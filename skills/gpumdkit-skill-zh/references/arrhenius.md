@@ -55,8 +55,8 @@ compute_msd <sample_interval> <Nc> group <group_method> <group_id> [save_every <
 
 具体系综和运行时长必须来自用户确认的研究设计。在相应的正式采样段中，重新给出不会自动延续的 compute/dump 命令。
 
-基于轨迹的 GPUMDkit MSD 要求固定晶胞、原子顺序一致，且 extxyz 的 `pos`
-字段为已核验的展开坐标，详见 `calculators.md`。将存储帧间隔传给 `-calc msd`：
+基于轨迹的 GPUMDkit MSD 要求原子顺序一致，且存储帧间隔足够短以便消除周期性
+边界跳变，详见 `calculators.md`。将存储帧间隔传给 `-calc msd`：
 
 ```text
 frame_dt_fs = integration_time_step_fs * dump_interval_steps

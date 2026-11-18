@@ -367,7 +367,7 @@ Overall min_distance: 1.587 Å</code></pre><button class="copy-btn" data-copy-pr
 <p><strong>支持的性质：</strong> <code>energy</code>、<code>force</code>、<code>virial</code></p>
 <div class="code"><div class="cap"><i></i><i></i><i></i><span>bash</span></div><pre><code>gpumdkit.sh -filter_value train.xyz force 20
 gpumdkit.sh -filter_value train.xyz energy &lt;max_energy&gt;</code></pre><button class="copy-btn" data-copy-pre aria-label="Copy"><svg class="cp"><use href="#i-copy"/></svg><svg class="ok"><use href="#i-check"/></svg></button></div>
-<p>所有值都不超过阈值的结构才会保留：<code>force</code> 比较每个力分量的绝对值（eV/Å），<code>energy</code> 比较文件中存储的总能量（eV，不是每原子能量），<code>virial</code> 比较每个维里分量。没有存储该性质的帧无法检查，会直接保留，脚本会报告其数量。保留的结构写入 <code>filtered.xyz</code>。</p>
+<p>所有值都不超过阈值的结构才会保留：<code>force</code> 比较每个力分量的绝对值（eV/Å），<code>energy</code> 比较文件中存储的总能量（eV，不是每原子能量），<code>virial</code> 比较每个维里分量。范围分析和过滤都兼容 extxyz 中的 <code>force</code> 和 <code>forces</code> 两种逐原子字段名。没有存储该性质的帧无法检查，会直接保留，脚本会报告其数量。保留的结构写入 <code>filtered.xyz</code>。</p>
 <h3 id="按对距离范围过滤">按对距离范围过滤</h3>
 <p><code>filter_dist_range.py</code> 提取特定元素对距离在给定范围内的结构。</p>
 <p><strong>输入文件：</strong> <code>dump.xyz</code>（extxyz 格式）</p>
@@ -388,9 +388,11 @@ gpumdkit.sh -filter_value train.xyz energy &lt;max_energy&gt;</code></pre><butto
 <hr />
 <h2 id="异常检测">异常检测</h2>
 <p><code>find_outliers.py</code> 基于能量、力和应力的 RMSE 阈值查找 NEP 训练数据中的异常结构。</p>
-<p><strong>输入文件：</strong> <code>energy_train.out</code>、<code>force_train.out</code>、<code>stress_train.out</code>、<code>train.xyz</code></p>
+<p><strong>输入文件：</strong> <code>energy_train.out</code>、<code>force_train.out</code>、<code>train.xyz</code>，以及可选的
+<code>stress_train.out</code>。缺少应力标签的帧仍参与能量和力筛选。</p>
 <p>这些文件在 NEP 训练过程中生成。脚本比较 DFT 与 NEP 的预测，识别误差较大的结构。</p>
-<p>含有 <code>-1e6</code> 应力缺失标记，或任一应力分量绝对值超过 <code>1e6</code> 的结构，会在计算 RMSE 前排除，也不会写入两个输出数据集。若没有剩余的有效结构，脚本会报错且不写出结果。</p>
+<p>应力阈值只用于标签有效的帧。所有帧都缺少应力标签时，脚本按能量和力筛选，
+仍会写出两个数据集。</p>
 <div class="code"><div class="cap"><i></i><i></i><i></i><span>bash</span></div><pre><code># 交互模式
 gpumdkit.sh    # 选择：5) 分析工具 → 502) 查找异常结构</code></pre><button class="copy-btn" data-copy-pre aria-label="Copy"><svg class="cp"><use href="#i-copy"/></svg><svg class="ok"><use href="#i-check"/></svg></button></div>
 <p><strong>交互提示：</strong></p>

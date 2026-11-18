@@ -42,7 +42,7 @@ window.GK_I18N = {
     "f5.t": "分析器",
     "f5.d": "成分分析、异常结构检测、电荷平衡检查、最小原子间距，以及能量、力、维里的分布范围。",
     "f6.t": "可视化",
-    "f6.d": '覆盖 NEP 训练、MD、扩散、声子与热输运的 <span data-stat="plot_types">42</span> 种绘图，每种只需一个参数：<code class="inline">gpumdkit.sh -plt train</code>',
+    "f6.d": '覆盖 NEP 训练、MD、扩散、声子与热输运的 <span data-stat="plot_types">41</span> 种绘图，每种只需一个参数：<code class="inline">gpumdkit.sh -plt train</code>',
     "f6.all": "打开图库",
     "more": "查看文档",
 
@@ -132,7 +132,7 @@ window.GK_I18N = {
 
     /* gallery page */
     "gp.eyebrow": "图库",
-    "gp.title": '<span data-stat="plot_types">42</span> 种绘图，一行命令',
+    "gp.title": '<span data-stat="plot_types">41</span> 种绘图，一行命令',
     "gp.lead": "GPUMDkit 绘图脚本生成的示例图像。点击任意图片放大，并复制生成它的命令。",
     "gp.search": "搜索图像或命令…",
     "gp.all": "全部",

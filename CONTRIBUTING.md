@@ -69,7 +69,7 @@ To maintain code quality and consistency across the project, please adhere to th
 - Ensure that help messages (e.g., `-h` flags) are clear and accurate.
 - Tutorial documentation lives in `docs/tutorials/en/` (English) and `docs/tutorials/zh/` (Chinese).
   If you add a new feature, consider updating the relevant tutorial page.
-- After editing tutorial markdown files, rebuild the web pages with `python3 docs/manual-src/build.py`.
+- After editing tutorial markdown files, rebuild the web pages with `python docs/manual-src/build.py`.
 
 ### Update Log
 
@@ -246,7 +246,7 @@ To add a new command-line flag or subcommand:
    args = sys.argv[1:]
    if len(args) < 2 or args[0] in ("-h", "--help"):
        print(" Usage: gpumdkit.sh -analyze_bonds <input.xyz> <cutoff_distance>")
-       print("    or: python3 analyze_bonds.py <input.xyz> <cutoff_distance>")
+       print("    or: python analyze_bonds.py <input.xyz> <cutoff_distance>")
        print("")
        print(" Arguments:")
        print("   input.xyz        Input extxyz file")
@@ -307,12 +307,8 @@ local opts="-h -help -update -U -clean -time -plt -calc ... -your_new_flag ..."
 #                                                        Add your flag here
 ```
 
-If your flag requires file arguments, add it to the existing file-completion case:
-```bash
-# Find the case for file-requiring flags and add yours with |
--out2xyz|-out2exyz|-...|-your_new_flag)
-    COMPREPLY=($(compgen -f -- "$cur")) ;;
-```
+File and directory names are completed automatically for every argument after
+the flag, so a flag that takes file arguments needs nothing more.
 
 If your flag accepts secondary options (like `-plt` or `-calc`), add a new case:
 ```bash
@@ -366,10 +362,10 @@ bash -n gpumdkit.sh
 find src Scripts -name '*.sh' -exec bash -n {} +
 
 # Python syntax checks (for modified Python files)
-python3 -m py_compile path/to/modified_script.py
+python -m py_compile path/to/modified_script.py
 
 # Rebuild the web pages (if you modified documentation)
-python3 docs/manual-src/build.py
+python docs/manual-src/build.py
 
 # Check for trailing whitespace issues
 git diff --check

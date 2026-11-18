@@ -85,7 +85,7 @@ gpumdkit.sh -traj2exyz input.traj output.xyz
 
 ```bash
 # MTP cfg 转 extxyz
-python3 ${GPUMDkit_path}/Scripts/format_conversion/mtp2xyz.py train.cfg Pd Ag
+python ${GPUMDkit_path}/Scripts/format_conversion/mtp2xyz.py train.cfg Pd Ag
 
 # 在 CP2K 结果根目录运行：递归读取日志和结构文件
 # 输出：当前目录的 cp2k_exyz.xyz 和 Logfile.txt
@@ -120,7 +120,7 @@ gpumdkit.sh -xyz2dp train.xyz Li P S
 不带参数时进入交互提示；带参数时输入文件和元素顺序会直接传给脚本。也可以直接运行 Python 脚本：
 
 ```
-python3 ${GPUMDkit_path}/Scripts/format_conversion/xyz2dp.py train.xyz Li P S
+python ${GPUMDkit_path}/Scripts/format_conversion/xyz2dp.py train.xyz Li P S
 ```
 
 输入应包含带能量和力标签的 extxyz 数据。输出写入当前目录下的

@@ -153,7 +153,7 @@ function convert_file() {
 <ul>
 <li>确保帮助信息（如 <code>-h</code> 标志）清晰准确。</li>
 <li>教程文档位于 <code>docs/tutorials/en/</code>（英文）和 <code>docs/tutorials/zh/</code>（中文）。如果你添加了新功能，请考虑更新相关教程页面。</li>
-<li>编辑教程 Markdown 文件后，使用 <code>python3 docs/manual-src/build.py</code> 重新生成网页。</li>
+<li>编辑教程 Markdown 文件后，使用 <code>python docs/manual-src/build.py</code> 重新生成网页。</li>
 </ul>
 <h3 id="更新记录">更新记录</h3>
 <ul>
@@ -306,7 +306,7 @@ import sys
 args = sys.argv[1:]
 if len(args) &lt; 2 or args[0] in ("-h", "--help"):
     print(" Usage: gpumdkit.sh -analyze_bonds &lt;input.xyz&gt; &lt;cutoff_distance&gt;")
-    print("    or: python3 analyze_bonds.py &lt;input.xyz&gt; &lt;cutoff_distance&gt;")
+    print("    or: python analyze_bonds.py &lt;input.xyz&gt; &lt;cutoff_distance&gt;")
     print("")
     print(" Arguments:")
     print("   input.xyz        Input extxyz file")
@@ -359,10 +359,7 @@ vim Scripts/utils/completion.sh</code></pre><button class="copy-btn" data-copy-p
 <div class="code"><div class="cap"><i></i><i></i><i></i><span>bash</span></div><pre><code># 找到 local opts=... 行
 local opts="-h -help -update -U -clean -time -plt -calc ... -your_new_flag ..."
 #                                                        在此添加你的标志</code></pre><button class="copy-btn" data-copy-pre aria-label="Copy"><svg class="cp"><use href="#i-copy"/></svg><svg class="ok"><use href="#i-check"/></svg></button></div></p>
-<p>如果你的标志需要文件参数，将其添加到现有的文件补全 case 中：
-<div class="code"><div class="cap"><i></i><i></i><i></i><span>bash</span></div><pre><code># 找到需要文件参数的 case 并用 | 添加你的标志
--out2xyz|-out2exyz|-...|-your_new_flag)
-    COMPREPLY=($(compgen -f -- "$cur")) ;;</code></pre><button class="copy-btn" data-copy-pre aria-label="Copy"><svg class="cp"><use href="#i-copy"/></svg><svg class="ok"><use href="#i-check"/></svg></button></div></p>
+<p>标志之后的每个参数都会自动补全文件名和目录名，因此接受文件参数的标志无需额外设置。</p>
 <p>如果你的标志接受二级选项（如 <code>-plt</code> 或 <code>-calc</code>），添加新 case：
 <div class="code"><div class="cap"><i></i><i></i><i></i><span>bash</span></div><pre><code>case "$prev" in
     # ... 现有 case ...
@@ -408,10 +405,10 @@ bash -n gpumdkit.sh
 find src Scripts -name '*.sh' -exec bash -n {} +
 
 # Python 语法检查（针对修改的 Python 文件）
-python3 -m py_compile path/to/modified_script.py
+python -m py_compile path/to/modified_script.py
 
 # 重新生成网页（如果修改了文档）
-python3 docs/manual-src/build.py
+python docs/manual-src/build.py
 
 # 检查尾随空格问题
 git diff --check</code></pre><button class="copy-btn" data-copy-pre aria-label="Copy"><svg class="cp"><use href="#i-copy"/></svg><svg class="ok"><use href="#i-check"/></svg></button></div>

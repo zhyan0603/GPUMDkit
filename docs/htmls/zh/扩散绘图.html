@@ -176,9 +176,11 @@ gpumdkit.sh -plt D_PT 380 save</code></pre><button class="copy-btn" data-copy-pr
 <hr />
 <div class="admonition note">
 <p class="admonition-title">电导率图（sigma、sigma_PT、sigma_xyz）的前提假设</p>
-<p>以下电导率图从首个温度的 <code>model.xyz</code> 合计 Li 和 Na 数量，按单价处理， 并对所有温度沿用相同离子数和扩胞倍数。适用于单一移动 Li 或 Na
-物种且 MSD 列与其对应的体系；其他物种、混合载流子或变组成体系需单独计算。脚本拟合 MSD 中间 40%–80% 的区间，并按
-Nernst–Einstein 关系外推 300 K 电导率。 使用结果前，应核验扩散区间与外推范围。</p>
+<p>以下电导率图统计首个温度的 <code>model.xyz</code> 中指定可迁移元素的原子数，使用给定的电荷数，并对所有温度沿用相同离子数和扩胞倍数。
+适用于单一可迁移物种且 MSD 列与其对应的体系；混合载流子或变组成体系需单独计算。脚本拟合 MSD 中间 40%–80% 的区间，并按
+Nernst–Einstein 关系外推 300 K 电导率。温度取自文件夹名，体积取整个 <code>thermo.out</code> 的平均值；而
+<code>gpumdkit.sh -calc ionic-cond</code> 对 <code>thermo.out</code> 后一半的温度和体积取平均，因此两者给出的电导率可能略有差异。
+使用结果前，应核验扩散区间与外推范围。</p>
 </div>
 <h3 id="sigma-plt_arrhenius_sigmapy">sigma (<code>plt_arrhenius_sigma.py</code>)</h3>
 <p>创建 Arrhenius 离子电导率图（log10(σ·T) vs 1000/T）。</p>

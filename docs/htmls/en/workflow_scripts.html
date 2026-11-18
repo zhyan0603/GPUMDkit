@@ -207,47 +207,42 @@ and <code>pos.xyz</code>.</p>
 directory:</p>
 <div class="code"><div class="cap"><i></i><i></i><i></i><span>bash</span></div><pre><code>python "${GPUMDkit_path}/Scripts/workflow/scf_batch_pretreatment_cp2k.py" train.xyz template.inp calc</code></pre><button class="copy-btn" data-copy-pre aria-label="Copy"><svg class="cp"><use href="#i-copy"/></svg><svg class="ok"><use href="#i-check"/></svg></button></div>
 <h3 id="abacus-scf-preparation-301-3">ABACUS SCF preparation (301 -&gt; 3)</h3>
-<p>Prepare one extxyz file with lattice information, a directory with one
-pseudopotential (<code>.upf</code>) file per element, and, for LCAO, a directory with one
-numerical orbital (<code>.orb</code>) file per element. Each file name must start with its
-element symbol, for example <code>Li_ONCV_PBE-1.0.upf</code> or
-<code>Li_gga_8au_100Ry_4s1p.orb</code>; <code>S_...</code> and <code>Si_...</code> are told apart. Run through
-the menu:</p>
-<div class="code"><div class="cap"><i></i><i></i><i></i><span>bash</span></div><pre><code>gpumdkit.sh
-# choose 3 -&gt; 301 -&gt; ABACUS</code></pre><button class="copy-btn" data-copy-pre aria-label="Copy"><svg class="cp"><use href="#i-copy"/></svg><svg class="ok"><use href="#i-check"/></svg></button></div>
-<p>The prompt is:</p>
-<div class="code"><div class="cap"><i></i><i></i><i></i><span>text</span></div><pre><code>&lt;extxyz_file&gt; &lt;prefix&gt; &lt;pseudo_dir&gt; [orbital_dir]</code></pre><button class="copy-btn" data-copy-pre aria-label="Copy"><svg class="cp"><use href="#i-copy"/></svg><svg class="ok"><use href="#i-check"/></svg></button></div>
-<p>For example:</p>
-<div class="code"><div class="cap"><i></i><i></i><i></i><span>text</span></div><pre><code>train.xyz LiF_iter01 ./pp ./orb</code></pre><button class="copy-btn" data-copy-pre aria-label="Copy"><svg class="cp"><use href="#i-copy"/></svg><svg class="ok"><use href="#i-check"/></svg></button></div>
-<p>Omit <code>orbital_dir</code> for plane-wave calculations. The script creates:</p>
+<h4 id="before-running-301">Before running 301</h4>
+<ol>
+<li><strong>Structure file</strong>. Put the structures into one extxyz, for example <code>frames.xyz</code>. Every frame needs a valid three-dimensional cell. If you start from a POSCAR, convert it with <code>gpumdkit.sh -pos2exyz POSCAR frame.xyz</code>.</li>
+<li><strong>Basis directory</strong>. Put exactly one <code>.upf</code> pseudopotential and one compatible <code>.orb</code> numerical orbital for every element in the batch directly in one directory. Choose the pairs from a compatible library. Filenames must start with the case-sensitive element symbol. A missing file or multiple matches for an element stops preparation before any calculation directories are created.</li>
+</ol>
+<p>For a Li–La–Zr–O batch, the files can be arranged as follows:</p>
+<div class="code"><div class="cap"><i></i><i></i><i></i><span>text</span></div><pre><code>work/
+├── frames.xyz
+└── basis/
+    ├── Li.upf
+    ├── Li_gga_9au_100Ry_4s1p.orb
+    ├── La_ONCV_PBE-1.2.upf
+    ├── La_gga_9au_100Ry_4s2p2d1f.orb
+    ├── Zr_ONCV_PBE-1.0.upf
+    ├── Zr_gga_10au_100Ry_4s2p2d1f.orb
+    ├── O.upf
+    └── O_gga_6au_100Ry_2s2p1d.orb</code></pre><button class="copy-btn" data-copy-pre aria-label="Copy"><svg class="cp"><use href="#i-copy"/></svg><svg class="ok"><use href="#i-check"/></svg></button></div>
+<p>Start <code>gpumdkit.sh</code> and choose <strong>3 → 301 → 3</strong>. Enter the structure file, the output directory prefix and the basis directory.</p>
+<div class="code"><div class="cap"><i></i><i></i><i></i><span>text</span></div><pre><code>frames.xyz LLZO ./basis</code></pre><button class="copy-btn" data-copy-pre aria-label="Copy"><svg class="cp"><use href="#i-copy"/></svg><svg class="ok"><use href="#i-check"/></svg></button></div>
+<p>The script creates:</p>
 <div class="code"><div class="cap"><i></i><i></i><i></i><span>text</span></div><pre><code>current directory/
 ├── fp/                 # put the shared INPUT (and KPT) here
-├── LiF_iter01_1/
+├── LLZO_1/
 │   ├── STRU            # this frame; species, masses, and file names filled in
 │   ├── INPUT -&gt; ../fp/INPUT
 │   └── KPT -&gt; ../fp/KPT
-├── LiF_iter01_2/
+├── LLZO_2/
 └── presub.sh</code></pre><button class="copy-btn" data-copy-pre aria-label="Copy"><svg class="cp"><use href="#i-copy"/></svg><svg class="ok"><use href="#i-check"/></svg></button></div>
 <p>Each <code>STRU</code> lists only the elements present in that frame, so structures with
 different compositions need no grouping. Lattice vectors and Cartesian
-positions are written in Angstrom with <code>LATTICE_CONSTANT 1.889726125457828</code>.
-The script stops if an element has no matching file or several.</p>
-<p>Then write <code>fp/INPUT</code> yourself; the script prints the keywords it needs:</p>
-<div class="code"><div class="cap"><i></i><i></i><i></i><span>text</span></div><pre><code>INPUT_PARAMETERS
-calculation   scf
-cal_force     1
-cal_stress    1
-pseudo_dir    /absolute/path/to/pp
-orbital_dir   /absolute/path/to/orb   # LCAO only, with basis_type lcao</code></pre><button class="copy-btn" data-copy-pre aria-label="Copy"><svg class="cp"><use href="#i-copy"/></svg><svg class="ok"><use href="#i-check"/></svg></button></div>
-<p>Choose the functional, cutoff, smearing, and k-point settings for your system.
-Provide <code>fp/KPT</code>, or set <code>kspacing</code> in <code>INPUT</code> and leave the <code>KPT</code> link
-dangling. With a source installation you can also call the script directly:</p>
-<div class="code"><div class="cap"><i></i><i></i><i></i><span>bash</span></div><pre><code>python "${GPUMDkit_path}/Scripts/workflow/scf_batch_pretreatment_abacus.py" train.xyz LiF_iter01 ./pp ./orb</code></pre><button class="copy-btn" data-copy-pre aria-label="Copy"><svg class="cp"><use href="#i-copy"/></svg><svg class="ok"><use href="#i-check"/></svg></button></div>
+positions are written in Angstrom with <code>LATTICE_CONSTANT 1.889726125457828</code>.</p>
 <h2 id="md-sampling-pretreatment">2. Prepare MD sampling directories</h2>
 <h3 id="gpumd-302">GPUMD (302)</h3>
-<p>Put <code>.vasp</code> files or one extxyz file in a dedicated working directory. The input
-selection rules are the same as for VASP preparation: <code>.vasp</code> files take
-precedence, and multiple <code>.xyz</code> files without <code>.vasp</code> require a choice.</p>
+<p>In a fresh working directory, provide one <code>.xyz</code> file or one or more <code>.vasp</code>
+files. The script rejects mixed formats and multiple XYZ files before moving
+any inputs.</p>
 <div class="code"><div class="cap"><i></i><i></i><i></i><span>bash</span></div><pre><code>gpumdkit.sh
 # choose 3 -&gt; 302</code></pre><button class="copy-btn" data-copy-pre aria-label="Copy"><svg class="cp"><use href="#i-copy"/></svg><svg class="ok"><use href="#i-check"/></svg></button></div>
 <p>Typical inputs are:</p>
@@ -270,8 +265,7 @@ precedence, and multiple <code>.xyz</code> files without <code>.vasp</code> requ
 sample directory links to them: <code>sample_1/run.in</code> points to <code>md/run_1.in</code>,
 <code>sample_2/run.in</code> to <code>md/run_2.in</code>, and so on.</p>
 <h3 id="lammps-303">LAMMPS (303)</h3>
-<p>Put <code>.vasp</code> files or one extxyz file in a dedicated working directory. When both
-formats are present, <code>.vasp</code> files take precedence.</p>
+<p>Use the same input rules as for GPUMD (302).</p>
 <div class="code"><div class="cap"><i></i><i></i><i></i><span>bash</span></div><pre><code>gpumdkit.sh
 # choose 3 -&gt; 303</code></pre><button class="copy-btn" data-copy-pre aria-label="Copy"><svg class="cp"><use href="#i-copy"/></svg><svg class="ok"><use href="#i-check"/></svg></button></div>
 <p>The script creates LAMMPS data files in <code>struct_md/</code>, sample directories, <code>md/</code>,

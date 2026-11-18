@@ -37,9 +37,9 @@ dump_exyz <i> <v> <f> <p> <s>       -> dump_xyz <i> dump.xyz[*] velocity force p
 
 These are migration examples, not current commands. The `*` is needed only when separate per-frame files are wanted. Extended XYZ remains a supported data format, and `dump_observer` still has an `interval_exyz` parameter; do not remove those format/parameter references.
 
-For GPUMDkit trajectory MSD, place verified unwrapped coordinates in the
-extxyz `pos` field; `-calc msd` does not read `unwrapped_position` directly.
-See `calculators.md` for cell and coordinate requirements.
+For GPUMDkit trajectory MSD, `-calc msd` uses an `unwrapped_position` column
+when every frame has one; otherwise it unwraps `pos` by minimum image in a
+fixed cell. See `calculators.md` for cell and coordinate requirements.
 
 ## Thermodynamic and model-specific dumps
 

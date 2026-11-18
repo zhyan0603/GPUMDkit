@@ -55,8 +55,8 @@ compute_msd <sample_interval> <Nc> group <group_method> <group_id> [save_every <
 
 The exact ensemble and run lengths must come from the user-approved design. Reissue non-propagating compute/dump commands in the correct production run.
 
-For trajectory-based GPUMDkit MSD, verify fixed-cell unwrapped coordinates in
-the extxyz `pos` field and stable atom order as described in `calculators.md`.
+For trajectory-based GPUMDkit MSD, verify stable atom order and a frame interval
+short enough for periodic unwrapping, as described in `calculators.md`.
 Pass the time between stored frames to `-calc msd`:
 
 ```text

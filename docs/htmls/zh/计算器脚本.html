@@ -159,7 +159,7 @@
 </tr>
 <tr>
 <td>NEB</td>
-<td><code>gpumdkit.sh -calc neb &lt;initial.xyz&gt; &lt;final.xyz&gt; &lt;n_images&gt; &lt;nep.txt&gt;</code></td>
+<td><code>gpumdkit.sh -calc neb &lt;initial.xyz&gt; &lt;final.xyz&gt; &lt;n_images&gt; &lt;nep.txt&gt; [max_steps]</code></td>
 <td>初末态结构</td>
 </tr>
 <tr>
@@ -319,9 +319,11 @@ Enter number of ions:</code></pre><button class="copy-btn" data-copy-pre aria-la
 <p><code>calc_msd.py</code> 可以直接从 extxyz 轨迹中计算指定元素的 MSD。</p>
 <div class="code"><div class="cap"><i></i><i></i><i></i><span>bash</span></div><pre><code>gpumdkit.sh -calc msd dump.xyz Li 10
 gpumdkit.sh -calc msd dump.xyz Li 10 5000</code></pre><button class="copy-btn" data-copy-pre aria-label="Copy"><svg class="cp"><use href="#i-copy"/></svg><svg class="ok"><use href="#i-check"/></svg></button></div>
-<p>使用固定晶胞、原子顺序一致的轨迹，并确保 <code>pos</code> 字段存储已核验的展开坐标。
-脚本读取 <code>pos</code> 和首帧晶胞，不读取独立的 <code>unwrapped_position</code> 属性。自动坐标
-判断不足以验证折回轨迹；按轴解包裹也不适用于一般倾斜或变化晶胞。
+<p>各帧的原子顺序须一致。每帧都有 <code>unwrapped_position</code> 列时，默认直接使用该列。
+否则，对于固定晶胞，脚本沿周期方向按最小镜像对 <code>pos</code> 中目标元素的坐标解卷绕。
+这对卷绕、部分卷绕和已连续的坐标都适用。存帧间隔应足够短，使每个原子在相邻帧间
+的位移小于半个晶胞长度。</p>
+<p>周期性变胞轨迹须提供 <code>unwrapped_position</code> 列。
 命令覆盖当前目录的 <code>msd.out</code>。</p>
 <p>交互模式选择 <code>412</code>，会看到：</p>
 <div class="code"><div class="cap"><i></i><i></i><i></i><span>text</span></div><pre><code>Input &lt;extxyz_file&gt; &lt;element_symbol&gt; &lt;dt_fs&gt; [max_corr_steps]
@@ -505,7 +507,8 @@ gpumdkit.sh -plt doas doas.out Li</code></pre><button class="copy-btn" data-copy
 <h2 id="neb-和结构优化">NEB 和结构优化</h2>
 <p>NEB：</p>
 <div class="code"><div class="cap"><i></i><i></i><i></i><span>bash</span></div><pre><code>gpumdkit.sh -calc neb initial.xyz final.xyz 9 nep.txt</code></pre><button class="copy-btn" data-copy-pre aria-label="Copy"><svg class="cp"><use href="#i-copy"/></svg><svg class="ok"><use href="#i-check"/></svg></button></div>
-<p>这会使用 NEP 模型运行包含 <code>9</code> 个中间构型（image）的 NEB 计算。运行过程中脚本会询问原子固定方式：</p>
+<p>这会使用 NEP 模型运行包含 <code>9</code> 个中间构型（image）的 NEB 计算。可在最后加
+<code>max_steps</code> 限制优化步数，脚本会报告是否收敛。运行过程中会询问原子固定方式：</p>
 <ul>
 <li><code>none</code>：不固定原子；</li>
 <li><code>index</code>：按原子索引（编号）固定；</li>
