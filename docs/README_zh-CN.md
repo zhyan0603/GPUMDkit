@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="./Gallery/gpumdkit_logo.png" width="25%" alt="GPUMDkit Logo">
+  <img src="./Gallery/gpumdkit_logo_lateral.png" width="55%" alt="GPUMDkit Logo">
 </p>
 <p align="center">
   <a href="../README.md">English</a>
@@ -21,6 +21,10 @@
   <a href="https://github.com/zhyan0603/GPUMDkit/graphs/contributors"><img src="https://img.shields.io/github/contributors/zhyan0603/GPUMDkit?style=flat-square&color=brightgreen&label=Contributors" alt="Contributors"></a>
 </p>
 <p style="text-align: justify;"><strong>GPUMDkit</strong> 是面向 GPUMD（<em>Graphics Processing Units Molecular Dynamics</em>）和 NEP（<em>neuroevolution potential</em>）程序的工具包。它提供统一的命令行入口，用于调用常用脚本、完成格式转换、结构采样、NEP 数据准备、分析和可视化。</p>
+
+<p align="center">
+  <a href="https://gpumdkit.cn/"><img src="./Gallery/gpumdkit_hero_zh.webp" width="100%" alt="GPUMDkit：面向 GPUMD 与 NEP 的用户友好工具包，在 gpumdkit.sh 菜单中完成数据准备、训练与模拟、分析与绘图"></a>
+</p>
 
 
 ## 功能特点
@@ -126,7 +130,7 @@ wget https://github.com/zhyan0603/GPUMDkit/archive/refs/heads/main.zip
                 | |_| |  __/| |_| | |  | | |_| |   <| | |_
                  \____|_|    \___/|_|  |_|____/|_|\_\_|\__|
 
-                 GPUMDkit Version 1.5.8 (2026-10-20)
+                 GPUMDkit Version 1.6.0 (2026-11-17)
            Core Developer: Zihan YAN (yanzihan@westlake.edu.cn)
         Main Contributors: Denan LI, Xin WU, Zhoulin LIU & Chen HUA
 
@@ -156,7 +160,7 @@ gpumdkit.sh -h
 
 ```
  +-------------------------------------------------------------------------------------------------------+
- |                          GPUMDkit 1.5.8 (2026-10-20)       Command Help                               |
+ |                          GPUMDkit 1.6.0 (2026-11-17)       Command Help                               |
  +-------------------------------------------------------------------------------------------------------+
  |                                          MAIN FUNCTIONS                                               |
  +-------------------------------------------------------------------------------------------------------+
@@ -204,7 +208,7 @@ gpumdkit.sh -plt -h
 
 ```
  +-----------------------------------------------------------------------------------------------+
- |                     GPUMDkit 1.5.8 (2026-10-20)       PLOT & VISUALIZATION TOOLS              |
+ |                     GPUMDkit 1.6.0 (2026-11-17)       PLOT & VISUALIZATION TOOLS              |
  +-----------------------------------------------------------------------------------------------+
  |  Usage: gpumdkit.sh -plt <type>                        List: gpumdkit.sh -plt -h              |
  +-----------------------------------------------------------------------------------------------+
@@ -269,6 +273,8 @@ gpumdkit.sh -plt train
 <div align="center">
     <img src="./Gallery/train.png" alt="Training loss and parity plots" width="75%" />
 </div>
+
+`-plt train` 和 `-plt train_density` 使用 `loss.out` 中的实际代数，支持自定义输出间隔及重复的注释表头，并在重启训练时累计衔接代数。旧版无表头文件仍可使用。
 
 ##### 示例 5：绘制 prediction 模式的 parity 结果
 
@@ -361,7 +367,7 @@ q-path 偏移会在比较前分别归一化，但对比文件仍必须使用相�
 
 ```bibtex
 @article{yan2026gpumdkit,
-  title   = {GPUMDkit: A User-Friendly Toolkit for GPUMD and NEP},
+  title   = { {GPUMDkit}: A User-Friendly Toolkit for {GPUMD} and {NEP} },
   author  = {Yan, Zihan and Li, Denan and Wu, Xin and Liu, Zhoulin and Hua, Chen and Situ, Boyi and Yang, Hao and Tang, Shengjie and Tang, Benrui and Wang, Ziyang and Yi, Shangzhao and Wang, Huan and Huang, Dian and Li, Ke and Guo, Qilin and Chen, Zherui and Xu, Ke and Wang, Yanzhou and Wang, Ziliang and Tang, Gang and Liu, Shi and Fan, Zheyong and Zhu, Yizhou},
   journal = {MGE Advances},
   volume  = {4},

@@ -25,11 +25,11 @@
 
 ```bash
 # 直接运行 Python 脚本
-python3 ${GPUMDkit_path}/Scripts/sample_structures/sample_structures.py <input.xyz> <method> <num_samples> [skip_initial]
+python ${GPUMDkit_path}/Scripts/sample_structures/sample_structures.py <input.xyz> <method> <num_samples> [skip_initial]
 
 # 示例
-python3 ${GPUMDkit_path}/Scripts/sample_structures/sample_structures.py dump.xyz uniform 50
-python3 ${GPUMDkit_path}/Scripts/sample_structures/sample_structures.py dump.xyz random 100 500
+python ${GPUMDkit_path}/Scripts/sample_structures/sample_structures.py dump.xyz uniform 50
+python ${GPUMDkit_path}/Scripts/sample_structures/sample_structures.py dump.xyz random 100 500
 ```
 
 参数：
@@ -43,6 +43,7 @@ python3 ${GPUMDkit_path}/Scripts/sample_structures/sample_structures.py dump.xyz
 
 - **Uniform**：通过 `numpy.linspace` 在可用轨迹范围内生成等间隔索引。
 - **Random**：通过 `numpy.random.choice` 无放回随机抽样。
+- 请求的帧数超过可用帧数（跳过之后）时，脚本将全部可用帧各写出一次并给出提示。
 
 ### 最远点采样（FPS）
 
@@ -53,10 +54,10 @@ python3 ${GPUMDkit_path}/Scripts/sample_structures/sample_structures.py dump.xyz
 gpumdkit.sh
 
 # 半交互式直接调用
-python3 ${GPUMDkit_path}/Scripts/sample_structures/parallel_neptrain_select_structs.py <sample.xyz> <train.xyz> <nep.txt> [threads]
+python ${GPUMDkit_path}/Scripts/sample_structures/parallel_neptrain_select_structs.py <sample.xyz> <train.xyz> <nep.txt> [threads]
 
 # 示例
-python3 ${GPUMDkit_path}/Scripts/sample_structures/parallel_neptrain_select_structs.py dump.xyz train.xyz nep.txt 4
+python ${GPUMDkit_path}/Scripts/sample_structures/parallel_neptrain_select_structs.py dump.xyz train.xyz nep.txt 4
 ```
 
 `threads` 为可选参数，默认值为 `1`。设为正整数即可并行计算描述符。
@@ -92,10 +93,10 @@ PyNEP 已不再积极维护。新任务应优先使用功能 203；`-pynep` 仅�
 gpumdkit.sh
 
 # 直接调用
-python3 ${GPUMDkit_path}/Scripts/sample_structures/perturb_structure.py <input.vasp> <pert_num> <cell_pert> <atom_pert> <style>
+python ${GPUMDkit_path}/Scripts/sample_structures/perturb_structure.py <input.vasp> <pert_num> <cell_pert> <atom_pert> <style>
 
 # 示例
-python3 ${GPUMDkit_path}/Scripts/sample_structures/perturb_structure.py POSCAR 20 0.03 0.2 uniform
+python ${GPUMDkit_path}/Scripts/sample_structures/perturb_structure.py POSCAR 20 0.03 0.2 uniform
 ```
 
 参数：
@@ -119,10 +120,10 @@ python3 ${GPUMDkit_path}/Scripts/sample_structures/perturb_structure.py POSCAR 2
 gpumdkit.sh
 
 # 直接调用
-python3 ${GPUMDkit_path}/Scripts/sample_structures/select_max_modev.py <top_n> <min_deviation>
+python ${GPUMDkit_path}/Scripts/sample_structures/select_max_modev.py <top_n> <min_deviation>
 
 # 示例
-python3 ${GPUMDkit_path}/Scripts/sample_structures/select_max_modev.py 200 0.15
+python ${GPUMDkit_path}/Scripts/sample_structures/select_max_modev.py 200 0.15
 ```
 
 当前目录必须包含来自同一次 GPUMD `active` 运行的：
@@ -139,10 +140,10 @@ GPUMD 每次检查都会向 `active.out` 写一行，但只有超过 `active` �
 gpumdkit.sh
 
 # 直接进入脚本；其余参数仍由交互提示输入
-python3 ${GPUMDkit_path}/Scripts/sample_structures/split_train_test.py <input.xyz>
+python ${GPUMDkit_path}/Scripts/sample_structures/split_train_test.py <input.xyz>
 
 # 示例
-python3 ${GPUMDkit_path}/Scripts/sample_structures/split_train_test.py data.xyz
+python ${GPUMDkit_path}/Scripts/sample_structures/split_train_test.py data.xyz
 ```
 
 脚本先输出数据集中的元素、总帧数以及每帧原子数范围，然后询问测试集大小：
@@ -164,7 +165,7 @@ python3 ${GPUMDkit_path}/Scripts/sample_structures/split_train_test.py data.xyz
 
 ```bash
 gpumdkit.sh -frame_range <input.xyz> <start_fraction> <end_fraction>
-python3 ${GPUMDkit_path}/Scripts/sample_structures/frame_range.py <input.xyz> <start_fraction> <end_fraction>
+python ${GPUMDkit_path}/Scripts/sample_structures/frame_range.py <input.xyz> <start_fraction> <end_fraction>
 
 # 示例：保留轨迹前 80%
 gpumdkit.sh -frame_range dump.xyz 0 0.8
@@ -195,16 +196,16 @@ MD 选出的结构是待标注候选，模型预测不能作为 DFT 参考标签
 
 ```bash
 # 1. 从 active.out/active.xyz 中挑选高偏差结构
-python3 ${GPUMDkit_path}/Scripts/sample_structures/select_max_modev.py <top_n> <min_deviation>
+python ${GPUMDkit_path}/Scripts/sample_structures/select_max_modev.py <top_n> <min_deviation>
 
 # 2. 如需进一步提高多样性，再使用 NepTrain FPS
-python3 ${GPUMDkit_path}/Scripts/sample_structures/parallel_neptrain_select_structs.py active.xyz train.xyz nep.txt 4
+python ${GPUMDkit_path}/Scripts/sample_structures/parallel_neptrain_select_structs.py active.xyz train.xyz nep.txt 4
 ```
 
 ### 生成初始扰动结构
 
 ```bash
-python3 ${GPUMDkit_path}/Scripts/sample_structures/perturb_structure.py POSCAR <pert_num> <cell_pert> <atom_pert> <style>
+python ${GPUMDkit_path}/Scripts/sample_structures/perturb_structure.py POSCAR <pert_num> <cell_pert> <atom_pert> <style>
 ```
 
 扰动数量和幅度需由用户确认。在进行 DFT 之前，应检查扰动结构的最小原子间距和晶胞是否合理。

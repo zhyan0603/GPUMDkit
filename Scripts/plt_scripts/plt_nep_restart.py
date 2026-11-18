@@ -13,7 +13,7 @@ Usage:      gpumdkit.sh -plt restart
 Output:
   Display of NEP restart parameters plot
 Author:     Zihan YAN (yanzihan@westlake.edu.cn)
-Last-modified: 2026-10-21
+Last-modified: 2026-10-28
 =============================================================================
 """
 
@@ -49,7 +49,9 @@ plt.rcParams.update({
 # of the SNES search distribution (column 1 and column 2, respectively)
 # Function to read two-column data from a file
 def read_data(file_path):
-    data = np.loadtxt(file_path)
+    with open(file_path) as f:
+        skiprows = 3 if f.readline().strip() == "nep_restart" else 0
+    data = np.loadtxt(file_path, skiprows=skiprows, ndmin=2)
     return data[:, 0], data[:, 1]
 
 # Read data from files

@@ -88,7 +88,7 @@ tail -1f "loss.out" | while read line; do
 
   # Calculate finish time (current time + remaining time)
   finish_timestamp=$((timestamp + remaining_time))
-  finish_time=$(date -d "@$finish_timestamp" "+%Y-%m-%d %H:%M:%S")
+  finish_time=$(date -d "@$finish_timestamp" "+%Y-%m-%d %H:%M:%S" 2>/dev/null || date -r "$finish_timestamp" "+%Y-%m-%d %H:%M:%S")
 
   # Output data in table format
   printf "| %-15s | %-9s | %-15s | %-19s |\n" \

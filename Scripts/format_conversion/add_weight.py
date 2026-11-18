@@ -48,14 +48,14 @@ def main():
     try:
         new_weight = float(sys.argv[3])
     except ValueError:
-        print("Error: The third argument (new weight) must be a number.")
+        print(" Error: The third argument (new weight) must be a number.")
         sys.exit(1)
 
     # Read all structures from the input file
     try:
         structures = read(input_file, index=':')
     except Exception as e:
-        print(f"Error: Could not read the file {input_file}. Reason: {e}")
+        print(f" Error: Could not read the file {input_file}. Reason: {e}")
         sys.exit(1)
 
     # Modify the 'Weight' in the info dictionary for each structure
@@ -66,11 +66,11 @@ def main():
     try:
         write(output_file, structures)
     except Exception as e:
-        print(f"Error: Could not write to the file {output_file}. Reason: {e}")
+        print(f" Error: Could not write to the file {output_file}. Reason: {e}")
         sys.exit(1)
 
     # Print success message
-    print(f"Weights in {input_file} have been updated and saved to {output_file}")
+    print(f" Weights in {input_file} have been updated and saved to {output_file}")
 
 if __name__ == "__main__":
     main()

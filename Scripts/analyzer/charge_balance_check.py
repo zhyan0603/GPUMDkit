@@ -110,7 +110,7 @@ def main():
     idx_atoms_pairs = list(enumerate(atoms_list))
     with Pool() as pool:
         structures = []
-        for structure in tqdm(pool.imap_unordered(process_structure, idx_atoms_pairs),
+        for structure in tqdm(pool.imap(process_structure, idx_atoms_pairs, chunksize=64),
                              total=len(idx_atoms_pairs),
                              desc="Computing compositions"):
             structures.append(structure)
@@ -179,6 +179,11 @@ def main():
         f.write("Unbalanced structures (indices): {}\n".format(sorted(unbalanced_indices)))
         f.write("Balanced structures written to {}\n".format(balanced_file))
         f.write("Unbalanced structures written to {}\n".format(unbalanced_file))
+
+    print(f" Total structures: {len(structures)}")
+    print(f" Balanced: {len(balanced_structures)}" + (f" -> {balanced_file}" if balanced_structures else ""))
+    print(f" Unbalanced: {len(unbalanced_structures)}" + (f" -> {unbalanced_file}" if unbalanced_structures else ""))
+    print(f" Frame indices (0-based) are listed in {index_file}")
 
 if __name__ == "__main__":
     main()

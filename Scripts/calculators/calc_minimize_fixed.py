@@ -116,10 +116,10 @@ def build_fix_mask(atoms, group_method, group_id):
 
 
 def print_usage():
-    print("Usage: python calc_minimize_fixed.py <structure> <nep.txt> "
+    print(" Usage: python calc_minimize_fixed.py <structure> <nep.txt> "
           "<group_method> <group_id> [fmax] [max_steps]")
     print("")
-    print("Arguments:")
+    print(" Arguments:")
     print("  structure     Input structure file (POSCAR or .xyz)")
     print("  nep.txt       Path to the NEP model file")
     print("  group_method  GPUMD group method: 1=by group, 2=by type, 3=group+type")
@@ -127,7 +127,7 @@ def print_usage():
     print("  fmax          Force convergence threshold (eV/A, default: 0.01)")
     print("  max_steps     Max optimization steps (default: 1000)")
     print("")
-    print("Examples:")
+    print(" Examples:")
     print("  # Fix atoms in group 1 (by 'group' property in extxyz)")
     print("  python calc_minimize_fixed.py POSCAR nep.txt 1 1")
     print("")
@@ -137,7 +137,7 @@ def print_usage():
     print("  # Fix atoms with combined group+type (group_method=3)")
     print("  python calc_minimize_fixed.py POSCAR nep.txt 3 3")
     print("")
-    print("Note: calorine requires the gpumdkit conda environment:")
+    print(" Note: calorine requires the gpumdkit conda environment:")
     print("  conda activate gpumdkit")
 
 
@@ -149,7 +149,7 @@ def main():
         sys.exit(0 if args and args[0] in ('-h', '--help') else 1)
 
     if len(args) < 4:
-        print(f"Error: expected at least 4 arguments, got {len(args)}")
+        print(f" Error: expected at least 4 arguments, got {len(args)}")
         print_usage()
         sys.exit(1)
 
@@ -160,7 +160,7 @@ def main():
         group_method = int(args[2])
         group_id = int(args[3])
     except ValueError:
-        print(f"Error: group_method and group_id must be integers, "
+        print(f" Error: group_method and group_id must be integers, "
               f"got '{args[2]}' and '{args[3]}'")
         sys.exit(1)
 

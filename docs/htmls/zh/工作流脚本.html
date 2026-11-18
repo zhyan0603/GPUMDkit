@@ -201,10 +201,41 @@ fp/
 <p>脚本为每个结构创建 <code>&lt;prefix&gt;_&lt;index&gt;/</code>，并写入 <code>input.inp</code> 和 <code>pos.xyz</code>。</p>
 <p>从源码安装时，也可以在数据目录中直接调用脚本：</p>
 <div class="code"><div class="cap"><i></i><i></i><i></i><span>bash</span></div><pre><code>python "${GPUMDkit_path}/Scripts/workflow/scf_batch_pretreatment_cp2k.py" train.xyz template.inp calc</code></pre><button class="copy-btn" data-copy-pre aria-label="Copy"><svg class="cp"><use href="#i-copy"/></svg><svg class="ok"><use href="#i-check"/></svg></button></div>
+<h3 id="abacus-单点预处理301-3">ABACUS 单点预处理（301 -&gt; 3）</h3>
+<h4 id="运行-301-前">运行 301 前</h4>
+<ol>
+<li><strong>结构文件</strong>。把结构放在同一个 extxyz 中，例如 <code>frames.xyz</code>。每帧都需要有效的三维晶胞。如果原始结构是 POSCAR，可用 <code>gpumdkit.sh -pos2exyz POSCAR frame.xyz</code> 转换。</li>
+<li><strong>基组目录</strong>。把整批用到的每种元素对应的一份 <code>.upf</code> 赝势和一份配套的 <code>.orb</code> 数值轨道直接放在同一个目录里。请从配套的库中选取文件，文件名以区分大小写的元素符号开头。某个元素缺文件或匹配到多份时，脚本会在生成计算目录前报错退出。</li>
+</ol>
+<p>以 Li–La–Zr–O 为例，可以这样放置文件：</p>
+<div class="code"><div class="cap"><i></i><i></i><i></i><span>text</span></div><pre><code>work/
+├── frames.xyz
+└── basis/
+    ├── Li.upf
+    ├── Li_gga_9au_100Ry_4s1p.orb
+    ├── La_ONCV_PBE-1.2.upf
+    ├── La_gga_9au_100Ry_4s2p2d1f.orb
+    ├── Zr_ONCV_PBE-1.0.upf
+    ├── Zr_gga_10au_100Ry_4s2p2d1f.orb
+    ├── O.upf
+    └── O_gga_6au_100Ry_2s2p1d.orb</code></pre><button class="copy-btn" data-copy-pre aria-label="Copy"><svg class="cp"><use href="#i-copy"/></svg><svg class="ok"><use href="#i-check"/></svg></button></div>
+<p>启动 <code>gpumdkit.sh</code>，选择 <strong>3 → 301 → 3</strong>，依次输入结构文件、计算目录前缀和基组目录。</p>
+<div class="code"><div class="cap"><i></i><i></i><i></i><span>text</span></div><pre><code>frames.xyz LLZO ./basis</code></pre><button class="copy-btn" data-copy-pre aria-label="Copy"><svg class="cp"><use href="#i-copy"/></svg><svg class="ok"><use href="#i-check"/></svg></button></div>
+<p>脚本生成：</p>
+<div class="code"><div class="cap"><i></i><i></i><i></i><span>text</span></div><pre><code>current directory/
+├── fp/                 # 在此放置共享的 INPUT（和 KPT）
+├── LLZO_1/
+│   ├── STRU            # 该帧结构，已写入元素、质量和文件名
+│   ├── INPUT -&gt; ../fp/INPUT
+│   └── KPT -&gt; ../fp/KPT
+├── LLZO_2/
+└── presub.sh</code></pre><button class="copy-btn" data-copy-pre aria-label="Copy"><svg class="cp"><use href="#i-copy"/></svg><svg class="ok"><use href="#i-check"/></svg></button></div>
+<p>每个 <code>STRU</code> 只列出该帧实际包含的元素，因此不同组分的结构无需分组。晶格矢量和
+笛卡尔坐标以 Å 写出，并设置 <code>LATTICE_CONSTANT 1.889726125457828</code>。</p>
 <h2 id="md">2. 准备 MD 采样目录</h2>
 <h3 id="gpumd302">GPUMD（302）</h3>
-<p>把 <code>.vasp</code> 文件或一个 extxyz 文件放在专用工作目录中。输入选择规则与 VASP
-预处理相同：<code>.vasp</code> 优先；没有 <code>.vasp</code> 且有多个 <code>.xyz</code> 时会让用户选择。</p>
+<p>在新的工作目录中放入一个 <code>.xyz</code> 文件，或一组 <code>.vasp</code> 文件。混放两种格式
+或提供多个 <code>.xyz</code> 时，脚本会提示并在移动文件前退出。</p>
 <div class="code"><div class="cap"><i></i><i></i><i></i><span>bash</span></div><pre><code>gpumdkit.sh
 # 选择 3 -&gt; 302</code></pre><button class="copy-btn" data-copy-pre aria-label="Copy"><svg class="cp"><use href="#i-copy"/></svg><svg class="ok"><use href="#i-check"/></svg></button></div>
 <p>典型输入：</p>
@@ -227,8 +258,7 @@ fp/
 会链接到它们：<code>sample_1/run.in</code> 指向 <code>md/run_1.in</code>，<code>sample_2/run.in</code> 指向
 <code>md/run_2.in</code>，依此类推。</p>
 <h3 id="lammps303">LAMMPS（303）</h3>
-<p>把 <code>.vasp</code> 文件或一个 extxyz 文件放在专用工作目录中；两种格式同时存在时
-优先处理 <code>.vasp</code>。</p>
+<p>输入规则与 GPUMD（302）相同。</p>
 <div class="code"><div class="cap"><i></i><i></i><i></i><span>bash</span></div><pre><code>gpumdkit.sh
 # 选择 3 -&gt; 303</code></pre><button class="copy-btn" data-copy-pre aria-label="Copy"><svg class="cp"><use href="#i-copy"/></svg><svg class="ok"><use href="#i-check"/></svg></button></div>
 <p>运行后会在 <code>struct_md/</code> 中创建 LAMMPS data 文件，并创建样本目录、<code>md/</code>
@@ -272,7 +302,7 @@ fp/
 </ul>
 <p>工作流脚本与集群、模板和软件版本有关，正式批量处理前先用少量结构试运行。计算结束后，先找出失败或不完整的样本，再继续下一步。</p>
 <h2 id="4-转换计算结果">4. 转换计算结果</h2>
-<p>DFT 计算结束后，用以下命令转换：<code>gpumdkit.sh -out2xyz &lt;dir&gt;</code>（VASP，输出 <code>NEPdataset/train.xyz</code>）、<code>-out2xyz_bec &lt;dir&gt;</code>（VASP，含 Born 有效电荷），或 <code>-cp2k2xyz</code>（CP2K，在结果根目录运行，输出 <code>cp2k_exyz.xyz</code>）。详见<a href="格式转换.html">格式转换</a>；这些步骤如何组成完整的 NEP 数据迭代，见<a href="主动学习工作流.html">主动学习工作流</a>。</p><div class="doc-pn"><a href="结构采样.html"><small>上一页</small><b>结构采样</b></a><a class="next" href="计算器脚本.html"><small>下一页</small><b>计算器脚本</b></a></div><a class="doc-edit" href="https://github.com/zhyan0603/GPUMDkit/edit/main/docs/tutorials/zh/工作流脚本.md" target="_blank" rel="noopener">编辑此页</a></article><nav class="doc-toc" aria-label="本页目录"><h6>本页目录</h6><a href="#交互入口" class="l2">交互入口</a><a href="#scf" class="l2">1. 准备 DFT 单点计算</a><a href="#vasp-单点预处理301-1" class="l3">VASP 单点预处理（301 -&gt; 1）</a><a href="#cp2k-单点预处理301-2" class="l3">CP2K 单点预处理（301 -&gt; 2）</a><a href="#md" class="l2">2. 准备 MD 采样目录</a><a href="#gpumd302" class="l3">GPUMD（302）</a><a href="#lammps303" class="l3">LAMMPS（303）</a><a href="#完整示例对两个结构运行-302" class="l2">完整示例：对两个结构运行 302</a><a href="#3-运行前检查" class="l2">3. 运行前检查</a><a href="#4-转换计算结果" class="l2">4. 转换计算结果</a></nav></div>
+<p>DFT 计算结束后，用以下命令转换：<code>gpumdkit.sh -out2xyz &lt;dir&gt;</code>（VASP，输出 <code>NEPdataset/train.xyz</code>）、<code>-out2xyz_bec &lt;dir&gt;</code>（VASP，含 Born 有效电荷），<code>-cp2k2xyz</code>（CP2K，在结果根目录运行，输出 <code>cp2k_exyz.xyz</code>），或菜单 <code>104</code> -&gt; SCF（ABACUS，读取各 <code>OUT.*/running_scf.log</code>，输出 <code>NEPdataset/train.xyz</code>）。详见<a href="格式转换.html">格式转换</a>；这些步骤如何组成完整的 NEP 数据迭代，见<a href="主动学习工作流.html">主动学习工作流</a>。</p><div class="doc-pn"><a href="结构采样.html"><small>上一页</small><b>结构采样</b></a><a class="next" href="计算器脚本.html"><small>下一页</small><b>计算器脚本</b></a></div><a class="doc-edit" href="https://github.com/zhyan0603/GPUMDkit/edit/main/docs/tutorials/zh/工作流脚本.md" target="_blank" rel="noopener">编辑此页</a></article><nav class="doc-toc" aria-label="本页目录"><h6>本页目录</h6><a href="#交互入口" class="l2">交互入口</a><a href="#scf" class="l2">1. 准备 DFT 单点计算</a><a href="#vasp-单点预处理301-1" class="l3">VASP 单点预处理（301 -&gt; 1）</a><a href="#cp2k-单点预处理301-2" class="l3">CP2K 单点预处理（301 -&gt; 2）</a><a href="#abacus-单点预处理301-3" class="l3">ABACUS 单点预处理（301 -&gt; 3）</a><a href="#md" class="l2">2. 准备 MD 采样目录</a><a href="#gpumd302" class="l3">GPUMD（302）</a><a href="#lammps303" class="l3">LAMMPS（303）</a><a href="#完整示例对两个结构运行-302" class="l2">完整示例：对两个结构运行 302</a><a href="#3-运行前检查" class="l2">3. 运行前检查</a><a href="#4-转换计算结果" class="l2">4. 转换计算结果</a></nav></div>
 </main>
 
 <!-- ======================================================= footer -->

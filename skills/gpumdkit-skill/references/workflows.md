@@ -18,6 +18,7 @@ choose scientific settings or submit an active-learning cycle automatically.
 |---|---|---|
 | SCF Batch (VASP) | 301 -> 1 | Prepare VASP single-point directories |
 | SCF Batch (CP2K) | 301 -> 2 | Prepare CP2K single-point directories |
+| SCF Batch (ABACUS) | 301 -> 3 | Prepare ABACUS single-point directories from extxyz |
 | MD Batch (GPUMD) | 302 | Prepare GPUMD MD sampling directories |
 | MD Batch (LAMMPS) | 303 | Prepare LAMMPS MD sampling directories |
 
@@ -83,12 +84,45 @@ The CP2K template must read coordinates from `pos.xyz`. The tool writes
 `<prefix>_<index>/input.inp` and `pos.xyz`. It prepares files only and does not
 submit CP2K.
 
+### ABACUS SCF Batch
+
+Prefer the supported menu entry:
+
+```bash
+gpumdkit.sh  # Select: 3) Workflow -> 301 -> 3) ABACUS
+```
+
+The prompt expects:
+
+```text
+<extxyz_file> <prefix> <basis_dir>
+```
+
+Input is one extxyz file with lattice information. For LCAO, `basis_dir`
+must contain exactly one `.upf` and one `.orb` per element present in the
+extxyz. File names must start with the element
+symbol (`S_*` and `Si_*` are distinguished). The script stops when an element has
+zero or several matches. Pseudopotential and orbital choices are scientific
+inputs: ask the user, do not pick files for them.
+
+The tool writes `<prefix>_<index>/STRU` (only that frame's elements, ASE atomic
+masses, Angstrom lattice vectors and Cartesian positions with
+`LATTICE_CONSTANT 1.889726125457828`), links `INPUT -> ../fp/INPUT` and
+`KPT -> ../fp/KPT`, creates `fp/`, and writes a `presub.sh` template. It does
+not write `INPUT`; the user supplies `fp/INPUT` with at least `calculation scf`,
+`cal_force 1`, `cal_stress 1`, `basis_type lcao`, and both `pseudo_dir` and
+`orbital_dir` pointing to `basis_dir` (absolute or relative to each calculation
+directory). Provide either `fp/KPT` or `kspacing`. Mixed compositions need no grouping. Convert
+finished runs with menu `104` -> SCF, which reads `OUT.*/running_scf.log` and
+`../STRU` and writes `NEPdataset/train.xyz`. It prepares files only and does not
+submit ABACUS.
+
 ## MD Sample Batch Preparation
 
 ### GPUMD MD Batch
 
-1. Put `.vasp` structures or one selected extxyz file in a dedicated working
-   directory.
+1. In a fresh directory, provide one `.xyz` file or one or more `.vasp` files.
+   Mixed formats and multiple XYZ files are rejected.
 2. Run:
 
 ```bash
@@ -266,7 +300,10 @@ reviewing the distance scale. PCA plots are diagnostics, not proof of coverage.
    supply approved `INCAR`, `POTCAR` (or grouped POTCARs) and other inputs in
    `fp/`. With approved `KSPACING` in `INCAR`, `KPOINTS` is not required; check
    that no unintended existing KPOINTS overrides it. For CP2K, use the required
-   approved template at the 301 prompt; see the CP2K section above.
+   approved template at the 301 prompt; see the CP2K section above. For ABACUS,
+   supply the extxyz file and the approved pseudopotential/orbital directories at
+   the 301 prompt, then the approved `fp/INPUT` (and `fp/KPT`); see the ABACUS
+   section above.
 3. Check input/species order, links, selected-frame-to-calculation mapping,
    resources and job count. Run DFT only within the user's execution authorization.
 4. Audit each selected configuration: expected task, completion, electronic
@@ -278,6 +315,7 @@ reviewing the distance scale. PCA plots are diagnostics, not proof of coverage.
 ```bash
 gpumdkit.sh -out2xyz <accepted_scf_results_directory>
 gpumdkit.sh -cp2k2xyz  # CP2K alternative: run in the results root; scans logs recursively, writes cp2k_exyz.xyz
+# ABACUS alternative: gpumdkit.sh menu 104 -> 1) SCF; writes NEPdataset/train.xyz
 # Inspect the actual extxyz output from the chosen converter
 gpumdkit.sh -range <new_reference.xyz> energy
 gpumdkit.sh -range <new_reference.xyz> force

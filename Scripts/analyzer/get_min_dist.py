@@ -18,7 +18,7 @@ Arguments:
 Output:
   Table of minimum distances for each element pair and overall minimum
 Author:     Zihan YAN (yanzihan@westlake.edu.cn)
-Last-modified: 2026-05-16
+Last-modified: 2026-11-10
 =============================================================================
 """
 
@@ -74,6 +74,7 @@ for frame in frames:
 
     # Compute pairwise distances
     distances = squareform(pdist(positions))
+    np.fill_diagonal(distances, np.inf)  # exclude each atom's distance to itself
 
     # Calculate minimum distance for each atom pair type
     for i, sym1 in enumerate(unique_symbols):
@@ -85,9 +86,9 @@ for frame in frames:
             # Get all distances between these atom types
             pair_distances = distances[np.ix_(idx1, idx2)]
 
-            # Exclude zero distances (same atom) if sym1 == sym2
-            if sym1 == sym2:
-                pair_distances = pair_distances[pair_distances > 0]
+            # Self-distances were set to inf above, so two different atoms at
+            # the same position (distance 0) are still reported.
+            pair_distances = pair_distances[np.isfinite(pair_distances)]
 
             # Update minimum distance if we have valid distances
             if pair_distances.size > 0:

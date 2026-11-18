@@ -9,15 +9,16 @@ Script:     neb_calculation.py
 Category:   Calculator Scripts
 Purpose:    Perform NEB calculations with a NEP model using calorine.
 Usage:      gpumdkit.sh -calc neb <initial_structure> <final_structure>
-            <n_images> <nep_model>
+            <n_images> <nep_model> [max_steps]
             python neb_calculation.py <initial_structure> <final_structure>
-            <n_images> <nep_model>
+            <n_images> <nep_model> [max_steps]
 Example:    gpumdkit.sh -calc neb init.xyz final.xyz 9 nep.txt
 Arguments:
   initial_structure  Path to the initial structure XYZ file
   final_structure    Path to the final structure XYZ file
   n_images           Number of intermediate images
   nep_model          Path to the NEP model file
+  max_steps          Optional maximum number of optimization steps
 Output:
   neb.traj               ASE Trajectory file with NEB optimization steps
   neb.xyz                Final NEB path in extxyz format
@@ -28,22 +29,23 @@ Output:
   nep_barrier.png        Energy profile plot
   (Note: interactive prompts for atom fixing method selection)
 Author:     Zhoulin LIU (1776627910@qq.com), Zihan YAN (yanzihan@westlake.edu.cn)
-Last-modified: 2026-09-14
+Last-modified: 2026-11-10
 =============================================================================
 """
 import os
 import sys
 
 # Check command-line arguments before importing optional heavy dependencies.
-if __name__ == "__main__" and (len(sys.argv) != 5 or sys.argv[1] in ("-h", "--help")):
-    print(" Usage: gpumdkit.sh -calc neb <initial_structure> <final_structure> <n_images> <nep_model>")
-    print("    or: python neb_calculation.py <initial_structure> <final_structure> <n_images> <nep_model>")
+if __name__ == "__main__" and (len(sys.argv) not in (5, 6) or sys.argv[1] in ("-h", "--help")):
+    print(" Usage: gpumdkit.sh -calc neb <initial_structure> <final_structure> <n_images> <nep_model> [max_steps]")
+    print("    or: python neb_calculation.py <initial_structure> <final_structure> <n_images> <nep_model> [max_steps]")
     print("")
     print(" Arguments:")
     print("   initial_structure  Path to the initial structure XYZ file")
     print("   final_structure    Path to the final structure XYZ file")
     print("   n_images           Number of intermediate images (e.g., 9)")
     print("   nep_model          Path to the NEP model file")
+    print("   max_steps          Optional maximum number of NEB optimization steps")
     print("")
     print(" Example: gpumdkit.sh -calc neb init.xyz final.xyz 9 nep.txt")
     print("")
@@ -53,7 +55,6 @@ import numpy as np
 from ase.io import read
 from ase.mep import NEB
 from ase.optimize.fire import FIRE as QuasiNewton
-from calorine.calculators import CPUNEP
 import matplotlib.pyplot as plt
 from ase.constraints import FixAtoms
 from ase.io import Trajectory, write
@@ -79,7 +80,14 @@ print_dependency_notice()
 
 initial_file = sys.argv[1]
 final_file = sys.argv[2]
-n_images = int(sys.argv[3])
+try:
+    n_images = int(sys.argv[3])
+    max_steps = int(sys.argv[5]) if len(sys.argv) == 6 else None
+    if n_images < 1 or (max_steps is not None and max_steps < 1):
+        raise ValueError
+except ValueError:
+    print(" Error: n_images and max_steps must be positive integers.")
+    sys.exit(1)
 nep_model = sys.argv[4]
 
 for input_file in (initial_file, final_file, nep_model):
@@ -90,6 +98,15 @@ for input_file in (initial_file, final_file, nep_model):
 # Read initial and final structures
 initial = read(initial_file)
 final = read(final_file)
+if initial.get_chemical_symbols() != final.get_chemical_symbols():
+    print(" Error: the initial and final structures must have the same atoms in the same order.")
+    sys.exit(1)
+
+try:
+    from calorine.calculators import CPUNEP
+except ImportError:
+    print(" Error: NEB requires calorine. Install it with: pip install calorine.")
+    sys.exit(1)
 
 # Create intermediate images
 images = [initial] + [initial.copy() for _ in range(n_images)] + [final]
@@ -215,12 +232,18 @@ print(" Path interpolation completed, starting NEB optimization...")
 
 # Run NEB optimization
 optimizer = QuasiNewton(neb, trajectory='neb.traj', logfile='neb.log')
-optimizer.run(fmax=0.01)
+run_options = {"steps": max_steps} if max_steps is not None else {}
+converged = optimizer.run(fmax=0.01, **run_options)
+if converged is None:  # ASE < 3.22 returns None from run()
+    converged = np.linalg.norm(neb.get_forces(), axis=1).max() < 0.01
 
 # Restore standard output
 sys.stdout = open('/dev/stdout', 'w')
 
-print(" NEB optimization completed!")
+if converged:
+    print(" NEB optimization converged.")
+else:
+    print(" Warning: NEB optimization did not converge. The saved path is the last iterate.")
 
 # Save NEB trajectory to a single XYZ file
 neb_traj = Trajectory('neb.traj')

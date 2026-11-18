@@ -59,7 +59,9 @@ for element in atoms.get_chemical_symbols():
     if element in elements:
         group = elements.index(element)
     else:
-        raise ValueError(f"Element {element} not found in the provided elements list")
+        print(f" Error: element {element} is in '{file_name}' but not in the provided element list.")
+        print(f" Elements given: {' '.join(elements)}")
+        sys.exit(1)
     groups.append(group)
 
 # Add the group information to the atomic data

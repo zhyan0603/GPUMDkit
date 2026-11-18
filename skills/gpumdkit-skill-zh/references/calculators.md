@@ -138,9 +138,12 @@ GPUMD 原生的 `compute_msd` 写入另一种 `msd.out`。只选择一个分组�
 `msd.out` 都有七列。独立的 `compute_sdc` 命令写入 `sdc.out`，该文件供
 `gpumdkit.sh -plt vac` 使用。
 
-使用固定晶胞、原子顺序一致的轨迹，并确保 `pos` 字段存储已核验的展开坐标。
-脚本读取 `pos` 和首帧晶胞，不读取独立的 `unwrapped_position` 属性。自动坐标
-判断不足以验证折回轨迹；按轴解包裹也不适用于一般倾斜或变化晶胞。
+各帧的原子顺序须一致。每帧都有 `unwrapped_position` 列时，默认直接使用该列。
+否则，对于固定晶胞，脚本沿周期方向按最小镜像对 `pos` 中目标元素的坐标解卷绕。
+这对卷绕、部分卷绕和已连续的坐标都适用。存帧间隔应足够短，使每个原子在相邻帧间
+的位移小于半个晶胞长度。
+
+周期性变胞轨迹须提供 `unwrapped_position` 列。
 命令覆盖当前目录的 `msd.out`。
 
 ### X 射线衍射（仅交互模式）
@@ -249,7 +252,7 @@ gpumdkit.sh -calc minimize POSCAR nep.txt 0.01 1000
 ### NEB 计算
 ```bash
 # CLI 快捷方式
-gpumdkit.sh -calc neb <initial.xyz> <final.xyz> <n_images> <nep.txt>
+gpumdkit.sh -calc neb <initial.xyz> <final.xyz> <n_images> <nep.txt> [max_steps]
 
 # 示例
 gpumdkit.sh -calc neb init.xyz fin.xyz 9 nep.txt

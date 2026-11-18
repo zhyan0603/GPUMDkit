@@ -375,7 +375,7 @@ Overall min_distance: 1.587 Å</code></pre><button class="copy-btn" data-copy-pr
 <p><strong>Supported properties:</strong> <code>energy</code>, <code>force</code>, <code>virial</code></p>
 <div class="code"><div class="cap"><i></i><i></i><i></i><span>bash</span></div><pre><code>gpumdkit.sh -filter_value train.xyz force 20
 gpumdkit.sh -filter_value train.xyz energy &lt;max_energy&gt;</code></pre><button class="copy-btn" data-copy-pre aria-label="Copy"><svg class="cp"><use href="#i-copy"/></svg><svg class="ok"><use href="#i-check"/></svg></button></div>
-<p>A structure is kept when every value is at most the threshold: each force component in magnitude (eV/Å) for <code>force</code>, the total energy stored in the file (eV, not per atom) for <code>energy</code>, and each virial component for <code>virial</code>. Frames that do not store the chosen property cannot be checked and are kept; the script reports how many. The kept structures are written to <code>filtered.xyz</code>.</p>
+<p>A structure is kept when every value is at most the threshold: each force component in magnitude (eV/Å) for <code>force</code>, the total energy stored in the file (eV, not per atom) for <code>energy</code>, and each virial component for <code>virial</code>. The range and filter commands accept both <code>force</code> and <code>forces</code> as per-atom extxyz field names. Frames that do not store the chosen property cannot be checked and are kept; the script reports how many. The kept structures are written to <code>filtered.xyz</code>.</p>
 <h3 id="filter-by-pair-distance-range">Filter by Pair-Distance Range</h3>
 <p><code>filter_dist_range.py</code> extracts structures where a specific element-pair distance falls within a given range.</p>
 <p><strong>Input file:</strong> <code>dump.xyz</code> (extxyz format)</p>
@@ -396,9 +396,13 @@ gpumdkit.sh -filter_value train.xyz energy &lt;max_energy&gt;</code></pre><butto
 <hr />
 <h2 id="outlier-detection">Outlier Detection</h2>
 <p><code>find_outliers.py</code> finds outlier structures in NEP training data based on RMSE thresholds for energy, force, and stress.</p>
-<p><strong>Input files:</strong> <code>energy_train.out</code>, <code>force_train.out</code>, <code>stress_train.out</code>, <code>train.xyz</code></p>
+<p><strong>Input files:</strong> <code>energy_train.out</code>, <code>force_train.out</code>, <code>train.xyz</code> and optional
+<code>stress_train.out</code>. Frames without stress labels still participate in energy
+and force screening.</p>
 <p>These files are generated during NEP training. The script compares DFT vs NEP predictions and identifies structures with large errors.</p>
-<p>Structures with a <code>-1e6</code> missing-stress marker or a stress component whose absolute value exceeds <code>1e6</code> are excluded before RMSE calculation and are not written to either output dataset. If no valid structures remain, the script reports an error without writing outputs.</p>
+<p>When stress labels are available, the stress threshold applies only to frames
+with valid labels. If there are no valid labels, the script screens by energy
+and force and still writes both datasets.</p>
 <div class="code"><div class="cap"><i></i><i></i><i></i><span>bash</span></div><pre><code># Interactive mode
 gpumdkit.sh    # Select: 5) Analyzer → 502) Find outliers of extxyz</code></pre><button class="copy-btn" data-copy-pre aria-label="Copy"><svg class="cp"><use href="#i-copy"/></svg><svg class="ok"><use href="#i-check"/></svg></button></div>
 <p><strong>Interactive prompts:</strong></p>

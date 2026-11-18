@@ -206,11 +206,43 @@ and <code>pos.xyz</code>.</p>
 <p>With a source installation you can also call the script directly from your data
 directory:</p>
 <div class="code"><div class="cap"><i></i><i></i><i></i><span>bash</span></div><pre><code>python "${GPUMDkit_path}/Scripts/workflow/scf_batch_pretreatment_cp2k.py" train.xyz template.inp calc</code></pre><button class="copy-btn" data-copy-pre aria-label="Copy"><svg class="cp"><use href="#i-copy"/></svg><svg class="ok"><use href="#i-check"/></svg></button></div>
+<h3 id="abacus-scf-preparation-301-3">ABACUS SCF preparation (301 -&gt; 3)</h3>
+<h4 id="before-running-301">Before running 301</h4>
+<ol>
+<li><strong>Structure file</strong>. Put the structures into one extxyz, for example <code>frames.xyz</code>. Every frame needs a valid three-dimensional cell. If you start from a POSCAR, convert it with <code>gpumdkit.sh -pos2exyz POSCAR frame.xyz</code>.</li>
+<li><strong>Basis directory</strong>. Put exactly one <code>.upf</code> pseudopotential and one compatible <code>.orb</code> numerical orbital for every element in the batch directly in one directory. Choose the pairs from a compatible library. Filenames must start with the case-sensitive element symbol. A missing file or multiple matches for an element stops preparation before any calculation directories are created.</li>
+</ol>
+<p>For a Li–La–Zr–O batch, the files can be arranged as follows:</p>
+<div class="code"><div class="cap"><i></i><i></i><i></i><span>text</span></div><pre><code>work/
+├── frames.xyz
+└── basis/
+    ├── Li.upf
+    ├── Li_gga_9au_100Ry_4s1p.orb
+    ├── La_ONCV_PBE-1.2.upf
+    ├── La_gga_9au_100Ry_4s2p2d1f.orb
+    ├── Zr_ONCV_PBE-1.0.upf
+    ├── Zr_gga_10au_100Ry_4s2p2d1f.orb
+    ├── O.upf
+    └── O_gga_6au_100Ry_2s2p1d.orb</code></pre><button class="copy-btn" data-copy-pre aria-label="Copy"><svg class="cp"><use href="#i-copy"/></svg><svg class="ok"><use href="#i-check"/></svg></button></div>
+<p>Start <code>gpumdkit.sh</code> and choose <strong>3 → 301 → 3</strong>. Enter the structure file, the output directory prefix and the basis directory.</p>
+<div class="code"><div class="cap"><i></i><i></i><i></i><span>text</span></div><pre><code>frames.xyz LLZO ./basis</code></pre><button class="copy-btn" data-copy-pre aria-label="Copy"><svg class="cp"><use href="#i-copy"/></svg><svg class="ok"><use href="#i-check"/></svg></button></div>
+<p>The script creates:</p>
+<div class="code"><div class="cap"><i></i><i></i><i></i><span>text</span></div><pre><code>current directory/
+├── fp/                 # put the shared INPUT (and KPT) here
+├── LLZO_1/
+│   ├── STRU            # this frame; species, masses, and file names filled in
+│   ├── INPUT -&gt; ../fp/INPUT
+│   └── KPT -&gt; ../fp/KPT
+├── LLZO_2/
+└── presub.sh</code></pre><button class="copy-btn" data-copy-pre aria-label="Copy"><svg class="cp"><use href="#i-copy"/></svg><svg class="ok"><use href="#i-check"/></svg></button></div>
+<p>Each <code>STRU</code> lists only the elements present in that frame, so structures with
+different compositions need no grouping. Lattice vectors and Cartesian
+positions are written in Angstrom with <code>LATTICE_CONSTANT 1.889726125457828</code>.</p>
 <h2 id="md-sampling-pretreatment">2. Prepare MD sampling directories</h2>
 <h3 id="gpumd-302">GPUMD (302)</h3>
-<p>Put <code>.vasp</code> files or one extxyz file in a dedicated working directory. The input
-selection rules are the same as for VASP preparation: <code>.vasp</code> files take
-precedence, and multiple <code>.xyz</code> files without <code>.vasp</code> require a choice.</p>
+<p>In a fresh working directory, provide one <code>.xyz</code> file or one or more <code>.vasp</code>
+files. The script rejects mixed formats and multiple XYZ files before moving
+any inputs.</p>
 <div class="code"><div class="cap"><i></i><i></i><i></i><span>bash</span></div><pre><code>gpumdkit.sh
 # choose 3 -&gt; 302</code></pre><button class="copy-btn" data-copy-pre aria-label="Copy"><svg class="cp"><use href="#i-copy"/></svg><svg class="ok"><use href="#i-check"/></svg></button></div>
 <p>Typical inputs are:</p>
@@ -233,8 +265,7 @@ precedence, and multiple <code>.xyz</code> files without <code>.vasp</code> requ
 sample directory links to them: <code>sample_1/run.in</code> points to <code>md/run_1.in</code>,
 <code>sample_2/run.in</code> to <code>md/run_2.in</code>, and so on.</p>
 <h3 id="lammps-303">LAMMPS (303)</h3>
-<p>Put <code>.vasp</code> files or one extxyz file in a dedicated working directory. When both
-formats are present, <code>.vasp</code> files take precedence.</p>
+<p>Use the same input rules as for GPUMD (302).</p>
 <div class="code"><div class="cap"><i></i><i></i><i></i><span>bash</span></div><pre><code>gpumdkit.sh
 # choose 3 -&gt; 303</code></pre><button class="copy-btn" data-copy-pre aria-label="Copy"><svg class="cp"><use href="#i-copy"/></svg><svg class="ok"><use href="#i-check"/></svg></button></div>
 <p>The script creates LAMMPS data files in <code>struct_md/</code>, sample directories, <code>md/</code>,
@@ -278,7 +309,7 @@ and <code>presub.sh</code>:</p>
 </ul>
 <p>Workflow scripts depend on your cluster, templates, and software versions, so try a few structures first. After the runs, look for failed or incomplete samples before continuing.</p>
 <h2 id="4-convert-the-results">4. Convert the results</h2>
-<p>After the DFT runs finish, convert them with <code>gpumdkit.sh -out2xyz &lt;dir&gt;</code> (VASP, writes <code>NEPdataset/train.xyz</code>), <code>-out2xyz_bec &lt;dir&gt;</code> (VASP with Born effective charges), or <code>-cp2k2xyz</code> (CP2K, run from the results root, writes <code>cp2k_exyz.xyz</code>). See <a href="format_conversion.html">Format Conversion</a> for details, and <a href="active_learning_workflow.html">Active Learning Workflow</a> for how these steps fit into a full NEP data iteration.</p><div class="doc-pn"><a href="structure_sampling.html"><small>Previous</small><b>Structure Sampling</b></a><a class="next" href="calculator_scripts.html"><small>Next</small><b>Calculator Scripts</b></a></div><a class="doc-edit" href="https://github.com/zhyan0603/GPUMDkit/edit/main/docs/tutorials/en/workflow_scripts.md" target="_blank" rel="noopener">Edit this page</a></article><nav class="doc-toc" aria-label="On this page"><h6>On this page</h6><a href="#interactive-entry" class="l2">Interactive Entry</a><a href="#scf-batch-pretreatment" class="l2">1. Prepare DFT single-point calculations</a><a href="#vasp-scf-preparation-301-1" class="l3">VASP SCF preparation (301 -&gt; 1)</a><a href="#cp2k-scf-preparation-301-2" class="l3">CP2K SCF preparation (301 -&gt; 2)</a><a href="#md-sampling-pretreatment" class="l2">2. Prepare MD sampling directories</a><a href="#gpumd-302" class="l3">GPUMD (302)</a><a href="#lammps-303" class="l3">LAMMPS (303)</a><a href="#a-worked-example-302-on-two-structures" class="l2">A Worked Example: 302 on Two Structures</a><a href="#3-check-before-running" class="l2">3. Check before running</a><a href="#4-convert-the-results" class="l2">4. Convert the results</a></nav></div>
+<p>After the DFT runs finish, convert them with <code>gpumdkit.sh -out2xyz &lt;dir&gt;</code> (VASP, writes <code>NEPdataset/train.xyz</code>), <code>-out2xyz_bec &lt;dir&gt;</code> (VASP with Born effective charges), <code>-cp2k2xyz</code> (CP2K, run from the results root, writes <code>cp2k_exyz.xyz</code>), or menu <code>104</code> -&gt; SCF (ABACUS, reads each <code>OUT.*/running_scf.log</code>, writes <code>NEPdataset/train.xyz</code>). See <a href="format_conversion.html">Format Conversion</a> for details, and <a href="active_learning_workflow.html">Active Learning Workflow</a> for how these steps fit into a full NEP data iteration.</p><div class="doc-pn"><a href="structure_sampling.html"><small>Previous</small><b>Structure Sampling</b></a><a class="next" href="calculator_scripts.html"><small>Next</small><b>Calculator Scripts</b></a></div><a class="doc-edit" href="https://github.com/zhyan0603/GPUMDkit/edit/main/docs/tutorials/en/workflow_scripts.md" target="_blank" rel="noopener">Edit this page</a></article><nav class="doc-toc" aria-label="On this page"><h6>On this page</h6><a href="#interactive-entry" class="l2">Interactive Entry</a><a href="#scf-batch-pretreatment" class="l2">1. Prepare DFT single-point calculations</a><a href="#vasp-scf-preparation-301-1" class="l3">VASP SCF preparation (301 -&gt; 1)</a><a href="#cp2k-scf-preparation-301-2" class="l3">CP2K SCF preparation (301 -&gt; 2)</a><a href="#abacus-scf-preparation-301-3" class="l3">ABACUS SCF preparation (301 -&gt; 3)</a><a href="#md-sampling-pretreatment" class="l2">2. Prepare MD sampling directories</a><a href="#gpumd-302" class="l3">GPUMD (302)</a><a href="#lammps-303" class="l3">LAMMPS (303)</a><a href="#a-worked-example-302-on-two-structures" class="l2">A Worked Example: 302 on Two Structures</a><a href="#3-check-before-running" class="l2">3. Check before running</a><a href="#4-convert-the-results" class="l2">4. Convert the results</a></nav></div>
 </main>
 
 <!-- ======================================================= footer -->

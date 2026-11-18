@@ -157,13 +157,13 @@ is not a number.
 gpumdkit.sh  # Select: 5) Analyzer -> 502
 
 # Non-interactive threshold mode also works
-python3 ${GPUMDkit_path}/Scripts/analyzer/find_outliers.py <energy_rmse_meV_atom> <force_rmse_meV_A> <stress_rmse_GPa>
+python ${GPUMDkit_path}/Scripts/analyzer/find_outliers.py <energy_rmse_meV_atom> <force_rmse_meV_A> <stress_rmse_GPa>
 
 # Required files in current directory:
 # - train.xyz
 # - energy_train.out
 # - force_train.out
-# - stress_train.out
+# - stress_train.out (optional)
 
 # Output: selected.xyz (high-error), remained.xyz (low-error)
 ```
@@ -174,7 +174,9 @@ the highest-error structures one at a time until the RMSE of the remaining set
 falls below the threshold; removed structures go to `selected.xyz`. Choose the
 thresholds with the user.
 
-Structures with a `-1e6` missing-stress marker or a stress component whose absolute value exceeds `1e6` are excluded from RMSE calculation and both output datasets. If none remain, the script reports an error without writing outputs.
+When stress labels are available, the stress threshold applies only to frames
+with valid labels. If there are no valid labels, the script screens by energy
+and force and still writes both datasets.
 
 ### Probability Density Analysis
 ```bash

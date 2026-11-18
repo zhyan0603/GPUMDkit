@@ -99,8 +99,8 @@
 <p>下面的命令在一个小型示意轨迹 <code>dump.xyz</code> 上运行：100 帧、每帧 54 个原子的 Li/S 晶胞。采样数量请按你自己的数据选择。</p>
 <p><strong>均匀地挑选 5 帧：</strong></p>
 <div class="code"><div class="cap"><i></i><i></i><i></i><span>bash</span></div><pre><code>python "${GPUMDkit_path}/Scripts/sample_structures/sample_structures.py" dump.xyz uniform 5</code></pre><button class="copy-btn" data-copy-pre aria-label="Copy"><svg class="cp"><use href="#i-copy"/></svg><svg class="ok"><use href="#i-check"/></svg></button></div>
-<div class="code"><div class="cap"><i></i><i></i><i></i><span>text</span></div><pre><code> All sampled frames written to sampled_structures.xyz</code></pre><button class="copy-btn" data-copy-pre aria-label="Copy"><svg class="cp"><use href="#i-copy"/></svg><svg class="ok"><use href="#i-check"/></svg></button></div>
-<p>在交互菜单中对应 <code>gpumdkit.sh</code> → <code>2</code> → <code>201</code>，输入 <code>dump.xyz uniform 5</code>。脚本总是写出 <code>sampled_structures.xyz</code>，再次运行前请先重命名结果。</p>
+<div class="code"><div class="cap"><i></i><i></i><i></i><span>text</span></div><pre><code> 5 sampled frames written to sampled_structures.xyz</code></pre><button class="copy-btn" data-copy-pre aria-label="Copy"><svg class="cp"><use href="#i-copy"/></svg><svg class="ok"><use href="#i-check"/></svg></button></div>
+<p>在交互菜单中对应 <code>gpumdkit.sh</code> → <code>2</code> → <code>201</code>，输入 <code>dump.xyz uniform 5</code>。脚本总是写出 <code>sampled_structures.xyz</code>，再次运行前请先重命名结果。同一帧不会被重复写出：请求的帧数超过可用帧数时，脚本写出全部可用帧并给出提示。</p>
 <p><strong>跳过开头若干帧并随机挑选：</strong></p>
 <div class="code"><div class="cap"><i></i><i></i><i></i><span>text</span></div><pre><code>dump.xyz random 5 20</code></pre><button class="copy-btn" data-copy-pre aria-label="Copy"><svg class="cp"><use href="#i-copy"/></svg><svg class="ok"><use href="#i-check"/></svg></button></div>
 <p>这会从前 20 帧之后的帧中随机挑选 5 帧，适合 MD 开头仍在平衡的情况。均匀和随机采样不考虑结构之间的差异；需要多样性时请使用 FPS（203）。</p>

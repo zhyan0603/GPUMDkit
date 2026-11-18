@@ -15,83 +15,20 @@
 # Last-modified: 2026-05-16
 # =============================================================================
 
+source "${GPUMDkit_path}/Scripts/workflow/md_sample_batch_pretreatment_gpumd.sh"
+
 function f303_md_sample_batch_pretreatment_lmp(){
+    local num_xyz_files i
     echo " ------------>>"
     echo " Starting MD sample batch pretreatment..."
+    prepare_md_structures || return 1
 
-    # Find all .vasp and .xyz files in the current directory
+    for ((i=1; i<=num_xyz_files; i++)); do
+        python "${GPUMDkit_path}/Scripts/format_conversion/exyz2lmp.py" \
+            "struct_md/model_${i}.xyz" "struct_md/lammps_${i}.data" || return 1
+    done
+    echo " $num_xyz_files lammps.data files were generated."
 
-    num_vasp_files=$(find . -maxdepth 1 -name "*.vasp" | wc -l)
-    num_xyz_files=$(find . -maxdepth 1 -name "*.xyz" | wc -l)
-
-	# Check if there are any .vasp files
-	if [ $num_vasp_files -gt 0 ]; then
-	    if [ $num_xyz_files -gt 0 ]; then
-	        echo " Notice: Found both .vasp and .xyz files in the current directory."
-	        echo " This workflow prioritizes .vasp files and will ignore .xyz files."
-	    fi
-	    # Create the struct directory and move .vasp files into it
-	    mkdir -p struct_md
-	    rename_seq=1
-	    total_vasp_num=$(ls -v *.vasp| wc -l)
-		for file in $(ls -v *.vasp); do
-		    new_vasp_name="POSCAR_${rename_seq}.vasp"
-		    new_xyz_name="model_${rename_seq}.xyz"
-			new_lmp_name="lammps_${rename_seq}.data"
-		    mv "${file}" "./struct_md/${new_vasp_name}"
-		    python "${GPUMDkit_path}/Scripts/format_conversion/pos2exyz.py" "./struct_md/${new_vasp_name}" "./struct_md/${new_xyz_name}"
-			python "${GPUMDkit_path}/Scripts/format_conversion/exyz2lmp.py" "./struct_md/${new_xyz_name}" "./struct_md/${new_lmp_name}"
-		    progress=$((rename_seq * 100 / total_vasp_num))
-		    echo -ne " Progress: ["
-		    for ((p=0; p<progress/2; p++)); do echo -ne "#"; done
-		    for ((p=progress/2; p<50; p++)); do echo -ne "."; done
-		    echo -ne "] $progress% ($rename_seq/$total_vasp_num)\r"
-		    rename_seq=$((rename_seq + 1))
-		done
-		num_lmp_files=$(find ./struct_md -maxdepth 1 -name "*.data" | wc -l)
-	else
-	    # Check available XYZ files
-	    if [ $num_xyz_files -ge 1 ]; then
-	        if [ $num_xyz_files -eq 1 ]; then
-	            xyz_file=$(find . -maxdepth 1 -name "*.xyz" | head -n 1)
-	            echo " No .vasp files found, but found one XYZ file: ${xyz_file#./}"
-	        else
-	            echo " No .vasp files found, but found multiple XYZ files:"
-	            select xyz_file in *.xyz; do
-	                if [ -n "$xyz_file" ]; then
-	                    break
-	                fi
-	                echo " Invalid selection. Please choose one XYZ file."
-	            done
-	            [ -n "$xyz_file" ] || { echo " Input closed. Exiting."; return 1; }
-	        fi
-	        echo " Splitting ${xyz_file#./} to model_*.xyz using GPUMDkit..."
-	        python ${GPUMDkit_path}/Scripts/format_conversion/split_single_xyz.py "$xyz_file"
-	        
-	        mkdir -p struct_md
-	        mv *.xyz ./struct_md
-			total_xyz_num=$(ls -v ./struct_md/model_*.xyz| wc -l)
-			for file in $(ls -v ./struct_md/model_*.xyz); do
-				seq=$(basename "$file" .xyz | sed 's/model_//')
-    			new_lmp_name="lammps_${seq}.data"
-				python ${GPUMDkit_path}/Scripts/format_conversion/exyz2lmp.py ./${file} ./struct_md/${new_lmp_name}
-				progress=$((seq * 100 / total_xyz_num))
-				echo -ne " Progress: ["
-				for ((p=0; p<progress/2; p++)); do echo -ne "#"; done
-				for ((p=progress/2; p<50; p++)); do echo -ne "."; done
-				echo -ne "] $progress% ($seq/$total_xyz_num)\r"
-			done
-	        num_lmp_files=$(find ./struct_md -maxdepth 1 -name "*.data" | wc -l)
-	        
-	    else
-	        echo " No .vasp files or .xyz files found."
-	        return 1
-	    fi
-	fi
-
-    echo " $num_lmp_files lammps.data files were generated."
-
-    # Ask user for directory name prefix
     echo " >-------------------------------------------------<"
     echo " | This function calls the script in Scripts       |"
     echo " | Script: md_sample_batch_pretreatment_lmp.sh     |"
@@ -101,8 +38,8 @@ function f303_md_sample_batch_pretreatment_lmp(){
     # Create md directory
     mkdir -p md
 
-    # Create individual directories for each .vasp file and set up the links
-    for i in $(seq 1 $num_lmp_files); do
+    # Create one sample directory per structure and set up the links
+    for i in $(seq 1 $num_xyz_files); do
         dir_name="sample_${i}"
         mkdir -p "${dir_name}"
         cd "${dir_name}"

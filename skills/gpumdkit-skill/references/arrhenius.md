@@ -55,8 +55,8 @@ compute_msd <sample_interval> <Nc> group <group_method> <group_id> [save_every <
 
 The exact ensemble and run lengths must come from the user-approved design. Reissue non-propagating compute/dump commands in the correct production run.
 
-For trajectory-based GPUMDkit MSD, verify fixed-cell unwrapped coordinates in
-the extxyz `pos` field and stable atom order as described in `calculators.md`.
+For trajectory-based GPUMDkit MSD, verify stable atom order and a frame interval
+short enough for periodic unwrapping, as described in `calculators.md`.
 Pass the time between stored frames to `-calc msd`:
 
 ```text
@@ -123,12 +123,15 @@ argument nor the plotting commands select a group automatically.
 
 ### Conductivity Arrhenius fit
 
-For a single mobile monovalent Li or Na species that satisfy the current script assumptions:
+For a single mobile species whose element and charge number the user has confirmed:
 
 ```bash
-gpumdkit.sh -plt arrhenius_sigma save
-gpumdkit.sh -plt sigma_xyz save
+gpumdkit.sh -plt arrhenius_sigma <element> <charge> save
+gpumdkit.sh -plt sigma_xyz <element> <charge> save
+gpumdkit.sh -plt sigma_PT <element> <charge> <transition_temperature> save
 ```
+
+Always pass `<element> <charge>` explicitly; when they are omitted the scripts prompt on stdin, which fails in non-interactive runs.
 
 These commands fit `log10(sigma*T)` versus `1000/T` and report activation energies. Inspect the current limitations below before using them.
 
@@ -151,7 +154,7 @@ Do not report a precise activation energy from an unvalidated fit merely because
 
 - `plt_arrhenius_d.py` and directional variant discover only integer `<temperature>K` directories and require usable `msd.out` files.
 - Arrhenius scripts use a fixed 40%-80% MSD fit interval.
-- `plt_arrhenius_sigma.py` and `plt_arrhenius_sigma_xyz.py` count only Li and Na from the first temperature's `model.xyz` and hard-code charge magnitude `z = 1`.
+- The conductivity scripts count only the requested element in the first temperature's `model.xyz` and apply the given charge number `z`. They warn, but do not stop, when the `compute_msd` group in `run.in` contains other species or only part of that element; resolve any such warning before reporting results.
 - Conductivity plotting reads replication from the first temperature's `run.in` and assumes the same ion count across the series.
 - The conductivity scripts extrapolate to 300 K. Ask the user whether that extrapolation is scientifically acceptable before presenting it as a result.
 - For other species, multivalent ions, mixed mobile species, changing compositions, or correlated conductivity, do not use the automatic conductivity Arrhenius scripts as though they were general. Use per-temperature verified calculations and a user-approved fitting method, or ask for a code change.

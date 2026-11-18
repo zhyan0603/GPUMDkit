@@ -113,12 +113,12 @@
 <h2 id="a-worked-example">A Worked Example</h2>
 <p>Every command below was run on a small illustrative file, <code>train.xyz</code>, with nine frames of a 16-atom cell. Each one writes a <strong>new</strong> file and leaves the input alone.</p>
 <div class="code"><div class="cap"><i></i><i></i><i></i><span>bash</span></div><pre><code>gpumdkit.sh -get_frame train.xyz 3</code></pre><button class="copy-btn" data-copy-pre aria-label="Copy"><svg class="cp"><use href="#i-copy"/></svg><svg class="ok"><use href="#i-check"/></svg></button></div>
-<div class="code"><div class="cap"><i></i><i></i><i></i><span>text</span></div><pre><code>Frame 3 has been successfully written to frame_3.xyz.</code></pre><button class="copy-btn" data-copy-pre aria-label="Copy"><svg class="cp"><use href="#i-copy"/></svg><svg class="ok"><use href="#i-check"/></svg></button></div>
+<div class="code"><div class="cap"><i></i><i></i><i></i><span>text</span></div><pre><code> Frame 3 has been successfully written to frame_3.xyz.</code></pre><button class="copy-btn" data-copy-pre aria-label="Copy"><svg class="cp"><use href="#i-copy"/></svg><svg class="ok"><use href="#i-check"/></svg></button></div>
 <div class="code"><div class="cap"><i></i><i></i><i></i><span>bash</span></div><pre><code>gpumdkit.sh -replicate train.xyz big.xyz 2 1 1</code></pre><button class="copy-btn" data-copy-pre aria-label="Copy"><svg class="cp"><use href="#i-copy"/></svg><svg class="ok"><use href="#i-check"/></svg></button></div>
-<div class="code"><div class="cap"><i></i><i></i><i></i><span>text</span></div><pre><code>Supercell: 2x1x1, Total atoms: 32
-Supercell created and saved to big.xyz</code></pre><button class="copy-btn" data-copy-pre aria-label="Copy"><svg class="cp"><use href="#i-copy"/></svg><svg class="ok"><use href="#i-check"/></svg></button></div>
+<div class="code"><div class="cap"><i></i><i></i><i></i><span>text</span></div><pre><code> Supercell: 2x1x1, Total atoms: 32
+ Supercell created and saved to big.xyz</code></pre><button class="copy-btn" data-copy-pre aria-label="Copy"><svg class="cp"><use href="#i-copy"/></svg><svg class="ok"><use href="#i-check"/></svg></button></div>
 <div class="code"><div class="cap"><i></i><i></i><i></i><span>bash</span></div><pre><code>gpumdkit.sh -addweight train.xyz w.xyz 2.0</code></pre><button class="copy-btn" data-copy-pre aria-label="Copy"><svg class="cp"><use href="#i-copy"/></svg><svg class="ok"><use href="#i-check"/></svg></button></div>
-<div class="code"><div class="cap"><i></i><i></i><i></i><span>text</span></div><pre><code>Weights in train.xyz have been updated and saved to w.xyz</code></pre><button class="copy-btn" data-copy-pre aria-label="Copy"><svg class="cp"><use href="#i-copy"/></svg><svg class="ok"><use href="#i-check"/></svg></button></div>
+<div class="code"><div class="cap"><i></i><i></i><i></i><span>text</span></div><pre><code> Weights in train.xyz have been updated and saved to w.xyz</code></pre><button class="copy-btn" data-copy-pre aria-label="Copy"><svg class="cp"><use href="#i-copy"/></svg><svg class="ok"><use href="#i-check"/></svg></button></div>
 <div class="code"><div class="cap"><i></i><i></i><i></i><span>bash</span></div><pre><code>gpumdkit.sh -frame_range train.xyz 0 0.5</code></pre><button class="copy-btn" data-copy-pre aria-label="Copy"><svg class="cp"><use href="#i-copy"/></svg><svg class="ok"><use href="#i-check"/></svg></button></div>
 <div class="code"><div class="cap"><i></i><i></i><i></i><span>text</span></div><pre><code> Extracted 4 frames from fraction 0.0 to 0.5
  Corresponding to frames 0 to 3
@@ -181,9 +181,9 @@ Input the function number or converter keyword:</code></pre><button class="copy-
 </tr>
 <tr>
 <td><code>104</code></td>
-<td><code>abacus2xyz_scf.sh</code> / <code>abacus2xyz_md.sh</code></td>
+<td><code>abacus2xyz_scf.py</code> / <code>abacus2xyz_md.py</code></td>
 <td>ABACUS to extxyz</td>
-<td>convert ABACUS SCF or MD output</td>
+<td>convert SCF or MD output to <code>NEPdataset/train.xyz</code></td>
 </tr>
 <tr>
 <td><code>105</code></td>
@@ -283,6 +283,7 @@ Input the function number or converter keyword:</code></pre><button class="copy-
 </tr>
 </tbody>
 </table></div>
+<p>For ABACUS SCF, the converter reads the lattice, coordinates, energy, forces, and available stress from <code>running_scf.log</code>. It uses <code>abacus.json</code> when the log is absent.</p>
 <h2 id="quick-command-reference">Quick Command Reference</h2>
 <div class="tbl-wrap"><table class="tbl">
 <thead>
@@ -369,14 +370,18 @@ Input the function number or converter keyword:</code></pre><button class="copy-
 <p>For a first conversion, use the POSCAR route because its two arguments make the
 data flow explicit:</p>
 <div class="code"><div class="cap"><i></i><i></i><i></i><span>text</span></div><pre><code>$ gpumdkit.sh -pos2exyz -h
- Usage: gpumdkit.sh -pos2exyz &lt;POSCAR&gt; &lt;output.xyz&gt;
+ Usage: gpumdkit.sh -pos2exyz &lt;POSCAR&gt; [&lt;POSCAR2&gt; ...] &lt;output.xyz&gt;
 
  Arguments:
    POSCAR       One or more VASP POSCAR files (supports wildcards)
-   output.xyz   Output extxyz file</code></pre><button class="copy-btn" data-copy-pre aria-label="Copy"><svg class="cp"><use href="#i-copy"/></svg><svg class="ok"><use href="#i-check"/></svg></button></div>
+   output.xyz   Output extxyz file (always the last argument)</code></pre><button class="copy-btn" data-copy-pre aria-label="Copy"><svg class="cp"><use href="#i-copy"/></svg><svg class="ok"><use href="#i-check"/></svg></button></div>
 <p><code>POSCAR</code> is the input structure name; <code>output.xyz</code> is the extxyz file created by
-the command. Shell wildcards are expanded by your shell, so check the matched
-filenames before converting a group of files. After conversion, a lightweight
+the command. Several POSCAR files can be given before the output name, for
+example <code>gpumdkit.sh -pos2exyz POSCAR_*.vasp output.xyz</code>. The output must end
+in <code>.xyz</code> or <code>.extxyz</code>. A quoted pattern such as
+<code>"POSCAR_*.vasp"</code> is read in natural order (<code>POSCAR_2</code> before <code>POSCAR_10</code>),
+whereas an unquoted one follows the order given by your shell, so check the
+matched filenames before converting a group of files. After conversion, a lightweight
 format check is:</p>
 <div class="code"><div class="cap"><i></i><i></i><i></i><span>bash</span></div><pre><code>head -n 2 output.xyz</code></pre><button class="copy-btn" data-copy-pre aria-label="Copy"><svg class="cp"><use href="#i-copy"/></svg><svg class="ok"><use href="#i-check"/></svg></button></div>
 <p>The first line is the atom count. The second line contains extxyz metadata such

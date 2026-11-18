@@ -94,7 +94,7 @@ calculate_times() {
         # Estimated end time
         current_time=$(date +%s)
         end_time_seconds=$(awk -v ct="$current_time" -v rt="$remaining_time" 'BEGIN {print int(ct + rt)}')
-        end_time=$(date -d "@$end_time_seconds" "+%Y-%m-%d %H:%M:%S")
+        end_time=$(date -d "@$end_time_seconds" "+%Y-%m-%d %H:%M:%S" 2>/dev/null || date -r "$end_time_seconds" "+%Y-%m-%d %H:%M:%S")
     else
         total_time="0h 0m 0s"
         remaining_time_str="0h 0m 0s"

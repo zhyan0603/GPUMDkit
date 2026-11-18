@@ -12,22 +12,23 @@ Purpose:    Find outlier structures in NEP training data based on RMSE
             are saved to selected.xyz, and the remaining to remained.xyz.
 Usage:      gpumdkit.sh
             choose 502) Find outliers of extxyz
-            python find_outliers.py [energy_thresh_meV force_thresh_meV stress_thresh_GPa]
+            python find_outliers.py [energy_thresh_meV force_thresh_meV [stress_thresh_GPa]]
 Arguments:
   energy_thresh_meV  (optional) Energy RMSE threshold in meV/atom
   force_thresh_meV   (optional) Force RMSE threshold in meV/Angstrom
-  stress_thresh_GPa  (optional) Stress RMSE threshold in GPa
+  stress_thresh_GPa  (optional) Stress RMSE threshold in GPa; omit it to skip
+                     stress screening when thresholds are given on the command line
 Input files:
   train.xyz          Training structures
   energy_train.out   NEP vs DFT energy per structure
   force_train.out    NEP vs DFT force components
-  stress_train.out   NEP vs DFT stress components
+  stress_train.out   NEP vs DFT stress components (optional)
 Output:
   selected.xyz       High-error structures
   remained.xyz       Structures below all thresholds
   selected_remained.png  Comparison plot
 Author:     Zihan YAN (yanzihan@westlake.edu.cn)
-Last-modified: 2026-05-16
+Last-modified: 2026-11-11
 =============================================================================
 """
 
@@ -38,18 +39,18 @@ import os
 def print_usage():
     print(" Usage: gpumdkit.sh")
     print("        choose 502) Find outliers of extxyz")
-    print("    or: python find_outliers.py [energy_thresh_meV force_thresh_meV stress_thresh_GPa]")
+    print("    or: python find_outliers.py [energy_thresh_meV force_thresh_meV [stress_thresh_GPa]]")
     print("")
     print(" Arguments:")
     print("   energy_thresh_meV  Optional energy RMSE threshold in meV/atom")
     print("   force_thresh_meV   Optional force RMSE threshold in meV/Angstrom")
-    print("   stress_thresh_GPa  Optional stress RMSE threshold in GPa")
+    print("   stress_thresh_GPa  Optional stress RMSE threshold in GPa (omit to skip stress screening)")
     print("")
     print(" Input files:")
     print("   train.xyz")
     print("   energy_train.out")
     print("   force_train.out")
-    print("   stress_train.out")
+    print("   stress_train.out  (optional)")
     print("")
     print(" Output:")
     print("   selected.xyz")
@@ -65,16 +66,17 @@ args = sys.argv[1:]
 if args and args[0] in ("-h", "--help"):
     print_usage()
     sys.exit(0)
-if args and len(args) < 3:
+if args and len(args) not in (2, 3):
     print_usage()
     sys.exit(1)
 
 energy_thresh = force_thresh = stress_thresh = None
-if len(args) >= 3:
+if args:
     try:
         energy_thresh = float(args[0]) / 1000  # Convert meV/atom to eV/atom
         force_thresh = float(args[1]) / 1000   # Convert meV/Angstrom to eV/Angstrom
-        stress_thresh = float(args[2])         # GPa, no conversion needed
+        if len(args) == 3:
+            stress_thresh = float(args[2])     # GPa, no conversion needed
     except ValueError:
         print(" Error: thresholds must be numbers.")
         print("")
@@ -127,18 +129,18 @@ def calculate_rmse(pred, actual):
     return np.sqrt(np.mean((pred - actual) ** 2))
 
 # Generalized select outliers
-def select_outliers(rmse_func, err_func, thresh, n_struct):
+def select_outliers(rmse_func, err_func, thresh, candidates):
     """
     Iteratively removes structures with the highest errors until the RMSE is below the threshold.
     Args:
         rmse_func: Function to compute RMSE for the current set of structures.
         err_func: Function to compute per-structure errors for ranking.
         thresh: RMSE threshold (in meV/atom for energy, meV/Å for force, GPa for stress).
-        n_struct: Total number of structures.
+        candidates: Original frame indices eligible for this error metric.
     Returns:
         A set of indices of structures to be selected (high-error structures).
     """
-    indices = list(range(n_struct))
+    indices = list(candidates)
     selected = set()
     current_rmse = rmse_func(indices)
     if current_rmse <= thresh:
@@ -152,12 +154,10 @@ def select_outliers(rmse_func, err_func, thresh, n_struct):
     return selected
 
 # Load data
-required_files = ['energy_train.out', 'force_train.out', 'stress_train.out', 'train.xyz']
+required_files = ['energy_train.out', 'force_train.out', 'train.xyz']
 for f in required_files:
-    if not os.path.exists(f):
-        print(f"Error: Required file '{f}' not found.")
-        print(f"Please ensure the following files exist in the current directory:")
-        print(f"  train.xyz, energy_train.out, force_train.out, stress_train.out")
+    if not os.path.isfile(f):
+        print(f" Error: required file '{f}' not found.")
         sys.exit(1)
 
 import matplotlib.pyplot as plt
@@ -165,66 +165,65 @@ import numpy as np
 
 energy_train = np.loadtxt('energy_train.out', ndmin=2)
 force_train = np.loadtxt('force_train.out', ndmin=2)
-stress_train = np.loadtxt('stress_train.out', ndmin=2)
 natoms_list, frames = parse_xyz('train.xyz')
-
-# Filter out rows with invalid stress data.  The prediction command uses the
-# exact -1e6 sentinel when both stress and virial targets are missing.
-invalid_stress = (
-    np.any(np.abs(stress_train[:, :12]) > 1e6, axis=1)
-    | np.any(stress_train[:, :12] == -1e6, axis=1)
-)
-valid_struct = ~invalid_stress
-if not np.any(valid_struct):
-    print(" Error: no structures with valid stress data remain.")
-    sys.exit(1)
-
-# Filter energy and stress
-energy_train = energy_train[valid_struct]
-stress_train = stress_train[valid_struct]
-
-# Filter force
-cum_old = np.cumsum([0] + natoms_list)
-force_keep = []
-start = 0
-for i, valid in enumerate(valid_struct):
-    end = start + natoms_list[i]
-    if valid:
-        force_keep.extend(range(start, end))
-    start = end
-force_train = force_train[force_keep]
-
-# Filter natoms and frames
-natoms_list = [natoms_list[i] for i in range(len(valid_struct)) if valid_struct[i]]
-frames = [frames[i] for i in range(len(valid_struct)) if valid_struct[i]]
-
 n_struct = len(natoms_list)
 cum = np.cumsum([0] + natoms_list)
+if not n_struct or energy_train.shape != (n_struct, 2) or force_train.shape != (cum[-1], 6):
+    print(" Error: energy_train.out or force_train.out does not match train.xyz.")
+    sys.exit(1)
+
+stress_train = np.zeros((n_struct, 12))
+valid_stress = np.zeros(n_struct, dtype=bool)
+if os.path.isfile('stress_train.out') and os.path.getsize('stress_train.out') > 0:
+    stress_train = np.loadtxt('stress_train.out', ndmin=2)
+    if stress_train.shape != (n_struct, 12):
+        print(" Error: stress_train.out does not match train.xyz.")
+        sys.exit(1)
+    valid_stress = np.all(
+        np.isfinite(stress_train) & (np.abs(stress_train) <= 1e6) & (stress_train != -1e6),
+        axis=1,
+    )
+stress_indices = np.flatnonzero(valid_stress)
+if not len(stress_indices):
+    print(" No valid stress labels. Screening by energy and force.")
 
 if energy_thresh is None:
-    # Prompt for manual input if command-line arguments are not provided
-    energy_thresh = float(input(" Enter energy RMSE threshold (meV/atom): ")) / 1000  # Convert to eV/atom
-    force_thresh = float(input(" Enter force RMSE threshold (meV/Å): ")) / 1000      # Convert to eV/Å
-    stress_thresh = float(input(" Enter stress RMSE threshold (GPa): "))             # No conversion needed
+    try:
+        energy_thresh = float(input(" Enter energy RMSE threshold (meV/atom): ")) / 1000
+        force_thresh = float(input(" Enter force RMSE threshold (meV/Å): ")) / 1000
+        if len(stress_indices):
+            stress_thresh = float(input(" Enter stress RMSE threshold (GPa): "))
+    except (EOFError, ValueError):
+        print(" Error: enter numeric RMSE thresholds.")
+        sys.exit(1)
+elif stress_thresh is None and len(stress_indices):
+    print(" No stress threshold given. Screening by energy and force.")
 
-# Define funcs for energy
 energy_rmse_func = lambda inds: calculate_rmse(energy_train[inds, 0], energy_train[inds, 1])
 energy_err_func = lambda inds: np.abs(energy_train[inds, 0] - energy_train[inds, 1])
 
-# For stress
-stress_rmse_func = lambda inds: np.mean([calculate_rmse(stress_train[inds, i], stress_train[inds, i+6]) for i in range(6)]) if inds else 0.0
-stress_err_func = lambda inds: np.array([np.sqrt(np.mean((stress_train[j, 0:6] - stress_train[j, 6:12])**2)) for j in inds])
+stress_rmse_func = lambda inds: np.mean([calculate_rmse(stress_train[inds, i], stress_train[inds, i+6]) for i in range(6)])
+stress_err_func = lambda inds: np.sqrt(np.mean((stress_train[inds, :6] - stress_train[inds, 6:12]) ** 2, axis=1))
 
-# For force
-force_rmse_func = lambda inds: (
-    np.mean([calculate_rmse(fr[:, i], fr[:, i+3]) for i in range(3)]) if (fr := np.vstack([force_train[cum[j]:cum[j+1]] for j in inds] if inds else [])) is not None and len(fr) > 0 else 0.0
+# Sum the squared force errors per frame once. Dataset RMSE still weights each atom equally.
+atom_counts = np.asarray(natoms_list)
+force_sq = (force_train[:, :3] - force_train[:, 3:6]) ** 2
+force_sq_by_frame = np.asarray([force_sq[start:end].sum(axis=0)
+                                for start, end in zip(cum[:-1], cum[1:])])
+force_frame_rmse = np.sqrt(force_sq_by_frame.mean(axis=1) / atom_counts)
+
+def force_rmse_func(indices):
+    if not indices:
+        return 0.0
+    return np.sqrt(force_sq_by_frame[indices].sum(axis=0) / atom_counts[indices].sum()).mean()
+
+all_indices = range(n_struct)
+selected_energy = select_outliers(energy_rmse_func, energy_err_func, energy_thresh, all_indices)
+selected_force = select_outliers(force_rmse_func, lambda inds: force_frame_rmse[inds], force_thresh, all_indices)
+selected_stress = (
+    select_outliers(stress_rmse_func, stress_err_func, stress_thresh, stress_indices)
+    if len(stress_indices) and stress_thresh is not None else set()
 )
-force_err_func = lambda inds: np.array([np.sqrt(np.mean((force_train[cum[j]:cum[j+1], 0:3] - force_train[cum[j]:cum[j+1], 3:6])**2)) for j in inds])
-
-# Select
-selected_energy = select_outliers(energy_rmse_func, energy_err_func, energy_thresh, n_struct)
-selected_stress = select_outliers(stress_rmse_func, stress_err_func, stress_thresh, n_struct)
-selected_force = select_outliers(force_rmse_func, force_err_func, force_thresh, n_struct)
 
 # Union
 selected_all = selected_energy | selected_stress | selected_force
@@ -256,8 +255,8 @@ def calculate_limits(data1, data2, padding=0.08):
 fig, axs = plt.subplots(1, 3, figsize=(12, 3.3), dpi=100)
 
 # Energy plot
-energy_left = energy_train[left_indices]
-energy_select = energy_train[selected_indices]
+energy_left = energy_train[left_indices] if left_indices else np.empty((0, 2))
+energy_select = energy_train[selected_indices] if selected_indices else np.empty((0, 2))
 xmin_energy, xmax_energy = calculate_limits(energy_train[:, 1], energy_train[:, 0])
 axs[0].set_xlim(xmin_energy, xmax_energy)
 axs[0].set_ylim(xmin_energy, xmax_energy)
@@ -296,28 +295,34 @@ else:
 axs[1].text(0.35, 0.1, rf'RMSE (Rem): {mean_force_rmse:.2f} meV/Å', transform=axs[1].transAxes, fontsize=10, verticalalignment='center')
 
 # Stress plot
-stress_left = stress_train[left_indices]
-stress_select = stress_train[selected_indices]
-xmin_stress, xmax_stress = calculate_limits(stress_train[:, 6:12].reshape(-1), stress_train[:, 0:6].reshape(-1))
-axs[2].set_xlim(xmin_stress, xmax_stress)
-axs[2].set_ylim(xmin_stress, xmax_stress)
-axs[2].plot(stress_left[:, 6:12].reshape(-1), stress_left[:, 0:6].reshape(-1), '.', markersize=10, label='Remained', color=Remained_color)
-axs[2].plot(stress_select[:, 6:12].reshape(-1), stress_select[:, 0:6].reshape(-1), '.', markersize=10, label='Selected', color=selected_color)
-axs[2].plot([xmin_stress, xmax_stress], [xmin_stress, xmax_stress], linewidth=1, color='red')
-axs[2].set_xlabel('DFT stress (GPa)', fontsize=10)
-axs[2].set_ylabel('NEP stress (GPa)', fontsize=10)
-axs[2].tick_params(axis='both', labelsize=10)
-axs[2].legend(frameon=False)
-
-# RMSE for stress
-if len(stress_left) > 0:
-    stress_rmse_comps = [calculate_rmse(stress_left[:, i], stress_left[:, i + 6]) for i in range(6)]
-    mean_stress_rmse = np.mean(stress_rmse_comps)
+if not len(stress_indices):
+    axs[2].axis('off')
+    axs[2].text(0.5, 0.5, 'No reference stress', ha='center', va='center')
 else:
-    mean_stress_rmse = 0.0
-axs[2].text(0.4, 0.1, f'RMSE (Rem): {mean_stress_rmse:.3f} GPa', transform=axs[2].transAxes, fontsize=10, verticalalignment='center')
+    stress_left_idx = [i for i in left_indices if valid_stress[i]]
+    stress_select_idx = [i for i in selected_indices if valid_stress[i]]
+    stress_left = stress_train[stress_left_idx] if stress_left_idx else np.empty((0, 12))
+    stress_select = stress_train[stress_select_idx] if stress_select_idx else np.empty((0, 12))
+    xmin_stress, xmax_stress = calculate_limits(stress_train[valid_stress, 6:12].reshape(-1), stress_train[valid_stress, 0:6].reshape(-1))
+    axs[2].set_xlim(xmin_stress, xmax_stress)
+    axs[2].set_ylim(xmin_stress, xmax_stress)
+    axs[2].plot(stress_left[:, 6:12].reshape(-1), stress_left[:, 0:6].reshape(-1), '.', markersize=10, label='Remained', color=Remained_color)
+    axs[2].plot(stress_select[:, 6:12].reshape(-1), stress_select[:, 0:6].reshape(-1), '.', markersize=10, label='Selected', color=selected_color)
+    axs[2].plot([xmin_stress, xmax_stress], [xmin_stress, xmax_stress], linewidth=1, color='red')
+    axs[2].set_xlabel('DFT stress (GPa)', fontsize=10)
+    axs[2].set_ylabel('NEP stress (GPa)', fontsize=10)
+    axs[2].tick_params(axis='both', labelsize=10)
+    axs[2].legend(frameon=False)
 
-# Adjust layout
+    # RMSE for stress
+    if len(stress_left) > 0:
+        stress_rmse_comps = [calculate_rmse(stress_left[:, i], stress_left[:, i + 6]) for i in range(6)]
+        mean_stress_rmse = np.mean(stress_rmse_comps)
+    else:
+        mean_stress_rmse = 0.0
+    axs[2].text(0.4, 0.1, f'RMSE (Rem): {mean_stress_rmse:.3f} GPa', transform=axs[2].transAxes, fontsize=10, verticalalignment='center')
+
+    # Adjust layout
 plt.tight_layout()
 fig.subplots_adjust(top=0.968, bottom=0.16, left=0.086, right=0.983, hspace=0.2, wspace=0.25)
 plt.savefig('selected_remained.png', dpi=300)

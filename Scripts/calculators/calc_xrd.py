@@ -11,7 +11,7 @@ Category:   Calculator
 Purpose:    Calculate and average LAMMPS-compatible XRD intensities from
             extended XYZ trajectories.
 Usage:      gpumdkit.sh -> 4) Calculators -> 413) X-ray diffraction (XRD)
-            python3 Scripts/calculators/calc_xrd.py
+            python Scripts/calculators/calc_xrd.py
 Arguments:  None. All values are collected through the interactive prompts.
 Interactive inputs:
   The input trajectory, output file, wavelength, two-theta range, bin count,
@@ -1153,7 +1153,7 @@ def interactive_inputs() -> tuple[str, str, XRDConfig, int]:
 def _print_help() -> None:
     """Print the interactive-only usage information."""
     print(" Usage: gpumdkit.sh -> 4) Calculators -> 413) Calc XRD")
-    print("    or: python3 Scripts/calculators/calc_xrd.py")
+    print("    or: python Scripts/calculators/calc_xrd.py")
     print("")
     print(" This calculator has no command-line calculation interface.")
     print(" It asks for the trajectory, output, wavelength, 2theta range, bins,")

@@ -131,7 +131,7 @@ This script converts all frames in an `extxyz` file to `POSCAR` format.
 #### Usage
 
 ```sh
-python3 exyz2pos.py <extxyz_file>
+python exyz2pos.py <extxyz_file>
 ```
 
 #### Example

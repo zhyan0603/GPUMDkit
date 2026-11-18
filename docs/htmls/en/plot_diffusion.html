@@ -182,20 +182,30 @@ activation energy of each component.</p>
 <hr />
 <div class="admonition note">
 <p class="admonition-title">Assumptions of the conductivity plots (sigma, sigma_PT, sigma_xyz)</p>
-<p>These conductivity plots use the first temperature's <code>model.xyz</code> to count Li and
-Na together, assume unit charge, and apply the same ion count and replication
-across temperatures. Use them for one mobile Li or Na species with matching MSD
-columns; other species, mixed carriers, or changing composition require a
-separate calculation. They fit the 40%–80% MSD interval and extrapolate
-conductivity to 300 K using the Nernst–Einstein relation. Validate the diffusive
-interval and the extrapolation range before interpreting the results.</p>
+<p>These conductivity plots count the atoms of the given mobile element in the
+first temperature's <code>model.xyz</code>, use the given charge number, and apply the
+same ion count and replication across temperatures. Use them for one mobile
+species with matching MSD columns; mixed carriers or changing composition
+require a separate calculation. They fit the 40%–80% MSD interval and
+extrapolate conductivity to 300 K using the Nernst–Einstein relation.
+The temperature is taken from the folder name and the volume is the mean over
+the whole <code>thermo.out</code>, whereas <code>gpumdkit.sh -calc ionic-cond</code> averages the
+temperature and volume over the last half of <code>thermo.out</code>, so the two
+conductivities can differ slightly. Validate the diffusive interval and the
+extrapolation range before interpreting the results.</p>
 </div>
 <h3 id="sigma-plt_arrhenius_sigmapy">sigma (<code>plt_arrhenius_sigma.py</code>)</h3>
 <p>Creates Arrhenius plot for ionic conductivity (log10(σ·T) vs 1000/T).</p>
 <p><strong>Input Files:</strong> <code>thermo.out</code> and <code>msd.out</code> in each <code>*K/</code> directory;
 <code>model.xyz</code> and optional <code>run.in</code> in the first temperature directory</p>
-<div class="code"><div class="cap"><i></i><i></i><i></i><span>bash</span></div><pre><code>gpumdkit.sh -plt arrhenius_sigma
-gpumdkit.sh -plt sigma         # Alternative command</code></pre><button class="copy-btn" data-copy-pre aria-label="Copy"><svg class="cp"><use href="#i-copy"/></svg><svg class="ok"><use href="#i-check"/></svg></button></div>
+<p>The mobile ion species and its charge number <code>z</code> are required by the Nernst-Einstein
+conversion. Give them after the command (for example <code>Li 1</code>, <code>Na 1</code>, <code>H 1</code>, or <code>Mg 2</code>);
+if they are omitted, the script asks for both on one line (for example <code>Li 1</code>). Only atoms
+of that element in the first <code>model.xyz</code> are counted, multiplied by any <code>replicate</code> factor.
+When <code>run.in</code> contains <code>compute_msd</code>, the script warns if its MSD group does not contain
+exactly that species.</p>
+<div class="code"><div class="cap"><i></i><i></i><i></i><span>bash</span></div><pre><code>gpumdkit.sh -plt arrhenius_sigma Li 1
+gpumdkit.sh -plt sigma Li 1 save   # Alternative command; omit "Li 1" to be prompted</code></pre><button class="copy-btn" data-copy-pre aria-label="Copy"><svg class="cp"><use href="#i-copy"/></svg><svg class="ok"><use href="#i-check"/></svg></button></div>
 <div align="center">
   <img src="../../Gallery/Arrhenius_sigma.png" alt="Arrhenius ionic conductivity" width="58%" />
 </div>
@@ -207,8 +217,10 @@ The transition-temperature point is included in both the <code>LowT</code> (<cod
 The 300 K conductivity is extrapolated from the branch on the same side of the transition as 300 K.</p>
 <p><strong>Input Files:</strong> <code>thermo.out</code> and <code>msd.out</code> in each <code>*K/</code> directory;
 <code>model.xyz</code> and optional <code>run.in</code> in the first temperature directory</p>
-<div class="code"><div class="cap"><i></i><i></i><i></i><span>bash</span></div><pre><code>gpumdkit.sh -plt sigma_PT 380
-gpumdkit.sh -plt sigma_PT 380 save</code></pre><button class="copy-btn" data-copy-pre aria-label="Copy"><svg class="cp"><use href="#i-copy"/></svg><svg class="ok"><use href="#i-check"/></svg></button></div>
+<p>The element and charge come before the transition temperature, as for <code>sigma</code>;
+if they are omitted (<code>gpumdkit.sh -plt sigma_PT 380</code>), the script asks for them.</p>
+<div class="code"><div class="cap"><i></i><i></i><i></i><span>bash</span></div><pre><code>gpumdkit.sh -plt sigma_PT Li 1 380
+gpumdkit.sh -plt sigma_PT Li 1 380 save</code></pre><button class="copy-btn" data-copy-pre aria-label="Copy"><svg class="cp"><use href="#i-copy"/></svg><svg class="ok"><use href="#i-check"/></svg></button></div>
 <p>The legend reports the activation energy of each branch as <code>HighT (xx eV)</code> and <code>LowT (xx eV)</code>.</p>
 <div align="center">
   <img src="../../Gallery/Arrhenius_sigma_PT.png" alt="Phase-transition Arrhenius ionic conductivity" width="58%" />
@@ -221,8 +233,10 @@ folders for the x/y/z directions, plots the directional Arrhenius relationship,
 and extracts the activation energy of each direction using the Nernst-Einstein
 relation.</p>
 <p><strong>Input Files:</strong> <code>thermo.out</code> and <code>msd.out</code> in each <code>*K/</code> directory;
-<code>model.xyz</code> in the first temperature directory</p>
-<div class="code"><div class="cap"><i></i><i></i><i></i><span>bash</span></div><pre><code>gpumdkit.sh -plt sigma_xyz</code></pre><button class="copy-btn" data-copy-pre aria-label="Copy"><svg class="cp"><use href="#i-copy"/></svg><svg class="ok"><use href="#i-check"/></svg></button></div><div class="doc-pn"><a href="plot_md_structure.html"><small>Previous</small><b>MD and Structure</b></a><a class="next" href="plot_heat_phonon.html"><small>Next</small><b>Heat Transport and Phonons</b></a></div><a class="doc-edit" href="https://github.com/zhyan0603/GPUMDkit/edit/main/docs/tutorials/en/plot_diffusion.md" target="_blank" rel="noopener">Edit this page</a></article><nav class="doc-toc" aria-label="On this page"><h6>On this page</h6><a href="#diffusion-and-ionic-transport" class="l2">Diffusion and Ionic Transport</a><a href="#msd-plt_msdpy" class="l3">msd (plt_msd.py)</a><a href="#msd_all-plt_msd_allpy" class="l3">msd_all (plt_msd_all.py)</a><a href="#msd_conv-plt_msd_convergence_checkpy" class="l3">msd_conv (plt_msd_convergence_check.py)</a><a href="#sdc-plt_sdcpy" class="l3">sdc (plt_sdc.py)</a><a href="#msd_sdc-plt_msd_sdcpy" class="l3">msd_sdc (plt_msd_sdc.py)</a><a href="#d-plt_arrhenius_dpy" class="l3">D (plt_arrhenius_d.py)</a><a href="#d_pt-plt_arrhenius_d_ptpy" class="l3">D_PT (plt_arrhenius_d_PT.py)</a><a href="#d_xyz-plt_arrhenius_d_xyzpy" class="l3">D_xyz (plt_arrhenius_d_xyz.py)</a><a href="#sigma-plt_arrhenius_sigmapy" class="l3">sigma (plt_arrhenius_sigma.py)</a><a href="#sigma_pt-plt_arrhenius_sigma_ptpy" class="l3">sigma_PT (plt_arrhenius_sigma_PT.py)</a><a href="#sigma_xyz-plt_arrhenius_sigma_xyzpy" class="l3">sigma_xyz (plt_arrhenius_sigma_xyz.py)</a></nav></div>
+<code>model.xyz</code> and optional <code>run.in</code> in the first temperature directory</p>
+<p>The element and charge arguments work as for <code>sigma</code>.</p>
+<div class="code"><div class="cap"><i></i><i></i><i></i><span>bash</span></div><pre><code>gpumdkit.sh -plt sigma_xyz Li 1
+gpumdkit.sh -plt sigma_xyz Li 1 save</code></pre><button class="copy-btn" data-copy-pre aria-label="Copy"><svg class="cp"><use href="#i-copy"/></svg><svg class="ok"><use href="#i-check"/></svg></button></div><div class="doc-pn"><a href="plot_md_structure.html"><small>Previous</small><b>MD and Structure</b></a><a class="next" href="plot_heat_phonon.html"><small>Next</small><b>Heat Transport and Phonons</b></a></div><a class="doc-edit" href="https://github.com/zhyan0603/GPUMDkit/edit/main/docs/tutorials/en/plot_diffusion.md" target="_blank" rel="noopener">Edit this page</a></article><nav class="doc-toc" aria-label="On this page"><h6>On this page</h6><a href="#diffusion-and-ionic-transport" class="l2">Diffusion and Ionic Transport</a><a href="#msd-plt_msdpy" class="l3">msd (plt_msd.py)</a><a href="#msd_all-plt_msd_allpy" class="l3">msd_all (plt_msd_all.py)</a><a href="#msd_conv-plt_msd_convergence_checkpy" class="l3">msd_conv (plt_msd_convergence_check.py)</a><a href="#sdc-plt_sdcpy" class="l3">sdc (plt_sdc.py)</a><a href="#msd_sdc-plt_msd_sdcpy" class="l3">msd_sdc (plt_msd_sdc.py)</a><a href="#d-plt_arrhenius_dpy" class="l3">D (plt_arrhenius_d.py)</a><a href="#d_pt-plt_arrhenius_d_ptpy" class="l3">D_PT (plt_arrhenius_d_PT.py)</a><a href="#d_xyz-plt_arrhenius_d_xyzpy" class="l3">D_xyz (plt_arrhenius_d_xyz.py)</a><a href="#sigma-plt_arrhenius_sigmapy" class="l3">sigma (plt_arrhenius_sigma.py)</a><a href="#sigma_pt-plt_arrhenius_sigma_ptpy" class="l3">sigma_PT (plt_arrhenius_sigma_PT.py)</a><a href="#sigma_xyz-plt_arrhenius_sigma_xyzpy" class="l3">sigma_xyz (plt_arrhenius_sigma_xyz.py)</a></nav></div>
 </main>
 
 <!-- ======================================================= footer -->

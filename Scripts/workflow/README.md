@@ -7,7 +7,7 @@
 
 Workflow scripts automate repetitive tasks in computational materials research:
 
-- **SCF batch preprocessing**: Set up VASP/CP2K single-point energy calculations
+- **SCF batch preprocessing**: Set up VASP/CP2K/ABACUS single-point energy calculations
 - **MD sampling**: Prepare molecular dynamics simulations with GPUMD/LAMMPS
 - **Active learning support**: Reusable SCF/MD preparation steps for a manually reviewed iteration
 
@@ -59,15 +59,25 @@ For CP2K, enter `3) Workflow`, then `301) SCF batch pretreatment`, and choose th
 
 The repository provides `Scripts/workflow/cp2k_template.inp` as a starting template.
 
+For ABACUS, choose the ABACUS branch (`301 -> 3`). The script asks for:
+
+```text
+<extxyz_file> <prefix> <basis_dir>
+```
+
+For LCAO, `basis_dir` must contain exactly one `.upf` and one `.orb` per element
+present in the extxyz, each named with the element symbol first (for
+example `Li_ONCV_PBE-1.0.upf`). Each `<prefix>_<index>/` gets its own `STRU`
+(only that frame's elements, Angstrom coordinates) and links to the shared
+`fp/INPUT` and `fp/KPT`. Write `fp/INPUT` yourself with at least `calculation scf`,
+`cal_force 1`, `cal_stress 1` and `basis_type lcao`. Set both `pseudo_dir` and
+`orbital_dir` to the basis directory. Convert the finished runs with menu `104`.
+
 
 
 ### 302) MD sample batch pretreatment (GPUMD)
 
-This entry prepares GPUMD MD sampling folders. Start from `.vasp` structures, or from one selected `.xyz` trajectory/structure file if no `.vasp` files are present.
-
-- If `.vasp` files are present, they are converted to extxyz files and processed.
-- If both `.vasp` and `.xyz` files are present, only `.vasp` files are processed.
-- If multiple `.xyz` files are detected without `.vasp` files, the script asks which one to use.
+In a fresh working directory, provide one `.xyz` file (one or more frames) or one or more `.vasp` files. Mixed formats and multiple XYZ files are rejected before any files are moved.
 
 After running, put `nep.txt` and `run_*.in` files into the generated `md/` directory. The sample folders link `run_1.in`, `run_2.in`, ... as their `run.in`.
 

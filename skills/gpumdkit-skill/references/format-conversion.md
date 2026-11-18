@@ -84,7 +84,7 @@ gpumdkit.sh -traj2exyz input.traj output.xyz
 
 ```bash
 # MTP cfg to extxyz
-python3 ${GPUMDkit_path}/Scripts/format_conversion/mtp2xyz.py train.cfg Pd Ag
+python ${GPUMDkit_path}/Scripts/format_conversion/mtp2xyz.py train.cfg Pd Ag
 
 # Run in the CP2K results root: recursively read logs and structure files
 # Outputs in the current directory: cp2k_exyz.xyz and Logfile.txt
@@ -121,7 +121,7 @@ input file and type-map order are forwarded to the script directly. The same
 conversion can be called directly with Python:
 
 ```
-python3 ${GPUMDkit_path}/Scripts/format_conversion/xyz2dp.py train.xyz Li P S
+python ${GPUMDkit_path}/Scripts/format_conversion/xyz2dp.py train.xyz Li P S
 ```
 
 The input should contain labeled extxyz energy and force data. The output is

@@ -300,7 +300,9 @@ gpumdkit.sh -min_dist_pbc dump.xyz
 
 This script is used to find outliers in training data based on RMSE thresholds for energy, force, and stress.
 
-Structures containing a `-1e6` missing-stress marker or a stress component with an absolute value above `1e6` are excluded from RMSE calculation and both output datasets. If none remain, the script reports an error without writing outputs.
+When stress labels are available, the stress threshold applies only to frames
+with valid labels. If there are no valid labels, the script screens by energy
+and force and still writes both datasets.
 
 #### Usage
 

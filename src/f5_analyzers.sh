@@ -30,11 +30,11 @@ echo " | This function calls the script in analyzer      |"
 echo " | Script: find_outliers.py                        |"
 echo " | Developer: Zihan YAN (yanzihan@westlake.edu.cn) |"
 echo " >-------------------------------------------------<"
-echo " Input the threshold of RMSE to identify outliers"
-echo " Required files: train.xyz, energy_train.out, force_train.out, stress_train.out"
-echo " The script will ask for energy (meV/atom), force (meV/Angstrom), and stress (GPa) thresholds."
+echo " Find structures with large NEP prediction errors"
+echo " Required files: train.xyz, energy_train.out, force_train.out (stress_train.out is optional)"
+echo " Enter energy and force thresholds, and a stress threshold when labels are available."
 echo " ---------------------------------------------------"
-python ${GPUMDkit_path}/Scripts/analyzer/find_outliers.py
+python "${GPUMDkit_path}/Scripts/analyzer/find_outliers.py" || return 1
 echo " Code path: ${GPUMDkit_path}/Scripts/analyzer/find_outliers.py"
 echo " ---------------------------------------------------"
 }
@@ -192,7 +192,7 @@ echo " Input the function number:"
 
 valid_menu_choices=("000" "501" "502" "503" "504" "505" "506" "507" "508" "509")
 read_menu_choice num_choice || return 1
-while ! echo "${valid_menu_choices[@]}" | grep -wq "$num_choice" 
+while ! printf '%s\n' "${valid_menu_choices[@]}" | grep -Fxq -- "$num_choice"
 do
   echo " ------------>>"
   echo " Please reinput function number..."

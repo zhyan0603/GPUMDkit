@@ -10,7 +10,7 @@ cd $SLURM_SUBMIT_DIR
 # source your submit_template.sh script
 # It is recommended that you copy it to another path,
 # otherwise there will be code conflicts when use 'git pull' command to update GPUMDkit.
-source ${GPUMDkit_path}/Scripts/workflow/submit_template.sh  
+source "${GPUMDkit_path}/Scripts/workflow/submit_template.sh"
 python_pynep=python  # python executable for deprecated pynep branch if needed
 
 work_dir=${PWD}  # work directory
@@ -23,7 +23,7 @@ pynep_sample_dist=0.01  # distance for pynep sampling
 
 # print some info
 echo "********************************************" 
-echo $(date -d "2 second" +"%Y-%m-%d %H:%M:%S")  
+echo "$(date +"%Y-%m-%d %H:%M:%S")"
 echo "WORK_DIR =" ${work_dir} 
 echo "********************************************" 
 
@@ -43,19 +43,21 @@ if [ -f nep.txt ] && [ -f nep.in ] && [ -f train.xyz ] && [ "$(find . -maxdepth 
     echo "Starting the workflow:"
 else
     echo "Please put nep.in nep.txt train.xyz run_*.in (eg. run_1.in, run_2.in, ...) INCAR POTCAR [KPOINTS] and the sample_struct.xyz in the current directory."
+    exit 1
 fi
 
 cd ${work_dir}
-mkdir 00.md common
+mkdir 00.md common || exit 1
 mv ${work_dir}/{nep.txt,nep.in,*.xyz,run_*.in,INCAR,KPOINTS,POTCAR} ./common
 cp ${work_dir}/common/$sample_xyz_file ${work_dir}/00.md
 cd ${work_dir}/00.md
-(echo 3; echo 302) | gpumdkit.sh >> /dev/null
+(echo 3; echo 302) | gpumdkit.sh || exit 1
+sample_struct_num=$(find . -maxdepth 1 -type d -name 'sample_*' | wc -l)
 ln -s ${work_dir}/common/{nep.txt,run_*.in} ${work_dir}/00.md/md
-echo $(date -d "2 second" +"%Y-%m-%d %H:%M:%S") "Starting 00.md step ..." 
+echo "$(date +"%Y-%m-%d %H:%M:%S")" "Starting 00.md step ..."
 submit_gpumd_array md ${sample_struct_num}
-sbatch submit.slurm
-echo $(date -d "2 second" +"%Y-%m-%d %H:%M:%S") "${sample_struct_num} tasks had been submitted."
+sbatch submit.slurm || exit 1
+echo "$(date +"%Y-%m-%d %H:%M:%S")" "${sample_struct_num} tasks had been submitted."
 
 # Wait for all tasks to finish
 while true; do
@@ -64,7 +66,7 @@ while true; do
     error_tasks_md=$(grep "Error" $logs | wc -l)
 
     if [ "$error_tasks_md" -ne 0 ]; then
-        echo $(date -d "2 second" +"%Y-%m-%d %H:%M:%S") "Error: MD simulation encountered an error. Exiting..." 
+        echo "$(date +"%Y-%m-%d %H:%M:%S")" "Error: MD simulation encountered an error. Exiting..."
         grep "Error" sample_*/log 
         exit 1
     fi
@@ -74,48 +76,57 @@ while true; do
     sleep 30
 done
 
-echo $(date -d "2 second" +"%Y-%m-%d %H:%M:%S") "All md tasks have finished. Starting analysis ..." 
+echo "$(date +"%Y-%m-%d %H:%M:%S")" "All md tasks have finished. Starting analysis ..."
 
 mkdir ${work_dir}/01.select
 ln -s ${work_dir}/common/{train.xyz,nep.txt} ${work_dir}/01.select
 cat sample_*/dump.xyz >> ${work_dir}/01.select/md_sampled_structs.xyz
 
-echo $(date -d "2 second" +"%Y-%m-%d %H:%M:%S") "Analysis the min_dist in md_sampled_structs.xyz" 
-actual_min_dist=$( gpumdkit.sh -min_dist ${work_dir}/01.select/md_sampled_structs.xyz | tail -1 | awk '{print $4}')
+echo "$(date +"%Y-%m-%d %H:%M:%S")" "Analysis the min_dist in md_sampled_structs.xyz"
+min_dist_output=$(gpumdkit.sh -min_dist "${work_dir}/01.select/md_sampled_structs.xyz") || exit 1
+actual_min_dist=$(printf '%s\n' "$min_dist_output" | awk '/Overall min_distance:/ {print $3}')
+if [ -z "$actual_min_dist" ]; then
+    echo " Error: failed to determine overall minimum distance."
+    exit 1
+fi
 
-if [ $(awk 'BEGIN {print ('$actual_min_dist' < '$min_dist')}') -eq 1 ]; then
+cd "${work_dir}/01.select" || exit 1
+if [ "$actual_min_dist" = "N/A" ]; then
+    echo "No interatomic pairs found (min_distance is N/A); skipping minimum-distance filtering."
+elif [ "$(awk -v a="$actual_min_dist" -v b="$min_dist" 'BEGIN {print (a < b)}')" -eq 1 ]; then
     echo "The actual minimum distance ($actual_min_dist) between two atoms is less than the specified value ($min_dist)."
     echo "Filtering the structs based on the min_dist you specified."
-    cd ${work_dir}/01.select
     gpumdkit.sh -filter_dist md_sampled_structs.xyz ${min_dist}
-    echo $(date -d "2 second" +"%Y-%m-%d %H:%M:%S") "Analysis the box in md_sampled_structs.xyz" 
     mv filtered_md_sampled_structs.xyz md_sampled_structs.xyz
-    gpumdkit.sh -filter_box md_sampled_structs.xyz ${box_limit}
-    echo "The box limit is $box_limit. filtered structs are saved in filtered_by_box.xyz"
 else
-    echo "The actual minimum distance ($actual_min_dist) between two atoms is greater than the specified value ($min_dist)."
-    echo $(date -d "2 second" +"%Y-%m-%d %H:%M:%S") "Analysis the box in md_sampled_structs.xyz" 
-    cd ${work_dir}/01.select
-    gpumdkit.sh -filter_box md_sampled_structs.xyz ${box_limit}
-    echo "The box limit is $box_limit. filtered structs are saved in filtered_by_box.xyz"
+    echo "The actual minimum distance ($actual_min_dist) meets the specified minimum ($min_dist)."
+fi
+
+echo "$(date +"%Y-%m-%d %H:%M:%S")" "Analysis the box in md_sampled_structs.xyz"
+gpumdkit.sh -filter_box md_sampled_structs.xyz "${box_limit}" || exit 1
+echo "The box limit is $box_limit. filtered structs are saved in filtered_by_box.xyz"
+
+if [ ! -s filtered_by_box.xyz ]; then
+    echo " Error: no structures passed the cell-size filter."
+    exit 1
 fi
 
 # Check the value of sample_method
 case $sample_method in
     "uniform")
-        echo $(date -d "2 second" +"%Y-%m-%d %H:%M:%S") "Performing uniform sampling..." 
+        echo "$(date +"%Y-%m-%d %H:%M:%S")" "Performing uniform sampling..."
         (echo 2; echo 201; echo "filtered_by_box.xyz ${sample_method} ${max_fp_num}") | gpumdkit.sh >> /dev/null
         mv sampled_structures.xyz selected.xyz
         selected_struct_num=$(grep -c Lat selected.xyz)
         ;;
     "random")
-        echo $(date -d "2 second" +"%Y-%m-%d %H:%M:%S") "Performing random sampling..." 
+        echo "$(date +"%Y-%m-%d %H:%M:%S")" "Performing random sampling..."
         (echo 2; echo 201; echo "filtered_by_box.xyz ${sample_method} ${max_fp_num}") | gpumdkit.sh >> /dev/null
         mv sampled_structures.xyz selected.xyz
         selected_struct_num=$(grep -c Lat selected.xyz)
         ;;
     "pynep")
-        echo $(date -d "2 second" +"%Y-%m-%d %H:%M:%S") "Performing pynep sampling..." 
+        echo "$(date +"%Y-%m-%d %H:%M:%S")" "Performing pynep sampling..."
         # This function still needs to be improved in the future. 
         (echo "filtered_by_box.xyz train.xyz nep.txt 1"; echo 1; echo ${pynep_sample_dist}) | gpumdkit.sh -pynep >> /dev/null
         #${python_pynep} ${GPUMDkit_path}/Scripts/sample_structures/pynep_select_structs.py filtered_by_box.xyz train.xyz nep.txt ${pynep_sample_dist}
@@ -133,21 +144,33 @@ case $sample_method in
         ;;
 esac
 
-echo $(date -d "2 second" +"%Y-%m-%d %H:%M:%S") "The number of selected structures is $selected_struct_num." 
+echo "$(date +"%Y-%m-%d %H:%M:%S")" "The number of selected structures is $selected_struct_num."
 
 # Continue 02.scf step
-echo $(date -d "2 second" +"%Y-%m-%d %H:%M:%S") "01.select have finished. Start 02.scf:" 
-mkdir ${work_dir}/02.scf
-cd ${work_dir}/02.scf
-mv ${work_dir}/01.select/selected.xyz .
-echo $(date -d "2 second" +"%Y-%m-%d %H:%M:%S") "Filter structs by distance considering pbc." 
-gpumdkit.sh -min_dist_pbc selected.xyz ${min_dist}
-mv filtered_selected.xyz selected.xyz
-(echo 3; echo 301; echo "${prefix_name}") | gpumdkit.sh >> /dev/null
+echo "$(date +"%Y-%m-%d %H:%M:%S")" "01.select have finished. Start 02.scf:"
+mkdir "${work_dir}/02.scf" || exit 1
+cd "${work_dir}/02.scf" || exit 1
+mv "${work_dir}/01.select/selected.xyz" . || exit 1
+echo "$(date +"%Y-%m-%d %H:%M:%S")" "Filter structs by distance considering pbc."
+gpumdkit.sh -filter_dist_pbc selected.xyz "${min_dist}" || exit 1
+if [ ! -s filtered_selected.xyz ]; then
+    echo " Error: no structures passed the PBC distance filter."
+    exit 1
+fi
+mv filtered_selected.xyz selected.xyz || exit 1
+selected_struct_num=$(grep -c Lat selected.xyz)
+# 301 -> VASP. If there are rejected frames, selected.xyz is the second XYZ choice.
+{
+    printf '3\n301\n1\n'
+    if [ -f filtered_out_selected.xyz ]; then
+        printf '2\n'
+    fi
+    printf '%s\n' "$prefix_name"
+} | gpumdkit.sh || exit 1
 ln -s ${work_dir}/common/{INCAR,POTCAR,KPOINTS} ./fp
 submit_vasp_array scf ${selected_struct_num} ${prefix_name}
-sbatch submit.slurm
-echo $(date -d "2 second" +"%Y-%m-%d %H:%M:%S") "${selected_struct_num} tasks had been submitted."
+sbatch submit.slurm || exit 1
+echo "$(date +"%Y-%m-%d %H:%M:%S")" "${selected_struct_num} tasks had been submitted."
 
 # Wait for all tasks to finish
 while true; do
@@ -159,15 +182,19 @@ while true; do
     sleep 30
 done
 
-echo $(date -d "2 second" +"%Y-%m-%d %H:%M:%S") "All scf tasks have finished. Starting prediction ..." 
+echo "$(date +"%Y-%m-%d %H:%M:%S")" "All scf tasks have finished. Starting prediction ..."
 echo "---------------------------------------"
-gpumdkit.sh -out2xyz .
+gpumdkit.sh -out2xyz . || exit 1
+if [ ! -s NEPdataset/train.xyz ]; then
+    echo " Error: no VASP structures were converted to NEPdataset/train.xyz."
+    exit 1
+fi
 echo "---------------------------------------"
-cd NEPdataset-multiple_frames
+cd NEPdataset
 mkdir prediction
 cd prediction
 ln -s ${work_dir}/common/nep.txt .
-ln -s ../NEP-dataset.xyz ./train.xyz
+ln -s ../train.xyz ./train.xyz
 cp ${work_dir}/common/nep.in .
 
 if ! grep -q "prediction" nep.in; then
@@ -175,6 +202,6 @@ if ! grep -q "prediction" nep.in; then
 fi
 
 submit_nep_prediction
-sbatch submit.slurm
-gpumdkit.sh -plt prediction save
-echo $(date -d "2 second" +"%Y-%m-%d %H:%M:%S") "Prediction finished."
+sbatch --wait submit.slurm || exit 1
+gpumdkit.sh -plt prediction save || exit 1
+echo "$(date +"%Y-%m-%d %H:%M:%S")" "Prediction finished."

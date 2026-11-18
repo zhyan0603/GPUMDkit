@@ -18,6 +18,7 @@
 |---|---|---|
 | SCF 批处理（VASP） | 301 -> 1 | 准备 VASP 单点计算目录 |
 | SCF 批处理（CP2K） | 301 -> 2 | 准备 CP2K 单点计算目录 |
+| SCF 批处理（ABACUS） | 301 -> 3 | 由 extxyz 准备 ABACUS 单点计算目录 |
 | MD 批处理（GPUMD） | 302 | 准备 GPUMD MD 采样目录 |
 | MD 批处理（LAMMPS） | 303 | 准备 LAMMPS MD 采样目录 |
 
@@ -77,11 +78,42 @@ gpumdkit.sh  # 选择：3) Workflow -> 301 -> 2) CP2K
 CP2K 模板必须从 `pos.xyz` 读取坐标。工具写出
 `<prefix>_<index>/input.inp` 和 `pos.xyz`，只准备文件，不提交 CP2K。
 
+### ABACUS SCF 批处理
+
+优先使用正式菜单入口：
+
+```bash
+gpumdkit.sh  # 选择：3) Workflow -> 301 -> 3) ABACUS
+```
+
+交互提示需要：
+
+```text
+<extxyz_file> <prefix> <basis_dir>
+```
+
+输入为一个带晶格信息的 extxyz 文件。对于 LCAO，`basis_dir` 中每种用到的元素
+必须恰好有一个 `.upf` 文件和一个 `.orb` 文件。文件名必须以元素符号开头
+（能区分 `S_*` 和 `Si_*`）。某种元素没有匹配或
+匹配到多个文件时，脚本报错退出。赝势和轨道的选择属于科学输入：应询问用户，
+不能替用户挑选文件。
+
+工具写出 `<prefix>_<index>/STRU`（只含该帧元素，使用 ASE 原子质量，晶格矢量和
+笛卡尔坐标以 Å 表示，`LATTICE_CONSTANT 1.889726125457828`），创建链接
+`INPUT -> ../fp/INPUT` 和 `KPT -> ../fp/KPT`，创建 `fp/`，并写出 `presub.sh`
+模板。工具不写 `INPUT`；用户需在 `fp/INPUT` 中至少提供 `calculation scf`、
+`cal_force 1`、`cal_stress 1` 和 `basis_type lcao`，并将 `pseudo_dir` 和
+`orbital_dir` 都设为基组目录（绝对路径，或相对各计算目录的路径）。
+提供 `fp/KPT` 或设置 `kspacing`。
+不同组分无需分组。计算完成后用菜单 `104` -> SCF 转换，它读取
+`OUT.*/running_scf.log` 和 `../STRU`，输出 `NEPdataset/train.xyz`。只准备文件，
+不提交 ABACUS。
+
 ## MD 采样批处理准备
 
 ### GPUMD MD 批处理
 
-1. 把 `.vasp` 结构或一个选定的 extxyz 文件放入专用工作目录。
+1. 在新目录中提供一个 `.xyz` 文件，或一组 `.vasp` 文件。脚本会拒绝混合格式和多个 XYZ 文件。
 2. 运行：
 
 ```bash
@@ -239,7 +271,8 @@ gpumdkit.sh  # Select: 2) Sample Structures -> 203) FPS by NepTrain
    目录、`struct_fp/` 和 `fp/`，再将批准的 `INCAR`、`POTCAR`（或分组 POTCAR）
    及其他输入放入 `fp/`。`INCAR` 已批准使用 `KSPACING` 时，不要求 `KPOINTS`；
    检查没有意外残留的 KPOINTS 覆盖它。CP2K 则在 301 提示时提供要求的已批准
-   模板，见前述 CP2K 部分。
+   模板，见前述 CP2K 部分。ABACUS 在 301 提示时提供 extxyz 文件和已批准的
+   赝势/轨道目录，随后提供已批准的 `fp/INPUT`（及 `fp/KPT`），见前述 ABACUS 部分。
 3. 检查输入/元素顺序、链接、入选帧到计算目录的映射、资源和任务数。在用户
    执行授权范围内才运行 DFT。
 4. 逐个检查入选构型对应任务、完成状态、电子收敛、有限标签和几何对应关系。
@@ -250,6 +283,7 @@ gpumdkit.sh  # Select: 2) Sample Structures -> 203) FPS by NepTrain
 ```bash
 gpumdkit.sh -out2xyz <accepted_scf_results_directory>
 gpumdkit.sh -cp2k2xyz  # CP2K 替代路径：在结果根目录运行，递归扫描日志，输出 cp2k_exyz.xyz
+# ABACUS 替代路径：gpumdkit.sh 菜单 104 -> 1) SCF，输出 NEPdataset/train.xyz
 # Inspect the actual extxyz output from the chosen converter
 gpumdkit.sh -range <new_reference.xyz> energy
 gpumdkit.sh -range <new_reference.xyz> force

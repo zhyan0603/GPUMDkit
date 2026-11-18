@@ -11,7 +11,7 @@ Purpose:    Convert DeepMD npy datasets under a directory to extended XYZ
             format using dpdata. Recursively finds type.raw + set.000
             directories and converts all frames into a single extxyz file.
 Usage:      gpumdkit.sh -dp2xyz <input_dir/> [output.xyz]
-            python3 dp2xyz.py <input_dir/> [output.xyz]
+            python dp2xyz.py <input_dir/> [output.xyz]
 Arguments:
   input_dir/    Directory to scan recursively for DeepMD npy datasets
   output.xyz    Output extxyz file (default: train.xyz)
@@ -28,7 +28,7 @@ import sys
 args = sys.argv[1:]
 if len(args) < 1 or args[0] in ("-h", "--help"):
     print(" Usage: gpumdkit.sh -dp2xyz <input_dir/> [output.xyz]")
-    print("    or: python3 dp2xyz.py <input_dir/> [output.xyz]")
+    print("    or: python dp2xyz.py <input_dir/> [output.xyz]")
     print("")
     print(" Arguments:")
     print("   input_dir/    Directory to scan recursively for DeepMD npy datasets")

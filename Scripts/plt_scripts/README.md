@@ -390,13 +390,17 @@ gpumdkit.sh -plt D_xyz [save]
 
 ---
 
-These conductivity plots use the first temperature's `model.xyz` to count Li
-and Na together, assume unit charge, and apply the same ion count and replication
-across temperatures. Use them for one mobile Li or Na species with matching MSD
-columns; other species, mixed carriers, or changing composition require a separate
-calculation. They fit the 40%–80% MSD interval and extrapolate conductivity to
-300 K using the Nernst–Einstein relation. Validate the diffusive interval and the
-extrapolation range before interpreting the results.
+These conductivity plots count the atoms of the given mobile element in the
+first temperature's `model.xyz`, use the given charge number, and apply the same
+ion count and replication across temperatures. Use them for one mobile species
+with matching MSD columns; mixed carriers or changing composition require a
+separate calculation. They fit the 40%–80% MSD interval and extrapolate
+conductivity to 300 K using the Nernst–Einstein relation. The temperature is
+taken from the folder name and the volume is the mean over the whole
+`thermo.out`, whereas `gpumdkit.sh -calc ionic-cond` averages the temperature
+and volume over the last half of `thermo.out`, so the two conductivities can
+differ slightly. Validate the diffusive interval and the extrapolation range
+before interpreting the results.
 
 #### plt_arrhenius_sigma.py
 
@@ -408,9 +412,14 @@ Creates Arrhenius plot for ionic conductivity (log10(σ·T) vs 1000/T).
 **Usage:**
 
 ```bash
-gpumdkit.sh -plt arrhenius_sigma
-gpumdkit.sh -plt sigma         # Alternative command
+gpumdkit.sh -plt arrhenius_sigma Li 1
+gpumdkit.sh -plt sigma Li 1 save   # Alternative command
 ```
+
+`<element> <charge>` (for example `Li 1`, `H 1`, `Mg 2`) select the mobile ion counted
+in the first `model.xyz` and its charge number. If they are omitted, the script asks
+for both on one line. It warns when the `compute_msd` group in `run.in` does not
+contain exactly that species.
 
 <div align="center">
     <img src="../../docs/Gallery/Arrhenius_sigma.png" alt="Arrhenius sigma" width="55%" />
@@ -430,9 +439,11 @@ The 300 K conductivity is extrapolated from the branch on the same side of the t
 **Usage:**
 
 ```bash
-gpumdkit.sh -plt sigma_PT 380
-gpumdkit.sh -plt sigma_PT 380 save
+gpumdkit.sh -plt sigma_PT Li 1 380
+gpumdkit.sh -plt sigma_PT Li 1 380 save
 ```
+
+The element and charge work as for `plt_arrhenius_sigma.py` and are asked for when omitted.
 
 The plot legend reports the activation energy of each branch as `HighT (xx eV)` and `LowT (xx eV)`.
 
@@ -454,13 +465,16 @@ folders, plots the Arrhenius relationship for the x/y/z directions, and
 extracts the activation energy for each direction using the
 Nernst-Einstein relation.
 
-**Input File:** `<T>K/msd.out` and `<T>K/thermo.out` folders for a temperature series
+**Input File:** `<T>K/msd.out` and `<T>K/thermo.out` folders for a temperature series,
+plus `model.xyz` and optional `run.in` in the first temperature folder
 
 **Usage:**
 
 ```bash
-gpumdkit.sh -plt sigma_xyz [save]
+gpumdkit.sh -plt sigma_xyz Li 1 [save]
 ```
+
+The element and charge work as for `plt_arrhenius_sigma.py` and are asked for when omitted.
 
 ---
 

@@ -3,24 +3,29 @@ function update_gpumdkit(){
 # Save the caller's working directory so it can be restored on success.
 __update_orig_pwd="$PWD"
 
-# Check if in a Git repository; if not, try to switch to GPUMDkit_path
+# Always update the GPUMDkit installation itself, never the Git repository
+# that happens to contain the caller's working directory.
+if [ -z "$GPUMDkit_path" ]; then
+    echo " Error: GPUMDkit_path environment variable is not set."
+    exit 1
+fi
+if [ ! -d "$GPUMDkit_path" ]; then
+    echo " Error: Directory $GPUMDkit_path does not exist."
+    exit 1
+fi
+cd "$GPUMDkit_path" || {
+    echo " Error: Failed to change directory to $GPUMDkit_path."
+    exit 1
+}
 if ! git rev-parse --is-inside-work-tree > /dev/null 2>&1; then
-    if [ -z "$GPUMDkit_path" ]; then
-        echo " Error: Not in a Git repository and GPUMDkit_path environment variable is not set."
-        exit 1
-    fi
-    if [ ! -d "$GPUMDkit_path" ]; then
-        echo " Error: Directory $GPUMDkit_path does not exist."
-        exit 1
-    fi
-    cd "$GPUMDkit_path" || {
-        echo " Error: Failed to change directory to $GPUMDkit_path."
-        exit 1
-    }
-    if ! git rev-parse --is-inside-work-tree > /dev/null 2>&1; then
-        echo " Error: $GPUMDkit_path is not a Git repository."
-        exit 1
-    fi
+    echo " Error: $GPUMDkit_path is not a Git repository."
+    cd "$__update_orig_pwd" 2>/dev/null
+    exit 1
+fi
+if [ "$(cd "$(git rev-parse --show-toplevel)" && pwd -P)" != "$(pwd -P)" ]; then
+    echo " Error: $GPUMDkit_path is not the top level of a Git repository."
+    cd "$__update_orig_pwd" 2>/dev/null
+    exit 1
 fi
 
 # Get current branch name

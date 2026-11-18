@@ -10,7 +10,7 @@ Category:   Utilities
 Purpose:    Check the GPUMDkit Python environment and report available common
             and feature-specific packages without importing them.
 Usage:      gpumdkit.sh -doctor
-            python3 doctor.py
+            python doctor.py
 Arguments:
   None
 Output:
@@ -103,7 +103,7 @@ if __name__ == "__main__":
     if len(sys.argv) > 1:
         if sys.argv[1] in ("-h", "--help"):
             print(" Usage: gpumdkit.sh -doctor")
-            print("    or: python3 doctor.py")
+            print("    or: python doctor.py")
             print("")
             print(" Checks the GPUMDkit path, Python and Bash versions, and Python packages.")
             sys.exit(0)

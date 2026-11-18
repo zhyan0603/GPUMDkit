@@ -144,6 +144,7 @@ def beautify_axes(ax):
 
 def add_marginal_distributions(ax, true, pred, color, bins=35):
     divider = make_axes_locatable(ax)
+    divider.set_aspect(True)
 
     ax_top = divider.append_axes("top", size="14%", pad=0, sharex=ax)
     ax_right = divider.append_axes("right", size="14%", pad=0, sharey=ax)
@@ -190,7 +191,22 @@ def add_residual_inset(ax, residuals, color):
     # Moved upward to avoid overlapping with main x-axis labels
     ax_inset = ax.inset_axes([0.60, 0.20, 0.28, 0.18])
 
-    ax_inset.hist(residuals, bins=28, color=color, alpha=0.70, edgecolor='gray', linewidth=0.6)
+    limit = np.max(np.abs(residuals))
+    grid = np.linspace(-1.05 * limit, 1.05 * limit, 256)
+
+    density = None
+    if gaussian_kde is not None:
+        try:
+            density = gaussian_kde(residuals)(grid)
+        except (np.linalg.LinAlgError, ValueError):
+            pass
+
+    if density is not None:
+        ax_inset.fill_between(grid, density, color=color, alpha=0.70, linewidth=0)
+        ax_inset.plot(grid, density, color=color, linewidth=1.0)
+        ax_inset.set_ylim(bottom=0)
+    else:
+        ax_inset.hist(residuals, bins=28, color=color, alpha=0.70, edgecolor='gray', linewidth=0.6)
 
     mean_res = np.mean(residuals)
     ax_inset.axvline(mean_res, color='k', linestyle='--', linewidth=1.0)
@@ -203,7 +219,6 @@ def add_residual_inset(ax, residuals, color):
                   color=color, fontsize=9, fontweight='bold')
 
     # Symmetric limits with three ticks (-t, 0, t) so the tick labels never overlap
-    limit = np.max(np.abs(residuals))
     tick = float(f'{0.7 * limit:.1g}')
     ax_inset.set_xlim(-1.05 * limit, 1.05 * limit)
     ax_inset.set_xticks([-tick, 0.0, tick])
@@ -253,7 +268,7 @@ def plot_parity_with_marginals(ax, true, pred, xlabel, ylabel, color, mae_text, 
 # =========================
 # Figure and colors - Changed to 1x3 layout
 # =========================
-fig, axs = plt.subplots(1, 3, figsize=(12, 4.0), dpi=100)
+fig, axs = plt.subplots(1, 3, figsize=(11.6, 3.65), dpi=100)
 
 energy_color = '#1f77b4'   # blue
 force_color = '#2ca02c'    # green
@@ -352,15 +367,14 @@ for i, ax in enumerate(axs.flat):
             ha='left',
             va='bottom')
 
-plt.tight_layout()
-plt.subplots_adjust(wspace=0.2)
+plt.subplots_adjust(left=0.078, right=0.986, bottom=0.155, top=0.963, wspace=0.32)
 
 if len(sys.argv) > 1 and sys.argv[1] == 'save':
-    plt.savefig('prediction.png', dpi=300, bbox_inches='tight')
+    plt.savefig('prediction.png', dpi=300)
 else:
     from matplotlib import get_backend
     if get_backend().lower() in ['agg', 'cairo', 'pdf', 'ps', 'svg']:
         print("Non-interactive backend detected. Plot saved as 'prediction.png'.")
-        plt.savefig('prediction.png', dpi=300, bbox_inches='tight')
+        plt.savefig('prediction.png', dpi=300)
     else:
         plt.show()

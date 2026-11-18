@@ -22,7 +22,9 @@ elif [[ "$SHELL" != *bash* ]]; then
 fi
 if ! touch "$RC_FILE" 2>/dev/null; then
     echo " Error: cannot write to ${RC_FILE}. Please check the file permissions."
-    exit 1
+    # 'return' stops a sourced script without closing the user's shell;
+    # 'exit' is the fallback when the script is executed directly.
+    return 1 2>/dev/null || exit 1
 fi
 echo " [2/4] Detecting shell configuration..."
 echo "       Target: ${RC_FILE}"
@@ -87,7 +89,7 @@ write_gpumdkit_config() {
 
     if [ $? -ne 0 ]; then
         echo " Error: failed to write the configuration to ${RC_FILE}."
-        exit 1
+        return 1
     fi
     echo "       Success: Environment variables added."
 }
@@ -109,15 +111,15 @@ if grep -q "export GPUMDkit_path=" "$RC_FILE"; then
     fi
 
     if [[ "$replace_config" == [yY]* ]]; then
-        backup_rc_file || exit 1
-        remove_old_gpumdkit_config || exit 1
-        write_gpumdkit_config
+        backup_rc_file || { return 1 2>/dev/null || exit 1; }
+        remove_old_gpumdkit_config || { return 1 2>/dev/null || exit 1; }
+        write_gpumdkit_config || { return 1 2>/dev/null || exit 1; }
     else
         echo "       Keeping existing GPUMDkit configuration."
     fi
 else
-    backup_rc_file || exit 1
-    write_gpumdkit_config
+    backup_rc_file || { return 1 2>/dev/null || exit 1; }
+    write_gpumdkit_config || { return 1 2>/dev/null || exit 1; }
 fi
 
 # 4. Set executable permissions

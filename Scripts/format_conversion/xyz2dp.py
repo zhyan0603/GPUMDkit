@@ -11,7 +11,7 @@ Category:   Format Conversion Scripts
 Purpose:    Convert a labeled extended XYZ file to a DeepMD-kit npy dataset.
             The user supplies the element order used by the DeepMD type map.
 Usage:      gpumdkit.sh -xyz2dp <input.xyz> <type1> <type2> ...
-            python3 xyz2dp.py <input.xyz> <type1> <type2> ...
+            python xyz2dp.py <input.xyz> <type1> <type2> ...
 Arguments:
   input.xyz     Labeled extended XYZ input containing energy and force data
   type1 ...      Element order for the DeepMD type_map.raw file
@@ -35,13 +35,13 @@ OUTPUT_DIR = "deepmd_data"
 def print_usage():
     """Print the standard GPUMDkit and direct-Python usage text."""
     print(" Usage: gpumdkit.sh -xyz2dp <input.xyz> <type1> <type2> ...")
-    print("    or: python3 xyz2dp.py <input.xyz> <type1> <type2> ...")
+    print("    or: python xyz2dp.py <input.xyz> <type1> <type2> ...")
     print("")
     print(" Arguments:")
     print("   input.xyz  Labeled extended XYZ input containing energy and force data")
     print("   type1 ...  Element order for the DeepMD type_map.raw file")
     print("")
-    print(" Example: python3 xyz2dp.py train.xyz Li P S")
+    print(" Example: python xyz2dp.py train.xyz Li P S")
     print("")
 
 

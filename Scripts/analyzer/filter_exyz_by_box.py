@@ -63,7 +63,7 @@ def filter_frames(input_file, output_file, edge_limit):
         write(output_file, filtered_frames)
     
     # Print the number of filtered-out structures
-    print(f"Number of structures discarded: {discarded_count}")
+    print(f" Number of structures discarded: {discarded_count}")
 
 if __name__ == "__main__":
     input_file = sys.argv[1]

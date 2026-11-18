@@ -27,7 +27,7 @@ If you are not sure about the required arguments, start from the interactive men
 | DPA prediction outputs | `gpumdkit.sh -prediction_dpa <input.xyz> <dpa_model>` | labeled extxyz + DeepMD DPA model |
 | NEP descriptors | `gpumdkit.sh -calc des <input.xyz> <output.npy> <nep.txt> <element>` | extxyz + NEP model |
 | DOAS | `gpumdkit.sh -calc doas <input.xyz> <nep.txt> <output.txt>` | extxyz + NEP model |
-| NEB | `gpumdkit.sh -calc neb <initial.xyz> <final.xyz> <n_images> <nep.txt>` | initial/final structures |
+| NEB | `gpumdkit.sh -calc neb <initial.xyz> <final.xyz> <n_images> <nep.txt> [max_steps]` | initial/final structures |
 | Minimization | `gpumdkit.sh -calc minimize <structure> <nep.txt> [fmax] [max_steps]` | structure + NEP model |
 | Neighbor list | `gpumdkit.sh -calc nlist ...` | see [Polar Material Analysis](polar_material_analysis.md) |
 | Displacement | `gpumdkit.sh -calc disp ...` | see [Polar Material Analysis](polar_material_analysis.md) |
@@ -179,11 +179,14 @@ gpumdkit.sh -calc msd dump.xyz Li 10
 gpumdkit.sh -calc msd dump.xyz Li 10 5000
 ```
 
-Use a fixed-cell trajectory with stable atom order and verified unwrapped
-coordinates in the `pos` field. The script reads `pos` and the first frame's
-cell; it does not use a separate `unwrapped_position` property. Its automatic
-wrapping check is not sufficient to validate wrapped trajectories, and its
-axis-wise unwrapping does not handle general tilted or changing cells.
+Keep the atom order consistent across frames. By default, the script uses
+`unwrapped_position` when that column is present in every frame. Otherwise,
+for a fixed cell, it unwraps the target atoms in `pos` with the minimum-image
+convention along periodic directions. This works for wrapped, partially
+wrapped, and already continuous coordinates. Store frames often enough that
+each atom moves less than half the cell length between consecutive frames.
+
+Periodic variable-cell trajectories require an `unwrapped_position` column.
 The command overwrites `msd.out` in the current directory.
 
 From interactive mode, choose `412`. You will see:
@@ -427,7 +430,8 @@ For very large systems, running minimization and atomistic-energy extraction dir
 gpumdkit.sh -calc neb initial.xyz final.xyz 9 nep.txt
 ```
 
-This runs a NEB calculation with `9` intermediate images. During execution, the script asks how atoms should be fixed:
+This runs a NEB calculation with `9` intermediate images. Append `max_steps`
+to limit optimization steps. The script reports whether NEB converged. During execution, the script asks how atoms should be fixed:
 
 - `none`: no atoms fixed;
 - `index`: fix atoms by index;

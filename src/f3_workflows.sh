@@ -34,8 +34,30 @@ echo " Example: dump.xyz template.inp H2O"
 echo " ------------>>"
 read_menu_array input_results || return 1
 echo " ---------------------------------------------------"
-python "${GPUMDkit_path}/Scripts/workflow/scf_batch_pretreatment_cp2k.py" "${input_results[@]}"
+python "${GPUMDkit_path}/Scripts/workflow/scf_batch_pretreatment_cp2k.py" "${input_results[@]}" || return 1
 echo " Code path: ${GPUMDkit_path}/Scripts/workflow/scf_batch_pretreatment_cp2k.py"
+echo " ---------------------------------------------------"
+}
+
+# ABACUS scf batch pretreatment
+function abacus_batch_pretreatment(){
+echo " >-------------------------------------------------<"
+echo " | Calling the script in Scripts/workflow          |"
+echo " | Script: scf_batch_pretreatment_abacus.py        |"
+echo " | Developer: Zihan YAN (yanzihan@westlake.edu.cn) |"
+echo " >-------------------------------------------------<"
+echo " >-------------------- NOTICE  --------------------<"
+echo " | Keep one .upf and one .orb per element in the   |"
+echo " | same directory. Names must start with the       |"
+echo " | element symbol.                                 |"
+echo " >-------------------------------------------------<"
+echo " Input <extxyz_file> <prefix> <basis_dir>"
+echo " Example: train.xyz LiF_iter01 ./basis"
+echo " ------------>>"
+read_menu_array input_results || return 1
+echo " ---------------------------------------------------"
+python "${GPUMDkit_path}/Scripts/workflow/scf_batch_pretreatment_abacus.py" "${input_results[@]}" || return 1
+echo " Code path: ${GPUMDkit_path}/Scripts/workflow/scf_batch_pretreatment_abacus.py"
 echo " ---------------------------------------------------"
 }
 
@@ -46,11 +68,12 @@ function f301_scf_batch_pretreatment(){
     echo " +-------------------------------------------------------------+"
     echo " | 1) VASP SCF batch pretreatment                              |"
     echo " | 2) CP2K SCF batch pretreatment                              |"
+    echo " | 3) ABACUS SCF batch pretreatment                            |"
     echo " +-------------------------------------------------------------+"
     echo " Input the function number:"
-    valid_menu_choices=("1" "2")
+    valid_menu_choices=("1" "2" "3")
     read_menu_choice num_choice || return 1
-    while ! echo "${valid_menu_choices[@]}" | grep -wq "$num_choice"
+    while ! printf '%s\n' "${valid_menu_choices[@]}" | grep -Fxq -- "$num_choice"
     do
       echo " ------------>>"
       echo " Please reinput function number..."
@@ -58,11 +81,14 @@ function f301_scf_batch_pretreatment(){
     done   
     case $num_choice in
         "1")
-            source ${GPUMDkit_path}/Scripts/workflow/scf_batch_pretreatment_vasp.sh
+            source "${GPUMDkit_path}/Scripts/workflow/scf_batch_pretreatment_vasp.sh"
             vasp_scf_batch_pretreatment
             ;;
         "2")
             cp2k_batch_pretreatment
+            ;;
+        "3")
+            abacus_batch_pretreatment
             ;;          
     esac
 }
@@ -82,7 +108,7 @@ echo " Input the function number:"
 
 valid_menu_choices=("000" "301" "302" "303")
 read_menu_choice num_choice || return 1
-while ! echo "${valid_menu_choices[@]}" | grep -wq "$num_choice"
+while ! printf '%s\n' "${valid_menu_choices[@]}" | grep -Fxq -- "$num_choice"
 do
   echo " ------------>>"
   echo " Please reinput function number..."
@@ -94,11 +120,11 @@ case $num_choice in
         f301_scf_batch_pretreatment
         ;;
     "302")
-        source ${GPUMDkit_path}/Scripts/workflow/md_sample_batch_pretreatment_gpumd.sh
+        source "${GPUMDkit_path}/Scripts/workflow/md_sample_batch_pretreatment_gpumd.sh"
         f302_md_sample_batch_pretreatment_gpumd
         ;;
     "303")
-        source ${GPUMDkit_path}/Scripts/workflow/md_sample_batch_pretreatment_lmp.sh
+        source "${GPUMDkit_path}/Scripts/workflow/md_sample_batch_pretreatment_lmp.sh"
         f303_md_sample_batch_pretreatment_lmp
         ;;          
     "000")

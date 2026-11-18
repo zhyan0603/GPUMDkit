@@ -113,12 +113,20 @@ def main():
     # Perform structure optimization with trajectory tracking
     opt = BFGS(atoms, logfile='minimize.log')
     opt.attach(traj_callback)  # Attach callback to save trajectory
-    opt.run(fmax=fmax, steps=max_steps)  # Convergence criterion based on input
+    converged = opt.run(fmax=fmax, steps=max_steps)  # Convergence criterion based on input
 
     # Save the complete trajectory to minimize.xyz
     write('minimize.xyz', traj_callback.trajectory)
-    print(f" Optimization completed after {len(traj_callback.trajectory)} steps.")
-    print(f" Final max force: {np.max(np.abs(atoms.get_forces())):.6f} eV/Ang")
+    n_steps = opt.get_number_of_steps()
+    final_fmax = np.linalg.norm(atoms.get_forces(), axis=1).max()
+    if converged is None:  # ASE < 3.22 returns None from run()
+        converged = final_fmax < fmax
+    if converged:
+        print(f" Optimization converged after {n_steps} steps.")
+    else:
+        print(f" Warning: optimization did NOT converge within {max_steps} steps (fmax = {fmax} eV/Ang).")
+        print(" Increase max_steps or check the structure and model.")
+    print(f" Final max force: {final_fmax:.6f} eV/Ang")
     print(f" Optimization trajectory saved to minimize.xyz")
 
 if __name__ == "__main__":

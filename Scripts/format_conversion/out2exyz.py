@@ -16,7 +16,7 @@ Arguments:
 Output:
   train.xyz  Converted structures in extxyz format
 Author:     Zihan YAN (yanzihan@westlake.edu.cn)
-Last-modified: 2026-05-16
+Last-modified: 2026-11-10
 =============================================================================
 """
 
@@ -43,11 +43,15 @@ from ase import Atoms, Atom
 from tqdm import tqdm
 
 def Convert_atoms(atom):
-    xx,yy,zz,yz,xz,xy = -atom.calc.results['stress']*atom.get_volume() 
-    atom.info['virial'] = np.array([(xx, xy, xz), (xy, yy, yz), (xz, yz, zz)])
+    """Store the virial and free energy; return False when the frame has no stress."""
+    has_stress = 'stress' in atom.calc.results
+    if has_stress:
+        xx,yy,zz,yz,xz,xy = -atom.calc.results['stress']*atom.get_volume()
+        atom.info['virial'] = np.array([(xx, xy, xz), (xy, yy, yz), (xz, yz, zz)])
+        del atom.calc.results['stress']
     atom.calc.results['energy'] = atom.calc.results['free_energy']
-    del atom.calc.results['stress']
     del atom.calc.results['free_energy']
+    return has_stress
 
 def find_outcar(start_path='.'):
     result = []
@@ -109,9 +113,17 @@ def is_converged(outcar_path):
     else:
         return False
 
+if not os.path.isdir(sys.argv[1]):
+    print(f" Error: directory '{sys.argv[1]}' does not exist.")
+    sys.exit(1)
+
 file_list = find_outcar(start_path=sys.argv[1])
+if not file_list:
+    print(f" Error: no OUTCAR found under '{sys.argv[1]}'; train.xyz was not written.")
+    sys.exit(1)
 
 cnum = 0     # total number of configuration
+no_stress_num = 0   # frames without stress, written without virial
 atoms_list, err_list, non_converged_list = [], [], []
 for file_path in tqdm(file_list):
     if not is_converged(file_path):
@@ -124,13 +136,25 @@ for file_path in tqdm(file_list):
         err_list.append(file_path)
         continue
     
-    for ai in range(len(atoms)):
-        Convert_atoms(atoms[ai])
-        atoms_list.append(atoms[ai])
-    cnum += len(atoms)
+    try:
+        converted = []
+        missing_stress = 0
+        for ai in range(len(atoms)):
+            if not Convert_atoms(atoms[ai]):
+                missing_stress += 1
+            converted.append(atoms[ai])
+    except Exception:
+        err_list.append(file_path)
+        continue
+    atoms_list.extend(converted)
+    no_stress_num += missing_stress
+    cnum += len(converted)
 
 write('train.xyz', atoms_list, format='extxyz')
 print(' The total number of configurations is: {} \n'.format(cnum))
+if no_stress_num:
+    print(f" Note: {no_stress_num} configurations have no stress in OUTCAR (e.g. ISIF = 0)")
+    print("       and were written without virial.\n")
 
 if err_list:
     print(" The list of failed calculation files is as follows.")

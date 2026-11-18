@@ -162,11 +162,7 @@ echo "| -new_flag  Description of new flag           | -existing_flag    Descrip
 编辑 `Scripts/utils/completion.sh`：
 
 1. 将 `-new_flag` 添加到 `opts` 字符串
-2. 如果需要文件补全，将其添加到调用 `compgen -f` 的 `|` 分隔 case 中：
-   ```bash
-   -out2xyz|-...|-new_flag)
-       COMPREPLY=($(compgen -f -- "$cur")) ;;
-   ```
+2. 之后的每个参数都会自动补全文件名和目录名，无需额外添加
 3. 如果需要二级选项，添加新的 case 块
 
 ## Python 脚本约定
@@ -188,7 +184,7 @@ Category:   Category Name
 Purpose:    One-line description of what this script does.
             Multi-line elaboration if needed.
 Usage:      gpumdkit.sh -flag <param1> <param2> [optional]
-            python3 script_name.py <param1> <param2> [optional]
+            python script_name.py <param1> <param2> [optional]
 Arguments:
   param1    Description of param1
   param2    Description of param2
@@ -211,7 +207,7 @@ import sys
 args = sys.argv[1:]
 if len(args) < N or args[0] in ("-h", "--help"):
     print(" Usage: gpumdkit.sh -flag <param1> <param2>")
-    print("    or: python3 script_name.py <param1> <param2>")
+    print("    or: python script_name.py <param1> <param2>")
     print("")
     print(" Arguments:")
     print("   param1    Description")
@@ -296,7 +292,7 @@ if not os.path.isfile(input_file):
 `Scripts/plt_scripts/README.md`）中补充用法和 Gallery 示例图。
 
 每个用户可见的功能或行为变化，都要在同一次修改中同步更新中英文 tutorials
-源文件和对应的子功能 README，并在验证阶段运行 `python3 docs/manual-src/build.py` 重新生成 `docs/htmls/**`。仅同步
+源文件和对应的子功能 README，并在验证阶段运行 `python docs/manual-src/build.py` 重新生成 `docs/htmls/**`。仅同步
 文档的改动不记入 `docs/updates.info`。
 
 ### 依赖提示
@@ -402,7 +398,7 @@ print("Error: 'input.xyz' not found.")
 ### 菜单验证
 
 - 验证数组：始终命名为 `valid_menu_choices`
-- 验证循环：`while ! echo "${valid_menu_choices[@]}" | grep -wq "$num_choice"; do ...; done`
+- 验证循环：`while ! printf '%s\n' "${valid_menu_choices[@]}" | grep -Fxq -- "$num_choice"; do ...; done`
 - 返回主菜单：`case ... "000") menu; main ;;`
 - 所有内容行的显示宽度必须与边框及相邻行一致，尤其要检查右侧 `|` 前的补齐空格
 - 每新增一个菜单项，都要运行 `gpumdkit.sh`、进入上级模块并目视检查真实终端输出
@@ -466,8 +462,8 @@ Python：`print(" Error: <message>."); sys.exit(1)` — 相同格式，之后始
 对于任何新脚本，提交前运行以下两项检查：
 
 ```bash
-python3 Scripts/path/to/script.py -h    # 帮助必须在无依赖时工作
-python3 Scripts/path/to/script.py        # 缺少参数必须打印用法 + exit 1
+python Scripts/path/to/script.py -h    # 帮助必须在无依赖时工作
+python Scripts/path/to/script.py        # 缺少参数必须打印用法 + exit 1
 ```
 
 ### 特定设计决策
@@ -499,13 +495,13 @@ bash -n gpumdkit.sh
 find src Scripts -name '*.sh' -exec bash -n {} +
 
 # Python 语法检查且不生成 __pycache__（仅检查已修改的 Python 文件）
-python3 -B -c 'from pathlib import Path; p=Path("Scripts/path/to/your_script.py"); compile(p.read_text(), str(p), "exec")'
+python -B -c 'from pathlib import Path; p=Path("Scripts/path/to/your_script.py"); compile(p.read_text(), str(p), "exec")'
 
 # 如果其他测试产生缓存，只删除已记录的显式路径
 # rm -rf /exact/path/to/the/test-created/__pycache__
 
 # 重新生成手册与教程页面（仅当其输入有更改时；见下文）
-python3 docs/manual-src/build.py
+python docs/manual-src/build.py
 
 # 空白检查（始终运行）
 git diff --check
@@ -525,7 +521,7 @@ git diff --check
 ### 何时重新生成手册与教程页面
 
 `docs/manual.html` 与 `docs/htmls/**` 下的教程页面由
-`python3 docs/manual-src/build.py` 生成（需要 `markdown` 和 `pymdown-extensions`
+`python docs/manual-src/build.py` 生成（需要 `markdown` 和 `pymdown-extensions`
 包）。只要更改涉及其输入，就需要运行：
 
 - `docs/tutorials/**`（Markdown 教程，渲染到 `docs/htmls/{en,zh}/`）

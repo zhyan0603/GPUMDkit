@@ -147,13 +147,59 @@ directory:
 python "${GPUMDkit_path}/Scripts/workflow/scf_batch_pretreatment_cp2k.py" train.xyz template.inp calc
 ~~~
 
+### ABACUS SCF preparation (301 -> 3)
+
+#### Before running 301
+
+1. **Structure file**. Put the structures into one extxyz, for example `frames.xyz`. Every frame needs a valid three-dimensional cell. If you start from a POSCAR, convert it with `gpumdkit.sh -pos2exyz POSCAR frame.xyz`.
+2. **Basis directory**. Put exactly one `.upf` pseudopotential and one compatible `.orb` numerical orbital for every element in the batch directly in one directory. Choose the pairs from a compatible library. Filenames must start with the case-sensitive element symbol. A missing file or multiple matches for an element stops preparation before any calculation directories are created.
+
+For a Li–La–Zr–O batch, the files can be arranged as follows:
+
+~~~text
+work/
+├── frames.xyz
+└── basis/
+    ├── Li.upf
+    ├── Li_gga_9au_100Ry_4s1p.orb
+    ├── La_ONCV_PBE-1.2.upf
+    ├── La_gga_9au_100Ry_4s2p2d1f.orb
+    ├── Zr_ONCV_PBE-1.0.upf
+    ├── Zr_gga_10au_100Ry_4s2p2d1f.orb
+    ├── O.upf
+    └── O_gga_6au_100Ry_2s2p1d.orb
+~~~
+
+Start `gpumdkit.sh` and choose **3 → 301 → 3**. Enter the structure file, the output directory prefix and the basis directory.
+
+~~~text
+frames.xyz LLZO ./basis
+~~~
+
+The script creates:
+
+~~~text
+current directory/
+├── fp/                 # put the shared INPUT (and KPT) here
+├── LLZO_1/
+│   ├── STRU            # this frame; species, masses, and file names filled in
+│   ├── INPUT -> ../fp/INPUT
+│   └── KPT -> ../fp/KPT
+├── LLZO_2/
+└── presub.sh
+~~~
+
+Each `STRU` lists only the elements present in that frame, so structures with
+different compositions need no grouping. Lattice vectors and Cartesian
+positions are written in Angstrom with `LATTICE_CONSTANT 1.889726125457828`.
+
 ## 2. Prepare MD sampling directories {#md-sampling-pretreatment}
 
 ### GPUMD (302)
 
-Put `.vasp` files or one extxyz file in a dedicated working directory. The input
-selection rules are the same as for VASP preparation: `.vasp` files take
-precedence, and multiple `.xyz` files without `.vasp` require a choice.
+In a fresh working directory, provide one `.xyz` file or one or more `.vasp`
+files. The script rejects mixed formats and multiple XYZ files before moving
+any inputs.
 
 ~~~bash
 gpumdkit.sh
@@ -194,8 +240,7 @@ sample directory links to them: `sample_1/run.in` points to `md/run_1.in`,
 
 ### LAMMPS (303)
 
-Put `.vasp` files or one extxyz file in a dedicated working directory. When both
-formats are present, `.vasp` files take precedence.
+Use the same input rules as for GPUMD (302).
 
 ~~~bash
 gpumdkit.sh
@@ -260,4 +305,4 @@ Workflow scripts depend on your cluster, templates, and software versions, so tr
 
 ## 4. Convert the results
 
-After the DFT runs finish, convert them with `gpumdkit.sh -out2xyz <dir>` (VASP, writes `NEPdataset/train.xyz`), `-out2xyz_bec <dir>` (VASP with Born effective charges), or `-cp2k2xyz` (CP2K, run from the results root, writes `cp2k_exyz.xyz`). See [Format Conversion](format_conversion.md) for details, and [Active Learning Workflow](active_learning_workflow.md) for how these steps fit into a full NEP data iteration.
+After the DFT runs finish, convert them with `gpumdkit.sh -out2xyz <dir>` (VASP, writes `NEPdataset/train.xyz`), `-out2xyz_bec <dir>` (VASP with Born effective charges), `-cp2k2xyz` (CP2K, run from the results root, writes `cp2k_exyz.xyz`), or menu `104` -> SCF (ABACUS, reads each `OUT.*/running_scf.log`, writes `NEPdataset/train.xyz`). See [Format Conversion](format_conversion.md) for details, and [Active Learning Workflow](active_learning_workflow.md) for how these steps fit into a full NEP data iteration.

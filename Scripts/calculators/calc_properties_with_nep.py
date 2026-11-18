@@ -18,7 +18,7 @@ Arguments:
 Output:
   <output.xyz>  (structures with NEP-computed energy, forces, stress)
 Author:     Zihan YAN (yanzihan@westlake.edu.cn)
-Last-modified: 2026-05-16
+Last-modified: 2026-11-05
 =============================================================================
 """
 
@@ -41,6 +41,7 @@ if __name__ == "__main__" and (len(sys.argv) < 4 or sys.argv[1] in ("-h", "--hel
 
 import numpy as np
 from ase import Atoms
+from ase.calculators.singlepoint import SinglePointCalculator
 from ase.io import read, write
 from calorine.calculators import CPUNEP
 
@@ -83,11 +84,13 @@ total_structures = len(structures)
 calc = CPUNEP(sys.argv[3])
 # Process each structure
 for i, atoms in enumerate(structures):
-    atoms.set_calculator(calc)
+    atoms.calc = calc
     # Calculate properties
     energy = atoms.get_potential_energy()
     forces = atoms.get_forces()
     stress = atoms.get_stress()
+    # Freeze this frame's results; the shared calculator only keeps the last one.
+    atoms.calc = SinglePointCalculator(atoms, energy=energy, forces=forces, stress=stress)
     #volume = atoms.get_volume()
     #virial = -stress * volume  # Virial calculation
     

@@ -55,7 +55,7 @@ from ase import Atoms
 def find_nearest_supercell(atoms, target):
     n_atoms = len(atoms)
     if target < n_atoms:
-        print("Warning: Target atom count is less than original; returning 1x1x1 supercell.")
+        print(" Warning: Target atom count is less than original; returning 1x1x1 supercell.")
         return (1, 1, 1)
     
     cell = atoms.cell.lengths()
@@ -141,7 +141,7 @@ def main():
     try:
         atoms = read(infile, format=in_format)
     except Exception as e:
-        print(f"Error reading input file: {e}")
+        print(f" Error reading input file: {e}")
         sys.exit(1)
     
     n_atoms = len(atoms)
@@ -154,7 +154,7 @@ def main():
             sys.exit(1)
         a, b, c = find_nearest_supercell(atoms, target_num)
         total_atoms = n_atoms * a * b * c
-        print(f"Original atoms: {n_atoms}, Target: {target_num}, Selected: {a}x{b}x{c} (total {total_atoms} atoms)")
+        print(f" Original atoms: {n_atoms}, Target: {target_num}, Selected: {a}x{b}x{c} (total {total_atoms} atoms)")
     elif len(args_inner) == 3:  # a b c
         try:
             a, b, c = map(int, args_inner)
@@ -162,10 +162,10 @@ def main():
             print(" Error: a, b, c must be integers")
             sys.exit(1)
         if any(x <= 0 for x in (a, b, c)):
-            print("Error: a, b, c must be positive integers")
+            print(" Error: a, b, c must be positive integers")
             sys.exit(1)
         total_atoms = n_atoms * a * b * c
-        print(f"Supercell: {a}x{b}x{c}, Total atoms: {total_atoms}")
+        print(f" Supercell: {a}x{b}x{c}, Total atoms: {total_atoms}")
     else:
         print(" Invalid number of arguments, use num or a b c")
         sys.exit(1)
@@ -183,9 +183,9 @@ def main():
             write(outfile, new_atoms, format="vasp", vasp5=True, direct=True, sort=False)
         else:
             write(outfile, new_atoms, format=out_format)
-        print(f"Supercell created and saved to {outfile}")
+        print(f" Supercell created and saved to {outfile}")
     except Exception as e:
-        print(f"Error writing output file: {e}")
+        print(f" Error writing output file: {e}")
         sys.exit(1)
 
 if __name__ == "__main__":

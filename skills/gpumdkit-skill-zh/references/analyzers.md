@@ -145,20 +145,21 @@ gpumdkit.sh -filter_value train.xyz force <max_force_component>
 gpumdkit.sh  # 选择：5) Analyzer -> 502
 
 # 非交互式阈值模式也可以
-python3 ${GPUMDkit_path}/Scripts/analyzer/find_outliers.py <energy_rmse_meV_atom> <force_rmse_meV_A> <stress_rmse_GPa>
+python ${GPUMDkit_path}/Scripts/analyzer/find_outliers.py <energy_rmse_meV_atom> <force_rmse_meV_A> <stress_rmse_GPa>
 
 # 当前目录中需要的文件：
 # - train.xyz
 # - energy_train.out
 # - force_train.out
-# - stress_train.out
+# - stress_train.out（可选）
 
 # 输出：selected.xyz（高误差）、remained.xyz（低误差）
 ```
 
 三个可选阈值分别是能量（meV/atom）、力（meV/埃）和应力（GPa）的目标 RMSE。对每种性质，脚本逐个剔除误差最大的结构，直到剩余结构的 RMSE 低于阈值；被剔除的结构写入 `selected.xyz`。阈值需与用户确认。
 
-含有 `-1e6` 应力缺失标记，或任一应力分量绝对值超过 `1e6` 的结构，会从 RMSE 计算和两个输出数据集中排除。若没有剩余的有效结构，脚本会报错且不写出结果。
+应力阈值只用于标签有效的帧。所有帧都缺少应力标签时，脚本按能量和力筛选，
+仍会写出两个数据集。
 
 ### 概率密度分析
 ```bash

@@ -10,44 +10,96 @@ Category:   Plot Scripts
 Purpose:    Calculate ionic conductivity from temperature folders and fit
             separate Arrhenius lines below and above a user-specified
             transition temperature.
-Usage:      gpumdkit.sh -plt sigma_PT <transition_temperature> [save]
-            python3 plt_arrhenius_sigma_PT.py <transition_temperature> [save]
+Usage:      gpumdkit.sh -plt sigma_PT [<element> <charge>] <transition_temperature> [save]
+            python3 plt_arrhenius_sigma_PT.py [<element> <charge>] <transition_temperature> [save]
 Arguments:
+  element                 Mobile ion species counted in model.xyz (e.g., Li, Na, H)
+  charge                  Ion charge number z (e.g., 1 for Li+, 2 for Mg2+)
+                          (element and charge are asked for interactively when omitted)
   transition_temperature  Transition temperature in K; a suffix 'K' is allowed
   save                    Save the plot as 'Arrhenius_sigma_PT.png'
 Output:
   Arrhenius_sigma_PT.png  (if save is used, or if backend is non-interactive)
 Author:     Zihan YAN (yanzihan@westlake.edu.cn)
-Last-modified: 2026-10-21
+Last-modified: 2026-11-06
 =============================================================================
 """
 
+import math
 import os
 import re
 import sys
 
 
 args = sys.argv[1:]
-if not args or args[0] in ("-h", "--help"):
-    print(" Usage: gpumdkit.sh -plt sigma_PT <transition_temperature> [save]")
-    print("    or: python3 plt_arrhenius_sigma_PT.py <transition_temperature> [save]")
+if args and args[0] in ("-h", "--help"):
+    print(" Usage: gpumdkit.sh -plt sigma_PT [<element> <charge>] <transition_temperature> [save]")
+    print("    or: python3 plt_arrhenius_sigma_PT.py [<element> <charge>] <transition_temperature> [save]")
     print("")
     print(" Arguments:")
+    print("   element                 Mobile ion species counted in model.xyz (e.g., Li, Na, H)")
+    print("   charge                  Ion charge number z (e.g., 1 for Li+, 2 for Mg2+)")
     print("   transition_temperature  Transition temperature in K; '380K' is also accepted")
     print("   save                    Save the plot as 'Arrhenius_sigma_PT.png'")
     print("")
-    print(" Example: gpumdkit.sh -plt sigma_PT 380 save")
+    print(" If <element> <charge> are omitted, they are asked for interactively.")
+    print(" Example: gpumdkit.sh -plt sigma_PT Li 1 380 save")
     print("")
-    sys.exit(0 if args and args[0] in ("-h", "--help") else 1)
+    sys.exit(0)
 
-if len(args) > 2 or (len(args) == 2 and args[1] != "save"):
+def prompt_ion_species():
+    """Ask once for '<element> <charge>' when they are not given on the command line."""
+    print(" Input <element> <charge> of the mobile ion")
+    print(" Example: Li 1   (others: Na 1, H 1, Mg 2)")
+    print(" ------------>>")
+    try:
+        answer = input(" ").split()
+    except (EOFError, KeyboardInterrupt):
+        print("\n Error: no <element> <charge> provided.")
+        sys.exit(1)
+    if len(answer) != 2:
+        print(" Error: expected exactly two values, e.g., 'Li 1'.")
+        sys.exit(1)
+    return answer[0], answer[1]
+
+
+def is_number(text):
+    """Return True when text parses as a float."""
+    try:
+        float(text)
+        return True
+    except ValueError:
+        return False
+
+
+explicit_species = len(args) >= 3 and not is_number(args[0].rstrip("Kk")) and is_number(args[1])
+rest_args = args[2:] if explicit_species else args
+
+if not rest_args or len(rest_args) > 2 or (len(rest_args) == 2 and rest_args[1] != 'save'):
     print(" Error: expected <transition_temperature> followed by optional 'save'.")
+    print(" Usage: gpumdkit.sh -plt sigma_PT [<element> <charge>] <transition_temperature> [save]")
+    print(" Example: gpumdkit.sh -plt sigma_PT Li 1 380 save")
     sys.exit(1)
+
+if explicit_species:
+    ion_element, charge_text = args[0], args[1]
+else:
+    ion_element, charge_text = prompt_ion_species()
+
+try:
+    ion_charge = float(charge_text)
+except ValueError:
+    ion_charge = float("nan")
+if not math.isfinite(ion_charge) or ion_charge == 0:
+    print(f" Error: charge must be a non-zero number, got '{charge_text}'.")
+    sys.exit(1)
+
 
 import matplotlib.pyplot as plt
 import matplotlib.ticker as ticker
 import numpy as np
 import scipy.constants as consts
+from ase.data import chemical_symbols
 from ase.io import read
 from matplotlib import get_backend
 from scipy.stats import linregress
@@ -162,17 +214,79 @@ def calculate_diffusivity(msd_file):
     return slope * 1e-4 / 6.0
 
 
-def read_ion_count(first_folder):
-    """Count Li/Na ions and apply the first folder's GPUMD replicate factor."""
+def count_mobile_ions(atoms, element):
+    """Count the requested species and stop with a hint if it is absent."""
+    symbols = atoms.get_chemical_symbols()
+    count = symbols.count(element)
+    if count == 0:
+        present = ", ".join(sorted(set(symbols)))
+        print(f" Error: no {element} atoms found in model.xyz (elements present: {present}).")
+        sys.exit(1)
+    return count
+
+
+def check_msd_group(run_in_path, atoms, element):
+    """Warn when compute_msd in run.in does not track exactly the counted species."""
+    if not os.path.isfile(run_in_path):
+        return
+    tokens = None
+    with open(run_in_path, "r", encoding="utf-8", errors="ignore") as run_file:
+        for line in run_file:
+            parts = line.split("#", 1)[0].split()
+            if parts and parts[0] == "compute_msd":
+                tokens = parts
+    if tokens is None:
+        return
+    symbols = np.array(atoms.get_chemical_symbols())
+    if "all_groups" in tokens:
+        print(f" [Warning] compute_msd uses all_groups; only msd.out columns 1-3 are used. "
+              f"Check that they belong to a group containing only {element}.")
+        return
+    if "group" not in tokens:
+        if np.any(symbols != element):
+            print(f" [Warning] compute_msd has no group option, so msd.out averages over all atoms, "
+                  f"not only {element}. Restrict compute_msd to a {element} group for a valid conductivity.")
+        return
+    index = tokens.index("group")
+    try:
+        method, group_id = int(tokens[index + 1]), int(tokens[index + 2])
+    except (IndexError, ValueError):
+        print(" [Warning] Could not parse the compute_msd group option; skipping the species check.")
+        return
+    groups = atoms.arrays.get("group")
+    if groups is None:
+        print(" [Warning] compute_msd uses a group but model.xyz has no group property; skipping the species check.")
+        return
+    groups = np.asarray(groups)
+    if groups.ndim == 1:
+        groups = groups[:, None]
+    if method >= groups.shape[1]:
+        print(f" [Warning] model.xyz has no grouping method {method}; skipping the species check.")
+        return
+    in_group = groups[:, method] == group_id
+    group_symbols = sorted(set(symbols[in_group]))
+    n_group = int(np.count_nonzero(in_group))
+    n_element = int(np.count_nonzero(symbols == element))
+    if group_symbols != [element]:
+        print(f" [Warning] compute_msd group (method {method}, id {group_id}) contains "
+              f"{', '.join(group_symbols) or 'no atoms'}, not only {element}.")
+    elif n_group != n_element:
+        print(f" [Warning] compute_msd group (method {method}, id {group_id}) contains {n_group} of "
+              f"{n_element} {element} atoms, but the conductivity counts all {n_element}.")
+
+
+def read_ion_count(first_folder, element):
+    """Count the requested ions and apply the first folder's GPUMD replicate factor."""
     xyz_file = os.path.join(first_folder, "model.xyz")
     if not os.path.isfile(xyz_file):
         raise FileNotFoundError(f"missing {xyz_file}")
     atoms = read(xyz_file, format="extxyz")
-    num_ions = sum(1 for atom in atoms if atom.symbol in ["Li", "Na"])
-    if num_ions <= 0:
-        raise ValueError("model.xyz contains no Li or Na ions")
+    num_ions = count_mobile_ions(atoms, element)
+    print(f" [Info] Counting {num_ions} {element} atoms in "
+          f"{os.path.basename(first_folder)}/model.xyz, charge z = {ion_charge:g}")
 
     run_in_path = os.path.join(first_folder, "run.in")
+    check_msd_group(run_in_path, atoms, element)
     if not os.path.isfile(run_in_path):
         print(" [Note] No run.in file found, assuming no replication")
         return num_ions
@@ -227,6 +341,7 @@ def collect_conductivities(base_dir, num_ions):
             volume_cm3 = volume * 1e-24
             conversion_factor = (
                 num_ions / (volume_cm3 * consts.N_A)
+                * ion_charge ** 2
                 * (consts.N_A * consts.e) ** 2
                 / (consts.R * temperature)
             )
@@ -278,7 +393,10 @@ def plot_branch(ax, temperatures, sigma_times, mask, label, color, marker="o"):
 
 def main():
     """Load data, fit both branches, extrapolate sigma at 300 K, and plot."""
-    transition_temperature = parse_transition_temperature(args[0])
+    if ion_element not in chemical_symbols[1:]:
+        print(f" Error: '{ion_element}' is not a valid element symbol (e.g., Li, Na, H).")
+        sys.exit(1)
+    transition_temperature = parse_transition_temperature(rest_args[0])
     base_dir = os.getcwd()
     folders = sorted(
         (folder for folder in os.listdir(base_dir)
@@ -291,7 +409,7 @@ def main():
         sys.exit(1)
 
     try:
-        num_ions = read_ion_count(os.path.join(base_dir, folders[0]))
+        num_ions = read_ion_count(os.path.join(base_dir, folders[0]), ion_element)
         temperatures, conductivities, sigma_times = collect_conductivities(base_dir, num_ions)
     except (OSError, ValueError) as error:
         print(f" Error: {error}.")
@@ -381,7 +499,7 @@ def main():
     print(f" conductivity_values = {conductivity_array}")
 
     output_file = "Arrhenius_sigma_PT.png"
-    if len(args) > 1 and args[-1] == "save":
+    if rest_args[-1] == "save":
         plt.savefig(output_file, dpi=300)
     elif get_backend().lower() in ["agg", "cairo", "pdf", "ps", "svg"]:
         print(" Unable to display the plot due to the non-interactive backend.")

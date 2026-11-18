@@ -98,7 +98,7 @@ fi
 function f104_abacus2xyz(){ 
 echo " >-------------------------------------------------<"
 echo " | Calling the script in Scripts/format_conversion |"
-echo " | Script: abacus2xyz_scf.sh/abacus2xyz_md.sh      |"
+echo " | Script: abacus2xyz_scf.py / abacus2xyz_md.py    |"
 echo " | Developer: Benrui TANG (tang070205@proton.me)   |"
 echo " >-------------------------------------------------<"
 echo " Choose the type of ABACUS calculation:"
@@ -107,21 +107,21 @@ echo " 2) MD calculation"
 echo " ------------>>"
 read_menu_choice abacus_type || return 1
 if [ "$abacus_type" == "1" ]; then
-    echo " Input the directory containing running_scf.log"
+    echo " Input the directory containing running_scf.log or abacus.json"
     echo " Example: ./ "
     echo " ------------>>"
     read_menu_choice dir_abacus_scf || return 1
     echo " ---------------------------------------------------"
-    bash "${GPUMDkit_path}/Scripts/format_conversion/abacus2xyz_scf.sh" "${dir_abacus_scf}"
-    echo " Code path: ${GPUMDkit_path}/Scripts/format_conversion/abacus2xyz_scf.sh"
+    python "${GPUMDkit_path}/Scripts/format_conversion/abacus2xyz_scf.py" "${dir_abacus_scf}" "NEPdataset/train.xyz" || return 1
+    echo " Code path: ${GPUMDkit_path}/Scripts/format_conversion/abacus2xyz_scf.py"
     echo " ---------------------------------------------------"
 elif [ "$abacus_type" == "2" ]; then
     echo " Input the directory containing running_md.log and MD_dump file"
     echo " ------------>>"
     read_menu_choice dir_abacus_md || return 1
     echo " ---------------------------------------------------"
-    bash "${GPUMDkit_path}/Scripts/format_conversion/abacus2xyz_md.sh" "${dir_abacus_md}"
-    echo " Code path: ${GPUMDkit_path}/Scripts/format_conversion/abacus2xyz_md.sh"
+    python "${GPUMDkit_path}/Scripts/format_conversion/abacus2xyz_md.py" "${dir_abacus_md}" "NEPdataset/train.xyz" || return 1
+    echo " Code path: ${GPUMDkit_path}/Scripts/format_conversion/abacus2xyz_md.py"
     echo " ---------------------------------------------------"
 else
     echo " Your input is illegal, please try again"
@@ -261,7 +261,7 @@ echo " Example: POSCAR model.xyz"
 echo " ------------>>"
 read_menu_array pos2extxyz_args || return 1
 echo " ---------------------------------------------------"
-python "${GPUMDkit_path}/Scripts/format_conversion/pos2exyz.py" "${pos2extxyz_args[@]}"
+python "${GPUMDkit_path}/Scripts/format_conversion/pos2exyz.py" "${pos2extxyz_args[@]}" || return 1
 echo " Code path: ${GPUMDkit_path}/Scripts/format_conversion/pos2exyz.py"
 echo " ---------------------------------------------------"
 }
@@ -380,7 +380,7 @@ echo " Example: ./database train.xyz"
 echo " ------------>>"
 read_menu_array dp2extxyz_args || return 1
 echo " ---------------------------------------------------"
-python3 "${GPUMDkit_path}/Scripts/format_conversion/dp2xyz.py" "${dp2extxyz_args[@]}"
+python "${GPUMDkit_path}/Scripts/format_conversion/dp2xyz.py" "${dp2extxyz_args[@]}"
 echo " Code path: ${GPUMDkit_path}/Scripts/format_conversion/dp2xyz.py"
 echo " ---------------------------------------------------"
 }
@@ -400,7 +400,7 @@ echo " Input the DeepMD type-map order (eg. Li P S)"
 echo " ------------>>"
 read_menu_array xyz2dp_type_map || return 1
 echo " ---------------------------------------------------"
-python3 "${GPUMDkit_path}/Scripts/format_conversion/xyz2dp.py" \
+python "${GPUMDkit_path}/Scripts/format_conversion/xyz2dp.py" \
     "${xyz2dp_input}" "${xyz2dp_type_map[@]}"
 echo " Code path: ${GPUMDkit_path}/Scripts/format_conversion/xyz2dp.py"
 echo " ---------------------------------------------------"
@@ -433,7 +433,7 @@ valid_menu_choices=(
     "out2exyz" "pos2exyz" "cif2pos" "cif2exyz" "xdat2exyz" "pos2lmp" "lmp2exyz" "traj2exyz" "dp2xyz" "xyz2dp"
 ) 
 read_menu_choice num_choice || return 1
-while ! echo "${valid_menu_choices[@]}" | grep -wq "$num_choice" 
+while ! printf '%s\n' "${valid_menu_choices[@]}" | grep -Fxq -- "$num_choice"
 do
   echo " ------------>>"
   echo " Please reinput function number or converter keyword..."

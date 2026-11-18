@@ -17,7 +17,7 @@ Arguments:
 Output:
   train.png  (if save is used, or if backend is non-interactive)
 Author:     Zihan YAN (yanzihan@westlake.edu.cn)
-Last-modified: 2026-10-20
+Last-modified: 2026-10-30
 =============================================================================
 """
 
@@ -71,7 +71,7 @@ def parity_panel(ax, pred, actual, labels, colors, lim):
     ax.set_ylim(lim)
 
 # Load data
-loss = np.loadtxt('loss.out', comments='#')
+loss = np.loadtxt('loss.out', comments='#', ndmin=2)
 energy_data = np.loadtxt('energy_train.out')
 force_data = np.loadtxt('force_train.out')
 tensor_name = "Stress"
@@ -134,28 +134,59 @@ def calculate_limits(train_data, padding=0.08):
 # Create a subplot with 2 rows and 2 columns
 fig, axs = plt.subplots(2, 2, figsize=(7.2, 6.1))
 
+# New NEP headers may repeat after every restart. Use their column names
+# to distinguish generation-based NEP (including interval 1) from GNEP.
+loss_columns = []
+restart_rows = set()
+row_count = 0
+with open('loss.out') as loss_file:
+    for line in loss_file:
+        fields = line.split()
+        if fields[:2] == ['#', 'columns'] and not loss_columns:
+            loss_columns = fields[2:]
+        if len(fields) > 1 and fields[0] == '#' and fields[1] in (
+                'format_version', 'output_interval', 'columns'):
+            if row_count:
+                restart_rows.add(row_count)
+        elif fields and not fields[0].startswith('#'):
+            row_count += 1
+
 if loss.shape[1] == 6:  # torchnep
     xlabel = 'Epoch'
     plot_cols = slice(1, 5)
     legend_labels = ['Loss', 'Energy', 'Force', 'Virial']
 elif loss.shape[1] >= 9:  # nep/gnep
-    step = loss[1, 0] - loss[0, 0]  
-    if step == 100: 
-        xlabel = 'Generation/100'
+    if loss_columns:
+        is_generation = loss_columns[0] == 'generation'
+    else:
+        # Legacy GNEP reports every epoch; legacy NEP reports every 100
+        # generations. A single NEP row must also be supported.
+        is_generation = not (loss[0, 0] == 1 or (
+            len(loss) > 1 and loss[1, 0] - loss[0, 0] == 1))
+    if is_generation:
+        xlabel = 'Generation'
         plot_cols = slice(1, 7)
         legend_labels = ['Total', 'L1', 'L2', 'Energy', 'Force', 'Virial']
-    elif step == 1: 
+    else:
         xlabel = 'Epoch'
         plot_cols = slice(1, 5)
         legend_labels = ['Total', 'Energy', 'Force', 'Virial']
-    else:
-        raise ValueError(f"Unsupported step size: {step}")
 else:
     raise ValueError(f"Unsupported loss format with {loss.shape[1]} columns")
 
-# Plotting the loss figure
-for i, (col, label) in enumerate(zip(range(loss[:, plot_cols].shape[1]), legend_labels)):
-    axs[0, 0].loglog(loss[:, plot_cols][:, col], '-', linewidth=1.4, color=COLORS[i % len(COLORS)], label=label)
+# Use actual generations/epochs, so changing output_interval preserves spacing.
+# Headers mark new runs even when the new interval exceeds the previous run's
+# last generation. For old files, detect restarts from counter resets alone.
+steps = loss[:, 0].copy()
+restarts = np.diff(steps) <= 0
+for row in restart_rows:
+    if row < len(steps):
+        restarts[row - 1] = True
+restart_offsets = np.where(restarts, steps[:-1], 0)
+steps[1:] += np.cumsum(restart_offsets)
+
+for i, label in enumerate(legend_labels):
+    axs[0, 0].loglog(steps, loss[:, plot_cols][:, i], '-', linewidth=1.4, color=COLORS[i % len(COLORS)], label=label)
 axs[0, 0].set_xlabel(xlabel)
 axs[0, 0].set_ylabel('Loss functions')
 axs[0, 0].margins(x=0.02)

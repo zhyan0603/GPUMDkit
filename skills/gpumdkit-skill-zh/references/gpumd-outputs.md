@@ -37,8 +37,8 @@ dump_exyz <i> <v> <f> <p> <s>       -> dump_xyz <i> dump.xyz[*] velocity force p
 
 这些是迁移示例，不是当前命令。只有需要每帧独立文件时才在文件名中使用 `*`。extended XYZ 仍是支持的数据格式，`dump_observer` 仍有 `interval_exyz` 参数；不要删除这些格式/参数引用。
 
-GPUMDkit 轨迹 MSD 要求 extxyz 的 `pos` 字段为已核验的展开坐标；
-`-calc msd` 不直接读取 `unwrapped_position`。晶胞和坐标要求见 `calculators.md`。
+GPUMDkit 轨迹 MSD：每帧都有 `unwrapped_position` 列时，`-calc msd` 直接使用该列；
+否则在固定晶胞中按最小镜像对 `pos` 解卷绕。晶胞和坐标要求见 `calculators.md`。
 
 ## 热力学和模型特定 dump
 

@@ -112,12 +112,12 @@
 <h2 id="完整示例">完整示例</h2>
 <p>下面的每条命令都在一个小型示意文件 <code>train.xyz</code>（9 帧、每帧 16 个原子）上运行。每条命令都会写出<strong>新</strong>文件，不会改动输入文件。</p>
 <div class="code"><div class="cap"><i></i><i></i><i></i><span>bash</span></div><pre><code>gpumdkit.sh -get_frame train.xyz 3</code></pre><button class="copy-btn" data-copy-pre aria-label="Copy"><svg class="cp"><use href="#i-copy"/></svg><svg class="ok"><use href="#i-check"/></svg></button></div>
-<div class="code"><div class="cap"><i></i><i></i><i></i><span>text</span></div><pre><code>Frame 3 has been successfully written to frame_3.xyz.</code></pre><button class="copy-btn" data-copy-pre aria-label="Copy"><svg class="cp"><use href="#i-copy"/></svg><svg class="ok"><use href="#i-check"/></svg></button></div>
+<div class="code"><div class="cap"><i></i><i></i><i></i><span>text</span></div><pre><code> Frame 3 has been successfully written to frame_3.xyz.</code></pre><button class="copy-btn" data-copy-pre aria-label="Copy"><svg class="cp"><use href="#i-copy"/></svg><svg class="ok"><use href="#i-check"/></svg></button></div>
 <div class="code"><div class="cap"><i></i><i></i><i></i><span>bash</span></div><pre><code>gpumdkit.sh -replicate train.xyz big.xyz 2 1 1</code></pre><button class="copy-btn" data-copy-pre aria-label="Copy"><svg class="cp"><use href="#i-copy"/></svg><svg class="ok"><use href="#i-check"/></svg></button></div>
-<div class="code"><div class="cap"><i></i><i></i><i></i><span>text</span></div><pre><code>Supercell: 2x1x1, Total atoms: 32
-Supercell created and saved to big.xyz</code></pre><button class="copy-btn" data-copy-pre aria-label="Copy"><svg class="cp"><use href="#i-copy"/></svg><svg class="ok"><use href="#i-check"/></svg></button></div>
+<div class="code"><div class="cap"><i></i><i></i><i></i><span>text</span></div><pre><code> Supercell: 2x1x1, Total atoms: 32
+ Supercell created and saved to big.xyz</code></pre><button class="copy-btn" data-copy-pre aria-label="Copy"><svg class="cp"><use href="#i-copy"/></svg><svg class="ok"><use href="#i-check"/></svg></button></div>
 <div class="code"><div class="cap"><i></i><i></i><i></i><span>bash</span></div><pre><code>gpumdkit.sh -addweight train.xyz w.xyz 2.0</code></pre><button class="copy-btn" data-copy-pre aria-label="Copy"><svg class="cp"><use href="#i-copy"/></svg><svg class="ok"><use href="#i-check"/></svg></button></div>
-<div class="code"><div class="cap"><i></i><i></i><i></i><span>text</span></div><pre><code>Weights in train.xyz have been updated and saved to w.xyz</code></pre><button class="copy-btn" data-copy-pre aria-label="Copy"><svg class="cp"><use href="#i-copy"/></svg><svg class="ok"><use href="#i-check"/></svg></button></div>
+<div class="code"><div class="cap"><i></i><i></i><i></i><span>text</span></div><pre><code> Weights in train.xyz have been updated and saved to w.xyz</code></pre><button class="copy-btn" data-copy-pre aria-label="Copy"><svg class="cp"><use href="#i-copy"/></svg><svg class="ok"><use href="#i-check"/></svg></button></div>
 <div class="code"><div class="cap"><i></i><i></i><i></i><span>bash</span></div><pre><code>gpumdkit.sh -frame_range train.xyz 0 0.5</code></pre><button class="copy-btn" data-copy-pre aria-label="Copy"><svg class="cp"><use href="#i-copy"/></svg><svg class="ok"><use href="#i-check"/></svg></button></div>
 <div class="code"><div class="cap"><i></i><i></i><i></i><span>text</span></div><pre><code> Extracted 4 frames from fraction 0.0 to 0.5
  Corresponding to frames 0 to 3
@@ -180,9 +180,9 @@ Input the function number or converter keyword:</code></pre><button class="copy-
 </tr>
 <tr>
 <td><code>104</code></td>
-<td><code>abacus2xyz_scf.sh</code> / <code>abacus2xyz_md.sh</code></td>
+<td><code>abacus2xyz_scf.py</code> / <code>abacus2xyz_md.py</code></td>
 <td>ABACUS 转 extxyz</td>
-<td>转换 ABACUS SCF 或 MD 输出</td>
+<td>将 SCF 或 MD 输出转换为 <code>NEPdataset/train.xyz</code></td>
 </tr>
 <tr>
 <td><code>105</code></td>
@@ -282,6 +282,7 @@ Input the function number or converter keyword:</code></pre><button class="copy-
 </tr>
 </tbody>
 </table></div>
+<p>ABACUS SCF 转换从 <code>running_scf.log</code> 读取晶胞、坐标、能量、力和可用的应力。没有日志时，读取 <code>abacus.json</code>。</p>
 <h2 id="快速命令表">快速命令表</h2>
 <div class="tbl-wrap"><table class="tbl">
 <thead>
@@ -367,12 +368,12 @@ Input the function number or converter keyword:</code></pre><button class="copy-
 <h2 id="看懂输入和输出文件名">看懂输入和输出文件名</h2>
 <p>第一次转换时，可以先使用只有两个参数的 POSCAR 路线，文件流向最直观：</p>
 <div class="code"><div class="cap"><i></i><i></i><i></i><span>text</span></div><pre><code>$ gpumdkit.sh -pos2exyz -h
- Usage: gpumdkit.sh -pos2exyz &lt;POSCAR&gt; &lt;output.xyz&gt;
+ Usage: gpumdkit.sh -pos2exyz &lt;POSCAR&gt; [&lt;POSCAR2&gt; ...] &lt;output.xyz&gt;
 
  Arguments:
    POSCAR       One or more VASP POSCAR files (supports wildcards)
-   output.xyz   Output extxyz file</code></pre><button class="copy-btn" data-copy-pre aria-label="Copy"><svg class="cp"><use href="#i-copy"/></svg><svg class="ok"><use href="#i-check"/></svg></button></div>
-<p><code>POSCAR</code> 是输入结构文件名，<code>output.xyz</code> 是命令创建的 extxyz 文件。通配符由 shell 展开；批量转换前应先确认实际匹配到的文件名。转换完成后可以先做一个轻量格式检查：</p>
+   output.xyz   Output extxyz file (always the last argument)</code></pre><button class="copy-btn" data-copy-pre aria-label="Copy"><svg class="cp"><use href="#i-copy"/></svg><svg class="ok"><use href="#i-check"/></svg></button></div>
+<p><code>POSCAR</code> 是输入结构文件名，<code>output.xyz</code> 是命令创建的 extxyz 文件。输出文件名之前可以给出多个 POSCAR 文件，例如 <code>gpumdkit.sh -pos2exyz POSCAR_*.vasp output.xyz</code>。输出文件必须以 <code>.xyz</code> 或 <code>.extxyz</code> 结尾。加引号的模式（如 <code>"POSCAR_*.vasp"</code>）按自然顺序读取（<code>POSCAR_2</code> 在 <code>POSCAR_10</code> 之前），不加引号时顺序由 shell 展开决定；批量转换前应先确认实际匹配到的文件名。转换完成后可以先做一个轻量格式检查：</p>
 <div class="code"><div class="cap"><i></i><i></i><i></i><span>bash</span></div><pre><code>head -n 2 output.xyz</code></pre><button class="copy-btn" data-copy-pre aria-label="Copy"><svg class="cp"><use href="#i-copy"/></svg><svg class="ok"><use href="#i-check"/></svg></button></div>
 <p>第一行是原子数，第二行包含晶胞和已有性质等 extxyz 元数据。</p>
 <h2 id="常见例子">常见例子</h2>

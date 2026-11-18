@@ -363,7 +363,7 @@ gpumdkit.sh -filter_value train.xyz force 20
 gpumdkit.sh -filter_value train.xyz energy <max_energy>
 ```
 
-A structure is kept when every value is at most the threshold: each force component in magnitude (eV/Å) for `force`, the total energy stored in the file (eV, not per atom) for `energy`, and each virial component for `virial`. Frames that do not store the chosen property cannot be checked and are kept; the script reports how many. The kept structures are written to `filtered.xyz`.
+A structure is kept when every value is at most the threshold: each force component in magnitude (eV/Å) for `force`, the total energy stored in the file (eV, not per atom) for `energy`, and each virial component for `virial`. The range and filter commands accept both `force` and `forces` as per-atom extxyz field names. Frames that do not store the chosen property cannot be checked and are kept; the script reports how many. The kept structures are written to `filtered.xyz`.
 
 ### Filter by Pair-Distance Range
 
@@ -403,11 +403,15 @@ This is intended for systems where common oxidation states are meaningful.
 
 `find_outliers.py` finds outlier structures in NEP training data based on RMSE thresholds for energy, force, and stress.
 
-**Input files:** `energy_train.out`, `force_train.out`, `stress_train.out`, `train.xyz`
+**Input files:** `energy_train.out`, `force_train.out`, `train.xyz` and optional
+`stress_train.out`. Frames without stress labels still participate in energy
+and force screening.
 
 These files are generated during NEP training. The script compares DFT vs NEP predictions and identifies structures with large errors.
 
-Structures with a `-1e6` missing-stress marker or a stress component whose absolute value exceeds `1e6` are excluded before RMSE calculation and are not written to either output dataset. If no valid structures remain, the script reports an error without writing outputs.
+When stress labels are available, the stress threshold applies only to frames
+with valid labels. If there are no valid labels, the script screens by energy
+and force and still writes both datasets.
 
 ```bash
 # Interactive mode

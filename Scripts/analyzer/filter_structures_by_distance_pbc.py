@@ -19,10 +19,11 @@ Output:
   filtered_<file_name>       Structures that pass the filter
   filtered_out_<file_name>   Structures that fail the filter
 Author:     Zihan YAN (yanzihan@westlake.edu.cn)
-Last-modified: 2026-05-16
+Last-modified: 2026-11-10
 =============================================================================
 """
 
+import os
 import sys
 
 args = sys.argv[1:]
@@ -43,8 +44,8 @@ if len(args) < 1 or args[0] in ("-h", "--help"):
     sys.exit(0 if args and args[0] in ("-h", "--help") else 1)
 
 import numpy as np
+from ase.geometry import get_distances
 from ase.io import read, write
-from scipy.spatial.distance import pdist
 
 def print_progress_bar(iteration, total, length=50):
     percent = ("{0:.1f}").format(100 * (iteration / float(total)))
@@ -54,38 +55,22 @@ def print_progress_bar(iteration, total, length=50):
     if iteration == total:
         print()
 
-# The following function is a part of NepTrainKit (https://github.com/aboys-cb/NepTrainKit)
-# Thanks to Chengbing Chen for providing this function.
-def calculate_pairwise_distances(lattice_params, atom_coords, fractional=True):
-    """
-    Calculate the distances between all pairs of atoms in a crystal, considering periodic boundary conditions.
-
-    Parameters:
-    lattice_params: Lattice parameters, a 3x3 numpy array representing the lattice vectors (a, b, c).
-    atom_coords: Atomic coordinates, an Nx3 numpy array.
-    fractional: Whether the coordinates are fractional (True) or Cartesian (False).
-
-    Returns:
-    distances: An NxN numpy array containing the distances between all pairs of atoms.
-    """
-    if fractional:
-        atom_coords = np.dot(atom_coords, lattice_params)
-
-    diff = atom_coords[np.newaxis, :, :] - atom_coords[:, np.newaxis, :]
-    shifts = np.array(np.meshgrid([-1, 0, 1], [-1, 0, 1], [-1, 0, 1])).T.reshape(-1, 3)
-    lattice_shifts = np.dot(shifts, lattice_params)
-    all_diffs = diff[:, :, np.newaxis, :] + lattice_shifts[np.newaxis, np.newaxis, :, :]
-    all_distances = np.sqrt(np.sum(all_diffs ** 2, axis=-1))
-    distances = np.min(all_distances, axis=-1)
-    np.fill_diagonal(distances, 0)
-    return distances
-
 # Read the file name from command line arguments
 file_name = sys.argv[1]
 
+if not os.path.isfile(file_name):
+    print(f" Error: file '{file_name}' does not exist.")
+    sys.exit(1)
+
 # Check if the distance threshold is provided
 if len(sys.argv) > 2:
-    distance_threshold = float(sys.argv[2])
+    try:
+        distance_threshold = float(sys.argv[2])
+        if not np.isfinite(distance_threshold):
+            raise ValueError
+    except ValueError:
+        print(f" Error: distance_threshold must be a number, got '{sys.argv[2]}'.")
+        sys.exit(1)
 else:
     distance_threshold = None
 
@@ -98,16 +83,20 @@ filtered_out_frames = []
 
 # Iterate over each frame
 for i, frame in enumerate(frames):
-    # Get cell parameters and atomic positions
-    lattice_params = frame.get_cell()
-    atom_coords = frame.get_positions()
-    # Calculate distances using custom function
-    distances = calculate_pairwise_distances(lattice_params, atom_coords, fractional=False)
-    np.fill_diagonal(distances, float('inf'))
-    min_distance = np.min(distances)
-    
-    # Check if the minimum distance meets the threshold
-    if distance_threshold is None or min_distance >= distance_threshold:
+    passes = True
+    if distance_threshold is not None and len(frame) > 1:
+        positions = frame.positions
+        block_size = max(1, 8192 // len(frame))
+        columns = np.arange(len(frame))
+        for start in range(0, len(frame), block_size):
+            stop = min(start + block_size, len(frame))
+            _, distances = get_distances(positions[start:stop], positions, frame.cell, frame.pbc)
+            distances[columns[start:stop, None] == columns] = np.inf
+            if distances.min() < distance_threshold:
+                passes = False
+                break
+
+    if passes:
         filtered_frames.append(frame)
     else:
         filtered_out_frames.append(frame)
@@ -119,11 +108,14 @@ filtered_count = len(filtered_frames)
 filtered_out_count = len(filtered_out_frames)
 
 # Output the filtered frames to a new XYZ file
-output_file_name = 'filtered_' + file_name
+# Outputs are written to the current directory, named after the input file
+# without its directory part, so that an input given with a path also works.
+base_name = os.path.basename(file_name)
+output_file_name = 'filtered_' + base_name
 write(output_file_name, filtered_frames)
 
 # Output the filtered-out frames to a new XYZ file
-filtered_out_file_name = 'filtered_out_' + file_name
+filtered_out_file_name = 'filtered_out_' + base_name
 if filtered_out_count > 0:  # Only write if there are filtered-out structures
     write(filtered_out_file_name, filtered_out_frames)
 

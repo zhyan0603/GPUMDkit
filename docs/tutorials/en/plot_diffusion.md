@@ -159,13 +159,17 @@ gpumdkit.sh -plt D_xyz
 ---
 
 !!! note "Assumptions of the conductivity plots (sigma, sigma_PT, sigma_xyz)"
-    These conductivity plots use the first temperature's `model.xyz` to count Li and
-    Na together, assume unit charge, and apply the same ion count and replication
-    across temperatures. Use them for one mobile Li or Na species with matching MSD
-    columns; other species, mixed carriers, or changing composition require a
-    separate calculation. They fit the 40%–80% MSD interval and extrapolate
-    conductivity to 300 K using the Nernst–Einstein relation. Validate the diffusive
-    interval and the extrapolation range before interpreting the results.
+    These conductivity plots count the atoms of the given mobile element in the
+    first temperature's `model.xyz`, use the given charge number, and apply the
+    same ion count and replication across temperatures. Use them for one mobile
+    species with matching MSD columns; mixed carriers or changing composition
+    require a separate calculation. They fit the 40%–80% MSD interval and
+    extrapolate conductivity to 300 K using the Nernst–Einstein relation.
+    The temperature is taken from the folder name and the volume is the mean over
+    the whole `thermo.out`, whereas `gpumdkit.sh -calc ionic-cond` averages the
+    temperature and volume over the last half of `thermo.out`, so the two
+    conductivities can differ slightly. Validate the diffusive interval and the
+    extrapolation range before interpreting the results.
 
 ### sigma (`plt_arrhenius_sigma.py`)
 
@@ -174,9 +178,16 @@ Creates Arrhenius plot for ionic conductivity (log10(σ·T) vs 1000/T).
 **Input Files:** `thermo.out` and `msd.out` in each `*K/` directory;
 `model.xyz` and optional `run.in` in the first temperature directory
 
+The mobile ion species and its charge number `z` are required by the Nernst-Einstein
+conversion. Give them after the command (for example `Li 1`, `Na 1`, `H 1`, or `Mg 2`);
+if they are omitted, the script asks for both on one line (for example `Li 1`). Only atoms
+of that element in the first `model.xyz` are counted, multiplied by any `replicate` factor.
+When `run.in` contains `compute_msd`, the script warns if its MSD group does not contain
+exactly that species.
+
 ```bash
-gpumdkit.sh -plt arrhenius_sigma
-gpumdkit.sh -plt sigma         # Alternative command
+gpumdkit.sh -plt arrhenius_sigma Li 1
+gpumdkit.sh -plt sigma Li 1 save   # Alternative command; omit "Li 1" to be prompted
 ```
 
 <div align="center">
@@ -194,9 +205,12 @@ The 300 K conductivity is extrapolated from the branch on the same side of the t
 **Input Files:** `thermo.out` and `msd.out` in each `*K/` directory;
 `model.xyz` and optional `run.in` in the first temperature directory
 
+The element and charge come before the transition temperature, as for `sigma`;
+if they are omitted (`gpumdkit.sh -plt sigma_PT 380`), the script asks for them.
+
 ```bash
-gpumdkit.sh -plt sigma_PT 380
-gpumdkit.sh -plt sigma_PT 380 save
+gpumdkit.sh -plt sigma_PT Li 1 380
+gpumdkit.sh -plt sigma_PT Li 1 380 save
 ```
 
 The legend reports the activation energy of each branch as `HighT (xx eV)` and `LowT (xx eV)`.
@@ -215,8 +229,11 @@ and extracts the activation energy of each direction using the Nernst-Einstein
 relation.
 
 **Input Files:** `thermo.out` and `msd.out` in each `*K/` directory;
-`model.xyz` in the first temperature directory
+`model.xyz` and optional `run.in` in the first temperature directory
+
+The element and charge arguments work as for `sigma`.
 
 ```bash
-gpumdkit.sh -plt sigma_xyz
+gpumdkit.sh -plt sigma_xyz Li 1
+gpumdkit.sh -plt sigma_xyz Li 1 save
 ```

@@ -64,11 +64,17 @@
 - 使用有意义的变量和函数名。
 - 在必要处添加注释以解释复杂逻辑。
 
+### 兼容性与审查优先级
+
+- 优先修复受支持输入上的故障，以及会悄悄改变科学结果的问题。
+- 对外部软件版本、用户输入错误或文件错配、用户侧预处理导致的问题，说明触发条件，并在适当时提供清晰的报错或记录输入要求。
+- 此类兼容处理默认属于可选改动。在添加兜底逻辑或扩大输入支持范围前，先询问维护者是否需要兼容。
+
 ### 文档
 
 - 确保帮助信息（如 `-h` 标志）清晰准确。
 - 教程文档位于 `docs/tutorials/en/`（英文）和 `docs/tutorials/zh/`（中文）。如果你添加了新功能，请考虑更新相关教程页面。
-- 编辑教程 Markdown 文件后，使用 `python3 docs/manual-src/build.py` 重新生成网页。
+- 编辑教程 Markdown 文件后，使用 `python docs/manual-src/build.py` 重新生成网页。
 
 ### 更新记录
 
@@ -244,7 +250,7 @@ git checkout -b your-branch-name upstream/dev
    args = sys.argv[1:]
    if len(args) < 2 or args[0] in ("-h", "--help"):
        print(" Usage: gpumdkit.sh -analyze_bonds <input.xyz> <cutoff_distance>")
-       print("    or: python3 analyze_bonds.py <input.xyz> <cutoff_distance>")
+       print("    or: python analyze_bonds.py <input.xyz> <cutoff_distance>")
        print("")
        print(" Arguments:")
        print("   input.xyz        Input extxyz file")
@@ -304,12 +310,7 @@ local opts="-h -help -update -U -clean -time -plt -calc ... -your_new_flag ..."
 #                                                        在此添加你的标志
 ```
 
-如果你的标志需要文件参数，将其添加到现有的文件补全 case 中：
-```bash
-# 找到需要文件参数的 case 并用 | 添加你的标志
--out2xyz|-out2exyz|-...|-your_new_flag)
-    COMPREPLY=($(compgen -f -- "$cur")) ;;
-```
+标志之后的每个参数都会自动补全文件名和目录名，因此接受文件参数的标志无需额外设置。
 
 如果你的标志接受二级选项（如 `-plt` 或 `-calc`），添加新 case：
 ```bash
@@ -363,10 +364,10 @@ bash -n gpumdkit.sh
 find src Scripts -name '*.sh' -exec bash -n {} +
 
 # Python 语法检查（针对修改的 Python 文件）
-python3 -m py_compile path/to/modified_script.py
+python -m py_compile path/to/modified_script.py
 
 # 重新生成网页（如果修改了文档）
-python3 docs/manual-src/build.py
+python docs/manual-src/build.py
 
 # 检查尾随空格问题
 git diff --check

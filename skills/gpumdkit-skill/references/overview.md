@@ -134,7 +134,7 @@ gpumdkit.sh -calc ionic-cond Li 1
 After checking every temperature, enter the parent containing temperature subdirectories such as `500K/` and `600K/` for cross-temperature analysis:
 
 ```bash
-gpumdkit.sh -plt sigma
+gpumdkit.sh -plt sigma <element> <charge>
 gpumdkit.sh -plt D
 ```
 

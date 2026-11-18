@@ -20,7 +20,7 @@ Purpose:    Start a local web server for the current working directory.
             in the web/ folder next to this script and are reloaded
             automatically when they change on disk.
 Usage:      gpumdkit.sh -server [port] [-b <address>] [-pw <password>]
-            python3 server.py [port] [-b <address>] [-pw <password>]
+            python server.py [port] [-b <address>] [-pw <password>]
 Arguments:
   port              Port to listen on (default: 8888)
   -b <address>      Bind address (default: 127.0.0.1; 0.0.0.0 for LAN)
@@ -223,7 +223,7 @@ DESCRIPTIONS = {
 
 USAGE_LINES = [
     " Usage: gpumdkit.sh -server [port] [-b <address>] [-pw <password>]",
-    "    or: python3 server.py [port] [-b <address>] [-pw <password>]",
+    "    or: python server.py [port] [-b <address>] [-pw <password>]",
     "",
     " Arguments:",
     "   port             Port to listen on (default: 8888)",
@@ -1296,6 +1296,28 @@ class KitHandler(BaseHTTPRequestHandler):
         sys.stdout.flush()
 
     def _route(self, method):
+        host = self.headers.get("Host", "").lower()
+        # A loopback bind may run without a password, so reject foreign Host
+        # names there (DNS rebinding). Non-loopback binds always require a
+        # password, so any host name or proxy in front of them is accepted.
+        if self.server.loopback:
+            allowed_hosts = {"localhost", "127.0.0.1", "[::1]", self.server.bind_host}
+            if host.startswith("["):  # IPv6 literal, e.g. [::1]:8888
+                host_name = host.split("]", 1)[0] + "]"
+            else:
+                host_name = host.split(":", 1)[0]
+            if host_name not in allowed_hosts:
+                self.close_connection = True
+                self._send_json({"error": "invalid Host header; open the console at "
+                                          "http://localhost:<port> or http://127.0.0.1:<port>"}, 403)
+                return
+        origin = self.headers.get("Origin")
+        if (method == "POST" and origin is not None
+                and urlparse(origin.lower()).netloc != host):
+            self.close_connection = True
+            self._send_json({"error": "invalid Origin"}, 403)
+            return
+
         parsed = urlparse(self.path)
         path = parsed.path
         query = parse_qs(parsed.query)
@@ -1394,6 +1416,10 @@ class KitHandler(BaseHTTPRequestHandler):
         self._send_body(200, data, "image/png")
 
     def _read_json(self):
+        if self.headers.get_content_type() != "application/json":
+            self.close_connection = True
+            self._send_json({"error": "expected application/json"}, 415)
+            return None
         try:
             length = int(self.headers.get("Content-Length", "0") or 0)
         except ValueError:
@@ -1668,6 +1694,10 @@ class KitHandler(BaseHTTPRequestHandler):
             self.close_connection = True
             self._send_json({"error": "unauthorized"}, 401)
             return
+        if self.headers.get_content_type() != "application/octet-stream":
+            self.close_connection = True
+            self._send_json({"error": "expected application/octet-stream"}, 415)
+            return
         raw_length = self.headers.get("Content-Length")
         try:
             length = int(raw_length) if raw_length is not None else -1
@@ -1934,6 +1964,8 @@ def main():
     except OSError as exc:
         print(f" Error: cannot listen on {bind}:{port} ({exc}).")
         sys.exit(1)
+    httpd.bind_host = bind.lower()
+    httpd.loopback = loopback
     httpd.daemon_threads = True
     print_banner(bind, port, loopback, bool(password))
     try:

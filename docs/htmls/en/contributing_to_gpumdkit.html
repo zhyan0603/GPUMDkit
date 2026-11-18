@@ -154,7 +154,7 @@ function convert_file() {
 <li>Ensure that help messages (e.g., <code>-h</code> flags) are clear and accurate.</li>
 <li>Tutorial documentation lives in <code>docs/tutorials/en/</code> (English) and <code>docs/tutorials/zh/</code> (Chinese).
   If you add a new feature, consider updating the relevant tutorial page.</li>
-<li>After editing tutorial markdown files, rebuild the web pages with <code>python3 docs/manual-src/build.py</code>.</li>
+<li>After editing tutorial markdown files, rebuild the web pages with <code>python docs/manual-src/build.py</code>.</li>
 </ul>
 <h3 id="update-log">Update Log</h3>
 <ul>
@@ -308,7 +308,7 @@ import sys
 args = sys.argv[1:]
 if len(args) &lt; 2 or args[0] in ("-h", "--help"):
     print(" Usage: gpumdkit.sh -analyze_bonds &lt;input.xyz&gt; &lt;cutoff_distance&gt;")
-    print("    or: python3 analyze_bonds.py &lt;input.xyz&gt; &lt;cutoff_distance&gt;")
+    print("    or: python analyze_bonds.py &lt;input.xyz&gt; &lt;cutoff_distance&gt;")
     print("")
     print(" Arguments:")
     print("   input.xyz        Input extxyz file")
@@ -362,10 +362,8 @@ vim Scripts/utils/completion.sh</code></pre><button class="copy-btn" data-copy-p
 <div class="code"><div class="cap"><i></i><i></i><i></i><span>bash</span></div><pre><code># Find the line with local opts=...
 local opts="-h -help -update -U -clean -time -plt -calc ... -your_new_flag ..."
 #                                                        Add your flag here</code></pre><button class="copy-btn" data-copy-pre aria-label="Copy"><svg class="cp"><use href="#i-copy"/></svg><svg class="ok"><use href="#i-check"/></svg></button></div></p>
-<p>If your flag requires file arguments, add it to the existing file-completion case:
-<div class="code"><div class="cap"><i></i><i></i><i></i><span>bash</span></div><pre><code># Find the case for file-requiring flags and add yours with |
--out2xyz|-out2exyz|-...|-your_new_flag)
-    COMPREPLY=($(compgen -f -- "$cur")) ;;</code></pre><button class="copy-btn" data-copy-pre aria-label="Copy"><svg class="cp"><use href="#i-copy"/></svg><svg class="ok"><use href="#i-check"/></svg></button></div></p>
+<p>File and directory names are completed automatically for every argument after
+the flag, so a flag that takes file arguments needs nothing more.</p>
 <p>If your flag accepts secondary options (like <code>-plt</code> or <code>-calc</code>), add a new case:
 <div class="code"><div class="cap"><i></i><i></i><i></i><span>bash</span></div><pre><code>case "$prev" in
     # ... existing cases ...
@@ -411,10 +409,10 @@ bash -n gpumdkit.sh
 find src Scripts -name '*.sh' -exec bash -n {} +
 
 # Python syntax checks (for modified Python files)
-python3 -m py_compile path/to/modified_script.py
+python -m py_compile path/to/modified_script.py
 
 # Rebuild the web pages (if you modified documentation)
-python3 docs/manual-src/build.py
+python docs/manual-src/build.py
 
 # Check for trailing whitespace issues
 git diff --check</code></pre><button class="copy-btn" data-copy-pre aria-label="Copy"><svg class="cp"><use href="#i-copy"/></svg><svg class="ok"><use href="#i-check"/></svg></button></div>

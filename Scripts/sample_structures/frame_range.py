@@ -18,7 +18,7 @@ Arguments:
 Output:
   <input>_<start>_<end>.xyz
 Author:     Zihan YAN (yanzihan@westlake.edu.cn)
-Last-modified: 2026-05-16
+Last-modified: 2026-11-10
 =============================================================================
 """
 
@@ -64,7 +64,10 @@ end_idx = int(end_fraction * n_frames)
 subset_images = images[start_idx:end_idx]
 
 # Generate output filename
-output_file = input_file.replace('.xyz', f'_{start_fraction:.2f}_{end_fraction:.2f}.xyz')
+# Build the name from the stem so that the input file is never overwritten,
+# whatever its extension is (e.g. .xyz, .extxyz, or none).
+input_stem = os.path.splitext(input_file)[0]
+output_file = f'{input_stem}_{start_fraction:.2f}_{end_fraction:.2f}.xyz'
 
 # Write to new file
 write(output_file, subset_images, format='extxyz')

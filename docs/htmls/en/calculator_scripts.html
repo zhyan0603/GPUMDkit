@@ -159,7 +159,7 @@
 </tr>
 <tr>
 <td>NEB</td>
-<td><code>gpumdkit.sh -calc neb &lt;initial.xyz&gt; &lt;final.xyz&gt; &lt;n_images&gt; &lt;nep.txt&gt;</code></td>
+<td><code>gpumdkit.sh -calc neb &lt;initial.xyz&gt; &lt;final.xyz&gt; &lt;n_images&gt; &lt;nep.txt&gt; [max_steps]</code></td>
 <td>initial/final structures</td>
 </tr>
 <tr>
@@ -326,11 +326,13 @@ Enter number of ions:</code></pre><button class="copy-btn" data-copy-pre aria-la
 <p><code>calc_msd.py</code> computes MSD directly from an extxyz trajectory.</p>
 <div class="code"><div class="cap"><i></i><i></i><i></i><span>bash</span></div><pre><code>gpumdkit.sh -calc msd dump.xyz Li 10
 gpumdkit.sh -calc msd dump.xyz Li 10 5000</code></pre><button class="copy-btn" data-copy-pre aria-label="Copy"><svg class="cp"><use href="#i-copy"/></svg><svg class="ok"><use href="#i-check"/></svg></button></div>
-<p>Use a fixed-cell trajectory with stable atom order and verified unwrapped
-coordinates in the <code>pos</code> field. The script reads <code>pos</code> and the first frame's
-cell; it does not use a separate <code>unwrapped_position</code> property. Its automatic
-wrapping check is not sufficient to validate wrapped trajectories, and its
-axis-wise unwrapping does not handle general tilted or changing cells.
+<p>Keep the atom order consistent across frames. By default, the script uses
+<code>unwrapped_position</code> when that column is present in every frame. Otherwise,
+for a fixed cell, it unwraps the target atoms in <code>pos</code> with the minimum-image
+convention along periodic directions. This works for wrapped, partially
+wrapped, and already continuous coordinates. Store frames often enough that
+each atom moves less than half the cell length between consecutive frames.</p>
+<p>Periodic variable-cell trajectories require an <code>unwrapped_position</code> column.
 The command overwrites <code>msd.out</code> in the current directory.</p>
 <p>From interactive mode, choose <code>412</code>. You will see:</p>
 <div class="code"><div class="cap"><i></i><i></i><i></i><span>text</span></div><pre><code>Input &lt;extxyz_file&gt; &lt;element_symbol&gt; &lt;dt_fs&gt; [max_corr_steps]
@@ -528,7 +530,8 @@ gpumdkit.sh -plt doas doas.out Li</code></pre><button class="copy-btn" data-copy
 
 <h2 id="neb-with-a-nep-model">NEB with a NEP Model</h2>
 <div class="code"><div class="cap"><i></i><i></i><i></i><span>bash</span></div><pre><code>gpumdkit.sh -calc neb initial.xyz final.xyz 9 nep.txt</code></pre><button class="copy-btn" data-copy-pre aria-label="Copy"><svg class="cp"><use href="#i-copy"/></svg><svg class="ok"><use href="#i-check"/></svg></button></div>
-<p>This runs a NEB calculation with <code>9</code> intermediate images. During execution, the script asks how atoms should be fixed:</p>
+<p>This runs a NEB calculation with <code>9</code> intermediate images. Append <code>max_steps</code>
+to limit optimization steps. The script reports whether NEB converged. During execution, the script asks how atoms should be fixed:</p>
 <ul>
 <li><code>none</code>: no atoms fixed;</li>
 <li><code>index</code>: fix atoms by index;</li>

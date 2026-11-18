@@ -202,8 +202,8 @@ gpumdkit.sh  # 选择：2) Sample Structures -&gt; 203) FPS by NepTrain</code></
 <p>如果你训练了一组 NEP 委员会模型，GPUMD 的 <code>active</code> 关键字会在 MD 过程中输出 <code>active.out</code> 和 <code>active.xyz</code>。随后可以用功能 205 按力偏差排序并限制数量。使用前请确认模型顺序、检查间隔、阈值、<code>top_n</code> 和 <code>min_deviation</code>。</p>
 <h2 id="3-准备-dft-计算">3. 准备 DFT 计算</h2>
 <p>把选出的结构（<code>selected.xyz</code>）交给功能 301：</p>
-<div class="code"><div class="cap"><i></i><i></i><i></i><span>bash</span></div><pre><code>gpumdkit.sh  # 选择：3) Workflow -&gt; 301 -&gt; VASP 或 CP2K</code></pre><button class="copy-btn" data-copy-pre aria-label="Copy"><svg class="cp"><use href="#i-copy"/></svg><svg class="ok"><use href="#i-check"/></svg></button></div>
-<p>VASP 分支会创建 <code>struct_fp/</code>、<code>fp/</code>、每个结构一个计算目录以及 <code>presub.sh</code>；之后把 <code>INCAR</code>、<code>POTCAR</code> 和 <code>KPOINTS</code> 放进 <code>fp/</code>。CP2K 分支（301 -&gt; 2）会依次询问 extxyz 文件、输入模板和目录前缀。</p>
+<div class="code"><div class="cap"><i></i><i></i><i></i><span>bash</span></div><pre><code>gpumdkit.sh  # 选择：3) Workflow -&gt; 301 -&gt; VASP、CP2K 或 ABACUS</code></pre><button class="copy-btn" data-copy-pre aria-label="Copy"><svg class="cp"><use href="#i-copy"/></svg><svg class="ok"><use href="#i-check"/></svg></button></div>
+<p>VASP 分支会创建 <code>struct_fp/</code>、<code>fp/</code>、每个结构一个计算目录以及 <code>presub.sh</code>；之后把 <code>INCAR</code>、<code>POTCAR</code> 和 <code>KPOINTS</code> 放进 <code>fp/</code>。CP2K 分支（301 -&gt; 2）会依次询问 extxyz 文件、输入模板和目录前缀。ABACUS 分支（301 -&gt; 3）会询问 extxyz 文件、目录前缀、赝势目录和可选的轨道目录；之后把 <code>INPUT</code>（和 <code>KPT</code>）放进 <code>fp/</code>。</p>
 <p>提交前检查结构数量、原子和元素顺序、晶胞、DFT 输入以及作业脚本。GPUMDkit 不会提交作业。</p>
 <h2 id="4-转换并检查参考数据">4. 转换并检查参考数据</h2>
 <p>DFT 计算完成后进行转换。</p>

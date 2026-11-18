@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="./docs/Gallery/gpumdkit_logo.png" width="25%" alt="GPUMDkit Logo">
+  <img src="./docs/Gallery/gpumdkit_logo_lateral.png" width="55%" alt="GPUMDkit Logo">
 </p>
 <p align="center">
   <strong>English</strong>
@@ -21,6 +21,10 @@
   <a href="https://github.com/zhyan0603/GPUMDkit/graphs/contributors"><img src="https://img.shields.io/github/contributors/zhyan0603/GPUMDkit?style=flat-square&color=brightgreen&label=Contributors" alt="Contributors"></a>
 </p>
 <p style="text-align: justify;"><strong>GPUMDkit</strong> is a toolkit for the GPUMD (<em>Graphics Processing Units Molecular Dynamics</em>) and NEP (<em>neuroevolution potential</em>) programs. It provides a unified command-line entry point for common scripts, format conversion, structure sampling, NEP data preparation, analysis, and visualization.</p>
+
+<p align="center">
+  <a href="https://gpumdkit.cn/"><img src="./docs/Gallery/gpumdkit_hero.webp" width="100%" alt="GPUMDkit, a user-friendly toolkit for GPUMD and NEP: prepare data, train and simulate, then analyze and plot from the gpumdkit.sh menu"></a>
+</p>
 
 ## Features
 - **Data Preparation**: Convert, label, sample, split, filter, and inspect atomistic datasets.
@@ -128,7 +132,7 @@ There are two options, <u>*interactive mode*</u> and <u>*command-line mode*</u>
                 | |_| |  __/| |_| | |  | | |_| |   <| | |_
                  \____|_|    \___/|_|  |_|____/|_|\_\_|\__|
 
-                 GPUMDkit Version 1.5.8 (2026-10-20)
+                 GPUMDkit Version 1.6.0 (2026-11-17)
            Core Developer: Zihan YAN (yanzihan@westlake.edu.cn)
         Main Contributors: Denan LI, Xin WU, Zhoulin LIU & Chen HUA
 
@@ -158,7 +162,7 @@ the help information:
 
 ```
  +-------------------------------------------------------------------------------------------------------+
- |                          GPUMDkit 1.5.8 (2026-10-20)       Command Help                               |
+ |                          GPUMDkit 1.6.0 (2026-11-17)       Command Help                               |
  +-------------------------------------------------------------------------------------------------------+
  |                                          MAIN FUNCTIONS                                               |
  +-------------------------------------------------------------------------------------------------------+
@@ -206,7 +210,7 @@ the help information:
 
 ```
  +-----------------------------------------------------------------------------------------------+
- |                     GPUMDkit 1.5.8 (2026-10-20)       PLOT & VISUALIZATION TOOLS              |
+ |                     GPUMDkit 1.6.0 (2026-11-17)       PLOT & VISUALIZATION TOOLS              |
  +-----------------------------------------------------------------------------------------------+
  |  Usage: gpumdkit.sh -plt <type>                        List: gpumdkit.sh -plt -h              |
  +-----------------------------------------------------------------------------------------------+
@@ -271,6 +275,8 @@ gpumdkit.sh -plt train
 <div align="center">
     <img src="./docs/Gallery/train.png" alt="Training loss and parity plots" width="75%" />
 </div>
+
+`-plt train` and `-plt train_density` use the actual generations in `loss.out`, support custom output intervals and repeated comment headers, and accumulate generations across restarted training runs. Legacy files without headers remain supported.
 
 ##### Example 5: Plot prediction-mode parity results
 
@@ -363,7 +369,7 @@ Also, welcome to join our QQ group ([825696376](https://qun.qq.com/universal-sha
 
 ```bibtex
 @article{yan2026gpumdkit,
-  title   = {GPUMDkit: A User-Friendly Toolkit for GPUMD and NEP},
+  title   = { {GPUMDkit}: A User-Friendly Toolkit for {GPUMD} and {NEP} },
   author  = {Yan, Zihan and Li, Denan and Wu, Xin and Liu, Zhoulin and Hua, Chen and Situ, Boyi and Yang, Hao and Tang, Shengjie and Tang, Benrui and Wang, Ziyang and Yi, Shangzhao and Wang, Huan and Huang, Dian and Li, Ke and Guo, Qilin and Chen, Zherui and Xu, Ke and Wang, Yanzhou and Wang, Ziliang and Tang, Gang and Liu, Shi and Fan, Zheyong and Zhu, Yizhou},
   journal = {MGE Advances},
   volume  = {4},
