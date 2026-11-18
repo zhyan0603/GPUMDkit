@@ -16,7 +16,7 @@ Arguments:
 Output:
   <extxyz>  (converted structures in extxyz format)
 Author:     Benrui Tang (tang070205@proton.me)
-Last-modified: 2026-11-17
+Last-modified: 2026-11-18
 =============================================================================
 """
 
@@ -164,7 +164,7 @@ def main():
             if result is None:
                 print(f" Skipping incomplete or unconverged SCF in {folder}.")
                 continue
-            frame = format_frame(*result, "/".join(folder.parts[-3:]))
+            frame = format_frame(*result, "/".join(folder.resolve().parts[-3:]))
             output.parent.mkdir(parents=True, exist_ok=True)
             with output.open("a" if converted else "w") as stream:
                 stream.write(frame)

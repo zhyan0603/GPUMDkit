@@ -16,7 +16,7 @@ Arguments:
 Output:
   <extxyz>  Converted MD structures with energies and forces
 Author:     Benrui Tang (tang070205@proton.me)
-Last-modified: 2026-11-17
+Last-modified: 2026-11-18
 =============================================================================
 """
 
@@ -33,13 +33,20 @@ def convert_md(folder, output):
     from ase.units import Bohr
 
     log = (folder / "running_md.log").read_text(errors="replace")
+    energies_by_step = {}
     energies = []
+    current_step = None
     for line in log.splitlines():
-        if "final etot is" in line or "#TOTAL ENERGY#" in line:
-            energies.append(float(line.split()[-2]))
-        elif "!! convergence has not been achieved" in line:
-            energies.append(None)
+        step_match = re.search(r"STEP OF MOLECULAR DYNAMICS\s*:\s*(\d+)", line)
+        if step_match:
+            current_step = int(step_match.group(1))
+        elif "final etot is" in line or "#TOTAL ENERGY#" in line:
+            energy = float(line.split()[-2])
+            energies.append(energy)
+            if current_step is not None:
+                energies_by_step[current_step] = energy
 
+    use_step_map = len(energies_by_step) == len(energies) and bool(energies_by_step)
     first_step = re.search(r"STEP OF MOLECULAR DYNAMICS\s*:\s*(\d+)", log)
     start = int(first_step[1]) if first_step else 0
     dump = (folder / "MD_dump").read_text(errors="replace")
@@ -49,13 +56,16 @@ def convert_md(folder, output):
 
     converted = 0
     for step, frame in zip(steps[1:], frames[1:]):  # Preserve the menu's initial-frame skip.
-        energy_index = int(step) - start
-        if not 0 <= energy_index < len(energies):
-            raise ValueError(f"no matching energy in running_md.log for MD step {step}")
-        energy = energies[energy_index]
-        if energy is None:
-            print(f" Skipping unconverged MD step {step}.")
-            continue
+        step_number = int(step)
+        if use_step_map:
+            if step_number not in energies_by_step:
+                raise ValueError(f"no matching energy in running_md.log for MD step {step}")
+            energy = energies_by_step[step_number]
+        else:
+            energy_index = step_number - start
+            if not 0 <= energy_index < len(energies):
+                raise ValueError(f"no matching energy in running_md.log for MD step {step}")
+            energy = energies[energy_index]
 
         lines = frame.splitlines()
         lattice_constant = lines[0].split()
@@ -79,7 +89,7 @@ def convert_md(folder, output):
         if lines[5].upper().startswith("VIRIAL"):
             stress = np.array([line.split() for line in lines[6:9]], dtype=float)
             virial = stress * (abs(np.linalg.det(cell)) / KBAR_PER_EV_A3)
-        config = "/".join(folder.parts[-3:]) + f"-{step}"
+        config = "/".join(folder.resolve().parts[-3:]) + f"-{step}"
         record = format_frame(symbols, positions, forces, cell, energy, virial, config)
         output.parent.mkdir(parents=True, exist_ok=True)
         with output.open("a" if converted else "w") as stream:
@@ -109,7 +119,7 @@ def main():
                 print(f" Error: failed to convert ABACUS MD in '{directory}': {exc}")
                 return 1
             if not converted:
-                print(f" Error: no converged MD frames to convert in '{directory}'.")
+                print(f" Error: no MD frames to convert in '{directory}'.")
                 return 1
             print(f" Converted {converted} MD frames to {output}.")
             return 0
