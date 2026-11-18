@@ -29,9 +29,17 @@ This helper scans the current directory and proposes files to remove. It keeps c
 Before deleting anything, it prints the candidate file list and asks for confirmation:
 
 ```text
-Do you want to delete all these files?
-y/yes to delete, n/no to cancel, or input files to keep (separated by spaces):
+ +------------------------------------------------------+
+ | Do you want to delete all these files?               |
+ |   y / yes : delete all                               |
+ |   n / no / q : cancel                                |
+ |   or input filenames to keep (space-separated)       |
+ +------------------------------------------------------+
 ```
+
+Answers are case-insensitive. Pressing Enter without an answer cancels, and a
+name that is not in the printed list also cancels, so nothing is deleted by a
+typo.
 
 Use this command only after checking that the current directory is the calculation folder you intend to clean.
 
@@ -44,7 +52,7 @@ gpumdkit.sh -update
 gpumdkit.sh -U
 ```
 
-The updater checks the current Git branch against the remote GPUMDkit repository and runs `git pull` when updates are available. If the command is launched outside a Git repository, it tries to use the configured `GPUMDkit_path`.
+The updater always works in the directory given by `GPUMDkit_path`, whatever the current working directory is. It checks that installation's Git branch against the remote GPUMDkit repository and runs `git pull` when updates are available.
 
 ---
 

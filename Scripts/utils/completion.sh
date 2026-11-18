@@ -21,7 +21,7 @@ fi
 
 # Bash completion function for gpumdkit.sh, supporting primary and secondary parameters
 _gpumdkit_completions() {
-    local cur prev
+    local cur prev candidate
     cur="${COMP_WORDS[COMP_CWORD]}"    # Current word being typed
     prev="${COMP_WORDS[COMP_CWORD-1]}" # Previous word
 
@@ -31,29 +31,32 @@ _gpumdkit_completions() {
     # Calculator subcommands
     local calc_subcmds="ionic-cond nep des doas neb minimize msd nlist disp avg-struct oct-tilt pol-abo3"
 
-    # If we are completing a subcommand right after -calc
-    if [[ "$prev" == "-calc" ]]; then
-        COMPREPLY=($(compgen -W "$calc_subcmds" -- "$cur"))
+    # The first word after gpumdkit.sh is always a primary option
+    if [ "$COMP_CWORD" -le 1 ]; then
+        COMPREPLY=($(compgen -W "$opts" -- "$cur"))
         return
     fi
 
-    # Provide secondary completion based on the previous word
+    # Later words: a secondary keyword right after -calc, -time or -plt,
+    # otherwise a file or directory name (input files, output names, models)
     case "$prev" in
-        # Secondary options for -time
-        -time)
-            COMPREPLY=($(compgen -W "gpumd nep gnep" -- "$cur")) ;;
+        -calc)
+            COMPREPLY=($(compgen -W "$calc_subcmds" -- "$cur")) ;;
 
-        # Secondary options for -plt
+        -time)
+            COMPREPLY=($(compgen -W "gpumd wpe nep gnep" -- "$cur")) ;;
+
         -plt)
             COMPREPLY=($(compgen -W "thermo thermo2 train train_density prediction test train_test parity_density born_charge bec msd msd_all msd_conv msd_sdc sdc rdf rdf_pmf xrd xrd_comp vac restart dimer force_errors des doas charge arrhenius_d arrhenius_sigma sigma D D_PT sigma_PT sigma_xyz D_xyz net_force emd emd2 nemd hnemd pdos phonon phonon_comp plane-grid cohesive viscosity" -- "$cur")) ;;
 
-        # Options requiring files or directories, complete with filenames
-        -out2xyz|-out2xyz_bec|-out2exyz|-cp2k2xyz|-exyz2pos|-min_dist|-min_dist_pbc|-filter_dist|-filter_dist_pbc|-filter_box|-filter_value|-filter_range|-get_frame|-clean_xyz|-pos2exyz|-cif2exyz|-cif2pos|-pos2lmp|-lmp2exyz|-traj2exyz|-dp2xyz|-addgroup|-addlabel|-addweight|-analyze_comp|-replicate|-pda|-cbc|-frame_range|-chem_species|-xdat2exyz|-prediction|-prediction_dpa)
-            COMPREPLY=($(compgen -f -- "$cur")) ;;
-
-        # Default case: complete primary options
         *)
-            COMPREPLY=($(compgen -W "$opts" -- "$cur")) ;;
+            # Mark the matches as file names so directories get a trailing slash
+            # (compopt is missing in bash 3.2; completion still works without it)
+            compopt -o filenames 2>/dev/null
+            COMPREPLY=()
+            while IFS= read -r candidate; do
+                COMPREPLY+=("$candidate")
+            done < <(compgen -f -- "$cur") ;;
     esac
 }
 

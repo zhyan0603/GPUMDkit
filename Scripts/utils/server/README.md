@@ -315,7 +315,7 @@ running child reliably.
 
 ```bash
 bash -n gpumdkit.sh
-python3 -B -c 'from pathlib import Path; p=Path("Scripts/utils/server/server.py"); compile(p.read_text(), str(p), "exec")'
+python -B -c 'from pathlib import Path; p=Path("Scripts/utils/server/server.py"); compile(p.read_text(), str(p), "exec")'
 node --check Scripts/utils/server/web/app.js
 git diff --check
 ```

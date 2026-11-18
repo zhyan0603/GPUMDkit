@@ -52,22 +52,23 @@ fi
 echo " +------------------------------------------------------+"
 echo " | Do you want to delete all these files?               |"
 echo " |   y / yes : delete all                               |"
-echo " |   n / no  : cancel                                   |"
+echo " |   n / no / q : cancel                                |"
 echo " |   or input filenames to keep (space-separated)       |"
 echo " +------------------------------------------------------+"
-if ! IFS= read -r -p " " user_input; then
+if ! read_menu_choice user_input; then
     echo " Input closed. No files were deleted."
     return 1
 fi
 
-# Process user input
-if [[ "$user_input" == "y" || "$user_input" == "yes" ]]; then
+# Process user input (answers are case-insensitive; an empty answer cancels)
+user_answer=$(printf '%s' "$user_input" | tr '[:upper:]' '[:lower:]')
+if [[ "$user_answer" == "y" || "$user_answer" == "yes" ]]; then
     echo " Deleting the files..."
     for file in "${delete_files[@]}"; do
-        rm -f "$file"
+        rm -f -- "$file"
     done
     echo " Files deleted."
-elif [[ "$user_input" == "n" || "$user_input" == "no" ]]; then
+elif [[ -z "$user_answer" || "$user_answer" == "n" || "$user_answer" == "no" || "$user_answer" == "q" ]]; then
     echo " Operation canceled. No files were deleted."
     return 0
 else
@@ -75,6 +76,23 @@ else
     # Tokenize and exclude by whole-word match (NOT substring removal,
     # which would corrupt names sharing a substring with the keep input).
     read -r -a extra_keep_files <<< "$user_input"
+
+    # Cancel on a typo before deleting anything.
+    for ek in "${extra_keep_files[@]}"; do
+        known=false
+        for df in "${delete_files[@]}"; do
+            if [ "$df" = "$ek" ]; then
+                known=true
+                break
+            fi
+        done
+        if [ "$known" = false ]; then
+            echo " Error: '$ek' is not one of the listed files."
+            echo " Operation canceled. No files were deleted."
+            return 1
+        fi
+    done
+
     new_delete_files=()
     for df in "${delete_files[@]}"; do
         skip=false
@@ -96,7 +114,7 @@ else
     else
         echo " Deleting remaining files..."
         for file in "${delete_files[@]}"; do
-            rm -f "$file"
+            rm -f -- "$file"
         done
         echo " Files deleted."
     fi
